@@ -1,0 +1,3054 @@
+Wed Jul 31 06:59:14 1991  Linus Tolke Y  (linus at lysator)
+
+	* commands2.el: lyskom-list-summary. R{knar nu r{tt p} vilken
+	  m}nad det {r.
+
+Fri Jul 19 12:39:19 1991  Inge Wallin  (inge at lysator)
+
+	* swedish-strings.el: Tagit bort bindningen till 'u' f|r kommandot
+	  Uttr{da eftersom det inte {r ett kommando som man vill trycka av
+	  misstag. 
+
+Fri Jul 19 12:30:17 1991  Linus Tolke Y  (linus at lysator)
+
+	* edit-text.el: gurksallad-k|n bytt till edit-2.
+
+Tue Jul  9 01:04:59 1991  Inge Wallin  (inge at lysator)
+
+	* commands2.el: kom-force-logout: Nytt kommando "Kasta ut en
+	  session".
+
+	* commands2.el: lyskom-set-motd: Nu blir det ingen newline extra
+	  n{r man editerar ett gammalt loginmeddelande.
+
+	* startup.el: lyskom-store-server-info: Ny hantering av
+	  loginmeddelandet. Nu skriver den ut snyggare.  
+
+Sun Jul  7 17:47:14 1991  Linus Tolke Y  (linus at lysator)
+
+	* swedish-strings.el, lyskom-rest.el: Nu get str{ngen som
+	  talar om vilken felkod vi har f}tt {ven numret p} felkoden.
+
+	* startup.el: Nu skickar bara klienten meddelandet kom-tell-login
+	  om vi redan var inloggade.
+
+	* commands1.el: I lyskom-add-sub-recipient-2 var inte
+	  lyskom-add-sub-recipient-answer ersatt med
+	  lyskom-handle-command-answer.
+
+	* lyskom-rest.el, startup.el: Nu kollar lyskom-start-of-command
+	  v{rdet p} first-time-around. S}lunda skall doing-default-command
+	  inte vara bundet n{r vi loggar in f|rsta g}ngen.
+
+Sat Jul  6 04:31:51 1991  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest.el: Ny funktion lyskom-format-insert som g|r
+	  detsamma som (lyskom-insert (lyskom-format ...)). Dessutom
+	  {ndrat alla f|rekomster i alla filer av det senare till det
+	  f|rstn{mnda.
+
+	* commands1.el: lyskom-change-presentation-or-motd med
+	  underfunktioner har nu vettiga docstr{ngar.
+
+Fri Jul  5 02:14:35 1991  Inge Wallin  (inge at lysator)
+
+	* commands2.el, swedish-strings.el: Nytt kommando Ta bort
+	  loginmeddelande. 
+
+	* lyskom-rest.el, m}nga andra: Skrivit lyskom-insert-string och
+	  bytt ut alla f|rekomster av (lyskom-insert (lyskom-get-string...
+	  mot anrop till den.
+
+Thu Jul  4 01:25:50 1991  Inge Wallin  (inge at lysator)
+
+	* startup.el, commands2.el: Nya funktioner: kom-set-motd med
+	  underfunktioner implementerar kommandot S{tt loginmeddelande som
+	  s{tter loginmeddelandet fr}n administrat|ren f|r LysKOM.
+
+Wed Jul  3 02:29:47 1991  Inge Wallin  (inge at lysator)
+
+	* swedish-strings.el: Nu {r anv{ndar-f{ltet i Status Person lite
+	  snyggare. 
+
+	* completing-read.el: lyskom-completing-read-2: Nu g|r den om
+	  prompten till swascii om n|dv{ndigt.
+
+	* commands1.el: {lys,}kom-change-password: Nu fr}gar klienten vem
+	  den skall {ndra l|senord f|r.
+
+	* vars.el, startup.el(lyskom-clear-vars),
+	  commands2({lys,}kom-{dis,en}able-adm-caps): Ny variabel
+	  lyskom-is-administrator som {r t om anv{ndaren {r i
+	  administrat|rsmod och annars nil.
+
+Wed Jul  3 02:00:32 1991  Linus Tolke Y  (linus at lysator)
+
+	* lyskom-rest.el: lyskom-enter-conf funkar nu {ven med
+	  kom-print-number-of-unread-on-entrance satt till nil.
+
+Tue Jul  2 00:37:46 1991  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest.el: Nu konverterar lyskom-read-number och
+	  lyskom-read-string sina promptstr{ngar till swascii om
+	  n|dv{ndigt.
+
+	* lyskom-rest.el: lyskom-set-mode-line anropar nu
+	  iso-8859-1-to-swascii om n|dv{ndigt.
+
+	* lyskom-rest.el: Ny funktion lyskom-message som {r samma som
+	  message men som konverterar till swascii om n|dv{ndigt.
+	  Dessutom bytt alla (message ...) mot (lyskom-message ...) mha
+	  tags-query-replace utom de som s}g ut som: (message "").
+
+	* lyskom-rest.el: lyskom-do-format, lyskom-format-help: Nu funkar
+	  det med en nolla f|rst i formatstr{ngen n{r man formatterar tal.
+
+	* vars.el: F|rb{ttrat docstr{ngen f|r
+	  kom-membership-default-placement s} att man kanske kan begripa
+	  den {ven om man inte har hackat p} klienten i ett halv}r.
+
+	* Makefile: swedish-strings.el ligger nu direkt efter vars.el
+	  eftersom det definieras variabler d{r som kan beh|vas p} andra
+	  st{llen i klienten.
+
+	* Definitionen av lyskom-header-separator flyttad fr}n vars.el
+	  till swedish-strings.el
+
+	* commands1.el: F|ljande funktioner ersatta av
+	  lyskom-handle-command-answer:
+	      lyskom-delete-text
+	      lyskom-change-password
+	      lyskom-add-sub-recipient-answer
+	      lyskom-add-sub-comment-answer
+	      lyskom-shutdown-server
+
+	  F|ljande funktioner f|renklade genom anrop till
+	  lyskom-handle-command-answer: 
+	      lyskom-add-member-answer
+
+	* lyskom-rest.el: funktionen lyskom-handle-command-anwer skall ta
+	  hand om alla svar till olika kommandon som slutar med texterna
+	  "klart"/"det gick inte".
+
+	* flags.el: Den h{r filen har nu en likadan filheader i b|rjan som
+	  alla andra filer.
+
+	* swedish-strings.el: Kommandot S{tt livsl{ngd heter nu [ndra
+	  livsl{ngd f|r att f|lja den tidigare standarden.
+
+	* startup.el, commands2.el: tagit bort lyskom-unread och ersatt
+	  den med lyskom-count-var.
+
+	* commands2.el: Ersatt lyskom-status-pers-unread med
+	  lyskom-count-var.
+
+	* vars.el, startup.el: Ny variabel: lyskom-count-var som kan
+	  anv{ndas till att r{kna lite olika saker i klienten.
+
+Mon Jul  1 04:09:30 1991  Linus Tolke Y  (linus at lysator)
+
+	* swedish-strings.el: Fixat buggen Duvar kanske aldrig medlem.
+
+	* commands2.el, swedish-strings.el: Fixat s} att status skriver ut
+	  n}rvarotiden i dagar timmer....
+
+	* view-text.el: Fixat buggen som gjorde att ledtexten S{nt av inte
+	  skrevs ut. Detta hade tillkommit under flyttandet av texter.
+
+	* vars.el, swedish-strings.el; flyttat definitionen av
+	  lyskom-text-start till swedish-strings.el
+
+	* swedish-strings.el: [ndrat endast prompten.
+
+	* cache.el: I cache-add-session-info kollade vi aldrig om vi fick
+	  felmeddelande tillbaka. Det small om n}gon hann logga ut snabbt
+	  igen. Nu kollar vi det.
+
+Sun Jun 30 03:16:30 1991  Inge Wallin  (inge at lysator)
+
+	* vars.el: lyskom-header-separator {r nu 8-bitsascii.
+
+	* commands1.el, swedish-strings.el: name-to-be-changedd ->
+	  name-to-be-changed. 
+
+	* async.el, swedish-strings.el: lyskom-is-fyll -> lyskom-is-full.
+
+	* swedish-strings.el: lyskom-change-prefix var omblandat f|r å
+	  och ä.
+
+Thu Jun 27 18:17:28 1991  Linus Tolke  (linus at lysator)
+
+	* commands1.el: lyskom-sub-member Nu kan man utesluta medlemmar ur
+	  brevl}dor ocks}.
+
+	* parse.el: lyskom-parse-success lyskom-decrease-pending-calls
+	  anropades felaktigt med unparsed-bufferten vilket gjorde att
+	  lyskom-number-of-pending-calls n{r den blev lokal inte
+	  fungerade l{ngre.
+	* startup.el: lyskom-number-of-pending-calls {r lokal igen.
+
+Thu Jun 27 14:27:49 1991  Thomas Bellman  (bellman at lysator)
+
+	* startup.el (lyskom-clear-vars): Kommenterat bort
+	  lyskom-number-of-pending-calls.  Klienten h{ngde sig ibland
+	  annars.  DETTA [R ETT SYMPTOM, INTE EN ORSAK!
+
+Thu Jun 27 02:29:50 1991  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest.el: lyskom-get-error-text: ny funktion som sl}r upp
+	  en felkod i lyskom-error-texts och returnerar klartexten om den
+	  fanns. 
+
+	* swedish-strings.el: lyskom-error-texts: en assoclista |ver alla 
+	  felkoder i klartext (svenska).
+
+Thu Jun 27 02:12:35 1991  Linus Tolke  (linus at lysator)
+
+	* startup.el: lyskom-clear-vars lyskom-number-of-pending-calls {r
+	  ju ganska lokal lagt till bland de lokala.
+	  Motsvarande f|r variabeln lyskom-status-pers-unread fr}n
+	  commands2.el	
+
+Wed Jun 26 22:04:57 1991  Linus Tolke  (linus at lysator)
+
+	* flyttat texterna f|r filerna: startup.el, internal.el,
+	  commands1.el, commands2.el, view-text.el, async.el, flags.el och 
+	  lyskom-rest.el till swedish-strings.el
+
+	* commands2.el: kom-compile-bugreport: [ndrat antalet rader i
+	  unparsed-bufferten som skall skickas med till det dubbla (10.)
+
+	* lyskom-rest.el: iso-8859-1-map {ndrad n}got. sz => B ^0 > 0
+
+Wed Jun 26 03:56:55 1991  Inge Wallin  (inge at lysator)
+
+	* commands2.el: lyskom-status-pers-[4-6]: Status person skriver
+	  nu ut hur många olästa personen i fråga har totalt om man
+	  väljer att titta på medlemsskapen.
+
+	* commands2.el: lyskom-status-pers-5: Alla m|ten d{r man har 0
+	  ol{sta visar ingen siffra, utan bara en tom kolumn f|r antal
+	  ol{sta. Det blir mer |versk}dligt p} det viset.
+
+Wed Jun 26 02:58:38 1991  Linus Tolke  (linus at lysator)
+
+	* edit-text.el: Lagt till funktionen overlay-map som används för
+	  att man skall kunna ha keymappen från 2 moder samtidigt.
+	  Behövs om man har en egen mode-map plus de lokala för
+	  edit-bufferten.
+
+Mon Jun 24 19:20:17 1991  Linus Tolke  (linus at robert)
+
+	* commands1.el: lyskom-delete-conf vi skall g|ra
+	  lyskom-end-of-command {ven n{r n}gon annan precis tog bort m|tet.
+
+Sun Jun 23 05:38:44 1991  Inge Wallin  (inge at lysator)
+
+	* startup.el: lyskom: [ndrat "LysKOM server" till "LysKOM-server". 
+
+	* Fixat str{ngarna i parse.el, services.el, cache.el, review.el,
+	  prioritize.el, edit-text.el och elib-string.el.
+
+	* Ny fil: swedish-strings som skall inneh}lla alla str{ngar p}
+	  svenska i elispklienten. Lagt till den tillf{lligt i Makefilen.
+
+	* lyskom-rest.el: Nya funktioner: lyskom-format med
+	  underfunktioner. 
+
+	* commands2.el, startup.el: kom-{dis,en}able-adm-caps +
+	  underfunktioner. Nya kommandon: \verg} till administrat|rs-/
+	  normalmod.
+
+Sat Jun 22 13:57:48 1991  Linus Tolke  (linus at lysator)
+
+	* lyskom-rest.el: I funktionen lyskom-set-mode-line hanterades
+	  inte fallet att man skickade med en conf-stat som argument
+	  korrekt.
+
+Sat Jun 22 00:45:18 1991  Inge Wallin  (inge at lysator)
+
+	* de flesta filer: [ndrat namn p} lyskom-format till
+	  lyskom-format-objects.  Jag vill anv{nda namnet lyskom-format
+	  till den funktion som skall anv{ndas i st{llet f|r format n{r vi
+	  internationaliserar klienten.
+
+Wed Jun 19 06:14:55 1991  Inge Wallin  (inge at lysator)
+
+	* startup.el: lyskom-start-anew-login-{1-5,2}: Nu talar klienten
+	  om om man har en lapp p} d|rren vid inloggning
+
+	* commands1.el: lyskom-{add,sub}-recipient med underfunktioner. Nu
+	  talar funktionerna om vem man adderar resp. subtraherar som
+	  mottagare. 
+
+Mon Jun 17 21:02:26 1991  Inge Wallin  (inge at lysator)
+
+	* commands2.el: Nytt kommando: St{ng av servern.
+	  Nya funktioner: {,lys}kom-shutdown-server.
+
+Sat Jun 15 18:08:04 1991  Inge Wallin  (inge at robert)
+
+	* Releaseade 0.33.1 som fixar problemet med userarean. 
+
+	* vars.el: 0.33 -> 0.33.1
+
+Thu Jun 13 03:49:11 1991  Peter Eriksson  (pen at lysator)
+
+	* vars.el: laila.lysator.liu.se -> kom.lysator.liu.se
+	           (foo de som inte k|r DNS)
+
+Thu Jun 13 02:07:23 1991  Linus Tolke  (linus at lave)
+
+	* flags.el: Hmmmm Fixat buggen som gjorde att man inte kan anv{nda
+	  en userarea utan separata areor f|r andra klienter {n
+	  elisp-klienten. 
+
+	* cache.el: cache-del-who-info 
+	  fixat buggen som gjorde att man ibland f}r markerp nil n{r man
+	  loggar in. N{mligen n}gon som {nnu inte {r inh{mtad loggar ut.
+
+Wed Jun 12 21:13:32 1991  Linus Tolke  (linus at lysator)
+
+    	* Distribuerat version 0.33           22:35.
+
+	* startup.el: lyskom-previous-text skall ocks} vara bufferlokal.
+
+Wed Jun 12 19:53:24 1991  Inge Wallin  (inge at lage)
+
+	* commands2.el: lyskom-status-pers-5: Skriver ut "O" f|r alla
+	  m|ten som personen {r organisat|r f|r.
+
+Wed Jun 12 03:37:17 1991  Linus Tolke  (linus at lysator)
+
+	* startup.el: define-key funkade inte l{ngre med 8-bitars emacs.
+	  Jag har bytat \M- (vilket betyder s{tta }ttonde biten) mot \033
+	  (escape) Detta {r egentligen ganska fult men jag {r inte helt p}
+	  det klara med hur man skall hantera flaggorna meta-flag och
+	  meta-prefix-char f|r att det skall bli snyggt.
+
+	* lyskom-rest.el: lyskom-set-mode-line
+	  Fixat s} att den klarar att man h}ller p} att }terse ocks}.
+
+	* commands2.el: oktetter till tecken i status person.
+
+Wed Jun 12 02:46:55 1991  Inge Wallin  (inge at lysator)
+
+	* lyskom-rest: lyskom-set-mode-line: Ta reda p} antalet ol{sta i
+	  det nuvarande m|tet och skriv det i moderaden.
+	  lyskom-print-prompt: Anropa lyskom-set-mode-line.
+	  lyskom-add-new-text: Anropa lyskom-set-mode-line.
+
+Wed Jun 12 00:16:40 1991  Linus Tolke  (linus at lysator)
+
+	* lyskom-rest.el: Ny funktion lyskom-set-mode-line
+	  startup.el, commands1.el, lyskom-rest.el. Olika funktioner
+	  anropar nu denna funktion ist{llet.
+
+Tue Jun 11 21:52:11 1991  Linus Tolke  (linus at lysator)
+
+	* startup.el: lyskom-debug-communications-to-buffer{,-buffer}
+	  skall vara bufferlokala.
+	  [ndring i lyskom-clear-vars
+
+	* completing-read.el: Nu {r `-' }terigen del av ett ord.
+
+Mon Jun 10 23:10:23 1991  Thomas Bellman  (bellman at lysator)
+
+	* edit-text.el (kom-edit-send): G} till slutet av LysKOM-buffern
+	  n{r ett inl{gg skickas in.
+
+Mon Jun 10 15:19:26 1991  Linus Tolke  (linus at lysator)
+
+	* lyskom-rest.el, startup.el: Nu anv{nder vi variablerna
+	  lyskom-prompt-text och lyskom-prompt-executing-default-command-text.
+
+	* flags.el, startup.el: N}gon (beroende p} om man har user-area
+	  eller inte) lyskom-read-options s{tter lyskom-do-when-starting
+	  ist{llet f|r lyskom-clear-vars. Nu har jag lyckats f} den att
+	  exekvera de kommandon som fanns i user-arean.
+
+	* lyskom-rest.el: Flyttade exekveringen av lyskom-do-when-starting
+	  till en egen funktion: lyskom-maybe-do-when-starting.
+
+	* flags.el, startup.el, vars.el: Nu kommer elisp-klienten ih}g
+	  andra clienters delar av user-arean och sparar med den.
+	  Variabeln heter lyskom-other-clients-user-areas.
+
+	* internal.el: Nu fixar vi s} att om man f}r "no more processes"
+	  felet s} behandlas det precis som "message to long". Jag tror
+	  att detta {r r{tt s{tt att behandla det p}.
+
+Mon Jun 10 05:00:23 1991  Inge Wallin  (inge at ruben)
+
+	* commands1.el: lyskom-write-comment: Nu talar klienten om f|r
+	  servern att anv{ndaren skriver en fotnot.
+
+Mon Jun 10 04:37:28 1991  Thomas Bellman  (bellman at lysator)
+
+	* edit-text.el (kom-edit-send): Stoppat in save-excursion inuti
+	  let-satsen och delat upp den p} tv}.  Detta f|r att edit-buffern
+	  inte ska scrollas.
+
+Mon Jun 10 01:11:09 1991  Linus Tolke  (linus at lysator)
+
+	* flags.el: Annat (snyggare) format f|r user-arean.
+
+	* lyskom-read.el: lyskom-insert-before-prompt har nu till}telse
+	  att skriva ett meddelande {ven n{r man v{ntar.
+
+	* lyskom-rest.el: Ny funktion iso-8859-1-to-swascii som
+	  konverterar en str{ng.
+	  Om variabeln kom-emacs-knows-iso-8859-1 {r sann s} g|r vi ingen
+	  konvertering. Annars g|r vi det.
+
+	* commands1.el: Nya funktioner lyskom-add-membership,
+	  lyskom-add-membership-2 som adderar ett medlemsskap till listan
+	  av medlemsskap och l{gger in korrekt post i lyskom-to-do-list.
+	  [ndringarna ber|r {ven n{r man g}r till ett m|te som man inte
+	  var medlem i f|rut. (det fungerar.)
+	  Kan t{nkas att lyskom-go-to-conf-handle-map inte l{ngre anv{nds
+	  men jag vill kolla detta ett par g}nger till.
+
+	* startup.el: lyskom-start-anew-login-1-5
+	  Nu st{lls globala lyskom-default-password ocks} till nil n{r vi
+	  anv{nt det.
+
+Sun Jun  9 18:46:12 1991  Inge Wallin  (inge at ruben)
+
+	* commands1.el: Nytt kommando: Fotnot. Ny funktion:
+	  kom-write-footnote. kom-write-comment med underfunktioner
+	  {ndrade.
+
+	* commands1.el: {lys,}kom-review-presentation: Snyggat upp koden
+	  samt gjort s} att den skriver ut vilket m|te/person man f}r
+	  presentationen f|r.
+
+	* startup.el: [ndrat lite i ledtexten n{r man loggar in f|rsta
+	  g}ngen f|r att det skall bli tydligare. [ndrat fr}gan ocks}.
+
+Sun Jun  9 13:27:34 1991  Linus Tolke  (linus at lave)
+
+	* commands1.el, vars.el: lyskom-add-member-3
+	  Nya variabler: kom-membership-default-placement
+	  kom-membership-default-priority som g{ller n{r man blir medlem i
+	  ett m|te.
+
+	* commands1.el: lyskom-add-member, kom-add-self, 
+	  lyskom-add-member-[23], lyskom-create-conf-handler
+	  Nu anropas inte l{ngre lyskom-add-member-3 "utifr}n". Allt skall
+	  g} genom lyskom-add-member-2 som ser till att
+	  lyskom-add-member-3 f}r r{tt argument. ] andra sidan tar nu
+	  lyskom-add-member-2 {ven argument f|r vilken funktion som skall
+	  anropas sedan.
+
+	* edit-text.el: kom-edit-send, lyskom-create-text-handler 
+	  Nu kommer man tillbaka till den window-configuration som g{llde
+	  n{r man startade editeringen direkt n{r man trycker 
+	  C-c C-c <RET>
+
+	* lyskom-rest.el: kom-extended-command funkar nu {ven om man anger
+	  ett ord som matchar fullst{ndigt med felaktigt case.
+
+Sat Jun  8 18:58:42 1991  Linus Tolke  (linus at lysator)
+
+	* commands2.el: lyskom-status-pers-2. bytes -> skapade oktetter.
+
+	* startup.el: lyskom-default-password m}ste beh}llas.
+
+	* commands1.el: (kom-create-conf, lyskom-create-conf-handler,
+	  lyskom-create-conf-handler-2) Nu blir man direkt medlem i m|tet
+	  n{r man skapar det.
+	  Ny funktion: lyskom-create-conf-handler-2.
+
+	* vars.el: Fixat formatet p} lyskom-text-start och lagt in en
+	  varningstext i view-text.el (vid lyskom-print-date-and-time) s}
+	  att vi inte skall r}ka ut f|r samma problem igen.
+
+Sat Jun  8 03:55:00 1991  Inge Wallin  (inge at laila)
+
+	* commands2.el, startup.el: Nytt kommando S{tt livsl{ngd. Nya
+	  funktioner: kom-set-garb-nice med underfunktioner.
+
+Wed Jun  5 23:53:34 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el: Lagt in Gertz bug-fix.
+
+Tue Jun  4 19:29:25 1991  Thomas Bellman  (bellman at nanny)
+
+	* edit-text.el (kom-edit-send): Lagt en save-excursion runt hela
+	  let-satsen, och tagit bort det avslutande (set-buffer buffer),
+	  som inte beh|vs l{ngre.
+
+Tue Jun  4 15:34:48 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el: Lagt in Anders Gertz addera mottagare med check
+	  efter om han har en lapp p} d|rren. Eftersom
+	  lyskom-edit-insert-misc nu (helt pl|tsligt :-) tar 4 argument
+	  ist{llet f|r 3 s} funkade inte de i original men de funkar nu.
+	  [ndringar: lyskom-edit-add-recipient/copy
+	  Nya funktioner: lyskom-edit-add-recipient/copy-2 och
+			  lyskom-edit-add-recipient/copy-3
+
+	* edit-text.el: lyskom-edit-add-misc. Dokumenterat extra
+	  argumentet (=> Inge du som lade till det f}r korrekturl{sa
+	  kommentaren) och en save-excursion som g|r att det funkar lite
+	  b{ttre. Vi skulle beh|va en save-excursion som sparade point och
+	  mark i alla buffertar (eller i alla fall s{kert i
+	  edit-bufferten) f|r att det skall fungera.
+
+Tue Jun  4 00:54:32 1991  Thomas Bellman  (bellman at lave)
+
+	* startup.el (lyskom-commands): Bytt namn p} "Subtrahera medlem"
+	  till "Uteslut medlem".
+
+	* commands1.el (lyskom-add-member-3): Placerar m|tet sist i en ny
+	  medlems m|teslista och ger det prioritet 100, om det inte {r en
+	  sj{lv man adderar -- d} fr}gar den.
+
+	* commands1.el (lyskom-add-member-2, lyskom-add-member-3):
+	  Personstatusen f|r personen plockas fram och skickas med till
+	  l-a-m-3.  Denna anv{nds i l-a-m-3 f|r att ta reda p} hur m}nga
+	  m|ten personen {r med i.
+
+Mon Jun  3 21:33:56 1991  Thomas Bellman  (bellman at laila)
+
+	* elib-string.el: Ny fil.  Kopia av den fr}n elib-paketet.  B|r
+	  tas bort i framtiden och laddas via (require 'elib-string).
+
+	* startup.el (lyskom-mode): F|rst|r inte l{ngre
+	  mode-line-buffer-identification lika illa som den gjorde innan.
+
+Mon Jun  3 21:03:38 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el, lyskom-rest.el: format funkar ej som det skall med
+	  argumentet %-s27s s} jag bytte till concat.
+	  [ndringar i lyskom-do-go-to-conf och lyskom-go-to-next-conf
+
+Sun Jun  2 13:35:33 1991  Inge Wallin  (inge at lave)
+
+	* commands2.el: Nu ger Status f|r Person ocks} vilka m|ten som
+	  personen {r medlem i om anv{ndaren vill det.  [ndring i
+	  lyskom-status-pers-2. Nya funktioner: lyskom-status-pers-[3-5].
+
+Sat Jun  1 19:42:06 1991  Inge Wallin  (inge at laila)
+
+	* view-text.el: lyskom-print-date-and-time har nu tv} mellanslag
+	  mellan datum och tid i st{llet f|r ett.
+
+	* commands2.el: Nu funkar Status f|r M|te n{r man v{ljer att titta
+	  p} medlemmarna ocks} precis som i gamla QZ-KOM.  Ny funktion:
+	  lyskom-status-conf-4.
+
+	* services.el: Ny initiate-function initiate-query-read-texts
+
+Thu May 30 22:23:29 1991  Inge Wallin  (inge at laila)
+
+	* commands2.el: kom-status-conf med underfunktioner.  Nu kan man
+	  f} upp vilka medlemmar som ett m|te har n{r man g|r Status f|r
+	  m|te. 
+
+	* commands2.el: kom-status-conf utnyttjar nu
+	  lyskom-completing-read-conf-stat i st{llet.  
+
+Mon May 27 00:10:58 1991  Linus Tolke  (linus at laila)
+
+	* flags.el: Testad och funkar.
+
+	* flags.el: Ny fil. Inneh}ller allt f|r att skapa sin user-area
+	  och evaluera det hela. 
+	  Otestat pga en serverbegr{nsning. Servern {r fixad men inte
+	  startad. S} fort det {r startad skall jag testa.
+
+Sun May 26 04:25:43 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el : lyskom-print-who-is-on anv{nder nu
+	  lyskom-session-info ist{llet f|r f|rsta elementet i listan.
+	  asterisken kommer allts} p} r{tt plats.
+
+	* src: rensat lite. Flyttat peters grejor till -eng, willf|rs till
+	  lw och bellmans till test-async. Uppmaning till dessa personer
+	  att g|ra klart projekten! (Obs att ursprungskoden kan ha
+	  utvecklats.)
+	  Nu funkar grep hyfsat igen. :-)
+
+	* commands2.el: lagt in funktionen kom-display-who-buffer.
+	  vars.el: variabeln kom-who-buffer-size-when-displaying
+	  startup.el: kommandot Visa vilka-listan.
+
+	* lyskom-rest.el (commands1.el): lyskom-maybe-save-unread, heter
+	  numera lyskom-maybe-move-unread och flyttar det m|tet man var i
+	  sist i lista om den anropas med non-nil argument. (N{sta m|te
+	  fungerar som det skall.)
+
+	* commands2.el: lyskom-list-summary-all {ndrat Namn till
+	  f|rfattare. 
+
+Thu May 23 05:08:15 1991  Linus Tolke  (linus at laila)
+
+	* review.el: kom-review-tree anropar nu lyskom-follow-comments
+	  direkt och inte end-of-command bara en g}ng.
+
+	* lyskom-rest.el: kom-view-next-text skall inte markera som l{st
+	  om vi h}ller p} att }terse. (ful patch. med 0)
+
+	* startup.el: Lagt till s} att vi b}de skall klara 8-bitar emacs
+	  och 7-bitars emacs som tror att den {r 8-bitars.
+	  Som tangentkommandon.
+
+	* Dokumenterat {ndra organisat|r.
+
+	* Dokumenterat scroll-down, M-p och M-n.
+
+	* commands1.el: lyskom-write-comment, lyskom-write-comment-soon:
+	  tar nu argument s} att man f}r r{tt text n{r man g|r kommentera
+	  f|reg}ende.
+	  startup.el, docen: Inlagt under 'annat'-menyn och dokumenterat.
+
+Wed May 22 14:41:21 1991  Linus Tolke  (linus at lave)
+
+	* doc/elisp-client-0.33.latexinfo: Skapat och stoppat in doc f|r
+	  nya {rende-hanteringen.
+
+	* commands1.el,commands2.el: lagt till s} att vi nu bara f}r
+	  fr}gan om {rende efter det att vi skrivit texten. [ndringar i
+	  kom-write-text, lyskom-do-send-letter
+
+	* Skapat ett nytt dir (doc) d}r jag lagt alla doc-filerna. Jag har
+	  {ndrat i makefilen men ej testat.
+
+	* startup.el: Lagt till s} att l{, }terse och {ndra
+	  tangenttryckningarna borde fungera p} iso-tangentbord.
+
+	* who-buffer.el: Lite grejor som kanske borde stoppas in
+	  n}gonstans. 
+
+Mon May 20 04:24:45 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el,commands1.el,startup.el: Lagt till s} att vi
+	  visar aktuellt m|te p} mode-raden.
+	  [ndringar i: lyskom-clear-vars, lyskom-mode,
+	  lyskom-do-go-to-conf och lyskom-go-to-next-conf
+
+	* startup.el: scroll-down bundet till delete.
+
+Mon May 20 02:36:42 1991  Inge Wallin  (inge at lage)
+
+	* commands1.el: Nytt kommando, [ndra organisat|r. Nya funktioner:
+	  kom-change-supervisor med underfunktioner.
+
+	* commands1.el: kom-change-name med underfunktioner anv{nder nu
+	  lyskom-completing-read-conf-stat i st{llet f|r
+	  lyskom-completing-read. 
+
+Sun May 19 23:49:09 1991  Inge Wallin  (inge at lage)
+
+	* commands1.el: En kultpryl i lyskom-display-time (se sj{lva i
+	  koden) . Linus:-)
+
+Thu May 16 00:55:16 1991  Inge Wallin  (inge at lave)
+
+	* cache.el, async.el, services.el, parse.el: Fixat s} att klienten
+	  inte h{mtar alla who-info varje g}ng n}gon loggar in.  Detta
+	  anv{nder initiate-get-session-info som jag ocks} fick skriva
+	  samt lyskom-parse-session-info.
+
+	* cache.el, async.el: Fixat s} att klienten inte h{mtar alla
+	  who-info varje g}ng n}gon loggar ut. 
+
+Thu May 16 00:52:26 1991  Linus Tolke  (linus at lave)
+
+	* lyskom-rest.el, parse.el : Flyttat nollst{llningen av
+	  mode-radens saving till lyskom-parse-unparsed.
+
+Wed May 15 11:30:50 1991  Linus Tolke  (linus at lave)
+
+	* commands1.el: Felkontroll i }terse det kommenterade {ven om man
+	  inte har l{st ett inl{gg.
+
+Mon May 13 01:39:20 1991  Linus Tolke  (linus at lage)
+
+	* Makefile, README, vars.el: Lagt till not i koden om att vi g{rna
+	  vill ha f|rb{ttringar oss tillhanda (inge och jag eller kom).
+
+	* startup.el: Fixat en bug. (kom-comment-previous)
+
+	* internal.el: Nu f}r man g|ra quit under det att en handler
+	  anropas.
+
+	* lyskom-rest.el: Lagt in Tommys nya kom-page-next-command.
+
+	* edit-text.el: Fixat s} att den fr}gar efter {rende en extra
+	  g}ng. Super-KOM g|r s} och det verkar smart.
+
+Mon May 13 00:00:40 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: Flyttat anropet till lyskom-end-of-command fr}n
+	  kom-send-message till lyskom-send-message.
+
+Sun May 12 18:53:06 1991  Inge Wallin  (inge at laila)
+
+	* edit-text.el: lyskom-edit-insert-misc-conf + funktioner som
+	  anropar den.  Tog hand om fallet att personen/m|tet inte finns
+	  l{ngre. 
+
+Wed May  8 07:38:07 1991  Thomas Bellman  (bellman at laila)
+
+	* startup.el: Definierat "K" i lyskom-mode-map till
+	  kom-comment-previous.
+
+	* commands1.el: Lagt till funktionen kom-comment-previous som
+	  kommenterar det n{st senast l{sta inl{gget.
+
+	* vars.el: Lagt till variabeln lyskom-previous-text som h}ller
+	  reda p} det n{st senast l{sta inl{gget.
+
+Mon May  6 02:59:07 1991  Inge Wallin  (inge at lave)
+
+	* startup.el: Nu skrivs serverns versionsnummer ut snyggt igen.
+
+	* commands2.el: Fixat en bug som gjorde att raden med till}tna
+	  f|rfattare blev konstig.
+
+Sat May  4 13:15:18 1991  Linus Tolke  (linus at lage)
+
+	* internals.el: Nu kan man addera kommentarer igen. Bugfix.
+
+Fri May  3 23:04:45 1991  Per Cederqvist  (ceder at lave)
+
+	* kom-quit: La till en bortgl|md lyskom-end-of-command (om man
+	  svarar q).
+
+Thu May  2 18:39:10 1991  Peter Eriksson  (pen at lage)
+
+	* startup.el: 'nanny.lysator.liu.se' -> 'ftp.lysator.liu.se'
+	              Tog bort punkten i "V{nta p} ett inl{gg.".
+
+          startup-eng.el: Engelsktalande variant av startup.el
+
+	  commands1.el: F} uppmuntran/F} sk{ll.. Skrev ut lite
+	                extra mycket "F} uppmuntran"/"F} sk{ll".
+
+	  commands1-eng.el: B|rjan till engelsktalande variant..
+	  	     
+Thu May  2 15:01:36 1991  Inge Wallin  (inge at laila)
+
+	* lyskom-rest.el: lyskom-array-to-list - F|renklat betydligt och
+	  gissningsvis {r det ocks} snabbare nu.
+
+Thu May  2 01:37:47 1991  Linus Tolke  (linus at lave)
+
+	* Gjort om docen f|r info-tr{det och stoppat in den p} lll (export
+	  till nanny)
+
+Wed May  1 00:24:47 1991  Linus Tolke  (linus at laila)
+
+        * Distribuerat klient version 0.32	04:00
+
+	* lyskom-rest.el: lyskom-next-command-or-scroll fixat s} att det
+	  klarar g} till n{sta prioriterade m|te. (Har inte detta funkat
+	  tidigare.)
+
+	* Dokumenterat hookar, Lista {renden. V{nta.
+
+	* vars.el: lyskom-login-hook borttagen.
+
+Tue Apr 30 21:15:33 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el:kom-delete-text, lyskom-do-send-letter,
+	  kom-write-text, kom-quit
+	  lyskom-rest.el: ja-or-nej-p
+	  ersatt read-string med lyskom-read-string och uppdaterat.
+
+	* lyskom-rest.el: ny funktion: lyskom-read-string. Som read-string
+	  men g|r lyskom-end-of-command om man trycker quit.
+
+	* commands1.el: lyskom-send-letter ersatt av en
+	  lyskom-completing-read-conf-stat in kom-send-letter.
+	  Doc-str{ngar i lyskom-send-letter-3 och lyskom-do-send-letter.
+
+	* lyskom-rest.el: lyskom-start-of-command st{ller nu point i
+	  b|rjan av raden igen. Dessutom l}ter kom-page-before-command
+	  promptens rad vara kvar p} sk{rmen.
+
+	* lyskom-rest.el: {ndrat kom-view s} att den g|r
+	  lyskom-start-of-command innan den fr}gar efter numret
+	  (lyskom-read-number fungerar allts}).
+
+	* commands2.el: [ndrat ledtexten till endast-fr}gan.
+
+	* completing-read.el: fixat bug som gjorde att man var i fel
+	  f|nster n{r man hade gjort completion.
+
+	* Makefile, distribution-makefile, bin/lyskom-do-send:
+	  Nya b{ttre skript f|r att s{nda iv{g klienten automatiskt.
+	  Det skickas nu med make send
+
+Tue Apr 30 18:28:19 1991  Inge Wallin  (inge at lave)
+
+	* startup.el: Fixat en ful bug som gjorde att de sista 3 tecknen i
+	  presentationen av serverinfot togs bort. Det visade sig vara
+	  lyskom-start-of-command som gjorde det. Fixat genom att l{gga
+	  till tv} mellanslag till "\n"-str{ngen. Fult, eller??
+
+Tue Apr 30 15:11:04 1991  Linus Tolke  (linus at laila)
+
+	* commands2.el: kom-busy-wait scrollar nu snyggt, dessutom s}
+	  skriver den inte ut prioritet -2 l{ngre.
+
+	* commands1.el: lyskom-jump. Bug-fix.
+
+	* vars.el, cache.el: inf|rde lyskom-who-info-has-changed-hook,
+	  som k|rs n{r who-bufferten {ndras.
+
+	* async.el: Nu skall who-bufferten uppdateras n{r n}gon loggar in.
+
+Mon Apr 29 13:28:56 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: Nu hoppar Hoppa |ver fotnoter ocks} (tror jag).
+
+	* prefetch-new.el: R{ttat ett antal buggar.
+
+Mon Apr 29 11:38:24 1991  Per Cederqvist  (ceder at lave)
+
+	* services.el: Nu {r alla anrop utom query-read-texts, sync,
+	  shutdown och n}gra *-old implementerade. (Dock inte provk|rda).
+
+Mon Apr 29 00:04:32 1991  Inge Wallin  (inge at laila)
+
+	* prefetch-new.el: Skrivit om prefetchen till att anv{nda en
+	  kombination av stack och k|er. Ny fil: prefetch-new.el
+
+Sun Apr 28 16:25:26 1991  Linus Tolke  (linus at lave)
+
+	* commands1.el: kom-sub-self, nu kan man g} ur brevl}dor.
+
+Sun Apr 28 15:59:32 1991  Inge Wallin  (inge at laila)
+
+	* commands2.el, startup.el: S{nda allm{nt meddelande borttaget.
+	  S{nda personligt meddelande omd|pt till S{nda meddelande.
+	  Dokumenterat.
+
+	* clienttypes.el: Skapat typen lyskom-stack.
+
+Sun Apr 28 03:59:02 1991  Linus Tolke  (linus at lave)
+
+	* review.el: kom-review-clear tar nu bort {ven ur lyskom-to-do-list.
+
+	* cache.el: patchat lyskom-set-who-info-2 (nu funkar who-bufferten
+	  ser det ut som.)
+
+	* lyskom-rest.el:lyskom-print-promt, jag flyttade
+	  lyskom-start-of-command s} att nu hamnar den r{tt.
+
+	* lyskom-rest.el:lyskom-start-of-command Nu byter vi till punkt
+	  n{r vi ger defaultkommandot.
+
+	* async.el:lyskom-add-new-text, nu skall den kunna fixa s} att man
+	  f}r nya prompten L{sa n{sta text - om det kommer en text i det
+	  m|tet.
+
+	* lyskom-rest.el: lyskom-sentinel, lade till ett kolon i texten.
+
+Sat Apr 27 18:05:05 1991  Per Cederqvist  (ceder at lave)
+
+	* conf-stat->no-of-texts uppdateras i cachen varje g}ng en ny text
+	  skapas i m|tet.
+
+	* Gjorde conf-stat med mktype f|r att skaffa modifiers. (N{r
+	  conf-stat genererades med mktype gjorde inte mktype n}gra
+	  modifiers...) 
+
+Fri Apr 26 22:01:06 1991  Per Cederqvist  (ceder at laila)
+
+	* Nu skickas h|gst lyskom-max-pending-calls (fn. 20) anrop iv{g }t
+	  g}ngen. [ndringar i lyskom-clear-vars, lyskom-parse-err,
+	  lyskom-parse-success, lyskom-send-packet. Nya variabler:
+	  lyskom-output-queue, lyskom-max-pending-calls,
+	  lyskom-number-of-pending-calls. [ndringen ligger p} s} l}g niv}
+	  att den inte borde p}verka n}got.
+
+	* kom-prioritze-kill: Nu kan man inte l{ngre pusha raden efter den
+	  sista raden. 
+
+	* kom-membership med underfunktioner omskrivna fr}n grunden.
+
+Fri Apr 26 20:10:10 1991  Linus Tolke  (linus at lage)
+
+	* elisp-client-0.32.doc: Markeras default.
+
+Fri Apr 26 12:44:03 1991  Per Cederqvist  (ceder at lave)
+
+	* kom-membership: lyskom-membership skickas inte med som
+	  parameter. Den {r ju global i alla fall... En "(let () ...)"
+	  borttagen.
+
+	* [ndrade p} alla st{llen d{r initiate-get-map anropas s} att inte
+	  mer {n n|dv{ndigt h{mtas. [ndringar i: kom-membership med
+	  underfunktioner , lyskom-list-unread-maybe-get-map och
+	  lyskom-prefetch-handle-conf.
+
+	* initiate-get-map: Nu h{mtas mappen i sm} delar om 50 texter.
+	  [ndringen {r osynlig f|r programmeraren, men leder till stora
+	  tidsvinster f|r stora mappar.
+
+Wed Apr 24 17:54:28 1991  Per Cederqvist  (ceder at lave)
+
+	* komtypes.el: Ett bindestreck fattades i set-text-list->texts.
+	  (Det stog textlist i st{llet f|r text-list inne i
+	  funktionskroppen).
+
+	* clienttypes.el: read-list-delete-text: Den gamla varianten var
+	  rekursiv. Skrev en iterativ variant efter klagom}l fr}n MeTa.
+	  Den gamla varianten gick igenom cdr till varje cons-cell TV]
+	  g}nger vilket resulterar i att den b|r ha tagit O(n^2/2) i
+	  st{llet f|r det mer rimliga O(n) (n=antal m|ten med ol{sta
+	  inl{gg i).
+
+Wed Apr 24 03:53:51 1991  Linus Tolke  (linus at laila)
+
+	* async.el:N{r n}gon loggar ut h{mtar vi all who-info till
+	  who-info-bufferten p} nytt.
+
+Tue Apr 23 10:29:56 1991  Linus Tolke  (linus at lave)
+
+	* komtypes.el, clienttypes.el: Flyttat textpointers till
+	  clienttypes (den hamnade fel f|rst.)
+
+	* completing-read.el: lyskom-complete-test-exact-name struntar nu
+	  i om det {r stora eller sm} bokst{ver. Dessutom {r docen f|r
+	  denna funktion r{ttad.
+
+Tue Apr 23 00:35:38 1991  Inge Wallin  (inge at laila)
+
+	* Nya prefetchfunktioner.
+
+	* diverse filer: Sett till att det read-info av typ CONF som {r
+	  det m|te vi l{ser just nu kopieras till lyskom-reading-list i
+	  st{llet f|r att flyttas. Det ligger allts} kvar i
+	  lyskom-to-do-list. Linus hj{lpte till att r{tta buggar. Detta {r
+	  ytterligare en f|rberedelse inf|r de nya prefetchfunktionerna.
+
+    	* startup.el: lyskom-start-anew-new-person: Lagt till info om hur
+	  man f}r fatt p} manualen. 
+
+Mon Apr 22 00:13:48 1991  Linus Tolke  (linus at lave)
+
+	* cache.el, async.el, clienttypes.el: Nu funkar who-bufferten
+	  n{stan. Den fylls och uppdateras i alla fall.
+	  Jag lade till ett f{lt till i who-buffer-info.
+	  Dessutom anv{nds cache-add, cache-assoc 
+	  cache-del ist{llet f|r n}gra skumma cons.
+	  Ny funktion: cache-add-who-info-list.
+
+	* cache.el: slagit p} *laila*-who bufferten n{r man loggar in.
+	  [ndringar i lyskom-set-who-info-buffer-2
+
+	* cache.el,view-text.el,komtypes.el:Nu lagras texter som {r
+	  inlagda i bufferten i form av fyra integer (positioner i
+	  bufferten)
+	  [ndringar i: cache-get-text, lyskom-print-text
+	  Nya typ: textpointers med f{lten: text-no start-subject
+				            end-subject start-text end-text.
+
+	* commands2.el: V (kom-busy-wait) tar nu ett prefix-argument.
+
+	* commands2.el: justerat formatet p} {rendelistan.
+
+Sat Apr 20 00:43:01 1991  Linus Tolke  (linus at laila)
+
+	* commands2.el, startup.el: Nya funktioner kom-list-summary resp
+	  lyskom-list-summary. Man kan lista i det m|te man {r i. Eller
+	  sina markerade (om man har prompten ]terse n{sta markerade -)
+	  Lista {renden 
+	  Ej dokumenterat.
+
+	* lyskom-rest.el lyskom-queue-print-name (-2) tar nu ett format
+	  argument som g|r att man kan skriva i kolummer.
+
+	* commands2.el: lyskom-help. Nu mappas inte lyskom-help bort.
+
+	* elisp-client-0.32.doc: skapad och kom-write-texts-in-window
+	  dokumenterad (det nya anv{ndningss{ttet.)
+	  Dokumenterat kom-edit-add-recipient, kom-edit-add-copy
+
+	* edit-text.el: namnbyte: lyskom-edit-send => kom-edit-send
+				  lyskom-edit-quit => kom-edit-quit.
+
+	* edit-text.el: F|rkortat funktionerna kom-edit-add-recipient och
+	  kom-edit-add-copy.
+
+	* lyskom-rest.el: lyskom-read-num. Bugfix. Nu g}r det att k|ra
+	  denna funktion utan att den g|r lyskom-end-of-command alltid.
+
+	* edit-text.el: lagt till felkontroll s} att den m{rker att en rad
+	  {r inkorrekt n{r den skall stoppa in texten.
+
+	* startup.el: Tagit bort texten B|rja med ny person f|rsta g}ngen.
+
+Fri Apr 19 18:54:33 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el, vars.el: kom-write-texts-in-other-window tar nu
+	  andra v{rden. nil som tidigare, other ist{llet f|r t och eller
+	  en buffert eller en bufferts namn f|r att ta det f|nster som den
+	  bufferten visas i.
+	  kom-write-texts-in-other-window omd|pt till
+	  kom-write-texts-in-window.
+
+	* edit-text.el:Jag lade in Anders Gertz funktioner f|r att addera
+	  mottagare.
+
+Tue Apr 16 23:38:34 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el: B{ttre doc till lyskom-edit-insert-misc-conf.
+
+	* completing-read.el : lyskom-completing-read-2, lyskom-complete,
+	  lyskom-complete-and-exit, lyskom-complete-quit och
+	  lyskom-complete-help.
+	  Nu bytar vi inte tillbaka window-conf n{r vi g|r en liten
+	  utflykt f|r att h{mta info.
+
+Tue Apr 16 23:06:00 1991  Per Cederqvist  (ceder at lave)
+
+	* lyskom-rest.el: lyskom-start-of-command: Ny hamnar point p}
+	  b|rjan av raden n{r man ger ett kommando.
+
+Tue Apr 16 20:13:31 1991  Thomas Bellman  (bellman at lave)
+
+	* startup.el (lyskom): Vid *fr}gan* om server, kollade den b}de
+	  lyskom-default-server och KOMSERVER, men n{r man bara tryckte
+	  return, kollade den bara lyskom-default-server.  Fixat.
+
+Mon Apr 15 15:25:00 1991  Linus Tolke  (linus at lll)
+
+	* Distribuerat klient version 0.31   15:30 (Inges f|delsedag)
+
+Sat Apr 13 02:05:55 1991  Linus Tolke  (linus at laila)
+
+	* vars.el,lyskom-rest.el: kom-higher-priority-breaks som avg|r hur
+	  man skall bryta textl{sningen n{r nya texter kommer.
+
+	* vars.el,commands1.el: defaultmarkering nu f|r nyb|rjare 100.
+
+	* lyskom-rest.el: Nu skriver inte kom-extended-command ut texten
+	  en extra g}ng.
+
+Fri Apr 12 07:22:38 1991  Linus Tolke  (linus at lave)
+
+	* lyskom-rest.el: lyskom-read-number g|r nu lyskom-end-of-command
+	  om man trycker quit.
+
+	* lyskom-rest.el: forward-text och backward-text g|r inte l{ngre
+	  recenter. regexpen lyskom-start-text {r ocks} {ndrad lite f|r
+	  att passa med det nya formatet.
+
+	* lyskom-rest.el, parse.el: lyskom-string-bytes-missing b|r ju
+	  h|ra till parse-bufferten. Jag gjorde den bufferlokal i
+	  parse-bufferten ist{llet.
+
+	* commands1.el, review.el: lyskom-view-commented-text,
+	  lyskom-review-marked-texts, lyskom-review-by-to,
+	  lyskom-review-comments tar nu och best{mmer prioriteten beroende
+	  p} den prioritet som man l{ser med f|r tillf{llet.
+	  Ny funktion: lyskom-get-current-priority talar om vilken den {r
+	  och jag tror att kom-review-priority kan tas bort.
+	  lyskom-review-tree anv{nder nu ocks} lyskom-get-current-priority
+	  och jag plockar bort kom-review-priority.
+
+	* commands1.el: [ndrad i kom-who-info-list,
+	  lyskom-print-who-info-list s} att funktionen blev snyggare. 
+	  Nya funktioner lyskom-return-username och
+	  lyskom-return-who-info-line.
+
+	* commands2.el: Bugg i lyskom-help. Nu klarar den {ven att anropas
+	  fr}n edit-bufferten.
+
+Thu Apr 11 01:34:50 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el: kom-queue f|r s{ndning av text {ndrad till
+	  sending. main h{ngde sig (dvs jag kunde inte forts{tta att l{sa
+	  f|rr{n texten accepterats eller f|rkastats.)
+
+Wed Apr 10 03:42:15 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el:lagt in underst|d f|r funktionen med att visa
+	  texter ur h|gre prioriterade m|ten.
+	  [ndringar i bl.a.: lyskom-what-to-do, lyskom-print-prompt,
+	  lyskom-next-command-or-scroll
+	  Nya funktioner: lyskom-view-priority-text och
+	  lyskom-go-to-pri-conf.
+	  Lite }teranv{ndning gav {ndring i kom-go-to-next-conf och ny
+	  funktion lyskom-go-to-next-conf.
+	  Ny variabel lyskom-break-comment-tree som talar om ifall man
+	  vill f} ny prompt direkt eller v{nta tills man l{st klart
+	  tr{det.
+
+	* commands1.el, lyskom-rest.el: Nya funktioner lyskom-enter-conf
+	  och lyskom-maybe-save-unread inf|rda f|r l{slighet och
+	  }teranv{ndning av kod.
+
+	* commands1.el: kom-change-presentation och kom-change-conf-motd
+	  har nu defaultv{rde sig sj{lv. Detta default funkar inte p}
+	  samma s{tt som m|tet i kom-review-by-to.
+
+	* startup.el: Lagt in en del gl|mda variabler i lyskom-clear-vars.
+	  lyskom-server-info, lyskom-to-be-printed-before-prompt mfl.
+
+	* commands2.el: lyskom-help skriver ut en liten lista av vilka
+	  alternativ som finns.
+
+	* completing-read.el: buggfix Kunde inte matcha namn med t i sig.
+
+	* commands1.el: I lyskom-review-marked-texts kollar man nu p}
+	  doing-default-command.
+
+	* lyskom-rest.el: I lyskom-next-command-or-scroll, lagt till
+	  variabeln doing-default-command som skall se till att
+	  meddelandet om vad man g|r f|r kommando inte skrivs ut om man
+	  g|r det normala. (reglerar ocks} proriteten vid }terse alla
+	  markerade och m|jligtvis andra kommando i kom-do-when-done. F|r
+	  tillf{llet inga.)
+
+	* commands2.el: kom-compile-bug-report, lagt till versionen.
+	  Dessutom skapas nu direkt filen som en text till lyskom-elisp...
+
+	* startup.el: uppdaterat lyskom-mode beskrivningen. (Korrekturl{s
+	  detta n{r du f}r tid Inge och andra.)
+
+Tue Apr  9 19:24:33 1991  Linus Tolke  (linus at lage)
+
+	* startup.el, lyskom-rest.el, commands2.el, edit-text.el : ny funktion
+	  lyskom-help som talar om vad man har f|r alternativ n{r man
+	  trycker ? efter ett kommando som kr{ver flera
+	  tangent-tryckningar.
+
+	* lyskom-rest.el: lyskom-scroll nu }terst{lld. scrollar bara n{r
+	  man {r i r{tt m|te.
+	  lyskom-start-of-command scrollar inte l{ngre.
+
+Mon Apr  8 00:08:54 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el, alla andra: lyskom-start-of-command tar nu
+	  argumenten i andra ordningen. F|rsta argumentet {r obligatoriskt.
+
+	* lyskom-rest.el: f|rs|kt f} lyskom-scroll att fungera men har
+	  inte lyckats f} det hela b{ttre, bara "s{krare".
+
+	* async.el : lyskom-default-new-text-hook Numera
+	  lyskom-save-excursion ist{llet f|r save-excursion.
+
+Sun Apr  7 19:32:01 1991  Linus Tolke  (linus at laila)
+
+	* completing-read.el: buggfix klarar nu }ven completion-auto-help
+	  nil alternativet. Dessutom r{knas `-' som whitespace.
+
+Sun Apr  7 14:57:04 1991  Inge Wallin  (inge at lave)
+
+	* Lagt till variabeln lyskom-string-bytes-missing som talar om hur
+	  m}nga bytes som m}ste komma fr}n servern f|r att den str{ng som
+	  h}ller p} att parsas skall bli komplett. Innan den {r det {r det
+	  ingen ide att parsa igen. Detta {r en optimering som snabbar upp
+	  inl{sningen av l}nga texter avsev{rt. 
+
+Sat Apr  6 23:11:02 1991  Inge Wallin  (inge at lage)
+
+	* Flyttat ut allt som har med start av lyskom att g|ra till en ny
+	  fil: startup.el. [ndrat Makefilen ocks}.
+
+Sat Apr  6 03:31:04 1991  Linus Tolke  (linus at lage)
+
+	* commands1.el: lyskom-do-go-to-conf felkontroll ifall n}gon
+	  raderar m|tet precis n{r man skall g} till det. Samt bugfix s}
+	  att man kan g} till m|ten {ven n{r man har fler ol{sta markerade
+	  kvar att l{sa.
+
+	* ../lib/mailing-list, ../bin/lyskom-send, Makefile : Nu anv{nds
+	  lyskom-send ist{llet f|r att vi mailar direkt fr}n make.
+	  mailing-list {r en lista som inneh}ller alla som vill ha
+	  klienten och hur.
+
+Fri Apr  5 19:57:31 1991  Linus Tolke  (linus at lave)
+
+	* parse.el: Nu har unparsed-bufferten reda p} vilken process den
+	  tillh|r.
+	  commands2.el: kom-compile-bug-report funkar om det blir fel i
+	  parse-bufferten ocks}. Dessutom censurerar den byte-codens
+	  str{ng och slutet p} unparsed-bufferten.
+	  dessutom f}r man nu lyskom-reading-list och lyskom-to-do-list.
+
+	* Makefile: nu skall vi f} r{tt skyddskod p} det som vi skickar
+	  till sparcarna. alpha och beta installeringarna borttagna.
+
+Wed Apr  3 15:04:56 1991  Linus Tolke  (linus at laila)
+
+	* commands2.el : Ny funktion kom-compile-bug-report
+
+	* lyskom-rest.el : nu talar kom-busy-wait om vad den v{ntar p} f|r
+	  niv}. Dessutom f}r man en beep n{r det kommer n}t.
+
+	* lyskom-rest.el : kom-save-text anv{nder nu append-to-file
+	  ist{llet f|r write-region.
+
+	* review.el: Fixat s} att }terse root och }terse tr{d inte h{nger
+	  sig om man inte f}r l{sa current-text.
+
+Tue Apr  2 00:59:32 1991  Inge Wallin  (inge at laila)
+
+	* internal.el: Skrivit om hela hanteringen av kom-k|erna s} att
+	  det blir effektivare och renare. kom-queue {r nu en egen typ,
+	  och hanteringen av lyskom-collect/lyskom-use {r nu mycket
+	  effektivare. Inneh}llet i denna fil {r n{stan helt utbytt.
+
+Mon Apr  1 07:21:37 1991  Thomas Bellman  (bellman at laila)
+
+	* lyskom-rest.el (kom-view): Defaultar inl{ggsnumret till senast
+	  l{sta eller skrivna text.  Senast l{sta {r egentligen
+	  ointressant, men det tycks inte finnas n}gon variabel f|r bara
+	  senast skrivna.
+
+Fri Mar 29 01:53:48 1991  Inge Wallin  (inge at laila)
+
+	* internal.el: lyskom-check-call-sub: Bytt ut tv} stycken append
+	  mot nconc (ceder trodde det skulle g} bra.) Troligen kommer nu
+	  allting som anv{nder lyskom-collect & friends att g} N g}nger
+	  snabbare. 
+
+Thu Mar 28 23:15:37 1991  Inge Wallin  (inge at laila)
+
+	* clienttypes.el: Skapat typen lyskom-queue som {r en generisk
+	  k|typ. Kommer att anv{ndas f|r att skriva om hanteringen av
+	  k|anrop som tydligen {r lite h}rig just nu.
+
+Thu Mar 28 20:37:41 1991  Per Cederqvist  (ceder at lave)
+
+	* Ny flagga: kom-page-before-command. Om non-nil s} utf|rs
+	  (recenter 0) i lyskom-start-of-command, vilket borde f} som
+	  effekt att sk{rmen alltid t|ms f|re alla kommandon. Flaggan
+	  definieras i vars.el. lyskom-start-of-command finns f|r
+	  n{rvarande i lyskom-rest.el.
+
+Wed Mar 27 06:13:15 1991  Lars Willf|r  (willfor at lage)
+
+	* Sl{ngde ihop lite rutiner f|r addera/subtrahera kommentarer
+	  (kom-add-comment, kom-sub-comment, lyskom-add-sub-comment och
+	  lyskom-add-sub-comment-answer i commands1.el samt
+	  initiate-add-comment och initiate-sub-comment i services.el)
+
+Mon Mar 25 18:17:18 1991  Per Cederqvist  (ceder at lave)
+
+	* kom-list-persons uppsnabbad med en faktor ca 20 (i alla fall om
+	  man r{knar antalet garbningar). Det {r lyskom-collect som {r
+	  mycket sl|. (Kommer att skrivas om i samband med byte till
+	  protokoll B).
+
+	* kom-prioritize.el inlagd i Makefilen. Inneh}ller en mode f|r att
+	  {ndra i medlemsskapslistan. Integrerade kommandot med resten av
+	  LysKOM. Dokumenterade.
+
+Mon Mar 25 02:23:15 1991  Inge Wallin  (inge at laila)
+
+	* B|rjat p} who-info-buffertkoden. Nya lokala variabler:
+	  lyskom-who-info-buffer och lyskom-who-info-cache.
+
+Sun Mar 24 23:34:44 1991  Linus Tolke  (linus at lave)
+
+	* completing-read.el: lyskom-completing-read-conf-stat funkar nu
+	  som det {r t{nkt.
+
+	* lyskom-rest.el, commands1.el: Nu har vi en sentinel ocks}. Som
+	  piper om f|rbindelsen g}r ner ov{ntat.
+
+Sun Mar 24 23:18:32 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: lyskom-add-sub-recipient anv{nder nu
+	  lyskom-read-number. 
+
+Sun Mar 24 05:44:15 1991  Linus Tolke  (linus at laila)
+
+	* completing-read.el: lyskom-complete-and-edit buggfix (att ingen
+	  hittat denna bug? lyskom-show-completion- funktionen fanns ju
+	  inte.)
+	  Nu f}r man [Not sole completion] om man trycker return direkt.
+
+	* async.el: lyskom-add-new-text tog bort den lyskom-check-to-do
+	  som l}g d{r. Nu kraschar det inte om man v{ntar n{r man skickar
+	  in en text. (samma session.).
+
+	* parse.el, lyskom-rest.el: Nu g|r vi st|rre delen av parsningen
+	  med inhibit-quit satt till t.
+
+	* internal.el: fixat s} att felet "host is unreachable" tas om
+	  hand lite snyggare. Vi kommer att loopa tills paketet kommer
+	  fram utan error.
+
+	* Nu skall vi kunna ta emot meddelanden {ven n{r vi v{ntar
+	  (aktivt.)
+
+Sat Mar 23 20:49:10 1991  Per Cederqvist  (ceder at lave)
+
+	* view-text.el: lyskom-maybe-follow-comments: Om
+	  + text 3 {r en kommentar till text 1
+	  + m|te A och m|te B {r mottagare till 1 och 3
+	  + m|te B {r mottagare till text 2
+	  + Uwe har l{st 1 och 2 i m|te A (men inte m|te B)
+	  + Uwe g}r med i m|te B
+	  s} f}r Uwe l{sa texterna i ordningsf|ljd 1, 2, 3, hela tiden med
+	  prompten "L{sa n{sta text - ". Orsak: om man har l{st en
+	  kommentar i _n}got_ m|te s} v{grar lyskom-maybe-follow-comments
+	  att l{gga upp den som kommentar. Fixat. lyskom-text-not-read
+	  beh|vs troligen inte l{ngre. och {r bortkommenterad.
+	  lyskom-text-read-p skapad.
+
+Fri Mar 22 23:43:15 1991  Thomas Bellman  (bellman at lave)
+
+	* completing-read.el: Linus {ndring nedan f|r C-M-v -> /dev/null.
+	  Lagt in annan, b{ttre, men mycket fulare, l|sning.  Se
+	  funktionerna lyskom-completing-read-3 och lyskom-hack-minibuf.
+
+Fri Mar 22 03:21:27 1991  Linus Tolke  (linus at lage)
+
+	* completing-read.el: [ndrat namnen p} bufferten med completions
+	  till att b|rja med ett mellanslag.
+	  Fixat s} att den scrollar r{tt Completions-f|nstret n{r man {r i
+	  minibufferten och trycker M-C-v
+
+	* commands1.el: Hittade ett st{lle som ceder missat ((format "..."
+	  name "...")).
+
+Thu Mar 21 19:45:29 1991  Per Cederqvist  (ceder at lave)
+
+	* Bytt alla (format "x%sy" foo) d{r foo kan t{nkas inneh}lla ett
+	  NUL-tecken mot (concat "x" foo "y"). Nu _ska_ det g} att ha NUL
+	  i texter...
+
+	* commands2.el: lyskom-status-conf-2: En brevl}da kan vara sluten,
+	  |ppen, osv. Fixat s} att alla fyra flaggorna skrivs ut oberoende
+	  av varandra.
+
+	* commands1.el: lyskom-add-sub-recipient: lyskom-current-text
+	  formatterades med %s. Visserligen korrekt, men jag bytte till
+	  %d.
+
+	* vars.el: Dokumenterat att lyskom-current-text {r ett text-no, 
+	  inte en str{ng. (Kan lyskom-current-text vara nil nu? Jag vet
+	  inte om doken st{mmer i det fallet).
+
+	* parse.el: Det finns tv} lyskom-parse-num. V}gade inte ta bort
+	  den f|rsta.
+
+	* Makefile: [ndrat file-label i uuencode p} det som skickas iv{g
+	  till mig p} IDA.
+
+Thu Mar 21 01:00:36 1991  Linus Tolke  (linus at laila)
+
+	* completing-read.el: [ndrat i docstr{ngar s} att empty {r bytt
+	  mot 'empty. Klarare enligt Inge.
+
+	* commands2.el: kom-send-message Nu accepteras {ven defaultv{rdet
+	  (Alla). 
+
+Thu Mar 21 00:17:11 1991  Thomas Bellman  (bellman at lave)
+
+	* lyskom-rest.el (lyskom): Fixat buggen (JA!) som gjorde att den
+	  aldrig fr}gade efter vilken maskin man ville k|ra p}.
+
+Wed Mar 20 21:32:34 1991  Linus Tolke  (linus at laila)
+
+        * commands1.el: lyskom-do-go-to-conf
+	  Fixat en bug som gjorde att man inte kunde g} till ett m|te utan
+	  ol{sta samt att man inte kunde g} till f|rsta m|tet i listan.
+
+	* Distribuerat klient version 0.30  21:10
+
+Wed Mar 20 20:14:49 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: Fixat en bug i lyskom-review-marked-texts som
+	  gjorde att man inte kunde avmarkera en text och sedan }terse den
+	  som markerad utan att det h{ngde sig.
+
+Wed Mar 20 03:21:15 1991  Linus Tolke  (linus at lave)
+
+	* commands2.el: lyskom-send-message-2 anv{nder nu
+	  lyskom-insert-before-prompt ist{llet.
+
+	* lyskom-rest.el: Lagt in Tommys kom-page-next-command
+
+	* Sl{ppt alpha varianten av 0.30   03:15
+
+Wed Mar 20 02:53:56 1991  Thomas Bellman  (bellman at laila)
+
+	* commands1.el (kom-quit): Tar nu prefix-argument.  Om man ger
+	  prefix-argument, fr}gar den inte om man verkligen vill sluta.
+
+Wed Mar 20 00:21:32 1991  Linus Tolke  (linus at nanny)
+
+	* Makefile: Nu kan vi ge ut alpha och beta release (bara p} lll
+	  och nanny.)
+
+	* edit-text.el: Nu s{tts lyskom-current-text till den senast
+	  inlagda texten varje g}ng en text l{ggs in.
+
+        * view-text.el (lyskom-read.el): lyskom-print-text tar nu ett
+	  text-no ocks} som argument och det s{tts som current text om
+	  texten man f|rs|ker l{sa inte finns.
+
+	* review.el: Nya funktioner kom-review-comments och
+	  lyskom-review-comments i princip kopior av
+	  {,lys}kom-view-commented-text. Bundna till }ak.
+	  kom-review-tree bunden till }ar.
+	  Lagt in i docen.
+
+	* commands1.el:  lyskom-comment-recipients  Nu kommer den inte att
+	  dubblera m|ten n{r man kommenterar om ett inl{gg skickas b}de
+	  till ett m|te och dess superm|te.
+
+Tue Mar 19 21:26:57 1991  Linus Tolke  (linus at nanny)
+
+	* commands1.el: lyskom-review-marked-texts skapar nu en lista med
+	  prioritet 256 (den f}r l{sas innan man l{ser ut m|tet.
+
+	* lyskom-rest.el: I lyskom-store-server-info Nu klaras serverns
+	  versionnummer 0.26 liksom 0.26.1 och 0.26.10 gr{nsen g}r vid
+	  100.
+
+Tue Mar 19 04:09:37 1991  Inge Wallin  (inge at laila)
+
+	* Brutit ur cache-rutinerna. Ny fil: cache.el
+
+	* Dokumenterat kom-do-when-starting.
+
+	* Dokumenterat det nya markeringss{ttet i elisp-client.doc.
+
+	* lyskom-rest.el: bundit "}m" till "]terse markerade" och "}am"
+	  till "]terse alla markerade". [ndrat default f|r
+	  kom-do-when-done till ("{am" "t") i st{llet f|r ("{m" "t").
+
+	* commands1.el: ]terse markerade uppdelad i kom-review-marked-texts
+	  och kom-review-all-marked-texts. 
+
+	* commands1.el: lyskom-mark-text: Nu kan man markera med ett tal
+	  mellan 1 och 255.  Anv{nder lyskom-read-number och
+	  lyskom-read-num-range.
+
+Mon Mar 18 22:49:04 1991  Inge Wallin  (inge at laila)
+
+	* Nu kastar kom-view-next-new-text bort alla kommentar-entryn. 
+
+Mon Mar 18 13:35:08 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el: lyskom-do-go-to-conf Nu kan man {ven g} till en
+	  conf som har nya texter. Texter som inte finns redovisade i
+	  conf-statusen. 
+
+	* async.el: Nu skall den byta prompt oavsett vad prompten {r n{r
+	  det kommer en ny text. Detta kommer att underl{tta n{r vi skall
+	  l{gga in s} att brev bryter igenom m|tena.
+
+	* commands1.el: I lyskom-comment-recipients Nu kollar den. Om man
+	  skickar ett inl{gg bara till m|ten man inte {r medlem i s}
+	  kommer man sj{lv att stoppas in som mottagare.
+
+	* commands1.el: Buggfix i kom-who-is-on. Nu anropas inte l{ngre
+	  lyskom-halt, lyskom-resume utan lyskom-who-is-on annropar
+	  lyskom-end-of-command direkt.
+
+	* lyskom-rest.el, vars.el: lyskom-print-prompt Nu skall
+	  kom-do-when-starting fungera. Syntax som kom-do-when-done.
+
+	* lyskom-rest.el (commands2.el): lyskom-prefetch tar nu {ven hand
+	  om marks.
+
+	* edit-text.el: lyskom-create-text-handler anv{nder nu
+	  lyskom-print-before-prompt ist{llet f|r en extra
+	  lyskom-end-of-command. 
+
+	* lyskom-rest.el: lyskom-print-prompt testar inte l{ngre om vi
+	  v{ntar innan den ger den nya kom-mercial till lyskom-tell-server.
+
+	* async.el, vars.el: lyskom-new-hook anropas nu med text-stat
+!	  s{kert bundet till current-text. Dessutom {r default p}
+!	  lyskom-new-text-hook numera nil. [ndringen av prompten kan
+	  allts} inte l{ngre st{ngas av.
+
+Mon Mar 18 00:20:44 1991  Inge Wallin  (inge at laila)
+
+	* Underst|d f|r ny funktion i servern: "skicka meddelande" som kan
+	  skicka antingen till alla eller till bara en person. Tar
+	  dessutom hand om det asynkrona meddelandet som kommer, nr
+	  12. Dessutom dokumenterat detta i doken.
+
+Sun Mar 17 15:07:16 1991  Inge Wallin  (inge at laila)
+
+	* services.el: initiate-logout skriven. quit-kommandot anropar nu
+	  den. 
+
+	* quit-kommandot flyttat till S och allt {r nu p} svenska.
+	  Dokumenterat detta i anv{ndarhandledningen.
+
+	* lyskom-rest.el: j-or-n-p samt ja-or-nej-p skapade. Samtliga
+	  y-or-n-p och yes-or-no-p {ndrade.
+
+	* Ny funktion: lyskom-read-number som har default. Klarar
+	  (interactive P)-argument. lyskom-read-num-range n}got f|renklad. 
+
+	* Bytt namn p} lyskom-check-to-do till
+	  lyskom-prefetch-and-print-prompt. Detta {r en inledning till det
+	  nya prefetchschema som jag skissar p}.
+
+Sat Mar 16 20:19:19 1991  Inge Wallin  (inge at laila)
+
+	* Dokumenterat allt som har med KOMSERVER, KOMNAME och KOMPASSWORD
+	  att g|ra.
+
+	* Lagt till lyskom-login-hook p} Bellmans beg{ran. Den k|rs n{r en
+	  person precis har loggat in i lyskom.
+
+Fri Mar 15 03:56:39 1991  Inge Wallin  (inge at laila)
+
+	* lyskom-rest.el: Funktionen lyskom tar nu {ven parametrarna
+	  username och password.
+
+	* Nu kan den modige anv{nda environmentvariabeln KOMPASSWORD.
+	  Varje g}ng man startar upp en ny lyskombuffert med "M-X lyskom"
+	  s} anv{nds l|senordet som default en g}ng.
+
+	* review.el: kom-review-clear: Nu kollar den f|rst om
+	  lyskom-reading-list {r tom innan den f|rs|ker utnyttja f|rsta
+	  elementet i den.  Allts} h{nger sig inte "}h" l{ngre om man inte
+	  {r i n}got m|te f|r tillf{llet.
+
+	* Tagit bort allt som hade med variabeln lyskom-unparsed att g|ra. 
+
+Thu Mar 14 17:06:22 1991  Inge Wallin  (inge at laila)
+
+	* macros.el: Nya makron ++ och --.
+
+	* Fixat lite i dokumentationen om kom-do-when-done.
+
+Thu Mar 14 01:00:49 1991  Linus Tolke  (linus at laila)
+
+	* edit-text.el:lyskom-edit-mode edit-bufferten har nu
+	  auto-save-mode satt.
+
+	* async.el:lyskom-add-new-text. Nu k|r vi lyskom-run p}
+	  lyskom-check-to-do s} att texten "s{kert" ligger i listorna n{r
+	  vi forts{tter.
+
+	* lyskom-rest.el: lyskom-check-to-do klarar nu lyskom-is-waiting.
+	  lyskom-start-of-command likas}.
+	  commands2.el: lyskom-busy-wait tillagd v{ntar tills det kommer
+	  ett inl{gg med h|gre prioritet.
+	  vars.el: lyskom-is-waiting.
+
+Wed Mar 13 15:00:38 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el:kom-view-next-text f|r att f} n}gon prioritet
+	  m}ste (read-info->priority (read-list->first lyskom-reading-list))
+	  anropas f|re lyskom-is-read.
+
+	* lyskom-rest.el: Fixat s} att man nu kan b|rja med en ny person
+	  ocks}. 
+
+	* vars.el, lyskom-rest.el: [ndrat defaultv{rdet p}
+	  lyskom-is-parsing till t. Det skall inte kunna h}nda saker medan
+	  man g|r lyskom-clear-vars.
+	  S{tts nu nil av lyskom-connect-filter f|rsta g}ngen.
+
+	* clienttypes.el: read-info har nu en ordningspost som talar om
+	  ifall man l{ser fram}t eller bak}t.
+	  Jag har skapat read-info med mktype s} ordningen {r inte riktigt
+	  densamma.
+	  commands1.el: lagt in s} att markeras l{ses fram}t.
+	  review.el: lyskom-review-by-to motsvarande {ndring.
+	  kom-review-backward klarar nu det nya formatet.
+
+	* lyskom-rest.el:lyskom-put-back-on-to-do-list stoppar nu {ven
+	  tillbaka }terse markerade-listor.
+	  lyskom-print-prompt och kom-go-to-next-conf beh|vde ocks} lite
+	  {ndringar.
+
+	* [ndrat dokumentation om kom-do-when-done s} att det
+	  inte {r lispfunktioner utan keyboard macros i den.
+	  Kolla g{rna detta Inge.
+
+	* commands1.el:lyskom-write-comment-soon felstavning %d\n. skall
+	  vara %d.\n givetvis.
+
+Tue Mar 12 14:35:48 1991  Inge Wallin  (inge at laila)
+
+	* vars.el: [ndrat defaultv{rdet f|r kom-do-when-done till
+	  ("}m" "t").
+
+	* Lagt tillbaka gamla lista nyheter under "lN". Funktionen heter
+	  nu kom-list-news-old och ligger i commands2.el
+
+	* Flyttat kom-list-news med underfunktioner till commands2.el. 
+
+	* commands1.el: kom-jump: Fixat en bugg som Linus antagligen
+	  introducerat i f|rrg}r. Felaktigt matchande parenteser.
+
+	* lyskom-rest.el: Bytt namn p} kom-prefetch-all-confs till
+	  kom-list-news. [ven flyttat p} lyskom-prefetch-all-confs till
+	  lyskom-prefetch-conf. En extra parameter: continuation som
+	  anropas n{r alla m|ten har h{mtats.
+
+	* commands1.el: kom-review-marked-texts: Nu l{ser man sina
+	  markerade med de senast markerade f|rst.
+
+Sun Mar 10 11:42:10 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el,review.el,view-text.el: Fixat s} att
+	  lyskom-current-text {r ett text-no och inte en text-stat l{ngre.
+	  
+	  [ndringar commands1.el:kom-delete-text,kom-view-commented-text,
+	  kom-write-comment, kom-write-private-answer,lyskom-mark-text,
+	  kom-jump, lyskom-add-sub-recipient.
+	  Ny funktion commands1.el: lyskom-view-commented-text
+	  [ndringar review.el: kom-review-tree,kom-find-root
+	  [ndringar view-text.el: lyskom-print-text
+
+	  Vid {ndringarna i kom-write-comment, kom-write-private-answer,
+	  kom-review-tree och kom-find-root passade jag p} att l{gga in s}
+	  att den ber{knar textnumret i interactive-niv}n. Vi skall str{va
+	  dit}t. 
+	  Kanske att lyskom-write-comment och lyskom-write-private-answer
+	  inte beh|vs l{ngre. Kolla noga!
+
+	* commands1.el:kom-view-commented-text Nu {r docstr{ngen
+	  uppdaterad till samma niv} som sj{lva funktionen var redan 0.27.
+
+	* edit-text.el:lyskom-edit-quit st{ller nu tillbaka
+	  lyskom-is-writing ocks}.
+
+Sat Mar  9 01:41:44 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: Kommandot Radera text har nu samma slags default
+	  som Markera, dvs senast l{sta.
+
+Fri Mar  8 13:40:07 1991  Linus Tolke  (linus at lave)
+
+	* lyskom-rest.el:lyskom-connect-filter. Felmeddelanden kommer {ven
+	  i bufferten.
+
+	* Makefile: Nu anv{nder vi nya byte-compilatorn och macros.el
+	  kommer med i tags-filen.
+
+	* review.el,lyskom-rest.el: lyskom-read-list-rotate finns inte.
+	  Bytt mot read-list-rotate.
+
+	* lyskom-rest.el:[ndring i lyskom-print-prompt. Ett LysKOMkommando
+	  som skrivs in som keyboard macro f}r nu r{tt prompt.
+
+	* commands1.el: kom-quit g|r nu scroll s} att man s{kert f}r se
+	  texten Lyskom-sessionen {r avslutad.
+
+	* parse.el:lyskom-parse-unparse sparar nu undan match-data.
+
+Thu Mar  7 14:42:25 1991  Inge Wallin  (inge at laila)
+
+	* commands1.el: Nu tar kommandot "G} till m|te" bort entryt f|r
+	  m|tet ur lyskom-to-do-list n{r det har lagt in det i
+	  lyskom-reading-list. Allts} f}r man inte l{ngre tv} entries f|r
+	  m|tet n{r man g|r Lista nyheter.
+
+Thu Mar  7 02:42:53 1991  Linus Tolke  (linus at laila)
+
+	* elisp-client.0.30.doc: documenterat kom-do-when-done och nya
+	  kom-quit.
+
+	* vars.el,lyskom-rest.el:Nu finns variabeln kom-do-when-done som
+	  man kan s{tta till en lista av funktioner som skall utf|ras i
+	  tur och ordning ist{llet f|r Se tiden - sista elementet i listan
+	  {r det som kommer att vara kvar hela sessionen.
+
+	* commands1.el:Nu raderas inte bufferten n{r man g|r quit ur
+	  lyskom. Men alla variabler raderas (s} att emacsen kan
+	  }teranv{nda de cons-cellerna.
+
+Wed Mar  6 18:40:35 1991  Linus Tolke  (linus at lage)
+
+	* async.el: [ndrat texten som skrivs ut n{r lyskom {r fullt till
+	  ceders tegelstensf|rslag.
+
+	* lyskom-rest.el:Lyskom-filter och lyskom-connect-filter anv{nder
+	  inte l{ngre format f|r att skriva debug-texterna. Kan {ven
+	  debugga meddelanden som inneh}ller NULL.
+
+	* async.el: Nu f}r man se alla allm{nna meddelanden. [ven sina
+	  egna och de som {r skrivna av person nummer 0.
+
+Wed Mar  6 03:08:14 1991  Linus Tolke  (linus at lave)
+
+        * Distribuerat klient version 0.29.	03:00
+
+Mon Mar  4 13:21:12 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el: kom-save-text (p} beg{ran av jsk) sitter nu p}
+	  st. Dokumenterat.
+
+	* vars.el: [ndrat default f|r kom-review-priority till 256.
+
+	* async.el: Tar hand om det nya asyncrona meddelandet som s{ger
+	  att n}gon f|rs|ker logga in. (Anv{nder
+	  lyskom-show-broadcast-message med f|rfattare ok{nd.
+	  Otestat eftersom servern inte supportar det {n.
+
+	* parse.el: Jag skulle tvunget p} och pilla lite. lyskom-parse-num
+	  och signal tar en lista. Signal {r inte noeval. (list "str{ng...
+	  fick ers{tta ("str{ng...
+
+	* async.el: Tog bort raderna. Jag tror jag var lite optimistisk
+	  n{r jag lade dit dem.
+
+Mon Mar  4 00:22:54 1991  Inge Wallin  (inge at laila)
+
+	* lyskom-rest.el: kom-go-to-next-conf: Fixat en bug som gjorde
+	  att to-do-listan blev helt konstig. Detta berodde p} att
+	  lyskom-reading-list aldrig t|mdes n{r man gick till n{sta m|te.
+
+Mon Mar  4 00:01:15 1991  Per Cederqvist  (ceder at lave)
+
+	* view-text.el: lyskom-print-text: Nu markeras texter som l{sta
+	  enbart om argumentet mark-as-read inte {r nil.
+
+Sun Mar  3 20:34:51 1991  Per Cederqvist  (ceder at lave)
+
+	* async.el: Kommenterat bort accept-process-output i
+	  lyskom-async-new-text. Anropet fick klienten att h{nga sig och
+	  v{nta p} input. Jag kan inte se n}gon anledning att ha anropet
+	  d{r det var. Linus: ta bort de tre raderna s} snart som m|jligt.
+Linus: Klart!
+
+	* R{ttade en bug i lyskom-parse-num. signal tar en lista som andra
+	  argument...
+
+Sun Mar  3 04:26:42 1991  Inge Wallin  (inge at laila)
+
+	* Tog bort gamla lista nyheter.
+
+	* lyskom-rest.el: Nytt kommando: S{nda allm{nt meddelande.
+	  services.el: initiate-broadcast
+	  commands2.el: kom-send-broadcast()
+
+	* Ny fil: macros.el som laddas in varje g}ng en fil
+	  bytekompileras. vars.el {r nu en vanlig elispfile som kompileras
+	  f|r sig.
+
+	* Asynkrona meddelandet nr 10 (broadcast) tas nu emot och
+	  meddelandet visas upp i bufferten samtidigt som terminalen piper
+	  till.
+
+Sat Mar  2 09:58:58 1991  Inge Wallin  (inge at laila)
+
+	* diverse filer: Ny typ f|r READ-INFO: REVIEW-MARK. Nu f}r man
+	  prompten "]terse n{sta markerade" om man g}r ]terse alla
+	  markerade.
+
+Fri Mar  1 19:23:26 1991  Linus Tolke  (linus at laila)
+
+	* lyskom-rest.el: Om ens KOMNAME matchar flera alternativ f}r man
+	  nu forts{tta och ange nytt namn.
+
+	* parse.el: fixat s} att alla cache-funtioner nu arbetar i r{tt
+	  buffert. Nu funkar allts} cachen igen.
+
+	* commands1.el: Nu sk|ts flaggan originalinl{gg snyggt. Den byter
+	  m|tet som inl{gget {r adresserat till.
+
+Fri Mar  1 01:17:24 1991  Linus Tolke  (linus at laila)
+
+	* parse.el: Nu g|rs parsningen av nummer med read ist{llet f|r att
+	  kolla om ett tecken {r en siffra och addera. Det blev bara n{tt
+	  och j{mnt m{rkbara minskningar p} antalet garbningar vid lm och lp.
+
+Thu Feb 28 19:57:18 1991  Linus Tolke  (linus at laila)
+
+	* parse.el,async.el: Lagt om s} att all parsning sker i
+	  unparsed-bufferten och funktionerna:
+	  lyskom-parse-success, lyskom-parse-error och lyskom-parse-async
+	  tar en buffert som argument nummer 2. Den som sj{lva lyskom k|rs i.
+
+	* commands1.el:Ledtexten till {ndra namn {ndrad.
+
+	* lyskom-parse-incomplete definitionerna flyttade till parse.el
+
+	* vars.el,lyskom-rest.el:lyskom-parse-pos finns inte l{ngre.
+	  (Den {r nu lokal i lyskom-parse-unparsed och underfunktioner.)
+
+	* parse.el,lyskom-parse.el:sedan lyskom-parse-unparsed inte
+	  anropar sig sj{lv recursivt l{ngre s} har jag flyttat
+	  nollst{llningen av lyskom-parse-pos till lyskom-parse-unparsed.
+
+	* parse.el: Ny funktion lyskom-init-parse som skapar buffert mm.
+	  [ndringar i lyskom-rest.el
+
+	* lyskom-rest.el:Lokala varablerna lyskom-unparsed,
+	  lyskom-unparsed-marker och lyskom-unparsed-buffer.
+
+	* lyskom-rest.el,parse.el:Flyttat funktionen lyskom-parse-unparsed
+	  till parse.el (sist)
+
+Thu Feb 28 02:30:14 1991  Inge Wallin  (inge at laila)
+
+	* commands2.el: Status f|r m|te visar nu eventuell lapp p} d|rren.
+
+	* commands2.el: Lagt till s} att man f}r se en eventuell lapp p}
+	  d|rren n{r man g|r status p} en person. Tagit bort visning av
+	  presentationen. 
+
+	* clienttypes.el: Gjort klart datatypen to-read-list och bytt namn
+	  p} den till read-list. Datatypen to-read-info bytte namn till
+	  read-info eftersom det blev s} erbarmligt l}nga namn. 
+
+	  Diverse filer: de abstrakta funktionerna f|r read-info anv{nds
+	  nu. 
+
+Wed Feb 27 21:48:29 1991  Inge Wallin  (inge at laila)
+
+	* Distribuerat version 0.28 klockan 23:13.
+
+	* commands1.el: Fixat buggen i lyskom-create-conf-handler som
+	  gjorde att man fick en massa fel n{r man f|rs|kte skapa ett m|te
+	  med ett namn som redan fanns. Nu ger den ett snyggt
+	  felmeddelande i st{llet.
+
+	* lyskom-rest.el: Flyttat kom-extended-command fr}n 'E'-tangenten
+	  till 'a'. Dessutom dokumenterat det i dok-filen.
+
+Wed Feb 27 02:19:29 1991  Inge Wallin  (inge at lage)
+
+	* commands1.el: Nu kan man addera medlemmar till brevl}dor ocks}.
+
+	* commands1.el: Fixat buggen som g|r att det inte g}r att
+	  kommentera ett inl{gg man inte f}r l{sa.
+
+	* clienttypes.el: Fortsatt att skapa datatypen to-read-list och
+	  n|dv{ndiga funktioner till den datatypen.
+
+	* lyskom-rest.el: Fixat en bugg som gjorde att kommandot 'm' (bli
+	  medlem) inte fungerade. 
+
+Tue Feb 26 06:12:44 1991  Inge Wallin  (inge at laila)
+
+	* clienttypes.el: B|rjat lite grann p} funktioner till typen
+	  to-read-list. 
+
+	* lyskom-rest.el:Fixat s} att inloggning med environment-
+	  variablerna KOMNAME och KOMSERVER satta }terigen funkar.
+
+Tue Feb 26 05:21:57 1991  Linus Tolke  (linus at nanny)
+
+	* Provat att l{gga alla meddelanden i buffert ist{llet f|r i
+	  variabeln lyskom-unparsed. Detta borde g} mycket snabbare
+	  eftersom man inte beh|ver g|ra s} m}nga concat. (Det gav
+	  h{lften (!) s} m}nga garbningar p} j{tteinl{gget 19728!)
+
+Mon Feb 25 15:45:39 1991  Linus Tolke  (linus at lave)
+
+	* Distribuerat elisp-klienten version 0.27 (igen) 23:00
+
+	* commands1.el: Fixat s} att man kan g} till ett m|te man inte {r
+	  medlem i.
+
+	* Distribuerat elisp-klienten version 0.27	  22:00
+
+	* elisp-client-0.27.doc: Till{gg Addera medlem.
+	  [ndring: Nu defaultv{rde p} m|tet vid ]terse senaste.
+
+	* commands1.el: Buggr{ttningar f|r addera medlem. Den skall anropa
+	  lyskom-end-of-command n{r den {r klar.
+
+	* internal.el,lyskom-rest.el,vars.el:
+	  lyskom-debug-replies-to-buffer heter numera
+	  lyskom-debug-communications-to-buffer.
+
+	* internal.el,lyskom-rest.el:Bytat end-of-buffer till goto-char.
+	  Vi skall inte beh|va f} n}gon Mark set meddelande l{ngre n{r man
+	  k|r debug.
+
+	* internal.el: Lagt in s{ att lyskom-debug-replies-to-buffer
+	  }stadkommer att {ven det som s{nds skickas till debug-bufferten.
+
+	* async.el:[ndring i lyskom-parse-async som g|r att man inte
+	  f|rs|ker h{mta conf-statusar n{r man sj{lv har loggat ut.
+	  Kanske {r det detta som g|r att man f}r symbol-function nil...
+
+	* lyskom-rest.el:kollen om servern vaknat efter ett sparande
+	  }terigen flyttat till lyskom-filter.
+	  Skrivet om lyskom-parse-unparsed s} att den jobbar som while
+	  ist{llet f|r ett rekursivt anrop.
+	  Dessutom slagit p} s} att man kan g|ra quit fr}n koms
+	  filterfunktion ocks}.
+
+        * completing-read.el:L{get completion-auto-help nil och
+	  angivet tomma str{ngen uppsnabbat s} tillvida att den inte
+	  h{mtar n}gra conf-statusar.
+
+	* lyskom-rest.el: B{ttre hantering av
+	  lyskom-debug-replies-to-buffer. Om det {r nil s} skapas inte
+	  bufferten och s} fort man sl}r p} den skapas bufferten. (Dvs n{r
+	  n{sta meddelande filtreras.)
+
+	* lyskom-rest.el,async.el: Fixat s} att vi verkligen uppdaterar
+	  mode-line ocks} n{r servern sparar.
+
+	* lyskom-rest.el:lyskom-parse-unparsed bugfix. mode-line-process
+	  var inte korrect hanterat. 
+
+	* review.el: Helt pl|tsligt tar lyskom-follow-comments fem (5)
+	  argument ist{llet f|r fyra (4). Detta gjorde att inte
+	  kom-review-tree fungerade l{ngre (Inge sk{rpning. G|r grep n{r
+	  du gjort s}dana {ndringar. Och skriv i changelog att du gjort
+	  dem.)
+
+	* lyskom-rest.el: Fixat s} att det g}r att logga in igen.
+	  [ndringar i funktioner: lyskom-start-anew-login heter nu
+	  lyskom-start-anew-login-1-5 och tar en conf-stat.
+	  Den gamla (del av select) lyskom-start-anew-login anv{nds nu f|r
+	  att behandla det som kommer fr}n lyskom-completing-read. Det kan
+	  vara b}det numret p} en existerande person och namnet p} en {nnu
+	  inte existerande person.
+
+Mon Feb 25 03:05:53 1991  Inge Wallin  (inge at lave)
+
+	* Fixat s} att det fullst{ndiga namnet stoppas in i bufferten n{r
+	  man loggar in (tror jag, se nedan).
+
+	* Kommandot Addera medlem till m|te {r nu f{rdigskrivet. Tyv{rr
+	  kan jag inte testa det eftersom linus "bugr{ttning" nr 5 nedan
+	  har gjort att jag inte kan logga in med testversion 0.27.
+
+Sun Feb 24 19:01:01 1991  Linus Tolke  (linus at laila)
+
+	* commands1.el: Jag hittade buggen som gjorde att man inte fick
+	  tillbaka n}gon promt efter att man gjort uttr{da.
+
+	* async.el: Nu g|rs sj{lva {ndringen av prompten efter det att vi
+	  redan har stoppat in texten i en del listor. Nu skall det kanske
+	  vara l{ttare att f} korrekt prompt.
+
+	* review.el: Nu {r lyskom-current-conf default f|r vilket m|te
+	  man }terser till.
+
+	* commands1.el: Fixat s} att vi scrollar efter det att vi skrivit
+	  ut texten: Du {r inte medlem i m|te...
+
+	* lyskom-rest.el: Fixat s} att messagearean t|ms n{r servern
+	  visar liv efter att den sparat. Dessutom flyttade jag kollen
+	  fr{n lyskom-filter till lyskom-parse-unparsed
+
+Fri Feb 22 15:52:57 1991  Inge Wallin  (inge at laila)
+
+	* Nu fungerar visning av lapp p} d|rren n{r man skickar brev till
+	  en person.
+
+	* Delat upp filen datatypes.el i delarna komtypes.el och
+	  clienttypes.el. Tanken {r att reading-listorna skall f} ett
+	  antal abstrakta funktioner och inga funktioner inne i lyskom
+	  skall komma }t dem direkt.
+
+	* Flyttat lyskom-async-new-text + underfunktioner till async.el.
+
+	* Fixat buggen som g|r att man aldrig f}r en prompt vid
+	  inloggningen f|rr{n man trycker 'r'.
+
+Thu Feb 21 14:53:12 1991  Inge Wallin  (inge at laila)
+
+	* Vilka-kommandot r{knar och skriver ut antalet anv{ndare.
+
+	* lyskom-view-text tar nu en explicit k|.
+
+	* N{r man tittar p} en text som {r markerad f}r man nu f|ljande: 
+	          Texten markerad av dig.
+	  eller:  Texten markerad av dig och 7 andra.
+	  eller:  Texten markerad av 7 personer.
+	  Detta ledde till ganska stora {ndringar. Nu finns en cache som
+	  h}ller reda p} vilka markerade man har. Denna initieras n{r man
+	  startar upp som en person. [ven {ndringar i Markera och
+	  Avmarkera s} att de l{gger till resp. tar bort ifr}n cachen.
+	  Tyv{rr s} finns det fortfarande n}gon bug. N{r man loggar in s}
+	  tar det j{ttel}ng tid innan man f}r prompten om den kommer alls.
+	  N{r man g|r recover s} funkar det dock. Ibland s{ h{nger sig
+	  alltihop. 
+
+Thu Feb 21 01:01:08 1991  Linus Tolke  (linus at laila)
+
+	* commands.el: Nu fungerar }terse det kommenterade s} att det
+	  bygger en lista av de texter som ocks} inl{gget {r kommentar
+	  till. Nu fungerar det allts} {ven n{r ett inl{gg {r
+	  kommentar till flera inl{gg och inte bara ett.
+	  [ndringar i: kom-view-commented-text, och
+	  lyskom-misc-info-from-list heter numera
+	  lyskom-misc-infos-from-list.
+
+Wed Feb 20 18:43:21 1991  Inge Wallin  (inge at laila)
+
+	* Ny fil: status-commands.el. Inneh}ll: lyskom-membership,
+	  lyskom-status-pers och lyskom-status-conf + underfunktioner.
+
+Wed Feb 19 23:32:36 1991  Inge Wallin  (inge at laila)
+
+	* elisp-client-0.27.doc: Flera till{gg.
+	  - mailadressen bug-lyskom@lysator.liu.se
+	  - C-c } k n{r man kommenterar ett inl{gg.
+	  - kommandot Subtrahera medlem.
+	  - lapp p} d|rren visas vid brevskickning.
+
+Mon Feb 18 19:58:23 1991  Inge Wallin  (inge at laila)
+
+	* commands.el: Nytt kommando, Subtrahera medlem.
+
+Mon Feb 18 15:04:09 1991  Linus Tolke  (linus at lage)
+
+	* vars.el: En bug i lyskom-traverse gjorde att vi inte fick
+	  fotnoterna f|rst (sic!)
+	  Den band n{mligen om text-stat under det att den k|rde.
+	  Fixat!
+
+Mon Feb 18 05:18:29 1991  Inge Wallin  (inge at lave)
+
+	* lyskom-rest.el: kom-start-anew med underfunktioner anv{nder nu
+	  lyskom-completing-read. 
+
+	* Nu b|r man f} l{sa en persons lapp p} d|rren n{r man skickar
+	  brev till honom/henne.
+
+Mon Feb 18 04:18:50 1991  Linus Tolke  (linus at lage)
+
+	* lyskom-rest.el: Fixade s} att fotnoter alltid f}r l{sas f|re
+	  funktioner. 
+	  Ny funktion: lyskom-follow-footnotes.
+
+Mon Feb 18 03:31:42 1991  Inge Wallin  (inge at lave)
+
+	* lyskom-rest.el: Plockade bort allt som hade med lyskom-select
+	  att g|ra. I forts{ttningen skall lyskom-completing-read anv{ndas
+	  till s}dant.
+
+	* commands.el: Funktionen [ndra namn (kom-change-name + 
+	  underfunktioner) anv{nder nu lyskom-completing-read i st{llet
+	  f|r lyskom-select-conf.
+
+	* commands.el: Funktionen Bli medlem (kom-member +
+	  underfunktioner) anv{nder nu lyskom-completing-read i st{llet
+	  f|r lyskom-select-conf.
+
+	* commands.el: Funktionen Uttr{d (kom-sub-member +
+	  underfunktioner) anv{nder nu lyskom-completing-read i st{llet
+	  f|r lyskom-select-conf.
+
+Sat Feb 16 00:41:50 1991  Inge Wallin  (inge at laila)
+
+	* lyskom-rest.el: lyskom-print-who-is-on och
+	  lyskom-print-who-info: Den session man {r i markeras med en
+	  asterisk. Detta utnyttjar det odokumenterade faktum att ens egen
+	  session kommer f|rst i vilka-listan. 
+	  Dessutom dokumenterat detta i elisp-client-0.27.doc.
+
+	* commands.el: lyskom-add-sub-recipient-2: Nu tar den bort den
+	  text-stat om p}verkas av kommandot ur text-stat-cachen.
+	  Tidigare, om man kommenterade ett inl{gg som man hade tagit bort
+	  eller lagt till en mottagare fr}n, s} kom den mottagaren {nd}
+	  med som mottagare till kommentaren.
+
+Sat Feb 16 00:01:14 1991  Linus Tolke  (linus at lave)
+
+	* Distribuerat elisp-klienten version 0.26
+
+	* elisp-client-0.26.doc: Dokumenterat Addera mottagare, Subtrahera
+	  mottagare.
+
+	* Makefile: Nu distribueras {ven dokumentationen med varje
+	  distribution.
+
+	* [ndrat versionsnummer till n{sta version 0.26
+
+Fri Feb 15 22:14:24 1991  Linus Tolke  (linus at lave)
+
+	* edit-text.el: fill-comment-block borttagen igen.
+
+	* alla filer: kollat alla anrop till signal och error. De {r _nu_
+	  troligen riktiga.
+
+	* lyskom-rest.el: I funktionen lyskom-connect-filter: bug i
+	  felhanteringen r{ttad.
+
+	* flyttat denna fil hit!
+
+Fri Feb 15 21:20:02 1991  Inge Wallin  (inge at laila)
+
+	* Nya kommandon under E: Addera mottagare och Subtrahera mottagare.
+	  commands.el: kom-add-recipient och kom-sub-recipient med
+	               underfunktioner.
+          services.el: initiate-add-recipient och initiate-sub-recipient. 
+	  lyskom-rest.el: Nya entries i tabellen |ver kommandon.
+
+	* R{ttat en bug i Uttr{da som gjorde att det inte funkade att g}
+	  ur det m|tet man stod i.
+
+Fri Feb 15 17:11:03 1991  Linus Tolke  (linus at lave)
+
+	* edit-text.el: Nu varnas det om man f|rs|ker skicka en text flera
+	  g}nger. Man f}r svara p} en kontrollfr}ga.
+
+	* edit-text.el:Fill-comment-block inlagd f|r att kunna g|ra fill
+	  p} inkluderad text.
+
+	* edit-text.el:Flyttat funktionen nedan till C-c i k och lagt till
+	  s} att man kan stoppa in andra texter ocks} men C-c i nummer
+	  eller C-c i SPC nummer eller <prefix argument> C-c i SPC f|r att
+	  l{gga in texten med det numret.
+
+	* edit-text.el:Fixat s} att man kan trycka C-c i och f} in den
+	  kommenterade texten med > f|re i bufferten.
+
+Thu Feb 14 03:41:32 1991  Inge Wallin  (inge at laila)
+
+	* Alla funktioner hittills i 0.18.8 {r nu dokumenterade.
+
+	* Alla funktioner har nu en motsvarighet under "E" och inte bara
+	  en tangentkod. 
+
+	* Nu funktion: Radera (text)
+	  services.el: Ny funktion: initiate-delete-text
+	  commands.el: Nya funktioner: kom-delete-text och
+	                               lyskom-delete-text.
+
+	* commands.el: Nu sorteras vilkalistan i sessionsnummerordning. 
+
+Wed Feb 13 20:00:17 1991  Linus Tolke  (linus at laila)
+
+	* async.el: ceders tips om att h{mta tiden n{r databasen sparar s{
+	  att den uppdaterar :saving tillbaka.
+
+	* review.el: Fixat s} att vi h{mtar nya conf-stat och pers-stat
+	  varje g}ng vi g|r }terse.
+
+	* review.el: Fixat en bug som gjorde att man alltid fick det n{st
+	  sista inl{gget ist{llet f|r det sista n{r man g|r } s.
+
+Tue Feb 12 23:12:16 1991  Inge Wallin  (inge at lage)
+
+	* vars.el: Flaggan kom-presence-messages-in-buffer har nu
+	  defaultv{rdet nil i st{llet f|r 'presence.
+
+	* Uppdaterat anv{ndarmanualen till elispklienten. Nu {r den
+	  aktuell till och med version 0.18.7 och dessutom {r alla flaggor
+	  dokumenterade. Namnet {r nu elisp-client-18.7.doc.
+
+Mon Feb 11 22:16:11 1991  Linus Tolke  (linus at laila)
+
+	* Fixat buggen s} att det nu g}r att }terse alla.
+
+Mon Feb 11 21:44:57 1991  Inge Wallin  (inge at laila)
+
+	* lyskom-rest.el: (suppress-keymap lyskom-mode-map) Det h{r
+	  inneb{r att man aldrig kommer att f} felmeddelandet "Buffer is
+	  read only" eller att man m}ste trycka <ESC> f|re numeriska
+	  argument. 
+Linus: En s}n k{nsla!
+
+Mon Feb 11 16:52:04 1991  Linus Tolke  (linus at lave)
+
+	* Fixat en bugg s} att man nu {ven kan g|ra }terse alla.
+
+	* kom-show-commented-text ligger nu p} C-c } k (allt enligt emacs
+	  default f|r egna funktioner.)
+
+	* Klienten version 0.18.7 utskickad.
+
+Fri Feb  8 00:31:46 1991  Linus Tolke  (linus at laila)
+
+	* R{ttat en bug i uttr{da som gjorde att man var kvar i samma conf
+	  om man gjorde uttr{da d{r man var. Dessutom funkar nu lista
+	  nyheter {ven om man gjort uttr{da en g}ng.
+	  (B{ttre test i lyskom-prefetch-all-confs)
+
+	* Nu har jag fixat orsaken till texten "pga tidsbrist..." n{r man
+	  g}r till ett m|te. Jag har dessutom bytat s} att den anv{nder
+	  lyskom-completing-read. (Man f}r g} till alla brevl}dor man {r
+	  medlem i och alla conferenser. Sedan |verl}ter rutinen }t
+	  servern att stoppa f|r hemliga m|ten mm)
+	  Detta f|ranledde ganska mycket {ndringar:
+	  lyskom-prefetch med flera funktioner fick nya argument.
+
+	* Hmm :=) r{ttat en bug som gjorde att man inte kunde g|ra endast.
+	  Introducerad av mig i samband med att jag b|rjade anv{nda
+	  get-conf-no-list. (lyskom-prefetch tar nu 2 argument.)
+
+	* Nu springer vi till slutet av bufferten n{r vi sl{ngt eller
+	  skickat in en text.
+
+	* (edit-text.el, datatypes.el) Fixat s} att klienten kollar p}
+	  original-biten innan den skapar headern. Men det {r en ganska
+	  ful patch. 
+	  Ny funktion: conf-stat->comm-conf
+	  [ndringar i: lyskom-edit-insert-misc
+
+	* Jag tror jag hittat buggen som skickar point i lyskom-bufferten
+	  var som helst n{r det kommer text.
+
+Thu Feb  7 01:18:55 1991  Linus Tolke  (linus at laila)
+
+	* Klienten version 0.18.6 utskickad.
+
+	* review.el: Ny funktion kom-review-backward 'B' som g|r s} att
+	  man kan v{nda p} l{sriktningen hos ett }terse-kommando.
+
+	* Hittat buggen s} att det fungerar nu (jag menar jag kunde inte
+	  hitta fler buggar.)
+
+	* F|rs|kte speeda upp review genom att l{sa korta mappar ist{llet
+	  f|r att h{mta hela mappen. Det g}r snabbare men det funkar inte
+	  {n. Kompilera ej den review.el som finns i dirret utan anv{nd
+	  den gamla review.elc. Vinst i tid!
+
+Wed Feb  6 01:53:38 1991  Linus Tolke  (linus at laila)
+
+	* Fixat s} att lyskom-completing-read reagerar p} flaggan
+	  completion-auto-help (=> ett uppf|rande som mer liknar emacs
+	  uppf|rande i |vrigt.)
+
+	* fixat och kollat detta.
+	* P} diverse st{llen i klienten s} {r numren till m|tet "lappar p}
+	  d|rren", "Presentation av nya m|ten" och "Presentation av nya
+	  personer" h}rdkodade. lyskom-server-info borde anv{ndas i
+	  st{llet. 
+
+	* [ndrat i make-filen s} att man kan kompilera utan att lyskom.el
+	  finns i dirret.
+
+	* Tv} nya filer parse.el och internal.el.
+
+	* lyskom-rest.el: Nu g|r lyskom-maybe-follow-comments {ven
+	  prefetch p} f|rfattaren till ett inl{gg som skall med i listan
+	  av kommentarer. Vinst i tid!
+
+	* Fixat s} att man nu h{mtar bara de conf-statusar f|r de m|ten
+	  man har ol{sta i n{r man loggar in och vid alla andra tillf{llen
+	  man anropar lyskom-prefetch.
+	  (Det blev inte s} mycket snabbare och det tror jag beror p} att
+	  det som tar tid i uppkopplingen {r att h{mta membershipen.)
+	  Vinst i tid!
+
+Tue Feb  5 14:40:14 1991  Linus Tolke  (linus at laila)
+
+	* Nu skall en texten motd-of-lyskom skrivas ut innan man f}r logga
+	  in.
+
+	* (lyskom-rest.el) lyskom-start-anew-create-handler
+	  anv{nder nu lyskom-server-info f|r att avg|ra vilket m|te
+	  presentationen skall skickas till.
+	  (commands.el) sammalunda f|r lyskom-create-conf-handler
+
+	* Plockat bort funktionen som inte anv{nds. (review.el)
+;;; +++This function should perhaps be moved somewhere???    
+
+(defun lyskom-conf-no (name is-conf)
+  "Returns the number of person or conference with name NAME.
+If IS-CONF is non-nil it is a conf. If nil it is a person.
+BUGS: Just looks up the already fetched ones.
+Maybe not used anymore +++"
+  (let ((list lyskom-conf-cache)
+	(return nil))
+    (while (and (not return)
+		list)
+      (if (and (string= name (conf-stat->name (cdr (car list))))
+	       (let ((person (conf-type->letterbox (conf-stat->conf-type
+						    (cdr (car list))))))
+		  (or (and is-conf (not person))
+		      (and (not is-conf) person))))
+	  (setq return (conf-stat->conf-no (cdr (car list)))))
+      (setq list (cdr list)))
+	return))
+
+
+	* (commands.el) Anv{nder lyskom-server-info n{r vi {ndrar
+	  presentation och lapp p} d|rr.
+
+Tue Feb  5 01:16:06 1991  Inge Wallin  (inge at lave)
+
+	* datatypes.el: Ny datatyp: server-info
+	  vars.el: ny variabel: lyskom-server-info
+	  lyskom-rest.el: Man f}r upp serverns versionsnummer vid
+	                  inloggning + info om servern sparas i
+			  lyskom-server-info. 
+
+Mon Feb  4 21:37:42 1991  Inge Wallin  (inge at lave)
+
+	* Skapade kommandona "S{tt lapp p} d|rren" och "Ta bort lapp p}
+	  d|rren" tillsammans med Linus.
+
+	* Info om ol{sta n{r man g}r in i ett nytt m|te kommer nu direkt
+	  efter m|tesnamnet och inte p} en egen rad.
+
+	* Markerade inl{gg f}r texten "Markerad av x personer" strax efter
+	  informationen om kommentarer.
+
+Mon Feb  4 21:03:37 1991  Linus Tolke  (linus at lage)
+
+	* [ven texten Text nr {r skapad stoppas nu om man h}ller p} i
+	  minibufferten. 
+
+	* Nu uppdateras sk{rmen efter databasen synkas s} att man f}r
+	  meddelandet Databasen synkas exakt samtidigt som (LysKOM:
+	  saving) visas.
+
+	* Nu anv{nder kom-get-abuse och kom-get-appreciation
+	  lyskom-start-of-command och lyskom-end-of-command
+
+Mon Feb  4 14:53:14 1991  Inge Wallin  (inge at lave)
+
+	* Skapat en ny fil: review.el och lagt in allt som har med ]terse
+	  att g|ra (utom ]terse markerade) d{r. [ven uppdaterat Makefile.
+	  Dessutom {r filen to-read.el borttagen eftersom den inte hade
+	  n}got inneh}ll. Det som ev. skulle flyttats dit finns nu i
+	  review.el.
+
+Mon Feb  4 00:34:27 1991  Linus Tolke  (linus at laila)
+
+	* Distribuerat 0.18.5
+
+	* Om man har flaggan kom-print-number-of-unread-on-entrance t
+	  (default) s} skrivs antalet ol}sta artiklar m|tet ut n}r man g}r
+	  dit. 
+
+Sun Feb  3 16:51:29 1991  Linus Tolke  (linus at laila)
+
+	* Nu kan man f} presence-messages i lyskom-bufferten. Dessutom
+	  har jag fixat s} att man inte f}r n}gra asynkrona meddelanden
+	  n{r man h}ller p} i minibufferten. 
+
+	  Nya funktioner:lyskom-insert-before-prompt, 
+	  lyskom-is-in-minibuffer
+	  [ndringar i funktionerna: async.el (alla funktioner
+	  lyskom-print-prompt
+
+	* Delat upp i en fil till. vars.el som inneh}ller variabler och
+	  macron. Nu skapas filen lyskom.elc av delarnas ist{llet. Det
+	  blir samma sak.
+
+Fri Feb  1 20:28:56 1991  Linus Tolke  (linus at laila)
+
+	* Ny funktion: kom-edit-show-commented ESC } k
+	  [ven lyskom-edit-show-commented.
+	  Visar den text som man skriver en kommentar till i det andra
+	  f|nstret.
+
+	* Jag har nu fixat buggen som gjorde att man fick Symbols value as
+	  a variable is void n{r man f|rs|ker g} in med en ny person.
+
+Thu Jan 31 15:48:14 1991  Inge Wallin  (inge at laila)
+
+	* Fixat s} att ']terse det kommenterade" nu ocks} klarar att f|lja
+	  fotnoter.
+
+	* Fixat en bugg i kom-start-anew som gjorde att man aldrig fick
+	  chansen att b|rja med nytt namn. Man fick alltid KOMNAME direkt
+	  om man en g}ng hade satt den.
+
+	* Uppdaterat tillsammans med ceder ceders gamla beskrivning av
+	  elispklienten, elisp-client.doc, till att st{mma med den
+	  nuvarande konfigurationen p} lysator samt att alla kommandon
+	  till och med version 0.18.3 finns beskrivna. Beskrivningen {r
+	  upplagd p} nannys ftp-area.
+
+Thu Jan 31 02:25:51 1991  Peter Eriksson  (pen at lave)
+
+	* lyskom-rest.el: (lyskom) Kollar om env-varren "KOMNAME"
+	  existerar och anv{nder det v{rdet innan lusern promptas
+	  med "Vad heter du?".
+
+Wed Jan 30 00:43:28 1991  Linus Tolke  (linus at lage)
+
+	* Nu s{tts bara window-configuration tillbaka till vad det var
+	  innan jag b|rjade kommentera om bufferten med inl{gget {r synlig
+	  p} sk{rmen (har ett window) n{r svaret kommer fr}n servern.
+
+	* kom-send-letter anv{nder nu lyskom-completing-read ist{llet f|r
+	  *select* .
+	  Bortagna funktioner: lyskom-send-letter-select,
+	  lyskom-send-letter-select-prompt-user,
+	  lyskom-send-letter-select-from-pers-nos och
+	  lyskom-send-letter-check-number
+	  Nytt namn: lyskom-do-send-letter => lyskom-send-letter
+	  [ndring i: kom-send-letter. (tar nu inget argument.)
+
+
+Tue Jan 29 20:21:41 1991  Linus Tolke  (linus at lave)
+
+	* Version 0.18.4 av klienten sl{ppt.
+
+	* [ndrat lite i mode-beskriviningen.
+
+	* Lagt till [ndra presentation i listan av kommandon som man
+	  kommer }t med extended.
+
+	* P} ett flertal st{llen stod det 
+	  (lyskom-insert-to-do
+	   (lyskom-create-to-read-info  . . 
+					(lyskom-create-text-list foo)
+	   lyskom-to-do-list)
+	   .
+	   .rader och ibland hela funktioner
+	   .
+	   )
+	  Ist{llet f|r
+	  (lyskom-insert-to-do
+	   (lyskom-create-to-read-info . .
+				       (lyskom-create-text-list foo))
+ 	   lyskom-to-do-list)
+
+Mon Jan 28 06:41:25 1991  Inge Wallin  (inge at laila)
+
+	* F|rst|rt lyskom-add-new-text. Fattar inget eftersom det inte
+	  heller funkar om jag {ndrar tillbaka till vad det var tidigare.
+	  Nu f}r man inte l{ngre "G} till n{sta m|te" om man v{ntar och
+	  det kommer ett nytt inl{gg.
+
+Sun Jan 27 23:34:49 1991  Inge Wallin  (inge at laila)
+
+	* Nytt kommando: [ndra l|senord.
+	  Nya funktioner: kom-change-password, lyskom-change-password och
+			  initiate-set-passwd.
+
+Sat Jan 26 08:56:32 1991  Thomas Bellman  (bellman at laila)
+
+	* elisp-client.doc: R{ttat ett par stavfel.
+
+	* lyskom-rest.el: lyskom-start-anew-login: Fr}gar efter l|senord,
+	  och inte efter password.
+
+Thu Jan 24 14:20:25 1991  Inge Wallin  (inge at lave)
+
+	* datatypes.el: Lagt till datatypen TEXT-LIST.
+	  *.el:		[ndrat alla (cons 'TEXT-LIST foo) till
+	                (lyskom-create-text-list foo)
+
+Wed Jan 23 02:26:05 1991  Inge Wallin  (inge at lave)
+
+	* [ndrat alla make-sparse-keymap till make-keymap. Detta g|r att
+	  man f}r meddelandet att en tangent inte {r bunden till n}gon
+	  funktion i st{llet f|r Buffer is read-only. 
+
+	* Nya kommandon: "]terse alla markerade" och "Avmarkera".
+
+Sun Jan 20 05:39:02 1991  Inge Wallin  (inge at laila)
+
+	* B|rjat dela upp lyskom.el i mindre filer samt gjort n}gra
+	  underdirectoryn under 2kom/elisp-client. Dessutom {ndrat
+	  Makefile s} att den underst|djer flera filer.
+
+	* B|rjat uppdatera den gamla dokumentation som ceder skrev f|r
+	  l{nge sedan om elispklienten. Jag h{mtade den fr}n ftp-arean p}
+	  nanny hit och jag t{nker h}lla den hyfsat up-to-date. Arbetet {r
+	  inte klart, bl a beh|ver alla flaggor dokumenteras.
+
+Sat Jan 19 08:13:08 1991  Linus Tolke  (linus at nanny)
+
+	* Lagt till (med hj{lp av ceder) funktioner f|r att kunna hantera
+	  conf-no-list.
+	  Nya funktioner: initiate-get-conf-no-list,
+	  lyskom-create-conf-no-list, conf-no-list->conf-nos,
+	  set-conf-no-list->conf-nos.
+
+	* Status (f|r) person bundet till tangenten sp samt
+	  Status (f|r) m|te bundet till tangenten sm.
+	  Nya funktioner kom-status-person, kom-status-conf.
+
+	* Lagt in mina funktioner f|r att springa omkring i bufferten.
+	  backward-text p} M-p forward-text p} M-n.
+
+Fri Jan 18 16:38:26 1991  Linus Tolke  (linus at nanny)
+
+	* Status f|r m|ten och personer finns nu.
+
+	* Asynkrona meddelanden av typen kalle g|r si. b|rjar nu p} en
+	  liten bokstav. (Utom i fallen ][\ (Emacs-bugg).)
+
+Fri Jan 18 12:06:58 1991  Inge Wallin  (inge at nanny)
+
+	* Skapat hantering av det (nya) asynkrona meddelandet om att n}gon
+	  har loggat in. Text: "Nu har x g}tt in i Lyskom".
+
+Fri Jan 18 11:12:17 1991  Linus Tolke  (linus at nanny)
+
+	* B|rjat skriva b{ttre mode-beskrivning. (lyskom-mode)
+
+	* lyskom-print-who-info {ndrad s} att user%machine@Machine.domain
+	  blir user@Machine.domain om Machine == machine och 
+	  user@machine (Machine.domain) om olika.
+
+
+Wed Jan 16 14:15:17 1991  Linus Tolke  (linus at nanny)
+
+	* Namnbyte. Variabeln kom-read-width-first heter numera
+	  kom-read-depth-first.
+
+	* Fixat s} att man f{r ]terse-prompten n{r man h}ller p} att
+	  }terse {ven om man {r i sin brevl}da. [ndring i
+	  lyskom-print-prompt.
+
+	* ]terst{llt hoppa-funktionen s} att den aldrig plockar bort en
+	  }terse-struktur utan alltid markerar som l{sta.
+
+	* [ndrat defaulten f|r }terse senaste (enligt |nskem}l)
+	  Argument == 0 => }terse alla.
+	  Argument > 0  => }terse senaste antal. (ej {ndrat)
+	  Argument < 0  => }terse f|rsta -antal. (ej {ndrat)
+	  Argument saknas => }terse senaste (1) inl{gg.
+
+	* Buggr{ttning. lyskom-set-presentation saknade
+	  cache-del-conf-stat s} om man {ndrade 2 ggr p} raken s} fick man
+	  inte den gamla presentationen.
+
+Mon Jan 14 22:11:54 1991  Peter Eriksson  (pen at nanny)
+
+	* [ndrat funktionen "[ndra namn" s} att den fr}gar efter
+	  namnet p} ett m|te eller en person (eller "m <num>" eller
+	  "p <num>". Dessutom visar den upp en lista p} alla "match"
+	  som sker vi namngivningen. (ala "G} till m|te"). Skapat
+	  funktionerna lyskom-select-conf-or-person samt
+	  lyskom-select-select-conf-or-person som fungerar som
+	  lyskom-select-conf och lyskom-select-select
+	  med den skillnaden att den jobbar p} b}de personer och m|ten.
+
+Tue Jan 15 03:21:19 1991  Inge Wallin  (inge at laila)
+
+	* Skapat funktionen "Utpl}na". Ny funktion: kom-delete-conf med
+	  sina underfunktioner.
+
+Sat Jan 12 23:19:00 1991  Linus Tolke  (linus at lave)
+
+	* Buggr{ttning: Nu f}r man felmeddelande om man inte {r
+	  organisat|r f|r det som man vill {ndra presentation f|r.
+
+Sat Jan 12 00:04:16 1991  Per Cederqvist  (ceder at laila)
+
+	* 0.18.2b distribuerad.
+
+	* En bugg i lyskom-completing-read r{ttad. (car choice) bytt mot
+	  (elt choice 0). choice kan vara en vektor...
+
+	* 0.18.2 distribuerad.
+
+	* [ndra presentation (kom-change-presentation, "{p") skriven.
+	  [ndringar i lyskom-edit-text och lyskom-edit-insert-miscs s}
+	  att man kan editera den gamla presentationen.
+
+Thu Jan 10 04:19:44 1991  Linus Tolke  (linus at laila)
+
+	* Nu skapas who-is-on listan med varierande bredd beroende p} hur
+	  brett f|nstret som lyskom-f|rbindelsen {r i {r. Om jag har
+	  r{knat r{tt s} {r f|rh}llandet samma som tidigare mellan
+	  Anv{ndare och N{rvarande i m|te. D{remot har connection fast
+	  l{ngd.
+	  Ny funktion: lyskom-window-width som ger l{ngden. (Jag litar
+	  inte p} att (window-width (get-buffer-window (current-buffer)))
+	  aldrig klickar.)
+
+	* Fixat s} att uttr{da ur plockar bort {ven fr}n lyskom-to-do-list
+	  samt att den uppdaterar (l{ser in en ny) lyskom-membership
+
+Wed Jan  9 05:22:32 1991  Inge Wallin  (inge at lave)
+
+	* B|rjat p} funktionen "Uttr{d ur". Det fungerar med den lilla
+	  nackdelen att inte to-do-listan t|ms. Man g}r allts} ur det m|te
+	  man vill, men man f}r fortfarande l{sa det som st}r i m|tet. N{r
+	  man g}r ur och in igen {r man inte l{ngre medlem i m|tet.
+	  F|r att fixa detta beh|ver jag hj{lp av ceder eftersom det
+	  antagligen finns en funktion som fixar detta redan, men det tar
+	  f|r l}ng tid att hitta den.
+
+Sat Jan  5 02:31:07 1991  Inge Wallin  (inge at lave)
+
+	* Skapat kommandot F} Sk{ll p} beg{ran av n}gon. Ny funktion:
+	  kom-get-abuse.
+
+Fri Jan  4 03:01:38 1991  Per Cederqvist  (ceder at laila)
+
+	* Version 0.18.1 distribuerad.
+
+	* En del {ndringar i kom-review-by-to av Linus. Oklart vad de g|r.
+Linus:	  (skillnaden {r att nu kan man ange av alla personer _eller_ i
+	   alla m|ten genom att trycka return ist}llet f|r att ange ett
+	   namn. Detta kr}vde en justering i lyskom-completing-read.)
+
+	* Ny funktion: lyskom-send-process-string. Den fungerar som
+	  send-process-string, men om operativsystemet inte klarar av att
+	  ta emot hela str{ngen (l{s: om man k|r p} Nanny) s} f|rs|ker den
+	  skicka str{ngen i sm}bitar.
+
+	* skip-first-zeros omskriven iterativ. Rekursiva funktioner {r
+	  inte s} bra p} att klara max-lisp-eval-depth...
+
+Thu Jan  3 23:01:47 1991  Per Cederqvist  (ceder at laila)
+
+	* "Endast" skriver numera ut vilket m|te man g|r endast i, innan
+	  det g|rs. En del sm} buggfixar.
+
+Thu Dec 20 17:44:20 1990  Inge Wallin  (inge at laila)
+
+	* Det ov{rderliga kommandot "F} Uppmuntran" finns nu och residerar
+	  p} tangenterna "fu". Funktionen som sk|ter alltihop heter
+	  kom-get-appreciation. 
+
+Thu Dec 20 08:30:47 1990  Linus Tolke  (linus at laila)
+
+	* Skrev klart kom-review-presentation nu med
+	  lyskom-completing-read. Den l{ser in ett m|te eller en person
+	  och visar dess presentation.
+
+	* Lite buggar hittade. Bla i lyskom-parse-async. Nu lyckades jag
+	  k|ra en liten stund 0.18.1
+
+Wed Dec 19 21:14:28 1990  Thomas Bellman  (bellman at lave)
+
+	* Vid uppkopplingen skickas user%maskin i st{llet f|r bara
+	  anv{ndarnamn.
+
+Wed Dec 19 03:44:34 1990  Inge Wallin  (inge at laila)
+
+	* Fixat en ful bug som gjorde att presentationen aldrig lades in
+	  n{r ett m|te eller person skapades. Buggen berodde p} att
+	  handler aldrig anropades n{r en text var f{rdigediterad.
+
+	* Skapat en rudiment{r version av "]terse presentationen". Just nu
+	  kan man, genom att trycka }p, }terse presentationen av det
+	  nuvarande m|tet.
+
+Mon Dec 17 01:29:34 1990  Inge Wallin  (inge at lage)
+
+	* Nytt kommando: [ndra namn.
+
+Sun Dec 16 14:41:30 1990  Per Cederqvist  (ceder at lave)
+
+	* Lyskom anv{nder nya i_am_on (som s{nder en hel who-info).
+	  [ndringar i lyskom-parse-async.
+
+	* N{r man g}r till ett nytt m|te s{tts inte l{ngre
+	  lyskom-current-text till nil. Man kan allts} kommentera senast
+	  sedda text {ven n{r man har bytt m|te.
+
+Fri Dec 14 22:09:04 1990  Linus Tolke  (linus at laila)
+
+	* V{nt p} b}da assoc-listorna (kom-tell-phrases och
+	  lyskom-commands) s} att man det skall kunna g} lite
+	  snabbare att h{mta texterna. Varning till alla som trixat med
+	  sin kom-tell-phrases.
+
+Thu Dec 13 15:07:57 1990  Linus Tolke  (linus at laila)
+
+	* Fixat s} att Quit (en speciell lyskom-complete-quit) g}r snyggt
+	  ur lyskom-complete-read. Funkar i det fall det anv}nds f|r det
+	  g|r bara lyskom-end-of-command.
+
+Fri Dec  7 23:44:01 1990  Linus Tolke
+
+	* Version 0.18 sl{ppt.
+
+Fri Dec  7 20:25:56 1990  Linus Tolke  (linus at laila)
+
+	* Lagt till funktionen kom-review-clear p} } h som rensar ut alla
+	  }terse-strukturer.
+
+	* [ndrar lyskom-review-by-to s} att den l{ser med
+	  lyskom-completing-read ist}llet.
+	  Nya funktioner: lyskom-review-by-to-person,
+	  lyskom-review-by-to-conf
+	  [ndringar: kom-review-by-to, lyskom-review-by-to
+
+	* Jag tror att jag har r{ttat en bug i lyskom-filter. Det fanns
+	  ett fall d} inte den gjorde set-buffer tillbaka. Jag hoppas att
+	  vi skall f} f{rre buffer is read-only *nanny*.
+
+	* Lade in min lyskom-completing-read.
+	  Nya funktioner: lyskom-completing-read,
+	  lyskom-completing-read-2, lyskom-complete-and-exit,
+	  lyskom-complete-and-edit, lyskom-complete-help,
+	  lyskom-complete
+	  My variabel: lyskom-completing-map
+	  BUG: lyskom-complete och lyskom-complete-and-exit funkar inte
+	       som i det |vriga emacs. Den fyller inte fram}t om det inte
+	       {r unikt redan.
+
+Thu Dec  6 15:27:58 1990  Linus Tolke  (linus at lave)
+
+	* Jag skapade filen To-do, mest f|r att h}lla reda p} vad jag
+	  skall ha i }tanke n{sta g}ng jag fixar lite saker i lyskom.el
+	  Alla kommentarer {r v{lkomna i filen och i lyskom och jag ser
+	  g{rna att ni sj{lv l{gger till vad ni tycker beh|ver g|ras.
+	  Jag har inte lagt sakerna i n}gon som helst prioritetsordning
+	  men ni f}r lov att flytta om (bara ni klart anger vilket h}ll
+	  prioriteten |kar och inte kr{ver att jag skall ta h{nsyn till
+	  det.)
+
+	  Buggar tycker jag h|r hemma n}gon annanstans men ni har r{tt
+	  till er egen }sikt p} den punkten.
+
+	  Tanken {r att man plockar bort saker efterhand som de fungerar
+	  och flyttar det hit. (ChangeLog).
+
+Wed Dec  5 03:12:52 1990  Linus Tolke  (linus at lave)
+
+	* Lagt in en }terse-funktion p} } s, ]terse stack flyttad till } l
+	  Funktionen tar ett prekommaargument och fr}gar sedan efter
+	  f|rfattaren till inl{ggen och mottagare.
+	  BUG: F|rfattaren och Mottagaren m}ste finnas i cachen.
+	  Sedan g|rs en }terse f|r alla inl{gg som matchar eller om man
+	  angett ett antal som prekomma det antalet. Om argumentet
+	  positivt s} l{ses fr}n slutet (senaste) och om negativt fr}n
+	  b|rjan p} m|tet. C-u } s skall v{l vara anpassat f|r normalfallet.
+	  Nya funktioner: kom-review-by-to, lyskom-review-by-to,
+	  lyskom-conf-no.
+
+	* R{ttat en bugg introducerad av Lars Aronsson:
+	  N{r man laddar lyskom f|rsta g}ngen {r inte reverse-assoc
+	  definierad.
+
+	* En funktion }terse stack {r tillagd. } s. F|r att man skall
+	  kunna h}lla reda p} vad man sysslar med.
+	  Nya funktioner: kom-review-stack, to-read-info->comm-to,
+	  set-to-read-info->comm-to
+	  [ndringar: lyskom-create-to-read-info, (set-)to-read-info->priority,
+	  (set-)to-read-info->text-list, lyskom-maybe-follow-comments och
+	  lyskom-follow-comments.
+	  [ndring i to-read-info-strukten.
+
+	* ni nu kopplad till kom-view-next-new-text som f|rst stoppar alla
+	  }terse-strukturer sist i lyskom-reading-list
+
+	* R{ttat buggar i ]terse tr{d grunkorna om det inte finns n}got
+	  inl{gg skall den ju g|ra lyskom-end-of-command.
+
+	* Hoppa (kom-jump) g|r numera pop p} en }terse-struktur
+
+	* ]terse n{sta skriven som plockar fram }terse-strukturerna.
+
+Tue Dec  4 22:54:14 1990  Lars Aronsson  (aronsson at laila)
+
+	* Kodnamn "version 0.18" har kom-tell-phrases.
+
+Thu Nov 29 02:27:52 1990  Per Cederqvist  (ceder at lave)
+
+	* Lade in lyskom-init-hook, som k|rs n{r lyskom {r laddat.
+	  Distribuerade version 0.17 igen.
+
+	* Version 0.17 distribuerad.
+
+	* Skapa m|te bundet till "sm".
+
+Mon Nov 26 12:58:29 1990  Linus Tolke  (linus at laila)
+
+	* Flaggan f|r att f} n{rvaromeddelanden namnbytt till
+	  kom-presence-messages.
+
+Mon Nov 26 03:40:44 1990  Inge Wallin  (inge at lage)
+
+	* Stoppat in Linus kod som ger n{rvaromeddelanden.
+
+	* Fixat (med ganska stor hj{lp av ceder och Linus) s} att klienten
+	  inte s{ger "G} till n{sta m|te" n{r man har "se tiden" och det
+	  kommer ett nytt inl{gg i det m|te man redan st}r i. Nu f}r man i
+	  st{llet "L{sa n{sta inl{gg".
+
+Sun Nov 25 19:52:51 1990  Linus Tolke  (linus at lage)
+
+	* r{ttat en bugg i kom-prefetch-all-confs (snabba lista nyheter).
+	  Den kallade sig sj{lv rekursivt och gjorde
+	  lyskom-start-of-command varje g}ng. :=).
+
+Sat Nov 24 05:43:42 1990  Per Cederqvist  (ceder at lave)
+
+	* Version 0.16 distribuerad.
+
+	* lyskom-print-names {r inte l{ngre rekursiv.
+
+Fri Nov 23 06:02:36 1990  Inge Wallin  (inge at laila)
+
+	* Skapat kom-send-letter med tillh|rande st|dfunktioner och lagt
+	  funktionen att skicka brev p} 'b' s} att det nu {r ganska enkelt
+	  att skicka personliga brev.
+
+Wed Nov 21 18:38:19 1990  Linus Tolke  (linus at lage)
+
+	* Nu finns ocks} kom-find-root och kom-find-root-review som s|ker
+	  reda p} urfaderinl{gget och visar det resp visar och g}r igenom
+	  hela tr{det med }terse n{sta kommentar.
+	  Nya funktioner: lyskom-review-tree, kom-find-root,
+	  kom-find-root-review, lyskom-find-root
+	  [ndringar: lyskom-review-tree tar b}de text-stat och text-no.
+
+	* Skrivet en kom-review-tree (ett "anv{ndargr{nssnitt" som startar
+	  en }terse alla kommentarer rekursivt.
+	  Bunden till }ak och tar antingen senaste inl{gget,
+	  lyskom-current-text eller ett prefixargument.
+	  Om den f}r ett prefixargument s} skriver den f|rst ut det
+	  inl{gget annars s} bara {ndras prompten till ]terse n{sta
+	  kommentar och man f}r l{sa med lyskom-next-command.
+	  Nya funktioner: lyskom-review-tree, kom-review-tree.
+
+Tue Nov 20 16:26:02 1990  Linus Tolke  (linus at lage)
+
+	* Fixat s} att man kan l{sa en REVIEW eller 'REVIEW-TREE lista
+	  f|rutom kommentarer.
+	  [ndringar i: kom-view-next-text, lyskom-view-text,
+	  lyskom-view-text-handle-text-stat, lyskom-follow-comments och
+	  lyskom-maybe-follow-comments.
+
+	* lyskom-print-prompt klarar 'REVIEW och 'REVIEW-TREE
+
+	* Nu skall inte l{ngre n}gra to-do-list av type 'REVIEW eller
+	  'REVIEW-TREE p}verkas av att man l{ser inl{gg. Det g{ller bara
+	  att komma ih}g att man skall plocka bort den man l{ser p} annat
+	  s{tt. [ndring: lyskom-delete-from-rlist
+
+	* Buggfix i lyskom-jump. Nu klarar den {ven att g|ra hoppa i tr{d
+	  d{r det finns inl{gg man inte f}r l{sa.
+
+Mon Nov 19 18:02:33 1990  Linus Tolke  (linus at lave)
+
+	* Nu har jag lagt till flaggan
+	  kom-reading-puts-comments-in-pointers-last som defaultar till t
+	  och inneb{r att man f}r alla rader av typen:
+	  Kommentar i text .... av %%%%%	och
+	  Fotnot i text .... av %%%%%
+	  efter inl{ggets text i st{llet.
+	  Ny funktion: lyskom-view-text-handle-saved-comments 
+	  [ndringar i: lyskom-view-text, lyskom-view-text-handle-text-stat
+	  nytt argument, lyskom-commence-print-header nytt argument.
+	  Det verkar fungera.
+
+Sun Nov 18 07:41:31 1990  Per Cederqvist  (ceder at lave)
+
+	* kom-set-unread ("Endast") skriven. Den {r inte helt buggfri. Man
+	  f}r en prompt f|r mycket, och man f}r l{sa en text mindre {n man
+	  fr}gar efter (det senare beror antagligen p} servern).
+
+================================================================
+Sat Nov 17 02:02:05 1990  Linus Tolke/Ceder mfl. Version 0.13 och 
+0.14 distrib====================29:23 19 (inge atat }tersede s} atlyskom-c{llet f|a och s|ferten.  }v{ne nah
+r i en :1727:ke  (lingagt ij-jump. Soatangenktionerom-jump
+"snabbar som aeDrefetch p} allt och sedan lista nyheter.
+	  Den gamla lista nyheter finns tills vidare p} kombinationen l N
+	  s} att folk kanske kan j{mf|ra.
+	  Nya funktioner: kom-prefetch-all-confs (d}ligt namn men
+	  kom-list-unread var ju upptaget.)
+			  lyskom-after-prefetch-all-confs ({nnu s{mre
+			  namn. Denna g|r sj{lva lista nyheter-grejen.)
+
+Tue Nov 13 17:56:28 1990  Linus Tolke  (linus at lave)
+
+	* Fixat en del av buggarna i gamla lista nyheter och lista
+	  medlemsskap. Jag anv{nder nu lyskom-list-unread f|r att r{kna ut
+	  hur m}nga ol{sta ist{llet f|r att subtrahera n}gra skumma
+	  listor. Det {r s} h{r det skall se ut.
+
+	* Adderat en uppplockning av asynkrona meddelanden f|r att snabba
+	  upp "Vilka" listan. Varje g}ng man f}r ett asynkront meddelande
+	  som talar om att n}gon person har g}tt in i LYSKOM eller till
+	  n}got m|te s} kontroll{ses denne personens (och m|tets)
+	  conf-stat. Det l{ggs ju automatiskt in i lyskom-conf-cache n{r
+	  det g|r s}. [ndringar enbart i lyskom-parse-async.
+
+	* Buggr{ttning i version 0.13.
+	  kom-view-commented-text gjorde lyskom-start-of-command 2 g}nger
+	  i det fallet att inl{gget inte hade n}got inl{gg som
+	  kommenterades. "V{nta p} prompten."
+	  Ceder var nog tr|tt n{r han gjorde detta. R{ttat:
+	  lyskom-end-of-comand => lyskom-end-of-command
+
+Mon Nov 12 19:00:16 1990  Linus Tolke  (linus at lage)
+
+	* lyskom-default-new-text-hook <f> kollar nu {ven att
+	  lyskom-executing-command {r satt till nil innan den till}ter
+	  byte av prompt.
+
+	* Nu skriver den S{nt av Linus Tolke Y ist{llet f|r S{nt av person
+	  31 i headern.
+
+Sun Nov 11 23:02:49 1990  Per Cederqvist  (ceder at lave)
+
+	* kom-extended-command anv{nder nu call-interactively i st{llet
+	  f|r funcall. Det inneb{r att t ex Skapa m|te fungerar nu.
+
+Sat Nov 10 19:28:58 1990  Per Cederqvist  (ceder at lave)
+
+	* Begreppet kom-stream har f}tt ett nytt namn: nu heter det
+	  kom-queue. Det {r trots allt mer en k| {n en stream.
+
+Sat Nov 10 00:36:48 1990  Linus Tolke  (linus at laila)
+
+	* Version 0.12 av klienten distribuerad.
+
+Fri Nov  9 17:58:30 1990  Inge Wallin  (inge at laila)
+
+	* Fixat s} att kommandon som tar l}ng tid skriver ut vad de heter
+	  i message-buffern. Nya funktioner: lyskom-command-name,
+	  reverse-assoc.
+
+Fri Nov  9 17:58:30 1990  Linus Tolke  (linus at laila)
+
+	* Lagt till en ny hook lyskom-edit-mode-mode-hook som till}ter att
+	  man kan k|ra swedish-mode.
+
+	* Lagt till Lista nyheter och Lista medlemsskap i listan av
+	  KOM-kommandon.
+
+Fri Nov  9 05:20:40 1990  Thomas Bellman  (bellman at laila)
+
+	* Definierade "?" att vara 'describe-mode'.
+
+Thu Nov  8 01:33:36 1990  Thomas Bellman  (bellman at laila)
+
+	* R{ttade stavningen av 'kom-extended-command'.
+
+Wed Nov  7 04:55:34 1990  Linus Tolke  (linus at lave)
+
+	* [ndringar i lyskom-commence-print-header,
+	  lyskom-print-header-comm. Till{gg av funktionen
+	  lyskom-print-header-comm-1. Ger:
+	    Kommentar till text 4711 av Linus Tolke Y
+	    Kommentar i text 5743 av ceder
+	    Fotnot till text 43 av Pell Pell Pell
+	    Fotnot i text 8921 av Redin
+	  
+	  Ceder! Om du t{nkt annorlunda f}r du fixa det men min fungerar i
+	  alla fall.
+
+Tue Nov  6 22:07:03 1990  Linus Tolke  (linus at laila)
+
+	* lyskom-edit-quit tillagd. P} C-c k. N{r man skriver inl{gg och
+	  }ngrar sig.
+
+	* lyskom-edit-text/lyskom-cre                                                                                                                                                                                                                                                                                                                                                                                                                                        ate-text-handler som startar ett
+	  inl{gg respektive l{gger in det sparar nu
+	  (current-window-configuration) s} att man kommer tillbaka till
+	  hur det s}g ut innan man b|rjade skriva. Kommunikationen dem
+	  emellan sker mha variabeln lyskom-edit-return-to-configuration
+	  som {r lokal i edit-bufferten.
+
+	* Ny variant av kom-list-unread inlagd. Anv{nder inte l{ngre en
+	  s{rskilld buffert och anropar bara servern efter map om det {r
+	  skrivet i m|tet efter det att anv{ndaren l{ste d{r sist.
+
+!	  - funktionen lyskom-time-greater kan kanske vara till anv{ndning
+	  {ven p} andra h}ll. Men (jag vet) den kan skrivas kortare.
+
+Tue Nov  6 19:08:25 1990  Per Cederqvist  (ceder at lave)
+
+	* lyskom-start-anew-login-handler anropar nu lyskom-clear-vars i
+	  st{llet f|r lyskom-mode.
+
+Sun Nov  4 21:22:46 1990  Per Cederqvist  (ceder at lave)
+
+	* kom-initial-digit-view skriven av willf|r.
+
+Wed Oct 31 20:23:14 1990  Per Cederqvist  (ceder at lave)
+
+	* kom-list-unread och kom-membership, skrivna av Linus Tolke,
+	  inlagda. De finns bundna till "ln" och "ls".	
+
+	* (provide 'lyskom)
+
+Tue Oct 23 17:26:30 1990  Linus Tolke  (linus at laila)
+
+	* Makefilen l{gger nu {ven upp f|r exekvering p} nanny inte bara i
+	  ftp listorna.
+
+Sun Oct 21 02:09:26 1990  Per Cederqvist  (ceder at lave)
+
+	* Klienten talar om vad man g|r, s} att andra kan se det i
+	  vilka-listan. 
+
+	* N{r en ny text skrivs s} byts prompten automatiskt.
+
+	* kom-write-comment och kom-private-answer kan ta ett numeriskt
+	  argument med ^u. Det {r textnummer f|r den text man vill
+	  kommentera. 
+
+	* RETURN scrollar en rad, SPC en sk{rm.
+
+	* Extended command mode! ^Z ger m|jlighet att skriva kommandon.
+	  Inte helt testat {n.
+
+	* L{sa i kommentarordning! (setq kom-read-width-first nil) ger den
+	  gamla varianten.
+
+	* '(se) tiden' {r nu bundet till "t".
+
+Sat Oct 20 13:25:55 1990  Per Cederqvist  (ceder at laila)
+
+	* lyskom-add-new-text-to-rlist fungerar nu. Nu f}r man l{sa nya
+	  texter i r{tt m|te, och inte i f|rsta b{sta.
+
+	* initiate-get-pers-stat, initiate-get-conf-stat och
+	  initiate-who-is-on anv{nder de nya funktionerna (fr}n version
+	  0.04 av servern).
+
+	* Typen who-info har f}tt tv} nya medlemmar: connection (en int)
+	  och username (anv{ndaridentitet@dator).
+
+	* 'Lista m|ten' skriver nu ut m|tena s} fort som m|jligt, och inte
+	  alla p} en g}ng. Tyv{rr m{rks det knappt n}gon skillnad. Det beror
+	  p} emacs s{tt att uppdatera sk{rmen.
+
+	* ']terse (det) kommenterade', skriven av Tommy Persson, inlagd och
+	  bunden till "}k".
+
+	* Om kom-show-where-and-what {r non-nil s} skriver kom-who-is-on
+	  ut en extra rad per anv{ndare med userid@host och
+	  what_am_i_doing. Default {r t.
+
+	* lyskom-header-separator deklareras nu med en defvar, s} att
+	  anv{ndaren kan s{tta den i sin .emacs. Om man anv{nder defconst
+	  s} s{tts den om n{r man laddar lyskom.elc.
+
+	* lyskom-parse-num omskriven. Nu garbar klienten n{stan inte alls!
+	  Den {ndrar inte heller gc-cons-threshold.
+
+	* Nu anv{nds regexp-quote n{r paragraph-start och paragraph-end
+	  s{tts. Som lyskom-header-separator ser ut idag s} spelar det
+	  ingen roll, men vem vet vad som h{nder i framtiden?
+
+Sat Oct 20 04:35:54 1990  Thomas Bellman  (bellman at lave)
+
+	* S{tter paragraph-start och paragraph-separate till att matcha
+	  mot lyskom-header-separator.  Verkar funka n}gorlunda, om {n
+	  inte helt perfekt.
+
+	* Ny konstant, lyskom-header-separator, som inneh}ller str{ngen
+	  "--- Skriv texten nedanf|r denna rad ---" som skiljer huvudena
+	  och textkroppen }t n{r man skriver en ny text.
+
+	* kom-private-answer skriven och bunden till "p".  Skriver ett
+	  personligt svar till f|rfattaren av en text.
+
+Fri Oct 19 21:50:52 1990  Per Cederqvist  (ceder at lave)
+
+	* N{r en ny text skrivs s} lades den f|rut in i _alla_ m|ten man
+	  h|ll p} att l{sa. Nu l{ggs den bara in i de m|ten som {r
+	  mottagare. Buggen l}g i lyskom-add-new-text-to-rlist.
+
+Tue Oct 16 18:32:40 1990  Linus Tolke  (linus at lave)
+
+	* Fixat sm}saker och propagerat 0.08 igen.
+
+Sun Oct 14 19:50:42 1990  Per Cederqvist  (ceder at lave)
+
+	* Presentationerna fungerar nu.
+
+Sun Oct  7 16:56:40 1990  Per Cederqvist  (ceder at laila)
+
+	* Presentation skrivs b}de n{r nya m|ten och personer skapas.
+	  Presentationen s{tts om i conf-statusen.
+
+	* lyskom-new-text-hook anropas n{r en ny text skapas. 'text-stat'
+	  {r bunden till text-statusen f|r den nya texten.
+
+
+
+
+Local Variables:
+mode:indented-swedish
+eval:(auto-fill-mode 1)
+End:

@@ -1,0 +1,44 @@
+# This is the distribution makefile for the lyskom elisp-client package.
+# bugs to bug-lyskom@lysator.liu.se
+# Tue Apr 30 21:15:14 1991  Linus@lysator.liu.se
+
+RM = /usr/gnu/bin/rm -vf
+
+# this should load your favorite byte-compiler
+EMACS-BATCH = emacs -batch 
+
+PARTS-EL = vars.el komtypes.el clienttypes.el startup.el \
+	internal.el parse.el services.el cache.el\
+	commands1.el commands2.el review.el edit-text.el \
+	view-text.el async.el completing-read.el \
+	prioritize.el \
+	lyskom-rest.el
+HEADER-EL = macros.el
+HEADER-ELC = macros.elc
+SRC-ELC = vars.elc komtypes.elc clienttypes.elc startup.elc \
+	internal.elc parse.elc services.elc cache.elc\
+	commands1.elc commands2.elc review.elc edit-text.elc \
+	view-text.elc async.elc completing-read.elc \
+	prioritize.elc \
+	lyskom-rest.elc
+PARTS-ELC = $(SRC-ELC)
+
+
+.SUFFIXES : .el .elc
+.el.elc:
+	$(EMACS-BATCH) -l ./macros.elc -f batch-byte-compile $*.el
+
+
+lyskom.elc: elc-files
+	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
+
+lyskom.el: $(HEADER-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(PARTS-EL) > lyskom.el
+
+elc-files: $(HEADER-ELC) $(PARTS-ELC) 
+
+tags:
+	-etags $(HEADER-EL) $(PARTS-EL)
+
+clean:
+	$(RM) *~ *.elc
