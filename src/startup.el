@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.10 1992-07-30 02:04:50 linus Exp $
+;;;;; $Id: startup.el,v 35.11 1992-07-30 19:49:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.10 1992-07-30 02:04:50 linus Exp $\n"))
+	      "$Id: startup.el,v 35.11 1992-07-30 19:49:28 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -319,14 +319,7 @@ Information required for this:
   "Adds a PART last in the membership-list."
   (let ((list (lyskom-array-to-list membership))
 	sent)
-    (while list
-      (if (memq (membership->conf-no (car list))
-		(mapcar (function membership->conf-no) lyskom-membership))
-	  (if (numberp lyskom-membership-is-read)
-	      (-- lyskom-membership-is-read))
-	(setq lyskom-membership (append lyskom-membership (list (car list)))))
-      (setq list (cdr list)))
-    (setq list (lyskom-array-to-list membership))
+    (lyskom-add-membership-to-membership membership)
     (while (and (not sent) list)
       (if (and lyskom-unread-confs
 	       (not (memq (membership->conf-no (car list))
@@ -388,17 +381,7 @@ If not, fetch next conf-stat from REST-MEMBERSHIPLIST."
 
 (defun lyskom-decide-unread-map (map conf)
   "Enters this map in the lyskom-to-do-list and returns to lyskom-start-anew-login-3."
-  (let ((list (lyskom-array-to-list (map->text-nos map))))
-    (while list
-      (if (read-list-enter-text (car list) conf lyskom-to-do-list)
-	  (setq list (cdr list))
-	(let ((info (lyskom-create-read-info 
-		     'CONF conf
-		     (membership->priority 
-		      (lyskom-member-p (conf-stat->conf-no conf)))
-		     (lyskom-create-text-list list))))
-	  (read-list-enter-read-info info lyskom-to-do-list))
-	(setq list))))
+  (lyskom-enter-map-in-to-do-list map conf)
   (lyskom-start-anew-login-3 'cont))
 
 
