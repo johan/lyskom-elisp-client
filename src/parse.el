@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 41.0 1996-05-02 19:27:47 davidk Exp $
+;;;;; $Id: parse.el,v 41.1 1996-05-04 01:04:03 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 41.0 1996-05-02 19:27:47 davidk Exp $\n"))
+	      "$Id: parse.el,v 41.1 1996-05-04 01:04:03 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -667,6 +667,21 @@ Args: TEXT-NO. Value: text-stat."
      (set-buffer lyskom-buffer)
      (cache-add-text text))
     text))
+
+
+(defun lyskom-parse-conf-z-info-list ()
+  "Parse result from functions that return a conf-z-info-list."
+  (let* ((list-len (lyskom-parse-num)))
+    (lyskom-create-conf-z-info-list
+     (lyskom-parse-vector list-len 'lyskom-parse-conf-z-info))))
+
+(defun lyskom-parse-conf-z-info ()
+  "Parse a conf-z-info."
+  (lyskom-create-conf-z-info
+   (lyskom-parse-string)		;name
+   (lyskom-parse-conf-type)		;conf-type
+   (lyskom-parse-num)))			;conf-no
+
 
 
 ;;; ================================================================

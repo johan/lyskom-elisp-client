@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.2 1996-05-03 22:41:41 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.3 1996-05-04 01:04:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.2 1996-05-03 22:41:41 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.3 1996-05-04 01:04:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -361,6 +361,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...")
     (sub-comment-to . "Subtraherar text %#1n som kommentar till text %#2n...")
     (comment-keep-recpt-p ."Ska %#1s vara mottagare? ")
+    (matching-regexp . "M\366ten/personer som matchar '%#1s'\n")
 
     ; From commands2.el:
 
@@ -928,6 +929,7 @@ Text:
     (kom-list-conferences 	"Lista m\366ten") 
     (kom-list-persons		"Lista personer")
     (kom-list-news              "Lista nyheter")
+    (kom-list-re                "Lista (med) regexpar")
     (kom-membership		"Lista medlemsskap")
     ;; (kom-list-marks		"Lista markeringar") 
     (kom-postpone		"Uppskjuta l\344sning")
@@ -1150,6 +1152,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "lm" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
   (define-key lyskom-mode-map "lp" 'kom-list-persons)
+  (define-key lyskom-mode-map "lr" 'kom-list-re)
   (define-key lyskom-mode-map "ls" 'kom-membership)
   (define-key lyskom-mode-map "l{" 'kom-list-summary)
   (define-key lyskom-mode-map "l[" 'kom-list-summary)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.2 1996-05-03 22:41:27 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.3 1996-05-04 01:03:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.2 1996-05-03 22:41:27 davidk Exp $"))
+              "$Id: english-strings.el,v 41.3 1996-05-04 01:03:51 davidk Exp $"))
 
 
 
@@ -358,6 +358,7 @@ and you have finished reading. Please come back later.
     (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
     (sub-comment-to . "Removing article %#1n as a comment to article %#2n...")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
+    (matching-regexp . "Conferences/users matching `%#1s'\n")
 
     ; From commands2.el:
 
@@ -904,6 +905,7 @@ Text:
     (kom-list-conferences       "List conferences") 
     (kom-list-persons           "List users")
     (kom-list-news              "List news")
+    (kom-list-re                "List (using) regexps")
     (kom-membership             "List memberships")
     ;; (kom-list-marks		"List marks")
     (kom-postpone               "Postpone reading")
@@ -1098,6 +1100,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "lc" 'kom-list-conferences)
   (define-key lyskom-mode-map "ln" 'kom-list-news)
   (define-key lyskom-mode-map "lu" 'kom-list-persons)
+  (define-key lyskom-mode-map "lr" 'kom-list-re)
   (define-key lyskom-mode-map "ls" 'kom-membership)
   (define-key lyskom-mode-map "la" 'kom-list-summary)
   (define-key lyskom-mode-map "lf" 'kom-list-filters)
