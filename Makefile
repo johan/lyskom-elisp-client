@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.1 1999-11-19 22:15:14 joel Exp $
+# $Id: Makefile,v 44.2 2000-08-31 13:16:31 mattias Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -40,7 +40,7 @@ release:
 	( cd doc; $(MAKE) release )
 
 clean:
-	rm -vf *~
+	rm -f *~
 	( cd src; ${MAKE} clean )
 	( cd doc; ${MAKE} clean )
 	( cd misc; ${MAKE} clean )
