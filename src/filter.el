@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.5 1996-01-19 18:49:48 byers Exp $
+;;;;; $Id: filter.el,v 38.6 1996-03-04 15:13:09 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -482,7 +482,8 @@ Otherwise return nil."
 			  t
 			  (or (and (conf-stat->conf-no conf-stat)
 				   (conf-stat->name conf-stat))
-			      "")))
+			      "")
+			  t))
 	      (if (/= conf 0)
 		  (setq filter (cons (cons 'recipient-no conf) filter)))
 	      (setq action (lyskom-filter-read-action))
@@ -519,7 +520,8 @@ Otherwise return nil."
 				      t
 				      (or (and auth-stat
 					       (conf-stat->name auth-stat))
-					  "")))
+					  "")
+				      t))
 	   (if (/= author 0)
 	       (setq filter (cons (cons 'author-no author) filter)))
 	   (setq conf (lyskom-read-conf-no
@@ -529,7 +531,8 @@ Otherwise return nil."
 		       (or 
 			(and conf-stat
 			     (conf-stat->name conf-stat))
-			"")))
+			"")
+		       t))
 	   (if (/= conf 0)
 	       (setq filter (cons (cons 'recipient-no conf) filter)))
 	   (setq action (lyskom-filter-read-action))
@@ -606,7 +609,8 @@ the current text"
 			      'all t
 			      (or (and (conf-stat->conf-no conf-stat)
 				       (conf-stat->name conf-stat))
-				  "")))
+				  "")
+			      t))
 		  (if (/= conf 0)
 		      (setq filter (cons (cons 'recipient-no conf) filter)))
 		  (setq action (lyskom-filter-read-action))
