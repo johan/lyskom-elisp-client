@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.218 2002-12-31 00:22:10 byers Exp $
+;;;;; $Id: vars.el.in,v 44.219 2002-12-31 00:58:34 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.218 2002-12-31 00:22:10 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.219 2002-12-31 00:58:34 ceder Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -124,10 +124,14 @@ if the variable is in kom-dont-read-saved-variables."
 
 ;;; User flags
 
-(def-kom-var kom-text-links nil
+(def-kom-var kom-text-links
+  '((t ("\\<bug[ \t\n]+\\([0-9]+\\)\\>"
+	"http://bugzilla.lysator.liu.se/show_bug.cgi?id=\\1"
+	0 t)))
   "*Links in the text.
 This list is an alist where the car is a conference number and the cdr
-a list of link specifications for that conference. Each link specification
+a list of link specifications for that conference. Use the value t as the
+car to apply the specification in all conferences. Each link specification
 is a list \(PATTERN REPLACEMENT HIGHLIGHT IGNORE-CASE), where PATTERN is
 a regexp to look for in the text, REPLACEMENT is a replacement text to 
 generate a URL from a match for REGEXP (see the NEWTEXT argument to 

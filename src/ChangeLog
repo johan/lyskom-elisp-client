@@ -1,3 +1,12 @@
+2002-12-31  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	Improve doc of kom-text-links, and set it so that the
+	functionality of the removed bugzilla links are present again.
+	* vars.el.in (kom-text-links): Added the sentence "Use the value t
+	as the car to apply the specification in all conferences." to the
+	documentation.  Let "bug X" link to the Bugzilla of Lysator by
+	default, so that we have a good sample value.
+
 2002-12-31  David Byers  <david.byers@swipnet.se>
 
 	Improve kom-list-summary:
