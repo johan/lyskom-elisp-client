@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 38.2 1995-10-28 11:07:52 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 38.3 1995-10-30 15:41:58 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -93,19 +93,23 @@
 	(props nil))
     (while blist
       (setq el (car blist))
+      (setq start 0)
       (while (string-match (elt el 0) text start)
 	(if (elt el 1)
 	    (setq props 
 		  (lyskom-default-button 
 			 (elt el 1)
 			 (substring text
-				    (match-beginning 0)
-				    (match-end 0))))
+				    (match-beginning 1)
+				    (match-end 1))))
 	  (setq props
 		(append (list 'mouse-2-action
 			      (elt el 2)
 			      'mouse-2-arg 
-			      (elt el 3))
+			      (elt el 3)
+			      ;; Experiment /davidk
+			      'lyskom-button-match-data
+			      (match-data))
 			(elt el 4))))
 	(add-text-properties (match-beginning 0)
 			     (match-end 0)
@@ -167,7 +171,7 @@
 		       (t 'kom-active-face))
 		 'mouse-2-action 'lyskom-button-view-pres
 		 'mouse-2-arg 
-		 (cons arg 
+		 (cons (if (stringp arg) (string-to-int arg) arg)
 		       (if (and (boundp 'lyskom-buffer)
 				lyskom-buffer)
 			   lyskom-buffer
@@ -217,6 +221,8 @@
       (kom-status-conf arg))))
       
 (defun lyskom-button-view-pres (pos args)
+  "View the presentation to a conference.
+The conferens is in the car of ARGS as either a conf-stat or an integer."
   (let ((arg (car args))
 	(buf (cdr args)))
     (if (not (buffer-name buf))
@@ -224,13 +230,10 @@
       (pop-to-buffer buf)
       (unwind-protect
 	  (lyskom-start-of-command 'kom-button-view-pres)
-	(let ((pres-no (cond ((integerp arg) arg)
-			     ((lyskom-conf-stat-p arg) (conf-stat->presentation arg))
-			     (t -1)))
-	      (conf-name (cond ((integerp arg)
-				(lyskom-format "%#1:M" arg))
-			       ((lyskom-conf-stat-p arg) (conf-stat->name arg))
-			       (t (lyskom-get-string 'the-conf)))))
+	(let* ((conf-stat (if (lyskom-conf-stat-p arg) arg
+			    (blocking-do 'get-conf-stat arg)))
+	       (pres-no (conf-stat->presentation conf-stat))
+	       (conf-name (conf-stat->name conf-stat)))
 	  (cond ((= 0 pres-no) (lyskom-format-insert 
 				'has-no-presentation conf-name))
 		((= -1 pres-no) (signal 'lyskom-internal-error
@@ -531,5 +534,9 @@ ACTION and argument ARG added."
 	(lyskom-url-manager-starting manager)))))
 
 
+;;;
+;;;	email buttons
+;;;
 
-
+(defun lyskom-button-send-mail (to)
+  (mail nil to))
