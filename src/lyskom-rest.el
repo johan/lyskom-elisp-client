@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.159 2002-05-07 20:12:12 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.160 2002-05-21 22:05:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.159 2002-05-07 20:12:12 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.160 2002-05-21 22:05:43 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -132,9 +132,9 @@
     (if custom-error
         (lyskom-get-string custom-error)
       (or
-       (lyskom-get-string-internal (intern (concat "error-"
-                                                   (number-to-string errno)))
-                                   'lyskom-error-texts)
+       (lyskom-try-get-string (intern (concat "error-"
+                                              (number-to-string errno)))
+                              'lyskom-error-texts)
        (lyskom-format 'error-not-found errno)))))
 
 (defun lyskom-report-command-answer (answer &optional errno error-descriptions)

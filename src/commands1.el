@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.144 2002-05-07 20:12:11 byers Exp $
+;;;;; $Id: commands1.el,v 44.145 2002-05-21 22:05:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.144 2002-05-07 20:12:11 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.145 2002-05-21 22:05:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3813,7 +3813,7 @@ recipient to remove and target the recipient to add to text-stat."
                   ;; Use memoing to ensure that we don't loop.
 
                   (unless (memq text-to-move done)
-                    (setq done (cons (car to-do) done))
+                    (setq done (cons text-to-move done))
 
                     ;; Check that the text has the source as a
                     ;; recipient. If not, skip to the next in the

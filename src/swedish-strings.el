@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.240 2002-05-08 19:50:09 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.241 2002-05-21 22:05:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.240 2002-05-08 19:50:09 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.241 2002-05-21 22:05:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -266,7 +266,7 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (who-to-add . "Vem vill du addera? ")
     (where-to-add . "Vilket möte skall han/hon adderas till? ")
     (where-to-add-self . "Vilket möte vill du bli medlem i? ")
-    (priority-q . "Prioritet på mötet? (0 (passivt medlemskap), 1 (låg) - 255 (hög)) ")
+    (priority-q . "Prioritet på ditt medlemskap i mötet? (0 (låg) - 255 (hög)) ")
     (done . "klart.\n")
     (cancelled . "avbrutet.\n")
     (nope . "det gick inte.\n")
@@ -2625,6 +2625,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
 
   (define-key lyskom-sv-mode-map (kbd "e")   'kom-set-unread)
   (define-key lyskom-sv-mode-map (kbd "a")   'kom-obsolete-extended-command-binding)
+  (define-key lyskom-sv-mode-map (kbd "l v") 'kom-obsolete-who-is-on-in-conference)
   (define-key lyskom-sv-mode-map (kbd "x")   'kom-extended-command)
   (define-key lyskom-sv-mode-map (kbd "<SPC>") 'kom-next-command)
   (define-key lyskom-sv-mode-map (kbd "<RET>") 'kom-line-next-command)

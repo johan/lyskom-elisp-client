@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.101 2002-05-08 19:50:10 byers Exp $
+;;;;; $Id: utilities.el,v 44.102 2002-05-21 22:05:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.101 2002-05-08 19:50:10 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.102 2002-05-21 22:05:44 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1444,6 +1444,39 @@ in the 20th century")
                                    nil)))
 
 
+;;; ================================================================
+;;; String truncation
+;;;
+
+(defun lyskom-truncate-to-lines (string threshold show-lines &optional width)
+  "If STRING is more than THRESHOLD lines on screen, truncate it to  SHOW-LINES.
+Optional argument WIDTH is thw window width to use instead of window-width.
+
+This function takes the setting of truncate-lines into account, so
+the resulting string may not have SHOW-LINES newline characters.
+
+Result is eq to STRING when no truncation is required.
+
+The result is approximate when truncate-lines is non-nil since different
+Emacsen use a different number of characters for the continuation marks
+at the end of broken lines. We assume one character continuation marks."
+  (let ((line-length (if truncate-lines lyskom-max-int (- (or width (window-width)) 1)))
+        (count 0)
+        (end nil)
+        (pos 0))
+    (while (and (< pos (length string)) (< count threshold))
+      (setq count (1+ count))
+      (let ((next (string-match "\\(\n\\|\\'\\)" string pos)))
+        (if (> (- next pos) line-length)
+            (setq pos (+ pos line-length))
+          (setq pos (match-end 0))))
+        (when (= count show-lines)
+          (setq end pos)))
+
+    (if (>= count threshold)
+        (substring string 0 end)
+      string)))
+
 
 ;;; ================================================================
 ;;; Color model manipulations
@@ -1457,18 +1490,19 @@ COLOR is a list of R G and B components from 0 to 65535.
 DISTANCE is a non-negative integer no larger than 1.0, that in some
 way specifies how far away from the original color the new color
 should be."
-  (let* ((hls (lyskom-rgb-to-hls (mapcar (lambda (x) (/ x 65535.0)) color)))
-         (l (elt hls 1)))
-    (if (> l 0.6)
-        (setq l (- l distance))
-      (setq l (+ l distance)))
-    (cond ((> l 1.0) (setq l 1.0))
-          ((< l 0.0) (setq l 0.0)))
-    (aset hls 1 l)
+  (when color
+    (let* ((hls (lyskom-rgb-to-hls (mapcar (lambda (x) (/ x 65535.0)) color)))
+           (l (elt hls 1)))
+      (if (> l 0.6)
+          (setq l (- l distance))
+        (setq l (+ l distance)))
+      (cond ((> l 1.0) (setq l 1.0))
+            ((< l 0.0) (setq l 0.0)))
+      (aset hls 1 l)
 
-    (apply 'format "#%02x%02x%02x"
-           (mapcar (lambda (c) (round (* 255 c)))
-                   (lyskom-hls-to-rgb hls)))))
+      (apply 'format "#%02x%02x%02x"
+             (mapcar (lambda (c) (round (* 255 c)))
+                     (lyskom-hls-to-rgb hls))))))
 
 
 (defun lyskom-string-to-rgb (color)

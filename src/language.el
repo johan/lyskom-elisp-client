@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.24 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: language.el,v 44.25 2002-05-21 22:05:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -210,7 +210,7 @@ assoc list."
     (lyskom-internal-error (message "Bad kom-tell-phrases: missing %s" key)
                            "")))
 
-(defsubst lyskom-get-string-internal (symbol category)
+(defsubst lyskom-try-get-string (symbol category)
     (cdr (assq (if (eq (cdr (assq category lyskom-language-categories)) 'local)
                    lyskom-language
                  lyskom-global-language)
@@ -222,7 +222,7 @@ assoc list."
 
 (defun lyskom-get-string (symbol &optional category)
   "Returns string associated with SYMBOL"
-    (or (lyskom-get-string-internal symbol (or category 'lyskom-message))
+    (or (lyskom-try-get-string symbol (or category 'lyskom-message))
         (lyskom-get-string-error 'lyskom-get-string
                                  symbol
                                  (or category 'lyskom-message))))
@@ -231,10 +231,10 @@ assoc list."
   "Returns string associated with SYMBOL
 If kom-long-lines is set, return the long form of the string, if it exists."
   (or  (and kom-long-lines
-            (lyskom-get-string-internal (intern (concat (symbol-name symbol)
+            (lyskom-try-get-string (intern (concat (symbol-name symbol)
                                                         "-long"))
                                         (or category 'lyskom-message)))
-       (lyskom-get-string-internal symbol
+       (lyskom-try-get-string symbol
                                    (or category 'lyskom-message))
        (lyskom-get-string-error 'lyskom-get-string
                                 symbol
@@ -256,8 +256,8 @@ lyskom-define-language."
 Looks for the 'lyskom-menu category, or 'lyskom-command
 if 'lyskom-menu is not found."
   (encode-coding-string 
-    (or (lyskom-get-string-internal symbol 'lyskom-menu)
-        (lyskom-get-string-internal symbol 'lyskom-command)
+    (or (lyskom-try-get-string symbol 'lyskom-menu)
+        (lyskom-try-get-string symbol 'lyskom-command)
         (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu))
     'iso-8859-1))
 
