@@ -1,3 +1,13 @@
+2002-05-29  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 503:
+	* commands2.el (kom-apropos): New function.
+	(lyskom-apropos-insert): New function.
+	(lyskom-apropos-insert-docstring): New function.
+
+	* view-mode.el (lyskom-view-mode-map): Bind = to
+	kom-menu-button-press, as in other modes.
+
 2002-05-28  David Byers  <david.byers@swipnet.se>
 
 	* help-compile.el (lyskom-help-parse-string): Fixed search for end

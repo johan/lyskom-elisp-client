@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-mode.el,v 44.7 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: view-mode.el,v 44.8 2002-05-29 20:22:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-mode.el,v 44.7 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: view-mode.el,v 44.8 2002-05-29 20:22:32 byers Exp $\n"))
 
 (defvar lyskom-view-mode-map nil
   "Keymap for LysKOM view mode")
@@ -59,7 +59,7 @@
     nil
   (setq lyskom-view-mode-map (make-sparse-keymap))
   (define-key lyskom-view-mode-map "*" 'kom-button-press)
-  (define-key lyskom-view-mode-map "+" 'kom-menu-button-press)
+  (define-key lyskom-view-mode-map "=" 'kom-menu-button-press)
   (define-key lyskom-view-mode-map "\t" 'kom-next-link)
   (define-key lyskom-view-mode-map [(meta tab)] 'kom-previous-link)
   (define-key lyskom-view-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)

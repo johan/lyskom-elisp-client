@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.2 2002-05-26 23:15:53 byers Exp $
+;;;;; $Id: help.el,v 44.3 2002-05-29 20:22:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.2 2002-05-26 23:15:53 byers Exp $\n"))
+	      "$Id: help.el,v 44.3 2002-05-29 20:22:32 byers Exp $\n"))
 
 
 
@@ -158,7 +158,7 @@
 
 (defun lyskom-help-format-cref (data)
   (let* ((command (intern (lyskom-help-data-get-attr 'id data)))
-         (command-name (lyskom-command-name command))
+         (command-name (lyskom-get-string command 'lyskom-command))
          (keys (delq nil
                      (mapcar (lambda (x)
                                (if (and (arrayp x)
