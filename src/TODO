@@ -78,6 +78,8 @@ Att göra i elisp-klienten
 
 -------- Allmänna förbättringar
 
+Visa i prompten om man är i administratörsläge.
+
     1385671
 
     Lista medlemsskap borde hållas uppdaterad. Vi behöver hookar för
