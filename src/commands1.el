@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.100 2001-04-01 13:18:32 joel Exp $
+;;;;; $Id: commands1.el,v 44.101 2001-04-21 16:21:42 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.100 2001-04-01 13:18:32 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.101 2001-04-21 16:21:42 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1861,7 +1861,7 @@ the user for what mark to use."
   (let ((mark
 	 (or mark
 	     kom-default-mark
-	     (lyskom-read-mark-type (lyskom-get-string 'what-mark)))))
+	     (lyskom-read-mark-type (lyskom-get-string 'what-mark) nil t))))
     (lyskom-format-insert 'marking-textno text-no)
 
     (if (blocking-do 'mark-text text-no mark)
@@ -1871,45 +1871,87 @@ the user for what mark to use."
       (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
     (cache-del-text-stat text-no)))
 
-
-(defun lyskom-read-mark-type (prompt &optional nildefault)
+(defun lyskom-read-mark-type (prompt &optional nildefault create-nonexistent)
   "Ask user about symbolic mark type and return the (integer)
 mark-type.  Prompt with PROMPT.  If NILDEFAULT is non-nil, nil is
 returned if the user enters the empty string, otherwise the user is
-prompted again."
-  (let ((mark-type -1)
+prompted again. If CREATE-NONEXISTENT is t, the user is asked whether
+the symbolic mark association should be created if it doesn't already
+exist."
+  (let ((mark-type nil) ; nil: not yet set, 'default: default chosen
         (completion-ignore-case t)
-        (completions kom-symbolic-marks-alist)
-        (first-time t)
-        (default-chosen nil))
-    (while (and (not default-chosen)
+        (completions kom-symbolic-marks-alist))
+    (while (and (not (eq mark-type 'default))
                 (or (not (integerp mark-type))
                     (< mark-type 0)
                     (> mark-type 255)))
-      (if first-time
-          (setq first-time nil)
-        (lyskom-insert 'erroneous-mark))
-      (let ((mark (lyskom-completing-read
+      (let* ((mark (lyskom-completing-read
                     prompt
-                    (lyskom-maybe-frob-completion-table
-                     completions))))
-        (if (and nildefault
-                 (stringp mark)
-                 (string= mark ""))
-            (setq default-chosen t)
-          (setq mark-type
-                (let ((tmp (lyskom-string-assoc mark completions)))
-                  (if tmp
-                      ;; Correct completion.
-                      (cdr tmp)
-                    ;; Incorrect completion.  Check for an integer.
-                    (if (string-match "\\`[0-9]+\\'" mark)
-                        (string-to-int mark)
-                      -1)))))))
-    (if default-chosen
+                    (lyskom-maybe-frob-completion-table completions)))
+             (mark-assoc (lyskom-string-assoc mark completions)))
+        (cond
+         ;; Default completion.
+         ((and nildefault
+               (stringp mark)
+               (string= mark ""))
+          (setq mark-type 'default))
+
+         ;; Correct completion.
+         (mark-assoc
+          (setq mark-type (cdr mark-assoc)))
+
+         ;; Incorrect completion, integer entered.
+         ((string-match "\\`[0-9]+\\'" mark)
+          (setq mark-type (string-to-int mark)))
+
+         ;; Incorrect completion; create new symbolic mark type.
+         ((and create-nonexistent
+               (lyskom-j-or-n-p
+                (lyskom-format (lyskom-get-string
+                                'want-to-create-symbolic-mark)
+                               mark)))
+          (let ((new-mark-type (lyskom-allocate-mark-type)))
+            (if (not new-mark-type)
+                (lyskom-insert 'no-mark-types-left)
+              (lyskom-format-insert 'creating-symbolic-mark-type
+                                    mark
+                                    new-mark-type)
+              (setq kom-symbolic-marks-alist
+                    (cons (cons mark new-mark-type)
+                          kom-symbolic-marks-alist))
+              (lyskom-save-options
+               (current-buffer)
+               (lyskom-get-string 'saving-settings)
+               (lyskom-get-string 'saving-settings-done)
+               (lyskom-get-string 'could-not-save-options))
+              (setq mark-type new-mark-type))))
+
+         ;; Incorrect completion.
+         (t
+          (lyskom-insert 'erroneous-mark)))))
+
+    (if (eq mark-type 'default)
         nil
       mark-type)))
 
+
+(defun lyskom-allocate-mark-type ()
+  (setq kom-symbolic-marks-alist
+        (sort kom-symbolic-marks-alist
+              (function (lambda (x y) (< (cdr x) (cdr y))))))
+  (let ((i 0)
+        (list kom-symbolic-marks-alist)
+        (found nil))
+    (while (and list
+                (not found)
+                (< i 256))
+      (if (not (= i (cdr (car list))))
+          (setq found t)
+        (setq list (cdr list))
+        (setq i (1+ i))))
+    (if (< i 256)
+        i
+      nil)))
 
 ;;; ================================================================
 ;;;          ]terse alla markerade - Review marked texts

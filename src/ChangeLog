@@ -1,5 +1,18 @@
 2001-04-21  Joel Rosdahl  <joel@rosdahl.net>
 
+	* vars.el.in (kom-default-mark): New default value: ask for mark
+	type.
+
+	* commands1.el (lyskom-read-mark-type): Offer to allocate new mark
+	type automatically.
+	(lyskom-allocate-mark-type): New function.
+	(lyskom-mark-text): Pass new parameters to lyskom-read-mark-type.
+
+	* english-strings.el (lyskom-message): New strings for automatic
+	mark type creation.
+
+	* swedish-strings.el (lyskom-message): Ditto.
+
 	* Makefile ($(TARGET-EL)): Always update build date in vars.el.
 
 2001-04-01  Joel Rosdahl  <joel@rosdahl.net>
