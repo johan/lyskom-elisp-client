@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.82 2002-03-21 21:23:26 joel Exp $
+# $Id: Makefile,v 44.83 2002-04-03 21:06:52 qha Exp $
 
 # Useful targets:
 #
@@ -284,10 +284,23 @@ redhat-packages: $(PACKAGENAME)-src-$(CLIENTVERSION).tar.gz
 	    >$(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
 	rpm -ba $(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
 
+######################################################################
+# Debian packages
+
+DEBIANCLIENTVERSION := $(subst -,.,$(CLIENTVERSION))
+
+debian-packages: $(RELEASE-BASE-SRC).buildstamp
+	cp -R debian $(RELEASE-BASE-SRC)
+	$(RM) -rf $(RELEASE-BASE-SRC)/debian/CVS
+	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-1)/' <debian/changelog >$(RELEASE-BASE-SRC)/debian/changelog
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >$(RELEASE-BASE-SRC)/debian/rules
+	cd $(RELEASE-BASE-SRC) && dpkg-buildpackage
+
+
 clean:
 	rm -f *~ *.gz *.zip *.buildstamp *.elc* _header.el $(TARGET-EL)
 	rm -rf $(PACKAGENAME)-*-$(CLIENTVERSION)* lyskom-*-$(CLIENTVERSION).el
 	rm -f vars.el vars.el-release
 	rm -f distribution-README-src distribution-README-nonsrc
 
-.PHONY: all verbose verbose-el fast check release redhat-packages clean
+.PHONY: all verbose verbose-el fast check release redhat-packages clean debian-packages
