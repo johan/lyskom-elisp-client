@@ -26,9 +26,9 @@ binary-indep: build
 	dh_clean -k
 	dh_installdirs
 
-	$(MAKE) lyskom.el
+	$(MAKE) lyskom-@@CLIENTVERSION@@.el
 	cp lpath.el debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/
-	gzip -c lyskom.el > debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/lyskom.el.gz
+	gzip -c lyskom-@@CLIENTVERSION@@.el > debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/lyskom.el.gz
 
 	install -m 644 debian/50lyskom-elisp-client.el debian/tmp/etc/emacs/site-start.d
 	install -m 755 debian/emacsen-common-install debian/tmp/usr/lib/emacsen-common/packages/install/lyskom-elisp-client

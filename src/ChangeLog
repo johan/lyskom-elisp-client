@@ -1,3 +1,9 @@
+2000-08-29  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* Makefile (debian-build): Use new Makefile target.
+
+	* debian/rules (binary-indep): Use new Makefile target.
+
 2000-08-29  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-P
