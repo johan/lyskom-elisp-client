@@ -1,5 +1,8 @@
 Tue Aug 20 17:16:14 1991  Linus Tolke Y  (linus at lysator)
 
+	* flags.el (lyskom-read-options-eval): Nu initieras
+	  lyskom-do-when-done {ven efter inl{sning av user-arean.
+
 	* vars.el, flags.el (lyskom-read-options-eval,
 	  kom-edit-options-send): Nu anv{nder den 2 variabler f|r att
 	  spara till common-arean: lyskom-global-boolean-variables och
