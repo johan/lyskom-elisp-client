@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.346 2003-08-25 20:02:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.347 2003-08-28 19:28:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.346 2003-08-25 20:02:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.347 2003-08-28 19:28:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -957,7 +957,7 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 Skicka in=\\[kom-edit-send], \
 Avbryt=\\[kom-edit-quit], \
 Annat se \\[describe-mode] ---")
-    (text-mass . "%#4s%#1s\n%[%#5@%#2s%]%[%#6@\n%]%#3s")
+    (text-mass . "%#4s%#1s%[%#6@\n%]%[%#5@%#2s%]%[%#7@\n%]%#3s")
     (comment-to-by . "%#1s till text %#2n%#3s.\n")
     (already-sent . "Du har redan skickat denna text en gång. Sänd ändå? ")
     (subject . "Ärende: ")
@@ -1970,8 +1970,10 @@ teckenkodning.
     (confusion-what-to-mark-unread . "Jag förstår inte vilken text du vill markera oläst.\n")
     (no-comment-to-to-unread . "Det finns inget kommenterat inlägg att markera som oläst.\n")
 
+    (mx-refuse-import-html . "HTML")
     (mx-refuse-import-spam . "Spam")
     (mx-refuse-import-all . "Alla texter")
+    (abc-html . "hHTML")
     (abc-spam . "sSpam")
     (abc-everything . "aAlla texter")
     (limit-import-to-conf . "Begränsa import till vilket möte? ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.189 2003-08-26 18:19:40 byers Exp $
+;;;;; $Id: commands2.el,v 44.190 2003-08-28 19:28:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.189 2003-08-26 18:19:40 byers Exp $\n"))
+              "$Id: commands2.el,v 44.190 2003-08-28 19:28:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3478,9 +3478,10 @@ are advisory; clients may ignore them."
                                             '(conf pers) nil nil t)))
   (when conf-stat
     (let* ((what (lyskom-a-or-b-or-c-p 'limit-import-of-what
-                                       '(abc-spam abc-everything)
+                                       '(abc-spam abc-html abc-everything)
                                        'abc-spam))
            (data (cond ((eq what 'abc-spam) "spam")
+                       ((eq what 'abc-html) "html")
                        ((eq what 'abc-everything) "all"))))
       (when (or (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
                                       lyskom-pers-no)
