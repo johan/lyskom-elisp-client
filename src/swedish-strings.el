@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.1 1993-04-26 19:38:24 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.2 1993-04-27 00:01:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.1 1993-04-26 19:38:24 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.2 1993-04-27 00:01:37 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -136,7 +136,7 @@ du \344r os\344ker.\n")
 
     (could-not-create-you .  "Det gick inte att skapa personen.\n")
     (presentation-subject . "%#1s")
-    (presentation-form . "Namn:\t\nAdress:\t\n\t\nTelefon:
+    (presentation-form . "Namn:\t\nAdress:\t\nStad:\t\nTelefon:
 Email-adress:\n\nAnnat:\t")
     (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej n\344rvarande i n\345got m\366te.")
@@ -401,7 +401,7 @@ Ditt allm\344nna meddelande l\366d:
     (waiting-higher-than . 
      "Du v\344ntar p\345 ett inl\344gg i ett m\366te med h\366gre prioritet \344n %#1d.\n")
 
-    (have-to-be-in-conf . "Du m\345ste g\345 till ett m\366te f\366rst.\n")
+    (have-to-be-in-conf-with-unread . "Du m\345ste g\345 till ett icketomt m\366te f\366rst.\n")
     (Texts . "Inl\344gg")
     (Date . "Datum")
     (Lines . "Rader")
@@ -541,6 +541,7 @@ M\344rk kuvertet LysKOM buggrapport.\n\n")
 
     (name-has-changed-to-name . "%#1s har nu bytt namn till %#2s")
     (name-has-changed-to-name-r . "%#1s har nu bytt namn till %#2s\n")
+    (you-changed-name-to . "Nu har du bytt namn till %#1s.\n")
     (database-sync . "Databasen synkas.")
     (lyskom-is-full . "\
 ===========================================================
