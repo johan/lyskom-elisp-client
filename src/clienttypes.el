@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 40.1 1996-04-02 16:19:03 byers Exp $
+;;;;; $Id: clienttypes.el,v 40.2 1996-04-23 16:53:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 40.1 1996-04-02 16:19:03 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 40.2 1996-04-23 16:53:10 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -518,9 +518,9 @@ The element last pushed is first in the list."
 (defun make-format-state (format-string
 			  start
 			  argl
-              result)
+			  result)
   (cons 'format-state
-	(vector format-string start argl (length argl) result nil)))
+	(vector format-string start argl (length argl) result nil nil)))
 
 (defsubst format-state-p (arg)
   (eq 'format-state (car-safe arg)))
@@ -558,5 +558,11 @@ The element last pushed is first in the list."
 
 (defsubst set-format-state->delayed-propl (arg propl)
   (aset (cdr arg) 5 propl))
+
+(defsubst format-state->delayed-content (arg)
+  (elt (cdr arg) 6))
+
+(defsubst set-format-state->delayed-content (arg string)
+  (aset (cdr arg) 6 string))
 
 ;;; ================================================================

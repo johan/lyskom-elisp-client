@@ -41,9 +41,18 @@ Buggar
 
     M-> i prioritera-bufferten. Text 1320736.
 
+    Spara text sparar hela bufferten.
+
     Det har hänt att call-info har blivit nil i lyskom-parse-error.
 
 Allmänna förbättringar
+
+    Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
+    ett inläggs eget nummer, alltså det som står precis innan datumet
+    och det som står inom parentesen precis efter inläggstexten, så
+    vill man antagligen inte återse det, eftersom man ju bevisligen
+    har det framför sig.  I stället vill man antagligen kommentera
+    det.
 
     Har detta att göra med lite för optimistisk cache att göra? Kanske
     bör man läsa om person-staten innan man varnar för lapp på dörren?

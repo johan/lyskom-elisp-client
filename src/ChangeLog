@@ -1,3 +1,25 @@
+Tue Apr 23 00:47:17 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-start-of-command): Anta att
+	lyskom-first-time-around är definierad.
+
+Mon Apr 22 05:57:27 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* view-text.el (lyskom-insert-person-name),
+	(lyskom-insert-conf-name): Dessa funktioner används inte, så jag
+ 	tog bort dem.
+	(lyskom-print-header-comm): Duplicera inte jobbet i lyskom-format.
+
+	* lyskom-rest.el (lyskom-delayed-print-conf): Ny funktion.
+
+	* clienttypes.el (format-state->delayed-content),
+	(set-format-state->delayed-content): Nya funktioner
+
+	* lyskom-rest.el (lyskom-do-format): Returnera state istället för
+	bara den färdiga strängen.
+	(lyskom-format-insert-before-prompt,lyskom-format-insert),
+	(lyskom-format): Justerade därefter.
+	
 Wed Apr 17 17:32:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* parse.el (lyskom-parse-error): Gör så att en bug inte blir så
