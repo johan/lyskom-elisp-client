@@ -92,7 +92,7 @@
    more consistent and open up keys for future use. As annoying as
    this is now, it will be good in the long run.
 
-** The key `a' is now a prefix for add comments.
+** The key `a' is now a prefix for add commands.
 
 ** The sequence `s u' is now a prefix for subtract commands.
 
