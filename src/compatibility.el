@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.18 1999-06-11 09:27:36 byers Exp $
+;;;;; $Id: compatibility.el,v 44.19 1999-06-11 12:21:26 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.18 1999-06-11 09:27:36 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.19 1999-06-11 12:21:26 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -205,12 +205,12 @@ KEYS should be a string in the format used for saving keyboard macros
          (setcdr tail new-parent))))
 
 (defconst lyskom-gnu-keysym
-  '((button1   . "<mouse-1>")
-    (button2   . "<mouse-2>")
-    (button3   . "<mouse-3>")
-    (button1up . "<down-mouse-1>")
-    (button2up . "<down-mouse-2>")
-    (button3up . "<down-mouse-3>")))
+  '((button1   . "<down-mouse-1>")
+    (button2   . "<down-mouse-2>")
+    (button3   . "<down-mouse-3>")
+    (button1up . "<mouse-1>")
+    (button2up . "<mouse-2>")
+    (button3up . "<mouse-3>")))
 
 (defconst lyskom-xemacs-keysym
   '((button1   . "<button1>")
