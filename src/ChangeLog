@@ -1,5 +1,8 @@
 Fri Aug 20 09:56:47 1993  Linus Tolke Y  (linus@dell)
 
+	* flags.el (lyskom-read-options-eval-get-holerith): Fixed
+	  string-to-int problem.
+
 	* lyskom-rest.el (kom-extended-command): Remove functions from the
 	  completing possibility if they are not interesting according to
 	  whether I am administrator or not.
