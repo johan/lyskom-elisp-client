@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 35.4 1991-09-17 19:37:13 linus Exp $
+;;;;; $Id: prioritize.el,v 35.5 1991-10-23 18:26:09 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -28,7 +28,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 35.4 1991-09-17 19:37:13 linus Exp $\n"))
+	      "$Id: prioritize.el,v 35.5 1991-10-23 18:26:09 linus Exp $\n"))
 
 
 
@@ -44,9 +44,6 @@ Only used by lyskom-prioritize-mode.")
 (defvar lyskom-prioritize-buffer nil
   "Used by kom-prioritize to remember which buffer the LysKOM session is in.
 Only used by lyskom-prioritize-mode.")
-
-(defvar lyskom-prioritize-mode-map nil
-  "Keymap used in lyskom-prioritize-mode.")
 
 
 (defun lyskom-prioritize-marker (pos)
@@ -170,23 +167,6 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (setq buffer-read-only t)
   (use-local-map lyskom-prioritize-mode-map)
   (run-hooks 'lyskom-prioritize-mode-hook))
-
-
-(if lyskom-prioritize-mode-map
-    nil
-  (setq lyskom-prioritize-mode-map (make-keymap))
-  (suppress-keymap lyskom-prioritize-mode-map)
-  (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
-  (define-key lyskom-prioritize-mode-map " "    'next-line)
-  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
-  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
-  (define-key lyskom-prioritize-mode-map "p"     'kom-prioritize-set-priority)
-  (define-key lyskom-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "q"     'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "S"     'kom-prioritize-quit)
-  (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
-  (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
-)
 
 
 (defun kom-prioritize-kill (count)
