@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 36.4 1993-05-22 21:06:45 linus Exp $
+;;;;; $Id: vars.el,v 36.5 1993-06-23 15:59:38 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 36.4 1993-05-22 21:06:45 linus Exp $\n"))
+	      "$Id: vars.el,v 36.5 1993-06-23 15:59:38 linus Exp $\n"))
 
 
 
@@ -521,6 +521,7 @@ unread texts in list-unread.")
     (kom-tell-review		"\305terser.")
     (kom-tell-change-name       "Ändrar sitt namn till n\345got annat.")
     (kom-tell-change-supervisor "Ändrar organisat\366r f\366r n\345got.")
+    (kom-tell-next-lyskom       "Hoppar till ett annat LysKOM.")
     )
   "The variable  kom-tell-phrases  defaults to this value.
 Users must not change this constant, but are encouraged to change

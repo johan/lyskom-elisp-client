@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.5 1993-06-18 11:51:00 linus Exp $
+;;;;; $Id: commands2.el,v 36.6 1993-06-23 15:59:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.5 1993-06-18 11:51:00 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.6 1993-06-23 15:59:20 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1389,7 +1389,26 @@ current conference to another session."
     (bury-buffer)
     (while (and (string-match (regexp-quote session-name) (buffer-name (current-buffer)))
 		(not (eq buffer (current-buffer))))
-      (bury-buffer (current-buffer)))))
+      (bury-buffer))))
 
 
+(defun kom-next-kom ()
+  "Pop up the next lyskom-session."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-next-lyskom)
+  (let ((buffers (buffer-list)))
+    (while (and buffers
+		(or (eq (car buffers) (current-buffer))
+		    (not (save-excursion
+			   (set-buffer (car buffers))
+			   (and (boundp 'lyskom-proc)
+				lyskom-proc
+				(processp lyskom-proc)
+				(memq (process-status lyskom-proc) '(run open))
+				(eq (current-buffer) (process-buffer lyskom-proc)))))))
+      (setq buffers (cdr buffers)))
+    (if buffers
+	(progn
+	  (kom-bury)
+	  (switch-to-buffer (car buffers))))))
 
