@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.9 1995-10-30 15:42:19 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.10 1995-11-16 23:46:45 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.9 1995-10-30 15:42:19 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.10 1995-11-16 23:46:45 davidk Exp $\n"))
 
 
 
@@ -115,13 +115,10 @@ If the value is 'express then texts are allowed to break in the middle of a
 comment chain.  Otherwise we dont let them in until the end of the comment
 tree.")
 
-(defvar kom-do-when-starting nil
+(defvar kom-login-hook nil
   "*What to do when logged in.
 This is a list of commands that are executed after we have logged in but before
-any command is accepted from the keyboard.
-The syntax is the same as for the kom-do-when-starting variable except that the
-last element is not remembered forever. These are executed as soon as we get a
-new prompt i.e. non-stop at login.")
+any command is accepted from the keyboard.")
 
 (defvar kom-do-when-done '(kom-review-all-marked-texts kom-display-time)
   "*What to do when all texts are read.
@@ -276,7 +273,7 @@ he gets a y-or-n-p question for all recipients.")
 
 (defconst lyskom-elisp-variables '(
   kom-do-when-done
-  kom-do-when-starting
+  kom-login-hook
   kom-mercial 
   kom-higher-priority-breaks
   kom-membership-default-placement
@@ -296,7 +293,6 @@ he gets a y-or-n-p question for all recipients.")
   lyskom-who-info-has-changed-hook
   lyskom-prompt-text
   lyskom-prompt-executing-default-command-text
-  lyskom-login-hook
   )
   "Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")
@@ -601,10 +597,6 @@ set the local variable no-message non-nil.")
 (defvar lyskom-who-info-has-changed-hook nil
   "*Hook to run every time the who-info-buffer has changed.
 The hook is run with current-buffer the lyskom buffer, not the who-info-buffer.")
-
-(defvar lyskom-login-hook nil
-  "*Hook to run when we have logged in. Other purposes than kom-do-when-starting.
-This could be set in the user-area.")
 
 (defvar lyskom-personal-message-hook nil
   "*Hook to run when a personal message is received.

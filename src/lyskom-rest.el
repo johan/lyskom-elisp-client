@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.13 1995-11-16 23:31:50 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 38.14 1995-11-16 23:46:28 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.13 1995-11-16 23:31:50 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.14 1995-11-16 23:46:28 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1388,9 +1388,7 @@ lyskom-is-waiting nil.
 
 (defun lyskom-print-prompt ()
   "Print prompt if the client knows which command will be default.
-Set lyskom-no-prompt otwherwise. Tell server what I am doing.
-If lyskom-do-when-starting is non-nil then do the first command from this 
-list."
+Set lyskom-no-prompt otwherwise. Tell server what I am doing."
   (setq lyskom-no-prompt nil)
   (let ((to-do (lyskom-what-to-do)))
     (setq lyskom-command-to-do to-do)
@@ -1446,7 +1444,6 @@ list."
 			      (lyskom-command-name (key-binding command))))
 			(t (lyskom-format 'the-command command))))))
 
-     ;; Should this happen in 0.39? I don't think so. /dk
      ((eq to-do 'unknown)		;Pending replies from server.
       (setq lyskom-no-prompt t))
 
@@ -1454,30 +1451,9 @@ list."
 
   (if lyskom-no-prompt
       nil
-    (lyskom-insert lyskom-prompt-text)
-    (lyskom-maybe-do-when-starting))
+    (lyskom-insert lyskom-prompt-text))
 
   (lyskom-set-mode-line))
-
-
-(defun lyskom-maybe-do-when-starting ()
-  "Call a command if lyskom-do-when-starting is non-nil."
-  (if lyskom-do-when-starting
-      (progn
-	(goto-char (point-max))
-	(let ((command (car lyskom-do-when-starting))
-	      (lyskom-executing-command nil))
-	  (setq lyskom-do-when-starting (cdr lyskom-do-when-starting))
-	  (save-window-excursion
-	    (switch-to-buffer (current-buffer))
-	    (cond
-	     ((stringp command)
-	      (execute-kbd-macro command))
-	     ((commandp command)
-	      (call-interactively command))
-	     (t 
-	      (lyskom-insert
-	       (lyskom-format 'error-in-do-when-starting command)))))))))
 
 
 (defun lyskom-what-to-do ()

@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 38.9 1995-10-28 07:36:21 davidk Exp $
+# $Id: Makefile,v 38.10 1995-11-16 23:46:00 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.9 1995-10-28 07:36:21 davidk Exp $
+# $Id: Makefile,v 38.10 1995-11-16 23:46:00 davidk Exp $
 #
 
 CLIENTVERSION = 0.39
@@ -82,7 +82,12 @@ vars.el: vars.el.in Makefile
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
 	chmod 444 vars.el
 
-lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
+lyskom.elc: lyskom.el
+	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
+
+# For fast compiling
+.PHONY: fast
+fast: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
 
 english-lyskom.elc: $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC)
@@ -123,8 +128,7 @@ installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
 	cp lyskom.el /usr/local/var/elisp/lyskom.el
 	cp lyskom-$(CLIENTVERSION).elc /usr/gnu/lib/emacs/site-lisp/lyskom.elc
 
-lyskom-$(CLIENTVERSION).elc: lyskom.el
-	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
+lyskom-$(CLIENTVERSION).elc: lyskom.elc
 	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
 
 lyskom.elc-compatibility: lyskom.el
