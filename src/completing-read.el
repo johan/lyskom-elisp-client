@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.3 1993-05-25 15:50:55 linus Exp $
+;;;;; $Id: completing-read.el,v 36.4 1993-06-01 19:39:51 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.3 1993-05-25 15:50:55 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.4 1993-06-01 19:39:51 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -292,7 +292,7 @@ When C-G is pressed then lyskom-end-of-command is evaled."
 	(and completion-buffer
 	     (get-buffer-window completion-buffer)))
   (use-local-map lyskom-completing-map)
-  (if (fboundp 'map-keymap)		;Special for lucid-emacs.
+  (if (boundp 'unread-command-event)		;Special for lucid-emacs.
       (setq unread-command-event last-command-event)
     (setq unread-command-char last-command-char)))
 
@@ -417,7 +417,7 @@ parst matching ([^)]) in string and alist are disgarded."
    ((fboundp 'map-keymap)		;lucid-emacs' way of doing things.
     (map-keymap 
      (function (lambda (keydesc binding)
-		 (define-key lyskom-initial-completing-map keydesc 
+		 (define-key lyskom-initial-completing-map (vector keydesc)
 		   'lyskom-hack-minibuf)))
      global-map))
    ((string-match "^19" emacs-version)
