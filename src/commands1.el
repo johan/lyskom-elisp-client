@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.87 2000-08-28 15:07:04 byers Exp $
+;;;;; $Id: commands1.el,v 44.88 2000-08-29 16:15:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.87 2000-08-28 15:07:04 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.88 2000-08-29 16:15:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2800,16 +2800,19 @@ Uses Protocol A version 9 calls"
 
 
 (defun lyskom-deferred-client-1 (name defer-info)
-  (initiate-get-client-version 'deferred
-			       'lyskom-deferred-client-2
-			       (elt (defer-info->data defer-info) 0)
-			       defer-info
-			       name
-                               (elt (defer-info->data defer-info) 1)
-                               ))
+  (let* ((data (defer-info->data defer-info))
+         (session (if (consp data) (elt data 0) data))
+         (collector (if (consp data) (elt data 1) nil)))
+    (initiate-get-client-version 'deferred
+                                 'lyskom-deferred-client-2
+                                 session
+                                 defer-info
+                                 name
+                                 collector
+                                 )))
 
 (defun lyskom-deferred-client-2 (version defer-info name collect)
-  (lyskom-list-clients-collect name version collect)
+  (when collect (lyskom-list-clients-collect name version collect))
   (lyskom-replace-deferred defer-info (if (zerop (length name))
 					  "-"
 					(concat name " " version))))
@@ -3153,21 +3156,6 @@ footnotes) to it as read in the server."
                      'adding-name-as-copy
                      'bcc-recpt))
 
-(defvar lyskom-add-recipient-type)
-(defvar lyskom-add-recipient-target)
-(defvar lyskom-add-recipient-text)
-
-(defun lyskom-verify-add-recipient ()
-    "Make sure the user really does mean to add a recipient
-conference instead of just adding a carbon copy as he most likely
-ought to. Useful as a lyskom-add-recipient-hook only."
-    (when (eq lyskom-add-recipient-type 'recpt)
-      (unless (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q
-                                              lyskom-add-recipient-target)
-                               t)
-        (setq lyskom-add-recipient-type 'cc-recpt))))
-
-
 (defun lyskom-add-helper (text-no last-variable who-prompt doing-prompt type)
   (let* ((conf (blocking-do 'get-conf-stat (lyskom-default-value last-variable)))
          (target (lyskom-read-conf-stat
@@ -3179,35 +3167,49 @@ ought to. Useful as a lyskom-add-recipient-hook only."
 
     (when (and target text-no)
 
-      (let ((lyskom-add-recipient-text text-no)
-            (lyskom-add-recipient-type type)
-            (lyskom-add-recipient-target target))
+      (when (and (eq type 'recpt)
+                 kom-confirm-add-recipients
+                 (not (lyskom-j-or-n-p (lyskom-format 'really-add-as-recpt-q
+                                                      target))))
+        (setq type 'cc-recpt 
+              doing-prompt 'adding-name-as-copy))
 
-        (run-hooks 'lyskom-add-recipient-hook)
+      (lyskom-set-default last-variable (conf-stat->conf-no target))
+      (lyskom-format-insert doing-prompt target text-no)
+      (lyskom-move-recipient text-no nil target type))))
 
-        (when (and target text-no)
-          (lyskom-set-default last-variable (conf-stat->conf-no target))
-          (lyskom-format-insert doing-prompt target text-no)
-          (lyskom-move-recipient text-no nil target type))))))
+(defun lyskom-default-recpt-for-sub (recipients)
+  "Select the default recipient for removal from RECIPIENTS.
+The value of RECIPIENTS should be the result of a call to 
+\(lyskom-text-recipients text-no t\)."
+  (let ((last-sub (lyskom-default-value 'lyskom-last-sub-rcpt)))
+    (cond ((and (assq last-sub recipients)
+                (blocking-do 'get-conf-stat last-sub)))
+          ((and (assq lyskom-current-conf recipients)
+                (blocking-do 'get-conf-stat lyskom-current-conf)))
+          ((and (rassq 'RECPT recipients)
+                (blocking-do 'get-conf-stat (car (rassq 'RECPT recipients)))))
+          ((and (car recipients)
+                (blocking-do 'get-conf-stat (car (car recipients))))))))
+
 
 (def-kom-command kom-sub-recipient (text-no)
   "Remove a recipient from text TEXT-NO."
   (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-recipient)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
     (if text-stat
-        (let ((recipients (lyskom-text-recipients text-stat)))
+        (let ((recipients (lyskom-text-recipients text-stat t)))
           (if recipients
-              (let* ((conf (cond ((memq lyskom-current-conf recipients)
-                                  (blocking-do 'get-conf-stat lyskom-current-conf))
-                                 ((car recipients) (blocking-do 'get-conf-stat (car recipients)))))
+              (let* ((conf (lyskom-default-recpt-for-sub recipients))
                      (source (lyskom-read-conf-stat
                               (lyskom-get-string 'who-to-sub-q)
-                              (list (cons 'restrict recipients))
+                              (list (cons 'restrict (mapcar 'car recipients)))
                               nil
                               (cons (if conf (conf-stat->name conf) "") 0)
                               t)))
                 (when source
                   (lyskom-format-insert 'remove-name-as-recipient source text-no)
+                  (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
                   (lyskom-move-recipient text-no source nil nil)
                   ))
             (lyskom-format-insert 'text-has-no-recipients-r text-no)))
@@ -3219,35 +3221,34 @@ ought to. Useful as a lyskom-add-recipient-hook only."
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
     (if text-stat
         (let* ((recipients (lyskom-text-recipients text-stat t))
-               (default-recpt (or (car (assq lyskom-current-conf recipients))
-                                  (car (rassq 'RECPT recipients))
-                                  (car (car recipients)))))
-          (if (null default-recpt)
+               (default-from (lyskom-default-recpt-for-sub recipients))
+               (default-to (blocking-do 'get-conf-stat
+                                        (or (lyskom-default-value 'lyskom-last-added-rcpt)
+                                            lyskom-current-conf))))
+          (if (null default-from)
               (lyskom-format-insert 'text-has-no-recipients-r text-no)
-            (blocking-do-multiple ((default-from (get-conf-stat default-recpt))
-                                   (default-to (get-conf-stat
-                                                (or lyskom-last-added-rcpt
-                                                    lyskom-current-conf))))
-              (let ((source (lyskom-read-conf-stat 'who-to-move-from-q
-                                                   (list
-                                                    (cons 'restrict
-                                                          (mapcar 'car
-                                                                  recipients)))
-                                                   nil
-                                                   (cons (if default-from
-                                                             (conf-stat->name default-from)
-                                                           "") 0)
-                                                   t))
-                    (target (lyskom-read-conf-stat 'who-to-move-to-q
-                                                   '(all)
-                                                   nil
-                                                   (cons (if default-to
-                                                             (conf-stat->name default-from)
-                                                           "") 0)
-                                                   t)))
-                (when (and source target)
-                  (lyskom-format-insert 'moving-name source target text-stat)
-                  (lyskom-move-recipient text-no source target 'recpt))))))
+            (let ((source (lyskom-read-conf-stat 'who-to-move-from-q
+                                                 (list
+                                                  (cons 'restrict
+                                                        (mapcar 'car
+                                                                recipients)))
+                                                 nil
+                                                 (cons (if default-from
+                                                           (conf-stat->name default-from)
+                                                         "") 0)
+                                                 t))
+                  (target (lyskom-read-conf-stat 'who-to-move-to-q
+                                                 '(all)
+                                                 nil
+                                                 (cons (if default-to
+                                                           (conf-stat->name default-from)
+                                                         "") 0)
+                                                 t)))
+              (when (and source target)
+                (lyskom-format-insert 'moving-name source target text-stat)
+                (lyskom-set-default 'lyskom-last-added-rcpt (conf-stat->conf-no target))
+                (lyskom-set-default 'lyskom-last-sub-rcpt (conf-stat->conf-no source))
+                (lyskom-move-recipient text-no source target 'recpt)))))
       (lyskom-format-insert 'no-such-text-no text-no))))
          
 

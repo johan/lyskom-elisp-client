@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.10 2000-08-23 10:43:41 byers Exp $
+# $Id: distribution-Makefile,v 44.11 2000-08-29 16:15:04 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -95,20 +95,21 @@ HEADER = 	header.el \
 		language.el
 
 
-all: envcheck lyskom.elc
+all: envcheck lyskom-@@CLIENTVERSION@@.elc
 
 envcheck:
 	$(EMACS-BATCH) -l ./envcheck.el -f lyskom-check-environment
 
-lyskom.elc: lyskom.el
-	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
+lyskom-@@CLIENTVERSION@@.elc: lyskom-@@CLIENTVERSION@@.el
+	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom-@@CLIENTVERSION@@.el
 
-lyskom.el: $(HEADER) $(SOURCES) 
-	cat $(HEADER) $(SOURCES) > lyskom.el
+lyskom-@@CLIENTVERSION@@.el: $(HEADER) $(SOURCES) 
+	cat $(HEADER) $(SOURCES) > lyskom-@@CLIENTVERSION@@.el
 
-install: lyskom.elc
-	cp lyskom.el lyskom.elc $(LISPDIR)
+install: lyskom-@@CLIENTVERSION@@.elc
+	cp lyskom-@@CLIENTVERSION@@.el lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)
+	ln -s $(LISPDIR)/lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)/lyskom.elc
 
 clean:
-	$(RM) lyskom.el
+	$(RM) lyskom-@@CLIENTVERSION@@.el
 	$(RM) *~ *.elc core *.bak

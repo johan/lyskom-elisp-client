@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.70 2000-08-28 13:32:14 byers Exp $
+;;;;; $Id: utilities.el,v 44.71 2000-08-29 16:15:15 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.70 2000-08-28 13:32:14 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.71 2000-08-29 16:15:15 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -650,7 +650,55 @@ See run-hook-with-args for detailed information."
                                        lyskom-buffer)
                                   (current-buffer)))
                   (apply 'run-hook-with-args hook args)))
-                              
+
+
+;;;(defun lyskom-set-variable-hook-wrapper (hook-function args)
+;;;  "Wrapper for running HOOK-FUNCTION with ARGS.
+;;;If HOOK returns an alist ((S1 . V1) ...), set value of symbol S1 to V1
+;;;and similarly for each element.
+;;;
+;;;The hook may set hook-function-args to change the arguments to subsequent
+;;;hook functions.
+;;;
+;;;Hook functions that rely on this are totally dependent on the current 
+;;;implementation of all callers. If you think you want to use this feature,
+;;;think again. You probably don't."
+;;;  (lyskom-traverse el (apply hook args)
+;;;    (set (car el) (cdr el))))
+;;;
+;;;
+;;;(defun lyskom-run-hook-with-wrapper (hook wrapper &rest args)
+;;;  "Run HOOK by calling WRAPPER for each function in the LysKOM buffer.
+;;;The wrapper will be called with arguments FUNCTION and ARGS. It
+;;;calls the actual hook function by applying FUNCTION to ARGS.
+;;;
+;;;This function emulates the built-in run-hook-with-args function.
+;;;It is modeled on the XEmacs 21.2 implementation, so there may be
+;;;slight discrepancies with other Emacs versions.
+;;;
+;;;The variable hook-function-args holds the arguments to the hook 
+;;;function (the ARGS parameter for the wrapper)."
+;;;  (save-excursion
+;;;    (set-buffer (or (and (boundp 'lyskom-buffer) lyskom-buffer)
+;;;                    (current-buffer)))
+;;;    (let ((hook-function-args args))
+;;;      (when (and hook (boundp hook))
+;;;        (let ((val (symbol-value hook)))
+;;;          (if (and (consp val) (eq (car val 'lambda)))
+;;;              (funcall wrapper val args)
+;;;            (while (and val (consp val))
+;;;              (if (eq (car val) t)
+;;;                  (let ((globals (default-value hook)))
+;;;                    (if (and (consp globals) (eq (car globals 'lambda)))
+;;;                        (funcall wrapper hook args)
+;;;                      (while (and globals (consp globals))
+;;;                        (unless (eq (car globals t))
+;;;                          (funcall wrapper (car globals) args))
+;;;                        (setq globals (cdr globals)))))
+;;;                (funcall wrapper (car val) args)
+;;;                (setq val (cdr val))))))))))
+
+                                                     
 
 (defun lyskom-add-hook (hook function &optional append)
   "Add to the value of HOOK the function FUNCTION in the LysKOM buffer.
