@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.15 1996-07-27 11:39:35 byers Exp $
+;;;;; $Id: english-strings.el,v 41.16 1996-07-29 09:16:59 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.15 1996-07-27 11:39:35 byers Exp $"))
+              "$Id: english-strings.el,v 41.16 1996-07-29 09:16:59 byers Exp $"))
 
 
 
@@ -1503,7 +1503,12 @@ This variable is stored in the LysKOM server.")
     (39 . "Out of memory")
     (40 . "The server is gone crazy")
     (41 . "The client thinks that the server says that it does not understand the client")
-    (42 . "No such session"))
+    (42 . "No such session")
+    (43 . "Invalid regular expression")
+    (44 . "Can't unmark an article that was not marked")
+    (45 . "Temorary lossage. Please try again later")
+    (46 . "Sending huge messages to the server is not a nice thing to do")
+    (47 . "Anonymous texts are not accepted by all recipients"))
   "All the errors reported from the server in plain text.")
 
 
