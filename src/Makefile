@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.12 1991-12-18 04:13:37 linus Exp $
+# $Id: Makefile,v 35.13 1991-12-19 12:03:51 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.12 1991-12-18 04:13:37 linus Exp $
+# $Id: Makefile,v 35.13 1991-12-19 12:03:51 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.12  1991-12-18 04:13:37  linus
+# Revision 35.13  1991-12-19 12:03:51  linus
+# .elc-files require macros.elc.
+#
+# Revision 35.12  1991/12/18  04:13:37  linus
 # $(MAKE)
 #
 # Revision 35.11  1991/10/08  17:11:18  linus
@@ -116,6 +119,7 @@ lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
 makealfa: makealfa.c
 	$(CC) -o makealfa $(CFLAGS) makealfa.c -ll
 
+$(SRC-ELC) $(SWEDISH-ELC) $(ENGLISH-ELC): macros.elc
 
 elc-files: $(HEADER-ELC) $(PARTS-ELC) 
 
