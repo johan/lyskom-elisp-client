@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 39.4 1996-03-20 13:15:22 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 39.5 1996-03-25 15:48:11 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 39.4 1996-03-20 13:15:22 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 39.5 1996-03-25 15:48:11 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -264,7 +264,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (want-become-member . "Vill du bli medlem? ")
     (no-ok . "Nehej.\n")
 
-    (who-to-remove-motd-for . "Vilket m\366te/person vill du ta bort lapp p\345 d\366rr f\366r (dig sj{lv): ")
+    (who-to-remove-motd-for . "Vilket m\366te/person vill du ta bort lapp p\345 d\366rr f\366r (dig sj\344lv): ")
 
     (conf-all-read . "%#1M - inga ol\344sta.\n")
     (no-in-conf . "Du \344r inte n\344rvarande i n\345got m\366te.\n")
