@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.53 1999-08-25 07:17:35 byers Exp $
+;;;;; $Id: commands1.el,v 44.54 1999-11-12 14:30:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.53 1999-08-25 07:17:35 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.54 1999-11-12 14:30:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2952,6 +2952,7 @@ command argument."
 			  (lyskom-get-string
 			   (cond ((eq action 'add-rcpt) 'who-to-add-q)
 				 ((eq action 'add-copy) 'who-to-add-copy-q)
+                                 ((eq action 'add-bcc)  'who-to-add-bcc-q)
 				 ((eq action 'sub) 'who-to-sub-q)
 				 ((eq action 'move) 'who-to-move-to-q)
 				 (t (lyskom-error "internal error"))))
