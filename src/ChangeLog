@@ -1,4 +1,21 @@
+2003-08-03  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in (kom-dont-complain-about-missing-presentation): New
+	variable.
+
 2003-08-02  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-nag-about-presentation): New function.
+
+	* startup.el (kom-start-anew): Use new function to nag about
+	presentation.
+
+	* commands1.el (lyskom-write-text): Nag about presentation.
+	(kom-write-comment): Here too.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Added support for F
+	format letter (fill paragraph).
+	(lyskom-do-insert): Ditto.
 
 	Coherent and useful defaults reading conference names:
 	* filter.el (kom-filter-subject): Don't set default when reading

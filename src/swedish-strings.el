@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.330 2003-07-28 20:02:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.331 2003-08-02 22:08:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.330 2003-07-28 20:02:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.331 2003-08-02 22:08:38 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -168,10 +168,6 @@ kan skapa en ny:\n")
     (lyskom-motd-was-garbed . "\nLoginmeddelandet finns inte!
 Det meddelande som ska visas efter inloggning har försvunnit.
 Kontakta LysKOM-administratören.\n")
-    (presentation-encouragement . 
-				"Du har ingen presentation. Det skulle vara trevligt om du skrev en.
-Använd kommandot Äp. Om du inte vill skriva någon presentation tryck fs.\n")
-
     (first-greeting . "%#1s
 Det tycks vara första gången du använder LysKOM. Välkommen!
 Kontrollera att du stavat ditt namn rätt. Använd gärna ditt fullständiga
@@ -1967,7 +1963,23 @@ teckenkodning.
     (text-has-no-comments . "Inlägg %#1n har inga kommentarer\n")
     (text-has-no-footnotes . "Inlägg %#1n har inga fotnoter\n")
     (set-message-flag-q . "Ta emot gruppmeddelanden till %#1M? ")
-    ))
+    (why-you-got-no-presentation . "\
+
+%#1@\
+========================================================================
+Du har ingen presentation%#2?z%[ men har skrivit %#2d inlägg%]%[%]
+
+Använd kommandot \"Ändra presentation\" för att skriva eller ändra din
+presentation.
+
+%[%#4F\
+Din presentation låter andra i %#3s veta lite om vem du är, och det
+bidrar till känslan av samhörighet i %#3s. Det här meddelandet kommer
+att upprepas då och då tills du har skrivit en presentation.%]
+========================================================================
+
+")
+))
 
 (lyskom-language-var local lyskom-month-names sv
   '(("januari" . 1)   ("jan" . 1)

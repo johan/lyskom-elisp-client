@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.188 2003-08-02 20:21:45 byers Exp $
+;;;;; $Id: commands1.el,v 44.189 2003-08-02 22:08:37 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.188 2003-08-02 20:21:45 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.189 2003-08-02 22:08:37 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -503,7 +503,7 @@ comment; `kom-confirm-multiple-recipients' affects how multiple
 recipients are handled."
   (interactive)
   (lyskom-tell-internat 'kom-tell-write-letter)
-  (lyskom-write-text pers-no 'who-letter-to nil))
+  (lyskom-write-text pers-no 'who-letter-to))
 
 
 ;;; ================================================================
@@ -1088,22 +1088,24 @@ This command accepts text number prefix arguments (see
 			      "")))
   (unwind-protect
       (if text-no
-          (blocking-do-multiple ((text (get-text text-no))
-                                 (text-stat (get-text-stat text-no)))
-            (when (or (null (text-stat-find-aux text-stat 4))
-                      (lyskom-j-or-n-p 
-                       (lyskom-get-string 'no-comments-q)))
-              (if (and (text-stat-find-aux text-stat 5)
-                       (lyskom-j-or-n-p
-                        (lyskom-get-string 'private-answer-q)))
-                  (lyskom-private-answer-soon
-                   text-stat
-                   text
-                   text-no)
-              (lyskom-write-comment-soon text-stat
-                                         text
-                                         text-no
-                                         'comment))))
+          (progn
+            (lyskom-nag-about-presentation)
+            (blocking-do-multiple ((text (get-text text-no))
+                                   (text-stat (get-text-stat text-no)))
+              (when (or (null (text-stat-find-aux text-stat 4))
+                        (lyskom-j-or-n-p 
+                         (lyskom-get-string 'no-comments-q)))
+                (if (and (text-stat-find-aux text-stat 5)
+                         (lyskom-j-or-n-p
+                          (lyskom-get-string 'private-answer-q)))
+                    (lyskom-private-answer-soon
+                     text-stat
+                     text
+                     text-no)
+                  (lyskom-write-comment-soon text-stat
+                                             text
+                                             text-no
+                                             'comment)))))
         (lyskom-insert-string 'confusion-who-to-reply-to))
     (lyskom-end-of-command)))
 
@@ -1835,19 +1837,15 @@ comment; `kom-confirm-multiple-recipients' affects how multiple
 recipients are handled."
   (interactive "P")
   (lyskom-tell-internat 'kom-tell-write-text)
-  (lyskom-write-text arg 'who-send-text-to nil))
+  (lyskom-write-text arg 'who-send-text-to))
 
-(defun lyskom-write-text (arg prompt default)
+(defun lyskom-write-text (arg prompt)
   "Start writing a new text."
-  (when default
-    (setq default (uconf-stat->name (blocking-do 'get-uconf-stat default))))
+  (lyskom-nag-about-presentation)
   (let* ((tono (if (and arg lyskom-current-conf (not (zerop lyskom-current-conf)))
                    lyskom-current-conf
                  (lyskom-read-conf-no (lyskom-get-string prompt)
-                                      '(pers conf) 
-                                      nil
-                                      (and default (cons default 0))
-                                      t)))
+                                      '(pers conf) nil nil t)))
          (conf-stat (blocking-do 'get-conf-stat tono)))
     (cache-del-conf-stat tono)
     (if (if (zerop (conf-stat->msg-of-day conf-stat))

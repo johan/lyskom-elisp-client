@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.253 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: vars.el.in,v 44.254 2003-08-02 22:08:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.253 2003-08-02 20:21:46 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.254 2003-08-02 22:08:39 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -121,6 +121,15 @@ if the variable is in kom-dont-read-saved-variables."
 
 
 ;;; User flags
+
+(def-kom-var kom-dont-complain-about-missing-presentation nil
+  "*Controls whether the client complains when you don't have
+a presentation. When set to non-nil, the client will never
+complain.
+
+This variable should not be documented. Anybody asocial enough
+to want this feature ought to have to work to find it."
+  server)
 
 (def-kom-var kom-show-sync-messages nil
   "**Controls display of database saving message.
