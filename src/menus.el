@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.5 1996-10-08 12:22:37 nisse Exp $
+;;;;; $Id: menus.el,v 44.6 1996-10-11 11:20:47 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,45 +32,98 @@
 
 
 (defvar lyskom-menus
-  '((menu lyskom
-	  ((menu read ((item kom-view-next-text)
-		       hline
-		       (item kom-view-commented-text)
-		       (item kom-view-previous-commented-text)
-		       (item kom-review-comments)
-		       (item kom-review-tree)
-		       (item kom-find-root)))
-	   (menu dont-read((item kom-jump)
-			   (item kom-set-unread)))
-	   (menu write ((item kom-write-text)
-			(item kom-send-letter)
-			(item kom-write-comment)
-			(item kom-comment-previous)
-			hline
-			(item kom-send-message)))
-	   (menu move ((item kom-go-to-conf)
-		       (item kom-go-to-next-conf)))
-	   (menu info ((item kom-who-is-on)
-		       (item kom-list-news)
-		       hline
-		       (item kom-status-person)
-		       (item kom-status-conf)
-		       (item kom-review-presentation)
-		       hline
-		       (item kom-list-conferences)
-		       (item kom-list-persons))))))
+  '((menu read
+	  ((item kom-view-next-text)
+	   (item kom-list-news)
+	   (hline review-separator)
+	   (item kom-view-commented-text)
+	   (item kom-view-previous-commented-text)
+	   (item kom-review-comments)
+	   (item kom-review-tree)
+	   (item kom-find-root)
+	   (hline jump-separator)
+	   (item kom-jump)
+	   (item kom-super-jump)
+	   (item kom-set-unread)))
+    (menu write
+	  ((item kom-write-text)
+	   (item kom-send-letter)
+	   (item kom-write-comment)
+	   (item kom-private-answer)
+	   (item kom-comment-previous)
+	   (hline send-separator)
+	   (item kom-send-message)))
+    (menu conference
+	  ((item kom-go-to-conf)
+	   (item kom-go-to-next-conf)
+	   (hline info-separator)
+	   (item kom-membership)
+	   (item kom-list-conferences)
+	   (item kom-status-conf)
+	   (item kom-review-presentation)
+	   (hline member-separator)
+	   (item kom-add-self)
+	   (item kom-sub-self)
+	   (item kom-prioritize)))
+    (menu person
+	  ((item kom-who-is-on)
+	   (item kom-status-session)
+	   (hline info-separator)
+	   (item kom-list-persons)
+	   (item kom-status-person)
+	   (item kom-review-presentation)
+	   (hline change-separator)
+	   (item kom-change-name)
+	   (item kom-change-password))))
   "The menus used in LysKOM.")
+
+(defvar lyskom-popup-menus
+  (` ((menu lyskom (, lyskom-menus))))
+  "Popup-menu in the backgrouond of the LysKOM window")
+
+;;; Gamla utseendet
+;;(defvar lyskom-menus
+;;  '((menu lyskom
+;;	    ((menu read ((item kom-view-next-text)
+;;			 hline
+;;			 (item kom-view-commented-text)
+;;			 (item kom-view-previous-commented-text)
+;;			 (item kom-review-comments)
+;;			 (item kom-review-tree)
+;;			 (item kom-find-root)))
+;;	     (menu dont-read((item kom-jump)
+;;			     (item kom-set-unread)))
+;;	     (menu write ((item kom-write-text)
+;;			  (item kom-send-letter)
+;;			  (item kom-write-comment)
+;;			  (item kom-comment-previous)
+;;			  hline
+;;			  (item kom-send-message)))
+;;	     (menu move ((item kom-go-to-conf)
+;;			 (item kom-go-to-next-conf)))
+;;	     (menu info ((item kom-who-is-on)
+;;			 (item kom-list-news)
+;;			 hline
+;;			 (item kom-status-person)
+;;			 (item kom-status-conf)
+;;			 (item kom-review-presentation)
+;;			 hline
+;;			 (item kom-list-conferences)
+;;			 (item kom-list-persons))))))
+;;  "The menus used in LysKOM.")
 
 (defvar lyskom-edit-menus
   '((menu lyskom
-	  ((menu send ((item kom-edit-send)
-		       (item kom-edit-send-anonymous)))
-	   (item kom-edit-quit)
-	   hline
-	   (menu recievers ((item kom-edit-add-recipient)
-			    (item kom-edit-add-copy)))
-	   (menu commented ((item kom-edit-show-commented)
-			    (item kom-edit-insert-commented))))))
+	  ((item kom-edit-send)
+;	   (item kom-edit-send-anonymous)
+	   (hline reciever-separator)
+	   (item kom-edit-add-recipient)
+	   (item kom-edit-add-copy)
+	   (hline comment-separator)
+	   (item kom-edit-show-commented)
+;	   (item kom-edit-insert-commented)
+	   (hline send-separator)
+	   (item kom-edit-quit))))
   "The menus for editing LysKOM messages.")
 
 (defvar lyskom-menu-map nil
@@ -85,45 +138,54 @@
 (when (not lyskom-edit-menu-map)
   (setq lyskom-edit-menu-map (make-sparse-keymap)))
 
+(defvar lyskom-popup-menu-map nil
+  "A keymap the LysKOM menu in the edit buffer.")
+
+(when (not lyskom-popup-menu-map)
+  (setq lyskom-popup-menu-map (make-sparse-keymap)))
+
 (defun lyskom-build-menus ()
   "Create menus from according to LYSKOM-MENUS"
   (interactive)
+
   ;; Menu in lyskom-mode
   (define-key lyskom-mode-map [menu-bar]
     lyskom-menu-map)
   (define-key lyskom-mode-map [menu-bar edit]
     'undefined)
-  (lyskom-define-menu lyskom-menu-map lyskom-menus)
+
   ;; Menu in lyskom-edit-mode
+  (lyskom-define-menu lyskom-menu-map lyskom-menus)
   (define-key lyskom-edit-mode-map [menu-bar]
     lyskom-edit-menu-map)
-  (lyskom-define-menu lyskom-edit-menu-map lyskom-edit-menus))
-  
+  (lyskom-define-menu lyskom-edit-menu-map lyskom-edit-menus)
+
+  ;; Popup-menu
+  (lyskom-define-menu lyskom-popup-menu-map lyskom-popup-menus))
 
 (defun lyskom-define-menu (map menus)
   (when menus
     (lyskom-define-menu map (cdr menus))
-    (cond ((eq 'hline (car menus))
-	   (define-key map [separator] '("--")))
-	  ((eq 'menu (car (car menus)))
-	   (let* ((symbol (car (cdr (car menus))))
-		  (name (lyskom-get-string symbol 'menu))
-		  (submenu (car (cdr (cdr (car menus)))))
-		  (submap (make-sparse-keymap name)))
+    (let ((type (car (car menus)))
+	  (symbol (car (cdr (car menus)))))
+      (cond ((eq 'hline type)
+	     (define-key map (vector symbol) '("--")))
+	    ((eq 'menu type)
+	     (let* ((name (lyskom-get-menu-string symbol))
+		    (submap (make-sparse-keymap name)))
+	       (define-key map (vector symbol)
+		 (cons name submap))
+	       (lyskom-define-menu submap
+				   (car (cdr (cdr (car menus)))))))
+	    ((eq 'item type)
 	     (define-key map (vector symbol)
-	       (cons name submap))
-	     (lyskom-define-menu submap submenu)))
-	  ((eq 'item (car (car menus)))
-	   (let* ((symbol (car (cdr (car menus))))
-		  (name (lyskom-get-string symbol 'menu)))
-	     (define-key map (vector symbol)
-	       (cons name symbol))))
-	  (t (error "Menu description invalid in lyskom-define-menu")))))
+	       (cons (lyskom-get-menu-string symbol) symbol)))
+	    (t (error "Menu description invalid in lyskom-define-menu"))))))
 
 		   
 (defun lyskom-background-menu (pos event)
   "Pop up a menu with LysKOM commands and execute the selected command."
-  (let* ((menu (lookup-key lyskom-menu-map [lyskom]))
+  (let* ((menu (lookup-key lyskom-popup-menu-map [lyskom]))
 	 (result (x-popup-menu event (list menu)))
 	 (command (and result
 		       (lookup-key menu
