@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.182 2002-04-10 22:24:26 byers Exp $
+;;;;; $Id: english-strings.el,v 44.183 2002-04-10 22:31:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.182 2002-04-10 22:24:26 byers Exp $"))
+              "$Id: english-strings.el,v 44.183 2002-04-10 22:31:58 byers Exp $"))
 
 
 ;;; ================================================================
@@ -596,7 +596,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
-    (status-aux-item . "Extra information:         %15#1s%#3s (skapad av %#2M)\n")
+    (status-aux-item . "Auxiliary information:     %15#1s%#3s (skapad av %#2M)\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1281,7 +1281,7 @@ Text:
     (conf-popup-title . "Conference %#1s")
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
-    (aux-popup-title  . "Extra information")
+    (aux-popup-title  . "Auxiliary information")
     (timestamp-popup-title . "Timestamp %#1s")
     (recpt-type-popup-title . "Recipient type: %#1s")
     (add-recpt-button-text . "[Add...]")
@@ -1439,7 +1439,7 @@ On since %#8s%#9s")
 
     (creating-software-aux . "Created with %#1s")
 
-    (cant-get-aux-item . "Can't find extra information")
+    (cant-get-aux-item . "Can't find auxiliary information")
     (aux-item-no-info . "No information available\n")
     (aux-item-info . "\
 Number:        %#1d %#6s
@@ -1459,7 +1459,7 @@ Contents:     \"%#9s\"
     (no-more-inheritance . "Inherit limit reached; will not be further inherited")
     (inherit-steps . "%#1d steps")
 
-    (aux-item-for . "Extra information for ")
+    (aux-item-for . "Auxiliary information for ")
     (conference-no . "conference <%#1m> %#1M")
     (text-no . "text %#1n")
 
@@ -1836,6 +1836,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-set-presentation     . "Add presentation")
     (kom-remove-presentation  . "Remove presentation")
     (kom-set-motd-text        . "Add notice")
+    (kom-create-aux-item      . "Create auxiliary information")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -3683,8 +3684,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-45 . "Temorary lossage. Please try again later")
     (error-46 . "Sending huge messages to the server is not a nice thing to do")
     (error-47 . "Anonymous texts are not accepted by all recipients")
-    (error-48 . "Invalid extra information")
-    (error-49 . "Change of extra information not permitted")
+    (error-48 . "Invalid auxiliary information")
+    (error-49 . "Change of auxiliary information not permitted")
     (error-50 . "Unknown asynchronous message")
     (error-51 . "Internal server error")
     (error-52 . "Feature disabled in the server")
