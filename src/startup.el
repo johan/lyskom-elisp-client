@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.4 1991-10-05 18:15:32 linus Exp $
+;;;;; $Id: startup.el,v 35.5 1991-12-18 03:35:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.4 1991-10-05 18:15:32 linus Exp $\n"))
+	      "$Id: startup.el,v 35.5 1991-12-18 03:35:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -104,8 +104,6 @@ Optional arguments: HOST, USERNAME and PASSWORD."
 	(goto-char (point-max))
 	(insert "-----> " output " <-----\n"))
       (set-buffer (process-buffer proc))))
-    (setq lyskom-who-info-buffer 
-	  (get-buffer-create (concat (buffer-name) "-who")))
     (cond
       ((string= output "LysKOM\n")
        (lyskom-init-parse)
@@ -508,7 +506,6 @@ Entry to this mode runs lyskom-mode-hook."
 	(replies-buffer lyskom-unparsed-buffer)
 	(replies-marker lyskom-unparsed-marker)
 	(server-info lyskom-server-info)
-	(who-buffer lyskom-who-info-buffer)
 	(default-password lyskom-default-password))
     (kill-all-local-variables)
     (make-local-variable 'lyskom-default-password)
@@ -529,6 +526,7 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'lyskom-server-info)
     (make-local-variable 'lyskom-who-info-cache)
     (make-local-variable 'lyskom-who-info-buffer)
+    (make-local-variable 'lyskom-who-info-buffer-is-on)
     (make-local-variable 'lyskom-prioritize-buffer)
     (make-local-variable 'lyskom-marked-text-cache)
     (make-local-variable 'lyskom-is-parsing)
@@ -573,7 +571,6 @@ Entry to this mode runs lyskom-mode-hook."
     (setq lyskom-unparsed-buffer replies-buffer)
     (setq lyskom-unparsed-marker replies-marker)
     (setq lyskom-server-info server-info)
-    (setq lyskom-who-info-buffer who-buffer)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queue (lyskom-queue-create))
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))
