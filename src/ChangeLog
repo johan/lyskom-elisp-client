@@ -1,3 +1,7 @@
+2002-03-20  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* vars.el.in (kom-server-aliases): Changed IP name of CSD-KOM.
+
 2002-03-19  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* commands2.el (lyskom-construct-summary-format-string): Removed
