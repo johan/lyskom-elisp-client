@@ -1,3 +1,18 @@
+2004-04-11  Johan Sundström  <jhs@lysator.liu.se>
+
+	* review.el (kom-review-cross-references): New command. Reviews
+	all [aux info] cross refeferenced texts.
+
+	* review.el (lyskom-cross-referenced-text,
+	lyskom-review-cross-references): New support functions.
+
+	* english-strings.el (lyskom-en-mode-map): Bind it to "r a x".
+
+	* swedish-strings.el (lyskom-sv-mode-map): Bind it to "å a x".
+
+	* english-strings.el, swedish-strings.el (local): added
+	review-xrefs-q.
+
 2004-02-29  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-format-plaintext-fonts-body): Updated
