@@ -1,3 +1,14 @@
+2000-05-04  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-buglist): Use our copy of
+	thing-at-point-looking-at instead of the one in thingatpt.
+
+	* utilities.el (lyskom-thing-at-point-looking-at): Copied from
+	thing-at-point-looking-at in thingatpt.el
+
+	* english-strings.el (lyskom-en-edit-mode-map): Added binding for
+	kom-edit-insert-buglist.
+
 2000-05-01  David Byers  <davby@ida.liu.se>
 
 	* async.el (lyskom-parse-async): Expanded comment for

@@ -108,6 +108,7 @@ access this variable directly.")
 (defvar lp--list-start-marker nil)
 (defvar lp--list-end-marker nil)
 (defvar lp--selected-entry-list nil)
+(defvar lp--buffer-done nil)
 
 
 ;;; ============================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.60 2000-05-01 21:15:55 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.61 2000-05-04 12:12:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.60 2000-05-01 21:15:55 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.61 2000-05-04 12:12:43 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1789,7 +1789,7 @@ buglist style, automating the removal of closed subjects and change-marks."
 		    (goto-char delete-to)
 		    (beginning-of-line)
 		    ;; Are we looking at a headline?
-		    (if (thing-at-point-looking-at "^\\s-\\{0,2\\}[^ \t(*![]")
+		    (if (lyskom-thing-at-point-looking-at "^\\s-\\{0,2\\}[^ \t(*![]")
 			;; yes -- hence we need to move point somewhat
 			(progn
 			  (beginning-of-line)
