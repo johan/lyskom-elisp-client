@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: envcheck.el,v 1.1 1997-07-08 07:40:25 byers Exp $
+;;;;; $Id: envcheck.el,v 1.2 1997-07-11 14:17:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -92,7 +92,7 @@ is used instead of `load-path'."
         (have-wid-browse (lyskom-locate-library "wid-browse"))
         (have-cus-edit (lyskom-locate-library "cus-edit"))
         (have-cus-face (lyskom-locate-library "cus-face"))
-        (have-w3 (lyskom-locate-library "have-w3"))
+        (have-w3 (lyskom-locate-library "w3"))
         (fatal nil))
 
     ;;

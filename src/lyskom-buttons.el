@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.10 1997-07-02 17:46:45 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.11 1997-07-11 14:17:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -114,7 +114,9 @@ on such functions see the documentation for lyskom-add-button-action."
                       (or (and glyph (glyph-property glyph 'widget))
                           (widget-at pos))))
          (parent (and widget (widget-get widget ':parent)))
-         (href (or (and widget (widget-get widget 'href))
+         (href (or (and widget (widget-get widget ':href))
+                   (and parent (widget-get parent ':href))
+                   (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href)))))
     (cond (href (w3-widget-button-click event))
           (t (lyskom-button-press pos)))))
@@ -128,7 +130,9 @@ on such functions see the documentation for lyskom-add-button-action."
                       (or (and glyph (glyph-property glyph 'widget))
                           (widget-at pos))))
          (parent (and widget (widget-get widget ':parent)))
-         (href (or (and widget (widget-get widget 'href))
+         (href (or (and widget (widget-get widget ':href))
+                   (and parent (widget-get parent ':href))
+                   (and widget (widget-get widget 'href))
                    (and parent (widget-get parent 'href)))))
     (cond (href (w3-popup-menu event))
           ((and pos (get-text-property pos 'lyskom-button-type))
@@ -196,7 +200,7 @@ on such functions see the documentation for lyskom-add-button-action."
 	   ;; the GNU folks. /davidk
            (let* ((menu (lyskom-make-button-menu title actl
                                                  buf arg text)))
-             (popup-menu menu event))))))
+             (lyskom-do-popup-menu menu event))))))
 
 
 
