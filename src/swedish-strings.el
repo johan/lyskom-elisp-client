@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.1 1996-05-03 16:52:22 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.2 1996-05-03 22:41:41 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.1 1996-05-03 16:52:22 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.2 1996-05-03 22:41:41 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -158,6 +158,7 @@ du \344r os\344ker.\n")
 Email-adress:\n\nAnnat:\t")
     (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej n\344rvarande i n\345got m\366te.")
+    (in-secret-conference . "Hemligt m\366te (%#1d).")
 
 
 
@@ -295,6 +296,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (is-in-conf . "N\344rvarande i m\366te")
     (from-machine . "K\366r fr\345n")
     (is-doing . "G\366r")
+    (lyskom-client . "Klient")
     (text-to-add-recipient . "Vilket inl\344gg vill du addera mottagare till")
     (text-to-add-copy . "Vilket inl\344gg vill du addera en extra kopia till")
     (text-to-delete-recipient . "Vilket inl\344gg vill du subtrahera mottagare fr\345n")
@@ -460,9 +462,9 @@ Meddelandet du f\366rs\366kte s\344nda till %#1M var:
     (have-to-be-in-conf-with-unread . "Du m\345ste g\345 till ett icketomt m\366te f\366rst.\n")
     (Texts . "Inl\344gg")
     (Date . "Datum")
-    (Lines . "Rader")
-    (Author . "  F\366rfattare")
-    (Subject . "  \304rende")
+    (Lines . "Rad.")
+    (Author . "F\366rfattare")
+    (Subject . "\304rende")
     (could-not-read . "Du fick inte l\344sa denna text (%#1n).\n")
     (multiple-choice . "Flera alternativ finns.")
     (does-not-exist . "Detta kommando finns inte.")
@@ -961,6 +963,7 @@ Text:
     (kom-view-next-text		"L\344sa n\344sta inl\344gg")
     (kom-who-is-on		"Vilka \344r inloggade") 
 ;    (kom-display-who-buffer	"Visa vilkalistan")
+    (kom-list-clients		"Lista klienter")
     (kom-busy-wait		"V\344nta p\345 ett inl\344gg")
     (kom-write-comment		"Kommentera inl\344gget")
     (kom-comment-previous	"Kommentera f\366reg\345ende inl\344gg")
@@ -1374,11 +1377,11 @@ This variable is stored in the LysKOM server.")
      conf-text
      lyskom-button-view-conf-presentation
      (("Visa presentation" . lyskom-button-view-conf-presentation)
-      ("Visa m\345tesstatus" . lyskom-button-view-conf-status)
-      ("G\345 till m\345tet" . lyskom-button-goto-conf)
+      ("Visa m\366tesstatus" . lyskom-button-view-conf-status)
+      ("G\345 till m\366tet" . lyskom-button-goto-conf)
       ("Skicka gruppmeddelande" . lyskom-button-send-message)
-      ("Bli medlem i m\345tet" . lyskom-button-add-self)
-      ("Uttr\344d ur m\345tet" . lyskom-button-sub-self))
+      ("Bli medlem i m\366tet" . lyskom-button-add-self)
+      ("Uttr\344d ur m\366tet" . lyskom-button-sub-self))
      ((kom-list-news . lyskom-button-goto-conf)))
     (pers 
      pers-text

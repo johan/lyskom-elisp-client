@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.1 1996-05-03 16:52:10 byers Exp $
+;;;;; $Id: english-strings.el,v 41.2 1996-05-03 22:41:27 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.1 1996-05-03 16:52:10 byers Exp $"))
+              "$Id: english-strings.el,v 41.2 1996-05-03 22:41:27 davidk Exp $"))
 
 
 
@@ -153,6 +153,7 @@ on how to do this.")
 Email-address:\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
+    (in-secret-conference . "Secret conference (%#1d).")
 
 
 
@@ -296,6 +297,7 @@ and you have finished reading. Please come back later.
     (is-in-conf . "In conference")
     (from-machine . "At")
     (is-doing . "Activity")
+    (lyskom-client . "Client")
     (text-to-add-recipient . "Add recipient to which article: ")
     (text-to-add-copy . "Add recipient of carbon copy of which article: ")
     (text-to-delete-recipient . "Remove recipient from which article: ")
@@ -936,6 +938,7 @@ Text:
     (kom-view-next-text         "(Read) next article")
     (kom-who-is-on              "Who (is on)") 
 ;    (kom-display-who-buffer     "Display who (list)")
+    (kom-list-clients		"List clients")
     (kom-busy-wait              "Wait (for news)")
     (kom-write-comment          "(Write) comment")
     (kom-comment-previous       "(Write) comment (to) previous article")

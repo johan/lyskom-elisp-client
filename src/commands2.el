@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.0 1996-05-02 19:25:55 davidk Exp $
+;;;;; $Id: commands2.el,v 41.1 1996-05-03 22:41:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.0 1996-05-02 19:25:55 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.1 1996-05-03 22:41:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -719,26 +719,27 @@ on one line."
   "List a summary of the texts in TEXTS.
 The summary contains the date, number of lines, author and subject of the text
 on one line."
-  (let ((time (blocking-do 'get-time)))
-
-      ;; Start fetching all text-stats and text to list them.
-      (lyskom-insert (format "%-8s%-6s%5s%s%s\n"
-			     (lyskom-get-string 'Texts)
-			     (lyskom-get-string 'Date)
-			     (lyskom-get-string 'Lines)
-			     (lyskom-fix-str (/ (- (lyskom-window-width) 21)
-						3)
-					     (lyskom-get-string 'Author))
-			     (lyskom-get-string 'Subject)))
-      (lyskom-traverse
-	  text-no texts
-	(let ((text-stat (blocking-do 'get-text-stat text-no))
-	      (text (blocking-do 'get-text text-no))
-	      ;; We could do som optimization here. 
-	      ;; We really don't need the whole text.
-	      )
-	  (lyskom-print-summary-line text-stat text text-no 
-				     (time->year time) (time->yday time))))))
+  (let ((time (blocking-do 'get-time))
+	(author-width (/ (- (lyskom-window-width) 22) 3)))
+    
+    ;; Start fetching all text-stats and text to list them.
+    (lyskom-format-insert (concat "%-8#1s%-6#2s%-4#3s %-"
+				  (int-to-string author-width)
+				  "#4s  %#5s\n")
+			  (lyskom-get-string 'Texts)
+			  (lyskom-get-string 'Date)
+			  (lyskom-get-string 'Lines)
+			  (lyskom-get-string 'Author)
+			  (lyskom-get-string 'Subject))
+    (lyskom-traverse
+	text-no texts
+      (let ((text-stat (blocking-do 'get-text-stat text-no))
+	    (text (blocking-do 'get-text text-no))
+	    ;; We could do som optimization here. 
+	    ;; We really don't need the whole text.
+	    )
+	(lyskom-print-summary-line text-stat text text-no 
+				   (time->year time) (time->yday time))))))
 
 
 (defun lyskom-print-summary-line (text-stat text text-no year day)
@@ -765,33 +766,20 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	   ;; We split the rest between author and subject
 	   (namelen (/ (- (lyskom-window-width) 22) 3))
 	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
-	   (author-name (lyskom-format "%#1:P" (text-stat->author text-stat))))
-      (lyskom-format-insert 'summary-line
+	   (author-name (lyskom-format "%#1:P" (text-stat->author text-stat)))
+	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
+				  (int-to-string namelen)
+				  "#4P  %[%#5@%=-"
+				  (int-to-string subjlen)
+				  "#6r%]\n")))
+      (lyskom-format-insert format-string
 			    text-no
 			    time
 			    lines
-			    (lyskom-default-button 'conf
-						   (text-stat->author
-						    text-stat))
-			    (lyskom-fix-str namelen author-name)
+			    (text-stat->author text-stat)
 			    (lyskom-default-button 'text
 						   text-no)
-			    (lyskom-fix-str subjlen subject))
-			    
-;;;      (lyskom-insert (lyskom-fix-str 7 (format "%d" text-no)))
-;;;      (lyskom-insert time)
-;;;      (lyskom-insert (format "%4d  " lines))
-;;;      (lyskom-halt 'main)
-;;;      ;;; +++ Should be a function that only takes number
-;;;      (lyskom-queue-print-name-2 
-;;;       (blocking-do 'get-conf-stat (text-stat->author text-stat))
-;;;       (text-stat->author text-stat)
-;;;       t namelen)
-;;;
-;;;      (lyskom-insert (concat "  "
-;;;			     (lyskom-fix-str subjlen subject)
-;;;			     "\n"))
-)))
+			    subject))))
 
 
 
