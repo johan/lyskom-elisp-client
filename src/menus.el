@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.23 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: menus.el,v 44.24 2002-05-08 20:08:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.23 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: menus.el,v 44.24 2002-05-08 20:08:22 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -185,7 +185,7 @@
                                        ':active
                                        t))
                              ((eq (car item) 'hline)
-                              (vector "--:shadowEtchedIn" nil ':active nil) )
+                              "--:shadowEtchedIn")
                              ((eq (car item) 'menu)
                               (lyskom-define-menu-xemacs item))
                              (t
