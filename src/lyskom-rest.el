@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.5 1996-09-29 15:44:01 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.6 1996-10-02 14:42:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.5 1996-09-29 15:44:01 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.6 1996-10-02 14:42:27 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1980,26 +1980,42 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 ;;   (lyskom-prefetch-and-print-prompt))
 
 
+;; (defun lyskom-list-unread (map membership)
+;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
+;; The list consists of text-nos."
+;;   (let ((res nil)
+;; 	   (last-read (membership->last-text-read membership))
+;; 	   (read (membership->read-texts membership))
+;; 	   (first (map->first-local map))
+;; 	   (i (length (map->text-nos map)))
+;; 	   (the-map (map->text-nos map)))
+;;     (while (> i 0)
+;; 	 (-- i)
+;; 	 (cond
+;; 	  ((zerop (elt the-map i)))	;Deleted text - do nothing.
+;; 	  ((<= (+ first i) last-read))	;Already read - do nothing.
+;; 	  ((lyskom-vmemq  (+ i first) read)) ;Already read - do nothing.
+;; 	  (t				;Unread - add to list.
+;; 	   (setq res (cons
+;; 		      (elt the-map i)
+;; 		      res)))))
+;;     res))
+
 (defun lyskom-list-unread (map membership)
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
 The list consists of text-nos."
-  (let ((res nil)
-	(last-read (membership->last-text-read membership))
+  (let ((last-read (membership->last-text-read membership))
 	(read (membership->read-texts membership))
 	(first (map->first-local map))
 	(i (length (map->text-nos map)))
 	(the-map (map->text-nos map)))
     (while (> i 0)
       (-- i)
-      (cond
-       ((zerop (elt the-map i)))	;Deleted text - do nothing.
-       ((<= (+ first i) last-read))	;Already read - do nothing.
-       ((lyskom-vmemq  (+ i first) read)) ;Already read - do nothing.
-       (t				;Unread - add to list.
-	(setq res (cons
-		   (elt the-map i)
-		   res)))))
-    res))
+      (when (or (<= (+ first i) last-read)
+		(lyskom-vmemq  (+ i first) read))
+	(aset the-map i 0)))
+    (delq 0 (listify-vector the-map))))
+
 
 
 ;; (defun lyskom-conf-fetched-p (conf-no)

@@ -1,3 +1,7 @@
+Wed Oct  2 16:41:53 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-list-unread): Ny implementation.
+
 Mon Sep 30 01:25:23 1996  David Kågedal  <kg@infovav.se>
 
 	* commands1.el (lyskom-quit): Ta bort rätt sak ur listorna.
