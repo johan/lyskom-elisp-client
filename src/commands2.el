@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.41 1999-06-29 14:21:12 byers Exp $
+;;;;; $Id: commands2.el,v 44.42 1999-08-21 22:07:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.41 1999-06-29 14:21:12 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.42 1999-08-21 22:07:36 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2147,3 +2147,121 @@ is alive."
        lyskom-reading-list t)))))
     
                        
+;;; ============================================================
+;;; Various aux-item stuff
+
+(def-kom-command kom-add-no-comments (&optional text-no)
+  "Add a don't comment me please aux-item to a text."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no t)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+
+    ;; Make sure there is a text there in the first place
+
+    (if (null text-stat)
+        (lyskom-format-insert 'no-such-text-no text-no)
+
+      ;; Make sure that the text doesn't already have this kind of item
+      ;; created by the same person
+
+      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
+                                  (lambda (el) 
+                                    (and (eq (aux-item->tag el) 4)
+                                         (eq (aux-item->creator el)
+                                             lyskom-pers-no))))
+          (lyskom-format-insert 'already-no-comments text-no)
+
+        ;; If the author of the text is not the current user, ask if the
+        ;; user wants to try anyway (it might work...)
+
+        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
+                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+            (progn (lyskom-format-insert 'adding-no-comments
+                                         text-no)
+                   (lyskom-report-command-answer
+                    (blocking-do 'modify-text-info
+                                 text-no
+                                 nil
+                                 (list
+                                  (lyskom-create-aux-item 
+                                   0 4 nil nil
+                                   (lyskom-create-aux-item-flags
+                                    nil nil nil nil nil nil nil nil) 0 ""))))
+                   (cache-del-text-stat text-no)))))))
+
+
+(def-kom-command kom-add-private-answer (&optional text-no)
+  "Add a private answer only please aux-item to a text."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no t)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+
+    ;; Make sure there is a text there in the first place
+
+    (if (null text-stat)
+        (lyskom-format-insert 'no-such-text-no text-no)
+
+      ;; Make sure that the text doesn't already have this kind of item
+      ;; created by the same person
+
+      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
+                                  (lambda (el) 
+                                    (and (eq (aux-item->tag el) 5)
+                                         (eq (aux-item->creator el)
+                                             lyskom-pers-no))))
+          (lyskom-format-insert 'already-private-answer text-no)
+
+        ;; If the author of the text is not the current user, ask if the
+        ;; user wants to try anyway (it might work...)
+
+        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
+                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+            (progn (lyskom-format-insert 'adding-private-answer
+                                         text-no)
+                   (lyskom-report-command-answer
+                    (blocking-do 'modify-text-info
+                                 text-no
+                                 nil
+                                 (list
+                                  (lyskom-create-aux-item 
+                                   0 5 nil nil
+                                   (lyskom-create-aux-item-flags
+                                    nil nil nil nil nil nil nil nil) 0 ""))))
+                   (cache-del-text-stat text-no)))))))
+
+(def-kom-command kom-add-request-confirm (&optional text-no)
+  "Add confirmation request aux-item to a text."
+  (interactive (list (lyskom-read-text-no-prefix-arg
+                      'what-request-confirm-no t)))
+  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+
+    ;; Make sure there is a text there in the first place
+
+    (if (null text-stat)
+        (lyskom-format-insert 'no-such-text-no text-no)
+
+      ;; Make sure that the text doesn't already have this kind of item
+      ;; created by the same person
+
+      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
+                                  (lambda (el) 
+                                    (and (eq (aux-item->tag el) 6)
+                                         (eq (aux-item->creator el)
+                                             lyskom-pers-no))))
+          (lyskom-format-insert 'already-request-confirm text-no)
+
+        ;; If the author of the text is not the current user, ask if the
+        ;; user wants to try anyway (it might work...)
+
+        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
+                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+            (progn (lyskom-format-insert 'adding-request-confirm
+                                         text-no)
+                   (lyskom-report-command-answer
+                    (blocking-do 'modify-text-info
+                                 text-no
+                                 nil
+                                 (list
+                                  (lyskom-create-aux-item 
+                                   0 6 nil nil
+                                   (lyskom-create-aux-item-flags
+                                    nil nil nil nil nil nil nil nil) 0 ""))))
+                   (cache-del-text-stat text-no)))))))
