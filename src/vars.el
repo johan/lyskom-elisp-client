@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.3 1991-09-15 10:04:31 linus Exp $
+;;;;; $Id: vars.el,v 35.4 1991-09-15 16:20:17 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.3 1991-09-15 10:04:31 linus Exp $\n"))
+	      "$Id: vars.el,v 35.4 1991-09-15 16:20:17 linus Exp $\n"))
 
 
 
@@ -165,6 +165,7 @@ otherwise => the new conf is entered after all conferences.")
   kom-show-where-and-what
   kom-who-buffer-size-when-displaying
   kom-write-texts-in-window
+  kom-quit-hook
   lyskom-fetch-map-nos
   lyskom-header-separator
   lyskom-new-text-hook
@@ -401,6 +402,9 @@ message \"new text\" is received.")
 
 (defvar lyskom-mode-hook nil
   "Hook to run when lyskom-mode is entered.")
+
+(defvar kom-quit-hook nil
+  "Hook to run when the LysKOM session is correctly ended.")
 
 (defvar lyskom-new-text-hook nil
   "*Hook to run when a new text is created.

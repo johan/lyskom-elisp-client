@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.5 1991-09-15 10:06:25 linus Exp $
+;;;;; $Id: commands1.el,v 35.6 1991-09-15 16:19:58 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.5 1991-09-15 10:06:25 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.6 1991-09-15 16:19:58 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -842,7 +842,8 @@ If optional argument is non-nil then dont ask for confirmation."
     (setq lyskom-proc)
     (lyskom-clear-vars)
     (lyskom-insert-string 'session-ended)
-    (lyskom-scroll))
+    (lyskom-scroll)
+    (run-hooks 'kom-quit-hook))
    (t (lyskom-end-of-command))))
 
   
