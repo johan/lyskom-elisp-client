@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.25 1999-11-21 17:59:27 byers Exp $
+;;;;; $Id: completing-read.el,v 44.26 1999-11-22 21:30:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.25 1999-11-21 17:59:27 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.26 1999-11-22 21:30:53 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -739,7 +739,7 @@ the LysKOM rules of string matching."
           (index 0))
       (lyskom-traverse
        el main-accumulator
-       (aset tmp index (if (eq el 'SPC) 32 el))
+       (aset tmp index (if (eq el 'SPC) ?\  el))
        (setq index (1+ index)))
       tmp)))
 
@@ -804,9 +804,9 @@ the LysKOM rules of string matching."
     (while (> depth 0)
       (cond ((>= pos (length string)) 
              (setq depth 0))
-            ((= (aref string pos) ?\))
+            ((eq (aref string pos) ?\))
              (setq depth (1- depth)))
-            ((= (aref string pos) ?\()
+            ((eq (aref string pos) ?\))
              (setq depth (1+ depth))))
       (setq pos (1+ pos)))
     (aset el 0 pos)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.20 1999-11-21 15:39:47 byers Exp $
+;;;;; $Id: command.el,v 44.21 1999-11-22 21:30:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.20 1999-11-21 15:39:47 byers Exp $\n"))
+	      "$Id: command.el,v 44.21 1999-11-22 21:30:52 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -201,13 +201,6 @@
                      (concat prefix-text (lyskom-get-string 'extended-command))
                    (lyskom-get-string 'extended-command))))
 
-    ;; (add-hook 'minibuffer-setup-hook
-    ;; 		 (function
-    ;; 		  (lambda ()
-    ;; 		    (let ((table (make-char-table 'case-table)))
-    ;; 		      (set-char-table-parent table (current-case-table))
-    ;; 		      (aset table ?\} 345)
-    ;; 		      (set-case-table table)))))
     (lyskom-with-lyskom-minibuffer
      (setq name (completing-read prompt
                                  alternatives 

@@ -3,45 +3,53 @@
 Att göra i elisp-klienten
 =========================
 
-Fixa aux-item-data och format-objects så att strängen kodas som
-raw-text. Hur hanteras då åäö i den? KLART.
+* MULEification
+  These items have to be dealt with before the client can be used in a
+  multibyte environment (where the strings sent from the server are in
+  a multibyte charset.) They do not affect users of unibyte charsets.
 
-Kolla alla användningar av length och substring för att se var man
-borde använda string-width och truncate-string-to-width istället.
-substring klart.
+** In completing-read.el, MULEify the character comparisons.
+   
 
-Kolla alla aset och aref så att de inte använder tecken som nyckel
-utan omkodning till iso-8859-1 först.
+** In completing-read.el, end of lyskom-complete-string, check how the
+   result of make-string is used and modified.
 
-MULEifiera hanteringen av user-arean.
+** The definition of lyskom-line-start-chars is not really kosher.
+   This should be MULEified. Perhaps a hash table of characters
+   instead of a vector. Problem is, speed is of the essence. Perhaps a
+   hash table for chars over 255 and a hash table for the rest?
 
-Kolla att spara text sparar med en vettig kodning.
+** In completing-read.el there are a lot of explicit character
+   constants. All of these are suspicious.
 
-Bli av med lyskom-is-parsing, gör parsern reentrant, installera
-reentrant blocking-do. Se över alla användningar av lyskom-wait-queue
-eftersom den just nu inte kan användas i svar på asynkront anrop.
+** Already checked suspicious things: substring->truncate-to-width, 
+   length->string-bytes or string-width.
 
-* Den parsade strängen måste bort innan man anropar callback-funktionen.
+** MULEify the user area by explicitly coding all strings. This is
+   implemented but disabled in the code that outputs the user area.
+   Look for (and val nil) or something very similar in the code.
 
-
-ispell-hooken rättar ärendet i bufferten men det blir inte rättat i
-den inskickade versionen av inlägget. KAnske.
-
-Om det kommer ett async-new-recipient och vi inte kan hitta lokalt
-textnummer i mottagaren, ignorera meddelandet. 
-
-
-
-Någon form at reply till importerade brev som använder mx-reply-to
-eller mx-to, mx-cc om de finns.
+** Make sure that kom-save-text and kom-save-text-body output a
+   suitable coding to the file.
 
 
-            Om du fixar någonting som står med på den här
-            listan, glöm inte att ta bort det från listan!
 
-Testa vad som händer om man har en ogiltig misc-item eller aux-item i
-headersarna när man adderar en mottagare eller flyttar ett inlägg
-eller adderar en aux-item eller tar bord en aux-item.
+* The Parser
+  This needs to be done by the next release.
+
+** Get rid of lyskom-is-parsing, make the parser reentrant, install
+   the reentrant blocking-do. The parsed string has to be removed from
+   the parse buffer before calling the callback. This goes for
+   asynchronous calls too.
+
+** Look over all callbacks and see to it that they don't use
+   lyskom-wait-queue, lyskom-collet, lyskom-use, lyskom-list-use,
+   blocking-do or multiple-blocking do since this is detrimental to
+   performance and possibly incompatible with the current parser.
+
+
+
+
 
 
 initiate-get-membership skulle kunna fylla i positionen för
@@ -70,51 +78,16 @@ Som det ser ut just nu, om man gör hantera medlemskap och sedan loggar
 in som en ny person i LysKOM-bufferten så blir det fel saatan eftersom 
 prioriterabufferten använder lyskom-pers-no.
 
-När man har kört prefetchen får man en skum kö i lyskom-prefetch-stack 
-som inte innehåller något annat än element som är köer vars sista
-element är FINISHED. Ibland verkar köerna bli cirkulära.
-
 Man borde använda next-command-event med vänner i silent-read och
 j-or-n-p.
 
-lyskom-get-texts-to är buggig. Om man återser senaste N av vem som
-helst till ett möte och det inte finns N texter så buggar den ur. Den
-borde klippa till max texter i mötet.
-
-
-Använd face-flag i lyskom-format-aux för att bestämma om man skall
-visa faces eller inte. Kolla att 
-
-1) det går att visa faces
-2) lyskom-show-faces är satt
-
-innan man försöker. Man skulle till och med kunna sätta face-flag
-efter de här villkoren. Lägg till användarvariabeln kom-show-faces som 
-talar om när man vill ha faces:
-
-0) alltid/aldrig
-1) vilkalistan (working conf och person)
-2) status möte/person   (föreslagen default)
-3) varje inlägg
-4) brev
-5) in- och utloggningar
-6) personliga meddelanden
-7) mottagarna till inlägg
-8) namnändring
-
-dessa funktioner får sedan binda om lyskom-show-faces dynamiskt till
-true eller false.
-
-Visa bilder mindre än X * Y pixels, mindre än X bytes
-
-Kombinera med möjlighet att bara visa bilder för kom-friends
-
-För varje punkt på listan, tala om vilka man vill eller inte vill se
-bilder för. 
-
-
 
 * SAKER ATT KOLLA TILL 0.46
+
+    Testa vad som händer om man har en ogiltig misc-item eller
+    aux-item i headersarna när man adderar en mottagare eller flyttar
+    ett inlägg eller adderar en aux-item eller tar bord en aux-item.
+
 
     Medlemskapslistan kan bli osorterad på många olika sätt. Klienten
     måste klara av detta.
@@ -136,6 +109,19 @@ bilder för.
 * BUGGAR
 
 ** OSORTERADE
+
+    lyskom-get-texts-to är buggig. Om man återser senaste N av vem som
+    helst till ett möte och det inte finns N texter så buggar den ur. 
+    Den borde klippa till max texter i mötet.
+    FIX BY: 0.46
+
+    ispell-hooken rättar ärendet i bufferten men det blir inte rättat
+    i den inskickade versionen av inlägget. Kanske.
+    FIX BY: 0.46
+
+    lyskom-filter hanterar inte lyskom-debug-what-i-am-doing rätt. Den
+    tittar på antal token i meddelandet, inte meddelandet i sig.
+    FIX BY: Whenever
 
     Om förbindelsen bryts så får man args out of range ibland.
     FIX BY: 0.46
@@ -197,6 +183,11 @@ bilder för.
 
 
 ** PREFETCH 
+
+    När man har kört prefetchen får man en skum kö i
+    lyskom-prefetch-stack som inte innehåller något annat än element
+    som är köer vars sista element är FINISHED. Ibland verkar köerna
+    bli cirkulära.
 
     Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
     endast i ett möte (säg IÅM) innan det prefetchas får man två
@@ -346,6 +337,9 @@ bilder för.
 
 
 ** SKRIVA INLÄGG
+
+    Någon form at reply till importerade brev som använder mx-reply-to
+    eller mx-to, mx-cc om de finns.
 
     Frågan om flera mottagare kanske inte borde ställas om man har
     arrangerat om mottagarlistan rejält. Den skall ställas om man
@@ -593,6 +587,39 @@ bilder för.
     
     Implementera re-z-lookup med re-lookup-X så att vi kan återinföra
     maximal kompatibilitet.
+
+
+** FACES
+
+    Använd face-flag i lyskom-format-aux för att bestämma om man skall
+    visa faces eller inte. Kolla att
+
+    1) det går att visa faces
+    2) lyskom-show-faces är satt
+
+    innan man försöker. Man skulle till och med kunna sätta face-flag
+    efter de här villkoren. Lägg till användarvariabeln kom-show-faces som 
+    talar om när man vill ha faces:
+
+    0) alltid/aldrig
+    1) vilkalistan (working conf och person)
+    2) status möte/person   (föreslagen default)
+    3) varje inlägg
+    4) brev
+    5) in- och utloggningar
+    6) personliga meddelanden
+    7) mottagarna till inlägg
+    8) namnändring
+
+    dessa funktioner får sedan binda om lyskom-show-faces dynamiskt till
+    true eller false.
+    
+    Visa bilder mindre än X * Y pixels, mindre än X bytes
+    
+    Kombinera med möjlighet att bara visa bilder för kom-friends
+    
+    För varje punkt på listan, tala om vilka man vill eller inte vill se
+    bilder för. 
 
 
 ** KOLLA ATT DETTA ÄR KLART
