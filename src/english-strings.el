@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.0 1996-08-07 16:39:48 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.1 1996-08-08 11:33:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.0 1996-08-07 16:39:48 davidk Exp $"))
+              "$Id: english-strings.el,v 43.1 1996-08-08 11:33:11 byers Exp $"))
 
 
 
@@ -724,6 +724,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (saving-settings . "Saving options...")
     (saving-settings-done . "Saving options...done")
     (hang-on . "Wait a moment...\n")
+    (no-changes . "Nothing was saved since no options had been changed\n")
     (could-not-save-options . "Couldn't save options.")
     (could-not-create-area . "Couldn't create the article.\n")
     (could-not-set-user-area . "Couldn't alter the user-area. The server says error: %#1d\n")

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.1 1996-08-07 20:02:32 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.2 1996-08-08 11:33:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.1 1996-08-07 20:02:32 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.2 1996-08-08 11:33:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -757,6 +757,7 @@ Gruppmeddelande till %#3M\nfr\345n %#2P (%#4s):
     (saving-settings . "Sparar inst\344llningarna...")
     (saving-settings-done . "Sparar inst\344llningarna...klart")
     (hang-on . "V\344nta ett tag...\n")
+    (no-changes . "Ingenting beh\366vde sparas eftersom inga variabler hade \344ndrats.\n")
     (could-not-save-options . "Kunde ej spara inst\344llningarna.\n")
     (could-not-create-area . "Kunde ej skapa texten.\n")
     (could-not-set-user-area . "Kunde ej st\344lla om user-arean. Servern s\344ger felmeddelande: %#1d\n")
