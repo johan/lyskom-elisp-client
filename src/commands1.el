@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.37 1999-02-18 16:29:35 petli Exp $
+;;;;; $Id: commands1.el,v 44.38 1999-05-05 14:38:11 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.37 1999-02-18 16:29:35 petli Exp $\n"))
+	      "$Id: commands1.el,v 44.38 1999-05-05 14:38:11 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1405,6 +1405,33 @@ If you are not member in the conference it will be flagged with an asterisk."
 	  (lyskom-format-insert 'change-name-nope name 
 				(lyskom-get-error-text lyskom-errno)
 				lyskom-errno))))))
+
+;;; ================================================================
+;;;                 [ndra parentes - Change parenthesis
+
+;;; Author: Per Cederqvist (template stolen from kom-change-name)
+
+(def-kom-command kom-change-parenthesis ()
+  "Change the name of a person or conference."
+  (interactive)
+  (let ((conf-stat (lyskom-read-conf-stat 
+		    (lyskom-get-string 'name-to-be-changed)
+		    '(all) nil nil t)))
+    (if (null conf-stat)
+	(lyskom-insert-string 'no-such-conf-or-pers)
+      (if (string-match "^\\([^(]*\\)(\\(.*\\))$" (conf-stat->name conf-stat))
+	  (let* ((non-paren (match-string 1 (conf-stat->name conf-stat)))
+		 (old-paren (match-string 2 (conf-stat->name conf-stat)))
+		 (paren (lyskom-read-string (lyskom-get-string 'new-paren)
+					    old-paren))
+		 (name (concat non-paren "(" paren ")")))
+	    (if (blocking-do 'change-name (conf-stat->conf-no conf-stat) name)
+		(lyskom-format-insert 'change-name-done name
+				      (lyskom-default-button 'conf conf-stat))
+	      (lyskom-format-insert 'change-name-nope name
+				    (lyskom-get-error-text lyskom-errno)
+				    lyskom-errno)))
+	(lyskom-insert-string 'no-paren-in-name)))))
 	    
 
 
