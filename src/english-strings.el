@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.187 2002-04-13 09:30:58 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.188 2002-04-13 15:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.187 2002-04-13 09:30:58 jhs Exp $"))
+              "$Id: english-strings.el,v 44.188 2002-04-13 15:01:28 byers Exp $"))
 
 
 ;;; ================================================================
@@ -449,6 +449,7 @@ Leave the conference again to unsubscribe completely.\n")
     (cant-read-textno . "You are not allowed to read text %#1:n.\n")
 
     (not-supervisor-for . "You are not the supervisor of %#1M.\n")
+    (not-supervisor-for-server . "You do not have administrative rights on this LysKOM-server.\n")
     (go-to-conf . "Go to conference %#1M.\n")
     (cant-go-to-his-mailbox . "You are not allowed to go to %#1M's mailbox.\n")
     (not-member-of-conf . "You are not a member of %#1M.\n")
@@ -484,7 +485,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s).\n")
     (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s).\n")
     (total-visible-active-users
-     . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s).\n")
+     . "    A total of %#1d visible%#1?d%[%]%[%] active user%#1?d%[%]%[s%] (%#2s).\n")
     (client-statistics . "    Distribution of clients:\n")
     (client-statistics-line . "    %4#2d %#1s")
     (who-to-add-q . "Add whom/what as a recipient? ")
@@ -1387,15 +1388,15 @@ On since %#8s%#9s")
     (conf-to-add-faq . "Which conference do you want to add an FAQ for? ")
     (text-to-add-as-faq . "Which text is the new FAQ? ")
     (text-to-change-as-faq . "Which FAQ do you want to change? ")
-    (adding-faq . "Adding text %#1n as an FAQ for %#2M...")
+    (adding-faq . "Adding text %#1n as an FAQ for %#2?b%[%#2M%]%[the server%]...")
     (conf-to-del-faq . "Which conference do you want to remove an FAQ from? ")
     (text-to-del-as-faq . "Which text do you want to remove as FAQ? ")
-    (deleting-faq . "Removing text %#1n as FAQ for %#2M...")
-    (conf-has-no-faq . "%#1M has no FAQ\n")
+    (deleting-faq . "Removing text %#1n as FAQ for %#2?b%[%#2M%]%[the server%]...")
+    (conf-has-no-faq . "%#1?b%[%#1M%]%[The server%] has no FAQ\n")
     (view-which-faq . "View FAQ for which conference? ")
-    (review-faq-for-r . "View FAQ for %#1M.\n")
-    (changed-faq-for-conf-done . "FAQ for %#1M changed to text %#3n.\n")
-    (changed-faq-for-conf-failed . "Unable to change FAQ for %#1M to text %#3n.
+    (review-faq-for-r . "View FAQ for %#1?b%[%#1M%]%[the server%].\n")
+    (changed-faq-for-conf-done . "FAQ in text %#2n for %#1?b%[%#1M%]%[the server%] changed to text %#3n.\n")
+    (changed-faq-for-conf-failed . "Unable to change FAQ for %#1?b%[%#1M%]%[the server%] to text %#3n.
 %#2?b%[Text %#2n is still the FAQ.
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
@@ -1860,6 +1861,10 @@ Number of sessions:  %21#1d (total)
     (kom-set-motd-text        . "Add notice")
     (kom-create-aux-item      . "Create auxiliary information")
     (kom-status-server        . "Status (of) server")
+    (kom-add-server-faq       . "Add server FAQ")
+    (kom-del-server-faq       . "Remove server FAQ")
+    (kom-review-server-faq    . "Review server FAQ")
+    (kom-change-server-faq    . "Change server FAQ")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -2185,6 +2190,7 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-mode-map (kbd "r M") 'kom-review-more)
   (define-key lyskom-en-mode-map (kbd "r g") 'kom-review-last-normally-read)
   (define-key lyskom-en-mode-map (kbd "r q") 'kom-review-faq)
+  (define-key lyskom-en-mode-map (kbd "r Q") 'kom-review-server-faq)
   (define-key lyskom-en-mode-map (kbd "B")  'kom-review-backward)
   (define-key lyskom-en-mode-map (kbd "r s") 'kom-review-stack)
   (define-key lyskom-en-mode-map (kbd "r p") 'kom-review-presentation)

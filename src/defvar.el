@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.14 2002-04-10 19:23:23 byers Exp $
+;;;;; $Id: defvar.el,v 44.15 2002-04-13 15:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.14 2002-04-10 19:23:23 byers Exp $\n"
+  "$Id: defvar.el,v 44.15 2002-04-13 15:01:28 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -228,18 +228,19 @@ language-force  A language-variable whose value is to be forced."
                         (car arglist))))
         (setq arglist (cdr arglist)))
 
-      (when doc-string
-        (when (or local-var-doc local-hook-doc)
-          (setq doc-string (concat doc-string "\n")))
-        (when local-var-doc
-          (setq doc-string (concat doc-string "\nThis variable is buffer-local.")))
-        (when local-hook-doc
-          (setq doc-string (concat doc-string "\nThis variable is a buffer-local hook.")))
-        (setq doc-string (concat doc-string "\n\n\
+      (if doc-string
+        (if
+          (if (or local-var-doc local-hook-doc)
+            (setq doc-string (concat doc-string "\n")))
+          (if local-var-doc
+            (setq doc-string (concat doc-string "\nThis variable is buffer-local.")))
+          (if local-hook-doc
+            (setq doc-string (concat doc-string "\nThis variable is a buffer-local hook.")))
+          (setq doc-string (concat doc-string "\n\n\
 Setting this variable in .emacs may not yield the results you expect
-since that will affect all LysKOM sessions.")))
+since that will affect all LysKOM sessions."))))
 
-      (when (and doc-string server-doc)
+      (if (and doc-string server-doc)
         (setq doc-string (concat doc-string "
 
 This variable is normally stored on a per-session basis in the

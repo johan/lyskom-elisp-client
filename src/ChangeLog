@@ -1,3 +1,32 @@
+2002-04-13  David Byers  <david.byers@swipnet.se>
+
+	More stringent format-string check (each arg needs to appear the
+	same number of times in all strings):
+	* check-strings.el (lcs-delete-format-arg): New function.
+	(lcs-check-format-string): Use it.
+
+	Full server FAQ support:
+	* commands1.el (kom-change-server-faq): New command.
+	(kom-change-conf-faq): Broke out main logic.
+	(lyskom-change-faq): Inlined logic from kom-change-conf-faq.
+	Support server FAQs.
+	(lyskom-change-faq-2): Broke out callback for modify-x-info to
+	lykom-change-faq-3. Renamed from lyskom-change-conf-faq-2. Handle
+	server FAQs.
+	(lyskom-change-faq-3): New function.
+
+	* commands2.el (kom-add-faq): Break out logic to a separate
+	function.
+	(lyskom-add-text-no): New function. Generic for conferences and
+	the server.
+	(kom-add-server-faq): New command.
+	(kom-del-faq): Removed args from this function. Broke out main
+	logic to lyskom-del-faq.
+	(kom-review-server-faq): New Command.
+	(kom-review-faq): Entering an empty conf gives the server FAQ.
+	Broke out main logic.
+	(lyskom-review-faq): New function.
+
 2002-04-13  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* Makefile (verbose-el): Made target "verbose" work again.
