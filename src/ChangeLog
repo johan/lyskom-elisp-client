@@ -1,3 +1,21 @@
+Fri Jan 24 22:14:20 1992  Linus Tolke Y  (linus at ruben)
+
+	* async.el (lyskom-handle-as-personal-message): New function.
+	  (lyskom-show-personal-message, lyskom-insert-personal-message):
+	  now uses the lyskom-handle-as-personal-message.
+
+	  commands2.el (lyskom-send-message, lyskom-send-message-2): Now
+	  prints the personal messages locally usin the
+	  lyskom-handle-as-personal-message function.
+
+	* commands2.el, swedish-strings.el (lyskom-send-message,
+	  lyskom-send-message-2): Nu f}r man ett meddelande i bufferten
+	  som inneh}ller vad man s{nde och till vem.
+
+	* commands1.el (kom-unset-conf-motd, lyskom-unset-conf-motd)
+	  swedish-strings.el: Default for remove note on the door is
+	  yourself.
+
 Wed Jan 22 00:22:02 1992  Inge Wallin  (inge at lysator)
 
 	* clienttypes.el (read-list-enter-read-info): Rewritten it into an
