@@ -1,3 +1,18 @@
+2003-12-11  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1233:
+	* commands1.el (kom-change-priority): Pass old mship-type to
+	lyskom-add-member-answer.
+
+	Fix bug 1234:
+	* lyskom-rest.el (lyskom-update-prompt): New prompts for when
+	prioritised texts are in the letterbox, or the prioritised
+	conference is the letterbox.
+
+	Fix bug 1233:
+	* commands1.el (lyskom-list-clients-collect): Deal with version
+	set to nil.
+
 2003-12-10  David Byers  <byers@lysator.liu.se>
 
 	* startup.el (kom-start-anew): Show a help link when setting the
