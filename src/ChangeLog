@@ -2,8 +2,6 @@ Mon Mar 25 16:22:42 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el: Formatteringen täcker inte padding.
 
-	* Release av elispklient 0.40
-
 	* swedish-strings.el,english-strings.el: Bugfixar
 
 	* filter.el: Bugfixar
