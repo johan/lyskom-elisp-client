@@ -1,4 +1,50 @@
+Mon Oct 28 00:03:12 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-delete-conf): Använd lyskom-pending-commands
+ 	för att få en ny inloggning när man utplånat sig själv.
+
+	* command.el (lyskom-end-of-command): Använd
+ 	lyskom-pending-commands.
+
+	* vars.el.in (lyskom-pending-commands): Ny variabel.
+
+	* swedish-strings.el,english-strings.el (lyskom-message): La till
+ 	ett WWW-fält i presentation-form.
+
+	* prioritize.el (kom-prioritize): Använd inhibit-read-only.
+	(lyskom-prioritize-redraw-entry): Dito.
+	(lyskom-prioritize-redraw-buffer): Dito.
+	(lyskom-prioritize-move-entry): Dito.
+	(kom-prioritize-reprioritize): Dito.
+
+	* lyskom-rest.el (lyskom-insert-at-point): Använd
+ 	inhibit-read-only.
+
+	* flags.el (lyskom-Edit-options-modify): Använd inhibit-read-only.
+
+	* filter-edit.el (lyskom-format-filter-list): Använd
+ 	inhibit-read-only.
+	(lyskom-filter-edit-insert-entry): Dito.
+	(lyskom-filter-edit-insert-pattern): Dito.
+	(lyskom-filter-edit-delete-pattern): Dito.
+	(lyskom-filter-edit-delete-entry): Dito.
+	(lyskom-filter-edit-revert): Dito.
+	(lyskom-filter-edit-toggle-permanent): Dito
+	(lyskom-filter-edit-toggle-action): Dito.
+	(kom-filter-edit): Dito.
+
+	* commands1.el (kom-write-comment): Gör textnumret som skrivs ut
+ 	till en knapp.
+
 Sun Oct 27 02:21:42 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-delete-conf): Släng upp en inloggningsprompt
+ 	om man utplånar sig själv.
+
+	* edit-text.el (lyskom-edit-mode): Rensade bort allt junk om
+ 	lyskom-edit-mode-mode-*.
+	(lyskom-edit-mode-mode-hook): Tog bort.
+	(lyskom-edit-mode-mode-map): Tog bort.
 
 	* option-edit.el (lyskom-widget-command-action): Gör inte car-safe
  	på svaret från lyskom-read-extended-command.
