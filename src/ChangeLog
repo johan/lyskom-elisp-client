@@ -1,3 +1,16 @@
+2000-05-28  Johan Sundström  <jhs@lysator.liu.se>
+
+	* edit-text.el (kom-edit-insert-commented): Edit-mode ^C^Y may now
+	be preceded with ^U to insert the text totally unchanged, that is,
+	without prefixing its rows with anything at all.
+	(lyskom-edit-get-commented): Now takes an optional additional
+	argument list sent to the callback.
+	(lyskom-edit-insert-commented): Now takes an optional additional
+	parameter `prefix' that is prepended to each line. Unfortunately I
+	had to add a kludge to stay compatible with kom-edit-insert-text,
+	which seems to be doing some black magic. These functions really
+	ought to be changed to use a lyskom-edit-insert-text function.
+
 2000-05-27  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands2.el (kom-list-news): Fixed introduced bug. Works
