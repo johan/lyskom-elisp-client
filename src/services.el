@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.45 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: services.el,v 44.46 2004-02-21 22:34:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.45 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: services.el,v 44.46 2004-02-21 22:34:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -716,18 +716,18 @@ Args: KOM-QUEUE HANDLER PERS-NO FIRST-IN-LIST LENGHT &rest DATA."
            (lyskom-send-packet 
             kom-queue 
             (lyskom-format-objects 108 pers-no first length
-                                   1 lyskom-max-int)))
+                                   0 0)))
           ((lyskom-have-call 99)
            (lyskom-call kom-queue lyskom-ref-no handler data
                         'lyskom-parse-membership-list)
            (lyskom-send-packet 
             kom-queue 
-            (lyskom-format-objects 99 pers-no first length 1)))
+            (lyskom-format-objects 99 pers-no first length 0)))
           (t (lyskom-call kom-queue lyskom-ref-no handler data
                           'lyskom-parse-membership-list-old)
              (lyskom-send-packet 
               kom-queue 
-              (lyskom-format-objects 46 pers-no first length 1))))))
+              (lyskom-format-objects 46 pers-no first length 0))))))
 
 
 (defun initiate-get-created-texts (kom-queue handler pers-no first-local

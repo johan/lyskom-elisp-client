@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.226 2004-01-26 21:51:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.227 2004-02-21 22:34:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.226 2004-01-26 21:51:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.227 2004-02-21 22:34:13 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -552,11 +552,11 @@ lyskom-mark-as-read."
     (if (memq (misc-info->type misc) '(RECPT BCC-RECPT CC-RECPT))
 	(let ((membership (lyskom-try-get-membership
 			   (misc-info->recipient-no misc))))
-	  (if membership
-	      (set-membership->read-texts
-	       membership
-	       (vconcat (vector (misc-info->local-no misc))
-			(membership->read-texts membership))))))))
+	  (when membership
+            (set-membership->read-texts
+             membership
+             (vconcat (vector (misc-info->local-no misc))
+                      (membership->read-texts membership))))))))
 
 
 ;;; ================================================================
@@ -1043,6 +1043,24 @@ found in lyskom-membership, a blocking call to the server is made."
                    membership
                  nil))))))
 
+
+(defun lyskom-get-read-texts-for-membership (pers-no mship)
+  "Get read-texts for membership MSHIP"
+  (when (and  mship (null (membership->read-texts mship)))
+    (let ((result (make-collector)))
+      (initiate-query-read-texts 'read-texts
+                                 'collector-push
+                                 pers-no
+                                 (membership->conf-no mship)
+                                 t
+                                 lyskom-max-int
+                                 result)
+      (lyskom-wait-queue 'read-texts)
+      (when (car (collector->value result))
+        (set-membership->read-texts 
+         mship
+         (or (membership->read-texts (car (collector->value result)))
+             (make-vector 0 nil)))))))
 
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
