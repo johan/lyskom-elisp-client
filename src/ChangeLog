@@ -1,5 +1,7 @@
 2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
 
+	* swedish-strings.el (lyskom-message): "Gå ur" --> "Utträd ur".
+
 	* swedish-strings.el (lyskom-custom-strings): Spelling.
 	(lyskom-message): Ditto.
 	(lyskom-menu): Ditto.
