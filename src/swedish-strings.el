@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.110 2000-04-29 07:41:13 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.111 2000-05-19 02:22:25 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.110 2000-04-29 07:41:13 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.111 2000-05-19 02:22:25 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -661,6 +661,12 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
 
     (not-logged-in . "Du är inte inloggad.  ")
 
+    ;; Used for kom-is-person-member-of-conference:
+    (pers-to-check-mship-for . "Vem vars medlemskap vill du undersöka? ") ;-)
+    (conf-to-check-mship-of . "...i vilket möte? ")
+    (conf-is-empty . "Mötet %#1M är tomt.\n")
+    (pers-is-member-of-conf . "Ja, %#1P är medlem i mötet %#2M.\n")
+    (pers-is-not-member-of-conf . "Nej, %#1P är inte medlem i mötet %#2M.\n")
 
     ;; +++ cant seem to find where these are used:
     (name-is-not-in-conf . "%#1s är inte närvarande i något möte.\n")
@@ -1562,6 +1568,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (kom-keep-alive           . "Håll förbindelsen aktiv")
     (kom-stop-keep-alive      . "Avbryt håll förbindelsen aktiv")
+
+    (kom-is-person-member-of-conference . "Kontrollera (om Person är) medlem (i Möte)")
     ))
 
 (lyskom-language-var lyskom-language-codes sv

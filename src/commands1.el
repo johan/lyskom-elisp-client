@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.66 2000-05-04 13:57:38 byers Exp $
+;;;;; $Id: commands1.el,v 44.67 2000-05-19 02:22:17 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.66 2000-05-04 13:57:38 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.67 2000-05-19 02:22:17 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -149,7 +149,7 @@
         (when (lyskom-report-command-answer 
                (blocking-do 'delete-text text-no))
           (when is-marked-by-me
-            (lyskom-unmark-text text-no nil)))))))
+            (lyskom-unmark-text text-no)))))))
 
 
 
@@ -199,13 +199,12 @@ If the current text is comment to (footnote to) several text then the first
 text is shown and a REVIEW list is built to shown the other ones. If the
 optional arg TEXT-NO is present review the text that text commented instead."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-commented-q)))
-  (let ((text-no (or text-no lyskom-current-text)))
-    (if text-no
-	(progn
-	  (lyskom-tell-internat 'kom-tell-read)
-	  (lyskom-view-commented-text
-	   (blocking-do 'get-text-stat text-no)))
-      (lyskom-insert-string 'have-to-read))))
+  (if text-no
+      (progn
+	(lyskom-tell-internat 'kom-tell-read)
+	(lyskom-view-commented-text
+	 (blocking-do 'get-text-stat text-no)))
+    (lyskom-insert-string 'have-to-read)))
 
 
 (def-kom-command kom-view-previous-commented-text ()
@@ -799,15 +798,38 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 (def-kom-command kom-write-footnote (&optional text-no)
   "Write a footnote to a text.
 If optional arg TEXT-NO is present write a footnote to that text instead."
-  (interactive (list 
-                (lyskom-read-text-no-prefix-arg 'what-footnote-no t
-                                                'last-seen-written)))
+  (interactive)
+  (let ((text-stat nil))
+    (setq text-no
+          (cond ((and (null current-prefix-arg)
+                      lyskom-current-text
+                      (setq text-stat
+                            (blocking-do 'get-text-stat lyskom-current-text))
+                      (eq (text-stat->author text-stat) lyskom-pers-no))
+                 (setq text-no lyskom-current-text))
+                
+                ((and (null current-prefix-arg)
+                      lyskom-last-written
+                      (setq text-stat
+                            (blocking-do 'get-text-stat lyskom-last-written)))
+                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)
+                                     lyskom-last-written))
+
+                ((integerp current-prefix-arg) 
+                 current-prefix-arg)
+                
+                ((listp current-prefix-arg)
+                 (lyskom-read-number (lyskom-get-string 'what-footnote-no)
+                                     (lyskom-text-at-point)))
+
+                (t (signal 'lyskom-internal-error '(kom-write-footnote)))))
+
   (if text-no
       (lyskom-write-comment-soon
        (blocking-do 'get-text-stat text-no)
        (blocking-do 'get-text text-no)
        text-no 'footnote)
-    (lyskom-insert-string 'confusion-what-to-footnote)))
+    (lyskom-insert-string 'confusion-what-to-footnote))))
 
 
 (def-kom-command kom-comment-previous ()
@@ -1561,65 +1583,45 @@ If you are not member in the conference it will be flagged with an asterisk."
 ;;;         Markera och Avmarkera - Mark and Unmark a text
 
 ;;; Author: Inge Wallin
-;;; [ndrad av: Linus Tolke
+;;; Modified by: Linus Tolke, Johan Sundström
 
-(def-kom-command kom-mark-text (text-no-arg)
-  "Mark a text.
-If the argument TEXT-NO-ARG is non-nil, the user has used a prefix
-command argument. If kom-defaul-mark is a number it is used as the
-mark. If it is nil the user is prompted for the mark to use."
-  (interactive "P")
-  (lyskom-mark-text text-no-arg (lyskom-get-string 'text-to-mark)))
+(def-kom-command kom-mark-text (&optional text-no)
+  "Mark the text TEXT-NO."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-mark)))
+  (lyskom-mark-text text-no))
 
 
-(def-kom-command kom-unmark-text (text-no-arg)
-  "Unmark a text. If the argument TEXT-NO-ARG is non-nil, the user has used
-a prefix command argument."
-  (interactive "P")
-  (lyskom-unmark-text text-no-arg (lyskom-get-string 'text-to-unmark)))
-  
-
-(defun lyskom-unmark-text (text-no-arg prompt)
-  "Get the number of the text that is to be marked and do the marking.
-Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number."
-  (let ((text-no (cond ((integerp text-no-arg) text-no-arg)
-                       ((and text-no-arg
-                             (listp text-no-arg))
-                        (car text-no-arg))
-                       (t lyskom-current-text))))
-    (if prompt
-        (setq text-no (lyskom-read-number prompt text-no)))
-    (lyskom-format-insert 'unmarking-textno text-no)
-    
-    (if (blocking-do 'unmark-text text-no)
-        (progn
-          (lyskom-insert-string 'done)	  
-          (cache-del-marked-text text-no))
-      (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
-    (cache-del-text-stat text-no)))
+(def-kom-command kom-unmark-text (&optional text-no)
+  "Unmark the text TEXT-NO."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-unmark)))
+  (lyskom-unmark-text text-no))
 
 
-(defun lyskom-mark-text (text-no-arg prompt)
-  "Get the number of the text that is to be marked and do the marking.
-Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number."
-  (let ((text-no (cond ((integerp text-no-arg) text-no-arg)
-                       ((and text-no-arg
-                             (listp text-no-arg))
-                        (car text-no-arg))
-                       (t lyskom-current-text)))
-        (mark nil))
-    (if prompt
-        (setq text-no (lyskom-read-number prompt text-no)))
-    (setq mark 
-          (or kom-default-mark (lyskom-read-num-range
-                                0 255 (lyskom-get-string 'what-mark) t)))
+(defun lyskom-unmark-text (text-no)
+  "Do the actual unmarking of the text TEXT-NO."
+  (lyskom-format-insert 'unmarking-textno text-no)
+
+  (if (blocking-do 'unmark-text text-no)
+      (progn
+	(lyskom-insert-string 'done)
+	(cache-del-marked-text text-no))
+    (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
+  (cache-del-text-stat text-no))
+
+
+(defun lyskom-mark-text (text-no &optional mark)
+  "Mark TEXT-NO using kom-default-mark (if non-nil) or prompt
+the user for what mark to use."
+  (let ((mark
+	 (or mark
+	     kom-default-mark
+	     (lyskom-read-num-range
+	      0 255 (lyskom-get-string 'what-mark) t))))
     (lyskom-format-insert 'marking-textno text-no)
-    
+
     (if (blocking-do 'mark-text text-no mark)
         (progn
-          (lyskom-insert-string 'done)	  
+          (lyskom-insert-string 'done)
           (cache-add-marked-text text-no mark))
       (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
     (cache-del-text-stat text-no)))

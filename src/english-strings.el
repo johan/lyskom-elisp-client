@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.83 2000-05-04 12:12:46 byers Exp $
+;;;;; $Id: english-strings.el,v 44.84 2000-05-19 02:22:21 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.83 2000-05-04 12:12:46 byers Exp $"))
+              "$Id: english-strings.el,v 44.84 2000-05-19 02:22:21 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -478,6 +478,13 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (who-is-on-in-what-conference . "Who in which conference: ")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
+
+    ;; Used for kom-is-person-member-of-conference:
+    (pers-to-check-mship-for . "Whom whose membership do you want to check? ") ;-)
+    (conf-to-check-mship-of . "...for what conference? ")
+    (conf-is-empty . "The conference %#1M is empty.\n")
+    (pers-is-member-of-conf . "Yes, %#1P is a member of the conference %#2M.\n")
+    (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
 
     ; From commands2.el:
 
@@ -1552,6 +1559,8 @@ You must become an active member of the conference to enter it.\n")
 
     (kom-keep-alive           . "Keep connection alive")
     (kom-stop-keep-alive      . "Stop keeping connection alive")
+
+    (kom-is-person-member-of-conference . "Check (if Person is a) member (of Conference)")
     ))
 
 (lyskom-language-var lyskom-language-codes en

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.98 2000-05-04 13:57:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.99 2000-05-19 02:22:29 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.98 2000-05-04 13:57:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.99 2000-05-19 02:22:29 jhs Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1268,6 +1268,8 @@ Users are encouraged to use their best sense of humor."
 
     kom-keep-alive
     kom-stop-keep-alive
+
+    kom-is-person-member-of-conference
     ))
 
 ;;; ================================================================
@@ -1690,13 +1692,6 @@ This is used by the command kom-busy-wait."
 
 (def-kom-var lyskom-last-written nil
   "Text-no of last text written. nil means no text written."
-  local)
-
-(def-kom-var lyskom-last-seen-written nil
-  "Text-no of last text read or written by the current user.
-When a new text is written, this is set to the text number of that text.
-When a text is read that was written by the current user, this is
-set to that text."
   local)
 
 (def-kom-var lyskom-previous-text nil

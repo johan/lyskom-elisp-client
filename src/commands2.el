@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.63 2000-05-04 13:57:40 byers Exp $
+;;;;; $Id: commands2.el,v 44.64 2000-05-19 02:22:19 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.63 2000-05-04 13:57:40 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.64 2000-05-19 02:22:19 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2038,7 +2038,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 (def-kom-command kom-add-faq (&optional conf-no text-no)
   "Add a FAQ to a conference"
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
-                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq t 'last-seen-written)))
+                     (lyskom-read-number 'text-to-add-as-faq)))
   (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)
@@ -2314,3 +2314,32 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 (defun lyskom-stop-keep-alive ()
   (mapcar 'cancel-timer lyskom-keep-alive-timers)
   (setq lyskom-keep-alive-timers nil))
+
+
+
+;;; ========================================================================
+;;;   Check (if Person is a) member (of Conference)
+;;;   Quickly finds out whether a person is a member of a given conference
+
+;;; Author: Johan Sundström
+
+(def-kom-command kom-is-person-member-of-conference
+  (&optional pers-no &optional conf-no)
+  "Find out whether PERS-NO is a member of conference CONF-NO."
+  (interactive)
+  (let* ((pers-no
+	  (or conf-no
+	      (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-mship-for)
+				   '(all) nil nil t)))
+	 (conf-no
+	  (or conf-no
+	      (lyskom-read-conf-no (lyskom-get-string 'conf-to-check-mship-of)
+				   '(all) nil nil t)))
+	 (member-list (blocking-do 'get-members conf-no 0 lyskom-max-int)))
+    (if (null member-list)
+	(lyskom-format-insert 'conf-is-empty conf-no)
+      (or (lyskom-traverse member (member-list->members member-list)
+	    (when (= pers-no (member->pers-no member))
+	      (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
+	      (lyskom-traverse-break t)))
+	  (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no)))))
