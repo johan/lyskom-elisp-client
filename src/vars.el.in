@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.276 2003-11-17 21:03:49 byers Exp $
+;;;;; $Id: vars.el.in,v 44.277 2003-11-17 22:25:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.276 2003-11-17 21:03:49 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.277 2003-11-17 22:25:34 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -347,7 +347,7 @@ the priority among links that match the same text is undefined."
                         (who-to-move-to-or-sub-q
                          (default . ((lyskom-default-conference-saved last-added-rcpt)
                                      lyskom-default-conference-current))
-                         (save last added-rcpt))
+                         (save last-added-rcpt))
                         (who-to-move-to-q
                          (default . ((lyskom-default-conference-saved last-added-rcpt)
                                      lyskom-default-conference-current))
@@ -355,6 +355,10 @@ the priority among links that match the same text is undefined."
 
     (kom-send-message (who-to-send-message-to
                        (default . (lyskom-default-conference-for-send-message))))
+
+    (kom-is-person-member-of-conference (pers-to-check-mship-for)
+                                        (conf-to-check-mship-of))
+
 
 
     ;; Defaults and commands that use the defaults
@@ -385,7 +389,6 @@ the priority among links that match the same text is undefined."
     (kom-set-garb-nice (conf-to-set-garb-nice-q))
     (kom-set-super-conf (conf-to-set-super-conf-q) (new-super-conf-q))
     (kom-set-personal-label (label-what-pers) (label-what-conf))
-    (kom-is-person-member-of-conference (pers-to-check-mship-for) (conf-to-check-mship-of))
     (kom-will-person-read-text (pers-to-check-will-read-for))
     (kom-create-aux-item (which-conf-to-add-aux-to))
     (kom-recommend-conference (recommend-which-conf))

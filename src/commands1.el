@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.202 2003-11-17 21:03:48 byers Exp $
+;;;;; $Id: commands1.el,v 44.203 2003-11-17 22:25:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.202 2003-11-17 21:03:48 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.203 2003-11-17 22:25:33 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -622,7 +622,7 @@ the priority of several memberships, use `kom-prioritize' instead."
 ;;; NOTE: This function is also called from lyskom-go-to-conf-handler
 ;;;       and from lyskom-create-conf-handler.
 
-(defun lyskom-add-member-by-no (conf-no pers-no &optional no-of-unread thendo &rest data)
+(defun lyskom-add-member-by-no (conf-no pers-no &optional no-of-unread mship-type thendo &rest data)
   "Fetch info to be able to add a person to a conf.
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
 for person PERS-NO and send them into lyskom-try-add-member."
@@ -631,7 +631,7 @@ for person PERS-NO and send them into lyskom-try-add-member."
                          (pers-stat (get-pers-stat pers-no)))
     (let ((result (lyskom-try-add-member whereto who pers-stat 
                                          nil nil t nil no-of-unread)))
-      (lyskom-add-member-answer result whereto who no-of-unread)
+      (lyskom-add-member-answer result whereto who no-of-unread mship-type)
       (if thendo
           (apply thendo data))
       (car result))))
@@ -762,7 +762,9 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
 (defun lyskom-add-member-answer (answer 
                                  conf-conf-stat
                                  pers-conf-stat
-                                 &optional no-of-unread)
+                                 &optional 
+                                 no-of-unread
+                                 mship-type)
   "Handle the result from an attempt to add a member to a conference."
   (let ((pos (if (consp answer) (elt answer 1) nil))
         (answer (if (consp answer) (elt answer 0) answer)))
@@ -797,15 +799,21 @@ If optional USE-PRIORITY is non-nil then use that as the priority.
 
                   (t (lyskom-insert-error errno err-stat)))))
 
-      (when (and (eq (conf-stat->conf-no pers-conf-stat)
-                     lyskom-pers-no)
-                 (lyskom-j-or-n-p
-                  (lyskom-format 'set-message-flag-q conf-conf-stat)))
-        (blocking-do 'set-membership-type
-                     (conf-stat->conf-no pers-conf-stat)
-                     (conf-stat->conf-no conf-conf-stat)
-                     (lyskom-create-membership-type nil nil nil t
-                                                    nil nil nil nil)))
+      (cond (mship-type
+             (blocking-do 'set-membership-type
+                          (conf-stat->conf-no pers-conf-stat)
+                          (conf-stat->conf-no conf-conf-stat)
+                          mship-type))
+
+            ((and (eq (conf-stat->conf-no pers-conf-stat)
+                      lyskom-pers-no)
+                  (lyskom-j-or-n-p
+                   (lyskom-format 'set-message-flag-q conf-conf-stat)))
+             (blocking-do 'set-membership-type
+                          (conf-stat->conf-no pers-conf-stat)
+                          (conf-stat->conf-no conf-conf-stat)
+                          (lyskom-create-membership-type nil nil nil t
+                                                         nil nil nil nil))))
 
       (cache-del-pers-stat (conf-stat->conf-no pers-conf-stat))
       (cache-del-conf-stat (conf-stat->conf-no conf-conf-stat))
@@ -1012,6 +1020,7 @@ probably a general Q&A conference where you can ask."
 	(lyskom-scroll)
 	(lyskom-add-member-by-no conf-no 
                                  lyskom-pers-no
+                                 nil
                                  nil
 				 (if secret
 				     nil ; Don't write a presentation
@@ -1811,9 +1820,14 @@ recipients are handled."
 (defun lyskom-write-text (arg prompt)
   "Start writing a new text."
   (lyskom-nag-about-presentation)
-  (let* ((tono (if (and arg lyskom-current-conf (not (zerop lyskom-current-conf)))
-                   lyskom-current-conf
-                 (lyskom-read-conf-no prompt '(pers conf) nil nil t)))
+  (let* ((tono (cond ((and arg (listp arg)
+                           lyskom-current-conf
+                           (not (eq 0 lyskom-current-conf)))
+                      lyskom-current-conf)
+
+                     ((numberp arg) arg)
+
+                     (t (lyskom-read-conf-no prompt '(pers conf) nil nil t))))
          (conf-stat (blocking-do 'get-conf-stat tono)))
     (cache-del-conf-stat tono)
     (if (if (zerop (conf-stat->msg-of-day conf-stat))

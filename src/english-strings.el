@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.309 2003-08-28 20:58:21 byers Exp $
+;;;;; $Id: english-strings.el,v 44.310 2003-11-17 22:25:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.309 2003-08-28 20:58:21 byers Exp $"))
+              "$Id: english-strings.el,v 44.310 2003-11-17 22:25:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -454,7 +454,9 @@ and you have finished reading. Please come back later.
     (change-priority-for . "Changing priority of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
     (unsubscribe-to-2 . "Leaving %#1M%#2s...")
-    (confirm-each-join . "Confirm joining each individual conference? ")
+    (confirm-each-join . "Confirm joining individual conferences? ")
+    (confirm-each-msg . "Confirm reception of group messages in individual möten? ")
+    (receive-each-msg . "Do you want to receive group messages in all conferences? ")
     (no-confirm-each-sure . "Are you sure you want to join %#1d conferences automatically? ")
     (confirm-join . "Join %#1M? ")
     (getting-all-confs . "Getting a list of all conferences...")
