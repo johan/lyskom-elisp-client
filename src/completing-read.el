@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.24 1999-11-21 15:39:50 byers Exp $
+;;;;; $Id: completing-read.el,v 44.25 1999-11-21 17:59:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.24 1999-11-21 15:39:50 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.25 1999-11-21 17:59:27 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -500,7 +500,7 @@ function work as a name-to-conf-stat translator."
   (let ((string (lyskom-unicase (lyskom-completing-strip-name string)))
         (result nil))
     (while (and list (not result))
-      (if (string= string (lyskom-unicase 
+      (if (lyskom-string= string (lyskom-unicase 
                            (lyskom-completing-strip-name (car list))))
           (setq result list)
         (setq list (cdr list))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.57 1999-11-19 13:37:29 byers Exp $
+;;;;; $Id: commands1.el,v 44.58 1999-11-21 17:59:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.57 1999-11-19 13:37:29 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.58 1999-11-21 17:59:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1666,7 +1666,7 @@ If MARK-NO is nil, review all marked texts."
 	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
 	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
 
-    (if (string= new-pw1 new-pw2)
+    (if (lyskom-string= new-pw1 new-pw2)
 	(progn
 	  (lyskom-insert-string 'changing-passwd)
 	  (lyskom-report-command-answer 
@@ -2620,8 +2620,8 @@ Uses Protocol A version 9 calls"
 				 (match-end 2))))
 	      (rest (substring username (match-end 0))))
 	  (if (or (not sent)
-		  (string= (downcase sent) (downcase gott))
-		  (string= (downcase sent)
+		  (lyskom-string= (downcase sent) (downcase gott))
+		  (lyskom-string= (downcase sent)
 			   (downcase (concat gott rest))))
 	      (concat name "@" gott rest)
 	    (concat name "@" sent " (" gott rest ")")))
@@ -2634,7 +2634,7 @@ Uses Protocol A version 9 calls"
   (if (string-match "\\(.*\\)%\\(.*\\)" username)
       (let ((user (substring username (match-beginning 1) (match-end 1)))
 	    (uhost (substring username (match-beginning 2) (match-end 2))))
-	(if (string= uhost hostname)
+	(if (lyskom-string= uhost hostname)
 	    (concat user "@" hostname)
 	  (concat username "@" hostname)))
     (concat username "@" hostname)))

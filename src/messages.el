@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: messages.el,v 44.6 1999-11-19 13:38:22 byers Exp $
+;;;;; $Id: messages.el,v 44.7 1999-11-21 17:59:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 44.6 1999-11-19 13:38:22 byers Exp $\n"))
+	      "$Id: messages.el,v 44.7 1999-11-21 17:59:37 byers Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
   "A list of personal message handlers.
@@ -134,7 +134,7 @@ on the value of PLACE. If PLACE is nil, 'after is assumed."
         
 
 (defun lyskom-info-request-handler (message-type sender recipient text)
-  (if (string= text "\011\016\006\017")
+  (if (lyskom-string= text "\011\016\006\017")
       (progn
         (initiate-send-message 
          'follow 

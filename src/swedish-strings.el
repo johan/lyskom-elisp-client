@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.90 1999-11-19 14:01:11 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.91 1999-11-21 17:59:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.90 1999-11-19 14:01:11 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.91 1999-11-21 17:59:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -47,6 +47,7 @@
 
 (lyskom-define-language
  'sv
+ 'iso-8859-1
  "Svenska")
 
 

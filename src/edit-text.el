@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.52 1999-11-19 22:00:10 byers Exp $
+;;;;; $Id: edit-text.el,v 44.53 1999-11-21 17:59:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.52 1999-11-19 22:00:10 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.53 1999-11-21 17:59:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -218,12 +218,12 @@ footn-to	-> Fotnot till text %d."
                     (concat (lyskom-get-string 'aux-item-prefix) data "\n")
                     where-put-misc)))))
             aux-list)
-    (princ (lyskom-format 'text-mass subject 
-			  (substitute-command-keys
-			   (lyskom-get-string 'header-separator))
-			  body 
-			  (lyskom-get-string 'header-subject))
-	   where-put-misc)
+    (lyskom-princ (lyskom-format 'text-mass subject 
+				 (substitute-command-keys
+				  (lyskom-get-string 'header-separator))
+				 body 
+				 (lyskom-get-string 'header-subject))
+		  where-put-misc)
     (set-buffer edit-buffer)
     (goto-char where-put-misc)
     ))
@@ -665,7 +665,7 @@ Based on ispell-message."
   (require 'ispell)
   (let ((ispell-dictionary (or kom-ispell-dictionary ispell-dictionary))
         (kill-ispell (or (not (boundp 'ispell-dictionary))
-                         (not (string= kom-ispell-dictionary
+                         (not (lyskom-string= kom-ispell-dictionary
                                        ispell-dictionary))))
         (result nil))
     (when kill-ispell (ispell-kill-ispell t))
@@ -966,8 +966,8 @@ Cannot be called from a callback."
               (format-encode-buffer 'text/enriched)
               (goto-char (point-min))
               (search-forward "\n\n")
-              (if (and (not (string= (buffer-substring (point)
-                                                       (point-max)) message))
+              (if (and (not (lyskom-string= (buffer-substring (point)
+                                                              (point-max)) message))
                        (save-excursion
                          (set-buffer lyskom-buffer)
                          (lyskom-j-or-n-p 
@@ -1234,10 +1234,11 @@ RECPT-TYPE is the type of recipient to add."
 	       (let ((win-config (current-window-configuration)))
 		 ;;(set-buffer buffer)
 		 (with-output-to-temp-buffer "*Motd*"
-		   (princ (lyskom-format 'conf-has-motd-no
-					 (text->text-no text)
-					 (text->decoded-text-mass text 
-                                                                  text-stat))))
+		   (lyskom-princ
+		    (lyskom-format 'conf-has-motd-no
+				   (text->text-no text)
+				   (text->decoded-text-mass text 
+							    text-stat))))
 		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
                       (if what-to-do
                           (funcall what-to-do conf-stat insert-at edit-buffer)
