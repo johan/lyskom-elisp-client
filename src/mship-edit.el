@@ -111,11 +111,7 @@
    extents                              ; Alist of extents/overlays
    ))
 
-(defvar lp--last-format-string nil
-  "The cached format string for entries. 
-Use lp--compute-format-string when you need the format string. Do not
-access this variable directly.")
-(defvar lp--last-window-width -1)
+(defvar lp--format-string nil "The format string for entries.")
 
 ;;; Local variables in the prioritize buffer
 ;;; There should be no reason to use these at all. There are functional
@@ -165,7 +161,8 @@ This function does not tell the server about the change."
       (cond
        ((and (>= old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
-        (lyskom-sort-to-do-list))
+        ;; Do nothing
+        )
 
        ((and (< old-priority lyskom-session-priority)
              (>= new-priority lyskom-session-priority))
@@ -280,17 +277,13 @@ even if the character at point is deleted."
 
 (defun lp--compute-format-string ()
   "Compute the format string for an entry in the buffer.
-To save time, the format string is cached in `lp--last-format-string'.  It is
+To save time, the format string is cached in `lp--format-string'.  It is
 only recomputed if the window width changes."
-  (if (and lp--last-format-string
-           (eq (window-width) lp--last-window-width))
-      lp--last-format-string
-    (let ((total (- (window-width) 1 3 3 2 12 2 5 2 4 1)))
-      (setq lp--last-window-width (window-width))
-      (setq lp--conf-name-width total)
-      (setq lp--last-format-string
-            (concat "%#1c %=3#2s %#10c %=-" (number-to-string total)
-                    "#3M  %=-12#4s %[%#15@%=5#5s%]  %[%#11@%#6c%]%[%#12@%#7c%]%[%#13@%#8c%]%[%#14@%#9c%]")))))
+  (let ((total (- (window-width) 1 3 3 2 12 2 5 2 4 1)))
+    (setq lp--conf-name-width total)
+    (setq lp--format-string
+          (concat "%#1c %=3#2s %#10c %=-" (number-to-string total)
+                  "#3M  %=-12#4s %[%#15@%=5#5s%]  %[%#11@%#6c%]%[%#12@%#7c%]%[%#13@%#8c%]%[%#14@%#9c%]"))))
 
 (defun lp--format-insert-entry (entry)
   "Format ENTRY and insert it into the current buffer at point."
@@ -335,7 +328,7 @@ only recomputed if the window width changes."
     (let* ((un (lyskom-find-unread (membership->conf-no
                                     (lp--entry->membership entry))))
            (string (lyskom-format
-                    (lp--compute-format-string)
+                    lp--format-string
                     (if (lp--entry->selected entry) ?* ?\ )
                     (if (zerop (membership->priority
                                 (lp--entry->membership entry)))
@@ -594,19 +587,22 @@ entry priority"
 
 (defun lp--entry-at (where)
   "Return the entry at WHERE."
-  (let ((entry-list (lp--all-entries))
-        (found nil)
-        (pos (save-excursion (goto-char where)
-                             (beginning-of-line)
-                             (point))))
-    (while (and (not found) entry-list)
-      (when (and (lp--entry->start-marker (car entry-list))
-                 (lp--entry->end-marker (car entry-list))
-                 (<= (lp--entry->start-marker (car entry-list)) pos)
-                 (>= (lp--entry->end-marker (car entry-list)) pos))
-        (setq found (car entry-list)))
-      (setq entry-list (cdr entry-list)))
-    found))
+  (let* ((pos (save-excursion (goto-char where)
+                              (beginning-of-line)
+                              (point)))
+         (idx (lyskom-binsearch 
+               pos (lp--all-entries) nil nil
+               (lambda (a b)
+                 (cond ((numberp a)
+                        (and (lp--entry->start-marker b)
+                             (lp--entry->end-marker b)
+                             (< a (lp--entry->start-marker b))))
+                       (t
+                        (and (lp--entry->start-marker a)
+                             (lp--entry->end-marker a)
+                             (< (lp--entry->end-marker a) b))))))))
+    (and idx (lp--get-entry idx))))
+
 
 (defun lp--move-entry (entry to)
   "Move the entry ENTRY to position TO in the list."
@@ -648,62 +644,63 @@ entry priority"
   "Update the entry for CONF-NO in the buffer.
 If optional NEW-MSHIP is non-nil, then get the membership again."
   (unless lp--inhibit-update
-    (lp--save-excursion
+    (save-excursion
      (let ((buffers (lyskom-buffers-of-category 'prioritize)))
        (mapcar (lambda (buffer)
                  (set-buffer buffer)
-                 (let ((entry (lp--conf-no-entry conf-no))
-                       (mship (lyskom-get-membership conf-no t)))
+                 (lp--save-excursion
+                  (let ((entry (lp--conf-no-entry conf-no))
+                        (mship (lyskom-get-membership conf-no t)))
 
-                   (cond 
-                    ((and (null entry) mship)       ; New membership
-                     (let* ((pos (membership->position mship))
-                            (elem (and pos (lp--get-entry pos)))
-                            (entry (lyskom-create-lp--entry 
-                                    nil
-                                    nil
-                                    (membership->priority mship)
-                                    mship
-                                    nil
-                                    (if (memq (membership->created-by mship)
-                                              (list lyskom-pers-no 0))
-                                        'contracted
-                                      'expanded)
-                                    t
-                                    nil)))
-                       (when pos
-                         (save-excursion
-                           (goto-char (if elem
-                                          (lp--entry->start-marker elem)
-                                        lp--list-end-marker))
-                           (lp--set-entry-list
-                            (lp--add-to-list pos entry (lp--all-entries)))
-                           (lp--print-entry entry)))))
+                    (cond 
+                     ((and (null entry) mship) ; New membership
+                      (let* ((pos (membership->position mship))
+                             (elem (and pos (lp--get-entry pos)))
+                             (entry (lyskom-create-lp--entry 
+                                     nil
+                                     nil
+                                     (membership->priority mship)
+                                     mship
+                                     nil
+                                     (if (memq (membership->created-by mship)
+                                               (list lyskom-pers-no 0))
+                                         'contracted
+                                       'expanded)
+                                     t
+                                     nil)))
+                        (when pos
+                          (save-excursion
+                            (goto-char (if elem
+                                           (lp--entry->start-marker elem)
+                                         lp--list-end-marker))
+                            (lp--set-entry-list
+                             (lp--add-to-list pos entry (lp--all-entries)))
+                            (lp--print-entry entry)))))
 
-                    ;; We have unsubscribed for good
+                     ;; We have unsubscribed for good
 
-                    ((null mship)
-                     (when entry
-                       (lp--set-entry-list
-                        (lp--remove-from-list entry
-                                              (lp--all-entries)))
-                       (lp--erase-entry entry)))
+                     ((null mship)
+                      (when entry
+                        (lp--set-entry-list
+                         (lp--remove-from-list entry
+                                               (lp--all-entries)))
+                        (lp--erase-entry entry)))
 
-                    ;; The priority or position of a membership has changed
+                     ;; The priority or position of a membership has changed
 
-                    ((or (/= (lp--entry->priority entry)
-                             (membership->priority mship))
-                         (/= (lp--entry-position entry)
-                             (membership->position mship)))
-                     (let ((new-pos (lp--entry-position
-                                     (lp--find-new-position 
-                                      entry (membership->priority mship)))))
-                       (lp--set-entry-pri-and-pos
-                        entry (membership->priority mship) new-pos)
-                       (set-lp--entry->membership entry mship)))
+                     ((or (/= (lp--entry->priority entry)
+                              (membership->priority mship))
+                          (/= (lp--entry-position entry)
+                              (membership->position mship)))
+                      (let ((new-pos (lp--entry-position
+                                      (lp--find-new-position 
+                                       entry (membership->priority mship)))))
+                        (lp--set-entry-pri-and-pos
+                         entry (membership->priority mship) new-pos)
+                        (set-lp--entry->membership entry mship)))
 
-                    (t (set-lp--entry->membership entry mship)
-                       (lp--redraw-entry entry)))))
+                     (t (set-lp--entry->membership entry mship)
+                        (lp--redraw-entry entry))))))
                buffers)))))
 
 
@@ -1053,7 +1050,13 @@ SELECT specifies new select."
   (when (not (numberp priority))
     (let ((entry (lp--entry-at (point))))
       (unless entry (error "No membership at point"))
-      (setq priority (membership->priority (lp--entry->membership entry)))))
+      (setq priority
+            (lyskom-read-num-range 0 255 
+                                   (if select
+                                       "Markera medlemskap med prioritet: "
+                                     "Avmarkera medlemskap med prioritet: ")
+                                   nil
+                                   (membership->priority (lp--entry->membership entry))))))
 
   (lp--select-entries
    (mapcar (lambda (entry)
@@ -1341,11 +1344,13 @@ entry with an adjacent priority."
        (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
       (lp--redraw-entry entry))))
 
-(defun lp--expand-all (arg)
-  "Expand all entries. 
+(defun lp--expand-entry (arg)
+  "Expand selected entries. 
 With prefix arg, expand only those that were created by someone else."
   (interactive "P")
-  (let ((hidden-list (list lyskom-pers-no 0)))
+  (let ((entries (or (lp--all-selected-entries)
+                      (list (lp--entry-at (point)))))
+        (hidden-list (list lyskom-pers-no 0)))
     (mapcar (lambda (entry)
               (when (and (or (null arg)
                              (not (memq (membership->created-by
@@ -1354,13 +1359,15 @@ With prefix arg, expand only those that were created by someone else."
                          (not (eq (lp--entry->state entry) 'expanded)))
                 (set-lp--entry->state entry 'expanded)
                 (lp--redraw-entry entry)))
-            (lp--all-entries))))
+            entries)))
 
-(defun lp--contract-all (arg)
-  "Contract all entries.
+(defun lp--contract-entry (arg)
+  "Contract selected entries.
 With prefix arg, contract only those that were created by self."
   (interactive "P")
-  (let ((hidden-list (list lyskom-pers-no 0)))
+  (let ((entries (or (lp--all-selected-entries)
+                      (list (lp--entry-at (point)))))
+        (hidden-list (list lyskom-pers-no 0)))
     (mapcar (lambda (entry)
               (when (and (or (null arg)
                              (memq (membership->created-by
@@ -1369,7 +1376,7 @@ With prefix arg, contract only those that were created by self."
                          (not (eq (lp--entry->state entry) 'contracted)))
                 (set-lp--entry->state entry 'contracted)
                 (lp--redraw-entry entry)))
-            (lp--all-entries))))
+            entries)))
 
 (defun lp--quit ()
   "Remove the membership buffer and quit"
@@ -1423,14 +1430,17 @@ With prefix arg, contract only those that were created by self."
   (define-key lp--mode-map (kbd "C-k") 'lp--toggle-membership-selection)
   (define-key lp--mode-map (kbd "p")   'lp--set-priority)
   (define-key lp--mode-map (kbd "C-w") 'lp--select-region)
+  (define-key lp--mode-map (kbd "M-w") 'lp--select-region)
   (define-key lp--mode-map (kbd "C-y") 'lp--yank)
   (define-key lp--mode-map (kbd "#")   'lp--select-priority)
-  (define-key lp--mode-map (kbd "M-#")   'lp--select-priority)
+  (define-key lp--mode-map (kbd "M-#")   'lp--deselect-priority)
   (define-key lp--mode-map (kbd "M-DEL") 'lp--deselect-all)
   (define-key lp--mode-map (kbd "C-p") 'lp--previous-entry)
   (define-key lp--mode-map (kbd "<up>") 'lp--previous-entry)
   (define-key lp--mode-map (kbd "C-n") 'lp--next-entry)
   (define-key lp--mode-map (kbd "<down>") 'lp--next-entry)
+  (define-key lp--mode-map (kbd "<home>") 'lp--first-entry)
+  (define-key lp--mode-map (kbd "<end>") 'lp--last-entry)
   (define-key lp--mode-map (kbd "M-<") 'lp--first-entry)
   (define-key lp--mode-map (kbd "M->") 'lp--last-entry)
   (define-key lp--mode-map (kbd "g") 'lp--goto-priority)
@@ -1439,12 +1449,16 @@ With prefix arg, contract only those that were created by self."
   (define-key lp--mode-map (kbd "-") 'lp--decrease-priority)
   (define-key lp--mode-map (kbd "M-p") 'lp--move-up)
   (define-key lp--mode-map (kbd "M-n") 'lp--move-down)
+  (define-key lp--mode-map (kbd "M-<up>") 'lp--move-up)
+  (define-key lp--mode-map (kbd "M-<down>") 'lp--move-down)
   (define-key lp--mode-map (kbd "I") 'lp--toggle-invitation)
   (define-key lp--mode-map (kbd "H") 'lp--toggle-secret)
   (define-key lp--mode-map (kbd "P") 'lp--toggle-passive)
   (define-key lp--mode-map (kbd "M") 'lp--toggle-message-flag)
   (define-key lp--mode-map (kbd "C-c C-c") 'lp--quit)
   (define-key lp--mode-map (kbd "q") 'lp--quit)
+  (define-key lp--mode-map (kbd "(") 'lp--expand-entry)
+  (define-key lp--mode-map (kbd ")") 'lp--contract-entry)
 
   (define-key lp--mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lp--mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
@@ -1511,8 +1525,8 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (interactive)
   (setq major-mode 'lp--mode)
   (setq mode-name "Prioritize")
-  (make-local-variable 'lp--last-format-string)
-  (make-local-variable 'lp--last-window-width)
+  (make-local-variable 'lp--format-string)
+  (make-local-variable 'lp--conf-name-width)
   (make-local-variable 'lp--entry-list)
   (make-local-variable 'lp--list-start-marker)
   (make-local-variable 'lp--list-end-marker)
@@ -1524,17 +1538,6 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (lp--update-mode-line)
   (setq buffer-read-only t)
   (lyskom-use-local-map lp--mode-map)
-;; I'm hard-coding these instead
-;;
-;;  (lyskom-add-hook 'lyskom-add-membership-hook
-;;                   'lp--add-membership-callback
-;;                    t)
-;;  (lyskom-add-hook 'lyskom-remove-membership-hook 
-;;                   'lyskom-prioritize-remove-membership
-;;                   t)
-;;  (lyskom-add-hook 'lyskom-replace-membership-hook 
-;;                   'lyskom-prioritize-replace-membership
-;;                   t)
   (run-hooks 'lp--mode-hook))
 
 
