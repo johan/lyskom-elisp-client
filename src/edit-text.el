@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $
+;;;;; $Id: edit-text.el,v 44.26.2.1 1999-10-13 09:55:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.44 1999-10-13 09:23:34 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.26.2.1 1999-10-13 09:55:53 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -171,7 +171,7 @@ Does lyskom-end-of-command."
 
 
 
-(defun lyskom-edit-insert-miscs (misc-list subject body &optional aux-list)
+(defun lyskom-edit-insert-miscs (misc-list subject body)
   "Insert MISC-LIST into header of text.
 recpt		-> Mottagare: <%d> %s.
 cc-recpt	-> Extra kopia: <%d> %s.
@@ -208,16 +208,6 @@ footn-to	-> Fotnot till text %d."
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
-    (mapcar (function
-             (lambda (item)
-               (let ((data (lyskom-aux-item-definition-call
-                            item '(edit-insert print)
-                            item lyskom-pers-no)))
-                 (when data
-                   (lyskom-princ
-                    (concat (lyskom-get-string 'aux-item-prefix) data "\n")
-                    where-put-misc)))))
-            aux-list)
     (princ (lyskom-format 'text-mass subject 
 			  (substitute-command-keys
 			   (lyskom-get-string 'header-separator))
@@ -407,8 +397,6 @@ so it's not as clean as it ought to be."
             (not lyskom-edit-mode)
           (> (prefix-numeric-value arg) 0)))
 
-  (lyskom-set-menus 'lyskom-edit-mode lyskom-edit-mode-map)
-
   (when lyskom-edit-mode
     (lyskom-edit-sending-mode 0)
     (lyskom-edit-sent-mode 0)
@@ -429,10 +417,6 @@ so it's not as clean as it ought to be."
                                       (substitute-command-keys
                                        (lyskom-get-string 'header-separator)))
                                      "$\\|" paragraph-separate))
-    (make-local-variable 'comment-start)
-    (make-local-variable 'comment-end)
-    (setq comment-start kom-cite-string
-	  comment-end "")
     (run-hooks 'lyskom-edit-mode-hook)))
 
 (defun lyskom-edit-sending-mode (arg)
@@ -465,36 +449,25 @@ so it's not as clean as it ought to be."
 (defun kom-edit-send-anonymous ()
   "Send the text anonymously to the server."
   (interactive)
-  (lyskom-edit-send 'initiate-create-anonymous-text nil))
+  (lyskom-edit-send 'initiate-create-anonymous-text))
 
 (defun kom-edit-send ()
   "Send the text to the server."
   (interactive)
-   (if (and (lyskom-default-value 'lyskom-is-anonymous)
-            (lyskom-j-or-n-p 'do-send-anonymous t))
-       (lyskom-edit-send 'initiate-create-anonymous-text t)
-     (lyskom-edit-send 'initiate-create-text nil)))
+  (lyskom-edit-send 'initiate-create-text))
 
-(defun lyskom-edit-send (send-function &optional is-anonymous)
-  "Send the text to the server by calling SEND-FUNCTION.
-If optional IS-ANONYMOUS is non-nil, assume that the text is being submitted
-anonymously and take actions to avoid revealing the sender."
+(defun lyskom-edit-send (send-function)
+  "Send the text to the server by calling SEND-FUNCTION."
   (condition-case err
       (if (or (not lyskom-edit-text-sent) ;++MINOR checked mode-name against lyskom-edit-mode-name
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
 	    (let ((buffer (current-buffer))
-		  (headers nil)
-                  (misc-list nil)
-                  (subject nil)
-                  (message nil)
-                  (aux-list nil))
+		  headers misc-list subject message)
 
 	      (save-excursion
 		(setq headers (lyskom-edit-parse-headers)
-		      misc-list (apply 'lyskom-create-misc-list 
-                                       (elt headers 1))
-                      aux-list (elt headers 2)
+		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
 		      subject (car headers)))
 
               ;;
@@ -520,8 +493,8 @@ anonymously and take actions to avoid revealing the sender."
                                                         subject)))
                 (if extra-headers
                     (setq misc-list (apply 'lyskom-create-misc-list
-                                           (nconc (elt headers 1)
-						  extra-headers)))))
+                                           (cdr (nconc headers
+                                                       extra-headers))))))
 
               ;;
               ;; Run user hooks
@@ -554,8 +527,7 @@ anonymously and take actions to avoid revealing the sender."
 
 		(set-buffer lyskom-buffer)
 		;; Don't change the prompt if we won't see our own text
-		(if (and kom-created-texts-are-read
-                         (not is-anonymous))
+		(if kom-created-texts-are-read
 		    (setq lyskom-dont-change-prompt t))
 		(setq lyskom-is-writing nil)
 		(lyskom-tell-internat 'kom-tell-send)
@@ -564,16 +536,7 @@ anonymously and take actions to avoid revealing the sender."
                          'lyskom-create-text-handler
                          full-message
                          misc-list
-                         (unless is-anonymous
-                           (cons (lyskom-create-aux-item
-                                  0 15 0 0
-                                  (lyskom-create-aux-item-flags
-                                   nil nil nil nil nil nil nil nil)
-                                  0 (concat "lyskom.el "
-                                            lyskom-clientversion))
-                                 aux-list))
-                         buffer
-                         is-anonymous))))
+                         buffer))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -662,7 +625,6 @@ Based on ispell-message."
              (ispell-checking-message t)
              (subject-string 
               (concat "^" (regexp-quote (lyskom-get-string 'subject)))))
-        (lyskom-ignore ispell-checking-message)
         (goto-char (point-min))
         (while (if internal-messagep
                    (< (point) internal-messagep)
@@ -706,23 +668,6 @@ Based on ispell-message."
     (when kill-ispell (ispell-kill-ispell t))
     result))
 
-(defun lyskom-is-permitted-author (conf-stat)
-  (and conf-stat
-       (or (eq 0 (conf-stat->permitted-submitters conf-stat))
-           (lyskom-is-supervisor conf-stat))))
-
-(defun lyskom-is-supervisor (conf-stat &optional memo)
-  "Return non-nil if lyskom-pers-no is a supervisor of CONF-STAT."
-  (cond ((null conf-stat) nil)
-        ((memq (conf-stat->conf-no conf-stat) memo) nil)
-        ((eq lyskom-pers-no (conf-stat->conf-no conf-stat)) t)
-        ((eq lyskom-pers-no (conf-stat->supervisor conf-stat)) t)
-        ((eq 0 (conf-stat->supervisor conf-stat)) nil)
-        ((lyskom-get-membership (conf-stat->conf-no conf-stat) t) t)
-        ((lyskom-is-supervisor
-          (blocking-do 'get-conf-stat (conf-stat->supervisor conf-stat))
-          (cons (conf-stat->conf-no conf-stat) memo)))))
-
 
 (defun lyskom-edit-send-check-recipients (misc-list subject) 
   "Check that the recipients of this text are OK. Ask the user to
@@ -738,9 +683,8 @@ text is a member of some recipient of this text."
          (buffer (current-buffer))
          (me (save-excursion (set-buffer lyskom-buffer)
                              lyskom-pers-no))
-         (num-me 0)
-         (num-real-recpt 0))
-    (lyskom-ignore text-stat)              ; Have no idea if its ever used...
+         (num-me 0))
+    (ignore text-stat)                  ; Have no idea if its ever used...
 
     ;;
     ;; List all texts this text is a comment to
@@ -752,29 +696,10 @@ text is a member of some recipient of this text."
              (setq comm-to-list (cons (cdr misc)
                                       comm-to-list)))
             ((or (eq (car misc) 'recpt)
-                 (eq (car misc) 'cc-recpt)
-                 (eq (car misc) 'bcc-recpt))
-             (when (eq (car misc) 'recpt)
-               (setq num-real-recpt (1+ num-real-recpt))
-               (when (eq (cdr misc) me) (setq num-me (1+ num-me))))
+                 (eq (car misc) 'cc-recpt))
+                 (eq (car misc) 'bcc-recpt)
+             (if (eq (cdr misc) me) (setq num-me (1+ num-me)))
              (setq recipient-list (cons (cdr misc) recipient-list)))))
-
-    ;;
-    ;; Check that there are recipients
-    ;;
-
-    (when (null recipient-list)
-      (lyskom-error "%s" (lyskom-format 'no-recipients)))
-
-    ;;
-    ;; Check for duplicate recipients
-    ;;
-
-    (let ((tmp recipient-list))
-      (while tmp
-        (when (memq (car tmp) (cdr tmp))
-          (lyskom-error "%s" (lyskom-format 'duplicate-recipients (car tmp))))
-        (setq tmp (cdr tmp))))
 
     ;;
     ;; Check for new comments
@@ -831,8 +756,7 @@ text is a member of some recipient of this text."
     (if (and (lyskom-default-value 'kom-confirm-multiple-recipients)
              (not (eq (lyskom-default-value 'kom-confirm-multiple-recipients)
                       'before))
-             (> (- num-real-recpt num-me) 1))
-
+             (> (- (length recipient-list) num-me) 1))
         (save-excursion
           (goto-char (point-min))
           (if (not 
@@ -852,12 +776,11 @@ text is a member of some recipient of this text."
           ;; For each commented text, get the author
           ;;
         
-          (mapcar 
-           (lambda (x)
-             (let ((text (blocking-do 'get-text-stat x)))
-               (when text
-                 (add-to-list 'author-list (text-stat->author text)))))
-           comm-to-list)
+          (setq author-list (mapcar 
+                             (function (lambda (x)
+                                         (text-stat->author
+                                          (blocking-do 'get-text-stat x))))
+                             comm-to-list))
 
           ;;
           ;; For each author, see if the author is a direct recipient
@@ -867,7 +790,10 @@ text is a member of some recipient of this text."
           ;;
 
           (lyskom-traverse misc (cdr misc-list)
-            (cond ((or (eq (car misc) 'recpt)
+            (cond ((eq (car misc) 'comm-to)
+                   (setq comm-to-list (cons (cdr misc)
+                                            comm-to-list)))
+                  ((or (eq (car misc) 'recpt)
                        (eq (car misc) 'bcc-recpt)
                        (eq (car misc) 'cc-recpt))
                    (if (or (memq (cdr misc) author-list)
@@ -892,24 +818,12 @@ text is a member of some recipient of this text."
                             author-number conference-number
                             collector)))
                         recipient-list)
+
                        (lyskom-wait-queue 'sending)
+                       (setq author-is-member (collector->value collector))
 
-                       ;; Now collector contains all the memberships for
-                       ;; author-number in the recipients.
-
-                       (let ((tmp (collector->value collector)))
-                         (while tmp
-                           (when (and (lyskom-membership-p (car tmp))
-                                      (not (membership-type->passive
-                                        (membership->type (car tmp)))))
-                             (setq author-is-member t
-                                   tmp nil))
-                           (setq tmp (cdr tmp))))
-                             
-                       (if (and (not author-is-member)
+                       (if (and (null (delq nil author-is-member))
 				(not (zerop author-number))
-                                (lyskom-is-permitted-author
-                                 (blocking-do 'get-conf-stat author-number))
                                 (lyskom-j-or-n-p
                                  (let ((kom-deferred-printing nil))
                                    (lyskom-format
@@ -1013,7 +927,7 @@ text is a member of some recipient of this text."
       (let* ((buffer (current-buffer))
              (window (selected-window))
              (headers (condition-case nil
-                          (elt (lyskom-edit-parse-headers) 1)
+                          (cdr (lyskom-edit-parse-headers))
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
         (while headers
@@ -1033,39 +947,12 @@ text is a member of some recipient of this text."
     (sit-for 0)))
 
 
-;;; ============================================================
-;;; Info node stuff
-
-(defvar Info-current-node)
-(defvar Info-current-file)
-
-(defun kom-yank-info-nodename ()
-  "Put the current Info-node on the kill-ring."
-  (interactive)
-  (kill-new (format "*Note %s: (%s)%s,"
-		    Info-current-node
-		    (file-name-nondirectory Info-current-file)
-		    Info-current-node)))
-
-(defun kom-insert-last-info-nodename ()
-  "Insert a reference to the most recently visited info node."
-  (interactive)
-  (condition-case nil
-      (let ((link nil))
-        (save-excursion
-          (set-buffer (get-buffer "*info*"))
-          (setq link (format "*Note %s: (%s)%s,"
-                             Info-current-node
-                             (file-name-nondirectory Info-current-file)
-                             Info-current-node)))
-        (insert link))
-    (error (lyskom-message (lyskom-get-string 'cant-find-info-node)))))
-
 ;;; ================================================================
 ;;;	  Add recipient, copy-recipient - Addera mottagare 
 ;;;
 ;;;  Author: Anders Gertz
 ;;;  Changed by: Linus Tolke
+
 
 (defun kom-edit-add-comment ()
   "Adds a text as commented to the text being edited."
@@ -1074,7 +961,6 @@ text is a member of some recipient of this text."
          (insert-at (point-min-marker))
          (text-no (lyskom-read-number (lyskom-get-string 'text-to-comment-q)))
          (text-stat (blocking-do 'get-text-stat text-no)))
-    (lyskom-ignore edit-buffer)
     (lyskom-save-excursion
      (if text-stat
          (lyskom-edit-get-commented-author 
@@ -1088,87 +974,55 @@ text is a member of some recipient of this text."
   "Adds a conference as recipient to the text being edited."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-recipient)
-                                 nil
-                                  'recpt))
+				  (lyskom-get-string 'recipient)))
 
 
 (defun kom-edit-add-bcc ()
   "Adds a conference as bcc recipient to the text being edited."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-blank-carbon-copy)
-                                  nil
-                                  'bcc-recpt))
+				  (lyskom-get-string 'blank-carbon-copy)))
 
 
 (defun kom-edit-add-copy ()
   "Adds a conference to which a copy of the edited text will be sent."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'added-carbon-copy)
-                                  nil
-                                  'cc-recpt))
+				  (lyskom-get-string 'carbon-copy)))
 
 (defun kom-edit-move-text ()
   "Adds a conference as a recipient, and changes all other recipients to
 CC recipients."
   (interactive)
   (lyskom-edit-add-recipient/copy (lyskom-get-string 'who-to-move-to-q)
+                                  (lyskom-get-string 'recipient)
                                   'lyskom-edit-move-recipients))
-
 
 (defun lyskom-edit-move-recipients (conf-stat insert-at edit-buffer)
   (save-excursion
     (set-buffer edit-buffer)
     (let* ((tmp (lyskom-edit-parse-headers))
            (subject (car tmp))
-           (miscs (mapcar (lambda (x) (if (eq (car x) 'recpt) 
-                                          (cons 'cc-recpt (cdr x)) x))
-                  (cdr (lyskom-edit-translate-headers (elt tmp 1)))))
-           (aux-list (elt tmp 2))
-           (elem nil))
-
-
-      ;; If the new target is already a recipient, convert it to the right 
-      ;; kind. Otherwise insert the new target after the last comm-to
-
-      (setq elem (lyskom-edit-find-misc miscs '(recpt cc-recpt bcc-recpt) 
-                                        (conf-stat->conf-no conf-stat)))
-      (if elem
-          (setcar elem 'recpt)
-        (lyskom-insert-in-list
-         (cons 'recpt (conf-stat->conf-no conf-stat))
-         miscs
-         (car (cdr (memq (lyskom-edit-find-misc miscs '(footn-to comm-to) 
-                                                nil t)
-                         miscs)))))
-
-      (lyskom-edit-replace-headers subject (cons 'MISC-LIST miscs) aux-list))))
+           (miscs (cons 'MISC-LIST
+                        (mapcar
+                         (function 
+                          (lambda (x)
+                            (if (eq (car x) 'recpt) 
+                                (cons 'cc-recpt (cdr x))
+                              x)))
+                         (cdr (lyskom-edit-translate-miscs (cdr tmp)))))))
+      (lyskom-edit-replace-miscs subject miscs)
+      (lyskom-edit-insert-misc-conf conf-stat
+                                    (lyskom-get-string 'recipient)
+                                    (point-min-marker)
+                                     nil))))
                                   
 
 
-(defun lyskom-edit-do-add-recipient/copy (recpt-type recpt-no edit-buffer)
-  (lyskom-save-excursion
-    (set-buffer edit-buffer)
-    (let* ((headers (lyskom-edit-parse-headers))
-           (miscs (lyskom-edit-translate-headers (elt headers 1)))
-           (elem (lyskom-edit-find-misc miscs '(cc-recpt bcc-recpt recpt)
-                                        recpt-no)))
-
-      (cond (elem (setcar elem recpt-type))
-            (t (setq miscs
-                     (append miscs (list (cons recpt-type recpt-no))))))
-      (lyskom-edit-replace-headers (elt headers 0)
-                                   miscs
-                                   (elt headers 2)))))
-           
-    
 
 
-(defun lyskom-edit-add-recipient/copy (prompt 
-                                       &optional what-to-do recpt-type)
-  "Adds a new recipient or a cc-recipient to the text which is being edited.
-PROMPT is the prompt to use to ask the user for a recipient.
-WHAT-TO-DO is a function to call to do the insertion.
-RECPT-TYPE is the type of recipient to add."
+(defun lyskom-edit-add-recipient/copy (prompt string &optional what-to-do)
+  "Adds a new recipient or a cc-recipient to the text which is being edited."
   (let ((edit-buffer (current-buffer))
 	(insert-at (point-min-marker))
 	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
@@ -1178,20 +1032,10 @@ RECPT-TYPE is the type of recipient to add."
      ;; +++ The information about msg-of-day might be old. We should
      ;; make sure it is up-to-date.
      (let ((text-no (conf-stat->msg-of-day conf-stat)))
-       
-
        (if (zerop text-no)
-
-           ;; If we have no notice on the recipient, just go ahead
-
            (if what-to-do
                (funcall what-to-do conf-stat insert-at edit-buffer)
-             (lyskom-edit-do-add-recipient/copy recpt-type
-                                                (conf-stat->conf-no conf-stat)
-                                                edit-buffer))
-
-         ;; Otherwise, show the notive and keep on going
-
+             (lyskom-edit-insert-misc-conf conf-stat string insert-at nil))
 	 (let ((text (blocking-do 'get-text text-no)))
 	   (if (and text (get-buffer-window edit-buffer))
 	       (let ((win-config (current-window-configuration)))
@@ -1203,211 +1047,24 @@ RECPT-TYPE is the type of recipient to add."
 		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
                       (if what-to-do
                           (funcall what-to-do conf-stat insert-at edit-buffer)
-                        (lyskom-edit-do-add-recipient/copy recpt-type
-                                                           (conf-stat->conf-no conf-stat)
-                                                           edit-buffer)))
+                        (lyskom-edit-insert-misc-conf conf-stat string
+                                                      insert-at nil)))
 		 (set-window-configuration win-config))
              (if what-to-do
                  (funcall what-to-do conf-stat insert-at edit-buffer)
-             (lyskom-edit-do-add-recipient/copy recpt-type
-                                                (conf-stat->conf-no conf-stat)
-                                                edit-buffer))))))))))
-
-(defun kom-edit-add-cross-reference ()
-  (interactive)
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
-         (completion-ignore-case t)
-         (type (cdr (lyskom-string-assoc
-                     (completing-read (lyskom-get-string 'xref-type)
-                                      completions nil t)
-                     completions)))
-         (obj nil)
-         (prompt nil)
-         (item nil))
-    (cond 
-     ((eq type 'text)
-      (setq prompt (lyskom-get-string 'which-text-to-xref))
-      (while (null obj)
-        (setq obj (blocking-do 'get-text-stat
-                               (lyskom-read-number prompt)))
-        (setq prompt (lyskom-get-string 'which-text-to-xref-err )))
-      (setq item
-            (lyskom-create-aux-item 0 3 0 0 
-                                    (lyskom-create-aux-item-flags
-                                     nil nil nil nil nil nil nil nil)
-                                    0 (format "T%d"
-                                              (text-stat->text-no obj)))))
-
-     ((eq type 'conf)
-      (setq prompt (lyskom-get-string 'which-conf-to-xref))
-      (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(conf) nil nil t))
-        (setq item
-              (lyskom-create-aux-item 0 3 0 0
-                                      (lyskom-create-aux-item-flags
-                                       nil nil nil nil nil nil nil nil)
-                                      0 (format "C%d" obj)))))
-        
-     ((eq type 'pers)
-      (setq prompt (lyskom-get-string 'which-pers-to-xref))
-      (while (null obj)
-        (setq obj (lyskom-read-conf-no prompt '(pers) nil nil t))
-        (setq item
-              (lyskom-create-aux-item 0 3 0 0
-                                      (lyskom-create-aux-item-flags
-                                       nil nil nil nil nil nil nil nil)
-                                      0 (format "P%d" obj)))))
-        
-     (t nil))
-
-    (lyskom-edit-insert-aux-item item)))
-
-(defun kom-edit-add-read-confirm-request ()
-  (interactive)
-  (lyskom-edit-insert-aux-item
-   (lyskom-create-aux-item 0 6 0 0
-                           (lyskom-create-aux-item-flags
-                            nil nil nil nil nil nil nil nil)
-                           0 "")))
-
-(defun kom-edit-add-no-comments ()
-  (interactive)
-  (lyskom-edit-insert-aux-item
-   (lyskom-create-aux-item 0 4 0 0
-                           (lyskom-create-aux-item-flags
-                            nil nil nil nil nil nil nil nil)
-                           0 "")))
-
-(defun kom-edit-add-personal-comments ()
-  (interactive)
-  (lyskom-edit-insert-aux-item
-   (lyskom-create-aux-item 0 5 0 0
-                           (lyskom-create-aux-item-flags
-                            nil nil nil nil nil nil nil nil)
-                           0 "")))
-  
-    
+               (lyskom-edit-insert-misc-conf conf-stat string
+                                             insert-at nil))))))))))
 
 
-
-(defun lyskom-edit-insert-aux-item (item)
-  "Insert the aux item ITEM in the current buffer"
-  (save-excursion
-    (goto-char (point-min))
-    (re-search-forward
-     (concat "^"
-             (regexp-quote
-              (substitute-command-keys
-               (lyskom-get-string 'header-separator)))
-             "$")
-     nil t)
-    (beginning-of-line)
-    (forward-line -1)
-    (insert
-     (concat (lyskom-format
-              (format "%%#1@%%[%s%%]%%#2s" (lyskom-get-string 'aux-item-prefix))
-              (lyskom-default-button 'aux-edit-menu (cons (current-buffer)
-                                                          (point-marker)))
-              (lyskom-aux-item-definition-call item 
-                                               '(edit-insert print)
-                                               item 
-                                               lyskom-pers-no))
-              "\n")))
-  )
-
-
-(defun lyskom-edit-toggle-secret-aux (buf arg text)
-  (interactive)
-  (lyskom-save-excursion
-    (set-buffer (car arg))
-    (goto-char (cdr arg))
-    (lyskom-edit-toggle-aux-item-flag buf arg text 'secret)))
-
-(defun lyskom-edit-toggle-anonymous-aux (buf arg text)
-  (interactive)
-  (save-excursion
-    (set-buffer (car arg))
-    (goto-char (cdr arg))
-    (lyskom-edit-toggle-aux-item-flag buf arg text 'anonymous)))
-
-(defun lyskom-edit-toggle-inherit-aux (buf arg text)
-  (interactive)
-  (save-excursion
-    (set-buffer (car arg))
-    (goto-char (cdr arg))
-    (lyskom-edit-toggle-aux-item-flag buf arg text 'inherit)))
-
-(defun lyskom-edit-delete-aux (buf arg text)
-  (interactive)
-  (save-excursion
-    (set-buffer (car arg))
-    (goto-char (cdr arg))
-    (beginning-of-line)
-    (delete-region (point) (save-excursion (forward-line 1) (point)))))
-
-
-(defun lyskom-edit-insert-aux-item-flags (flags)
-  (save-excursion
-    (let ((str (mapconcat 'identity
-                          (delq nil
-                                (list
-                                 (and (aux-item-flags->secret flags)
-                                      (lyskom-get-string 'secret-aux-flag))
-                                 (and (aux-item-flags->anonymous flags)
-                                      (lyskom-get-string 'anonymous-aux-flag))
-                                 (and (aux-item-flags->inherit flags)
-                                      (lyskom-get-string 'inherit-aux-flag))))
-                          ", ")))
-      (when (not (string= str ""))
-          (end-of-line)
-          (insert (format " [%s]" str))))))
-
-
-(defun lyskom-edit-toggle-aux-item-flag (buf arg text flag)
-  (beginning-of-line)
-  (let ((flags (lyskom-edit-extract-aux-item-flags)))
-    (when (re-search-forward "\\s-?\\[[^]]*\\]\\s-*$" 
-                             (save-excursion (end-of-line) (point)) t)
-      (delete-region (match-beginning 0) (match-end 0)))
-    (funcall (intern (format "set-aux-item-flags->%s" flag))
-             flags
-             (not
-              (funcall (intern (format "aux-item-flags->%s" flag)) flags)))
-    (lyskom-edit-insert-aux-item-flags flags)))
-
-
-
-  
 
 ;;; ================================================================
 ;;;   Help functions for the functions bound to keyboard sequences 
 ;;;                       in lyskom-edit-mode.
 
 
-(defun lyskom-edit-find-misc (misc-list type data &optional last)
-  "Return the first misc-info pair in MISC-LIST of type TYPE containing DATA.
-If TYPE is a list, then any type in TYPE is considered to match. If DATA
-is nil, then any DATA is considered to match.
-If optional LAST is non-nil, then return the last match instead of the first."
-  (when (eq (car misc-list) 'MISC-LIST) (setq misc-list (cdr misc-list)))
-  (let ((result nil)
-        (elem nil))
-    (while (and misc-list (or last (null result)))
-      (setq elem (car misc-list))
-      (setq misc-list (cdr misc-list))
-      (when (cond ((listp type) (and (memq (car elem) type)
-                                     (or (null data) (eq data (cdr elem)))))
-                  ((symbolp type) (and (eq type (car elem))
-                                       (or (null data) (eq data (cdr elem)))))
-                  (t (or (null data) (eq data (cdr elem)))))
-        (setq result elem)))
-    result))
-
-(defun lyskom-edit-translate-headers (misc-list)
+(defun lyskom-edit-translate-miscs (misc-list)
   "Translate result of lyskom-edit-parse-header to something we can send
-to lyskom-edit-replace-headers"
+to lyskom-edit-replace-miscs"
   (let ((result nil))
     (while misc-list
       (setq result (cons (cons (car misc-list) (car (cdr misc-list)))
@@ -1415,7 +1072,7 @@ to lyskom-edit-replace-headers"
       (setq misc-list (cdr (cdr misc-list))))
     (cons 'MISC-LIST (nreverse result))))
 
-(defun lyskom-edit-replace-headers (subject misc-list aux-list)
+(defun lyskom-edit-replace-miscs (subject misc-list)
   "Replace all headers with SUBJECT and MISC-LIST"
   (save-excursion
     (let ((start nil)
@@ -1428,7 +1085,7 @@ to lyskom-edit-replace-headers"
       (end-of-line)
       (setq end (point-marker))
       (goto-char (point-min))
-      (lyskom-edit-insert-miscs misc-list subject "" aux-list)
+      (lyskom-edit-insert-miscs misc-list subject "")
       (delete-region start end)
       (goto-char end)
       (delete-char 1))))
@@ -1458,9 +1115,8 @@ and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
 either 'recpt, 'cc-recpt, 'comm-to or 'footn-to. This is to make it
 easy to use the result in a call to `lyskom-create-misc-list'."
   (goto-char (point-min))
-  (let ((misc nil)
-        (subject nil)
-        (aux nil))
+  (let ((result (cons nil nil)))	; The car will be replaced by
+					; the real subject
     (save-restriction
       ;; Narrow to headers
       (search-forward (substitute-command-keys
@@ -1470,67 +1126,26 @@ easy to use the result in a call to `lyskom-create-misc-list'."
       (goto-char (point-min))
       (while (< (point) (point-max))
 	(let ((case-fold-search t)
-	      (n nil))
+	      n)
 	  (cond
 	   ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
-	    (setq misc (nconc misc (list 'recpt n))))
+	    (nconc result (list 'recpt n)))
 	   ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
-	    (setq misc (nconc misc (list 'cc-recpt n))))
+	    (nconc result (list 'cc-recpt n)))
 	   ((setq n (lyskom-looking-at-header 'blank-carbon-copy-prefix
                                               'angled))
-	    (setq misc (nconc misc (list 'bcc-recpt n))))
+	    (nconc result (list 'bcc-recpt n)))
 	   ((setq n (lyskom-looking-at-header 'comment-prefix t))
-	    (setq misc (nconc misc (list 'comm-to n))))
+	    (nconc result (list 'comm-to n)))
 	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
-	    (setq misc (nconc misc (list 'footn-to n))))
+	    (nconc result (list 'footn-to n)))
 	   ((lyskom-looking-at-header 'header-subject nil)
-	    (setq subject (lyskom-edit-extract-subject)))
-
-           ((looking-at (lyskom-get-string 'aux-item-prefix))
-            (goto-char (match-end 0))
-            (let ((item (lyskom-edit-parse-aux-item)))
-              (if item
-                  (setq aux (cons item aux))
-                (signal 'lyskom-unknown-header
-                        (list 'unknown-header (point))))))
-
-	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
+	    (setcar result (lyskom-edit-extract-subject)))
+	   (t
+	    (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))
-    (list subject misc aux)))
+    result))
 
-(defun lyskom-edit-parse-aux-item ()
-  (let ((definitions lyskom-aux-item-definitions)
-        (data nil))
-    (while (and (null data) definitions)
-      (setq data (lyskom-aux-item-definition-call (car definitions) 'parse))
-      (unless data (setq definitions (cdr definitions))))
-
-    (when data
-      (lyskom-create-aux-item 0 (lyskom-aux-item-definition->number
-                                 (car definitions))
-                              0 0 (lyskom-edit-extract-aux-item-flags) 0
-                              data))))
-
-(defun lyskom-edit-extract-aux-item-flags ()
-  (if (looking-at ".*\\[\\([^]]*\\)\\]\\s-*$")
-    (let ((flag-strings (match-string 1))
-          (start 0)
-          (flag nil)
-          (flags (lyskom-create-aux-item-flags 
-                  nil nil nil nil nil nil nil nil))
-          (case-fold-search t))
-      (while (string-match "\\s-*\\(\\w+\\)\\s-*" flag-strings start)
-        (setq flag (match-string 1 flag-strings))
-        (setq start (match-end 0))
-        (cond ((string-match (lyskom-get-string 'secret-aux-flag) flag)
-               (set-aux-item-flags->secret flags t))
-              ((string-match (lyskom-get-string 'anonymous-aux-flag) flag)
-               (set-aux-item-flags->anonymous flags t))
-              ((string-match (lyskom-get-string 'inherit-aux-flag) flag)
-               (set-aux-item-flags->inherit flags t))
-              (t nil)))
-      flags)
-    (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)))
 
 
 (defun lyskom-edit-extract-subject ()
@@ -1544,10 +1159,14 @@ Point must be located on the line where the subject is."
   "Get text as a string."
   (save-excursion
     (goto-char (point-min))
-    (if (not (search-forward 
-              (substitute-command-keys
-               (lyskom-get-string 'header-separator)) 
-              nil (point-max)))
+    (if (not (or (re-search-forward 
+		  (substitute-command-keys
+		   (lyskom-get-string 'header-separator))
+		  nil (point-max))
+		 (search-forward 
+		  (substitute-command-keys
+		   (lyskom-get-string 'header-separator)) 
+		  nil (point-max))))
 	(signal 'lyskom-internal-error
 		"Altered lyskom-header-separator line.")
       (buffer-substring (1+ (point))
@@ -1558,20 +1177,8 @@ Point must be located on the line where the subject is."
 			  (forward-char 1)
 			  (point))))))
 
-
-(defun lyskom-edit-on-aux-item ()
-  "Return non-nil if point is on the same line as an aux-item"
-  (save-excursion
-    (beginning-of-line)
-    (and (looking-at (lyskom-get-string 'aux-item-prefix))
-         (search-forward 
-          (substitute-command-keys
-           (lyskom-get-string 'header-separator)) 
-          nil (point-max)))))
-
-
-(defun lyskom-create-text-handler (text-no edit-buffer 
-                                           &optional is-anonymous)
+  
+(defun lyskom-create-text-handler (text-no edit-buffer)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)
   (message "")
@@ -1591,12 +1198,10 @@ Point must be located on the line where the subject is."
     (lyskom-insert-before-prompt
      (lyskom-format 'text-created  text-no))
 
-    ;; Immediately mark the text as read if kom-created-texts-are-read is set
-    ;; and we are not sending the text anonymously.
+    ;; Immediately mark the text as read if kom-created-texts-are-read is set.
     
     (cond
-     ((and kom-created-texts-are-read
-           (not is-anonymous))
+     (kom-created-texts-are-read
       (lyskom-is-read text-no)
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)

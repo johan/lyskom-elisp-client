@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.16 1999-08-23 09:51:43 byers Exp $
+;;;;; $Id: prefetch.el,v 44.10.4.1 1999-10-13 09:56:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.16 1999-08-23 09:51:43 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.10.4.1 1999-10-13 09:56:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -83,7 +83,6 @@ lyskom-queue.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
 \('MEMBERSHIPISREAD\) -  Just sets the lyskom-membership-is-read variable to t.
-\('CANCELED . rest\)   Whatever it was, it has been canceled.
 
 
 See further documentation in the source code."
@@ -139,34 +138,12 @@ This is used to prevent the prefetch code to reenter itself.")
   (setq lyskom-membership-is-read 0))
 
 
-;;; =================================================================
-;;; Functions to cancel some prefetches
-
-(defun lyskom-prefetch-cancel-prefetch-map (conf-no &optional queue)
-;;;  (let ((prefetch-list (if queue
-;;;                           (lyskom-queue->all-entries queue)
-;;;                         (lyskom-stack->all-entries lyskom-prefetch-stack))))
-;;;    (lyskom-traverse el prefetch-list
-;;;      (cond
-;;;       ((lyskom-queue-p el)
-;;;        (lyskom-prefetch-cancel-prefetch-map conf-no el))
-;;;       ((not (consp el)) nil)
-;;;       ((or (and (eq (car el) 'MAP) 
-;;;                 (eq (conf-stat->conf-no (elt el 1)) conf-no))
-;;;            (and (eq (car el) 'CONFSTATFORMAP)
-;;;                 (eq (elt el 1) conf-no)))
-;;;        (setcar el 'CANCELED))
-;;;       )))
-)
-
-
 ;;;; ================================================================
 ;;; +++ lyskom-reset-prefetch  to be called on client reset.
 ;;;                            must restart everything.
 ;;; +++ THIS DOES NOT WORK CURRENTLY
 (defun lyskom-reset-prefetch ()
   "Reset the prefetch system."
-  ;; (lyskom-wait-queue 'prefetch)
   (lyskom-setup-prefetch))
 
 
@@ -253,17 +230,12 @@ prefetched the prefetch is not done."
   
 
 (defun lyskom-prefetch-membership (pers-no &optional queue)
-  "h{mtar medlemsskapet i sm} delar och d{refter conf-stat f|r m|tena"
+  "+++"
+  ;; h{mtar medlemsskapet i sm} delar 
+  ;; och d{refter conf-stat f|r m|tena
   (if queue
       (lyskom-queue-enter queue (cons 'MEMBERSHIP pers-no))
     (lyskom-stack-push lyskom-prefetch-stack (cons 'MEMBERSHIP pers-no)))
-  (lyskom-continue-prefetch))
-
-(defun lyskom-prefetch-one-membership (conf-no pers-no &optional queue)
-  (if queue
-      (lyskom-queue-enter queue (list 'ONE-MEMBERSHIP conf-no pers-no))
-    (lyskom-stack-push lyskom-prefetch-stack (list 'ONE-MEMBERSHIP
-                                                   conf-no pers-no)))
   (lyskom-continue-prefetch))
 
 
@@ -400,8 +372,6 @@ process is started. Used to keep prefetch going."
     (while (not done)
       (setq element (lyskom-queue->first queue))
       (if (or (eq element 'DONE)
-              (and (consp element) 
-                   (eq (car element) 'CANCELED))
 	      (and (lyskom-queue-p element)
 		   (eq (lyskom-queue->first element) 'FINISHED)))
 	  (lyskom-queue-delete-first queue)
@@ -421,8 +391,6 @@ Return t if an element was prefetched, otherwise return nil."
     (while (not done)
       (setq element (lyskom-stack->top lyskom-prefetch-stack))
       (if (or (eq element 'DONE)
-              (and (consp element)
-                   (eq (car element) 'CANCELED))
 	      (and (lyskom-queue-p element)
 		   (eq (lyskom-queue->first element) 'FINISHED)))
 	  (lyskom-stack-pop lyskom-prefetch-stack)
@@ -435,8 +403,6 @@ Return t if an element was prefetched, otherwise return nil."
 	(cond
 	 ((eq element 'DONE) nil)
 	 ((eq element 'FINISHED) nil)
-         ((and (consp element)
-               (eq (car element) 'CANCELED)) nil)
 
 	 ;; A queue ==> check it out first.
 	 ((lyskom-queue-p element)
@@ -457,7 +423,7 @@ Return t if an element was prefetched, otherwise return nil."
 	 ;; A complex request?
 	 ((and (listp element)
 	       (memq (car element)
-		     '(TEXTAUTH TEXT-ALL TEXTTREE ONE-MEMBERSHIP
+		     '(TEXTAUTH TEXT-ALL TEXTTREE 
 				CONFSTATFORMAP MAP MARKS
 				MEMBERSHIP WHOBUFFER TEXTS)))
 	  (let ((queue (lyskom-queue-create)))
@@ -508,7 +474,6 @@ Return t if an element was prefetched, otherwise return nil."
 
 (defun lyskom-prefetch-one-request (request queue)
   "Prefetch REQUEST. If the request is complex, put the resulting requests on QUEUE."
-;  (message "Prefetch: %s" request)
   (cond
    ((eq (car request) 'CONFSTAT)
     (initiate-get-conf-stat 'prefetch
@@ -530,15 +495,6 @@ Return t if an element was prefetched, otherwise return nil."
    ((eq (car request) 'TEXTTREE)
     (initiate-get-text-stat 'prefetch 'lyskom-prefetch-texttree-handler
 			    (cdr request) queue))
-
-   ((eq (car request) 'ONE-MEMBERSHIP)
-    (initiate-query-read-texts 'prefetch
-                               'lyskom-prefetch-read-texts-handler
-                               (elt request 2)
-                               (elt request 1)
-                               (elt request 1)
-                               queue))
-
    ((eq (car request) 'MEMBERSHIP)
     (if (numberp lyskom-membership-is-read) ; Are we done?
 	(initiate-get-part-of-membership 
@@ -655,47 +611,18 @@ Put the requests on QUEUE."
   (lyskom-start-prefetch))
 
 
-(defun lyskom-prefetch-read-texts-handler (membership pers-no queue)
-  (lyskom-stop-prefetch)
-  (-- lyskom-pending-prefetch)
-  (when membership
-    (unless (lyskom-try-get-membership (membership->conf-no membership) t)
-      (lyskom-add-memberships-to-membership (list membership))
-      (when (and (lyskom-visible-membership membership)
-                 (lyskom-prefetch-map (membership->conf-no membership)
-                                      membership
-                                      queue)))))
-  (lyskom-queue-enter queue 'FINISHED)
-  (lyskom-start-prefetch))
-
-
 (defun lyskom-prefetch-membership-handler (memberships pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
   (let ((size (length memberships))
-	(i 0)
-;;; Commented out 1999-06-28 byers
-;;; Used by removed code below
-;;;        (old-mships (mapcar (lambda (mship)
-;;;                              (and (lyskom-try-get-membership
-;;;                                    (membership->conf-no mship))
-;;;                                   (membership->conf-no mship)))
-;;;                            memberships))
-        )
-    (lyskom-insert-memberships-in-membership memberships)
+	(i 0))
+    (lyskom-add-memberships-to-membership memberships)
     (while (< i size)
       (let ((membership (aref memberships i)))
-;;; Commented out 1999-06-26 byers
-;;; This should not be necessary since we know that all of these
-;;; maps were empty when we started the client. Texts created after
-;;; the client was started should end up in the reading list anyway
-;;; 'cuase they generate asynchronous messages.
-;;;	(if (and (lyskom-visible-membership membership)
-;;;                 (not (memq (membership->conf-no membership) old-mships)))
-;;;	    (lyskom-prefetch-map (membership->conf-no membership)
-;;;				 membership
-;;;				 queue))
-)
+	(if (lyskom-visible-membership membership)
+	    (lyskom-prefetch-map (membership->conf-no membership)
+				 membership
+				 queue)))
       (++ i))
     (if (and (numberp lyskom-membership-is-read)
 	     (< (length memberships) lyskom-fetch-membership-length))

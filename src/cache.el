@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.8 1999-06-29 14:21:09 byers Exp $
+;;;;; $Id: cache.el,v 44.3.2.1 1999-10-13 09:55:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.8 1999-06-29 14:21:09 byers Exp $\n"))
+	      "$Id: cache.el,v 44.3.2.1 1999-10-13 09:55:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -46,8 +46,7 @@
 If full conf-stat is cached, construct an uconf-stat from that data and
 cache it."
   (or (cache-assoc conf-no lyskom-uconf-cache)
-      (and (lyskom-have-feature long-conf-types)
-           (cache-construct-uconf-stat (cache-get-conf-stat conf-no)))))
+      (cache-construct-uconf-stat (cache-get-conf-stat conf-no))))
 
 (defun cache-construct-uconf-stat (conf)
   "If conf is non-nil, create an uconf-stat from conf and cache it.
@@ -227,7 +226,7 @@ otherwise return nil"
   "Get static-session-info for session SESSION, or nil if nothing is cached."
   (let ((tx (cache-assoc session lyskom-static-session-info-cache)))
     (cond
-     ((lyskom-static-session-info-p tx) tx))))
+     ((static-session-info-p tx) tx))))
 
   
 (defun cache-add-static-session-info (session info)
@@ -490,8 +489,6 @@ CACHE is the name of the variable that points to the cache."
 
 (defun lyskom-tell-server (string)
   "Tell the server what the user is doing. Args: STRING."
-  (when lyskom-is-anonymous
-    (setq string (lyskom-tell-string 'kom-tell-is-being-anonymous)))
   (save-excursion
     (when lyskom-buffer
       (set-buffer lyskom-buffer))
@@ -500,5 +497,3 @@ CACHE is the name of the variable that points to the cache."
      (t
       (setq lyskom-what-i-am-doing string)
       (initiate-change-what-i-am-doing 'background nil string)))))
-
-(provide 'lyskom-cache)

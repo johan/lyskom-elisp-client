@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: messages.el,v 44.5 1999-06-29 14:21:16 byers Exp $
+;;;;; $Id: messages.el,v 44.1.2.1 1999-10-13 09:56:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 44.5 1999-06-29 14:21:16 byers Exp $\n"))
+	      "$Id: messages.el,v 44.1.2.1 1999-10-13 09:56:07 byers Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
   "A list of personal message handlers.
@@ -48,7 +48,7 @@ recipient or zero for common messages.
 
 The functions may use the lyskom-set-current-message-text function to
 modify the message text. A non-nil return value from the function
-indicates that the message was handled and no other handlers need to
+indicates that the message was handlerd and no other handlers need to
 be called and a nil return value means that the message was not
 handled and should be sent to the next handler.")
 
@@ -134,7 +134,7 @@ on the value of PLACE. If PLACE is nil, 'after is assumed."
         
 
 (defun lyskom-info-request-handler (message-type sender recipient text)
-  (if (string= text "\011\016\006\017")
+  (if (string= text "	")
       (progn
         (initiate-send-message 
          'follow 
@@ -146,23 +146,10 @@ on the value of PLACE. If PLACE is nil, 'after is assumed."
         t)
     nil))
 
-(defun lyskom-filter-message-handler (message-type sender recipient text)
-  "Optionally kill messages from certain senders or to certain recipients.
-See the documentation for kom-ignore-message-recipients and 
-kom-ignore-message-senders for more information."
-  (condition-case nil
-      (or (memq (cond ((lyskom-conf-stat-p sender) (conf-stat->conf-no sender))
-                      ((lyskom-uconf-stat-p sender) (uconf-stat->conf-no sender))
-                      (t sender)) kom-ignore-message-senders)
-          (memq (cond ((lyskom-conf-stat-p sender) (conf-stat->conf-no recipient))
-                      ((lyskom-uconf-stat-p sender) (uconf-stat->conf-no recipient))
-                      (t recipient)) kom-ignore-message-recipients))
-    (error nil)))
 
-
-(lyskom-add-personal-message-handler 'lyskom-filter-message-handler 'before)
+    
 (lyskom-add-personal-message-handler 'lyskom-info-request-handler 'before)
 
-(eval-and-compile (provide 'lyskom-messages))
+(provide 'lyskom-messages)
 
 ;;; messages.el ends here

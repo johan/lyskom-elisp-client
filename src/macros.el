@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.23 1999-06-29 10:20:20 byers Exp $
+;;;;; $Id: macros.el,v 44.14.2.1 1999-10-13 09:56:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.23 1999-06-29 10:20:20 byers Exp $\n"))
+	      "$Id: macros.el,v 44.14.2.1 1999-10-13 09:56:06 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -44,6 +44,9 @@
 (require 'custom)
 (require 'widget)
 
+
+
+
 ;;; ======================================================================
 ;;; lyskom-traverse - traverse a sequence.
 ;;;
@@ -51,49 +54,20 @@
 (defmacro lyskom-traverse (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
 Value returned is always nil."
-  `(let* ((__i__ 0)
-          (__sequence__ ,sequence)
-          (__len__ (or (listp __sequence__ )
-                       (length __sequence__)))
-          (,atom nil)
-          (__result__ nil))
-     (setq __result__ __result__)       ; Get rid of compiler warnings
-     (if (listp __sequence__)
-         (while __sequence__
-           (setq ,atom (car __sequence__))
-           ,@body
-           (setq __sequence__ (cdr __sequence__)))
-       (while (< __i__ __len__)
-         (setq ,atom (aref __sequence__ __i__))
-         ,@body
-         (setq __i__ (1+ __i__))))
-     __result__))
-  
+  (list 'let* (list '(__i__ 0)
+		    (list '__sequence__ sequence)
+		    '(__len__ (length __sequence__))
+		    atom)
+	(list 'if '(listp __sequence__)
+	      (append (list 'while '__sequence__
+			    (list 'setq atom '(car __sequence__)))
+		      body
+		      (list '(setq __sequence__ (cdr __sequence__))))
+	      (append (list 'while '(< __i__ __len__)
+			    (list 'setq atom '(aref __sequence__ __i__)))
+		      body
+		      (list '(setq __i__ (1+ __i__)))))))
 
-(defmacro lyskom-traverse-break (&optional result)
-  "Break a current lyskom-traverse"
-  `(progn (setq __len__ 0)
-          (setq __sequence__ nil)
-          (setq __result__ (or ,result __result__))))
-
-(defmacro lyskom-traverse-aux (atom sequence &rest body)
-  "Bind ATOM to each element in SEQUENCE and execute BODY.
-Value returned is always nil."
-  (let ((seq (make-symbol "aux-items")))
-    (` (let (((, seq) (, sequence))
-             ((, atom) nil))
-         (while (, seq)
-           (setq (, atom) (car (, seq)))
-           (if (not (aux-item-flags->deleted
-                     (aux-item->flags (, atom))))
-               (,@ body))
-           (setq (, seq) (cdr (, seq))))))))
-
-
-(put 'lyskom-traverse-aux 'edebug-form-spec
-     '(sexp form body))
-
-(put 'lyskom-traverse-aux 'lisp-indent-hook 2)
 
 (put 'lyskom-traverse 'edebug-form-spec
      '(sexp form body))
@@ -112,7 +86,7 @@ Value returned is always nil."
 	      '(set-buffer __buffer__))))
 
 (put 'lyskom-save-excursion 'edebug-form-spec t)
-(put 'lyskom-save-excursion 'lisp-indent-hook 0)
+(put 'lyskom-provide-macro 'lisp-indent-hook 2)
 
 ;;; ======================================================================
 ;;; Some useful macros to make the code more readable.
@@ -135,23 +109,19 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-(eval-and-compile
-  (if (fboundp 'when)
-      nil
-    (defmacro when (expr &rest body)
-      "Execute BODY if EXPR evaluates to non-nil"
-      (list 'if expr (cons 'progn body)))
-    (put 'when lisp-indent-function 1)
-    (put 'when 'edebug-form-spec t)))
+(defmacro when (expr &rest body)
+  "Execute BODY if EXPR evaluates to non-nil"
+  (list 'if expr (cons 'progn body)))
 
-(eval-and-compile
-  (if (fboundp 'unless)
-      nil
-    (defmacro unless (expr &rest body)
-      "Execute BODY if EXPR evaluates to non-nil"
-      (append (list 'if expr nil) body))
-    (put 'unless lisp-indent-function 1)
-    (put 'unless 'edebug-form-spec t)))
+(put 'when lisp-indent-function 1)
+(put 'when 'edebug-form-spec t)
+
+(defmacro unless (expr &rest body)
+  "Execute BODY if EXPR evaluates to non-nil"
+  (append (list 'if expr nil) body))
+
+(put 'unless lisp-indent-function 1)
+(put 'unless 'edebug-form-spec t)
 
 
 ;;; ======================================================================
@@ -188,21 +158,6 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 
 
 ;;; ======================================================================
-;;; Some commands generat async messages we don't really want
-;;;
-
-(defmacro lyskom-ignoring-async (async &rest body)
-  `(let ((lyskom-ignoring-async-list 
-          (cons (list ,@async) lyskom-ignoring-async-list)))
-     ,@body))
-
-(put 'lyskom-ignoring-async 'edebug-form-spec
-     '(sexp body))
-
-(put 'lyskom-ignoring-async 'lisp-indent-function 1)
-
-
-;;; ======================================================================
 ;;; These macros do magic things to the compiler to avoid gratuitous
 ;;; compiler warnings.
 ;;;
@@ -223,21 +178,13 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
                 (consp (car-safe byte-compile-unresolved-functions))
                 (symbolp (car-safe (car-safe 
                                     byte-compile-unresolved-functions))))
-           (progn
-             (mapcar (function (lambda (x)
-                                 (setq byte-compile-unresolved-functions
-                                       (delq
-                                        (assq x
-                                              byte-compile-unresolved-functions)
-                                        byte-compile-unresolved-functions))))
-                     lyskom-expected-unresolved-functions)
-             (mapcar (function (lambda (x)
-                                 (setq byte-compile-unresolved-functions
-                                       (delq
-                                        (assq x
-                                              byte-compile-unresolved-functions)
-                                        byte-compile-unresolved-functions))))
-                     lyskom-compatibility-definitions)))
+           (mapcar (function (lambda (x)
+                               (setq byte-compile-unresolved-functions
+                                     (delq
+                                      (assq x
+                                            byte-compile-unresolved-functions)
+                                      byte-compile-unresolved-functions))))
+                   lyskom-expected-unresolved-functions))
        (if lyskom-compatibility-definitions
            (message "Compatibility definitions: %s"
                     (mapconcat '(lambda (sym)
@@ -254,6 +201,8 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
        (,@ body))))
 
 (put 'lyskom-make-face 'lisp-indent-function 1)
+
+(provide 'lyskom-macros)
 
 
 ;;; ============================================================
@@ -273,21 +222,27 @@ the current buffer, and its value is copied from the LysKOM buffer."
 ;;; Widget gunk
 ;;;
 
-(defmacro lyskom-widget-wrapper (fn file)
-  `(eval-and-compile
-     (if (not (fboundp ',fn))
-         (autoload ',fn ,file))))
+(defmacro lyskom-widget-wrapper (fn)
+  (` (if (not (fboundp (quote (, fn))))
+         (defun (, fn) (&rest args)
+           (require 'custom)            ; lww
+           (require 'widget)            ; lww
+           (require 'wid-edit)          ; lww
+           (require 'wid-browse)        ; lww
+           (require 'cus-edit)          ; lww
+           (require 'cus-face)          ; lww
+           (apply (quote (, fn)) args)))))
 
-(lyskom-widget-wrapper define-widget "widget")
-(lyskom-widget-wrapper widget-at "wid-edit")
-(lyskom-widget-wrapper widget-value "wid-edit")
-(lyskom-widget-wrapper widget-button-click "wid-edit")
-(lyskom-widget-wrapper widget-setup "wid-edit")
-(lyskom-widget-wrapper widget-value-set "wid-edit")
-(lyskom-widget-wrapper widget-insert "wid-edit")
-(lyskom-widget-wrapper widget-create "wid-edit")
-(lyskom-widget-wrapper widget-get "wid-edit")
-(lyskom-widget-wrapper widget-put "wid-edit")
+(lyskom-widget-wrapper define-widget)
+(lyskom-widget-wrapper widget-at)
+(lyskom-widget-wrapper widget-value)
+(lyskom-widget-wrapper widget-button-click)
+(lyskom-widget-wrapper widget-setup)
+(lyskom-widget-wrapper widget-value-set)
+(lyskom-widget-wrapper widget-insert)
+(lyskom-widget-wrapper widget-create)
+(lyskom-widget-wrapper widget-get)
+(lyskom-widget-wrapper widget-put)
 
 ;;; ============================================================
 ;;; Signal gunk
@@ -310,10 +265,8 @@ the current buffer, and its value is copied from the LysKOM buffer."
   (` (lyskom-set-default (quote (, name))
                          (, value))))
 
-(eval-and-compile (provide 'lyskom-macros))
-
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 0)
+;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 2)
 ;;; eval: (put 'lyskom-ignore-errors 'lisp-indent-hook 2)
 ;;; end: 

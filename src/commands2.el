@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.20.2.1 1999-10-13 09:55:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,10 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.47 1999-10-13 09:23:32 byers Exp $\n"))
-
-(eval-when-compile
-  (require 'lyskom-command "command"))
+	      "$Id: commands2.el,v 44.20.2.1 1999-10-13 09:55:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -159,176 +156,138 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((conf-no
 	 (or conf-no
 	     (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-				  '(all) nil nil t))))
+				  '(all) nil nil t)))
+	conf-stat)
     (cache-del-conf-stat conf-no)
-    (cache-del-uconf-stat conf-no)
-    (blocking-do-multiple ((conf-stat (get-conf-stat conf-no))
-                           (uconf-stat (get-uconf-stat conf-no)))
-      (if (null conf-stat)
-          (lyskom-insert-string 'no-such-conf)
-        (let* ((type (uconf-stat->conf-type uconf-stat))
-               (box (conf-type->letterbox type))
-               (ori (conf-type->original type))
-               (pro (conf-type->rd_prot type))
-               (sec (conf-type->secret type)))
-          (lyskom-format-insert 'status-record
-                                conf-stat
-                                conf-stat
-                                (cond
-                                 ((or box ori pro sec)
-                                  (concat
-                                   "("
-                                   (if box (lyskom-get-string 'Mailbox) "")
-                                   (if (and box (or sec ori pro)) ", " "")
-                                   (if sec (lyskom-get-string
-                                            'Protected) "")
-                                   (if (and sec (or ori pro)) ", " "")
-                                   (if ori (lyskom-get-string
-                                            'no-comments) "")
-                                   (if (and ori pro) ", " "")
-                                   (if pro (lyskom-get-string 'closed) "")
-                                   ")"))
-                                 (t ""))))
-        (let ((creator (conf-stat->creator conf-stat)))
-          (lyskom-format-insert 'created-by
-                                creator
-                                creator
-                                (if (and 
-                                     (lyskom-conf-stat-p creator)
-                                     (> (length (conf-stat->name creator))
-                                        (- (lyskom-window-width) 46)))
-                                    "\n"
-                                  "")))
-        (lyskom-format-insert 'created-at
-                              (lyskom-return-date-and-time
-                               (conf-stat->creation-time conf-stat)))
-        (lyskom-format-insert 'members
-                              (conf-stat->no-of-members conf-stat))
-        (lyskom-format-insert 'conf-allows-secret-members
-                              (lyskom-get-string 
-                               (if (conf-type->forbid-secret 
-                                    (uconf-stat->conf-type uconf-stat))
-                                   'secret-members-not-permitted
-                                 'secret-members-permitted)))
-        (lyskom-format-insert 'conf-allows-anon-texts
-                              (lyskom-get-string 
-                               (if (conf-type->anarchy
-                                    (uconf-stat->conf-type uconf-stat))
-                                   'anon-texts-permitted
-                                 'anon-texts-not-permitted))) 
-        (lyskom-format-insert 'garb-nice
-                              (conf-stat->garb-nice conf-stat))
-        (lyskom-format-insert 'lowest-local-no
-                              (conf-stat->first-local-no conf-stat))
-        (lyskom-format-insert 'highest-local-no
-                              (1- (+ (conf-stat->no-of-texts conf-stat)
-                                     (conf-stat->first-local-no conf-stat))))
-        (lyskom-format-insert 'last-text-time
-                              (lyskom-return-date-and-time
-                               (conf-stat->last-written conf-stat)))
-        (lyskom-format-insert 'no-of-motd
-                              (conf-stat->msg-of-day conf-stat))
-        (let ((superconf (conf-stat->super-conf conf-stat)))
-          (lyskom-format-insert 'superconf-is-no-name
-                                superconf
-                                superconf
-                                (if (and 
-                                     (lyskom-conf-stat-p superconf)
-                                     (> (length (conf-stat->name superconf))
-                                        (- (lyskom-window-width) 46)))
-                                    "\n"
-                                  "")))
-        (let ((permitted-submitters (conf-stat->permitted-submitters conf-stat)))
-          (lyskom-format-insert 'permitted-submitters-no-name
-                                permitted-submitters
-                                (if (zerop permitted-submitters)
-                                    (lyskom-get-string 'Everybody)
-                                  permitted-submitters)
-                                ""))
-        (let ((supervisor (conf-stat->supervisor conf-stat)))
-          (lyskom-format-insert 'supervisor-is-no-name
-                                supervisor
-                                supervisor
-                                ""))
-        (lyskom-format-insert 'presentation-no
-                              (conf-stat->presentation conf-stat))
+    (setq conf-stat (blocking-do 'get-conf-stat conf-no))
+    (if (null conf-stat)
+	(lyskom-insert-string 'no-such-conf)
+      (let* ((type (conf-stat->conf-type conf-stat))
+	     (box (conf-type->letterbox type))
+	     (ori (conf-type->original type))
+	     (pro (conf-type->rd_prot type))
+	     (sec (conf-type->secret type)))
+	(lyskom-format-insert 'status-record
+			      conf-stat
+			      conf-stat
+			      (cond
+			       ((or box ori pro sec)
+				(concat
+				 "("
+				 (if box (lyskom-get-string 'Mailbox) "")
+				 (if (and box (or sec ori pro)) ", " "")
+				 (if sec (lyskom-get-string
+					  'Protected) "")
+				 (if (and sec (or ori pro)) ", " "")
+				 (if ori (lyskom-get-string
+					  'no-comments) "")
+				 (if (and ori pro) ", " "")
+				 (if pro (lyskom-get-string 'closed) "")
+				 ")"))
+			       (t ""))))
+      (let ((creator (conf-stat->creator conf-stat)))
+	(lyskom-format-insert 'created-by
+			      creator
+			      creator
+			      (if (and 
+				   (lyskom-conf-stat-p creator)
+				   (> (length (conf-stat->name creator))
+				      (- (lyskom-window-width) 46)))
+				  "\n"
+				"")))
+      (lyskom-format-insert 'created-at
+			    (lyskom-return-date-and-time
+			     (conf-stat->creation-time conf-stat)))
+      (lyskom-format-insert 'members
+			    (conf-stat->no-of-members conf-stat))
+      (lyskom-format-insert 'garb-nice
+			    (conf-stat->garb-nice conf-stat))
+      (lyskom-format-insert 'lowest-local-no
+			    (conf-stat->first-local-no conf-stat))
+      (lyskom-format-insert 'highest-local-no
+			    (1- (+ (conf-stat->no-of-texts conf-stat)
+				   (conf-stat->first-local-no conf-stat))))
+      (lyskom-format-insert 'last-text-time
+			    (lyskom-return-date-and-time
+			     (conf-stat->last-written conf-stat)))
+      (lyskom-format-insert 'no-of-motd
+			    (conf-stat->msg-of-day conf-stat))
+      (let ((superconf (conf-stat->super-conf conf-stat)))
+	(lyskom-format-insert 'superconf-is-no-name
+			      superconf
+			      superconf
+			      (if (and 
+				   (lyskom-conf-stat-p superconf)
+				   (> (length (conf-stat->name superconf))
+				      (- (lyskom-window-width) 46)))
+				  "\n"
+				"")))
+      (let ((permitted-submitters (conf-stat->permitted-submitters conf-stat)))
+	(lyskom-format-insert 'permitted-submitters-no-name
+			      permitted-submitters
+			      (if (zerop permitted-submitters)
+				  (lyskom-get-string 'Everybody)
+				permitted-submitters)
+			      ""))
+      (let ((supervisor (conf-stat->supervisor conf-stat)))
+	(lyskom-format-insert 'supervisor-is-no-name
+			      supervisor
+			      supervisor
+			      ""))
+      (lyskom-format-insert 'presentation-no
+			    (conf-stat->presentation conf-stat))
 
-        (if (zerop (conf-stat->msg-of-day conf-stat))
-            nil
-          (lyskom-format-insert 'conf-has-motd conf-stat)
-          (lyskom-view-text (conf-stat->msg-of-day conf-stat)))
+      (if (zerop (conf-stat->msg-of-day conf-stat))
+	  nil
+	(lyskom-format-insert 'conf-has-motd conf-stat)
+	(lyskom-view-text (conf-stat->msg-of-day conf-stat)))
 
-        ;; Show aux items
-
-        (lyskom-traverse-aux item
-            (conf-stat->aux-items conf-stat)
-          (lyskom-aux-item-definition-call item 'status-print item conf-stat))
-
-        (let ((mship (lyskom-try-get-membership (conf-stat->conf-no conf-stat) t)))
-          (when mship
-            (lyskom-format-insert 'conf-mship-priority
-                                  (membership->priority mship)
-                                  (lyskom-return-membership-type
-                                   (membership->type mship)))))
-
-        ;; Show all members of CONF-STAT if the user so wishes."
-        (lyskom-scroll)
-        (if (lyskom-j-or-n-p
-             (lyskom-get-string 'show-members-list-also-q))
-            (let ((member-list (blocking-do 'get-members
-                                            (conf-stat->conf-no conf-stat)
-                                            0 lyskom-max-int)))
+      ;; Show all members of CONF-STAT if the user so wishes."
+      (lyskom-scroll)
+      (if (lyskom-j-or-n-p
+	   (lyskom-get-string 'show-members-list-also-q))
+	  (let ((member-list (blocking-do 'get-members
+					  (conf-stat->conf-no conf-stat)
+					  0 lyskom-max-int)))
 	    
-              (if (null member-list)
-                  (lyskom-format-insert 'conf-has-no-members conf-stat)
-                (lyskom-format-insert 'conf-has-these-members conf-stat)
-                (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
-                    (progn
-                      (lyskom-insert-string 'member-list-header)
-                      (lyskom-traverse 
-                       member (member-list->members member-list)
-                       (let ((membership (blocking-do
-                                          'query-read-texts 
-                                          (member->pers-no member)
-                                          (conf-stat->conf-no conf-stat))))
-                         ;; Print a row describing the membership of MEMBER
-                         ;; (described by MEMBERSHIP) in CONF-STAT.
-                         (if (or (null membership))
-                             (lyskom-insert-string 'secret-membership)
-                           (lyskom-insert 
-                            (format "%17s"
-                                    (lyskom-return-date-and-time
-                                     (membership->last-time-read membership))))
-                           (let ((unread (- (+ (conf-stat->first-local-no
-                                                conf-stat)
-                                               (conf-stat->no-of-texts conf-stat))
-                                            (membership->last-text-read membership)
-                                            (length (membership->read-texts
-                                                     membership))
-                                            1)))
-                             (lyskom-format-insert 'conf-membership-line
-                                                   (if (zerop unread)
-                                                       "         "
-                                                     (format "%7d  " unread))
-                                                   (member->pers-no member)
-                                                   (lyskom-return-membership-type (member->membership-type member))
-                                                   )
-                             (when (and (member->created-by member)
-                                        (not (zerop (member->created-by member)))
-                                        (not (eq (member->pers-no member)
-                                                 (member->created-by member))))
-                               (lyskom-format-insert 'conf-membership-line-2
-                                                     (lyskom-return-date-and-time
-                                                      (member->created-at member))
-                                                     (member->created-by member)))
-                             )))))
+	    (lyskom-format-insert 'conf-has-these-members
+				  conf-stat)
+	    (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
+		
+		(progn
+		  (lyskom-insert-string 'member-list-header)
+		  (lyskom-traverse 
+		   member (conf-no-list->conf-nos member-list)
+		   (let ((membership (blocking-do
+				      'query-read-texts 
+				      member
+				      (conf-stat->conf-no conf-stat))))
+		     ;; Print a row describing the membership of MEMBER
+		     ;; (described by MEMBERSHIP) in CONF-STAT.
+		     (if (or (null membership))
+			 (lyskom-insert-string 'secret-membership)
+		       (lyskom-insert 
+			(format "%17s"
+				(lyskom-return-date-and-time
+				 (membership->last-time-read membership))))
+		       (let ((unread (- (+ (conf-stat->first-local-no
+					    conf-stat)
+					   (conf-stat->no-of-texts conf-stat))
+					(membership->last-text-read membership)
+					(length (membership->read-texts
+						 membership))
+					1)))
+			 (lyskom-format-insert 'conf-membership-line
+					       (if (zerop unread)
+						   "         "
+						 (format "%7d  " unread))
+					       member))))))
 	      
-                  ;; Don't show membership info
-                  (lyskom-insert "\n")
-                  (lyskom-traverse
-                   member (member-list->members member-list)
-                   (lyskom-format-insert "  %#1P\n" 
-                                         (member->pers-no member)))))))))))
+	      ;; Don't show membership info
+	      (lyskom-insert "\n")
+	      (lyskom-traverse
+	       member (conf-no-list->conf-nos member-list)
+	       (lyskom-format-insert "  %#1P\n" member))))))))
 
 
 ;;; ================================================================
@@ -423,12 +382,6 @@ otherwise: the conference is read with lyskom-completing-read."
 	    (lyskom-format-insert 'has-motd conf-stat)
 	    (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
 
-      ;; Show aux items
-      
-      (lyskom-traverse-aux item
-          (conf-stat->aux-items conf-stat)
-        (lyskom-aux-item-definition-call item 'status-print item conf-stat))
-
       ;; "Show all conferences CONF-STAT is a member of if the user so wishes."
       (lyskom-scroll)
       (if (null (lyskom-j-or-n-p (lyskom-get-string
@@ -481,18 +434,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			   (conf-stat->supervisor member-conf-stat))
 			(lyskom-get-string 'is-supervisor-mark)
 		      "  ")
-		    member-conf-stat
-                    (lyskom-return-membership-type (membership->type membership))
-                    )
-                   (when (and (membership->created-by membership)
-                              (not (zerop (membership->created-by membership)))
-                              (not (eq (conf-stat->conf-no conf-stat)
-                                       (membership->created-by membership))))
-                     (lyskom-format-insert 'pers-membership-line-2
-                                           (lyskom-return-date-and-time
-                                            (membership->created-at membership))
-                                           (membership->created-by membership)))
-
+		    member-conf-stat)
 		   (setq lyskom-count-var (+ lyskom-count-var unread)))))))
 
 	  ;; "Print the total number of unread texts for the person CONF-STAT."
@@ -516,7 +458,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((target (or who
 		    (lyskom-read-conf-no
 		     (format (lyskom-get-string 'who-to-send-message-to)
-			     (lyskom-get-string 'nobody))
+			     (lyskom-get-string 'everybody))
                      (if kom-permissive-completion
                          '(all)
                        '(login conf))
@@ -541,16 +483,14 @@ otherwise: the conference is read with lyskom-completing-read."
 			 "")))
                      t))))
     (if (zerop target)
-        (lyskom-format-insert 'message-use-alarm-instead
-                              (lyskom-command-name 'kom-send-alarm))
-      (lyskom-format-insert 'message-recipient-info target)
-      (lyskom-send-message target message))))
+	(lyskom-insert (lyskom-get-string 'message-all-info))
+      (lyskom-format-insert 'message-recipient-info target))
+    (lyskom-send-message target message)))
   
 
 (def-kom-command kom-send-alarm (&optional message)
   "Send a message to all of the users in KOM right now."
   (interactive)
-  (lyskom-insert (lyskom-get-string 'message-all-info))
   (lyskom-send-message 0 message))
 
 
@@ -604,12 +544,10 @@ send. If DONTSHOW is non-nil, don't display the sent message."
               (if (not dontshow)
                   (lyskom-handle-as-personal-message
                    (if lyskom-message-recipient
-                       (lyskom-format (lyskom-get-string-sol 
-                                       'message-sent-to-user)
+                       (lyskom-format 'message-sent-to-user
                                       lyskom-message-string 
                                       lyskom-message-recipient)
-                     (lyskom-format (lyskom-get-string-sol 
-                                     'message-sent-to-all)
+                     (lyskom-format 'message-sent-to-all
                                     lyskom-message-string))
                    lyskom-pers-no
                    lyskom-filter-outgoing-messages))
@@ -622,19 +560,18 @@ send. If DONTSHOW is non-nil, don't display the sent message."
     ))
 
 (defun lyskom-send-message-trim-newlines ()
-  (when (stringp lyskom-message-string)
-    (let ((size (length lyskom-message-string)))
-      (while (and (> size 0)
-                  (eq ?\n (aref lyskom-message-string (1- size))))
-        (setq size (1- size)))
-      (cond ((and (eq size 0)
-                  (not (lyskom-j-or-n-p (lyskom-get-string 
-                                         'send-empty-message-p))))
-             (setq lyskom-message-string nil))
-            ((eq size 0)
-             (setq lyskom-message-string ""))
-            (t (setq lyskom-message-string (substring lyskom-message-string 
-                                                      0 size)))))))
+  (let ((size (length lyskom-message-string)))
+    (while (and (> size 0)
+                (eq ?\n (aref lyskom-message-string (1- size))))
+      (setq size (1- size)))
+    (cond ((and (eq size 0)
+                (not (lyskom-j-or-n-p (lyskom-get-string 
+                                       'send-empty-message-p))))
+           (setq lyskom-message-string nil))
+          ((eq size 0)
+           (setq lyskom-message-string ""))
+          (t (setq lyskom-message-string (substring lyskom-message-string 
+                                                    0 size))))))
 
 (lyskom-external-function lyskom-resize-minibuffer-mode)
 (lyskom-external-function resize-minibuffer-setup)
@@ -644,7 +581,6 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   (remove-hook 'lyskom-send-message-exit-hook
                'lyskom-send-message-turn-off-resize-on-exit))
                
-(defvar resize-minibuffer-mode)
 (defun lyskom-send-message-resize-minibuffer ()
   "Temporarily turn on resizing of minibuffer"
   (let ((tmp nil))
@@ -677,7 +613,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   "Set number of unread articles in current conference."
   (interactive "P")
   (setq conf-no (or conf-no lyskom-current-conf))
-  (if (zerop conf-no)
+  (if (and (zerop lyskom-current-conf) (null conf-no))
       (progn
         (lyskom-insert-string 'not-present-anywhere)
         (lyskom-insert-string "\n"))
@@ -697,8 +633,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 	       (result (blocking-do 'set-unread conf-no n))
                (membership (blocking-do 'query-read-texts
 					lyskom-pers-no
-					conf-no)))
-          (lyskom-ignore result)
+					conf-no))
+	       )
+          (ignore result)
 	  (lyskom-replace-membership membership lyskom-membership)
 	  (if (= conf-no lyskom-current-conf)
 	      (set-read-list-empty lyskom-reading-list))
@@ -715,7 +652,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 ;;; Rehacked: Inge Wallin
 
 
-(defvar lyskom-special-conf-name "\\`\\(Inl.gg .t mig\\|NL:\\)\\'"
+(defvar lyskom-special-conf-name "\\`Inl.gg .t mig\\'"
   "Regexp to match conf names that are special.")
 
 (def-kom-command kom-list-news (&optional num)
@@ -726,52 +663,41 @@ send. If DONTSHOW is non-nil, don't display the sent message."
     (sit-for 0)
     (lyskom-prefetch-all-confs))
 
-  (let* ((num-arg (cond
-                   ((numberp num) num)
-                   ((and (listp num)
-                         (numberp (car num))) (car num))
-                   (t nil)))
-         (sum 0)
-         (mship-confs (and (numberp num-arg)
-                           (< num-arg 1)
-                           (delq nil 
-                                 (mapcar (lambda (el)
-                                           (when (not (membership-type->passive
-                                                       (membership->type el)))
-                                             (membership->conf-no el)))
-                                         lyskom-membership))))
-         (nconfs 0))
-    (when num-arg
-      (lyskom-format-insert 'list-unread-with-n-unread num-arg))
+  (let ((num-arg (cond
+                  ((numberp num) num)
+                  ((and (listp num)
+                        (numberp (car num))) (car num))
+                  (t nil)))
+        (sum 0))
     (mapcar
      (function
       (lambda (info)
         (let ((un (length (cdr (read-info->text-list info))))
               (name (conf-stat->name (read-info->conf-stat info)))
               (conf-stat (read-info->conf-stat info)))
-          (setq mship-confs (delq (conf-stat->conf-no conf-stat) mship-confs))
           (cond
            ((eq (read-info->type info) 'CONF)
             (if (or (not num-arg)
-                    (>= un num-arg))
+                    (>= (-- num-arg) 0))
                 (lyskom-insert 
                  (if (and (boundp 'lyskom-special-conf-name)
                           (stringp lyskom-special-conf-name)
                           (string-match lyskom-special-conf-name name))
-                     (lyskom-format 'you-have-unreads-special un conf-stat)
-                   (lyskom-format 'you-have-unreads un conf-stat))))
-            (setq sum (+ sum un)
-                  nconfs (1+ nconfs)))))))
+                     (if (/= un 1)
+                         (lyskom-format 'you-have-unreads-special un conf-stat)
+                       (lyskom-format 'you-have-an-unread-special conf-stat))
+                   (if (/= un 1)
+                       (lyskom-format 'you-have-unreads un conf-stat)
+                     (lyskom-format 'you-have-an-unread conf-stat)))))
+            (setq sum (+ sum un)))))))
      (read-list->all-entries lyskom-to-do-list))
-
-    (mapcar 
-     (lambda (conf-no)
-       (lyskom-format-insert 'you-have-no-unreads conf-no))
-       mship-confs)
-
     (if (= 0 sum)
         (lyskom-insert-string 'you-have-read-everything)
-      (lyskom-format-insert 'total-unreads sum nconfs))))
+      (lyskom-insert 
+       (if (/= sum 1)
+           (lyskom-format 'total-unreads 
+                          sum)
+         (format (lyskom-get-string 'total-unread)))))))
 
 
 ;;; ================================================================
@@ -869,6 +795,24 @@ on one line."
 		(++ r))))
 	  (read-list->nth lyskom-reading-list r)))))))
 
+;; This function is commented out untile we might implement marks in a
+;; new way. But it works as it is.
+
+;;(def-kom-command kom-list-marks (&optional mark)
+;;  "List a summary of marked texts with mark MARK."
+;;  (interactive (list (or (and current-prefix-arg
+;;			      (prefix-numeric-value current-prefix-arg))
+;;			 (lyskom-read-num-range
+;;			  1 255
+;;			  (lyskom-get-string 'what-mark-to-list)))))
+;;  (let ((texts (delq nil
+;;		     (mapcar (function
+;;			      (lambda (x) (and (= (elt (cdr x) 1) mark)
+;;					       (elt (cdr x) 0))))
+;;			     (blocking-do 'get-marks)))))
+;;    (lyskom-list-summary texts)
+;;    (lyskom-format-insert 'you-have-marks (length texts) mark)))
+
 
 (defun lyskom-list-summary (texts)
   "List a summary of the texts in TEXTS.
@@ -894,110 +838,15 @@ on one line."
 	    ;; We really don't need the whole text.
 	    )
 	(lyskom-print-summary-line text-stat text text-no 
-				   (time->year time)
-                                   (time->mon time)
-                                   (time->mday time))
+				   (time->year time) (time->yday time))
 	(sit-for 0)))))
 
 
-(defun lyskom-print-summary-line (text-stat text text-no year mon mday)
+(defun lyskom-print-summary-line (text-stat text text-no year day)
   "Handle the info, fetch the author and print it.
 Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
 The year and day is there to be able to choose format on the day.
 Format is 23:29 if the text is written today. Otherwise 04-01."
-  (if (not (and text-stat text))	;+++ B{ttre felhantering.
-      (lyskom-format-insert 'could-not-read text-no)
-    (let* ((lines (text-stat->no-of-lines text-stat))
-	   (txt (text->text-mass text))
-	   (eos (string-match (regexp-quote "\n") txt))
-	   (subject (substring txt 0 eos))
-           (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
-           (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-           (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-	   ;; length of the number %%%%%% :8
-	   ;; length for time is: 6
-           (time (or (lyskom-mx-date-to-time mx-date)
-                     (text-stat->creation-time text-stat)))
-	   (time (if (and (= year (time->year time))
-			  (= mon (time->mon time))
-                          (= mday (time->mday time)))
-		     (format "%02d:%02d" (time->hour time)
-			     		 (time->min time))
-		   (format "%02d-%02d" (1+ (time->mon time))
-			   	       (time->mday time))))
-	   ;; length for lines is: 4
-	   ;; We split the rest between author and subject
-	   (namelen (/ (- (lyskom-window-width) 22) 3))
-	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
-	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
-				  (int-to-string namelen)
-				  "#4P  %[%#5@%=-"
-				  (int-to-string subjlen)
-				  "#6r%]\n")))
-      (lyskom-format-insert format-string
-			    text-no
-			    time
-			    lines
-                            (if mx-from
-                                (lyskom-format-mx-author mx-from mx-author)
-                              (text-stat->author text-stat))
-			    (lyskom-default-button 'text
-						   text-no)
-			    subject))))
-
-
-
-;;; ============================================================
-;;; kom-list-marks                      Lista markeringar
-;;; Author: David Byers
-
-(def-kom-command kom-list-marks (&optional which-mark)
-  (interactive "P")
-  (when (not (numberp which-mark))
-    (setq which-mark (lyskom-read-num-range 
-                      0 255
-                      (lyskom-get-string 'list-which-mark) nil nil nil t)))
-  (let ((marks
-         (sort (listify-vector (blocking-do 'get-marks))
-               (lambda (a b) (< (mark->mark-type a) (mark->mark-type b))))))
-  (let ((time (blocking-do 'get-time))
-	(author-width (/ (- (lyskom-window-width) 26) 3)))
-    
-    ;; Start fetching all text-stats and text to list them.
-    (lyskom-format-insert (concat "%-4#6s%-8#1s%-6#2s%-4#3s %-"
-				  (int-to-string author-width)
-				  "#4s  %#5s\n")
-			  (lyskom-get-string 'Texts)
-			  (lyskom-get-string 'Date)
-			  (lyskom-get-string 'Lines)
-			  (lyskom-get-string 'Author)
-			  (lyskom-get-string 'Subject)
-                          (lyskom-get-string 'mark-type))
-;    (lyskom-insert (make-string (1- (window-width)) ?-))
-;    (lyskom-insert "\n")
-    (lyskom-traverse
-	mark marks
-      (when (or (null which-mark)
-                (eq (mark->mark-type mark) which-mark))
-        (let* ((text-no (mark->text-no mark))
-               (text-stat (blocking-do 'get-text-stat text-no))
-               (text (blocking-do 'get-text text-no))
-	    ;; We could do som optimization here. 
-	    ;; We really don't need the whole text.
-	    )
-          (lyskom-print-mark-summary-line mark text-stat text text-no 
-                                     (time->year time) (time->yday time))
-          (sit-for 0))))
-;    (lyskom-insert (make-string (1- (window-width)) ?-))
-;    (lyskom-insert "\n")
-    )))
-                           
-(defun lyskom-print-mark-summary-line (mark text-stat text text-no year day)
-  "Handle the info, fetch the author and print it.
-Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
-The year and day is there to be able to choose format on the day.
-Format is 23:29 if the text is written today. Otherwise 04-01."
-  (lyskom-format-insert "%3#1d " (mark->mark-type mark))
   (if (not (and text-stat text))	;+++ B{ttre felhantering.
       (lyskom-format-insert 'could-not-read text-no)
     (let* ((lines (text-stat->no-of-lines text-stat))
@@ -1015,8 +864,8 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			   	       (time->mday time))))
 	   ;; length for lines is: 4
 	   ;; We split the rest between author and subject
-	   (namelen (/ (- (lyskom-window-width) 26) 3))
-	   (subjlen (/ (* (- (lyskom-window-width) 26) 2) 3))
+	   (namelen (/ (- (lyskom-window-width) 22) 3))
+	   (subjlen (/ (* (- (lyskom-window-width) 22) 2) 3))
 	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
 				  (int-to-string namelen)
 				  "#4P  %[%#5@%=-"
@@ -1030,6 +879,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    (lyskom-default-button 'text
 						   text-no)
 			    subject))))
+
 
 
 ;;; ============================================================
@@ -1050,7 +900,16 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (lyskom-format-insert 
    'who-i-am-server
    lyskom-server-name
-   (version-info->software-version lyskom-server-version-info))
+   (if (zerop (% (server-info->version lyskom-server-info) 100))
+       (format "%d.%d"
+               (/ (server-info->version lyskom-server-info) 10000)
+               (/ (% (server-info->version lyskom-server-info) 10000) 
+                  100))
+     (format "%d.%d.%d"
+             (/ (server-info->version lyskom-server-info) 10000)
+             (/ (% (server-info->version lyskom-server-info) 10000)
+                100)
+             (% (server-info->version lyskom-server-info) 100))))
 
   (lyskom-format-insert 'who-i-am-client
                         lyskom-clientversion)
@@ -1281,7 +1140,8 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 		    '(all) nil nil t)))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
-      (let ((garb-nice (lyskom-read-number 'new-garb-nice-q)))
+      (let ((garb-nice (lyskom-read-number
+			(lyskom-get-string 'new-garb-nice-q))))
 	(lyskom-format-insert 'garb-nice-for-is
 			      conf-stat
 			      garb-nice)
@@ -1367,10 +1227,12 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 (def-kom-command kom-sync-database ()
   "Save the LysKOM database."
   (interactive)
-  (if (and (>= (version-info->protocol-version lyskom-server-version-info) 8)
-           (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync)))
-      (progn (lyskom-insert-string 'syncing-server)
-             (lyskom-report-command-answer (blocking-do 'sync)))
+  (if (or (> (elt lyskom-server-version 0) 1)
+          (and (= (elt lyskom-server-version 0) 1)
+               (> (elt lyskom-server-version 1) 8)))
+      (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync))
+          (progn (lyskom-insert-string 'syncing-server)
+                 (lyskom-report-command-answer (blocking-do 'sync))))
     (setq lyskom-errno 12)
     (lyskom-report-command-answer nil)))
 
@@ -1520,7 +1382,9 @@ current conference to another session."
   (interactive (list
 		(cond
 		 ((null current-prefix-arg)
-		  (lyskom-read-number 'postpone-prompt kom-postpone-default))
+		  (lyskom-read-number
+		   (lyskom-get-string 'postpone-prompt)
+		   17))
 		 (t (prefix-numeric-value current-prefix-arg)))))
 
   (let ((len (read-list-length lyskom-reading-list))
@@ -1570,7 +1434,7 @@ membership info."
                                 255
                                 (lyskom-get-string 'set-session-priority)
                                 t
-                                (or kom-default-session-priority 100)))))
+                                100))))
     (setq lyskom-session-priority pri)
     (lyskom-refetch)))
 
@@ -1597,21 +1461,16 @@ membership info."
       (bury-buffer))))
 
 
-(defun lyskom-buffer-p (buf &optional may-be-dead)
-  "Returns non-nil if BUF is an active LysKOM buffer
-If optional second argument MAY-BE-DEAD is non-nil, this function returns t
-whether the session is alive or not. Otherwise it checks that the session
-is alive."
-  (when (buffer-live-p buf)
-    (save-excursion
-      (set-buffer buf)
-      (and (eq major-mode 'lyskom-mode)
-           (boundp 'lyskom-proc)
-           lyskom-proc
-           (processp lyskom-proc)
-           (or (and may-be-dead
-                    (memq (process-status lyskom-proc) '(run open closed)))
-               (memq (process-status lyskom-proc) '(run open)))))))
+(defun lyskom-buffer-p (buf)
+  ;; Returns non-nil if BUF is an active LysKOM buffer
+  (if (and buf (bufferp buf) (buffer-name buf))
+      (save-excursion
+	(set-buffer buf)
+	(and (eq major-mode 'lyskom-mode)
+	     (boundp 'lyskom-proc)
+	     lyskom-proc
+	     (processp lyskom-proc)
+	     (memq (process-status lyskom-proc) '(run open))))))
 
 ;;;(defun lyskom-update-lyskom-buffer-list ()
 ;;;  (mapcar (function
@@ -1639,154 +1498,120 @@ is alive."
 
 
 
-(defun lyskom-clean-buffer-list (buffers)
-  "Remove all dead buffers from BUFFERS"
-  (let ((result nil))
-    (while buffers
-      (when (lyskom-buffer-p (car buffers))
-        (setq result (cons (car buffers) result)))
-      (setq buffers (cdr buffers)))
-    (nreverse result)))
+(defun lyskom-next-kom ()
+  "Internal version of kom-next-kom"
+  (if lyskom-buffer-list
+      (progn
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    ;; If there is an "active" lyskom buffer, send it to the
+	    ;; back of the list.
+	    (progn
+	      ;; If the "active" lyskom buffer is the current buffer,
+	      ;; and kom-bury-buffers is non-nil, bury it.
+	      (if (and kom-bury-buffers
+		       (eq (car lyskom-buffer-list)
+			   (current-buffer)))
+		  (kom-bury))
+	      (setq lyskom-buffer-list
+		    (nconc (cdr lyskom-buffer-list)
+			   (list (car lyskom-buffer-list)))))
+	  ;; The "active" lyskom buffer is dead, so we remove it from
+	  ;; some lists.
+	  (setq lyskom-sessions-with-unread
+		(delq (car lyskom-buffer-list)
+		      lyskom-sessions-with-unread))
+	  (setq lyskom-sessions-with-unread-letters
+		(delq (car lyskom-buffer-list)
+		      lyskom-sessions-with-unread-letters))
+	  (setq lyskom-buffer-list (cdr lyskom-buffer-list)))
+	;; Don't switch to dead sessions.
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    (switch-to-buffer (car lyskom-buffer-list))
+	  (lyskom-next-kom)))
+    (error "No active LysKOM buffers")))
 
-(defun lyskom-next-kom (buffer-list-name direction)
-  "Internal version of kom-next-kom
-BUFFER-LIST-NAME is the list of buffers to rotate through. It must be a 
-name since this function may modify the list.
-DIRECTION should be one of 'forward or 'backward and is the direction to
-rotate through the buffer list.
-Return-value: 'no-session if there is no suitable session to switch to
-              'same-session if the current buffer is the only suitable one
-              nil if everything went well"
 
-  ;; Clean the buffer lists 
+(defun lyskom-previous-kom ()
+  "Internal version of kom-previous-kom"
+  (if (> (length lyskom-buffer-list) 1)
+      (let (lastbuf
+	    (last-but-one lyskom-buffer-list))
+	(while (cdr (cdr last-but-one))
+	  (setq last-but-one (cdr last-but-one)))
+	(setq lastbuf (car (cdr last-but-one)))
+	(if (lyskom-buffer-p (car lyskom-buffer-list))
+	    ;; If there is an "active" lyskom buffer, send it to the
+	    ;; back of the list.
+	    (progn
+	      ;; If the "active" lyskom buffer is the current buffer,
+	      ;; and kom-bury-buffers is non-nil, bury it.
+	      (if (and kom-bury-buffers
+		       (eq (car lyskom-buffer-list)
+			   (current-buffer)))
+		  (kom-bury))
+	      (setq lyskom-buffer-list (cons lastbuf lyskom-buffer-list))
+	      (rplacd last-but-one nil))
+	  ;; The "active" lyskom buffer is dead, so we remove it from
+	  ;; some lists.
+	  (setq lyskom-sessions-with-unread
+		(delq (cdr last-but-one)
+		      lyskom-sessions-with-unread))
+	  (setq lyskom-sessions-with-unread-letters
+		(delq (cdr last-but-one)
+		      lyskom-sessions-with-unread-letters))
+	  (rplacd last-but-one nil))
+	(if (lyskom-buffer-p (car last-but-one))
+	    (switch-to-buffer lastbuf)
+	  (lyskom-previous-kom)))
+    (if (null lyskom-buffer-list)
+        (error
+         (lyskom-get-string 'no-lyskom-session)))))
 
-  (setq lyskom-sessions-with-unread
-        (lyskom-clean-buffer-list lyskom-sessions-with-unread)
-        lyskom-sessions-with-unread-letters
-        (lyskom-clean-buffer-list lyskom-sessions-with-unread-letters)
-        lyskom-buffer-list
-        (lyskom-clean-buffer-list lyskom-buffer-list))
 
-  (let ((current (lyskom-buffer-root-ancestor (current-buffer)))
-        (buffer-list (symbol-value buffer-list-name))
-        (result nil))
-
-    ;; Figure out the start buffer. The target buffer will be the
-    ;; following buffer in lyskom-buffer-list
-
-    (cond
-     ((null buffer-list) (setq result 'no-session
-                               current nil))
-
-     ;; If we are in a lyskom buffer that is in lyskom-buffer-list
-     ;; switch from the current buffer. If unlisted, list it.
-     ((lyskom-buffer-p current) 
-      (unless (memq current buffer-list)
-        (setq buffer-list (cons current buffer-list))))
-
-     ;; If we are in a non-LysKOM buffer, the start buffer is the
-     ;; last one in the list
-     (t (setq current (car buffer-list))))
-
-    ;; Rotate the buffer list so the target buffer is first
-
-    (when current
-      (cond ((eq direction 'forward)
-             (setq buffer-list 
-                   (lyskom-rotate-list buffer-list
-                                       (car (cdr (memq current buffer-list))))))
-            (t
-             (setq buffer-list
-                   (lyskom-rotate-list buffer-list
-                                       (or (car (lyskom-preceding-cons 
-                                                 buffer-list
-                                                 current))
-                                           (car (last buffer-list)))))))
-      (set buffer-list-name buffer-list)
-
-      ;; If the current buffer and the target buffer are the same
-      ;; do nothing. Otherwise, flip around the buffers
-
-      (if (eq (current-buffer) (car buffer-list))
-          (setq result 'same-session)
-        ;; Possibly bury the current buffer
-        (when (and kom-bury-buffers (eq current (current-buffer)))
-          (kom-bury))
-
-        ;; Switch to the new buffer
-        (switch-to-buffer (car buffer-list))
-        (setq result nil)))
-    result))
 
 (def-kom-emacs-command kom-next-kom ()
   "Pop up the next lyskom-session."
   (interactive)
-  (let ((result (lyskom-next-kom 'lyskom-buffer-list 'forward)))
-    (cond ((eq result 'no-session)
-           (error (lyskom-get-string 'no-lyskom-session)))
-          ((eq result 'same-session)
-           (if kom-next-kom-running-as-kom-command
-               (lyskom-insert-before-prompt (lyskom-get-string
-                                             'no-other-lyskom-r))
-             (error (lyskom-get-string 'no-lyskom-session))))
-          (t nil))))
+  (let ((start-buffer (current-buffer)))
+    (if (lyskom-buffer-p (current-buffer))
+        (lyskom-tell-internat 'kom-tell-next-lyskom))
+    (lyskom-next-kom)
+    (when (eq (current-buffer) start-buffer)
+      (if kom-next-kom-running-as-kom-command
+          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
+        (error (lyskom-get-string 'no-lyskom-session))))))
+
 
 (def-kom-emacs-command kom-previous-kom ()
   "Pop up the previous lyskom-session."
   (interactive)
-  (let ((result (lyskom-next-kom 'lyskom-buffer-list 'backward)))
-    (cond ((eq result 'no-session)
-           (error (lyskom-get-string 'no-lyskom-session)))
-          ((eq result 'same-session)
-           (if kom-previous-kom-running-as-kom-command
-               (lyskom-insert-before-prompt (lyskom-get-string
-                                             'no-other-lyskom-r))
-             (error (lyskom-get-string 'no-lyskom-session))))
-          (t nil))))
-               
+  (let ((start-buffer (current-buffer)))
+    (if (lyskom-buffer-p (current-buffer))
+        (lyskom-tell-internat 'kom-tell-next-lyskom))
+    (lyskom-previous-kom)
+    (when (eq (current-buffer) start-buffer)
+      (if kom-previous-kom-running-as-kom-command
+          (lyskom-insert-before-prompt (lyskom-get-string 'no-other-lyskom-r))
+        (error 'no-lyskom-session)))))
+
 
 (def-kom-emacs-command kom-next-unread-kom ()
-  "Pop up the previous lyskom-session."
+  "Pop up the next LysKOM session with unread texts in."
   (interactive)
-  (let ((result (lyskom-next-kom 'lyskom-sessions-with-unread 'forward)))
-    (cond ((eq result 'no-session)
-           (if kom-next-unread-kom-running-as-kom-command
-               (lyskom-insert-before-prompt (lyskom-get-string 
-                                             'no-unread-lyskom-r))
-             (error (lyskom-get-string 'no-unread-lyskom))))
-          ((eq result 'same-session)
-           (if kom-next-unread-kom-running-as-kom-command
-               (lyskom-insert-before-prompt (lyskom-get-string
-                                             'no-other-unread-lyskom-r))
-             (error (lyskom-get-string 'no-lyskom-session))))
-          (t nil))))
+  (let ((start-buffer (current-buffer)))
+    (if (not (lyskom-buffer-p (current-buffer)))
+        (lyskom-next-kom))
+    (let ((thisbuf (current-buffer)))
+      (lyskom-next-kom)
+      (while (and (not (eq thisbuf (current-buffer)))
+                  (not (memq lyskom-buffer lyskom-sessions-with-unread)))
+        (lyskom-next-kom)))
+    (when (eq start-buffer (current-buffer))
+        (if kom-next-unread-kom-running-as-kom-command
+            (lyskom-insert-before-prompt 
+             (lyskom-get-string 'no-unread-lyskom-r))
+          (error (lyskom-get-string 'no-unread-lyskom))))))
 
-
-;;; ============================================================
-;;; Var finns kommandot                 (kom-where-is)
-;;; Author: David Byers
-
-(def-kom-emacs-command kom-where-is (cmd)
-  "Show on which key a LysKOM command is"
-  (interactive
-   (list (lyskom-read-extended-command)))
-  (let ((w (where-is-internal cmd))
-        (msg nil))
-    (cond ((null cmd)
-           (setq msg (lyskom-format (lyskom-get-string 'where-is-doesnt-exist)
-                                    (lyskom-command-name cmd))))
-          ((null w)
-           (setq msg (lyskom-format (lyskom-get-string 'where-is-on-no-key)
-                                    (lyskom-command-name cmd))))
-          (t (setq msg (lyskom-format (lyskom-get-string 'where-is-on-key)
-                                      (lyskom-command-name cmd)
-                                      (mapconcat
-                                       (lambda (x) 
-                                         (format "`%s'" (key-description x)))
-                                       w ", ")))))
-    (if kom-where-is-running-as-kom-command
-        (lyskom-insert-before-prompt (concat msg "\n"))
-      (message msg))))
 
 ;;;============================================================
 ;;;  Visa user-arean                    (kom-show-user-area)
@@ -1811,55 +1636,53 @@ Return-value: 'no-session if there is no suitable session to switch to
 (def-kom-command kom-change-conf-type ()
   "Change type of a conference"
   (interactive)
-  (let* ((uconf-stat (lyskom-read-uconf-stat
-                      (lyskom-get-string 'what-conf-to-change)
-                      '(conf pers) nil "" t))
-	 (type (uconf-stat->conf-type uconf-stat))
+  (let* ((conf-stat (lyskom-read-conf-stat
+                     (lyskom-get-string 'what-conf-to-change)
+                     '(conf pers) nil "" t))
+	 (type (conf-stat->conf-type conf-stat))
 	 (box (conf-type->letterbox type))
 	 (ori (conf-type->original type))
 	 (pro (conf-type->rd_prot type))
-	 (sec (conf-type->secret type))
-         (ano (conf-type->anarchy type))
-         (ope (conf-type->forbid-secret type)))
-    (lyskom-format-insert 
-     'change-type-prompt
-     uconf-stat
-     uconf-stat
-     (mapconcat 'identity
-                (delq nil
-                      (list (and box (lyskom-get-string 'Mailbox))
-                            (and sec (lyskom-get-string 'Protected))
-                            (and ori (lyskom-get-string 'no-comments))
-                            (and pro (lyskom-get-string 'closed))
-                            (and ano (lyskom-get-string 'allow-anon))
-                            (and ope (lyskom-get-string 'allow-secret))))
-                ", "))
-    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member) t))
+	 (sec (conf-type->secret type)))
+    (lyskom-format-insert 'change-type-prompt
+			  conf-stat
+			  conf-stat
+			  (cond
+			   ((or box ori pro sec)
+			    (concat
+			     "("
+			     (if box (lyskom-get-string 'Mailbox) "")
+			     (if (and box (or sec ori pro)) ", " "")
+			     (if sec (lyskom-get-string
+				      'Protected) "")
+			     (if (and sec (or ori pro)) ", " "")
+			     (if ori (lyskom-get-string
+				      'no-comments) "")
+			     (if (and ori pro) ", " "")
+			     (if pro (lyskom-get-string 'closed) "")
+			     ")"))
+			   (t "")))
+    (let* ((open (lyskom-j-or-n-p (lyskom-get-string 'anyone-member)))
 	   (secret (if (not open)
-		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf) t)))
-	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed) t))
-	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed) t))
-           (secmem (and (lyskom-have-feature long-conf-types)
-                        (not (lyskom-j-or-n-p (lyskom-get-string 'secret-members-allowed) t)))))
-      (cache-del-conf-stat (uconf-stat->conf-no uconf-stat))
-      (cache-del-uconf-stat (uconf-stat->conf-no uconf-stat))
+		       (lyskom-j-or-n-p (lyskom-get-string 'secret-conf))))
+	   (orig (lyskom-j-or-n-p (lyskom-get-string 'comments-allowed)))
+	   (anarchy (lyskom-j-or-n-p (lyskom-get-string 'anonymous-allowed))))
+      (cache-del-conf-stat (conf-stat->conf-no conf-stat))
       (if (not (blocking-do 
 		'set-conf-type
-		(uconf-stat->conf-no uconf-stat)
+		(conf-stat->conf-no conf-stat)
 		(lyskom-create-conf-type (not open)
 					 (not orig)
 					 secret
 					 (conf-type->letterbox
-					  (uconf-stat->conf-type  uconf-stat))
+					  (conf-stat->conf-type  conf-stat))
 					 anarchy
-                                         (if (lyskom-have-feature long-conf-types)
-                                             secmem
-                                           (conf-type->forbid-secret
-                                            (uconf-stat->conf-type uconf-stat)))
+					 (conf-type->rsv1
+					  (conf-stat->conf-type conf-stat))
 					 (conf-type->rsv2
-					  (uconf-stat->conf-type uconf-stat))
+					  (conf-stat->conf-type conf-stat))
 					 (conf-type->rsv3
-					  (uconf-stat->conf-type uconf-stat)))))
+					  (conf-stat->conf-type conf-stat)))))
 	  (progn (lyskom-insert-string 'nope)
 		 (lyskom-format-insert 'error-code
 				       (lyskom-get-error-text lyskom-errno)
@@ -1915,7 +1738,6 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;; ============================================================
 ;;; Beräkna
 
-(lyskom-external-function calc-eval)
 (def-kom-command kom-calculate (&optional exprx)
   "Calculate optional arg EXPRX, or prompt the user for an expression."
   (interactive)
@@ -1935,346 +1757,3 @@ Return-value: 'no-session if there is no suitable session to switch to
                 expr
                 (make-string (car result) ?\ )
                 (car (cdr result))))))))
-
-;;; ============================================================
-;;; Ändra namn
-
-(def-kom-command kom-set-personal-label ()
-  "Set a personal label on an object of some kind"
-  (interactive)
-  (let* ((completions (list (cons (lyskom-get-string 'conference) 'conf)
-                            (cons (lyskom-get-string 'person) 'pers)
-                            (cons (lyskom-get-string 'text) 'text)))
-         (completion-ignore-case t)
-         (type (cdr (lyskom-string-assoc
-                     (completing-read (lyskom-get-string 'label-what-kind)
-                                      completions nil t)
-                     completions)))
-         (objno nil)
-         (label nil)
-         (object nil)
-         (secret nil)
-         (aux nil))
-    (cond ((eq type 'text)
-           (setq objno (lyskom-read-number 'label-what-text))
-           (setq object (blocking-do 'get-text-stat objno))
-           (when (null object)
-             (lyskom-error 'no-such-text-no objno))
-           (setq aux (text-stat-find-aux object 10 lyskom-pers-no))
-           (setq secret (not (lyskom-j-or-n-p 
-                              (lyskom-get-string 'label-secret))))
-           (setq label
-                 (lyskom-with-lyskom-minibuffer
-                  (read-from-minibuffer 
-                   (lyskom-get-string 'label-what-label))))
-           (blocking-do 
-            'modify-text-info
-            objno
-            (mapcar 'aux-item->aux-no aux)
-            (list
-             (lyskom-create-aux-item 0 10 0 0 
-                              (lyskom-create-aux-item-flags
-                               nil nil secret nil nil nil nil nil)
-                              0 label)))
-           (cache-del-text-stat objno))
-
-          ((or (eq type 'conf)
-               (eq type 'pers))
-           (setq object
-                 (lyskom-read-conf-stat (lyskom-get-string 
-                                         (if (eq type 'pers)
-                                             'label-what-pers
-                                           'label-what-conf))
-                                         (if (eq type 'pers)
-                                             '(pers)
-                                           '(all))
-                                         nil nil t))
-           (setq objno (conf-stat->conf-no object))
-           (setq aux (conf-stat-find-aux object 10 lyskom-pers-no))
-           (setq secret (not (lyskom-j-or-n-p
-                              (lyskom-get-string 'label-secret))))
-           (setq label
-                 (lyskom-with-lyskom-minibuffer
-                  (read-from-minibuffer 
-                   (lyskom-get-string 'label-what-label))))
-           (blocking-do 
-            'modify-conf-info
-            objno
-            (mapcar 'aux-item->aux-no aux)
-            (list
-             (lyskom-create-aux-item 0 10 0 0 
-                              (lyskom-create-aux-item-flags
-                               nil nil secret nil nil nil nil nil)
-                              0 label)))
-           (cache-del-conf-stat objno)))))
-
-
-(def-kom-command kom-fast-reply (text-no)
-  "Add a fast reply to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no)))
-  (if text-no
-      (progn (lyskom-format-insert 'fast-replying text-no)
-             (lyskom-fast-reply text-no
-                                (lyskom-read-string 
-                                 (lyskom-get-string 'fast-reply-prompt)
-                                 nil
-                                 'lyskom-fast-reply-history)))
-    (lyskom-insert-string 'confusion-what-to-reply-to)))
-                                         
-
-
-(defun lyskom-default-agree-string (&optional text)
-  (unless text (setq text kom-agree-text))
-  (cond ((null text) (lyskom-get-string 'default-agree-string))
-        ((stringp text) text)
-        ((functionp text) (funcall text))
-        ((listp text) (lyskom-default-agree-string
-                       (elt text (random (length kom-agree-text)))))))
-
-(def-kom-command kom-agree (&optional text-no)
-  "Convenience function to add agreement."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no)))
-  (if text-no
-      (progn (lyskom-format-insert 'agreeing text-no)
-             (lyskom-fast-reply text-no
-                                (lyskom-read-string
-                                 (lyskom-get-string 'agree-prompt)
-                                 (lyskom-default-agree-string)
-                                 'lyskom-fast-reply-history)))
-    (lyskom-insert-string 'confusion-what-to-agree-to)))
-    
-
-(defun lyskom-fast-reply (text-no message)
-  "To text TEXT-NO add MESSAGE as a fast reply."
-  (cache-del-text-stat text-no)
-  (lyskom-report-command-answer
-   (blocking-do 'modify-text-info
-                text-no
-                nil
-                (list (lyskom-create-aux-item 0 2 0 0 
-                                              (lyskom-create-aux-item-flags
-                                               nil nil nil nil nil nil nil nil)
-                                              0 message)))))
-
-
-;;; ======================================================================
-;;; FAQ Management
-;;;
-
-(def-kom-command kom-add-faq (&optional conf-no text-no)
-  "Add a FAQ to a conference"
-  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
-                     (lyskom-read-number 'text-to-add-as-faq)))
-  (let ((text (blocking-do 'get-text-stat text-no)))
-    (if (null text)
-        (lyskom-format-insert 'no-such-text-no text-no)
-      (lyskom-format-insert 'adding-faq text-no conf-no)
-      (cache-del-text-stat text-no)
-      (cache-del-conf-stat conf-no)
-      (lyskom-report-command-answer
-       (blocking-do 'modify-conf-info
-                    conf-no
-                    nil
-                    (list (lyskom-create-aux-item 
-                           0 14 0 0 
-                           (lyskom-create-aux-item-flags nil nil nil nil
-                                                         nil nil nil nil)
-                           0
-                           (int-to-string text-no))))))))
-               
-(def-kom-command kom-del-faq (&optional conf-no text-no)
-  "Remove a FAQ from a conference"
-  (interactive)
-  (let* ((conf-stat (if conf-no 
-                        (blocking-do 'get-conf-stat conf-no)
-                      (lyskom-read-conf-stat 'conf-to-del-faq '(conf) nil nil t)))
-         (faq-list (when conf-stat
-                     (let ((tmp nil))
-                       (lyskom-traverse-aux item 
-                           (conf-stat->aux-items conf-stat)
-                         (progn
-                           (when (eq (aux-item->tag item) 14)
-                             (setq tmp (cons (cons (aux-item->data item) (aux-item->aux-no item)) tmp)))))
-                       tmp)))
-         (text-no nil))
-    (cond
-     ((null conf-stat) 
-      (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
-     ((null faq-list) 
-      (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     (t (setq text-no (completing-read (lyskom-get-string 
-                                        'text-to-del-as-faq) faq-list nil t))
-        (when text-no
-          (lyskom-format-insert 'deleting-faq 
-                                (string-to-int text-no)
-                                conf-stat)
-          (cache-del-text-stat (string-to-int text-no))
-          (cache-del-conf-stat (conf-stat->conf-no conf-no))
-          (lyskom-report-command-answer
-           (blocking-do 'modify-conf-info
-                        (conf-stat->conf-no conf-stat)
-                        (list (cdr (lyskom-string-assoc text-no faq-list)))
-                        nil)))))))
-
-(def-kom-command kom-review-faq (&optional conf-no)
-  "View the FAQs for a conference"
-  (interactive (list (lyskom-read-conf-no 'view-which-faq '(conf) nil nil t)))
-  (let* ((conf-stat (blocking-do 'get-conf-stat conf-no))
-         (faq-list (when conf-stat
-                     (let ((tmp nil))
-                       (lyskom-traverse-aux item 
-                           (conf-stat->aux-items conf-stat)
-                         (progn
-                           (when (eq (aux-item->tag item) 14)
-                             (setq tmp (cons 
-                                        (string-to-int (aux-item->data item))
-                                        tmp)))))
-                       tmp))))
-    (cond 
-     ((null conf-stat) 
-      (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
-     ((null faq-list) 
-      (lyskom-format-insert 'conf-has-no-faq conf-stat))
-     (t 
-      (lyskom-format-insert 'review-faq-for-r conf-stat)
-      (read-list-enter-read-info
-       (lyskom-create-read-info 'REVIEW
-                                nil
-                                (lyskom-get-current-priority)
-                                (lyskom-create-text-list faq-list)
-                                nil t)
-       lyskom-reading-list t)))))
-    
-                       
-;;; ============================================================
-;;; Various aux-item stuff
-
-(def-kom-command kom-add-no-comments (&optional text-no)
-  "Add a don't comment me please aux-item to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no t)))
-  (let ((text-stat (blocking-do 'get-text-stat text-no)))
-
-    ;; Make sure there is a text there in the first place
-
-    (if (null text-stat)
-        (lyskom-format-insert 'no-such-text-no text-no)
-
-      ;; Make sure that the text doesn't already have this kind of item
-      ;; created by the same person
-
-      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
-                                  (lambda (el) 
-                                    (and (eq (aux-item->tag el) 4)
-                                         (eq (aux-item->creator el)
-                                             lyskom-pers-no))))
-          (lyskom-format-insert 'already-no-comments text-no)
-
-        ;; If the author of the text is not the current user, ask if the
-        ;; user wants to try anyway (it might work...)
-
-        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
-            (progn (lyskom-format-insert 'adding-no-comments
-                                         text-no)
-                   (lyskom-report-command-answer
-                    (blocking-do 'modify-text-info
-                                 text-no
-                                 nil
-                                 (list
-                                  (lyskom-create-aux-item 
-                                   0 4 nil nil
-                                   (lyskom-create-aux-item-flags
-                                    nil nil nil nil nil nil nil nil) 0 ""))))
-                   (cache-del-text-stat text-no)))))))
-
-
-(def-kom-command kom-add-private-answer (&optional text-no)
-  "Add a private answer only please aux-item to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no t)))
-  (let ((text-stat (blocking-do 'get-text-stat text-no)))
-
-    ;; Make sure there is a text there in the first place
-
-    (if (null text-stat)
-        (lyskom-format-insert 'no-such-text-no text-no)
-
-      ;; Make sure that the text doesn't already have this kind of item
-      ;; created by the same person
-
-      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
-                                  (lambda (el) 
-                                    (and (eq (aux-item->tag el) 5)
-                                         (eq (aux-item->creator el)
-                                             lyskom-pers-no))))
-          (lyskom-format-insert 'already-private-answer text-no)
-
-        ;; If the author of the text is not the current user, ask if the
-        ;; user wants to try anyway (it might work...)
-
-        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
-            (progn (lyskom-format-insert 'adding-private-answer
-                                         text-no)
-                   (lyskom-report-command-answer
-                    (blocking-do 'modify-text-info
-                                 text-no
-                                 nil
-                                 (list
-                                  (lyskom-create-aux-item 
-                                   0 5 nil nil
-                                   (lyskom-create-aux-item-flags
-                                    nil nil nil nil nil nil nil nil) 0 ""))))
-                   (cache-del-text-stat text-no)))))))
-
-(def-kom-command kom-add-request-confirm (&optional text-no)
-  "Add confirmation request aux-item to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg
-                      'what-request-confirm-no t)))
-  (let ((text-stat (blocking-do 'get-text-stat text-no)))
-
-    ;; Make sure there is a text there in the first place
-
-    (if (null text-stat)
-        (lyskom-format-insert 'no-such-text-no text-no)
-
-      ;; Make sure that the text doesn't already have this kind of item
-      ;; created by the same person
-
-      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
-                                  (lambda (el) 
-                                    (and (eq (aux-item->tag el) 6)
-                                         (eq (aux-item->creator el)
-                                             lyskom-pers-no))))
-          (lyskom-format-insert 'already-request-confirm text-no)
-
-        ;; If the author of the text is not the current user, ask if the
-        ;; user wants to try anyway (it might work...)
-
-        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
-            (progn (lyskom-format-insert 'adding-request-confirm
-                                         text-no)
-                   (lyskom-report-command-answer
-                    (blocking-do 'modify-text-info
-                                 text-no
-                                 nil
-                                 (list
-                                  (lyskom-create-aux-item 
-                                   0 6 nil nil
-                                   (lyskom-create-aux-item-flags
-                                    nil nil nil nil nil nil nil nil) 0 ""))))
-                   (cache-del-text-stat text-no)))))))
-
-(def-kom-command kom-review-mail-headers (&optional text-no)
-  "Review the mail headers of an imported message"
-  (interactive (list (lyskom-read-text-no-prefix-arg
-                      'review-mail-headers-to-what t)))
-  (let* ((text-stat (blocking-do 'get-text-stat text-no))
-         (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))))
-    (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
-          ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
-          (t (lyskom-format-insert 'mail-headers-for text-no)
-             (mapcar (lambda (el) 
-                       (lyskom-insert (aux-item->data el))
-                       (lyskom-insert "\n"))
-                     headers)))))

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
-;;;;;
-;;;;; $Id: utilities.el,v 44.34 1999-10-11 15:44:03 byers Exp $
+;;;;; -*-unibyte: t;-*-
+;;;;; -*- emacs-lisp -*-
+;;;;; $Id: utilities.el,v 44.21.2.1 1999-10-13 09:56:20 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.34 1999-10-11 15:44:03 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.21.2.1 1999-10-13 09:56:20 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -64,42 +64,6 @@
   (if (or (<= n 0) (not list))
       nil
     (cons (car list) (nfirst (1- n) (cdr list)))))
-
-(defun lyskom-rotate-list (list el)
-  "Destructively rotate LIST so EL becomes the first element.
-If EL occurs more than one, the first occurrence is used."
-  (let ((tail (memq el list)))
-    (if (or (null tail) (eq el (car list)))
-        list
-      (setcdr (nthcdr (- (length list) (length tail) 1) list) nil)
-      (setcdr (nthcdr (1- (length tail)) tail) list)
-      tail)))
-
-(defun lyskom-preceding-cons (list el)
-  "Return the cons cell of LIST preceding the first cons cell whose car is EL.
-Return nil if TAIL is the same as LIST or not a member of LIST."
-  (unless (or (eq (car list) el)
-              (not (memq el list)))
-    (nthcdr (- (length list) (length (memq el list)) 1) list)))
-
-(defun lyskom-insert-in-list (el list before)
-  "Destructively insert EL in LIST before element BEFORE.
-If BEFORE is not in the list, then insert EL at the end of the list."
-  (cond ((eq before (car list))
-         (cons el list))
-        (t (setcdr (nthcdr (- (length list)
-                              (length (memq before list)) 1) list)
-                   (cons el (memq before list)))
-           list)))
-
-(defun lyskom-move-in-list (el list pos)
-  "Destructively move EL within LIST so it appears at position POS."
-  (when (memq el list)
-    (setq list (delq el list))
-    (cond ((eq 0 pos) (setq list (cons el list)))
-          (t (setcdr (nthcdr (1- pos) list)
-                     (cons el (nthcdr pos list))))))
-  list)
 
 ;;;
 ;;; +++ FIXME: If cl.el can be guaranteed, this is pointless.
@@ -155,10 +119,6 @@ If BEFORE is not in the list, then insert EL at the end of the list."
    (t nil)))
 
 
-(defun lyskom-ignore (&rest args)
-  "Ignore all arguments"
-  )
-
 (defun regexpp (re)
   "Return non-nil if RE looks like a valid regexp."
   (let ((result t))
@@ -179,18 +139,11 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 
 
 (defun lyskom-maxint ()
-  (let ((n 1) 
-        (l nil)
-        (i 31))
-    (while (and (> n 0) (> i 0))
+  (let ((n 1) (l nil))
+    (while (> n 0)
       (setq l (cons n l))
-      (setq n (* 2 n))
-      (setq i (1- i)))
+      (setq n (* 2 n)))
     (apply '+ l)))
-
-;; Set lyskom-maxint correctly
-
-(setq lyskom-max-int (lyskom-maxint))
 
 
 (defun lyskom-try-require (feature &optional message &rest args)
@@ -229,34 +182,21 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
 (defconst lyskom-apo-timeout-vector-max (1- (length lyskom-apo-timeout-vector))
   "Maximum index in lyskom-apo-timeout-vector")
 
-(defun lyskom-next-apo-timeout ()
+(defsubst lyskom-next-apo-timeout ()
   (if (< lyskom-apo-timeout-index lyskom-apo-timeout-vector-max)
       (setq lyskom-apo-timeout
             (aref lyskom-apo-timeout-vector
                   (setq lyskom-apo-timeout-index
                         (1+ lyskom-apo-timeout-index))))))
 
-(defun lyskom-reset-apo-timeout ()
+(defsubst lyskom-reset-apo-timeout ()
   (setq lyskom-apo-timeout-index -1)
   (setq lyskom-apo-timeout 0))
 
-(defun lyskom-accept-process-output ()
+(defsubst lyskom-accept-process-output ()
   "Call accept-process-output with the correct timeout values."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
-
-(defun lyskom-current-time (&optional secs)
-  "Return the time in a format that LysKOM understands.
-If optional argument SECS is set, it is used in place of the value
-of \(current-time\)."
-  (let ((time (decode-time (or secs (current-time)))))
-    (setcar (cdr (cdr (cdr (cdr time))))
-            (1- (car (cdr (cdr (cdr (cdr time)))))))
-    (setcar (cdr (cdr (cdr (cdr (cdr time)))))
-            (- (car (cdr (cdr (cdr (cdr (cdr time))))))
-               1900))
-    time))
-
 
 
 ;;;
@@ -274,7 +214,7 @@ of \(current-time\)."
 ;;;
 
 (defvar lyskom-default-collate-table
-  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIĞNOOOO\\×OUUUYYŞßAAAA[]ACEEEEIIIIğNOOOO\\÷OUUUYYşÿ"
+  "\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~\200\201\202\203\204\205\206\207\210\211\212\213\214\215\216\217\220\221\222\223\224\225\226\227\230\231\232\233\234\235\236\237 !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIĞNOOOO\\×OUUUYYŞßAAAA[]ACEEEEIIIIğNOOOO\\÷OUUUYYşÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
 (defsubst lyskom-unicase-char (c)
@@ -333,26 +273,6 @@ The value is actually the element of LIST whose car equals KEY."
                          lyskom-buffer)
                     (current-buffer)))
     (and (boundp sym) (symbol-value sym))))
-
-
-;;; ============================================================
-;;; Prefix arguments
-
-(defun lyskom-read-text-no-prefix-arg (prompt &optional always-read)
-  "Call in interactive list to read text-no.
-If optional argument ALWAYS-READ is non-nil the user is prompted if
-an explicit prefix argument was not given."
-  (cond
-   ((null current-prefix-arg) 
-    (if always-read 
-        (lyskom-read-number prompt lyskom-current-text)
-      lyskom-current-text))
-   ((integerp current-prefix-arg) current-prefix-arg)
-   ((listp current-prefix-arg) 
-    (lyskom-read-number prompt (lyskom-text-at-point)))
-   (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
-                    current-prefix-arg))))
-
 
 
 ;;; ======================================================================
@@ -467,19 +387,19 @@ under XEmacs."
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
 in lyskom-face-schemes."
   (let ((tmp (assoc scheme lyskom-face-schemes)))
-    (when (and tmp
-               (fboundp 'copy-face)
-               (fboundp 'lyskom-set-face-foreground)
-               (fboundp 'lyskom-set-face-background))
-      (mapcar 
-       (function
-        (lambda (spec)
-          (copy-face (or (elt spec 1) 'default) (elt spec 0))
-          (if (elt spec 2)
-              (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
-          (if (elt spec 3)
-              (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
-       (cdr tmp)))))
+    ;; This test is NOT good, but now it's better...
+    (if (and tmp (or (not (eq (console-type) 'tty))
+		     (not (eq (device-class) 'mono))))
+        (progn
+          (mapcar 
+           (function
+            (lambda (spec)
+	      (copy-face (or (elt spec 1) 'default) (elt spec 0))
+              (if (elt spec 2)
+                  (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
+              (if (elt spec 3)
+                  (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
+	   (cdr tmp))))))
 
 
 (defun lyskom-face-resource (face-name attr type)
@@ -540,48 +460,6 @@ also reads the proper X resources."
 	    (if ul (set-face-underline-p face (eq ul 'on))))))
        lyskom-faces)))
 
-
-;;; ============================================================
-;;; Date and time utilities
-
-(defun lyskom-client-date-string (&optional fmt)
-  "Format the current client time as a string.
-The optional format string FMT specifies the format. If no format string
-is supplied time-yyyy-mm-dd-hh-mm is used. The arguments to the format
-string are the following: the year, the month, the day, the hour, the 
-minutes, the seconds, the full name of the day of week, the abbreviated
-name of the day of week."
-  (let ((now (decode-time)))
-    (lyskom-format (or fmt 'time-yyyy-mm-dd-hh-mm)
-                   (elt now 5)
-                   (elt now 4)
-                   (elt now 3)
-                   (elt now 2)
-                   (elt now 1)
-                   (elt now 0)
-                   (elt (lyskom-get-string 'weekdays)
-                        (elt now 6))
-                   (elt (lyskom-get-string 'weekdays-short)
-                        (elt now 6)))))
-
-(defun lyskom-client-date ()
-  "Format the current client time as a string.
-The optional format string FMT specifies the format. If no format string
-is supplied time-yyyy-mm-dd-hh-mm is used. The arguments to the format
-string are the following: the year, the month, the day, the hour, the 
-minutes, the seconds, the full name of the day of week, the abbreviated
-name of the day of week."
-  (let ((now (decode-time)))
-    (lyskom-create-time (elt now 0)     ;sec
-                        (elt now 1)     ;min
-                        (elt now 2)     ;hour
-                        (elt now 3)     ;mday
-                        (elt now 4)     ;mon
-                        (- (elt now 5) 1900) ;year
-                        (elt now 6)     ;wday
-                        0               ;yday
-                        (elt now 7)
-                        )))
 
 ;;; ============================================================
 ;;; Keymap utilities
@@ -668,21 +546,3 @@ name of the day of week."
          ((and binding
                (null base-binding)) (define-key keymap keys binding)))))
 
-
-;;;
-;;; Stuff
-;;;
-
-(defun lyskom-return-membership-type (mt)
-  "Return a text description of membership type mt"
-  (let ((tmp
-         (mapconcat 
-          'identity
-          (delete nil
-                  (list (if (membership-type->invitation mt) (lyskom-get-string 'invitation-mt-type) nil)
-                        (if (membership-type->passive mt) (lyskom-get-string 'passive-mt-type) nil)
-                        (if (membership-type->secret mt) (lyskom-get-string 'secret-mt-type) nil)))
-          ", ")))
-    (if (string= tmp "") 
-        tmp
-      (concat "[" tmp "]"))))

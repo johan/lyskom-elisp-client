@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $
+;;;;; $Id: komtypes.el,v 44.2.2.1 1999-10-13 09:56:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,65 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $\n"))
-
-
-;;; ============================================================
-;;; Black magic...
-
-(defmacro def-komtype (type &rest args)
-  (let ((typename (symbol-name type))
-	(n 0)
-        (tmp nil))
-    ;; Constructor
-    (append
-     (list 'progn
-           (list 'defsubst
-                 (intern (concat "lyskom-create-" typename))
-                 args
-                 (concat "Create a `" typename "' from arguments.\n"
-                         "Args: " (upcase (mapconcat
-                                           'symbol-name args " ")) "\n"
-                         "Automatically created with def-komtype.")
-                 (list 'cons
-                       (list 'quote (intern (upcase typename)))
-                       (cons 'vector args)))
-           ;; Identifier
-           (list 'defsubst
-                 (intern (concat "lyskom-" typename "-p"))
-                 (list type)
-                 (concat "Return `t' if " (upcase typename)
-                         " is a " typename ".\n"
-                         "Args: " (upcase typename) "\n"
-                         "Automatically created with def-komtype.")
-                 (list 'and
-                       (list 'consp type)
-                       (list 'eq (list 'car type)
-                             (list 'quote (intern (upcase typename)))))))
-    ;; Selectors/Modifiers
-     (progn
-       (while args
-         (let ((argname (symbol-name (car args))))
-           ;; Selctor
-           (setq tmp (cons
-                      (list 'defsubst
-                            (intern (concat typename "->" argname))
-                            (list type)
-                            "Automatically created with def-komtype."
-                            (list 'aref (list 'cdr type) n))
-                      tmp))
-           ;; Modifier
-           (setq tmp (cons
-                      (list 'defsubst
-                            (intern (concat "set-" typename "->" argname))
-                            (list type (car args))
-                            "Automatically created with def-komtype."
-                            (list 'aset (list 'cdr type) n (car args)))
-                      tmp))
-           (setq n (1+ n)
-                 args (cdr args))))
-       tmp))))
-
+	      "$Id: komtypes.el,v 44.2.2.1 1999-10-13 09:56:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -106,10 +48,7 @@
   "Create a conf-no-list from all parameters."
   (cons
    'CONF-NO-LIST
-   (vector
-    (cond ((vectorp conf-nos) (append conf-nos nil))
-          (t conf-nos)))))
-
+   (vector conf-nos)))
 
 
 ;;; Selector:
@@ -156,8 +95,49 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 
 ;;; Constructor:
 
-(def-komtype uconf-stat 
-  conf-no name conf-type highest-local-no nice)
+(defsubst lyskom-create-uconf-stat (conf-no 
+				    name
+				    conf-type 
+				    highest-local-no
+				    nice)
+  "Create an uconf-stat from all parameters."
+  (cons 'UCONF-STAT
+	(vector conf-no name conf-type highest-local-no nice)))
+
+
+;;; Selectors:
+
+
+(defsubst uconf-stat->conf-no (conf)
+  "Get the conf-no from an uconf-stat"
+  (elt (cdr conf) 0))
+
+(defsubst uconf-stat->name (conf)
+  "Get the name of a conference."
+  (elt (cdr conf) 1))
+
+(defsubst uconf-stat->conf-type (conf)
+  "Get the type of a conference."
+  (elt (cdr conf) 2))
+
+(defsubst uconf-stat->highest-local-no (conf)
+  "Get the highest local number in a conference"
+  (elt (cdr conf) 3))
+
+(defsubst uconf-stat->garb-nice (conf)
+  "Get garb-nice from a conference."
+  (elt (cdr conf) 4))
+
+
+;;; Modifiers
+;;; You shouldn't need modifiers
+
+;;; Predicate
+
+(defsubst lyskom-uconf-stat-p (object)
+  "Return t if OBJECT is a conf-stat."
+  (eq (car-safe object) 'UCONF-STAT))
+
 
 ;;; ================================================================
 ;;;                            conf-stat
@@ -176,19 +156,16 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 				super-conf
 				msg-of-day
 				garb-nice
-                                keep-commented
 				no-of-members
 				first-local-no
-				no-of-texts
-                                &optional expire
-                                aux-items)
+				no-of-texts)
   "Create a conf-stat from all parameters."
   (cons
    'CONF-STAT
    (vector conf-no name conf-type creation-time last-written 
 	   creator presentation supervisor permitted-submitters 
 	   super-conf msg-of-day garb-nice no-of-members first-local-no 
-	   no-of-texts (or expire 0) aux-items)))
+	   no-of-texts )))
 
 
 ;;; Selectors:
@@ -253,14 +230,6 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
   "Get no-of-texts from conf-stat."
   (elt (cdr conf-stat) 14))
 
-(defsubst conf-stat->expire (conf-stat)
-  "Get expire from conf-stat."
-  (elt (cdr conf-stat) 15))
-
-(defsubst conf-stat->aux-items (conf-stat)
-  "Get aux-items from conf-stat."
-  (elt (cdr conf-stat) 16))
-
 
 ;;; Modifiers:
 
@@ -323,14 +292,6 @@ CONF-NO is a conf-no and CONF-NO-LIST is a conf-no-list."
 (defsubst set-conf-stat->no-of-texts (conf-stat newval)
   "Set no-of-texts in conf-stat to NEWVAL."
   (aset (cdr conf-stat) 14 newval))
-
-(defsubst set-conf-stat->expire (conf-stat newval)
-  "Set expire in conf-stat to NEWVAL."
-  (aset (cdr conf-stat) 15 newval))
-
-(defsubst set-conf-stat->aux-items (conf-stat newval)
-  "Set aux-items in conf-stat to NEWVAL."
-  (aset (cdr conf-stat) 16 newval))
 
 
 
@@ -584,13 +545,12 @@ Both vectors should be of the same length."
 				no-of-lines
 				no-of-chars
 				no-of-marks
-				misc-info-list
-                                &optional aux-items)
+				misc-info-list)
   "Create a text-stat from all parameters."
   (cons
    'TEXT-STAT
    (vector text-no creation-time author no-of-lines no-of-chars 
-	   no-of-marks misc-info-list aux-items)))
+	   no-of-marks misc-info-list )))
 
 
 ;;; Selectors:
@@ -623,10 +583,6 @@ Both vectors should be of the same length."
   "Get misc-info-list from text-stat."
   (elt (cdr text-stat) 6))
 
-(defsubst text-stat->aux-items (text-stat)
-  "Get aux-items from text-stat."
-  (elt (cdr text-stat) 7))
-
 
 ;;; Modifiers:
 
@@ -654,13 +610,10 @@ Both vectors should be of the same length."
   "Set no-of-marks in text-stat to NEWVAL."
   (aset (cdr text-stat) 5 newval))
 
+
 (defsubst set-text-stat->misc-info-list (text-stat newval)
   "Set misc-info-list in text-stat to NEWVAL."
   (aset (cdr text-stat) 6 newval))
-
-(defsubst set-text-stat->aux-items (text-stat newval)
-  "Set aux-items in text-stat to NEWVAL."
-  (aset (cdr text-stat) 7 newval))
 
 
 ;;; Predicate:
@@ -668,6 +621,7 @@ Both vectors should be of the same length."
 (defsubst lyskom-text-stat-p (object)
   "Return t if OBJECT is a text-stat."
   (eq (car-safe object) 'TEXT-STAT))
+
 
 ;;; ================================================================
 ;;;                            text
@@ -848,12 +802,11 @@ FOOTN-TO or FOOTN-IN."
 			   year
 			   wday
 			   yday
-			   isdst
-                           &optional tzhr tzmin)
+			   isdst)
   "Create a time from all parameters."
   (cons
    'TIME
-   (vector sec min hour mday mon year wday yday isdst tzhr tzmin)))
+   (vector sec min hour mday mon year wday yday isdst )))
 
 
 ;;; Selectors:
@@ -893,14 +846,6 @@ FOOTN-TO or FOOTN-IN."
 (defsubst time->isdst (time)
   "Get isdst from time."
   (elt (cdr time) 8))
-
-(defsubst time->tzhr (time)
-  "Get isdst from time."
-  (elt (cdr time) 9))
-
-(defsubst time->tzmin (time)
-  "Get isdst from time."
-  (elt (cdr time) 10))
 
 
 ;;; Predicate:
@@ -1085,6 +1030,62 @@ FOOTN-TO or FOOTN-IN."
 ;;;                            flags
 
 
+;;; This is an experiment. Hopefully most of the code can be
+;;; automatically generated.
+
+(defmacro def-komtype (type &rest args)
+  (let ((typename (symbol-name type))
+	(n 0)
+        (tmp nil))
+    ;; Constructor
+    (append
+     (list 'progn
+           (list 'defsubst
+                 (intern (concat "lyskom-create-" typename))
+                 args
+                 (concat "Create a `" typename "' from arguments.\n"
+                         "Args: " (upcase (mapconcat
+                                           'symbol-name args " ")) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'cons
+                       (list 'quote (intern (upcase typename)))
+                       (cons 'vector args)))
+           ;; Identifier
+           (list 'defsubst
+                 (intern (concat typename "-p"))
+                 (list type)
+                 (concat "Return `t' if " (upcase typename)
+                         " is a " typename ".\n"
+                         "Args: " (upcase typename) "\n"
+                         "Automatically created with def-komtype.")
+                 (list 'and
+                       (list 'consp type)
+                       (list 'eq (list 'car type)
+                             (list 'quote (intern (upcase typename)))))))
+    ;; Selectors/Modifiers
+     (progn
+       (while args
+         (let ((argname (symbol-name (car args))))
+           ;; Selctor
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat typename "->" argname))
+                            (list type)
+                            "Automatically created with def-komtype."
+                            (list 'aref (list 'cdr type) n))
+                      tmp))
+           ;; Modifier
+           (setq tmp (cons
+                      (list 'defsubst
+                            (intern (concat "set-" typename "->" argname))
+                            (list type (car args))
+                            "Automatically created with def-komtype."
+                            (list 'aset (list 'cdr type) n (car args)))
+                      tmp))
+           (setq n (1+ n)
+                 args (cdr args))))
+       tmp))))
+
 
 (def-komtype session-flags
   invisible user_active_used user_absent
@@ -1200,28 +1201,15 @@ FOOTN-TO or FOOTN-IN."
 
 ;;; Constructor:
 
-(def-komtype member-list members)
-
-(def-komtype member pers-no created-by created-at membership-type)
-
-(def-komtype membership-type invitation passive secret rsv1 
-  rsv2 rsv3 rsv4 rsv5)
-
-(defsubst lyskom-create-membership ( position
-                                     last-time-read
-                                     conf-no
-                                     priority
-                                     last-text-read
-                                     read-texts
-                                     created-by
-                                     created-at
-                                     type
-                                     )
+(defsubst lyskom-create-membership (last-time-read
+				 conf-no
+				 priority
+				 last-text-read
+				 read-texts)
   "Create a membership from all parameters."
   (cons
    'MEMBERSHIP
    (vector last-time-read conf-no priority last-text-read read-texts 
-           created-by created-at type position
 	   )))
 
 
@@ -1247,23 +1235,6 @@ FOOTN-TO or FOOTN-IN."
   "Get read-texts from membership."
   (elt (cdr membership) 4))
 
-(defsubst membership->created-by (membership)
-  "Get created-by from membership"
-  (elt (cdr membership) 5))
-
-(defsubst membership->created-at (membership)
-  "Get created-by from membership"
-  (elt (cdr membership) 6))
-
-(defsubst membership->type (membership)
-  "Get type from membership"
-  (elt (cdr membership) 7))
-
-(defsubst membership->position (membership)
-  "Get position from membership, if known"
-  (elt (cdr membership) 8))
-
-
 
 ;;; Modifiers:
 
@@ -1287,37 +1258,12 @@ FOOTN-TO or FOOTN-IN."
   "Set read-texts in membership to NEWVAL."
   (aset (cdr membership) 4 newval))
 
-(defsubst set-membership->created-by (membership newval)
-  "Set created-by in membership to NEWVAL."
-  (aset (cdr membership) 5 newval))
-
-(defsubst set-membership->created-at (membership newval)
-  "Set type in membership to NEWVAL."
-  (aset (cdr membership) 6 newval))
-
-(defsubst set-membership->type (membership newval)
-  "Set type in membership to NEWVAL."
-  (aset (cdr membership) 7 newval))
-
-(defsubst set-membership->position (membership newval)
-  "Set position in membership to NEWVAL."
-  (aset (cdr membership) 8 newval))
-
 
 ;;; Predicate:
 
 (defsubst lyskom-membership-p (object)
   "Return t if OBJECT is a membership."
   (eq (car-safe object) 'MEMBERSHIP))
-
-;;; Special stuff
-
-(defun lyskom-member-list-find-member (person members)
-  (when members
-    (lyskom-traverse member (member-list->members members)
-      (when (eq person (member->pers-no member))
-        (lyskom-traverse-break member)))))
-
 
 
 ;;; ================================================================
@@ -1384,15 +1330,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
       (lyskom-create-map first (apply 'vconcat maplist)))))
 
 
-;;; ============================================================
-;;; Local to global mapping
-;;; - Sparse map
-;;; - Text mapping
-
-(def-komtype sparse-map mapping)
-(def-komtype text-mapping have-more type mapping)
-
-
 ;;; ================================================================
 ;;;                            mark
 
@@ -1446,13 +1383,11 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 			       working-conf
 			       connection
 			       doing-what
-			       username
-                               &optional hostname ident-user)
+			       username)
   "Create a who-info from all parameters."
   (cons
    'WHO-INFO
-   (vector pers-no working-conf connection doing-what 
-           username hostname ident-user
+   (vector pers-no working-conf connection doing-what username 
 	   )))
 
 
@@ -1478,14 +1413,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get username from who-info."
   (elt (cdr who-info) 4))
 
-(defsubst who-info->hostname (who-info)
-  "Get hostname from who-info."
-  (elt (cdr who-info) 5))
-
-(defsubst who-info->ident-user (who-info)
-  "Get ident-user from who-info."
-  (elt (cdr who-info) 6))
-
 
 ;;; Modifiers:
 
@@ -1509,14 +1436,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Set username in who-info to NEWVAL."
   (aset (cdr who-info) 4 newval))
 
-(defsubst set-who-info->hostname (who-info newval)
-  "Set hostname in who-info to NEWVAL."
-  (aset (cdr who-info) 5 newval))
-
-(defsubst set-who-info->ident-user (who-info newval)
-  "Set ident-user in who-info to NEWVAL."
-  (aset (cdr who-info) 6 newval))
-
 
 ;;; Predicate:
 
@@ -1536,15 +1455,13 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 				   connection
 				   doing
 				   username
-                                   hostname
-                                   ident-user
 				   idletime
 				   connect-time)
   "Create a session-info from all parameters."
   (cons
    'SESSION-INFO
    (vector pers-no working-conf connection doing username idletime 
-	   connect-time hostname ident-user)))
+	   connect-time )))
 
 
 ;;; Selectors:
@@ -1577,14 +1494,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get connect-time from session-info."
   (elt (cdr session-info) 6))
 
-(defsubst session-info->hostname (session-info)
-  "Get hostname from session-info."
-  (elt (cdr session-info) 7))
-
-(defsubst session-info->ident-user (session-info)
-  "Get connect-time from session-info."
-  (elt (cdr session-info) 8))
-
 
 ;;; Modifiers:
 
@@ -1616,14 +1525,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Set connect-time in session-info to NEWVAL."
   (aset (cdr session-info) 6 newval))
 
-(defsubst set-session-info->hostname (session-info newval)
-  "Set hostname in session-info to NEWVAL."
-  (aset (cdr session-info) 7 newval))
-
-(defsubst set-session-info->ident-user (session-info newval)
-  "Set ident-user in session-info to NEWVAL."
-  (aset (cdr session-info) 8 newval))
-
 
 
 ;;; Predicate:
@@ -1642,7 +1543,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 (defsubst lyskom-create-conf-type (rd_prot original secret letterbox 
                                            &optional anarchy
-                                           forbid-secret rsv2 rsv3)
+                                           rsv1 rsv2 rsv3)
   "Create a conf-type object. Args: RD_PROT ORIGINAL SECRET LETTERBOX."
   (list 'CONF-TYPE 
 	rd_prot 
@@ -1650,7 +1551,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 	secret 
 	letterbox
         anarchy
-        forbid-secret
+        rsv1
         rsv2
         rsv3
 	))
@@ -1678,7 +1579,7 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get anarchy from conf-type."
   (elt (cdr conf-type) 4))
 
-(defsubst conf-type->forbid-secret (conf-type)
+(defsubst conf-type->rsv1 (conf-type)
   "Get reserved bit from conf-type."
   (elt (cdr conf-type) 5))
 
@@ -1777,13 +1678,12 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 				  pers-pres-conf
 				  motd-conf
 				  kom-news-conf
-				  motd-of-lyskom
-                                  &optional aux-items)
+				  motd-of-lyskom)
   "Create a server-info from all parameters."
   (cons
    'SERVER-INFO
    (vector version conf-pres-conf pers-pres-conf motd-conf kom-news-conf 
-	   motd-of-lyskom aux-items )))
+	   motd-of-lyskom )))
 
 
 ;;; Selectors:
@@ -1812,10 +1712,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Get motd-of-lyskom from server-info."
   (elt (cdr server-info) 5))
 
-(defsubst server-info->aux-item-list (server-info)
-  "Get motd-of-lyskom from server-info."
-  (elt (cdr server-info) 6))
-
 
 ;;; Modifiers:
 
@@ -1842,10 +1738,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 (defsubst set-server-info->motd-of-lyskom (server-info newval)
   "Set motd-of-lyskom in server-info to NEWVAL."
   (aset (cdr server-info) 5 newval))
-
-(defsubst set-server-info->aux-item-list (server-info newval)
-  "Set motd-of-lyskom in server-info to NEWVAL."
-  (aset (cdr server-info) 6 newval))
 
 
 ;;; Predicate:
@@ -1939,21 +1831,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   (eq (car-safe object) 'CONF-Z-INFO))
 
 
-;;; ================================================================
-;;;                              aux-item
-
-(def-komtype aux-item-flags deleted inherit secret anonymous
-  reserved1 reserved2 reserved3 reserved4)
-
-(def-komtype aux-item aux-no 
-                       tag
-                       creator
-                       sent-at
-                       flags
-                       inherit-limit
-                       data)
-
-
 ;;;; ================================================================
 ;;;; This field is just simulation of a field in the conf-stat
 ;;;; that not yet exist.
@@ -1966,55 +1843,3 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 
 ;;; ================================================================
-
-
-
-;;; Utilities
-
-(defun text-stat-find-aux (text-stat tag &optional person)
-  "Return a list containing the aux items in TEXT-STAT with tag TAG.
-If PERSON is non-nil return only those items created by person.
-Args: TEXT-STAT TAG PERSON"
-  (let ((result nil)
-        (items (text-stat->aux-items text-stat)))
-    (while items
-      (when (and (eq tag (aux-item->tag (car items)))
-                 (not (aux-item-flags->deleted
-                       (aux-item->flags (car items))))
-                 (or (null person)
-                     (eq person (aux-item->creator (car items)))))
-        (setq result (cons (car items) result)))
-      (setq items (cdr items)))
-    (nreverse result)))
-
-(defun conf-stat-find-aux (conf-stat tag &optional person)
-  "Return a list containing the aux items in CONF-STAT with tag TAG.
-If PERSON is non-nil return only those items created by person.
-Args: CONF-STAT TAG PERSON"
-  (let ((result nil)
-        (items (conf-stat->aux-items conf-stat)))
-    (while items
-      (when (and (eq tag (aux-item->tag (car items)))
-                 (not (aux-item-flags->deleted
-                       (aux-item->flags (car items))))
-                 (or (null person)
-                     (eq person (aux-item->creator (car items)))))
-        (setq result (cons (car items) result)))
-      (setq items (cdr items)))
-    (nreverse result)))
-
-(defun lyskom-is-recipient (text-stat conf-no)
-  "Return non-nil if TEXT-STAT has CONF-NO as a recipient."
-  (let ((result nil))
-    (lyskom-traverse misc
-        (text-stat->misc-info-list text-stat)
-      (when (and (or (eq (misc-info->type misc) 'RECPT)
-                     (eq (misc-info->type misc) 'CC-RECPT)
-                     (eq (misc-info->type misc) 'BCC-RECPT))
-                 (eq (misc-info->recipient-no misc) conf-no))
-        (setq result t)))
-    result))
-
-
-
-(provide 'lyskom-types)

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $
+;;;;; $Id: internal.el,v 44.1.2.1 1999-10-13 09:56:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.7 1999-06-10 13:36:10 byers Exp $\n"))
+	      "$Id: internal.el,v 44.1.2.1 1999-10-13 09:56:00 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -230,7 +230,7 @@ all previous calls to the server via KOM-QUEUE have been handled."
 (defun lyskom-halt (queue-name)
   "Prohibit execution of handlers on QUEUE-NAME.
 The execution will resume when (lyskom-resume KOM-QUEUE) is called."
-  (let ((queue-pair (assq queue-name lyskom-call-data)))
+  (let ((queue-pair (assoc queue-name lyskom-call-data)))
     (if (null queue-pair)
 	(setq queue-pair (lyskom-add-new-queue queue-name)))
     (kom-queue-halt (cdr queue-pair))))
@@ -239,7 +239,7 @@ The execution will resume when (lyskom-resume KOM-QUEUE) is called."
 (defun lyskom-resume (kom-queue)
   "Resume execution of waiting handlers on KOM-QUEUE.
 See documentation for lyskom-halt."
-  (let ((queue (assq kom-queue lyskom-call-data)))
+  (let ((queue (assoc kom-queue lyskom-call-data)))
     (cond
      ((null queue)			;A new kom-queue?
       (signal 'lyskom-internal-error
@@ -359,9 +359,8 @@ Send calls from queues with higher priority first, and make sure that at
 most lyskom-max-pending-calls are sent to the server at the same time."
   (catch 'done
     (let ((i 9))
-      (while (and lyskom-ok-to-send-new-calls
-		  (< lyskom-number-of-pending-calls
-		     lyskom-max-pending-calls))
+      (while (< lyskom-number-of-pending-calls
+		lyskom-max-pending-calls)
 	(while (lyskom-queue-isempty (aref lyskom-output-queues i))
 	  (-- i)
 	  (if (< i 0) (throw 'done nil)))
@@ -370,7 +369,7 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 	  (++ lyskom-number-of-pending-calls)
 	  (lyskom-process-send-string
 	   lyskom-proc
-	   (concat (number-to-string (car entry)) (cdr entry) "\n")))))))
+	   (concat (car entry) (cdr entry) "\n")))))))
 
 (defun lyskom-decrease-pending-calls ()
   "A reply has come.
@@ -438,7 +437,7 @@ is sent with each packet. If STRING is longer it is splitted."
      process
      (progn
        (if lyskom-debug-communications-to-buffer
-	   (lyskom-debug-insert process "To " string))
+	   (lyskom-debug-insert process ">>>>>> " string))
        string)))
    (t
     (let ((i 0))
@@ -456,7 +455,8 @@ is sent with each packet. If STRING is longer it is splitted."
 		 (save-excursion
 		   (goto-char (point-max))
 		   (insert "\n"
-                           "To " process ": "))
+			   (format "%s" process)
+			   (concat ">>>>>> " string)))
 		 (set-buffer (process-buffer process))))
 	   string))
 	(setq i (+ i lyskom-max-packet-size)))))))

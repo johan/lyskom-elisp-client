@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $
+;;;;; $Id: view-text.el,v 44.11.2.1 1999-10-13 09:56:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,24 +35,21 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.27 1999-10-13 09:23:39 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.11.2.1 1999-10-13 09:56:23 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
 				 follow-comments conf-stat priority
-				 build-review-tree filter-active
-				 flat-review)
+				 build-review-tree filter-active)
   "Display text number TEXT-NO.
 Args: TEXT-NO &optional MARK-AS-READ FOLLOW-COMMENTS CONF-STAT 
-PRIORITY BUILD-REVIEW-TREE FLAT-REVIEW.
+PRIORITY BUILD-REVIEW-TREE.
 If MARK-AS-READ is non-nil the text will be marked as read.
 If FOLLOW-COMMENTS is non-nil all comments and footnotes to this text will be
 read before the next text. CONF-STAT must be the conference status of the
 current conference, and PRIORITY the priority, if FOLLOW-COMMENTS is non-nil.
 If BUILD-REVIEW-TREE is non-nil then it fixes a new entry in the 
 lyskom-reading-list to read the comments to this.
-If FLAT-REVIEW is non-nil this is a review caused by lyskom-view-commented or
-kom-view-text viewing REVIEW or REVIEW-MARK text.
 
 Note that this function must not be called asynchronously."
 
@@ -85,41 +82,18 @@ Note that this function must not be called asynchronously."
 	       (setq todo 'next-text))
 	   (blocking-do-multiple ((text-stat (get-text-stat text-no))
 				  (text (get-text text-no)))
-	     (if (and text-stat text)
+	     (if (and text-stat
+		      text)
 		 (progn
                    (run-hooks 'lyskom-view-text-hook)
 		   ;; Use a marker, because the buffer may lose data
 		   ;; at the top if kom-max-buffer-size is set.
 		   (setq start (point-max-marker))
-		   (lyskom-format-insert "%#1n " text-stat)
-                   (let ((mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
-                         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-                         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-                         (mx-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 19))
-                         (mx-cc (lyskom-get-aux-item (text-stat->aux-items text-stat) 20))
-                         (mx-filename (lyskom-get-aux-item (text-stat->aux-items text-stat) 10104))
-                         (mx-sender (lyskom-get-aux-item (text-stat->aux-items text-stat) 10103))
-                         (mx-reply-to (lyskom-get-aux-item (text-stat->aux-items text-stat) 18)))
-                         
-
-                     ;; Insert date
-
-                     (if mx-date
-                         (let ((date (lyskom-mx-date-to-time mx-date)))
-                           (if date
-                             (progn
-                               (lyskom-print-date-and-time date)
-                               (when (time->tzhr date)
-                                 (lyskom-format-insert " %#1s%#2s " 
-                                                       (time->tzhr date)
-                                                       (time->tzmin date))))
-                             (lyskom-format-insert (aux-item->data mx-date))))
-                       (lyskom-print-date-and-time (text-stat->creation-time
-                                                    text-stat)
-                                                   'time-y-m-d-h-m))
-
-                     ;; Insert number of lines
-
+		   (lyskom-format-insert "%#1n " 
+					 text-stat)
+		   (lyskom-print-date-and-time (text-stat->creation-time
+						text-stat)
+					       'time-y-m-d-h-m)
 		   (lyskom-insert 
 		    (if (= 1 (text-stat->no-of-lines text-stat))
 			(lyskom-get-string 'line)
@@ -130,65 +104,12 @@ Note that this function must not be called asynchronously."
 					   2 ; compatibility with old KOM. /lw
 					 n)))))
 		   
-                   ;; Insert the author
-
-                   (lyskom-insert (or (lyskom-format-mx-author mx-from mx-author) ""))
-                   (unless (or mx-from mx-author)
-                     (lyskom-format-insert "%#1P" (text-stat->author text-stat)))
-
-                   ;; Insert filtration prompt
-
-		   (when (eq filter 'dontshow)
-                     (lyskom-insert " ")
-                     (lyskom-insert (lyskom-get-string 'filtered)))
-                   (lyskom-insert "\n")
-
-                   ;; Insert sender
-
-                   (when (and mx-sender kom-show-imported-envelope-sender)
-                     (lyskom-format-insert 'envelope-sender 
-                                           (aux-item->data (car mx-sender))))
-                   (when mx-filename
-                     (lyskom-format-insert 'attachment-filename
-                                           (aux-item->data (car mx-filename))))
-
-                   ;; Insert imported at
-
-                   (cond ((and mx-from 
-                               (text-stat->author text-stat)
-                               kom-show-imported-importer)
-                          (lyskom-format-insert 'text-imported-at-by
-                                                (lyskom-return-date-and-time (text-stat->creation-time
-                                                                              text-stat)
-                                                                             'time-y-m-d-h-m)
-                                                (text-stat->author text-stat)))
-                         (mx-from
-                          (lyskom-format-insert 'text-imported-at
-                                                (lyskom-return-date-and-time (text-stat->creation-time
-                                                                              text-stat)
-                                                                             'time-y-m-d-h-m)))
-                         (mx-date (lyskom-format-insert 'text-created-at
-                                                        (lyskom-return-date-and-time (text-stat->creation-time
-                                                                                      text-stat)
-                                                                                     'time-y-m-d-h-m))))
-                   (when kom-show-imported-external-recipients
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Recipient)
-                                                     (aux-item->data el)))
-                             mx-to)
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Extra-recipient)
-                                                     (aux-item->data el)))
-                             mx-cc)
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Extern-reply-to)
-                                                     (aux-item->data el)))
-                             mx-reply-to)
-                     )
-
+		   (if (eq filter 'dontshow)
+		       (lyskom-format-insert "%#1P %#2s\n"
+					     (text-stat->author text-stat)
+					     (lyskom-get-string 'filtered))
+		     (lyskom-format-insert "%#1P\n"
+					   (text-stat->author text-stat)))
 		   
 		   (setq end (point-max))
 
@@ -220,51 +141,20 @@ Note that this function must not be called asynchronously."
                              (if lyskom-show-comments ; +++SOJGE
                                  (lyskom-print-header-comm
                                   (misc-info->comm-in misc)
-                                  misc
-                                  text-stat))))
+                                  misc))))
 			  ((eq type 'FOOTN-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
 			       nil
 			     (lyskom-print-header-comm
 			      (misc-info->footn-in misc)
-			      misc
-                              text-stat)))
+			      misc)))
 			  ((eq type 'COMM-TO)
 			   (lyskom-print-header-comm (misc-info->comm-to misc)
-						     misc
-                                                     text-stat))
+						     misc))
 			  ((eq type 'FOOTN-TO)
 			   (lyskom-print-header-comm (misc-info->footn-to misc)
-						     misc
-                                                     text-stat))
+						     misc))
 			  )))
-
-                     ;;
-                     ;; Print aux-items that go in the header
-                     ;;
-
-                     (let ((text nil))
-                       (lyskom-traverse-aux aux
-                                            (text-stat->aux-items text-stat)
-                         (when (and
-                             (or (eq (lyskom-aux-item-definition-field aux
-                                                                 'text-print-when)
-                                     'header)
-                              (and (eq (lyskom-aux-item-definition-field aux
-                                                                  'text-print-when)
-                                       'comment)
-                               (not kom-reading-puts-comments-in-pointers-last)
-                               ))
-                             (setq text 
-                                   (lyskom-aux-item-definition-call 
-                                    aux
-                                    'text-print
-                                    aux
-                                    text-stat)))
-                           (lyskom-insert text)
-                           (lyskom-insert "\n"))))
-
-
 		     (let ((num-marks (text-stat->no-of-marks text-stat))
 			   (is-marked-by-me (cache-text-is-marked
 					     (text-stat->text-no text-stat))))
@@ -273,36 +163,20 @@ Note that this function must not be called asynchronously."
 			    (if is-marked-by-me
 				(if (= num-marks 1)
 				    (lyskom-get-string 'marked-by-you)
-                                  (lyskom-format 'marked-by-you-and-others
-                                                 (1- num-marks)))
-                              (lyskom-format 'marked-by-several num-marks)))))
+				  (if (= num-marks 2)
+				      (lyskom-get-string 
+				       'marked-by-you-and-one)
+				    (lyskom-format 'marked-by-you-and-several
+						   (1- num-marks))))
+			      (if (= num-marks 1)
+				  (lyskom-get-string 'marked-by-one)
+				(lyskom-format 'marked-by-several
+					       num-marks))))))
 		   
 		     (lyskom-print-text text-stat text
-					mark-as-read text-no flat-review))
+					mark-as-read text-no))
 		   
 		   
-                   (let ((text nil))
-                       (lyskom-traverse-aux aux
-                                            (text-stat->aux-items text-stat)
-                         (when (and
-                             (or (eq (lyskom-aux-item-definition-field aux
-                                                                 'text-print-when)
-                                     'footer)
-                              (and (eq (lyskom-aux-item-definition-field aux
-                                                                  'text-print-when)
-                                       'comment)
-                                   kom-reading-puts-comments-in-pointers-last
-                               ))
-                             (setq text 
-                                   (lyskom-aux-item-definition-call 
-                                    aux
-                                    'text-print
-                                    aux
-                                    text-stat)))
-                           (lyskom-insert text)
-                           (lyskom-insert "\n"))))
-
-
 		   (if kom-reading-puts-comments-in-pointers-last
 		       (lyskom-view-text-handle-saved-comments text-stat))
 		   
@@ -318,15 +192,8 @@ Note that this function must not be called asynchronously."
 			 (lyskom-follow-comments text-stat
 						 conf-stat mark-as-read
 						 priority build-review-tree)))
-		   ))
-	       (lyskom-format-insert 'no-such-text-no text-no))
-             (let ((aux-items (text-stat->aux-items text-stat)))
-               (while aux-items
-                 (lyskom-aux-item-definition-call (car aux-items)
-                                                  'read-action
-                                                  text-stat)
-                 (setq aux-items (cdr aux-items))))
-             )))
+		   )
+	       (lyskom-format-insert 'no-such-text-no text-no)))))
     todo))
 	  
 	  
@@ -374,19 +241,12 @@ lyskom-reading-list."
 		       (not (lyskom-text-read-p text-stat))))
 	      (setq comments (cons no comments)))))
       (if comments
-          (if review-tree
-              (lyskom-review-enter-read-info
-               (lyskom-create-read-info 'REVIEW-TREE
-                                        conf-stat priority
-                                        (lyskom-create-text-list comments)
-                                        (text-stat->text-no text-stat)) t)
-            (read-list-enter-read-info
-             (lyskom-create-read-info 'COMM-IN
-                                      conf-stat priority
-                                      (lyskom-create-text-list comments)
-                                      (text-stat->text-no text-stat))
-             lyskom-reading-list t)))
-
+	  (read-list-enter-read-info
+	   (lyskom-create-read-info (if review-tree 'REVIEW-TREE 'COMM-IN)
+				    conf-stat priority
+				    (lyskom-create-text-list comments)
+				    (text-stat->text-no text-stat))
+	   lyskom-reading-list t))
       ;; Find the footnotes that we should read and enter them into
       ;; the read-list. A slight trick is to increase the priority so
       ;; that they will be read first.
@@ -452,7 +312,7 @@ recipients to it that the user is a member in."
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
-			     (misc-info->recipient-no misc-info) t))
+			     (misc-info->recipient-no misc-info)))
 		(loc-no (misc-info->local-no misc-info)))
 
 	    ;; Make a note that this text really is in a group we are
@@ -469,12 +329,9 @@ recipients to it that the user is a member in."
       res)))
 
 
-(defun lyskom-text-read-at-least-once-p (text-stat &optional bg)
+(defun lyskom-text-read-at-least-once-p (text-stat)
   "Return t if TEXT-STAT has been marked as read in any of the recipients
-the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil.
-
-If BG is non-nil, this function is run in the background and must not use
-blocking-do."
+the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
   (if text-stat
       (let* ((misc-info-list (text-stat->misc-info-list text-stat))
              (misc-item nil)
@@ -489,11 +346,8 @@ blocking-do."
           (cond ((or (eq type 'RECPT) 
                      (eq type 'BCC-RECPT)
                      (eq type 'CC-RECPT))
-                 (setq membership (if bg
-                                      (lyskom-try-get-membership
-                                       (misc-info->recipient-no misc-item) t)
-                                    (lyskom-get-membership
-                                     (misc-info->recipient-no misc-item) t)))
+                 (setq membership (lyskom-get-membership
+                                   (misc-info->recipient-no misc-item)))
                  (when membership
                    (setq is-member t)
                    (when (or (<= (misc-info->local-no misc-item)
@@ -559,65 +413,28 @@ blocking-do."
          (format-letter nil)
          (field-width nil)
          (kom-deferred-printing nil)
-         (author-name-len nil)
          (have-author (and format (string-match "%=?[0-9]*P" format))))
 
-    (setq author-name-len (length (or author-name (conf-stat->name author))))
-
-    ;; No user-specified format, so output dashes and stuff
-
     (if (null format)
-        (let* ((format-flag-string
-                (if (and format-flags (listp format-flags))
-                    (let ((first-flag t))
-                      (concat
-                       "("
-                       (mapconcat 
-                        (lambda (str)
-                          (let ((face nil))
-                            ;; If it's a cons, the cdr is property list
-                            (when (consp str)
-                              (setq face (cdr str)
-                                    str (car str)))
-                            ;; Get the string
-                            (setq str (lyskom-get-string str))
-                            ;; Upcase the first in the list
-                            (when first-flag 
-                              (setq first-flag nil str (upcase-initials str)))
-                            ;; If we have a plist, apply it
-                            (when face
-                              (add-text-properties 0 (length str) face str))
-                            ;; Return the string
-                            str))
-                        format-flags ", ")
-                       ")"))
-                  ""))
-               (end-dash-chars
-                (- kom-text-footer-dash-length
-                   (length (int-to-string (text-stat->text-no text))) 
-                   3                             ; Parens and space
-                   (if kom-show-author-at-end
-                       (+ author-name-len 2) 
-                     0)
-                   (length format-flag-string)))
-               (end-dash (if (> end-dash-chars 0)
-                             (make-string end-dash-chars ?-)
-                           "")))
-          (lyskom-format
-           (cond ((and kom-dashed-lines kom-show-author-at-end)
-                  "(%#1n) /%#2P/%#3s%#4s")
-                 (kom-dashed-lines
-                  "(%#1n) %#3s%#4s")
-                 (kom-show-author-at-end
-                  "(%#1n) /%#2P/")
-                 (t
-                  "(%#1n)"))
-           text
-           (or author-name author)
-           end-dash
-           format-flag-string))
-
-      ;; User-specified format. Do all kinds of weird stuff
+        (lyskom-format
+         (cond ((and kom-dashed-lines kom-show-author-at-end)
+                "(%#1n) /%#2P/%#3s%#4s")
+               (kom-dashed-lines
+                "(%#1n) %#3s%#4s")
+               (kom-show-author-at-end
+                "(%#1n) /%#2P/")
+               (t
+                "(%#1n)"))
+         text
+         (or author author-name)
+         (if kom-show-author-at-end
+             (if (> (length author-name) 42)
+                 ""
+               (make-string (- 42 (length author-name)) ?-))
+           "------------------------------------------")
+         (if format-flags
+             (lyskom-get-string format-flags)
+           ""))
 
       (while (string-match "%\\(=?-?[0-9]+\\)?\\([-nPpf% ]\\)" format start)
         (setq result (concat result (substring format start 
@@ -631,8 +448,7 @@ blocking-do."
                result
                (cond
                 ((eq format-letter ?p)
-                 (lyskom-format (format "%%%s#1p" field-width) 
-                                (or author (text-stat->author text))))
+                 (lyskom-format (format "%%%s#1p" field-width) author))
 
                 ((eq format-letter ?P)
                  (lyskom-format (format "%%%s#1P" field-width) 
@@ -659,8 +475,8 @@ blocking-do."
                    (lyskom-format 
                     "%#1s"
                     (if have-author
-                        (if (< author-name-len width)
-                            (make-string (- width author-name-len) ?-)
+                        (if (< (length author-name) width)
+                            (make-string (- width (length author-name)) ?-)
                           "")
                       (make-string width ?-)))))
 
@@ -679,15 +495,11 @@ blocking-do."
   "Insert the name of a conference at a previously reserved place."
   (let* ((text-stat (elt (defer-info->data defer-info) 0))
          (format-flags (elt (defer-info->data defer-info) 1))
-         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-         (name (cond (conf-stat nil)
+         (name (cond (conf-stat (conf-stat->name conf-stat))
                       ((= (defer-info->call-par defer-info) 0)
                        (lyskom-get-string 'person-is-anonymous))
-                      (t (lyskom-format 'person-does-not-exist)))))
-
-    (setq name (or (lyskom-format-mx-author mx-from mx-author) name))
-
+                      (t (lyskom-format 'person-does-not-exist
+                                        (defer-info->call-par defer-info))))))
     (lyskom-replace-deferred defer-info 
                              (lyskom-format-text-footer text-stat
                                                         conf-stat
@@ -695,12 +507,11 @@ blocking-do."
                                                         kom-text-footer-format
                                                         format-flags))))
 
-
-(defun lyskom-print-text (text-stat text mark-as-read text-no flat-review)
+(defun lyskom-print-text (text-stat text mark-as-read text-no)
   "Print a text. The header must already be printed.
 Print an error message if TEXT-STAT or TEXT is nil.
 Mark the text as read if (and only if) MARK-AS-READ is non-nil.
-Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
+Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
   (let ((lyskom-current-function 'lyskom-print-text))
     (cond
      ((or (null text)
@@ -710,7 +521,6 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
       (setq lyskom-current-text text-no))
      (t
       (let* ((str (text->text-mass text))
-	     (truncated nil)
              ;; s1 s2 t1 t2
 	     body)
         (cond
@@ -721,52 +531,27 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           (let ((lyskom-current-function-phase 'subject))
             (lyskom-format-insert "%#1r\n" 
                                   (copy-sequence lyskom-current-subject)))
-          (when kom-dashed-lines
+          (if kom-dashed-lines
               (lyskom-insert 
-               (make-string kom-text-header-dash-length ?-)))
-
-          (lyskom-insert "\n")
+               "------------------------------------------------------------\n")
+            (lyskom-insert "\n"))
           ;; (setq t1 (point-max))
-
-	  ;; Truncate body if flat-review and long text
-	  (if (and flat-review kom-truncate-show-lines kom-truncate-threshold)
-	      (let ((lines 0)
-		    (pos 0)
-		    (show-lines (min kom-truncate-show-lines
-				     kom-truncate-threshold))
-		    last-line)
-		(while (and pos (setq pos (string-match "\n" body pos)))
-		  (setq pos (1+ pos))
-		  (setq lines (1+ lines))
-		  (if (= lines show-lines)
-		      (setq last-line (1- pos)))
-		  (if (>= lines kom-truncate-threshold)
-		      (setq body (substring body 0 last-line)
-			    pos nil
-			    truncated t)))))
-		    
           (let ((lyskom-current-function-phase 'body))
-            (lyskom-format-insert "%#1t\n" (cons text-stat body)))
-
-	  ;; Indicate that the text was truncated
-	  (if truncated
-              (lyskom-signal-reformatted-text
-               '(reformat-truncated . (face kom-warning-face))))
-
-	  
+            (lyskom-format-insert "%#1t" body))
           ;; (setq t2 (point-max))
 	  )
          (t                             ;No \n found. Don't print header.
-          (when kom-dashed-lines
-            (lyskom-insert 
-             (make-string kom-text-header-dash-length ?-)))
-          (lyskom-insert "\n")
-          (lyskom-format-insert "%#1t\n" (cons text-stat str))
+          (if kom-dashed-lines
+              (lyskom-insert 
+               "------------------------------------------------------------\n")
+            (lyskom-insert "\n"))
+          (lyskom-format-insert "%#1t" str)
           (setq lyskom-current-subject "")))
         (if (lyskom-text-p (cache-get-text (text->text-no text)))
             (cache-del-text (text->text-no text)))
         (sit-for 0)
         (let ((lyskom-current-function-phase 'footer))
+          (lyskom-insert "\n")
           (if kom-deferred-printing
               (progn
                 (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
@@ -862,13 +647,13 @@ Args: TEXT-STAT of the text being read."
       (cond
        ((eq type 'COMM-IN)
         (if lyskom-show-comments        ;+++SOJGE
-            (lyskom-print-header-comm (misc-info->comm-in misc) misc text-stat)))
+            (lyskom-print-header-comm (misc-info->comm-in misc) misc)))
        ((eq type 'FOOTN-IN)
-	(lyskom-print-header-comm (misc-info->footn-in misc) misc text-stat))))))
+	(lyskom-print-header-comm (misc-info->footn-in misc) misc))))))
 
 
 
-(defun lyskom-print-header-comm (text misc read-text-stat)
+(defun lyskom-print-header-comm (text misc)
   "Get author of TEXT-NO and print a header line."
   (let ((text-stat (if kom-deferred-printing
 		       (cache-get-text-stat text)
@@ -876,9 +661,9 @@ Args: TEXT-STAT of the text being read."
 
     ;; Print information about the link
     (cond (text-stat
-           (lyskom-insert-header-comm text-stat misc read-text-stat))
+           (lyskom-insert-header-comm text-stat misc))
           ((not kom-deferred-printing) 
-           (lyskom-insert-header-comm text-stat misc read-text-stat))
+           (lyskom-insert-header-comm text-stat misc))
           (t
            (let ((defer-info (lyskom-create-defer-info
                               'get-text-stat
@@ -887,7 +672,7 @@ Args: TEXT-STAT of the text being read."
                               (point-max-marker)
                               (length lyskom-defer-indicator)
                               nil       ; Filled in later
-                              (list misc read-text-stat))))
+                              misc)))
              (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
              (lyskom-defer-insertion defer-info))))
 
@@ -901,43 +686,21 @@ Args: TEXT-STAT of the text being read."
 
 (defun lyskom-insert-deferred-header-comm (text-stat defer-info)
   (let* ((author (if text-stat (text-stat->author text-stat) nil))
-	 (misc (elt (defer-info->data defer-info) 0))
-	 (read-text-stat (elt (defer-info->data defer-info) 1))
+	 (misc (defer-info->data defer-info))
 	 (type (misc-info->type misc))
-         (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-         (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-         (mx-attachments-in (mapcar
-                             (lambda (el)
-                               (string-to-number (aux-item->data el)))
-                             (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10101)))
-         (mx-belongs-to (mapcar
-                         (lambda (el)
-                           (string-to-number (aux-item->data el)))
-                         (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
 	 fmt data)
-
-    (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
-    
     (cond
      ((eq type 'COMM-TO)
-      (setq fmt (cond ((memq (misc-info->comm-to misc) mx-belongs-to) 'attachment-to-text)
-                      (author 'comment-to-text-by)
-                      (t 'comment-to-text))
+      (setq fmt (if author 'comment-to-text-by 'comment-to-text)
 	    data (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
-      (setq fmt (cond ((memq (misc-info->footn-to misc) mx-belongs-to) 'attachment-to-text)
-                      (author 'footnote-to-text-by)
-                      (t 'footnote-to-text))
+      (setq fmt (if author 'footnote-to-text-by 'footnote-to-text)
 	    data (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
-      (setq fmt (cond ((memq (misc-info->comm-in misc) mx-attachments-in) 'attachment-in-text)
-                      (author 'comment-in-text-by)
-                      (t 'comment-in-text))
+      (setq fmt (if author 'comment-in-text-by 'comment-in-text)
 	    data (misc-info->comm-in misc)))
      ((eq type 'FOOTN-IN)
-      (setq fmt (cond ((memq (misc-info->footn-in misc) mx-attachments-in) 'attachment-in-text)
-                      (author 'footnote-in-text-by)
-                      (t 'footnote-in-text))
+      (setq fmt (if author 'footnote-in-text-by 'footnote-in-text)
 	    data(misc-info->footn-in misc)))) 
     (set-defer-info->format defer-info fmt)
     ; Note: author is ignored if fmt is not *-by
@@ -945,87 +708,27 @@ Args: TEXT-STAT of the text being read."
 
 
 
-(defun lyskom-insert-header-comm (text-stat misc read-text-stat)
+(defun lyskom-insert-header-comm (text-stat misc)
   "Get author of TEXT-NO and print a header line."
   ;;+++ error kommer att se annorlunda ut.
   (let ((author (if text-stat
 		    (text-stat->author text-stat)
 		  nil))
-        (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-        (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-        (mx-attachments-in (mapcar
-                            (lambda (el)
-                              (string-to-number (aux-item->data el)))
-                            (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10101)))
-        (mx-belongs-to (mapcar
-                        (lambda (el)
-                          (string-to-number (aux-item->data el)))
-                        (lyskom-get-aux-item (text-stat->aux-items read-text-stat) 10100)))
-        (type (misc-info->type misc)))
-
-    (setq author (or (lyskom-format-mx-author mx-from mx-author) author))
-    
+	(type (misc-info->type misc)))
     (cond
      ((eq type 'COMM-TO)
-      (lyskom-format-insert (if (memq (misc-info->comm-to misc) mx-belongs-to)
-                                'attachment-to-text
-                              'comment-to-text)
-                            (misc-info->comm-to misc)))
+      (lyskom-format-insert 'comment-to-text (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
-      (lyskom-format-insert (if (memq (misc-info->footn-to misc) mx-belongs-to)
-                                'attachment-to-text
-                              'footnote-to-text)
-                            (misc-info->footn-to misc)))
+      (lyskom-format-insert 'footnote-to-text (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
-      (lyskom-format-insert (if (memq (misc-info->comm-in misc) mx-attachments-in)
-                                'attachment-in-text
-                              'comment-in-text)
-                            (misc-info->comm-in misc)))
+      (lyskom-format-insert 'comment-in-text (misc-info->comm-in misc)))
      ((eq type 'FOOTN-IN)
-      (lyskom-format-insert (if (memq (misc-info->footn-in misc) mx-attachments-in)
-                                'attachment-in-text
-                              'footnote-in-text)
-                            (misc-info->footn-in misc))))
+      (lyskom-format-insert 'footnote-in-text (misc-info->footn-in misc))))
     (if author
 	(lyskom-format-insert 'written-by author)
       (lyskom-insert "\n"))))
 
-(defun lyskom-format-mx-author (mx-from mx-author)
-  (let ((author nil))
-    (when (or mx-from mx-author)
-      (setq author (lyskom-get-string 'email-name-prefix))
-      (when mx-author (setq author (concat author (aux-item->data mx-author))))
-      (when (and mx-from mx-author) (setq author (concat author " ")))
-      (when mx-from (setq author (concat author "<" (aux-item->data mx-from) ">")))
-      (setq author (concat (lyskom-get-string 'email-name-suffix) author))
-      )
-    author))
-    
-(defun lyskom-mx-date-to-time (mx-date)
- "Attempt to convert MX-DATE to a lyskom time structure.
-Returns the time structure if successful, otherwise nil."
-  (if (and mx-date
-           (condition-case nil
-               (progn (require 'calendar)
-                      (require 'cal-iso)
-                      t)
-             (error nil))
-           (string-match "\\([0-9][0-9][0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\) \\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\) \\([-+][0-9][0-9]\\)?\\([0-9][0-9]\\)?"
-                         (aux-item->data mx-date)))
-      (let* ((secs (string-to-number (match-string 6 (aux-item->data mx-date))))
-             (mins (string-to-number (match-string 5 (aux-item->data mx-date))))
-             (hour (string-to-number (match-string 4 (aux-item->data mx-date))))
-             (mday (string-to-number (match-string 3 (aux-item->data mx-date))))
-             (mon  (string-to-number (match-string 2 (aux-item->data mx-date))))
-             (year (string-to-number (match-string 1 (aux-item->data mx-date))))
-             (tzhr (match-string 7 (aux-item->data mx-date)))
-             (tzmin (or (match-string 8 (aux-item->data mx-date)) ""))
-             (wday (elt 
-                    (calendar-iso-from-absolute
-                     (calendar-absolute-from-gregorian
-                      (list mon mday year)))
-                    1)))
-        (lyskom-create-time secs mins hour mday (1- mon) (- year 1900) wday 0 nil tzhr tzmin))))
+
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

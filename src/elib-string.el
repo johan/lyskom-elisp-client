@@ -1,5 +1,5 @@
-;;;;; -*-coding: raw-text;-*-
-;;;; $Id: elib-string.el,v 44.1 1998-06-02 12:14:37 byers Exp $
+;;;;; -*-unibyte: t;-*-
+;;;; $Id: elib-string.el,v 44.0.4.1 1999-10-13 09:55:54 byers Exp $
 ;;;; This file contains some miscellaneous string functions
 
 ;; Copyright (C) 1991-1995 Free Software Foundation

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
-;;;;;
-;;;;; $Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $
+;;;;; -*-unibyte: t;-*-
+;;;;; -*- emacs-lisp -*-
+;;;;; $Id: compatibility.el,v 44.13.4.1 1999-10-13 09:55:50 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.13.4.1 1999-10-13 09:55:50 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -64,6 +64,7 @@ LysKOM"))
   (` (eval-and-compile
        (if (not (, predicate))
            (progn (,@ forms))))))
+
 
 (defmacro lyskom-compatibility-definition (predicate definition)
   "If PREDICATE is nil, evaluate DEFINITION at compile and run time.
@@ -96,12 +97,18 @@ of the lyskom-provide-* functions instead."
 ;;;
 
 (defmacro lyskom-provide (definer name rest)
-  `(eval-and-compile
-     (if (not (fboundp ',name))
-         (progn (setq lyskom-compatibility-definitions
-                      (cons ',name lyskom-compatibility-definitions))
-                (,definer ,name ,@rest)))))
-
+  (` (progn ;(eval-when-compile 
+            ;  (if (not (fboundp (quote (, name))))
+            ;      (message "Compatibility %S for %S"
+            ;               (quote (, definer))
+            ;               (quote (, name)))))
+            (eval-and-compile 
+              (if (not (fboundp (quote (, name))))
+                  (progn
+                    (setq lyskom-compatibility-definitions
+                          (cons (quote (, name)) 
+                                lyskom-compatibility-definitions))
+                    ((, definer) (, name) (,@ rest))))))))
 
 (defmacro lyskom-provide-macro (name &rest rest)
   "If NAME is not already defined, define it as a macro."
@@ -122,38 +129,9 @@ of the lyskom-provide-* functions instead."
 
 (defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
   "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
-  (if (string-match "XEmacs" (emacs-version))
-      xemacs-form
-    gnu-form))
-
-(put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
-
-
-
-;;; ======================================================================
-;;; Defining keys
-;;;
-;;; Lots of Emacsen have buggy definitions of kbd (or no definition at all)
-;;; Although it's crufty to redefine a function from subr.el, I will do so
-;;; if it appears to be misbehaving. Don't like it? Tough!
-;;;
-
-(lyskom-compatibility-definition
-
-    (condition-case nil
-        (or (equal (kbd (identity "<down-mouse-2>"))
-                   [down-mouse-2])
-            (error "Bad definition of kbd"))
-      (error nil))
-
-    (defmacro kbd (keys)
-      "Convert KEYS to the internal Emacs key representation.
-KEYS should be a string in the format used for saving keyboard macros
-\(see `insert-kbd-macro')."
-      (if (or (stringp keys)
-              (vectorp keys))
-          (read-kbd-macro keys)
-        `(read-kbd-macro ,keys))))
+  (` (if (string-match "XEmacs" (emacs-version))
+         (, xemacs-form)
+       (, gnu-form))))
 
 
 ;;; ======================================================================
@@ -168,9 +146,6 @@ KEYS should be a string in the format used for saving keyboard macros
 
 (lyskom-provide-function characterp (obj)
   (integerp obj))
-
-(lyskom-provide-function int-to-char (obj)
-  obj)
 
 (lyskom-compatibility-forms (fboundp 'frame-width)
     (fset 'frame-width 'screen-width))
@@ -201,28 +176,45 @@ KEYS should be a string in the format used for saving keyboard macros
      (if tail
          (setcdr tail new-parent))))
 
+(defconst lyskom-xemacs-keysym 
+  '((mouse-1 . (button1))
+    (mouse-2 . (button2))
+    (mouse-3 . (button3))
+    (down-mouse-3 . (button3))
+    (C-å     . (control aring))
+    (C-ä     . (control adiaeresis))
+    (C-Å     . (control Aring))
+    (C-Ä     . (control Adiaeresis))
+    (å       . aring)
+    (Å       . Aring)
+    (ä       . adiaeresis)
+    (Ä       . Adiaeresis)))
+
 (defconst lyskom-gnu-keysym
-  '((button1   . "<down-mouse-1>")
-    (button2   . "<down-mouse-2>")
-    (button3   . "<down-mouse-3>")
-    (button1up . "<mouse-1>")
-    (button2up . "<mouse-2>")
-    (button3up . "<mouse-3>")))
-
-(defconst lyskom-xemacs-keysym
-  '((button1   . "<button1>")
-    (button2   . "<button2>")
-    (button3   . "<button3>")
-    (button1up . "<button1up>")
-    (button2up . "<button2up>")
-    (button3up . "<button3up>")))
+  '((C-å     . (control å))
+    (C-ä     . (control ä))
+    (C-Å     . (control Å))
+    (C-Ä     . (control Ä))
+    (å       . ?\å)
+    (Å       . ?\Å)
+    (ä       . ?\ä)
+    (Ä       . ?\Ä)
+    (ö       . ?\ö)
+    (Ö       . ?\Ö)))
 
 
-(defun lyskom-keys (sym)
-  "Look up the key description for key SYM."
-  (cdr (assq sym (lyskom-xemacs-or-gnu lyskom-xemacs-keysym
-                                       lyskom-gnu-keysym))))
+(defun lyskom-keys (binding)
+  (cond ((vectorp binding) (apply 'vector (mapcar 'lyskom-keysym binding)))
+        (t binding)))
 
+(defun lyskom-keysym (sym)
+  "Look up the proper symbol to bind sym to"
+  (lyskom-xemacs-or-gnu (or (cdr (assq sym lyskom-xemacs-keysym)) sym)
+                        (or (cdr (assq sym lyskom-gnu-keysym))
+                            (let ((name (symbol-name sym)))
+                              (and (= (length name) 1)
+                                   (elt name 0)))
+                            sym)))
 
 ;;; ============================================================
 ;;; Text property and extents stuff
@@ -269,36 +261,13 @@ string to search in."
 
 
 ;;; ============================================================
-;;; Basic stuff
+;;; Character stuff
 
 (lyskom-provide-function char-to-int (c) c)
-
-(defvar enable-multibyte-characters nil)
-(lyskom-provide-function set-buffer-multibyte (arg)
-  (put 'enable-multibyte-characters 'permanent-local t)
-  (make-local-variable 'enable-multibyte-characters)
-  (setq enable-multibyte-characters arg))
-
-(lyskom-provide-function set-process-coding-system (proc &optional encoding decoding)
-  )
-
-(lyskom-provide-function last (x &optional n)
-  "Returns the last link in the list LIST.
-With optional argument N, returns the Nth-to-last link (default 1)."
-  "Returns the last link in the list LIST.
-With optional argument N, returns Nth-to-last link (default 1)."
-  (if n
-      (let ((m 0) (p x))
-	(while (consp p) (setq m (1+ m)) (setq p (cdr p)))
-	(if (<= n 0) p
-	  (if (< n m) (nthcdr (- m n) x) x)))
-    (while (consp (cdr x)) (setq x (cdr x)))
-    x))
 
 ;;; ======================================================================
 ;;; Event stuff
 
-(lyskom-external-function event-start)
 (lyskom-provide-function event-point (e)
   "Return the character position of the given mouse event.
 If the event did not occur over a window, or did not occur over text,

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.23 1999-08-14 19:16:09 byers Exp $
+;;;;; $Id: parse.el,v 44.12.2.1 1999-10-13 09:56:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.23 1999-08-14 19:16:09 byers Exp $\n"))
+	      "$Id: parse.el,v 44.12.2.1 1999-10-13 09:56:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -91,9 +91,9 @@ lyskom-unparsed-buffer is exhausted."
 Return nil, or signal lyskom-protocol-error if the
 first non-white character was not equal to CHAR."
   (if (/= char (lyskom-parse-nonwhite-char))
-      (lyskom-protocol-error 'lyskom-expect-char
-                             "Expecting %S but got %S"
-                             char (char-after (1- lyskom-parse-pos)))
+      (signal 'lyskom-protocol-error
+	      (list "Expecting " char " but got "
+		    (char-after (1- lyskom-parse-pos))))
     nil))
 
 
@@ -123,11 +123,10 @@ Signal lyskom-protocol-error if the next token is not a number."
    ((looking-at "[ \n]*\\'") 
     (goto-char (point-max))
     (signal 'lyskom-parse-incomplete nil))
-   (t (lyskom-protocol-error 'lyskom-parse-num
-                             "Expected number, got %S"
-                             (lyskom-string-to-parse))))
-)
+   (t (signal 'lyskom-protocol-error
+              (list "Expected number, got " (lyskom-string-to-parse)))))
 
+)
 
 
 (defun lyskom-parse-string ()
@@ -143,23 +142,20 @@ Signal lyskom-protocol-error if the next token is not a string."
      ((string-match "\\`[0-9]*\\(\\|H\\)\\'" to-parse)
       (signal 'lyskom-parse-incomplete nil))
      ((null (string-match "\\`[0-9]+H" to-parse))
-      (lyskom-protocol-error 'lyskom-parse-string
-                             "Expected hollerith, got %S" 
-                             to-parse)) ;Not a legal string.
+      (signal 'lyskom-protocol-error (list to-parse))) ;Not a legal string.
      (t
       (let ((end (match-end 0))
 	    (len (string-to-int to-parse)))
 	(setq lyskom-parse-pos (+ lyskom-parse-pos end))
 	(cond
 	 ((< (point-max) (+ lyskom-parse-pos len))
-	  (lyskom-setq-default lyskom-string-bytes-missing
+	  (setq lyskom-string-bytes-missing
 		(- (+ lyskom-parse-pos len)
 		   (point-max)))
 	  (signal 'lyskom-parse-incomplete nil))
 	 (t
 	  (prog1 (buffer-substring lyskom-parse-pos 
 				   (+ lyskom-parse-pos len))
-            (lyskom-setq-default lyskom-string-bytes-missing 0)
 	    (setq lyskom-parse-pos (+ lyskom-parse-pos len))))))))))
 
 
@@ -171,8 +167,10 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
     (cond
      ((= char ?0) nil)
      ((= char ?1) t)
-     (t (lyskom-protocol-error 'lyskom-parse-1-or-0
-                               "Expected boolean, got %S" char)))))
+     (t (signal 'lyskom-protocol-error
+		(list 'lyskom-parse-1-or-0 char
+		      lyskom-parse-pos
+		      (buffer-string)))))))
 
 
 (defun lyskom-parse-bitstring (default)
@@ -194,9 +192,10 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 	     ;; expected.
              (setq continue nil))
 
-            (t (lyskom-protocol-error 'lyskom-parse-bitstring
-                                      "Expected bool or space, got %S"
-                                      char))))
+            (t (signal 'lyskom-protocol-error
+                       (list 'lyskom-parse-bitstring char
+                             lyskom-parse-pos
+                             (buffer-string))))))
     (if (not (or (eq char ?\ )
                  (eq char ?\n)))
 	;; This occurs when the received string is longer than
@@ -236,7 +235,6 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
   (let ((to-parse (lyskom-string-to-parse)))
     (cond
      ((string-match "\\`{" to-parse)	;Array/list?
-        (lyskom-parse-nonwhite-char)
         (lyskom-skip-array))
      ((string-match "\\`*" to-parse)	;Empty array/list?
         (lyskom-parse-nonwhite-char))	;Simply skip it.
@@ -246,15 +244,13 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
         (lyskom-parse-num))
      ((string-match "\\`[0-9]\\'" to-parse)	;Incomplete number?
         (signal 'lyskom-parse-incomplete nil))
-     (t (lyskom-protocol-error 'lyskom-skip-one-token
-                               "Unrecognized token")))))
+     (t (signal 'lyskom-protocol-error (list to-parse))))))
 
 
 (defun lyskom-skip-array ()
   (let ((to-parse (lyskom-string-to-parse)))
     (cond
-     ((string-match "\\`}" to-parse)
-      (lyskom-parse-nonwhite-char))
+     ((string-match "\\`}" to-parse))
      (t (lyskom-skip-one-token)
 	(lyskom-skip-array)))))
   
@@ -277,22 +273,6 @@ Each element is parsed by PARSER, a function that takes no arguments."
       (prog1
 	  (lyskom-fill-vector (make-vector len nil) parser)
 	(lyskom-expect-char ?})))))
-
-(defun lyskom-parse-list (len parser)
-  "Parse a vector with LEN elements and return it as a list.
-Each element is parsed by PARSER, a function that takes no arguments."
-  (cond
-   ((zerop len) (if (lyskom-char-p ?*)
-                    (lyskom-expect-char ?*)
-                  (lyskom-expect-char ?\{)
-                  (lyskom-expect-char ?\})) nil)
-   ((lyskom-char-p ?*) (lyskom-expect-char ?*) nil)
-   (t (lyskom-expect-char ?{)
-      (let ((result nil))
-        (while (> len 0)
-          (setq result (cons (funcall parser) result))
-          (setq len (1- len)))
-        (nreverse result)))))
 
 
 (defun lyskom-fill-vector (vector parser)
@@ -337,8 +317,9 @@ result is assigned to the element."
       (prog1
 	  (lyskom-parse-misc-info-list-sub n)
 	(lyskom-expect-char ?})))
-     (t (lyskom-protocol-error 'lyskom-parse-misc-info-list
-                               "Expected * or {, got %S" char)))))
+     (t					;Error.
+      (signal 'lyskom-protocol-error (list 'lyskom-parse-misc-info-list
+					   "Expected * or {, got " char))))))
 
 
 (defun lyskom-parse-misc-info-list-sub (n)
@@ -363,8 +344,10 @@ result is assigned to the element."
 	(setq res (lyskom-parse-misc-footn-in last n)))
        ((eq next-key 15)                ;bcc-recpt
         (setq res (lyskom-parse-misc-recipient 'BCC-RECPT last n)))
-       (t (lyskom-protocol-error 'lyskom-parse-misc-info-list-sub
-                                 "Unknown misc-info type %S" next-key)))
+       (t				;error!
+	(signal 'lyskom-protocol-error
+		(list 'lyskom-parse-misc-info-list-sub
+		      "Unknown misc-type " next-key))))
       (setq n (car res))
       (setq next-key (cdr res))
       (setq last (cdr last)))
@@ -385,8 +368,7 @@ Returns (cons n next-key)."
     (setq n (1- n))
     ;; A loc-no should follow.
     (if (/= 6 (lyskom-next-num n nil))
-        (lyskom-protocol-error 'lyskom-parse-misc-recipient
-                               "Expected 6, got something else"))
+	(signal 'lyskom-protocol-error '("No loc-no after recipient.")))
     (set-misc-info->local-no info (lyskom-parse-num))
     (setq n (1- n))
     ;; A rec-time might follow.
@@ -506,61 +488,15 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-num))
 
 
-(defun lyskom-parse-membership-type ()
-  "Parse a membership type"
-  (apply 'lyskom-create-membership-type
-         (lyskom-parse-bitstring '(nil nil nil nil nil nil nil nil))))
-
-(defun lyskom-parse-member-old ()
-  "Parse an old-style member record."
-  (lyskom-create-member (lyskom-parse-num) 
-                        0
-                        (lyskom-current-time)
-                        (lyskom-create-membership-type
-                         nil nil nil nil nil nil nil nil)))
-
-(defun lyskom-parse-member ()
-  "Parse a member record"
-  (lyskom-create-member
-   (lyskom-parse-num)                   ;conf-no
-   (lyskom-parse-num)                   ;added-by
-   (lyskom-parse-time)                  ;added-at
-   (lyskom-parse-membership-type)       ;type
-   ))
-
-(defun lyskom-parse-member-list ()
-  "Parse a list of members"
-  (lyskom-create-member-list
-   (lyskom-parse-vector (lyskom-parse-num)
-                        'lyskom-parse-member)))
-
 (defun lyskom-parse-membership ()
   "Parse a membership."
-    (lyskom-create-membership
-     (lyskom-parse-num)                 ;position
-     (lyskom-parse-time)                ;last-time-read
-     (lyskom-parse-num)			;conf-no
-     (lyskom-parse-num)			;priority
-     (lyskom-parse-num)			;last-text-read
-     (lyskom-parse-vector               ;read-texts
-      (lyskom-parse-num) 'lyskom-parse-num)
-     (lyskom-parse-num)                 ;added-by
-     (lyskom-parse-time)                ;added-at
-     (lyskom-parse-membership-type)))
-
-(defun lyskom-parse-membership-old ()
-  "Parse a membership."
   (lyskom-create-membership
-   nil
    (lyskom-parse-time)			;last-time-read
    (lyskom-parse-num)			;conf-no
    (lyskom-parse-num)			;priority
    (lyskom-parse-num)			;last-text-read
    (lyskom-parse-vector			;read-texts
-    (lyskom-parse-num) 'lyskom-parse-num)
-   0
-   (lyskom-current-time)
-   (lyskom-create-membership-type nil nil nil nil nil nil nil nil)))
+    (lyskom-parse-num) 'lyskom-parse-num)))		
 
 
 (defun lyskom-parse-version-info ()
@@ -578,17 +514,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-num)
    (lyskom-parse-num)
    (lyskom-parse-num)
-   (lyskom-parse-num)
-   (lyskom-parse-aux-item-list)))
-
-(defun lyskom-parse-server-info-old ()
-  "Parse info about the server."
-  (lyskom-create-server-info
-   (lyskom-parse-num)
-   (lyskom-parse-num)
-   (lyskom-parse-num)
-   (lyskom-parse-num)
-   (lyskom-parse-num)
    (lyskom-parse-num)))
 
 
@@ -598,31 +523,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-num)			;first-local
    (lyskom-parse-vector			;text-nos
     (lyskom-parse-num) 'lyskom-parse-num)))
-
-(defun lyskom-parse-sparse-map ()
-  "Parse a sparce l2g block."
-  (lyskom-create-sparse-map
-   (lyskom-parse-list (lyskom-parse-num)
-                      'lyskom-parse-text-number-pair)))
-
-(defun lyskom-parse-text-number-pair ()
-  (cons (lyskom-parse-num) (lyskom-parse-num)))
-
-
-(defun lyskom-parse-text-mapping ()
-  "Parse a text-mapping"
-  (let ((have-more (lyskom-parse-1-or-0))
-        (kind (lyskom-parse-num)))
-    (cond ((= kind 0) 
-           (lyskom-create-text-mapping have-more
-                                       'sparse
-                                       (lyskom-parse-sparse-map)))
-          ((= kind 1)
-           (lyskom-create-text-mapping have-more
-                                       'dense
-                                       (lyskom-parse-map))))))
-
-
 
 
 (defun lyskom-parse-who-info ()
@@ -634,19 +534,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-string)		;doing-what
    (lyskom-parse-string)))		;userid@host
 
-(defun lyskom-parse-who-info-ident ()
-  "Parse a who-info-ident"
-  (lyskom-create-who-info
-   (lyskom-parse-num)			;pers-no
-   (lyskom-parse-num)			;working-conf
-   (lyskom-parse-num)			;connection
-   (lyskom-parse-string)		;doing-what
-   (lyskom-parse-string)		;userid@host
-   (lyskom-parse-string)                ;hostname
-   (lyskom-parse-string)                ;ident-user
-   ))
-
-
 (defun lyskom-parse-session-info ()
   "Parse a session-info."
   (lyskom-create-session-info
@@ -655,23 +542,9 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-num)			;connection
    (lyskom-parse-string)		;doing
    (lyskom-parse-string)		;userid@host
-   nil                                  ;username
-   nil                                  ;ident-user
    (lyskom-parse-num)			;idletime
    (lyskom-parse-time)))		;connect-time
 
-(defun lyskom-parse-session-info-ident ()
-  "Parse a session-info."
-  (lyskom-create-session-info
-   (lyskom-parse-num)			;pers-no
-   (lyskom-parse-num)			;working-conf
-   (lyskom-parse-num)			;connection
-   (lyskom-parse-string)		;doing
-   (lyskom-parse-string)		;userid@host
-   (lyskom-parse-string)                ;username
-   (lyskom-parse-string)                ;ident-user
-   (lyskom-parse-num)			;idletime
-   (lyskom-parse-time)))                ;connect-time
 
 ;; prot-A.txt says that this should allow more or less flags than
 ;; specified, but I can't figure out how. /davidk
@@ -702,13 +575,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   t)					;Needn't do anything.
 			  
 
-(defun lyskom-parse-conf-no-list ()
-  "Parse result from functions that return conf-no-list"
-  (lyskom-create-conf-no-list
-   (lyskom-parse-vector (lyskom-parse-num)
-                        'lyskom-parse-num)))
-
-
 (defun lyskom-parse-conf-list ()
   "Parse result from functions that return a conf-list."
   (let* ((list-len (lyskom-parse-num)))
@@ -717,10 +583,10 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
      (lyskom-parse-vector list-len 'lyskom-parse-conf-type))))
 
 
-(defun lyskom-parse-member-list-old ()
+(defun lyskom-parse-conf-no-list ()
   "Parse result from functions that return a conf-no-list."
-  (lyskom-create-member-list
-   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-member-old)))
+  (lyskom-create-conf-no-list
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-num)))
 
 
 (defun lyskom-parse-mark-list ()
@@ -733,28 +599,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   (lyskom-create-mark
    (lyskom-parse-num)			;Text-no
    (lyskom-parse-num)))			;Mark-type
-
-(defun lyskom-parse-aux-item-list ()
-  "Parse an aux-item list"
-  (listify-vector
-   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-aux-item)))
-
-(defun lyskom-parse-aux-item ()
-  "Parse an aux-item"
-  (lyskom-create-aux-item (lyskom-parse-num)    ; aux-no
-                          (lyskom-parse-num)    ; creator
-                          (lyskom-parse-num)    ; creator
-                          (lyskom-parse-time)   ; sent-at
-                          (lyskom-parse-aux-item-flags)
-                          (lyskom-parse-num)    ; inherit-limit
-                          (lyskom-parse-string) ; data
-                          ))
-
-(defun lyskom-parse-aux-item-flags ()
-  "Parse aux-item flags"
-  (apply 'lyskom-create-aux-item-flags
-         (lyskom-parse-bitstring
-          '(nil nil nil nil nil nil nil nil))))
   
 
 ;;;================================================================
@@ -774,34 +618,6 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
     info))
     
 
-(defun lyskom-parse-conf-stat-old (conf-no)
-  "Parse a conf-stat, add add it in the cache.
-Retuns the conf-stat. Args: CONF-NO."
-  (let
-      ((conf-stat (lyskom-create-conf-stat
-		   conf-no		;conf-no (supplied by
-					; initiate-get-conf-stat)
-		   (lyskom-parse-string) ;name
-		   (lyskom-parse-conf-type) ;conf-type
-		   (lyskom-parse-time)	;creation-time
-		   (lyskom-parse-time)	;last-written
-		   (lyskom-parse-num)	;creator
-		   (lyskom-parse-num)	;presentation
-		   (lyskom-parse-num)	;supervisor
-		   (lyskom-parse-num)	;permitted-submitters
-		   (lyskom-parse-num)	;super-conf
-		   (lyskom-parse-num)	;msg-of-day
-		   (lyskom-parse-num)	;garb-nice
-                   77                   ;fake keep-commented
-		   (lyskom-parse-num)	;no-of-members
-		   (lyskom-parse-num)	;first-local-no
-		   (lyskom-parse-num)))) ;no-of-texts
-    
-    (lyskom-save-excursion
-     (set-buffer lyskom-buffer)
-     (cache-add-conf-stat conf-stat))
-    conf-stat))
-
 (defun lyskom-parse-conf-stat (conf-no)
   "Parse a conf-stat, add add it in the cache.
 Retuns the conf-stat. Args: CONF-NO."
@@ -820,13 +636,9 @@ Retuns the conf-stat. Args: CONF-NO."
 		   (lyskom-parse-num)	;super-conf
 		   (lyskom-parse-num)	;msg-of-day
 		   (lyskom-parse-num)	;garb-nice
-                   (lyskom-parse-num)   ;keep-commented
 		   (lyskom-parse-num)	;no-of-members
 		   (lyskom-parse-num)	;first-local-no
-		   (lyskom-parse-num)   ;no-of-texts
-                   (lyskom-parse-num)   ;expire
-                   (lyskom-parse-aux-item-list)
-                   )))
+		   (lyskom-parse-num)))) ;no-of-texts
     
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
@@ -879,23 +691,6 @@ Retuns the pers-stat. Args: PERS-NO."
     pers-stat))
 
 
-(defun lyskom-parse-text-stat-old (text-no)
-  "Parse a text-stat and add it in the cache. 
-Args: TEXT-NO. Value: text-stat."
-  (let
-      ((text-stat (lyskom-create-text-stat
-		   text-no
-		   (lyskom-parse-time)	;creation-time
-		   (lyskom-parse-num)	;author
-		   (lyskom-parse-num)	;no-of-lines
-		   (lyskom-parse-num)	;no-of-chars
-		   (lyskom-parse-num)	;no-of-marks
-		   (lyskom-parse-misc-info-list)))) ;misc-info-list
-    (lyskom-save-excursion
-     (set-buffer lyskom-buffer)
-     (cache-add-text-stat text-stat))
-    text-stat))
-
 (defun lyskom-parse-text-stat (text-no)
   "Parse a text-stat and add it in the cache. 
 Args: TEXT-NO. Value: text-stat."
@@ -907,9 +702,7 @@ Args: TEXT-NO. Value: text-stat."
 		   (lyskom-parse-num)	;no-of-lines
 		   (lyskom-parse-num)	;no-of-chars
 		   (lyskom-parse-num)	;no-of-marks
-		   (lyskom-parse-misc-info-list)  ;misc-info-list
-                   (lyskom-parse-aux-item-list)
-                   )))
+		   (lyskom-parse-misc-info-list)))) ;misc-info-list
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
      (cache-add-text-stat text-stat))
@@ -949,20 +742,12 @@ Args: TEXT-NO. Value: text-stat."
 
 (defun lyskom-parse-membership-list ()
   "Parse a membership-list. Returns a vector."
-   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership))
-
-(defun lyskom-parse-membership-list-old ()
-  "Parse a membership-list. Returns a vector."
-   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership-old))
+  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership))
 
 
 (defun lyskom-parse-who-info-list ()
   "Parse a who-info-list. Returns a vector."
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info))
-  
-(defun lyskom-parse-who-info-ident-list ()
-  "Parse a who-info-ident-list. Returns a vector."
-  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info-ident))
   
 
 (defun lyskom-parse-dynamic-session-info-list ()
@@ -988,7 +773,6 @@ i.e creates the buffer, sets all markers and pointers."
 	   (setq lyskom-proc proc)
 	   (make-local-variable 'lyskom-buffer)
 	   (setq lyskom-buffer buffer)
-           (lyskom-setq-default lyskom-string-bytes-missing 0)
 	   (goto-char (point-max))
 	   (point-marker)))))
 
@@ -1072,18 +856,18 @@ CALL-INFO is destructively changed to
     (set-buffer buffer)
     (let* ((kom-queue (cdr (assq ref-no lyskom-pending-calls)))
 	   (call-info (lyskom-locate-ref-no kom-queue ref-no))
-	   errno err-stat)
+	   errno)
       (set-buffer lyskom-unparsed-buffer)
       (setq errno (lyskom-parse-num))
-      (setq err-stat (lyskom-parse-num))		;Skip ref_no.
+      (lyskom-parse-num)		;Skip ref_no.
       (set-buffer buffer)
       (setq lyskom-errno errno)
-      (setq lyskom-err-stat err-stat)
       (setq lyskom-pending-calls
 	    (lyskom-assoc-dremove ref-no lyskom-pending-calls))
       (lyskom-decrease-pending-calls)
-      (when call-info
-	  (lyskom-tr-call-to-parsed call-info nil))
+      (if call-info
+	  (lyskom-tr-call-to-parsed call-info nil)
+	(lyskom-message "Bug i lyskom-parse-error"))
       (lyskom-check-call kom-queue))))
 
 
@@ -1107,6 +891,7 @@ functions and variables that are connected with the lyskom-buffer."
 	      (message ""))))
     (lyskom-save-excursion
      (set-buffer lyskom-unparsed-buffer)
+     (setq lyskom-string-bytes-missing 0)
      (while (not (zerop (1- (point-max)))) ;Parse while replies.
        (let* ((lyskom-parse-pos 1)
 	      (key (lyskom-parse-nonwhite-char)))
@@ -1131,24 +916,4 @@ functions and variables that are connected with the lyskom-buffer."
              (delete-region (match-beginning 0) (match-end 0)))
 	 )))
     (store-match-data match-data)))
-
-(defun lyskom-protocol-error (function format-string &rest args)
-  (when lyskom-debug-communications-to-buffer
-    (lyskom-debug-insert lyskom-proc
-                         (format " Protocol error in %S: " function)
-                         (apply 'format format-string args))
-    (lyskom-debug-insert lyskom-proc
-                         " Backtrace:"
-                         "")
-    (let ((standard-output
-           (get-buffer-create lyskom-debug-communications-to-buffer-buffer)))
-      (backtrace))
-    (lyskom-debug-insert lyskom-proc
-                         (format " Current string: ")
-                         (buffer-substring lyskom-parse-pos (point-max))))
-
-  (signal 'lyskom-protocol-error
-          (format "Protocol error in %S: %s"
-                  function
-                  (apply 'format format-string args))))
 

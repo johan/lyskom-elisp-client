@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.39 1999-08-23 09:51:45 byers Exp $
+;;;;; $Id: startup.el,v 44.23.2.1 1999-10-13 09:56:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,20 +36,12 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.39 1999-08-23 09:51:45 byers Exp $\n"))
+	      "$Id: startup.el,v 44.23.2.1 1999-10-13 09:56:16 byers Exp $\n"))
 
 
 ;;; ================================================================
 ;;;                         Start kom.
 
-
-(defvar lyskom-www-proxy-connect-phase 1
-  "Phase when reading connection response from www-proxy:
-1: (initial phase) waiting for the
-   string \"HTTP/1.0 2000 Connection established\"
-2: we have seen the connection string. After this, it may come lines stating
-   proxy-agents and other things. They all seem to end with an empty line,
-   so in this phase we wait for an empty line.")
 
 ;;;###autoload
 (defun lyskom (&optional host username password session-priority)
@@ -89,35 +81,15 @@ See lyskom-mode for details."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (let* ((duplicate-buffers
-            (delq nil
-                  (mapcar (lambda (buffer)
-                            (and (lyskom-buffer-p buffer t)
-                                 (buffer-name buffer)
-                                 (string-match (regexp-quote host)
-                                               (buffer-name buffer))
-                                 (save-excursion (set-buffer buffer)
-                                                 (and 
-                                                  (boundp 'lyskom-server-port)
-                                                  (eq port lyskom-server-port)))
-                                 buffer))
-                          (buffer-list))))
+    (let* ((buffer (get-buffer host))
 	   (name nil)
 	   (proc nil)
-           (buffer (car duplicate-buffers))
-	   ;; (alive (lyskom-buffer-p buffer))
            (reused-buffer nil))
-      
-
-      ;;<<<<<<< startup.el
-      ;;      (if (and buffer
-      ;;	       alive
-      ;;=======
-      (if (and (lyskom-buffer-p buffer nil)
+      (if (and buffer
+	       (lyskom-buffer-p buffer)
 	       (not (prog1
 			(j-or-n-p (lyskom-get-string
-				   'start-new-session-same-server)
-                                  t)
+				   'start-new-session-same-server))
 		      (message ""))))
 	  (progn 
             (switch-to-buffer buffer)
@@ -128,7 +100,12 @@ See lyskom-mode for details."
 		     (set-buffer buffer)
                      (setq reused-buffer t)
 		     (goto-char (point-max))
-		     (let ((time (lyskom-current-time)))
+		     (let ((time (decode-time (current-time))))
+		       (setcar (cdr (cdr (cdr (cdr time))))
+			       (1- (car (cdr (cdr (cdr (cdr time)))))))
+		       (setcar (cdr (cdr (cdr (cdr (cdr time)))))
+			       (- (car (cdr (cdr (cdr (cdr (cdr time))))))
+				  1900))
 		       (lyskom-insert
 			(format (lyskom-get-string 'new-session-in-buffer)
 				(lyskom-format-time
@@ -160,44 +137,22 @@ See lyskom-mode for details."
                        (setq proc (open-network-stream name buffer
                                                        proxy-host
                                                        proxy-port))
-                       (set-process-coding-system proc 'no-conversion 'iso-8859-1)
-
-		       ;; Install our filter.
-		       ;; Do this before we send the CONNECT command to
-		       ;; the proxy, in case the proxy answers fast.
-		       (setq lyskom-www-proxy-connect-phase 1)
-		       (set-process-filter proc
-					   'lyskom-www-proxy-connect-filter)
-		       (process-kill-without-query proc nil)
-
                        (lyskom-process-send-string 
                         proc
                         (format "\
-CONNECT %s:%d HTTP/1.0\r\n\
+connect %s:%d HTTP/1.0\r\n\
 \r\n"
-                                host port))
-
-		       ;; Now wait for the answer from the proxy
-		       ;;
-		       ;; This is because anything we send before the
-		       ;; connection ack will be thrown away by the proxy
-		       ;; so it is bad to try to start talking with the
-		       ;; server before the connection is up.
-		       (while (eq 'lyskom-www-proxy-connect-filter
-				  (process-filter proc))
-			 (accept-process-output proc))
-		       ;; Now the proxy has connected to the kom server
-		       )
+                                host port)))
                       (t (setq proc (open-network-stream name buffer
-                                                         host port))
-                         (set-process-coding-system proc 'no-conversion 'iso-8859-1))))
+                                                         host port)))))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
+	      (if session-priority
+		  (setq lyskom-session-priority session-priority))
 	      (setq lyskom-buffer buffer)
 	      (setq lyskom-default-user-name username)
 	      (setq lyskom-default-password password)
 	      (setq lyskom-server-name host)
-	      (setq lyskom-server-port port)
 	      (setq lyskom-proc proc)
 	      (lyskom-setup-faces)
 	      (lyskom-insert
@@ -219,9 +174,6 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	      (save-excursion
 		(lyskom-init-parse buffer))
 
-              ;; Async messages
-              (lyskom-accept-async)
-
 	      ;; +++PREFETCH+++
 	      (lyskom-setup-prefetch)
 
@@ -230,16 +182,23 @@ CONNECT %s:%d HTTP/1.0\r\n\
 					   "lyskom.el" lyskom-clientversion)
 
 	      (setq lyskom-server-info (blocking-do 'get-server-info))
-              (setq lyskom-server-version-info (blocking-do 'get-version-info))
-              (when (or (null lyskom-server-version-info)
-                        (<= (version-info->protocol-version 
-                             lyskom-server-version-info) 7))
-                (lyskom-error 'too-old-server))
-
+	      (setq
+	       lyskom-server-version
+	       (list (/ (server-info->version lyskom-server-info) 10000)
+		     (/ (% (server-info->version lyskom-server-info) 10000)
+			100)
+		     (% (server-info->version lyskom-server-info) 100)))
 	      (lyskom-setup-client-for-server-version)
 	      (lyskom-format-insert 
 	       'connection-done
-	       (version-info->software-version lyskom-server-version-info))
+	       (if (zerop (elt lyskom-server-version 2))
+		   (format "%d.%d"
+			   (elt lyskom-server-version 0)
+			   (elt lyskom-server-version 1))
+		 (format "%d.%d.%d"
+                         (elt lyskom-server-version 0)
+                         (elt lyskom-server-version 1)
+                         (elt lyskom-server-version 2))))
 	      (if (not (zerop (server-info->motd-of-lyskom
 			       lyskom-server-info)))
 		  (let ((text (blocking-do 'get-text 
@@ -253,7 +212,7 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil) 
 	      ;; Log in
-	      (kom-start-anew t session-priority)
+	      (kom-start-anew t)
 	      (if (memq lyskom-buffer lyskom-buffer-list)
 		  (while (not (eq lyskom-buffer (car lyskom-buffer-list)))
 		    (setq lyskom-buffer-list
@@ -269,98 +228,54 @@ CONNECT %s:%d HTTP/1.0\r\n\
 	    (unless reused-buffer (kill-buffer buffer))))))))
 
 
-(defun lyskom-accept-async ()
-  (blocking-do 'accept-async '(5 7 8 9 11 12 13 14 15 16 17 18))
-  (let* ((ans (blocking-do 'query-async)))
-    (unless (memq 15 (listify-vector ans))
-      (blocking-do 'accept-async '(0 5 7 8 9 11 12 13 14 16 17 18)))))
-
-
-(defun lyskom-www-proxy-connect-filter (proc output)
-  "Receive connection acknowledgement from proxy."
-  (if lyskom-debug-communications-to-buffer
-      (lyskom-debug-insert proc "-----> " output))
-  (cond
-   ((and (= lyskom-www-proxy-connect-phase 1)
-	 (string-match "^HTTP/1.0 200.*\r\n" output))
-    (setq lyskom-www-proxy-connect-phase 2)
-    ;; safety check: see if the empty line is already in this output
-    (lyskom-www-proxy-connect-filter proc output))
-
-   ((and (= lyskom-www-proxy-connect-phase 2)
-	 (string-match "^\r\n" output))
-    (set-process-filter proc 'lyskom-connect-filter))))
-
+(defun lyskom-setup-client-check-version (spec version)
+  (let ((relation (elt spec 0))
+        (major (elt spec 1))
+        (minor (elt spec 2))
+        (revision (elt spec 3)))
+    (cond ((eq relation '=)
+           (and (or (null major) (= major (elt version 0)))
+                (or (null minor) (= minor (elt version 1)))
+                (or (null revision) (= revision (elt version 2)))))
+          ((eq relation '>=)
+           (or (and (= (elt version 0) major)
+                    (= (elt version 1) minor)
+                    (>= (elt version 2) revision))
+               (and (= (elt version 0) major)
+                    (> (elt version 1) minor))
+               (and (> (elt version 0) major))))
+          ((eq relation '<)
+           (or (and (= (elt version 0) major)
+                    (= (elt version 1) minor)
+                    (< (elt version 2) revision))
+               (and (= (elt version 0) major)
+                    (< (elt version 1) minor))
+               (and (< (elt version 0) major)))))))
 
 
 (defun lyskom-setup-client-for-server-version ()
-  "Setup flags according to protocol versions."
-  (lyskom-clear-features)
-  (let ((protocol-version 
-         (version-info->protocol-version lyskom-server-version-info)))
-
-  (when (>= protocol-version 10)
-    (lyskom-set-feature bcc-misc t)
-    (lyskom-set-feature aux-items t)
-    (lyskom-set-feature highest-call 105)
-    (lyskom-set-feature local-to-global t))
-
-  (when (>= protocol-version 9)
-    (lyskom-set-feature dynamic-session-info t)
-    (lyskom-set-feature idle-time t))
-
-  (when (>= protocol-version 8)
-    (lyskom-set-feature long-conf-types t))))
-
-
-;;;(defun lyskom-setup-client-check-version (spec version)
-;;;  (let ((relation (elt spec 0))
-;;;        (major (elt spec 1))
-;;;        (minor (elt spec 2))
-;;;        (revision (elt spec 3)))
-;;;    (cond ((eq relation '=)
-;;;           (and (or (null major) (= major (elt version 0)))
-;;;                (or (null minor) (= minor (elt version 1)))
-;;;                (or (null revision) (= revision (elt version 2)))))
-;;;          ((eq relation '>=)
-;;;           (or (and (= (elt version 0) major)
-;;;                    (= (elt version 1) minor)
-;;;                    (>= (elt version 2) revision))
-;;;               (and (= (elt version 0) major)
-;;;                    (> (elt version 1) minor))
-;;;               (and (> (elt version 0) major))))
-;;;          ((eq relation '<)
-;;;           (or (and (= (elt version 0) major)
-;;;                    (= (elt version 1) minor)
-;;;                    (< (elt version 2) revision))
-;;;               (and (= (elt version 0) major)
-;;;                    (< (elt version 1) minor))
-;;;               (and (< (elt version 0) major)))))))
-
-
-;;;(defun lyskom-setup-client-for-server-version ()
-;;; "Set up the supports list and flags for the current server. See
-;;;variable documentation for lyskom-server-feautres"
-;;;  (let ((result nil)
-;;;        (flags nil))
-;;;    (mapcar (function
-;;;             (lambda (spec)
-;;;               (let ((spec-version (elt spec 0))
-;;;                     (plist (elt spec 1)))
-;;;                 (if (and (lyskom-setup-client-check-version 
-;;;                           spec-version
-;;;                           lyskom-server-version))
-;;;                     (mapcar
-;;;                      (function
-;;;                       (lambda (x)
-;;;                         (cond ((consp x) (setq result (cons x result)))
-;;;                               ((symbolp x) (setq flags (cons x flags)))
-;;;                               (t (setq result (cons (cons x t) 
-;;;                                                     result))))))
-;;;                      plist)))))
-;;;            lyskom-server-features)
-;;;    (mapcar (function (lambda (x) (set x t))) flags)
-;;;    (setq lyskom-server-supports result)))
+ "Set up the supports list and flags for the current server. See
+variable documentation for lyskom-server-feautres"
+  (let ((result nil)
+        (flags nil))
+    (mapcar (function
+             (lambda (spec)
+               (let ((spec-version (elt spec 0))
+                     (plist (elt spec 1)))
+                 (if (and (lyskom-setup-client-check-version 
+                           spec-version
+                           lyskom-server-version))
+                     (mapcar
+                      (function
+                       (lambda (x)
+                         (cond ((consp x) (setq result (cons x result)))
+                               ((symbolp x) (setq flags (cons x flags)))
+                               (t (setq result (cons (cons x t) 
+                                                     result))))))
+                      plist)))))
+            lyskom-server-features)
+    (mapcar (function (lambda (x) (set x t))) flags)
+    (setq lyskom-server-supports result)))
                                              
                                                                  
 
@@ -380,148 +295,119 @@ CONNECT %s:%d HTTP/1.0\r\n\
 ;;;                        Start anew
 
 
-(defun kom-start-anew (&optional lyskom-first-time-around session-priority)
+(defun kom-start-anew (&optional lyskom-first-time-around)
   "Start as a new person."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
   (lyskom-completing-clear-cache)
   (let ((old-me lyskom-pers-no)
-	(new-me nil)
 	(login-successful nil))
     (unwind-protect
         (progn
           (if lyskom-first-time-around
               nil
             (lyskom-tell-internat 'kom-tell-login))
-	  ;; We can't allow the prefetch to go on after the new user
-	  ;; is logged in, but to shut down the prefetch would be too
-	  ;; brutal, since the new login might be cancelled. To
-	  ;; prevent the blocking-do calls below from allowing
-	  ;; prefetch we set lyskom-inhibit-prefetch locally.
-	  (let ((lyskom-inhibit-prefetch t))
-	    (while (not new-me)
+          (setq lyskom-pers-no nil)
+          (while (not lyskom-pers-no)
 
-	      (if (and lyskom-first-time-around
-		       lyskom-default-user-name)
-		  ;; This is nil if we can't find a unique match.
-		  (setq new-me
-			(conf-z-info->conf-no
-			 (lyskom-lookup-conf-by-name lyskom-default-user-name
-						     '(pers)))))
-	      (if new-me
-		  nil
-		(let ((name (lyskom-read-conf-name
-			     (lyskom-get-string 'what-is-your-name)
-			     '(pers none) t "" t)))
-		  (setq new-me
-			(or (conf-z-info->conf-no 
-			     (lyskom-lookup-conf-by-name name '(pers)))
-			    (lyskom-create-new-person name)))))
-	      ;; Now new-me contains a number of a person.
-	      ;; Lets log him in.
-	      (if new-me
-		  (let ((conf-stat (blocking-do 'get-conf-stat new-me))
-			(lyskom-inhibit-minibuffer-messages t))
+            (if (and lyskom-first-time-around
+                     lyskom-default-user-name)
+                ;; This is nil if we can't find a unique match.
+                (setq lyskom-pers-no
+                      (conf-z-info->conf-no
+                       (lyskom-lookup-conf-by-name lyskom-default-user-name
+                                                   '(pers)))))
+            (if lyskom-pers-no
+                nil
+              (let ((name (lyskom-read-conf-name
+                           (lyskom-get-string 'what-is-your-name)
+                           '(pers none) t "" t)))
+                (setq lyskom-pers-no
+                      (or (conf-z-info->conf-no 
+                           (lyskom-lookup-conf-by-name name '(pers)))
+                          (lyskom-create-new-person name)))))
+            ;; Now lyskom-pers-no contains a number of a person.
+            ;; Lets log him in.
+            (if lyskom-pers-no
+                (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no))
+                      (lyskom-inhibit-minibuffer-messages t))
 
-		    ;; Previously this code used lyskom-pers-no
-		    ;; directly instead of new-me, but that caused
-		    ;; problem with asynchrounous code trying to
-		    ;; access it.
-		    (setq lyskom-pers-no new-me)
-		  
-		    ;; DEBUG
-		    (if (null conf-stat)
-			(lyskom-insert "You don't exist. Go away.\n"))
+		  ;; DEBUG
+		  (if (null conf-stat)
+		      (lyskom-insert "You don't exist. Go away.\n"))
 
-		    (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
-		    (setq lyskom-first-time-around nil)
-		    (if (blocking-do 'login new-me
-				     (if lyskom-default-password
-					 (prog1
-					     lyskom-default-password
-					   (setq lyskom-default-password nil)
-					   (set-default 'lyskom-default-password
-							nil))
-				       ;; Use password read when creating
-				       ;; the person when loggin in new
-				       ;; users
-				       (or lyskom-is-new-user
-					   (silent-read
-					    (lyskom-get-string 'password))))
-                                     0)
-			(progn
-			  (if lyskom-is-new-user
-			      (blocking-do 'add-member
-					   (server-info->conf-pres-conf lyskom-server-info)
-					   new-me
-                                           100 
-                                           1
-                                           (lyskom-create-membership-type
-                                            nil nil nil nil nil nil nil nil)))
-			  (setq login-successful t))
-		      (lyskom-insert-string 'wrong-password)
-		      (setq new-me nil))
-		    (setq lyskom-is-new-user nil))))
-	    
-	    ;; Now we are logged in.
-	    (lyskom-insert-string 'are-logged-in)
-	    
-	    (if (not lyskom-dont-read-user-area)
-		(lyskom-read-options))
-            (when (or session-priority kom-default-session-priority)
-              (setq lyskom-session-priority
-                    (or session-priority kom-default-session-priority)))
-	    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-				       lyskom-current-conf
-				       0)
-	    (setq lyskom-current-conf 0)
-	    ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
-	    (cache-set-marked-texts (blocking-do 'get-marks))
-	    ;; What is this variable? It is never used. It is ust to
-	    ;; fill the cache?
-	    (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
-	      (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
-          ;; Start the prefetch
-          (lyskom-refetch))
+                  (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
+                  (setq lyskom-first-time-around nil)
+                  (if (blocking-do 'login lyskom-pers-no
+                                   (if lyskom-default-password
+                                       (prog1
+                                           lyskom-default-password
+                                         (setq lyskom-default-password nil)
+                                         (set-default 'lyskom-default-password
+                                                      nil))
+                                     ;; Use password read when creating
+                                     ;; the person when loggin in new
+                                     ;; users
+                                     (or lyskom-is-new-user
+                                         (silent-read
+					  (lyskom-get-string 'password)))))
+		      (progn
+			(if lyskom-is-new-user
+			    (blocking-do 'add-member
+					 (server-info->conf-pres-conf lyskom-server-info)
+					 lyskom-pers-no 100 1))
+			(setq login-successful t))
+                    (lyskom-insert-string 'wrong-password)
+                    (setq lyskom-pers-no nil))
+                  (setq lyskom-is-new-user nil))))
 	  
-      ;; If login succeeded, clear the caches and set the language
-
+          ;; Now we are logged in.
+          (lyskom-insert-string 'are-logged-in)
+          (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+            (if (and conf-stat
+                     (/= (conf-stat->msg-of-day conf-stat) 0))
+                (progn
+                  (lyskom-insert-string 'you-have-motd)
+                  (let ((lyskom-show-comments ; +++SOJGE
+                         (not kom-no-comments-to-motd)))
+                    (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
+            (if (and conf-stat
+                     (zerop (conf-stat->presentation conf-stat))
+                     (not (zerop (conf-stat->no-of-texts conf-stat))))
+                (lyskom-insert-string 'presentation-encouragement)))
+          (if (not lyskom-dont-read-user-area)
+              (lyskom-read-options))
+          (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                                     lyskom-current-conf
+                                     0)
+          (setq lyskom-current-conf 0)
+          (lyskom-refetch)
+          ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
+          (cache-set-marked-texts (blocking-do 'get-marks))
+          ;; What is this variable? It is never used. It is ust to
+          ;; fill the cache?
+          (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
+            (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
+	  
+      ;; If something failed, make sure we are someone
       (if login-successful
-	  (progn (clear-all-caches)
-                 (unless (eq lyskom-language kom-default-language)   
-                   (when (lyskom-set-language kom-default-language)
-                     (lyskom-format-insert-before-prompt 
-                      'language-set-to
-                      (lyskom-language-name kom-default-language)))))
+	  (clear-all-caches)
 	(setq lyskom-pers-no old-me))
-
-      ;; Show motd and encourage writing a presentation
-
-      (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-        (if (and conf-stat
-                 (/= (conf-stat->msg-of-day conf-stat) 0))
-            (progn
-              (lyskom-insert-string 'you-have-motd)
-              (let ((lyskom-show-comments ; +++SOJGE
-                     (not kom-no-comments-to-motd)))
-                (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
-        (if (and conf-stat
-                 (zerop (conf-stat->presentation conf-stat))
-                 (not (zerop (conf-stat->no-of-texts conf-stat))))
-            (lyskom-insert-string 'presentation-encouragement)))
-
       (setq lyskom-is-new-user nil)
       (lyskom-end-of-command)))
-
   ;; Run the hook kom-login-hook. We don't want to hang the
   ;; login, just because something crashed here.
-
   (condition-case err
       (progn
         (run-hooks 'lyskom-login-hook)
         (run-hooks 'kom-login-hook))
     (error (lyskom-format-insert-before-prompt
-            'error-in-login-hook (format "%s" err)))))
+            'error-in-login-hook (format "%s" err))))
+  (unless (eq lyskom-language kom-default-language)   
+    (when (lyskom-set-language kom-default-language)
+      (lyskom-format-insert-before-prompt 
+       'changing-language-to
+       (lyskom-language-name kom-default-language)))))
 
 
 (defun lyskom-refetch ()
@@ -536,18 +422,12 @@ This is called at login and after prioritize and set-unread."
 
   (setq lyskom-membership nil)
 
-  (setq lyskom-to-do-list (lyskom-create-read-list))
-  (setq lyskom-reading-list (lyskom-create-read-list))
-
-
   (lyskom-reset-prefetch)
-  (let ((lyskom-inhibit-prefetch t))
-    (lyskom-prefetch-membership lyskom-pers-no)
-    (let ((unreads (blocking-do 'get-unread-confs lyskom-pers-no)))
-      (lyskom-traverse conf-no (nreverse (conf-no-list->conf-nos unreads))
-        (lyskom-prefetch-one-membership conf-no lyskom-pers-no))))
   (lyskom-start-prefetch)
-)
+  (lyskom-prefetch-membership lyskom-pers-no)
+
+  (setq lyskom-to-do-list (lyskom-create-read-list))
+  (setq lyskom-reading-list (lyskom-create-read-list)))
 
 
 (defun lyskom-set-membership (membership)
@@ -611,17 +491,7 @@ WANT-PERSONS is t for persons, nil for confs."
 	nil)
        (t
 	;; Entered the same password twice
-	(let ((new-person (blocking-do 'create-person name
-                                       password
-                                       (lyskom-create-flags nil
-                                                            nil
-                                                            nil
-                                                            nil
-                                                            nil
-                                                            nil
-                                                            nil
-                                                            nil)
-                                       nil)))
+	(let ((new-person (blocking-do 'create-person name password)))
 	  (if (null new-person)
 	      (lyskom-insert-string 'could-not-create-you)
 	    ;; Raise a flag so the user will be added to the
@@ -685,7 +555,7 @@ alias name is entered, the corresponding address is returned."
   "\\<lyskom-mode-map>Mode for LysKOM client.
 Commands:
 \\[kom-next-command]	Do the default action. This can be to read the next text,select
-	next conference with unread texts or whatever the prompt says.
+n	ext conference with unread texts or whatever the prompt says.
 \\[kom-go-to-conf]	Go to a conference. LysKOM will ask you for a conference
 	and make you a member of it if you are not already.
 \\[kom-list-conferences]	List conferences matching a given string.
@@ -715,7 +585,7 @@ Commands:
 \\[describe-mode]	Display this help text.
 
 \\[kom-busy-wait]	Put the lyskom-session in wait mode. The next created text with 
-	a priority higher than that of the next conference you are going
+	a priotity higher that that of the next conference you are going
 	to will be read directly when it is created.
 \\[kom-set-unread]	Mark a number of texts as unread.
 \\[kom-jump]	Skip (mark as read) all the comments to this article recursively.
@@ -832,6 +702,7 @@ to see, set of call."
 ;    (make-local-variable 'kom-remote-control)
 ;    (make-local-variable 'kom-remote-controllers)
 ;    (make-local-variable 'kom-session-filter-list)
+;    (make-local-variable 'lyskom-accept-async-flag)
 ;    (make-local-variable 'lyskom-blocking-return)
 ;    (make-local-variable 'lyskom-buffer)
 ;    (make-local-variable 'lyskom-command-to-do)
@@ -844,9 +715,11 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-default-user-name)
 ;    (make-local-variable 'lyskom-do-when-done)
 ;    (make-local-variable 'lyskom-dynamic-session-info-flag)
+;    (make-local-variable 'lyskom-dont-change-prompt)
 ;    (make-local-variable 'lyskom-errno)
 ;    (make-local-variable 'lyskom-executing-command)
 ;    (make-local-variable 'lyskom-filter-list)
+;    (make-local-variable 'lyskom-idle-time-flag)
 ;    (make-local-variable 'lyskom-is-administrator)
 ;    (make-local-variable 'lyskom-is-parsing)
 ;    (make-local-variable 'lyskom-is-waiting)
@@ -856,6 +729,7 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-last-personal-message-sender)
 ;    (make-local-variable 'lyskom-last-viewed)
 ;    (make-local-variable 'lyskom-list-of-edit-buffers)
+;    (make-local-variable 'lyskom-long-conf-types-flag)
 ;    (make-local-variable 'lyskom-marked-text-cache)
 ;    (make-local-variable 'lyskom-membership)
 ;    (make-local-variable 'lyskom-membership-is-read)
@@ -883,8 +757,10 @@ to see, set of call."
 ;    (make-local-variable 'lyskom-server-name)
 ;    (make-local-variable 'lyskom-server-version)
 ;    (make-local-variable 'lyskom-server-supports)
+;    (make-local-variable 'lyskom-long-conf-types-flag)
 ;    (make-local-variable 'lyskom-set-last-read-flag)
 ;    (make-local-variable 'lyskom-uconf-stats-flag)
+;    (make-local-variable 'lyskom-z-lookup-flag)
 ;    (make-local-variable 'lyskom-session-no)
 ;    (make-local-variable 'lyskom-session-priority)
 ;    (make-local-variable 'lyskom-text-cache)

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.24 1999-10-11 15:43:58 byers Exp $
+;;;;; $Id: option-edit.el,v 44.16.2.1 1999-10-13 09:56:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.24 1999-10-11 15:43:58 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.16.2.1 1999-10-13 09:56:08 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -51,162 +51,136 @@
 
 (defvar lyskom-customize-buffer-format
   '("\n"
-;    (lyskom bold centered)
-;    "\n\n"
-;    lyskom-doc
-;    "\n\n"
-;    [kom-customize-format]
-;    "\n\n"
-;    section
-;    (look-and-feel-misc bold centered)
-;    section
-;    "\n"
-;    [kom-default-language]
-;    [kom-show-namedays]
-;    [kom-show-week-number]
-;    "\n"
-;    [kom-idle-hide]
-;    [kom-show-where-and-what]
-;    [kom-show-since-and-when]
-;    "\n"
-;    [kom-friends]
-;    "\n"
-;    [kom-presence-messages]
-;    [kom-presence-messages-in-buffer]
-;    "\n"
-;    [kom-page-before-command]
-;    [kom-agree-text]
-;    "\n\n"
-;    section
-;    (window-locations bold centered)
-;    section
-;    "\n"
-;    (windows-where bold centered)
-;    "\n"
-;    windows-doc
-;    "\n\n"
-;    [kom-customize-in-window]
-;    [kom-edit-filters-in-window]
-;    [kom-prioritize-in-window]
-;    [kom-list-membership-in-window]
-;    [kom-write-texts-in-window]
-;    [kom-view-commented-in-window]
-;    [kom-personal-messages-in-window]
-;    
-;    "\n\n"
-;    section
-;    (audio-cues bold centered)
-;    section
-;    "\n"
-;    [kom-audio-player]
-;    "\n"
-;    (audio-cues-when bold centered)
-;    "\n"
-;    audio-cues-doc
-;    "\n\n"
+    (lyskom bold centered)
+    "\n\n"
+    lyskom-doc
+    "\n\n"
+    [kom-customize-format]
+    "\n\n"
+    section
+    (look-and-feel-misc bold centered)
+    section
+    "\n"
+    [kom-default-language]
+    [kom-show-namedays]
+    "\n"
+    [kom-idle-hide]
+    [kom-show-where-and-what]
+    "\n"
+    [kom-friends]
+    "\n"
+    [kom-presence-messages]
+    [kom-presence-messages-in-buffer]
+    "\n"
+    [kom-page-before-command]
+    "\n\n"
+    section
+    (window-locations bold centered)
+    section
+    "\n"
+    (windows-where bold centered)
+    "\n"
+    windows-doc
+    "\n\n"
+    [kom-customize-in-window]
+    [kom-edit-filters-in-window]
+    [kom-prioritize-in-window]
+    [kom-list-membership-in-window]
+    [kom-write-texts-in-window]
+    [kom-view-commented-in-window]
+    
+    "\n\n"
+    section
+    (audio-cues bold centered)
+    section
+    "\n"
+    [kom-audio-player]
+    "\n"
+    (audio-cues-when bold centered)
+    "\n"
+    audio-cues-doc
+    "\n\n"
     [kom-ding-on-priority-break]
     [kom-ding-on-new-letter]
     [kom-ding-on-wait-done]
-    [kom-ding-on-no-subject]
     [kom-ding-on-common-messages]
     [kom-ding-on-group-messages]
     [kom-ding-on-personal-messages]
-;    [kom-silent-ansaphone]
-;    "\n\n"
-;    section
-;    (reading bold centered)
-;    section
-;    "\n"
-;    [kom-default-session-priority]
-;    [kom-print-number-of-unread-on-entrance]
-;    [kom-allow-incompleteness]
-;    [kom-created-texts-are-read]
-;    [kom-higher-priority-breaks]
-;    [kom-review-priority]
-;    [kom-show-footnotes-immediately]
-;    [kom-follow-comments-outside-membership]
-;    "\n"
-;    [kom-default-mark]
-;    [kom-membership-default-priority]
-;    [kom-membership-default-placement]
-;    [kom-unsubscribe-makes-passive]
-;    [kom-postpone-default]
-;    "\n"
-;    [kom-autowrap]
-;    [kom-show-author-at-end]
-;    [kom-show-creating-software]
-;    [kom-show-imported-importer]
-;    [kom-show-imported-external-recipients]
-;    [kom-show-imported-envelope-sender]
-;    [kom-smileys]
-;    "\n"
-;    [kom-dashed-lines]
-;    [kom-long-lines]
-;    [kom-text-footer-format]
-;    [kom-text-header-dash-length]
-;    [kom-text-footer-dash-length]
-;    "\n"
-;    [kom-truncate-threshold]
-;    [kom-truncate-show-lines]
-;    "\n"
-;    [kom-ignore-message-senders]
-;    [kom-ignore-message-recipients]
-;    [kom-show-personal-message-date]
-;    "\n\n"
-;    section
-;    (writing bold centered)
-;    section
-;    "\n"
-;    [kom-cite-string]
-;    [kom-ispell-dictionary]
-;    "\n"
-;    sending-doc
-;    "\n\n"
-;    [kom-confirm-multiple-recipients]
-;    [kom-check-commented-author-membership]
-;    [kom-check-for-new-comments]
-;
-;    "\n\n"
-;    section
-;    (urls bold centered)
-;    section
-;    "\n"
-;    [kom-url-viewer-preferences]
-;    [kom-mosaic-command]
-;    [kom-netscape-command]
-;
-;    "\n\n"
-;    section
-;    (personal-messages bold centered)
-;    section
-;    "\n"
-;    [kom-show-personal-messages-in-buffer]
-;    [kom-pop-personal-messages]
-;    [kom-default-message-recipient]
-;    "\n"
-;    (automatic-replies bold centered)
-;    "\n"
-;    [kom-ansaphone-record-messages]
-;    [kom-ansaphone-show-messages]
-;    "\n"
-;    [kom-ansaphone-default-reply]
-;
-;    "\n\n"
-;    section
-;    (remote-control bold centered)
-;    section
-;    "\n"
-;    [kom-remote-control]
-;    [kom-self-control]
-;    "\n"
-;    [kom-remote-controllers]
-;    "\n\n"
-;    section
-;    (hooks bold centered)
-;    section
-;    "\n"
-;    [kom-login-hook]
-;    [kom-do-when-done]
+    [kom-ding-on-no-subject]
+
+    "\n\n"
+    section
+    (reading bold centered)
+    section
+    "\n"
+    [kom-created-texts-are-read]
+    [kom-higher-priority-breaks]
+    [kom-show-footnotes-immediately]
+    [kom-follow-comments-outside-membership]
+    "\n"
+    [kom-default-mark]
+    [kom-membership-default-priority]
+    "\n"
+    [kom-print-number-of-unread-on-entrance]
+    [kom-autowrap]
+    [kom-dashed-lines]
+    [kom-show-author-at-end]
+
+    "\n\n"
+    section
+    (writing bold centered)
+    section
+    "\n"
+    [kom-cite-string]
+    [kom-ispell-dictionary]
+    "\n"
+    sending-doc
+    "\n\n"
+    [kom-confirm-multiple-recipients]
+    [kom-check-commented-author-membership]
+    [kom-check-for-new-comments]
+
+    "\n\n"
+    section
+    (urls bold centered)
+    section
+    "\n"
+    [kom-url-viewer-preferences]
+    [kom-mosaic-command]
+    [kom-netscape-command]
+
+    "\n\n"
+    section
+    (personal-messages bold centered)
+    section
+    "\n"
+    [kom-show-personal-messages-in-buffer]
+    [kom-pop-personal-messages]
+    [kom-default-message-recipient]
+    "\n"
+    (automatic-replies bold centered)
+    "\n"
+    [kom-ansaphone-record-messages]
+    [kom-ansaphone-show-messages]
+    "\n"
+    [kom-ansaphone-default-reply]
+
+    "\n\n"
+    section
+    (remote-control bold centered)
+    section
+    "\n"
+    [kom-remote-control]
+    [kom-self-control]
+    "\n"
+    [kom-remote-controllers]
+    "\n\n"
+    section
+    (hooks bold centered)
+    section
+    "\n"
+    [kom-login-hook]
+    [kom-do-when-done]
     ))
 
 ;;; ======================================================================
@@ -220,19 +194,9 @@ customize buffer but do not save them to the server."
   (let ((tmp lyskom-widgets))
     (save-excursion
       (set-buffer lyskom-buffer)
-      (when (listp kom-dont-read-saved-variables)
-        (setq kom-dont-read-saved-variables nil))
       (while tmp
         (set (car (car tmp))
              (widget-value (cdr (car tmp))))
-        (when (and (listp kom-dont-read-saved-variables)
-                   (not (widget-value (widget-get (cdr (car tmp)) 
-                                                  ':lyskom-storage-widget)))
-                   (or (memq (car (car tmp)) lyskom-elisp-variables)
-                       (memq (car (car tmp)) lyskom-global-boolean-variables)
-                       (memq (car (car tmp)) lyskom-global-non-boolean-variables)))
-          (setq kom-dont-read-saved-variables 
-                (cons (car (car tmp)) kom-dont-read-saved-variables)))
         (setq tmp (cdr tmp))))))
 
 (eval-when-compile (defvar save-options-init-file nil))
@@ -251,11 +215,9 @@ customize buffer but do not save them to the server."
         (lambda (e)
           (when (and (vectorp e)
                      (symbolp (elt e 0))
-                     (or 
-                      (and (not (memq (elt e 0) lyskom-elisp-variables))
-                           (not (memq (elt e 0) lyskom-global-boolean-variables))
-                           (not (memq (elt e 0) lyskom-global-non-boolean-variables)))
-                      (memq (elt e 0) kom-dont-read-saved-variables))
+                     (not (memq (elt e 0) lyskom-elisp-variables))
+                     (not (memq (elt e 0) lyskom-global-boolean-variables))
+                     (not (memq (elt e 0) lyskom-global-non-boolean-variables))
                      (boundp (elt e 0)))
             (setq var-list (cons (cons (elt e 0)
                                        (symbol-value (elt e 0)))
@@ -429,7 +391,6 @@ customize buffer but do not save them to the server."
 
 (defvar lyskom-custom-variables
   '((kom-emacs-knows-iso-8859-1 (toggle (yes no)))
-    (kom-personal-messages-in-window (open-window))
     (kom-write-texts-in-window (open-window))
     (kom-list-membership-in-window (open-window))
     (kom-edit-filters-in-window (open-window))
@@ -445,7 +406,7 @@ customize buffer but do not save them to the server."
     (kom-user-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
-    (kom-default-mark (choice ((number (0 255) 
+    (kom-default-mark (choice ((number (1 255) 
                                        :tag selected-mark
                                        :format "%[%t%] (%v)"
                                        :size 0)
@@ -456,27 +417,17 @@ customize buffer but do not save them to the server."
                            (number nil :tag max-text-length))))
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
-
-    (kom-truncate-threshold (choice ((const (off nil))
-				     (number nil :tag truncate-threshold-lines))))
-    (kom-truncate-show-lines (number nil))
-
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
-    (kom-presence-messages (choice ((const (on t))
-                                    (const (friends friends))
-                                    (repeat (person nil :tag name)
-                                            :indent 4
-                                            :tag some-persons
-                                            :menu-tag some-persons))))
+    (kom-presence-messages      (choice ((const (on t))
+              (repeat (person nil :tag name)
+                      :tag some-persons
+                      :menu-tag some-persons))))
     (kom-presence-messages-in-buffer
      (choice ((const (on t))
-              (const (friends friends))
               (repeat (person nil :tag name)
-                      :indent 4
                       :tag some-persons
                       :menu-tag some-persons))))
     (kom-show-where-and-what (toggle (yes no)))
-    (kom-show-since-and-when (toggle (yes no)))
     (kom-idle-hide (number))
     (kom-show-footnotes-immediately (toggle (yes no)))
     (kom-follow-comments-outside-membership (toggle (yes no)))
@@ -486,19 +437,16 @@ customize buffer but do not save them to the server."
     (kom-higher-priority-breaks (choice ((const (express-break express))
                                          (const (break t))
                                          (const (no-break nil)))))
-    (kom-login-hook (repeat (command nil :tag command)
-                            :indent 4))
+    (kom-login-hook (repeat (command nil :tag command)))
     (kom-do-when-done (repeat (choice ((command nil :tag command)
                                        (kbd-macro nil :tag kbd-macro))
                                       :tag execute
                                       :help-echo select-what-to-execute
-                                      :format "%[%t%] %v")
-                              :indent 4))
+                                      :format "%[%t%] %v")))
     (kom-page-before-command (choice ((const (page-none nil))
                                       (const (page-all t))
                                       (repeat (command nil
                                                        :tag command)
-                                              :indent 4
                                               :tag page-some
                                               :menu-tag page-some
                                               :format "%[%t%] %v"
@@ -530,9 +478,8 @@ customize buffer but do not save them to the server."
               (const (group-rcpt group))
               (const (sender-rcpt sender)))))
     (lyskom-filter-outgoing-messages (noggle (yes no)))
-    (kom-friends (repeat (person nil :tag name) :indent 4))
-    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
-                                        :indent 4))
+    (kom-friends (repeat (person nil :tag name)))
+    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)))
     (kom-mosaic-command (file))
     (kom-netscape-command (file))
     (kom-confirm-multiple-recipients
@@ -552,51 +499,10 @@ customize buffer but do not save them to the server."
     (kom-ansaphone-show-messages (toggle (yes no)))
     (kom-ansaphone-default-reply (string nil :format "%[%t%]\n%v"))
     (kom-remote-control (toggle (on off)))
-    (kom-remote-controllers (repeat (person nil :tag name)
-                                    :indent 4))
+    (kom-remote-controllers (repeat (person nil :tag name)))
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
     (kom-show-namedays (toggle (on off)))
-
-    (kom-show-week-number (toggle (on off)))
-    (kom-membership-default-placement (choice ((const (last last))
-                                               (const (first first))
-                                               (number nil
-                                                       :tag specific-placement
-                                                       ))))
-    (kom-show-imported-importer (toggle (on off)))
-    (kom-show-imported-envelope-sender (toggle (on off)))
-    (kom-show-imported-external-recipients (toggle (on off)))
-    (kom-agree-text (choice ((string nil :tag a-string)
-                             (repeat (string nil
-                                             :tag a-string
-                                             :format "%[%t%] `%v'\n")
-                                     :indent 4
-                                     :tag some-string
-                                     :menu-tag some-string))))
-    (kom-silent-ansaphone (noggle (on off)))
-    (kom-default-session-priority (choice ((const (unspecified nil))
-                                           (number nil
-                                                   :tag priority))))
-    (kom-unsubscribe-makes-passive (toggle (on off)))
-    (kom-review-priority (choice ((const (same-as-conf nil))
-                                  (number nil :tag fixed-priority))))
-    (kom-show-creating-software (toggle (on off)))
-    (kom-text-footer-format (choice ((const (default-format nil))
-                                     (string nil :tag custom-format))))
-    (kom-long-lines (toggle (on off)))
-    (kom-postpone-default (number))
-    (kom-allow-incompleteness (toggle (on off)))
-    (kom-smileys (toggle (on off)))
-    (kom-ignore-message-senders (repeat (person nil :tag name)
-                                    :indent 4))
-    (kom-ignore-message-recipients (repeat (person nil 
-                                                   :tag name
-                                                   :lyskom-predicate (pers conf))
-                                    :indent 4))
-    (kom-text-header-dash-length (number))
-    (kom-text-footer-dash-length (number))
-    (kom-show-personal-message-date (toggle (on off)))
 ))
 
 (defvar lyskom-widget-functions 
@@ -632,25 +538,8 @@ customize buffer but do not save them to the server."
          (doc-sym (intern (concat (symbol-name variable) "-doc")))
          (help-sym (intern (concat (symbol-name variable) "-help")))
          (value (save-excursion (set-buffer lyskom-buffer)
-                                (symbol-value variable)))
-         (storage-widget nil))
-
-    (lyskom-ignore value help-sym dummy)       ; Are they ever used?
-
-    (setq storage-widget
-          (condition-case nil
-              (prog1
-                (widget-create 'checkbox
-                               ':value (and (not (memq variable kom-dont-read-saved-variables))
-                                            (or (memq variable lyskom-elisp-variables)
-                                                (memq variable lyskom-global-boolean-variables)
-                                                (memq variable lyskom-global-non-boolean-variables)))
-                               ':args variable
-                               ':format "%[%v%]"
-                               ':help-echo (lyskom-custom-string 'variable-type-help))
-                (widget-insert " "))
-            (error nil)))
-
+                                (symbol-value variable))))
+    (ignore value help-sym dummy)       ; Are they ever used?
     (setq spec 
           (cons (car spec)
                 (append
@@ -664,7 +553,6 @@ customize buffer but do not save them to the server."
                        (lyskom-format 
                         (lyskom-custom-string 'default-help-echo)
                         (symbol-name variable))
-                       ':lyskom-storage-widget storage-widget
                        )
                  (cdr spec))))
     (let ((widget (apply 'widget-create spec)))
@@ -877,36 +765,7 @@ customize buffer but do not save them to the server."
               (list 'lyskom-string
                     ':tag (lyskom-custom-string 'sound-file)
                     ':help-echo (lyskom-custom-string 'select-audio-file)
-                    ':size 0)
-              (list 'editable-list
-                    ':format "%[%t%]\n%v%i"
-                    ':indent 4
-                    ':tag (lyskom-custom-string 'specific-spec)
-                    ':menu-tag (lyskom-custom-string 'specific-spec)
-                    ':args
-                    `((cons number number))
-;                       :value (1 . 1)
-;                       `(lyskom-name :tag ,(lyskom-custom-string 'conf-of-person))
-;                       `(menu-choice
-;                         :case-fold t
-;                         :format "%[%t%] %v"
-;                         :args
-;                         `((item :tag ,(lyskom-custom-string 'turned-off)
-;                                 :value nil
-;                                 :format "%t"
-;                                 :match (lambda (w v) (or (null v) (eq v 0))))
-;                           (lyskom-number :tag ,(lyskom-custom-string 'number-of-times)
-;                                          :help-echo ,(lyskom-custom-string 'select-number)
-;                                          :value "1"
-;                                          :format "%[%t%]: (%v)"
-;                                          :size 0
-;                                          :min-value 1
-;                                          :max-value 255)
-;                           (lyskom-string :tag ,(lyskom-custom-string 'sound-file)
-;                                          :help-echo ,(lyskom-custom-string 'select-audio-file)
-;                                          :size 0)))))
-)
-              )))
+                    ':size 0))))
 
 (defun lyskom-toggle-widget-inverse (type &optional args propl)
   (list 'menu-choice

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $
+;;;;; $Id: command.el,v 44.11.2.1 1999-10-13 09:55:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,15 +32,11 @@
 ;;;;
 
 
-(setq lyskom-clientversion-long 
-      (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $\n"))
-
-;;; (eval-when-compile
-;;;   (require 'lyskom-vars "vars")
-;;;   (require 'lyskom-services "services")
-;;;   (require 'lyskom-language "language")
-;;;   (require 'lyskom-clienttypes "clienttypes"))
+(eval-when-compile
+  (require 'lyskom-vars "vars")
+  (require 'lyskom-services "services")
+  (require 'lyskom-language "language")
+  (require 'lyskom-clienttypes "clienttypes"))
 
 
 ;;; ======================================================================
@@ -240,8 +236,7 @@ This function checks if lyskom-doing-default-command and
 lyskom-first-time-around are bound. The text entered in the buffer is
 chosen according to this"
 
-  (if (or (not lyskom-proc)
-          (memq (process-status lyskom-proc) '(closed signal exited nil)))
+  (if (not lyskom-proc)
       (lyskom-error "%s" (lyskom-get-string 'dead-session)))
 
   (if (and lyskom-is-waiting
@@ -290,7 +285,7 @@ chosen according to this"
       (progn
 	(if (pos-visible-in-window-p (1- (point-max)))
 	    (goto-char (point-max)))
-	(sit-for 0)))
+        (sit-for 0))) 
                                         ;  (lyskom-scroll)
   (run-hooks 'lyskom-before-command-hook)
   (if kom-page-before-command           ;Nice with dumb terminals.
@@ -318,7 +313,7 @@ chosen according to this"
        (lyskom-set-last-viewed))
    (lyskom-prefetch-and-print-prompt)
    (run-hooks 'lyskom-after-command-hook)
-   (if (lyskom-have-feature idle-time)
+   (if lyskom-idle-time-flag
        (save-excursion (set-buffer lyskom-buffer)
                        (initiate-user-active 'background nil)))
    (if kom-inhibit-typeahead
@@ -333,6 +328,6 @@ chosen according to this"
    (when lyskom-slow-mode
      (buffer-enable-undo))))
 
-(eval-and-compile (provide 'lyskom-command))
+(provide 'lyskom-command)
 
 ;;; command.el ends here

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.13 1999-06-29 10:20:16 byers Exp $
+;;;;; $Id: flags.el,v 44.7.2.1 1999-10-13 09:55:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,10 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.13 1999-06-29 10:20:16 byers Exp $\n"))
-
-(eval-when-compile
-  (require 'lyskom-command "command"))
+	      "$Id: flags.el,v 44.7.2.1 1999-10-13 09:55:59 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -92,7 +89,6 @@
                        (lyskom-get-string 'could-not-save-options)))
 
 
-(lyskom-external-function edit-options)
 (defun kom-edit-options ()
   "Edit options for the lyskom client."
   (interactive)
@@ -169,21 +165,19 @@
         (lyskom-insert-string 'hang-on)
         (initiate-create-text 'options 'lyskom-edit-options-send
 			    ;;; This is a cludge awaiting prot-B
-			    (apply 'lyskom-format-objects 
-				   (apply 'lyskom-format-objects 
-					  "common"
-					  "elisp"
-					  (mapcar 
-					   (function car)
-					   lyskom-other-clients-user-areas))
-				   common-block
-				   elisp-block
-				   (mapcar (function cdr) 
-					   lyskom-other-clients-user-areas))
-;			    (concat common-block "----------\n" elisp-block)
-			    (lyskom-create-misc-list) 
-                            nil
-                            optbuf))))
+                              (apply 'lyskom-format-objects 
+                                     (apply 'lyskom-format-objects 
+                                            "common"
+                                            "elisp"
+                                            (mapcar 
+                                             (function car)
+                                             lyskom-other-clients-user-areas))
+                                     common-block
+                                     elisp-block
+                                     (mapcar (function cdr) 
+                                             lyskom-other-clients-user-areas))
+                                        ;			    (concat common-block "----------\n" elisp-block)
+                              (lyskom-create-misc-list) optbuf))))
    (t
     (let ((optbuf (current-buffer)))
       (set-buffer lyskom-buffer)
@@ -271,7 +265,6 @@ If successful then set the buffer not-modified. Else print a warning."
                                    (mapcar (function cdr)
                                            lyskom-other-clients-user-areas))
                             (lyskom-create-misc-list) 
-                            nil
                             kombuf
                             done-message
                             error-message))))
@@ -334,8 +327,6 @@ If successful then set the buffer not-modified. Else print a warning."
 	     ((string= word "elisp")
 	      (setq elisp-no r))
 	     (t
-	      ;; Build up lyskom-other-clients-user-areas so that it
-	      ;; contains a list of pairs: (name . number). (string, int).
 	      (setq lyskom-other-clients-user-areas
 		    (cons (cons word r) lyskom-other-clients-user-areas))))
 	    (++ r)))
@@ -377,14 +368,10 @@ If successful then set the buffer not-modified. Else print a warning."
 	   (t
 	    (let ((pos lyskom-other-clients-user-areas))
 	      (while (and pos
-			  (not (equal
-				(cdr (car pos))	;The position or the string.
-				r)))
+			  (not (= (cdr (car pos)) r)))
 		(setq pos (cdr pos)))
 	      (if pos
-		  (setcdr (car pos) working))))) ;Insert the string
-						 ;where the position
-						 ;was stored.
+		  (setcdr (car pos) working)))))
 	  (++ r))
 
 	(setq lyskom-filter-list (append kom-permanent-filter-list

@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.5 1999-10-11 15:43:59 byers Exp $
+;;;;; $Id: remote-control.el,v 44.1.2.1 1999-10-13 09:56:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,10 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.5 1999-10-11 15:43:59 byers Exp $\n"))
-
-(eval-when-compile
-  (require 'lyskom-command "command"))
+	      "$Id: remote-control.el,v 44.1.2.1 1999-10-13 09:56:12 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -192,7 +189,7 @@ Handler to implement remote control of the ansaphone."
            (lyskom-ansaphone-send-message
             lyskom-pers-no
             (lyskom-format (lyskom-get-string 'illegal-remote)
-                           (lyskom-client-date-string)
+                           (current-time-string)
                            sender
                            recipient
                            text))
@@ -229,16 +226,16 @@ Handler to implement remote control of the ansaphone."
   (if arg
       (let ((lyskom-last-text-format-flags nil))
         (setq kom-ansaphone-default-reply arg)
-        (setq lyskom-ansaphone-when-set (lyskom-client-date-string))
+        (setq lyskom-ansaphone-when-set (current-time-string))
         (lyskom-ansaphone-send-message sender
                                        (concat 
                                         (lyskom-get-string
                                          'ansaphone-new-message)
                                         arg))
         (lyskom-insert-before-prompt
-         (lyskom-format (lyskom-get-string-sol 'remote-set-message)
+         (lyskom-format (lyskom-get-string 'remote-set-message)
                         sender
-                        (lyskom-client-date-string)
+                        (current-time-string)
                         arg))
         nil)
     'remote-bad-command))
@@ -263,7 +260,7 @@ Handler to implement remote control of the ansaphone."
   (lyskom-insert-before-prompt
    (lyskom-format (lyskom-get-string 'remote-set-ansaphone)
                   sender
-                  (lyskom-client-date-string)
+                  (current-time-string)
                   (lyskom-get-string (if kom-ansaphone-on 
                                          'state-on 'state-off))))
   nil)
@@ -305,7 +302,7 @@ Handler to implement remote control of the ansaphone."
   (lyskom-insert-before-prompt
    (lyskom-format (lyskom-get-string 'remote-list-messages)
 		  sender
-                  (lyskom-client-date-string)))))
+		  (current-time-string)))))
 
 
 
@@ -313,10 +310,11 @@ Handler to implement remote control of the ansaphone."
 
 (defun lyskom-remote-erase-messages (arg sender recipient text)
   (setq lyskom-ansaphone-messages nil)
-  (lyskom-format-insert-before-prompt
+  (lyskom-insert-before-prompt
+   (lyskom-format 
     (lyskom-get-string 'remote-erase-messages)
     sender
-    (lyskom-client-date-string))
+    (current-time-string)))
   nil)
 
 
@@ -324,7 +322,7 @@ Handler to implement remote control of the ansaphone."
   (lyskom-insert-before-prompt
    (lyskom-format (lyskom-get-string 'remote-quit)
                   sender
-                  (lyskom-client-date-string)))
+                  (current-time-string)))
    (lyskom-quit))
 
 

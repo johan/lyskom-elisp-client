@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.7 1999-10-11 15:43:51 byers Exp $
+;;;;; $Id: ansaphone.el,v 44.2.2.1 1999-10-13 09:55:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -44,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.7 1999-10-11 15:43:51 byers Exp $\n"))
+	      "$Id: ansaphone.el,v 44.2.2.1 1999-10-13 09:55:42 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -59,12 +59,10 @@
   (interactive)
   (let ((message (or message
                     (read-from-minibuffer 
-                     (lyskom-get-string 'ansaphone-new-message)
-                     (if (stringp kom-ansaphone-default-reply)
-                          (cons kom-ansaphone-default-reply 0)))))
+                     (lyskom-get-string 'ansaphone-new-message))))
         (lyskom-last-text-format-flags nil))
     (setq kom-ansaphone-default-reply message)
-    (lyskom-format-insert (lyskom-get-string-sol 'ansaphone-message)
+    (lyskom-format-insert (lyskom-get-string 'ansaphone-message)
                           kom-ansaphone-default-reply)))
 
 
@@ -78,8 +76,8 @@
                                              'state-off)))
   (if kom-ansaphone-on
       (progn
-        (setq lyskom-ansaphone-when-set (lyskom-client-date-string))
-        (lyskom-format-insert (lyskom-get-string-sol 'ansaphone-message)
+        (setq lyskom-ansaphone-when-set (current-time-string))
+        (lyskom-format-insert (lyskom-get-string 'ansaphone-message)
                               kom-ansaphone-default-reply))))
 
 
@@ -217,7 +215,7 @@ kom-ansaphone-default-reply and kom-ansaphone-replies."
   (if (not (numberp recipient))
       (setq recipient (conf-stat->conf-no recipient)))
   (setq lyskom-ansaphone-messages (cons (list sender recipient text
-                                              (lyskom-client-date))
+                                              (current-time-string))
                                         lyskom-ansaphone-messages)))
 
 
@@ -228,6 +226,6 @@ kom-ansaphone-default-reply and kom-ansaphone-replies."
                                      t)
 
 
-(eval-and-compile (provide 'lyskom-ansaphone))
+(provide 'lyskom-ansaphone)
 
 ;;; ansaphone.el ends here

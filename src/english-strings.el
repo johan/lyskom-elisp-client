@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $
+;;;;; $Id: english-strings.el,v 44.32.2.1 1999-10-13 09:55:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $"))
+              "$Id: english-strings.el,v 44.32.2.1 1999-10-13 09:55:55 byers Exp $"))
 
 
 ;;; ================================================================
@@ -66,45 +66,38 @@
   (define-prefix-command 'lyskom-en-edit-prefix)
   (define-prefix-command 'lyskom-en-edit-review-prefix)
   (define-prefix-command 'lyskom-en-edit-insert-prefix)
-  (define-prefix-command 'lyskom-en-edit-aux-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c"	'lyskom-en-edit-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c?"	'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-r" 'lyskom-en-edit-review-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i" 'lyskom-en-edit-insert-prefix)
+  (define-key lyskom-en-edit-mode-map (lyskom-keys [mouse-2]) 'kom-button-click-or-yank)
+  (define-key lyskom-en-edit-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-en-edit-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-edit-mode-map "\C-c*" 'kom-button-press)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-c"	'kom-edit-send)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-s" 'kom-ispell-message)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
+  (define-key lyskom-en-edit-mode-map "\C-cr?"	'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-r\C-c" 'kom-edit-show-commented)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i?" 'lyskom-help)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i\C-c" 'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i\C-y" 'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i1" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i2" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i3" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i4" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i5" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i6" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i7" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i8" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i9" 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-i " 'kom-edit-insert-text)
   (define-prefix-command 'lyskom-en-edit-add-prefix)
-  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click-or-yank)
-  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
-  (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "C-x") 'lyskom-en-edit-aux-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
-  (define-key lyskom-en-edit-prefix (kbd "C-r") 'lyskom-en-edit-review-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "C-i") 'lyskom-en-edit-insert-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "*") 'kom-button-press)
-  (define-key lyskom-en-edit-prefix (kbd "+") 'kom-menu-button-press)
-  (define-key lyskom-en-edit-prefix (kbd "C-c")	'kom-edit-send)
-  (define-key lyskom-en-edit-prefix (kbd "C-s") 'kom-ispell-message)
-  (define-key lyskom-en-edit-prefix (kbd "C-k")	'kom-edit-quit)
-  (define-key lyskom-en-edit-prefix (kbd "r ?")	'lyskom-help)
-  (define-key lyskom-en-edit-prefix (kbd "C-r C-c") 'kom-edit-show-commented)
-  (define-key lyskom-en-edit-prefix (kbd "C-i ?") 'lyskom-help)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-c") 'kom-edit-insert-commented)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-y") 'kom-edit-insert-commented)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 1") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 2") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 3") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 4") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 5") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 6") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 7") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 8") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 9") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i ") 'kom-edit-insert-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-r") 'kom-edit-add-recipient)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)
-  (define-key lyskom-en-edit-prefix (kbd "C-a <RET>") 'kom-edit-move-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-r") 'kom-edit-add-read-confirm-request)
-  (define-key lyskom-en-edit-prefix (kbd "C-a ?") 'lyskom-help))
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a" 'lyskom-en-edit-add-prefix)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-r" 'kom-edit-add-recipient)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-c" 'kom-edit-add-copy)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a\C-m" 'kom-edit-move-text)
+  (define-key lyskom-en-edit-mode-map "\C-c\C-a?" 'lyskom-help))
 
 
 ;;(defvar lyskom-header-separator
@@ -139,13 +132,12 @@
     (server-q . "LysKOM server? (%#1s) ")
     (try-connect . "LysKOM elisp client version %#1s.\nAttempting to connect to %#2s.\n")
     (protocoll-error . "Protocol error. Servers says: %#1s")
-    (too-old-server . "The server is too old for this version of the client.")
     (connection-done . "Connection established. Server version is %#1s.\n\n")
     (what-is-your-name . "What is your name? ")
     (password . "Your Password? ")
     (wrong-password . "Incorrect password.\n")
     (are-logged-in . "You have entered LysKOM. Please wait...\n")
-    (you-have-motd . "\nYou have a notice on your mailbox:\n\n")
+    (you-have-motd . "\nYou have a note on your door:\n\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
 The message that was supposed to be shown after login has disappeared.
 Please contact the LysKOM administrator.\n")
@@ -178,7 +170,7 @@ on how to do this.
 Email-address:\t\nWWW:\t\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
-    (unknown-person . "Unknown user")
+    (secret-person . "Secret user")
     (in-secret-conference . "Secret conference (%#1d).")
     (start-new-session-same-server
      . "You are already connected to that server. Do you want a new session? ")
@@ -227,25 +219,20 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (you-could-not-delete . "%#1M can't be deleted by you.\n")
     (you-have-deleted-yourself . "You have deleted yourself.\n")
 
-    (what-text-to-delete . "Remove which text? ")
-    (delete-marked-text . "The text is %#1s. Delete anyway? ")
-    (delete-marked-by-you . "marked by you")
-    (delete-marked-by-you-and-others . "marked by you and %#1?d%[someone else%]%[%#1d others%]")
-    (delete-marked-by-several . "marked by %#1d user%#1?d%[%]%[s%]")
-    (deleting-text . "Removing text %#1:n...")
+    (what-text-to-delete . "Remove which article? ")
+    (deleting-text . "Removing article %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
     (review-presentation-of . "Review presentation of %#1M.\n")
     (has-no-presentation . "%#1:M has no presentation.\n")
 
-    (have-to-read . "You must read a text first.\n")
+    (have-to-read . "You must read an article first.\n")
 
-    (no-comment-to . "There is no commented text.\n")
+    (no-comment-to . "There is no commented article.\n")
 
     (who-letter-to . "Send a letter to whom? ")
-    (who-send-text-to . "Send text to which conference? ")
-    (has-motd . "%#1P has a notice on his/her mailbox:\n\n")
+    (has-motd . "%#1P has a note on the door:\n\n")
     (motd-persist-q . "Send the letter? ")
 
     (who-to-add . "Whom do you want to add? ")
@@ -253,7 +240,6 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (where-to-add-self . "Join which conference? ")
     (priority-q . "Conference priority? (0 (passive membership), 1 (low) - 255 (high)) ")
     (done . "done.\n")
-    (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
@@ -274,55 +260,39 @@ Send a letter to  %#2P to apply for membership.\n")
     (anyone-member . "May anyone join? ")
     (secret-conf . "Secret conference? ")
     (comments-allowed . "Are comments allowed? ")
-    (anonymous-allowed . "Are anonymous texts allowed? ")
-    (secret-members-allowed . "Are secret members permitted? ")
-    (what-comment-no . "Comment text number: ")
-    (what-footnote-no . "Footnote text number: ")
-    (confusion-what-to-reply-to . "I can't figure out which text you want to write a fast reply to.\n")
-    (confusion-what-to-agree-to . "I can't figure out which text you want to agree with.\n")
-    (confusion-what-to-comment . "I can't figure out which text you want to comment.\n")
-    (confusion-what-to-footnote . "I can't figure out to which text you want to write a footnote to.\n")
-    (what-private-no . "Private reply to text number: ")
+    (anonymous-allowed . "Are anonymous articles allowed? ")
+    (what-comment-no . "Comment article number: ")
+    (what-footnote-no . "Footnote article number: ")
+    (confusion-what-to-comment . "I can't figure out which article you want to comment.\n")
+    (confusion-what-to-footnote . "I can't figure out to which article you want to write a footnote to.\n")
+    (what-private-no . "Private reply to article number: ")
 
-    (confusion-who-to-reply-to . "I can't figure out which text you want to write a private reply to.\n")
-    (confusion-what-to-answer-to . "I can't figure out which text you want to write a reply to.\n")
-    (quit-in-spite-of-unsent . "You have an unsent text. Do you really want to quit? ")
-    (confusion-what-to-view . "I can't figure out which text you want to view.\n")
+    (confusion-who-to-reply-to . "I can't figure out which article you want to write a private reply to.\n")
+    (confusion-what-to-answer-to . "I can't figure out which article you want to write a reply to.\n")
+    (quit-in-spite-of-unsent . "You have an unsent article. Do you really want to quit? ")
+    (confusion-what-to-view . "I can't figure out which article you want to view.\n")
     (really-quit . "Do you really want to quit LysKOM? ")
     (session-ended . "
 --------------------------------------------
   LysKOM session finished
   You are now disconnected from the server
---------------------------------------------
-")
-    (session-ended-long . "
--------------------------------------------------------------------------------
-  LysKOM session finished
-  You are now disconnected from the server
--------------------------------------------------------------------------------
-")
+--------------------------------------------\n")
     (session-auto-ended . "
 ============================================================
 Disconnecting from LysKOM since all connections are in use
 and you have finished reading. Please come back later.
 ============================================================\n\n")
-    (session-auto-ended-long . "
-===============================================================================
-Disconnecting from LysKOM since all connections are in use
-and you have finished reading. Please come back later.
-===============================================================================
-\n")
     (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
-    (who-to-put-motd-for . "Post notice on who/what (yourself): ")
+    (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
     (go-to-conf-p . "Go to conference: ")
     (want-become-member . "Do you want to join? ")
     (no-ok . "Okiedokie, whatever you say.\n")
 
-    (who-to-remove-motd-for . "Remove notice from who/what: ")
+    (who-to-remove-motd-for . "Remove note from the door of who/what: ")
 
-    (conf-all-read . "%#1M - no unread texts.\n")
+    (conf-all-read . "%#1M - no unread articles.\n")
     (no-in-conf . "You are not present in any conference.\n")
 
     (search-for-pers . "Enter search key (RETURN for all users): ")
@@ -331,50 +301,39 @@ and you have finished reading. Please come back later.
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
     (new-name . "New name: ")
-    (new-paren . "New parenthesis: ")
-    (no-paren-in-name . "The name doesn't contain a parenthesis.\n")
     (who-to-change-supervisor-for . "Change supervisor of who/what? ")
     (new-supervisor . "New supervisor: ")
-    (text-to-mark . "Mark which text? ")
-    (text-to-unmark . "Unmark which text? ")
+    (text-to-mark . "Mark which article? ")
+    (text-to-unmark . "Unmark which article? ")
     (what-mark . "Set which mark? ")
-    (unmarking-textno . "Unmarking text %#1n...")
-    (marking-textno . "Marking text %#1n...")
-    (list-which-mark . "List texts with which mark (0-255, RET for all)? ")
+    (unmarking-textno . "Unmarking article %#1n...")
+    (marking-textno . "Marking article %#1n...")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
     (what-mark-to-view . "Review which mark? ")
     (whos-passwd . "Change password for whom? (yourself) ")
-    (old-passwd . "Your current password: ")
-    (new-passwd . "The new password: ")
+    (old-passwd . "Your old password: ")
+    (new-passwd . "Your new password: ")
     (changing-passwd . "Changing password...")
     (retype-dont-match . "You didn't reenter the same passwrod. Try again.\n")
-    (palindrome . " (a palindrome!)")
+    (palindrome . "(a palindrome!) ")
     (lyskom-name . "User")
     (is-in-conf . "In conference")
     (from-machine . "At")
     (is-doing . "Activity")
-    (connection-time . "Connected")
-    (active-last . "Active last")
-    (active . "Active")
     (lyskom-client . "Client")
-    (text-to-add-recipient . "Add recipient to which text:")
-    (text-to-add-copy . "Add recipient of carbon copy of which text:")
-    (text-to-add-bcc . "Add recipient of blind carbon copy of which text:")
-    (text-to-delete-recipient . "Remove recipient from which text:")
+    (text-to-add-recipient . "Add recipient to which article:")
+    (text-to-add-copy . "Add recipient of carbon copy of which article:")
+    (text-to-add-bcc . "Add recipient of blind carbon copy of which article:")
+    (text-to-delete-recipient . "Remove recipient from which article:")
     (text-to-move . "Which text do you want to move: ")
-    (text-to-add-comment-to . "Add comment to which text:")
-    (text-to-delete-comment-from . "Remove comment from which text:")
-    (text-to-add-footnote-to . "Add footnote to which text:")
-    (text-to-delete-footnote-from . "Remove footnote from which text:")
+    (text-to-add-comment-to . "Add comment to which article:")
+    (text-to-delete-comment-from . "Remove comment from which article:")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M...")
     (add-member-in . "Adding %#1P as a member of %#2M...")
-    (change-priority-for-q . "Change priority of conference: ")
-    (change-priority-for . "Changing priority of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
-    (passivate-done . "You are now a passive member of %#1M.\n")
 
     (exclude-from . "Removing %#1P from %#2M...")
 
@@ -383,7 +342,7 @@ and you have finished reading. Please come back later.
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\n")
     (created-conf-no-name . "Conference number %[%#3@%#1:m %#2:M%] has been created.\n")
-    (cant-read-textno . "You are not allowed to read text %#1:n")
+    (cant-read-textno . "You are not allowed to read article %#1:n")
 
     (not-supervisor-for . "You are not the supervisor of %#1M.\n")
     (go-to-conf . "Go to conference %#1M.\n")
@@ -396,15 +355,13 @@ and you have finished reading. Please come back later.
     (change-supervisor-nope . 
      "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1M?\n")
     
-    (no-marked-texts . "You have not marked any texts.\n")
+    (no-marked-texts . "You have not marked any articles.\n")
     (no-marked-texts-mark . 
-     "You have not marked any texts with mark %#1d.\n")
+     "You have not marked any articles with mark %#1d.\n")
 
     (weekdays . ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday"
 		 "Friday" "Saturday" "Sunday"])
-    (weekdays-short . ["Sun" "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"])
-    (time-is . "The time is %#1s%#2s, (according to the server).")
-    (time-is-week . "The time is %#1s%#2s, week %#3d (according to the server).")
+    (time-is . "The time is %#1s %#2s(according to the server).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "Christmas eve!\nYou didn't open any gifts early, did you?")
@@ -417,43 +374,36 @@ On this day, in 1973, the Lysator Academic Computer Society was
 formed, and it was a great day in the history of computing in Sweden.
 Read all about it at http://www.lysator.liu.se/history/")
 
-    (total-users . "    A total of %#1d users (%#2s.)\n")
-    (total-users-sans-date . "    A total of %#1d users\n")
-    (total-visible-users . "    A total of %#1d visible user%#1?d%[%]%[s%] (%#2s.)\n")
-    (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s.)\n")
+    (total-users . "    A total of %#1d users.\n")
+    (total-visible-users . "    A total of %#1d visible users.\n")
+    (total-active-users . "    A total of %#1d active users.\n")
     (total-visible-active-users
-     . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
+     . "    A total of %#1d visible active users.\n")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as recipient of a carbon copy? ")
     (who-to-sub-q . "Remove who/what as a recipient? ")
     (who-to-move-from-q . "Move from where? ")
     (who-to-move-to-q . "Move to where? ")
 
-    (adding-name-as-recipient . "Adding %#1M as recipient of text %#2n...")
-    (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
+    (adding-name-as-recipient . "Adding %#1M as recipient of article %#2n...")
+    (adding-name-as-copy . "%#1M will receive a carbon copy of article %#2n...")
     (remove-name-as-recipient .
-     "Removing %#1M as recipient of text %#2n...")
+     "Removing %#1M as recipient of article %#2n...")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
-    (text-to-add-q . "Add which text as a comment? ")
-    (text-to-remove-q . "Remove which text as a comment? ")
-    (text-to-add-footn-q . "Add which text as a footnote? ")
-    (text-to-remove-footn-q . "Remove which text as a footnote? ")
-    (add-comment-to . "Adding text %#1n as a comment to text %#2n...")
-    (sub-comment-to . "Removing text %#1n as a comment to text %#2n...")
-    (add-footnote-to . "Adding text %#1n as a footnote to text %#2n...")
-    (sub-footnote-to . "Removing text %#1n as a footnote to text %#2n...")
+    (text-to-add-q . "Add which article as a comment? ")
+    (text-to-remove-q . "Remove which article as a comment? ")
+    (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
+    (sub-comment-to . "Removing article %#1n as a comment to article %#2n...")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
     (comment-all-relevant-p . "There are multiple recipients. Are they all relevant? ")
-    (please-edit-recipients . "Modify the recipient list and send the text again.")
+    (please-edit-recipients . "Modify the recipient list and send the article again.")
     (add-recipient-p . "Add recipient %#1P? ")
     (checking-rcpt . "Checking recipients...")
     (checking-rcpt-done . "Checking recipients...done")
-    (checking-comments . "Checking commented texts...")
-    (checking-comments-done . "Checking commented texts...done")
+    (checking-comments . "Checking commented articles...")
+    (checking-comments-done . "Checking commented articles...done")
     (please-check-commented-texts . "Review the commented text and its comments.")
     (have-unread-comment . "Send despite unread comments to text %#1n? ")
-    (duplicate-recipients . "Unable to post. A recipient is duplicated (%#1M)")
-    (no-recipients . "Unable to post text. No recipients were specified.")
 
     (matching-regexp . "Conferences/users matching `%#1s'\n")
 
@@ -464,12 +414,9 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (no-other-lyskom-r . "There are not other active LysKOM sessions.\n")
     (no-lyskom-session . "There are no active LysKOM-sessions.")
-    (no-other-unread-lyskom-r . "There is no another LysKOM-session with unread texts.\n")
     (no-unread-lyskom-r . "There is no active LysKOM session with unread texts.\n")
     (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
 
-    (who-is-on-in-what-conference . "Who in which conference: ")
-    (who-is-active-and-member . "Only members in %#1M are shown.\n")
 
     ; From commands2.el:
 
@@ -485,47 +432,36 @@ Read all about it at http://www.lysator.liu.se/history/")
     (Protected . "Protected")
     (no-comments . "No comments")
     (closed . "Closed")
-    (allow-anon . "anonymomus ok")
-    (allow-secret . "secret members")
                    
     (created-by . "Created by person %24#1p %#3s(%#2P)\n")
     (created-at . "Created:%34#1s\n")
     (members .    "Number of members: %19#1d\n")
-    (conf-allows-secret-members . "Secret members:                          %#1s\n")
-    (conf-allows-anon-texts .     "Anonymous texts:                         %#1s\n")
-    (anon-texts-permitted . "Anonymous texts are permitted")
-    (anon-texts-not-permitted . "Anonymous texts are not permitted")
-    (secret-members-permitted . "Secret members are permitted")
-    (secret-members-not-permitted . "Secret members are not permitted")
     (garb-nice . "Expiration time (in days):%16#1d\n")
     (lowest-local-no . "Lowest local number: %21#1d\n")
     (highest-local-no . "Highest local number: %20#1d\n")
     (last-text-time . 
-     "Time of last text:    %20#1s (accordning to your cache)\n")
-    (no-of-motd . "Notice in text:    %13#1n\n")
+     "Time of last article: %20#1s (accordning to your cache)\n")
+    (no-of-motd . "Note on the door in article: %13#1n\n")
     (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
     (supervisor-is-no-name . "Supervisor: %30#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
-    (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
-    (status-conf-generic . "%-40#1s %#2s\n")
+    (conf-has-motd . "\n%#1M has a note on the door:\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
     (show-membership-info-q . "Show number of unreads? ")
     (conf-has-these-members . "\n%#1M has the following members:\n")
-    (conf-has-no-members . "\n%#1M has no members.\n")
     (member-list-header . "Last entered       Unread  Name\n\n")
     (secret-membership . "--- Secret line ---\n")
-    (conf-membership-line . "%#1s%#2M %#3s\n")
-    (conf-membership-line-2 . "                          Added %#1s by %#2P\n")
+    (conf-membership-line . "%#1s%#2M\n")
     (pers-for-status . "Get status of which user? ")
     (no-such-pers . "The user doesn't exist.\n")
     (pers-status-record . "Status of user %#1P (%#2p)\n")
     (created-time .  "Created:%34#1s\n\n")
     (created-confs . "Conferences created:%22#1d\n")
     (created-persons . "Users created:%28#1d\n")
-    (created-texts . "Texts created:%28#1d\n")
+    (created-texts . "Articles created:%25#1d\n")
     (created-lines . "Lines created:%28#1d\n")
     (created-chars . "Characters created:%23#1d\n")
     (no-of-sessions . "Session count:%28#1d\n")
@@ -533,8 +469,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (last-log-in . "Last session:%29#1s\n")
     (user-name . "User: %36#1s\n")
 
-    (read-texts . "Texts read:%31#1d\n")
-    (marked-texts . "Texts marked:%29#1d\n")
+    (read-texts . "Articles read:%28#1d\n")
+    (marked-texts . "Articles marked:%26#1d\n")
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
     (superconf . "Superconference: %25#1m %#3s(%#2M)\n")
     (supervisor . "Supervisor: %30#1p %#3s(%#2P)\n")
@@ -544,71 +480,54 @@ Read all about it at http://www.lysator.liu.se/history/")
     (not-allowed-see-confs . "You are not premitted to see which conferences %#1P is a member of.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
-    (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
-    (pers-membership-line-2 . "                          Added %#1s by %#2P\n")
+    (pers-membership-line . "%#1s%#2s%#3M\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Send message to whom? (%s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
-    (his-total-unread . "\n%#1M has a total of %#2d unread texts.\n")
+    (his-total-unread . "\n%#1M has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
-    (message-sent-to-user . "\
-================================================================
+    (message-sent-to-user .
+     "================================================================
 Your message for %#2M:
 
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-sent-to-all . "\
-================================================================
+    (message-sent-to-all . 
+     "================================================================
 Your public message:
 
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-sent-to-user-long . "\
-===============================================================================
-Your message for %#2M:
-
-%#1t
--------------------------------------------------------------------------------
-")
-    (message-sent-to-all-long . "\
-===============================================================================
-Your public message:
-
-%#1t
--------------------------------------------------------------------------------
-")
-    (message-use-alarm-instead . "Use %#1s to send alarm messages.\n")
-    (message-all-info . "Send alarm\n")
+    (message-all-info . "Send public message\n")
     (message-recipient-info . "Send message to %#1M\n")
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.
 The message you were sending to %#1M was:
 %#2t\n")
-    (only-last . "Last (0 - %#1d) texts in %#2s: ")
+    (only-last . "Last (0 - %#1d) articles in %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
     
-    (you-have-unreads . "You have %#1d unread text%#1?d%[%]%[s%] in %#2M\n")
-    (you-have-unreads-special . "You have %#1d uncommented text%#1?d%[%]%[s%] in %#2M\n")
-    (you-have-no-unreads . "You have read everything in %#1M\n")
+    (you-have-unreads . "You have %#1d unread articles in %#2M\n")
+    (you-have-an-unread . "You have 1 unread article in %#1M\n")
+    (you-have-unreads-special . "You have %#1d uncommented articles in %#2M\n")
+    (you-have-an-unread-special . "You have 1 uncommented article in %#1M\n")
     (you-have-read-everything . "No news (is bad news).\n")
-    (total-unreads . "\nYou have %#1d unread text%#1?d%[%]%[s%] texts in %#2M.\n")
-    (list-unread-with-n-unread . "Listing conferences with at least %#1d unread.\n")
+    (total-unreads . "\nYou have %#1d unread articles.\n")
+    (total-unread . "\nYou have 1 unread article.\n")
     (waiting-for-anything .
-     "You are waiting for a text in any conference.\n")
+     "You are waiting for an article in any conference.\n")
     (waiting-higher-than . 
-     "You are waiting for a text in any conference with a priority higher than %#1d.\n")
+     "You are waiting for an article in any conference with a priority higher than %#1d.\n")
     
     (have-to-be-in-conf-with-unread . "You must go to a non-empty conference first.\n")
-    (Texts . "Text")
+    (Texts . "Article")
     (Date . "Date")
     (Lines . "Len.")
     (Author . "  Author")
     (Subject . "  Subject")
-    (mark-type . "Mrk")
-
-    (could-not-read . "You couldn't read the text (%#1n).\n")
+    (could-not-read . "You couldn't read the article (%#1n).\n")
     (multiple-choice . "There are several alternatives.")
 
     (what-mark-to-list . "List which mark? ")
@@ -662,7 +581,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (submitters-conf-for-is . "Changing authors admitted to conference %#1M to the members of %#2M...") 
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference? ")
-    (new-garb-nice-q . "After how many days shall texts be removed? ")
+    (new-garb-nice-q . "After how many days shall articles be removed? ")
     (garb-nice-for-is . "Changing expiration for %#1M to %#2d...")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
@@ -672,7 +591,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (administrator . "administrator")
     (no-longer-administrator . "a regular user again")
     (you-are-now . "Ok, you are now running as %#1s.\n")
-    (setting-motd . "Changing login message to text %#1n.\n")
+    (setting-motd . "Changing login message to article %#1n.\n")
     (set-motd-success . "You have set a new login message.\n")
     (set-motd-failed . "Didn't work. Perhaps you were not an administrator.\n")
     (removing-motd . "Removing the login message.\n")
@@ -701,43 +620,33 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (review-rest . "the rest")
     (review-more . "%#1d more")
     (you-review . "You are now reviewing %#1s.\n")
-    (read-text-first . "You must read a text first.\n")
-    (cannot-read-last-text . "You cannot review the last read text.\n")
-    (review-n-texts . "Review %#1d texts.\n")
-    (review-marked . "Review %#1d marked texts.\n")
-    (review-text-no . "Review text %#1n\n")
-    (review-many-comments . "Review %#2?d%[one%]%[%#2d%] comment%#2?d%[%]%[s%] to text %#1n.\n")
-    (view-many-comments . "Read %#2?d%[one%]%[%#2d%] comment%#2?d%[%]%[s%] to %#1n.\n")
-    (view-texts-in-conf . "Grand total of %#1d texts to read in %#2M.\n")
-
-    (not-reading-anywhere . "You are not reading in any conference.\n")
-    (read-normally-read . "How many texts to you want to read again? ")
-
+    (read-text-first . "You must read a article first.\n")
+    (cannot-read-last-text . "You cannot review the last read article.\n")
+    (review-n-texts . "Review %#1d articles.\n")
+    (review-marked . "Review %#1d marked articles.\n")
+    (review-text-no . "Review article %#1n\n")
+    (review-one-comment . "Review one comment to article %#1n.\n")
+    (review-many-comments . "Review %#2d comments to article %#1n.\n")
+    (read-normally-read . "How many articles to you want to read again? ")
     (review-conf-gone . "The conference does not exist.\n")
     (review-pers-gone . "The user does not exist.\n")
-    (review-cant-read-conf . "You can't review texts to a closed conference you are not a member of.\n")
-    (review-cant-read-letterbox . "You can't review texts to somebody else's mailbox.\n")
+    (review-cant-read-conf . "You can't review articles to a closed conference you are not a member of.\n")
+    (review-cant-read-letterbox . "You can't review articles to somebody else's mailbox.\n")
     (review-cant-read-empty . "The conference is empty.\n")
     (cant-review-everything . "You cannot review every artible in LysKOM.\n")
 
-    (more-than-one-root . "Text %#1n has more than one root.\n")
+    (more-than-one-root . "Article %#1n has more than one root.\n")
     (more-than-one-root-review . "\
-Text %#1n has more than one root but only one of the trees will be shown.\n")
+Article %#1n has more than one root but only one of the trees will be shown.\n")
 
     ; From edit-text.el:
-    (press-C-c-C-c . "Enter C-c C-c to post the text.")
+    (press-C-c-C-c . "Enter C-c C-c to post the article.")
     (recipient . "Recipient:")
     (recipient-prefix . "[Rr]")
     (carbon-copy . "Carbon copy:")
     (blank-carbon-copy . "Blind Carbon copy:")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
-
-    (secret-aux-flag . "secret")
-    (anonymous-aux-flag . "anonymous")
-    (inherit-aux-flag  . "inherited")
-    (aux-item-prefix . "> ")
-
     (header-subject . "Subject: ")
     (header-separator . "\\<lyskom-edit-mode-map>\
 --- Write below. \
@@ -745,31 +654,32 @@ Post: \\[kom-edit-send], \
 Kill: \\[kom-edit-quit], \
 Help: \\[describe-mode] ---")
     (text-mass . "%#4s%#1s\n%#2s\n%#3s")
-    (comment-to-by . "%#1s to text %#2n%#3s.\n")
-    (already-sent . "You have already posted this text. Post it anyway? ")
+    (comment-to-by . "%#1s to article %#2n%#3s.\n")
+    (already-sent . "You have already posted this article. Post it anyway? ")
     (subject . "Subject: ")
     (subject-prefix . "[Ss]")
     (enter-subject-idi . "Enter a subject.")
-    (which-text-include . "Include which text? ")
+    (which-text-include . "Include which article? ")
     (added-recipient . "Recipient: ")
     (added-carbon-copy . "Carbon copy to conference: ")
     (added-blank-carbon-copy . "Blind carbon copy to conference: ")
-    (text-to-comment-q . "Which text to you want to comment? ")
-    (conf-has-motd-no . "The conference has a notice. (%#1d)\n\n%#2s")
+    (text-to-comment-q . "Which article to you want to comment? ")
+    (conf-has-motd-no . "The conference has a note on the door. (%#1d)\n\n%#2s")
     (still-want-to-add . "Do you still want to add the conference as a recipient? ")
-    (could-not-create-text . "\nCouldn't create the text. Error: %#2s.\n")
-    (no-get-text . "You were not allowed to retrieve the text.")
+    (could-not-create-text . "\nCouldn't create the article. Error: %#2s.\n")
+    (no-get-text . "You were not allowed to retrieve the article.")
     (unknown-header . "Unknown header")
     (transform-error . "Skicka in oformatterat (%#1s)? ")
-    (cant-find-info-node . "Can't find the info buffer")
 
     ; From view-text.el:
     (line . " /1 line/ ")
     (lines ." /%#1d lines/ ")
 
     (marked-by-you . "Marked by you.\n")
-    (marked-by-you-and-others . "Marked by you and %#1?d%[someone else%]%[%#1d others%].\n")
-    (marked-by-several . "Marked by %#1d user%#1?d%[%]%[s%].\n")
+    (marked-by-you-and-one . "Marked by dig and someone else.\n")
+    (marked-by-you-and-several . "Marked by you and %#1d other users.\n")
+    (marked-by-one . "Marked by 1 user.\n")
+    (marked-by-several . "Marked by %#1d users.\n")
 
 ;; The format of this function should coincide with the format of the 
 ;; lyskom-text-start variable. DONT change one without changing the other.
@@ -778,44 +688,30 @@ Help: \\[describe-mode] ---")
 
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d %02#3d/%02#2d  %02#4d:%02#5d ")
-    (time-hh-mm . "%02#1d:%02#2d")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "today")
     (yesterday . "yesterday")
-    (no-such-text-no . "The text doesn't exist. (%#1:n)\n")
-    (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
-    (text-created-at . "Created: %#1s\n")
-    (text-imported-at . "Imported: %#1s\n")
-    (text-imported-at-by . "Imported: %#1s by %#2P\n")
+    (no-such-text-no . "The article doesn't exist. (%#1:n)\n")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
     (Extra-recipient . "CC")
     (Hidden-recipient . "BCC")
-    (mx-Recipient . "External recipient")
-    (mx-Extra-recipient . "External CC")
-    (mx-Extern-reply-to . "External replies to")
     (Strange-recipient . "Also to")
     (send-at . "   Posted:     %#1s\n")
     (sent-by . "   Posted by %#1P\n")
     (recieved-at . "    Received: %#1s\n")
 
-    (comment-to-text . "Comment to text %#1n")
-    (footnote-to-text . "Footnote to text %#1n")
-    (comment-in-text . "Comment in text %#1n")
-    (footnote-in-text . "Footnote in text %#1n")
+    (comment-to-text . "Comment to article %#1n")
+    (footnote-to-text . "Footnote to article %#1n")
+    (comment-in-text . "Comment in article %#1n")
+    (footnote-in-text . "Footnote in article %#1n")
 
-    (attachment-to-text . "Attachment to text %#1n")
-    (attachment-in-text . "Attachment in text %#1n")
-    
-    (envelope-sender . "Sent by: %#1s\n")
-    (attachment-filename . "Attachment file name: \"%#1s\"\n")
-
-    (comment-to-text-by . "Comment to text %#1n by %#2P")
-    (footnote-to-text-by . "Footnote to text %#1n by %#2P")
-    (comment-in-text-by . "Footnote in text %#1n by %#2P")
-    (footnote-in-text-by . "Footnote in text %#1n by %#2P")
+    (comment-to-text-by . "Comment to article %#1n by %#2P")
+    (footnote-to-text-by . "Footnote to article %#1n by %#2P")
+    (comment-in-text-by . "Footnote in article %#1n by %#2P")
+    (footnote-in-text-by . "Footnote in article %#1n by %#2P")
 
     (written-by . " by %#1P\n")
 
@@ -831,71 +727,36 @@ Help: \\[describe-mode] ---")
 Message from the LysKOM-system: Somebody tried to connect,
 but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
-for a text.
+for an article.
 ===========================================================\n")
-    (lyskom-is-full-long . "\
-===============================================================================
-Message from the LysKOM-system: Somebody tried to connect,
-but failed since all connections available to LysKOM are in
-use. Please leave and return later if you are just waiting
-for a text.
-===============================================================================
-")
-    (has-entered . "%#1:P has entered %#2s.")
-    (has-entered-r . "%#2@%#1P has entered %#3s.\n")
-    (has-left . "%#1:P has left %#2s.")
-    (has-left-r . "%#2@%#1P has left %#3s.\n")
+    (has-entered . "%#1:P has entered LysKOM.")
+    (has-entered-r . "%#2@%#1P has entered LysKOM.\n")
+    (has-left . "%#1:P has left LysKOM.")
+    (has-left-r . "%#2@%#1P has left LysKOM.\n")
     (unknown . "unknown")
+    (secret-person . "Secret user")
 
-    (no-longer-member . "You are no longer a member of %#1M.\n")
-    (no-longer-member-n . "You are no longer a member of %#1m (conference is gone.)\n")
-    (have-become-member . "You have become a member of %#1M.\n")
-    (have-become-passive-member . "You have become a passive member of %#1M.\n")
-
-
-    (message-broadcast . "\
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Alarm from %#1P (%#3s):
+    (message-broadcast .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Public message from %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-broadcast-long . "\
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Alarm from %#1P (%#3s):
-
-%#2t
--------------------------------------------------------------------------------
-")
-    (message-from . "\
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-from . 
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Personal message from %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-from-long . "\
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personal message from %#1P (%#3s):
-
-%#2t
--------------------------------------------------------------------------------
-")
-    (message-from-to ."\
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-from-to .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Group message to %#3M\nfrom %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------
-")
-    (message-from-to-long ."\
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Group message to %#3M\nfrom %#2P (%#4s):
-
-%#1t
--------------------------------------------------------------------------------
-")
-    (text-is-created . "Text %#1n has been created!")
+")    (text-is-created . "Article %#1n has been created!")
 
     ; Used in mode-line-process
     (mode-line-waiting . ": waiting")
@@ -907,7 +768,6 @@ Group message to %#3M\nfrom %#2P (%#4s):
 
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
     (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
-    (conf-prompt . "Which conference/person? ")
 
     ; From prioritize.el:
 
@@ -927,7 +787,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (prioritize-help .
 "u,n Move conference, SPC select, p prioritize selection, q quit, C-h m help")
     (your-priorities . " Priority   Conference
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 ")
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
@@ -945,7 +805,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (hang-on . "Wait a moment...\n")
     (no-changes . "Nothing was saved since no options had been changed.\n")
     (could-not-save-options . "Couldn't save options.\n")
-    (could-not-create-area . "Couldn't create the text.\n")
+    (could-not-create-area . "Couldn't create the article.\n")
     (could-not-set-user-area . "Couldn't alter the user-area. The server says error: %#1d\n")
     (you-dont-exist . "You don't exist. Go away.\n")
     (error-in-options . "There was an error in one of your variables (%#1s)
@@ -960,28 +820,23 @@ Send a bug report.\n")
     (mode-line-unread . " Unread ")
     (mode-line-letters . "letters ")
 
-    (bad-text-no-prefix . "Unable to translate prefix `%s' to a text number")
     (error-code . "Error code %#2d: %#1s.\n")
     (error-in-kom-do-when-done . "The variable kom-do-when-done has an erroneous value.
 You should set it to a better value.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM is waiting for a response from the server. Wait for the prompt.\n")
-    (review-text-q . "Review text: ")
+    (review-text-q . "Review article: ")
 
-    (completely-read-conf . "You have seen all the texts in this conference.\n")
+    (completely-read-conf . "You have seen all the articles in this conference.\n")
     (not-in-any-conf . "You are not in a conference now.\n")
 
     (all-conf-unread-r . "You have nothing unread.\n")
     (all-conf-unread-s . "You have nothing unread. ")
-    (one-unread . "%#1M - one unread text\n")
-    (several-unread . "%#1M - %#2d unread texts\n")
+    (one-unread . "%#1M - one unread article\n")
+    (several-unread . "%#1M - %#2d unread articles\n")
     (enter-conf . "%#1M\n")
 
-    (save-on-file-q . "Archive text on file: (%#1s) ")
-    (save-text-to-file-q . "Save body of text %#1n in which file: ")
-    (save-text-confirm . "File %#1s exists. Overwrite? ")
-    (saving-text . "Saving text %#1n as %#2s...")
-    (what-save-no . "Which text do you want to save? ")
+    (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
 
     (conference-no . "<möte %#1d>")
@@ -990,17 +845,15 @@ You should set it to a better value.\n")
     (prompt-single-message . "(%d message)")
 
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
-    (read-pri-text-conf . "Read next prioritized text")
-    (review-next-text-prompt . "Review next text")
+    (read-pri-text-conf . "Read next prioritized article")
+    (review-next-text-prompt . "Review next article")
     (review-next-comment-prompt . "Review next comment")
-    (review-next-marked-prompt . "Review next marked text")
+    (review-next-marked-prompt . "Review next marked article")
     (read-next-letter-prompt . "Read next letter")
     (read-next-footnote-prompt . "Read next footnote")
     (read-next-comment-prompt . "Read next comment")
-    (read-next-text-prompt . "Read next text")
-    (go-to-conf-of-marked-prompt . "Resume reviewing marked")
-    (go-to-conf-of-review-tree-prompt . "Resume reviewing comments")
-    (go-to-conf-of-review-prompt . "Resume reviewing texts")
+    (read-next-text-prompt . "Read next article")
+    (go-to-conf-of-marked-prompt . "Review next marked")
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
     (the-command . "Command: %#1C")
@@ -1020,7 +873,6 @@ You should set it to a better value.\n")
 
     (person-does-not-exist . "User %#1d (does not exist).")
     (conference-does-not-exist . "Conference %#1d (does not exist).")
-    (conf-no-does-not-exist-r . "Conference %#1d does not exist.")
     (person-is-anonymous . "Anonymous user")
 
     (process-signal . "Signal from the process.")
@@ -1028,15 +880,14 @@ You should set it to a better value.\n")
     (closed-connection . "
 **************************************************
 %#2s
-LysKOM session killed abnormally
+LysKOM session killed abnormallly
 Error message: %#1s**************************************************")
     (error-not-found . "Error code %#1d. No explanation available.")
 
     ; Useful in more place than one:
     (illegal-command . "Illegal command.\n")
-    (no-such-text . "The text doesn't exist.\n")
-    (no-such-text-m . "The text doesn't exist.")
-    (nobody . "nobody")
+    (no-such-text . "The article doesn't exist.\n")
+    (no-such-text-m . "The article doesn't exist.")
     (everybody . "everyone")
     (everything . "everything")
     (anybody . "anyone")
@@ -1048,25 +899,25 @@ Error message: %#1s**************************************************")
     (footnote . "Footnote")
     (footnote-prefix . "[Ff]")
     (by . " by %#1P")
-    (text-created .  "Text %#1n has been created.\n")
+    (text-created .  "Article %#1n has been created.\n")
 
     (resolve-session . "Which session: ")
 
     (starting-program . "Starting %#1s...")
     (super-jump . "Filtering subject \"%#1r\" in conference \"%#2M\"\n")
-    (no-recipient . "There are no recipients for this text.\n")
+    (no-recipient . "There are no recipients for this article.\n")
     (filtered . "[Filtered]")
     (filter-error-specification . "Error in the filter specification")
     (filter-error-bad-not . "Error in the filter specification after 'not'")
     (filter-error-unknown-key . "The filter key '%S' is unknown.")
     (filter-error-key-arg . "Bad filter data (%S %S)")
-    (filter-tree . "Skipping text %#1n \"%#2r\" by %#3P and all its comments.\n")
-    (filter-text . "Skipping text %#1n \"%#2r\" by %#3P.\n")
+    (filter-tree . "Skipping article %#1n \"%#2r\" by %#3P and all its comments.\n")
+    (filter-text . "Skipping article %#1n \"%#2r\" by %#3P.\n")
     (filter-permanent . "Permanent? ")
     (filter-action . "Filter how? ")
     (filter-in-conf . "In which conference? (all) ")
     (filter-subject . "Filter which subject? ")
-    (filter-which-text . "Filter texts containing: ")
+    (filter-which-text . "Filter articles containing: ")
     (filter-author . "Filter which author? ")
     (permanent . "(permanent)")
     (temporary . "(temporary)")
@@ -1081,7 +932,7 @@ Error message: %#1s**************************************************")
     (filter-edit-outside-list . "Can't do that outside the list")
     (filter-edit-end-of-pattern . "End of filter")
     (filter-edit-save-p . "Save changes? ")
-    (filter-edit-remove-empty . "Empty filters cause all texts to be filtered. Do you want to remove these? ")
+    (filter-edit-remove-empty . "Empty filters cause all articles to be filtered. Do you want to remove these? ")
     (filter-edit-restart-p . "You have made changes. Really revert? ")
     (filter-edit-help . "p Up, n Down, i New line, M-i New filter, d Delete line, M-d Delete filter")
     (filter-edit-header . "Edit filters on \"%s\"\n")
@@ -1100,11 +951,6 @@ Error message: %#1s**************************************************")
 %#1t
 ----------------------------------------------------------------------
 ")
-    (ansaphone-message-long . "Ansaphone message:
--------------------------------------------------------------------------------
-%#1t
--------------------------------------------------------------------------------
-")
     (ansaphone-state . "The Ansaphone is %#1s.")
     (ansaphone-state-r . "The Ansaphone is now %#1s.\n")
     (ansaphone-messages-gone . "Recorded messages have been erased.")
@@ -1119,11 +965,7 @@ Error message: %#1s**************************************************")
 %#3t
 ----------------------------------------------------------------------
 ")
-    (remote-set-message-long . "Remote control (%#1P %#2s): Ansaphone message:
--------------------------------------------------------------------------------
-%#3t
--------------------------------------------------------------------------------
-")    (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
+    (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
     (remote-list-messages . "Remote control (%#1P %#2s): Listed recorded messages\n")
     (remote-quit . "Remote control (%#1P %#2s): Quit\n")
 
@@ -1146,11 +988,10 @@ Text:
     (state-off . "off")
     
 
-    (text-popup-title . "Text %#1s")
+    (text-popup-title . "Article %#1s")
     (conf-popup-title . "Conference %#1s")
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
-    (aux-popup-title  . "Extra information")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
@@ -1184,8 +1025,6 @@ On since %#8s%#9s")
     (doing-nowhere-conn . "but is")
     (waiting-for-membership . "Waiting for the membership list to be fetched...%d/%d")
 
-    (keyboard-menu-help . "Next: SPC  Prev: DEL  Select: RET  Cancel: ESC")
-
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
@@ -1193,167 +1032,14 @@ On since %#8s%#9s")
     (which-language . "Change language to: ")
     (send-formatted . "Send as formatted text? ")
     (changing-language-to . "Changing to %#1s.\n")
-    (language-set-to . "Language set to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
 
-;;    (reformat-generic . "(%#1s)")
-    (reformat-html . "HTML")
-    (reformat-enriched . "enriched")
-    (reformat-filled . "filled")
-
-    (reformat-truncated . "truncated")
+    (reformat-html . "(HTML)")
+    (reformat-enriched . "(Enriched)")
+    (reformat-filled . "(Filled)")
 
     (need-library . "The \"%#1s\" package is required for this command.\n")
     (calc-expression . "Expression: ")
-
-    (do-send-anonymous . "Send the text anonymously? ")
-    (anonymous . "anonymous")
-    (Anonymous . "Anonymous")
-
-    ;; Some Help
-
-    (where-is-doesnt-exist . "The command %#1s does not exist")
-    (where-is-on-no-key . "%#1s is not on any key")
-    (where-is-on-key . "%#1s is on %#2s")
-
-    ;; From aux-items.el
-
-    (content-type-aux . "Content type: %#1s")
-    (content-type-regexp . "Content type: \\(\\S-+\\)")
-    
-    (agreeing . "Agreeing with text %#1n...")
-    (fast-replying . "Quick reply to text %#1n...")
-    (fast-reply-aux . "\"%#1t\" /%#2P/")
-    
-    (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
-    (faq-in-text-aux . "FAQ in text:                 %10#1n")
-    (conf-to-add-faq . "Which conference to you want to add a FAQ for? ")
-    (text-to-add-as-faq . "Which text is the new FAQ? ")
-    (adding-faq . "Adding text %#1n as a FAQ for %#2M...")
-    (conf-to-del-faq . "Which conference do you want to remove a FAQ from? ")
-    (text-to-del-as-faq . "Which text do you want to remove as FAQ? ")
-    (deleting-faq . "Removinb text %#1n as FAQ for %#2M...")
-    (conf-has-no-faq . "%#1M has no FAQ\n")
-    (view-which-faq . "View FAQ for which conference? ")
-    (review-faq-for-r . "View FAQ for %#1M.\n")
-    
-    (cross-reference-text-status-aux . "See text:              %10#1n /%#2P/")
-    (cross-reference-conf-status-aux . "See conference:                         <%#1m> %#1M /%#2P/")
-    (cross-reference-pers-status-aux . "See person:                             <%#1p> %#1P /%#2P/")
-    (strange-cross-reference-status .  "See also:                                %#1s (whatever that means)")
-    (cross-reference-text-aux . "See text %#1n /%#2P/")
-    (cross-reference-conf-aux . "See conference <%#1m> %#1M /%#2P/")
-    (cross-reference-pers-aux . "See person <%#1p> %#1P /%#2P/")
-    (cross-reference-text-regexp . "See text \\([0-9]+\\)")
-    (cross-reference-conf-regexp . "See conference <\\([0-9]+\\)>")
-    (cross-reference-pers-regexp . "See person <\\([0-9]+\\)>")
-    (strange-cross-reference . "See %#1s, whatever that might mean")
-
-    (no-comments-aux . "The author has requested others not to comment this text")
-    (no-comments-edit-aux . "Request that others do not comment")
-    (no-comments-regexp . "Request that others do not comment")
-    
-    (personal-comment-aux . "The author requests private replies only")
-    (personal-comment-edit-aux . "Request private replies only")
-    (personal-comment-regexp . "Request private replies only")
-    
-    (request-confirmation-aux . "%#1P requests confirmation of reading")
-    (request-confirmation-edit-aux . "Request confirmation of reading")
-    (request-confirmation-regexp . "Request confirmation of reading")
-    (confirm-read-q . "Confirm reading text %#1n? ")
-    
-    (read-confirm-aux . "Confirmed reading: %#1P %#2s")
-
-    (redirect-email-aux . "Send e-mail to %#1s")
-    (redirect-lyskom-aux . "Send texts to conference %#1M")
-
-    (label-what-kind . "Set personal label on what (text, conference, user)? ")
-    (label-what-text . "Set personal label on text: ")
-    (label-what-conf . "Set personal label on which conference? ")
-    (label-what-pers . "Set personal label on which person? ")
-    (label-what-label . "Personal label: ")
-    (label-secret    . "Should others to be able to see the label? ")
-
-    (creating-software-aux . "Created with %#1s")
-
-    (cant-get-aux-item . "Can't find extra information")
-    (aux-item-no-info . "No information available\n")
-    (aux-item-info . "\
-Number:        %#1d %#6s
-Type:          %#2d (%#3s)
-Created by:    %#4P <%#4p>
-Created:       %#5s
-Flags:         %#7s
-Inherit limit: %#8s
-Contents:     \"%#9s\"
-")
-    (secret . "Secret")
-    (deleted . "Deleted")
-    (hide-creator . "Secret creator")
-    (inherit . "Inherited")
-    (unlimited-inherit . "Unlimited inheritance")
-    (no-inheritance . "Inheritance is off")
-    (no-more-inheritance . "Inherit limit reached; will not be further inherited")
-    (inherit-steps . "%#1d steps")
-
-    (aux-item-for . "Extra information for ")
-    (conference-no . "conference <%#1m> %#1M")
-    (text-no . "text %#1n")
-
-    (what-fast-reply-no . "Quick reply to which text? ")
-    (fast-reply-prompt . "Reply: ")
-    (agree-prompt . "Text: ")
-    (default-agree-string . "I agree")
-    (what-agree-no . "Agree with which text? ")
-
-
-    ;; Aux-item stuff from edit-text
-
-    (person . "User")
-    (conference . "Conference")
-    (text . "Text")
-
-    (xref-type . "What to you want to refer to (text, conference or person)? ")
-    (which-text-to-xref . "Add reference to text: ")
-    (which-text-to-xref-err . "Text not found. Add reference to text: ")
-    (which-pers-to-xref . "Add reference to user: ")
-    (which-conf-to-xref . "Add reference to conference: ")
-
-    (no-comments-q . "Author requestes no comments. Comment anyway? ")
-    (private-answer-q . "Author requests private replies. Write private reply? ")
-
-    (your-invited . "You have been invited to %#1M by %#2P.
-By accepting the invitation you will continue to be a member of %#1M.
-If you decline the invitation you will not be a member of the conference.
-")
-    (accept-invitation . "Do you want to accept the invitation now? ")
-    (enter-passive . "You are a passive member of %#1M.
-You must become an active member of the conference to enter it.\n")
-    (convert-passive . "Vill du bli aktiv medlem i %#1M? ")
-    (bug-secret-mship . "You are a secret member of %#1M\n")
-
-    (invitation-mt-type . "invited")
-    (passive-mt-type . "passive")
-    (secret-mt-type . "secret")
-
-    (not-author-try-anyway-p . "You are not the author of the text. Try anyway? ")
-    (what-no-comments-no . "Which text do you want to prevent comments to: ")
-    (adding-no-comments . "Preventing commens to text %#1n...")
-    (already-no-comments . "Text %#1n already prevents comment.\n")
-
-    (what-private-answer-no . "Which text do you want private replies to: ")
-    (adding-private-answer . "Requesting only private replies to text %#1n...")
-    (already-private-answer . "Text %#1n already has a request for private replies only.\n")
-
-    (what-request-confirm-no . "Which text do you want read confirmations for: ")
-    (adding-request-confirm . "Requesting read confirmation for text %#1n...")
-    (already-request-confirm . "Text %#1n already has a request for read confirmation.\n")
-
-    (review-mail-headers-to-what . "Which text's mail headers do you want to see? ")
-    (no-mail-headers . "Text %#1n has no mail headers\n")
-    (mail-headers-for . "Mail headers for text %#1n:\n")
-    (email-name-prefix . "")
-    (email-name-suffix . "")
     ))
 
 
@@ -1368,10 +1054,9 @@ You must become an active member of the conference to enter it.\n")
     (kom-slow-mode            . "Long commands")
     (kom-quick-mode           . "Short commands")
     (kom-send-message         . "Send message")
-    (kom-send-alarm           . "Send alam")
     (kom-create-conf          . "Create conference")
     (kom-delete-conf          . "Delete conference")
-    (kom-delete-text          . "Remove text")
+    (kom-delete-text          . "Remove article")
     (kom-display-time         . "Time")
     (kom-go-to-conf           . "Go (to) conference")
     (kom-go-to-next-conf      . "(Go to) next conference")
@@ -1388,13 +1073,12 @@ You must become an active member of the conference to enter it.\n")
     (kom-status-person        . "Status (of) user")
     (kom-status-conf          . "Status (of) conference")
     (kom-add-self             . "Join (a) conference")
-    (kom-change-priority      . "Change priority")
-    (kom-list-summary         . "List text (subjects)")
+    (kom-list-summary         . "List article (subjects)")
     (kom-sub-self             . "Leave (a) conference")
     (kom-quit                 . "Quit")
     (kom-recover              . "Recover") 
     (kom-start-anew           . "New User")
-    (kom-view                 . "Review text")
+    (kom-view                 . "Review article")
     (kom-find-root-review     . "Review tree")
     (kom-review-comments      . "Review all comments")
     (kom-review-tree          . "Review all comments recursively")
@@ -1403,44 +1087,42 @@ You must become an active member of the conference to enter it.\n")
      			      . "Review again")
     (kom-review-noconversion  . "Review unconverted")
     (kom-review-next          . "Review next")
-    (kom-find-root            . "Review original (text)")
+    (kom-find-root            . "Review original (article)")
     (kom-review-by-to         . "Review last")
     (kom-review-first         . "Review first")
     (kom-review-all           . "Review all")
     (kom-review-more          . "Review more")
-    (kom-view-commented-text  . "Review (the) commented (text)")
+    (kom-view-commented-text  . "Review (the) commented (article)")
     (kom-view-previous-commented-text
-     			      . "Review (the) previously commented (text)")
+     			      . "Review (the) previously commented (article)")
     (kom-review-stack         . "Review stack")
     (kom-review-presentation  . "Review presentation")
     (kom-review-backward      . "(Review) Backwards")
-    (kom-view-next-text       . "(Read) next text")
+    (kom-view-next-text       . "(Read) next article")
     (kom-who-is-on            . "Who is on") 
-    (kom-who-is-on-in-conference
-                              . "Who is on in conference") 
     (kom-who-am-i             . "Where (am) i")
+;    (kom-display-who-buffer   .  "Display who (list)")
     (kom-list-clients	      . "List clients")
     (kom-busy-wait            . "Wait (for news)")
     (kom-write-comment        . "(Write) comment")
-    (kom-comment-previous     . "(Write) comment (to) previous text")
+    (kom-comment-previous     . "(Write) comment (to) previous article")
     (kom-write-footnote       . "(Write) footnote")
     (kom-private-answer       . "(Write) personal reply (by letter)")
     (kom-private-answer-previous
-   . "(Write) personal (reply to) previous text (by letter)")
+   . "(Write) personal (reply to) previous article (by letter)")
     (kom-set-unread     	      . "Only (the) last")
-    (kom-write-text           . "Write (an) text")
+    (kom-write-text           . "Write (an) article")
     (kom-send-letter          . "Write (a) letter")
     (kom-change-name          . "Change name")
-    (kom-change-parenthesis   . "Change parenthesis")
     (kom-change-password      . "Change password")
     (kom-change-supervisor    . "Change supervisor")
     (kom-change-presentation  . "Change presentation")
     (kom-get-appreciation     . "(Please) pat my head")
     (kom-get-abuse            . "(Please) kick my butt")
-    (kom-mark-text            . "Mark (text)")
-    (kom-unmark-text          . "Unmark (text)")
-    (kom-review-marked-texts  . "Review marked (texts)")
-    (kom-review-all-marked-texts . "Review all marked (texts)")
+    (kom-mark-text            . "Mark (article)")
+    (kom-unmark-text          . "Unmark (article)")
+    (kom-review-marked-texts  . "Review marked (articles)")
+    (kom-review-all-marked-texts . "Review all marked (articles)")
     (kom-add-recipient        . "Add recipient")
     (kom-add-copy             . "Add (recipient of) carbon copy")
     (kom-add-bcc	      . "Addera (recipient of) blind carbon copy")
@@ -1450,13 +1132,12 @@ You must become an active member of the conference to enter it.\n")
     (kom-sub-comment          . "Remove comment")
     (kom-add-member           . "Add (a) member")
     (kom-sub-member           . "Remove (a) member")
-    (kom-change-conf-motd     . "(Post) notice (on the)")
+    (kom-change-conf-motd     . "(Post) note (on the) door")
     (kom-set-garb-nice        . "Change expiration")
     (kom-set-super-conf       . "Change superconference")
     (kom-set-permitted-submitters . "Change allowed authors")
-    (kom-unset-conf-motd      . "Remove notice")
-    (kom-save-text            . "Archive text (in file)")
-    (kom-save-text-body       . "Save text body (in file)")
+    (kom-unset-conf-motd      . "Remove note (from the door)")
+    (kom-save-text            . "Save article (in file)")
     (kom-edit-options         . "Change options")
     (kom-save-options         . "Save options")
     (kom-shutdown-server      . "Shut down (server)")
@@ -1486,28 +1167,13 @@ You must become an active member of the conference to enter it.\n")
     (kom-remote-erase-messages . "Remote control erase messages")
     (kom-remote-quit          . "Remote control quit")
 
-    (kom-status-session       . "Status (of a) session")
-    (kom-customize            . "Customize LysKOM")
+    (kom-status-session . "Status (of a) session")
     (kom-next-kom             . "Next LysKOM")
     (kom-previous-kom         . "Previous LysKOM")
     (kom-next-unread-kom      . "Next unread LysKOM")
-    (kom-change-language      . "Change language")
+    (kom-customize      . "Customize LysKOM")
+    (kom-change-language . "Change language")
     (kom-calculate            . "Calculate")
-    (kom-list-marks           . "List marked texts")
-    (kom-where-is             . "Where (is the) command")
-    (kom-fast-reply           . "Quick reply")
-    (kom-agree                . "Agree")
-    (kom-add-faq              . "Add FAQ")
-    (kom-del-faq              . "Remove FAQ")
-    (kom-review-faq           . "View FAQ")
-
-    (kom-sub-footnote         . "Remove footnote")
-    (kom-add-footnote         . "Add footnote")
-
-    (kom-add-no-comments      . "Prevent comments")
-    (kom-add-private-answer   . "Request private reply")
-    (kom-add-request-confirm  . "Request confirmation of reading")
-    (kom-review-mail-headers  . "Review mail headers")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -1660,7 +1326,6 @@ You must become an active member of the conference to enter it.\n")
     (conference . "Conference")
     (other     . "Other")
     (person    . "User")
-    (marks     . "Marks")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
@@ -1673,14 +1338,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-edit-add-recipient . "Add recipient")
     (kom-edit-add-copy . "Add carbon copy")
     (kom-edit-show-commented . "Review commented")
-    (kom-edit-insert-commented . "Cite commented")
-    (kom-edit-add-bcc . "Add blind carbon copy")
-    (kom-edit-add-cross-reference . "Add cross reference")
-    (kom-edit-add-no-comments . "Request no comments")
-    (kom-edit-add-personal-comments . "Request personal replies")
-    (kom-edit-add-read-confirm-request . "Request read confirmation")
-    (kom-edit-move-text . "Move to new recipient")
-))
+    (kom-edit-insert-commented . "Cite commented")))
 
 ;;(defvar lyskom-swascii-commands nil
 ;;  "The swascii-versions of lyskom-commands.")
@@ -1734,130 +1392,120 @@ You must become an active member of the conference to enter it.\n")
   (define-prefix-command 'lyskom-en-filter-get-prefix)
   (define-prefix-command 'lyskom-en-S-prefix)
   (define-prefix-command 'lyskom-en-previous-prefix)
-  (define-key lyskom-en-mode-map (kbd "A") 'lyskom-en-change-prefix)
-  (define-key lyskom-en-mode-map (kbd "r") 'lyskom-en-review-prefix)
-  (define-key lyskom-en-mode-map (kbd "f") 'lyskom-en-filter-get-prefix)
-  (define-key lyskom-en-mode-map (kbd "n") 'lyskom-en-next-prefix)
-  (define-key lyskom-en-mode-map (kbd "l") 'lyskom-en-list-prefix)
-  (define-key lyskom-en-mode-map (kbd "s") 'lyskom-en-S-prefix)
-  (define-key lyskom-en-mode-map (kbd "b") 'lyskom-en-previous-prefix)
+  (define-key lyskom-en-mode-map "A" 'lyskom-en-change-prefix)
+  (define-key lyskom-en-mode-map "r" 'lyskom-en-review-prefix)
+  (define-key lyskom-en-mode-map "f" 'lyskom-en-filter-get-prefix)
+  (define-key lyskom-en-mode-map "n" 'lyskom-en-next-prefix)
+  (define-key lyskom-en-mode-map "l" 'lyskom-en-list-prefix)
+  (define-key lyskom-en-mode-map "s" 'lyskom-en-S-prefix)
+  (define-key lyskom-en-mode-map "b" 'lyskom-en-previous-prefix)
 
-  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
-  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
-  (define-key lyskom-en-mode-map (kbd "*") 'kom-button-press)
-  (define-key lyskom-en-mode-map (kbd "+") 'kom-menu-button-press)
-  (define-key lyskom-en-mode-map (kbd "TAB") 'kom-next-link)
-  (define-key lyskom-en-mode-map (kbd "M-TAB") 'kom-previous-link)
+  (define-key lyskom-en-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
+  (define-key lyskom-en-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-en-mode-map [mouse-3] 'kom-mouse-null)
+  (define-key lyskom-en-mode-map "*" 'kom-button-press)
+  (define-key lyskom-en-mode-map "\C-i" 'kom-next-link)
+  (define-key lyskom-en-mode-map "\M-\C-i" 'kom-previous-link)
 
   ;; These should be first in order to be last in the menu of alternatives.
-  (define-key lyskom-en-mode-map (kbd "A ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "r ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "f ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "n ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "l ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "s ?") 'lyskom-help)
+  (define-key lyskom-en-mode-map "A?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "r?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "f?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "n?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "l?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "s?" 'lyskom-help)
   
 
-  (define-key lyskom-en-mode-map (kbd "o")     'kom-set-unread)
-  (define-key lyskom-en-mode-map (kbd "x")     'kom-extended-command)
-  (define-key lyskom-en-mode-map (kbd "<SPC>") 'kom-next-command)
-  (define-key lyskom-en-mode-map (kbd "<LFD>")  'kom-page-next-command)
-  (define-key lyskom-en-mode-map (kbd "<RET>")  'kom-line-next-command)
+  (define-key lyskom-en-mode-map "o" 'kom-set-unread)
+  (define-key lyskom-en-mode-map "x" 'kom-extended-command)
+  (define-key lyskom-en-mode-map " " 'kom-next-command)
+  (define-key lyskom-en-mode-map "\n" 'kom-page-next-command)
+  (define-key lyskom-en-mode-map "\r" 'kom-line-next-command)
 
-  (define-key lyskom-en-mode-map (kbd "?")  'describe-mode)
-  (define-key lyskom-en-mode-map (kbd "m")  'kom-send-letter)
-  (define-key lyskom-en-mode-map (kbd "g")  'kom-go-to-conf)
-  (define-key lyskom-en-mode-map (kbd "a")  'kom-write-text)
-  (define-key lyskom-en-mode-map (kbd "c")  'kom-write-comment)
-  (define-key lyskom-en-mode-map (kbd "C")  'kom-comment-previous)
-  (define-key lyskom-en-mode-map (kbd "F")  'kom-write-footnote)
-  (define-key lyskom-en-mode-map (kbd "p")  'kom-private-answer)
-  (define-key lyskom-en-mode-map (kbd "P")  'kom-private-answer-previous)
-  (define-key lyskom-en-mode-map (kbd "j")  'kom-jump)
-  (define-key lyskom-en-mode-map (kbd "J")  'kom-super-jump)
-  (define-key lyskom-en-mode-map (kbd "l M") 'kom-list-marks)
-  (define-key lyskom-en-mode-map (kbd "l c") 'kom-list-conferences)
-  (define-key lyskom-en-mode-map (kbd "l n") 'kom-list-news)
-  (define-key lyskom-en-mode-map (kbd "l u") 'kom-list-persons)
-  (define-key lyskom-en-mode-map (kbd "l r") 'kom-list-re)
-  (define-key lyskom-en-mode-map (kbd "l s") 'kom-membership)
-  (define-key lyskom-en-mode-map (kbd "l a") 'kom-list-summary)
-  (define-key lyskom-en-mode-map (kbd "l f") 'kom-list-filters)
-  (define-key lyskom-en-mode-map (kbd "l w") 'kom-who-is-on-in-conference)
-  (define-key lyskom-en-mode-map (kbd "S")  'kom-add-self)
-  (define-key lyskom-en-mode-map (kbd "M")  'kom-mark-text)
-  (define-key lyskom-en-mode-map (kbd "U")  'kom-unmark-text)
-  (define-key lyskom-en-mode-map (kbd "n a") 'kom-view-next-new-text)
-  (define-key lyskom-en-mode-map (kbd "n c") 'kom-go-to-next-conf)
-  (define-key lyskom-en-mode-map (kbd "n l") 'kom-next-kom)
-  (define-key lyskom-en-mode-map (kbd "n u") 'kom-next-unread-kom)
-  (define-key lyskom-en-mode-map (kbd "b l") 'kom-previous-kom)
-  (define-key lyskom-en-mode-map (kbd "q")  'kom-quit)
-  (define-key lyskom-en-mode-map (kbd "z")  'kom-bury)
-  (define-key lyskom-en-mode-map (kbd "R")  'kom-recover)
-  (define-key lyskom-en-mode-map (kbd "t")  'kom-display-time)
-  (define-key lyskom-en-mode-map (kbd "f p") 'kom-get-appreciation)
-  (define-key lyskom-en-mode-map (kbd "f k") 'kom-get-abuse)
-  (define-key lyskom-en-mode-map (kbd "f s") 'kom-filter-subject)
-  (define-key lyskom-en-mode-map (kbd "f a") 'kom-filter-author)
-  (define-key lyskom-en-mode-map (kbd "f c") 'kom-filter-text)
-  (define-key lyskom-en-mode-map (kbd "w")  'kom-who-is-on)
-  (define-key lyskom-en-mode-map (kbd "I")  'kom-who-am-i)
-  (define-key lyskom-en-mode-map (kbd "W")  'kom-busy-wait)
-  (define-key lyskom-en-mode-map (kbd "A p") 'kom-change-presentation)
-  (define-key lyskom-en-mode-map (kbd "A f") 'kom-filter-edit)
-  (define-key lyskom-en-mode-map (kbd "A m") 'kom-change-auto-reply)
-  (define-key lyskom-en-mode-map (kbd "A t") 'kom-move-text)
-  (define-key lyskom-en-mode-map (kbd "r SPC") 'kom-view)
-  (define-key lyskom-en-mode-map (kbd "r 0") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 1") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 2") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 3") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 4") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 5") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 6") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 7") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 8") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r 9") 'kom-initial-digit-view)
-  (define-key lyskom-en-mode-map (kbd "r c") 'kom-view-commented-text)
-  (define-key lyskom-en-mode-map (kbd "r C") 'kom-view-previous-commented-text)
-  (define-key lyskom-en-mode-map (kbd "r a ?") 'lyskom-help)
-  (define-key lyskom-en-mode-map (kbd "r a c") 'kom-review-comments)
-  (define-key lyskom-en-mode-map (kbd "r a r") 'kom-review-tree)
-  (define-key lyskom-en-mode-map (kbd "r j") 'kom-review-clear)
-  (define-key lyskom-en-mode-map (kbd "r n") 'kom-review-next)
-  (define-key lyskom-en-mode-map (kbd "r u") 'kom-review-noconversion)
-  (define-key lyskom-en-mode-map (kbd "r o") 'kom-find-root)
-  (define-key lyskom-en-mode-map (kbd "r l") 'kom-review-by-to)
-  (define-key lyskom-en-mode-map (kbd "r f") 'kom-review-first)
-  (define-key lyskom-en-mode-map (kbd "r A") 'kom-review-all)
-  (define-key lyskom-en-mode-map (kbd "r M") 'kom-review-more)
-  (define-key lyskom-en-mode-map (kbd "r g") 'kom-review-last-normally-read)
-  (define-key lyskom-en-mode-map (kbd "r q") 'kom-review-faq)
-  (define-key lyskom-en-mode-map (kbd "B")  'kom-review-backward)
-  (define-key lyskom-en-mode-map (kbd "r s") 'kom-review-stack)
-  (define-key lyskom-en-mode-map (kbd "r p") 'kom-review-presentation)
-  (define-key lyskom-en-mode-map (kbd "r r") 'kom-find-root-review)
-  (define-key lyskom-en-mode-map (kbd "r m") 'kom-review-marked-texts)
-  (define-key lyskom-en-mode-map (kbd "r a m") 'kom-review-all-marked-texts)
-  (define-key lyskom-en-mode-map (kbd "r a SPC") 'kom-review-all)
-  (define-key lyskom-en-mode-map (kbd "r x a") 'kom-agree)
-  (define-key lyskom-en-mode-map (kbd "r x q") 'kom-fast-reply)
-  (define-key lyskom-en-mode-map (kbd "s c") 'kom-status-conf)
-  (define-key lyskom-en-mode-map (kbd "s u") 'kom-status-person)
-  (define-key lyskom-en-mode-map (kbd "s s") 'kom-status-session)
-  (define-key lyskom-en-mode-map (kbd "s m") 'kom-send-message)
+  (define-key lyskom-en-mode-map "?"  'describe-mode)
+  (define-key lyskom-en-mode-map "m"  'kom-send-letter)
+  (define-key lyskom-en-mode-map "g"  'kom-go-to-conf)
+  (define-key lyskom-en-mode-map "a"  'kom-write-text)
+  (define-key lyskom-en-mode-map "c"  'kom-write-comment)
+  (define-key lyskom-en-mode-map "C"  'kom-comment-previous)
+  (define-key lyskom-en-mode-map "F"  'kom-write-footnote)
+  (define-key lyskom-en-mode-map "p"  'kom-private-answer)
+  (define-key lyskom-en-mode-map "P"  'kom-private-answer-previous)
+  (define-key lyskom-en-mode-map "j"  'kom-jump)
+  (define-key lyskom-en-mode-map "J"  'kom-super-jump)
+  (define-key lyskom-en-mode-map "lc" 'kom-list-conferences)
+  (define-key lyskom-en-mode-map "ln" 'kom-list-news)
+  (define-key lyskom-en-mode-map "lu" 'kom-list-persons)
+  (define-key lyskom-en-mode-map "lr" 'kom-list-re)
+  (define-key lyskom-en-mode-map "ls" 'kom-membership)
+  (define-key lyskom-en-mode-map "la" 'kom-list-summary)
+  (define-key lyskom-en-mode-map "lf" 'kom-list-filters)
+  (define-key lyskom-en-mode-map "S"  'kom-add-self)
+  (define-key lyskom-en-mode-map "M"  'kom-mark-text)
+  (define-key lyskom-en-mode-map "U"  'kom-unmark-text)
+  (define-key lyskom-en-mode-map "na" 'kom-view-next-new-text)
+  (define-key lyskom-en-mode-map "nc" 'kom-go-to-next-conf)
+  (define-key lyskom-en-mode-map "nl" 'kom-next-kom)
+  (define-key lyskom-en-mode-map "nu" 'kom-next-unread-kom)
+  (define-key lyskom-en-mode-map "bl" 'kom-previous-kom)
+  (define-key lyskom-en-mode-map "q"  'kom-quit)
+  (define-key lyskom-en-mode-map "z"  'kom-bury)
+  (define-key lyskom-en-mode-map "R"  'kom-recover)
+  (define-key lyskom-en-mode-map "t"  'kom-display-time)
+  (define-key lyskom-en-mode-map "fp" 'kom-get-appreciation)
+  (define-key lyskom-en-mode-map "fk" 'kom-get-abuse)
+  (define-key lyskom-en-mode-map "fs" 'kom-filter-subject)
+  (define-key lyskom-en-mode-map "fa" 'kom-filter-author)
+  (define-key lyskom-en-mode-map "fc" 'kom-filter-text)
+  (define-key lyskom-en-mode-map "w"  'kom-who-is-on)
+  (define-key lyskom-en-mode-map "I"  'kom-who-am-i)
+  (define-key lyskom-en-mode-map "W"  'kom-busy-wait)
+  (define-key lyskom-en-mode-map "Ap" 'kom-change-presentation)
+  (define-key lyskom-en-mode-map "Af" 'kom-filter-edit)
+  (define-key lyskom-en-mode-map "Am" 'kom-change-auto-reply)
+  (define-key lyskom-en-mode-map "r " 'kom-view)
+  (define-key lyskom-en-mode-map "r0" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r1" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r2" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r3" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r4" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r5" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r6" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r7" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r8" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "r9" 'kom-initial-digit-view)
+  (define-key lyskom-en-mode-map "rc" 'kom-view-commented-text)
+  (define-key lyskom-en-mode-map "rC" 'kom-view-previous-commented-text)
+  (define-key lyskom-en-mode-map "ra?" 'lyskom-help)
+  (define-key lyskom-en-mode-map "rac" 'kom-review-comments)
+  (define-key lyskom-en-mode-map "rar" 'kom-review-tree)
+  (define-key lyskom-en-mode-map "rj" 'kom-review-clear)
+  (define-key lyskom-en-mode-map "rn" 'kom-review-next)
+  (define-key lyskom-en-mode-map "ru" 'kom-review-noconversion)
+  (define-key lyskom-en-mode-map "ro" 'kom-find-root)
+  (define-key lyskom-en-mode-map "rl" 'kom-review-by-to)
+  (define-key lyskom-en-mode-map "rf" 'kom-review-first)
+  (define-key lyskom-en-mode-map "rA" 'kom-review-all)
+  (define-key lyskom-en-mode-map "rM" 'kom-review-more)
+  (define-key lyskom-en-mode-map "rg" 'kom-review-last-normally-read)
+  (define-key lyskom-en-mode-map "B"  'kom-review-backward)
+  (define-key lyskom-en-mode-map "rs" 'kom-review-stack)
+  (define-key lyskom-en-mode-map "rp" 'kom-review-presentation)
+  (define-key lyskom-en-mode-map "rr" 'kom-find-root-review)
+  (define-key lyskom-en-mode-map "rm" 'kom-review-marked-texts)
+  (define-key lyskom-en-mode-map "ram" 'kom-review-all-marked-texts)
+  (define-key lyskom-en-mode-map "ra " 'kom-review-all)
+  (define-key lyskom-en-mode-map "sc" 'kom-status-conf)
+  (define-key lyskom-en-mode-map "su" 'kom-status-person)
+  (define-key lyskom-en-mode-map "ss" 'kom-status-session)
 
-  ;; Running in) buffer
+  ;; Running in buffer
 
-  (define-key lyskom-en-mode-map (kbd "M-p") 'backward-text)
-  (define-key lyskom-en-mode-map (kbd "M-n") 'forward-text)
-  (define-key lyskom-en-mode-map (kbd "s a") 'kom-save-text)
+  (define-key lyskom-en-mode-map "\033p" 'backward-text)
+  (define-key lyskom-en-mode-map "\033n" 'forward-text)
+  (define-key lyskom-en-mode-map "sa" 'kom-save-text)
 
-  (define-key lyskom-en-mode-map (kbd "C-?") 'scroll-down)
-  (define-key lyskom-en-mode-map (kbd "<DEL>") 'scroll-down)
-  (define-key lyskom-en-mode-map (kbd "<BS>") 'scroll-down)
+  (define-key lyskom-en-mode-map "\C-?" 'scroll-down)
   )
 
 
@@ -1871,38 +1519,35 @@ You must become an active member of the conference to enter it.\n")
 (if lyskom-en-filter-edit-map ()
   (setq lyskom-en-filter-edit-map (make-keymap))
   (suppress-keymap lyskom-en-filter-edit-map)
-  (define-prefix-command 'lyskom-en-filter-edit-prefix)
-  (define-key lyskom-sv-filter-edit-map (kbd "C-c")  'lyskom-en-filter-edit-prefix)
-  (define-key lyskom-en-filter-edit-map (kbd "p") 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "P") 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "n") 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "N") 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "C-p") 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "C-n") 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "C-b") 'lyskom-filter-edit-prev-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "C-f") 'lyskom-filter-edit-next-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "M-p") 'lyskom-filter-edit-prev-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "M-n") 'lyskom-filter-edit-next-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "d") 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "M-d") 'lyskom-filter-edit-delete-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "D") 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "C-d") 'lyskom-filter-edit-delete-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "i") 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "I") 'lyskom-filter-edit-insert-pattern)
-  (define-key lyskom-en-filter-edit-map (kbd "M-i") 'lyskom-filter-edit-insert-entry)
-  (define-key lyskom-en-filter-edit-map (kbd "<") 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-en-filter-edit-map (kbd ">") 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-en-filter-edit-map (kbd "M-<") 'lyskom-filter-edit-beginning-of-list)
-  (define-key lyskom-en-filter-edit-map (kbd "M->") 'lyskom-filter-edit-end-of-list)
-  (define-key lyskom-en-filter-edit-map (kbd "q") 'lyskom-filter-edit-quit)
-  (define-key lyskom-sv-filter-edit-map (kbd "C-c C-c")   'lyskom-filter-edit-quit)
-  (define-key lyskom-en-filter-edit-map (kbd "x") 'lyskom-filter-edit-expunge)
-  (define-key lyskom-en-filter-edit-map (kbd "s") 'lyskom-filter-edit-save)
-  (define-key lyskom-en-filter-edit-map (kbd "g") 'lyskom-filter-edit-revert)
-  (define-key lyskom-en-filter-edit-map (kbd "t") 'lyskom-filter-edit-toggle-permanent)
-  (define-key lyskom-en-filter-edit-map (kbd "a") 'lyskom-filter-edit-toggle-action)
-  (define-key lyskom-en-filter-edit-map (kbd "?") 'lyskom-filter-edit-brief-help)
-  (define-key lyskom-en-filter-edit-map (kbd "h") 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-en-filter-edit-map "p" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "P" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map "n" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "N" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map "\C-P" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-N" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-B" 'lyskom-filter-edit-prev-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-F" 'lyskom-filter-edit-next-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-p" 'lyskom-filter-edit-prev-entry)
+  (define-key lyskom-en-filter-edit-map "\M-n" 'lyskom-filter-edit-next-entry)
+  (define-key lyskom-en-filter-edit-map "d" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-d" 'lyskom-filter-edit-delete-entry)
+  (define-key lyskom-en-filter-edit-map "D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "\C-D" 'lyskom-filter-edit-delete-pattern)
+  (define-key lyskom-en-filter-edit-map "i" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map "I" 'lyskom-filter-edit-insert-pattern)
+  (define-key lyskom-en-filter-edit-map "\M-i" 'lyskom-filter-edit-insert-entry)
+  (define-key lyskom-en-filter-edit-map "<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map ">" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map "\M-<" 'lyskom-filter-edit-beginning-of-list)
+  (define-key lyskom-en-filter-edit-map "\M->" 'lyskom-filter-edit-end-of-list)
+  (define-key lyskom-en-filter-edit-map "q" 'lyskom-filter-edit-quit)
+  (define-key lyskom-en-filter-edit-map "x" 'lyskom-filter-edit-expunge)
+  (define-key lyskom-en-filter-edit-map "s" 'lyskom-filter-edit-save)
+  (define-key lyskom-en-filter-edit-map "g" 'lyskom-filter-edit-revert)
+  (define-key lyskom-en-filter-edit-map "t" 'lyskom-filter-edit-toggle-permanent)
+  (define-key lyskom-en-filter-edit-map "a" 'lyskom-filter-edit-toggle-action)
+  (define-key lyskom-en-filter-edit-map "?" 'lyskom-filter-edit-brief-help)
+  (define-key lyskom-en-filter-edit-map "h" 'lyskom-filter-edit-brief-help)
   )
 
 
@@ -1923,17 +1568,16 @@ You must become an active member of the conference to enter it.\n")
 ;;;)
 
 (defvar lyskom-en-prioritize-mode-map nil)
-(lyskom-language-keymap lyskom-prioritize-mode-map en lyskom-en-prioritize-mode-map)
+(lyskom-language-keymap lyskom-filter-edit-map en lyskom-en-filter-edit-map)
 
 (if lyskom-en-prioritize-mode-map 
     nil
   (setq lyskom-en-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-en-prioritize-mode-map)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
-  (define-key lyskom-en-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [mouse-2]) 'kom-button-click)
+  (define-key lyskom-en-prioritize-mode-map (lyskom-keys [down-mouse-3]) 'kom-popup-menu)
+  (define-key lyskom-en-prioritize-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-en-prioritize-mode-map "*" 'kom-button-press)
-  (define-key lyskom-en-prioritize-mode-map "+" 'kom-menu-button-press)
   (define-key lyskom-en-prioritize-mode-map "?" 'kom-prioritize-help)
   (define-key lyskom-en-prioritize-mode-map "\C-k" 'kom-prioritize-select)
   (define-key lyskom-en-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
@@ -1988,7 +1632,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-customize-map "\t" 'widget-forward)
   (define-key lyskom-en-customize-map "\M-\t" 'widget-backward)
   (define-key lyskom-en-customize-map "\C-m" 'widget-button-press)
-  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
+  (define-key lyskom-en-customize-map (lyskom-keys [mouse-2]) 'widget-button-click)
   (define-key lyskom-en-customize-map "\C-c\C-c" 'lyskom-customize-save-and-quit)
   (define-key lyskom-en-customize-map "\C-c\C-k" 'lyskom-customize-quit)
   (define-key lyskom-en-customize-map "\C-c\C-s" 'lyskom-customize-save)
@@ -2013,7 +1657,6 @@ You must become an active member of the conference to enter it.\n")
     ;; Help messages
     ;;
 
-    (variable-type-help . "Select to save setting in the server.")
     (default-help-echo . "Change the value of  %#1s.")
     (change-this-name . "Change the name in this entry.")
     (show-doc . "Show documentation.")
@@ -2044,9 +1687,7 @@ Select whether to execute command or keyboard macro.")
     (off . "Off")
     (yes . "Yes")
     (no . "No ")
-    (max-text-length . "For texts shorter than: ")
-
-    (friends . "Friends and other special people")
+    (max-text-length . "For articles shorter than: ")
 
     (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
@@ -2108,19 +1749,6 @@ Select whether to execute command or keyboard macro.")
     (long-format .  "Show help texts")
     (short-format . "Hide help texts")
 
-    (truncate-threshold-lines . "Max lines")
-
-    (first . "First")
-    (last . "Last")
-    (specific-placement . "Specific location")
-    (priority . "Priority")
-    (same-as-conf . "Same as current conference")
-    (custom-format . "Custom format")
-    (default-format . "Standard format")
-    (a-string . "The string")
-    (some-string . "A random string")
-    (unspecified . "Unspecified")
-    
     ;;
     ;; Misc doc strings
     ;;
@@ -2134,10 +1762,7 @@ Select whether to execute command or keyboard macro.")
 \\[widget-button-press] changes the value
 
 Documentation:  [?] Show documentation    [!] Hide documentation
-Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify
-
-If the box before the name of the setting is selected, the setting will
-be saved in the server. Otherwise it will be saved in your .emacs.")
+Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 
 
 
@@ -2176,15 +1801,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (sending-doc . "\
   The following settings turn on or off certain checks that can be performed
-  before sending a text to the server. The checks are designed to keep
+  before sending an article to the server. The checks are designed to keep
   you from doing something stupid.
 
     Confirm multiple recipients
-        If a text or comment has more than one recipient, LysKOM 
+        If an article or comment has more than one recipient, LysKOM 
         can ask which of the recipients are relevant. This can either
-        be done before you start writing the text, in which case 
+        be done before you start writing the article, in which case 
         LysKOM will post a question for each recipient, or before sending
-        the text to the server, in which case you may confirm all the
+        the article to the server, in which case you may confirm all the
         recipients at once. It is also possible to turn this check off
         entirely.
 
@@ -2196,7 +1821,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     Check for unread comments
         When this is on, LysKOM will check that you have read all the other
-        comments to the text you are commenting before sending your
+        comments to the article you are commenting before sending your
         comment to the server. This is supposed to help you avoid duplicating
         someone else's comment.")
 
@@ -2240,12 +1865,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   Controls how the LysKOM buffer is handled when moving to another KOM buffer
   with the Next and Previous LysKOM commands. When turned on the current
   buffer is buried.")
-
-    (kom-personal-messages-in-window-doc . "\
-  Controls which window is used to display the buffer with personal messages.
-  For this setting to have any effect, personal messages must be displayed
-  in a separate buffer, and that buffer must be displayed automatically
-  every time a message is received.")
 
     (kom-write-texts-in-window-doc . "\
   Controls which window is used to write new texts.")
@@ -2331,7 +1950,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     398331 1996-09-24  13:22  /2 lines/ George Berkeley
     Recipient: Philosophy <1226>
-    Comment in text 398374 by John Locke
+    Comment in article 398374 by John Locke
     Subject: 
     ------------------------------------------------------------
     An abstract idea is a contradiction in terms.
@@ -2345,7 +1964,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     ------------------------------------------------------------
     An abstract idea is a contradiction in terms.
     (398331) -----------------------------------
-    Comment in text 398374 by John Locke
+    Comment in article 398374 by John Locke
 ")
 
     (kom-dashed-lines-doc . "\
@@ -2379,7 +1998,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-show-author-at-end-doc . "\
   When this is turned on the name of the author will be shown at the end
-  of the text text. The name is also shown before the text as usual.
+  of the article text. The name is also shown before the text as usual.
 
   On (with dashed lines on):
 
@@ -2402,30 +2021,21 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   If dashed lines are off the author's name will be shown as in this
   example, but the dashed lines are natually not displayed.")
 
-    (kom-truncate-threshold-doc . "\
-  If this is activated texts longer than the maximum number of lines will
-  be truncated when you review comments, review marked texts or review the
-  first or last texts in a conference.  Texts will not be truncated when
-  you review a text, review a tree or read the next text.")
-
-    (kom-truncate-show-lines-doc . "\
-  The number of lines to show of truncated texts.")
-
     (kom-print-number-of-unread-on-entrance-doc . "\
-  Determines whether the number of unread texts is shown when entering
+  Determines whether the number of unread articles is shown when entering
   a conference:
 
   On:
 
     Go to next conference...
     Presentation (of nya) Members - 3 unread
-    Read next text - 
+    Read next article - 
 
   Off:
 
     Go to next conference...
     Presentation (of nya) Members
-    Read next text - ")
+    Read next article - ")
 
 
 
@@ -2462,9 +2072,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
      6810 George Berkeley                      Philosophy                     
      7571 John Locke                           Philosophy")
 
-    (kom-show-since-and-when-doc . "\
-  If this is on, the list of active users will include the connection time
-  and the inactivity period for each user.")
 
     (kom-idle-hide-doc . "\
   The listing of active users normally only shows those users who have been
@@ -2473,7 +2080,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (kom-show-footnotes-immediately-doc . "\
-  Footnotes can be shown either as comments or immediately when the text
+  Footnotes can be shown either as comments or immediately when the article
   they are footnotes to is displayed. This setting controls which behavior
   is used.")
 
@@ -2485,10 +2092,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (kom-read-depth-first-doc . "\
-  LysKOM can display texts either in the order they were written or in
-  the order defined by the comment tree. For example, if texts 1003 and
-  1004 are comments to text 1002, text 1006 is a comment to 1003 and 
-  texts 1005 and 1007 are comments to 1004, the comment tree looks 
+  LysKOM can display articles either in the order they were written or in
+  the order defined by the comment tree. For example, if articles 1003 and
+  1004 are comments to article 1002, article 1006 is a comment to 1003 and 
+  articles 1005 and 1007 are comments to 1004, the comment tree looks 
   something like this:
         
   1002 +-- 1003 --- 1006
@@ -2497,7 +2104,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
                 |
                 +-- 1007
 
-  Reading in order of creation will cause the texts to be displayed
+  Reading in order of creation will cause the articles to be displayed
   in numerical order: 1002, 1003, 1004, 1005, 1006 and finally 1007.
    Reading in comment order will give the order 1002, 1003, 1006, 1004,
   1005 and finally 1007.")
@@ -2518,7 +2125,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 
     (kom-higher-priority-breaks-doc . "\
-  When texts are created in conferences that have a higher priority than
+  When articles are created in conferences that have a higher priority than
   the one currently being read, LysKOM will attempt to break the normal
   reading order to show these. This setting controls whether the reading
   order is broken immediately, after the current comment chain is read or
@@ -2650,113 +2257,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This only works in Swedish. If you're running LysKOM in Swedish, turning
   this on causes today's names to be shown when you ask for the time.")
 
-    (kom-show-week-number-doc . "\
-  The Time command shows week numbers if this is on.")
-
-    (kom-membership-default-placement-doc . "\
-  This controls where new memberships are placed. First means before
-  all existing memberships of the same priority. Last means after all
-  existing memberships of the same priority. A number indicates a
-  fixed placement (although the client will eventually sort the membership
-  list in order of priority.)")
-
-    (kom-show-imported-importer-doc . "\
-  The importer of an imported e-mail message is shown if this is on.
-  This only works with compliant e-mail importers.")
-
-    (kom-show-imported-envelope-sender-doc . "\
-  The actual sender (the envelope sender) of imported e-mails is shown 
-  if this is on. This only works with compliant e-mail importers.")
-
-    (kom-show-imported-external-recipients-doc . "\
-  Show external recipients and CC recipients of imported e-mails if this
-  is on. This only works with compilant e-mail importers.")
-
-    (kom-agree-text-doc . "\
-  Default text for the Agree command. It can either be a text of a list
-  of texts. If it is a list, one of the texts will be chosen at random.")
-
-    (kom-silent-ansaphone-doc . "\
-  If this is off, the client will not beep when a personal, group, or
-  public message is received when the auto reply feature is on.")
-
-    (kom-default-session-priority-doc . "\
-  The session priority of new sessions. Conferences with a lower priority
-  will not be read.")
-
-    (kom-unsubscribe-makes-passive-doc . "\
-  When this is on, the first time you leave a conference you become a
-  passive member. Leaving the conference again ubsubscribes you completely.
-  When this is off, leaving a conference unsubscribes you immediately.")
-
-    (kom-review-priority-doc . "\
-  Priority for review commands. This setting can be used to give review
-  commands a higher priority than normal. The default priority is the
-  same as the conference currently being read. Set this to 256 or higher
-  if you want review commands to take precedence over all conferences.")
-
-    (kom-show-creating-software-doc . "\
-  Show the name of the client used to create a text if the information
-  is present and this setting is on.")
-
-    (kom-text-footer-format-doc . "\
-  Format for the text footer. In the format string, %n is replaced by the
-  text number, %P with the author's name, %p with the authods number, %f
-  with information about the text (HTML, filled, etc), and %- with a
-  suitable dashed line. A number after the percent sign is the minimum
-  number of characters to use. A minus sign before the number causes text
-  to be left justified within the field. An equals sign causes text
-  longer than the indicated width to be truncated.")
- 
-    (kom-long-lines-doc . "\
-  When this is on, most of the dashed lines are made longer than normal.")
-
-    (kom-postpone-default-doc . "\
-  Number of texts to postpone with the Postpone reading command.")
-
-    (kom-allow-incompleteness-doc . "\
-  When this is on, the client will not wait for information about all
-  unread texts, even if it is needed. The result is that List news and
-  some other commands do not yield accurate results shortly after logging
-  in. When this is off, the client will wait for informationn on all
-  unread texts when it is needed.")
-
-    (kom-smileys-doc . "\
-  When this is on, Emacs supports it, and the appropriate package 
-  (smiley.el, which is part of gnus) is installed, smileys will be
-  shown graphically.")
-  
-    (kom-ignore-message-senders-doc . "\
-  Don't show personal, group or alarm messages from these senders.")
-
-    (kom-ignore-message-recipients-doc . "\
-  Don't show group messages to these recipients.")
-
-    (kom-text-footer-dash-length-doc . "\
-  The total length of the text footer when long dashed lines are not
-  in effect and no custom format is being used.")
-
-    (kom-text-header-dash-length-doc . "\
-  The total length of the text header when long dashed lines are not
-  in effect.")
-
-    (kom-show-personal-message-date-doc . "\
-  When this is on, the date and time is shown on all personal, group and
-  alarm messages.")
-
-
-    (kom-ding-on-no-subject-doc . "")
-    (kom-ding-on-personal-messages-doc . "")
-    (kom-ding-on-group-messages-doc . "")
-    (kom-ding-on-common-messages-doc . "")
-    (kom-ding-on-no-subject-doc . "")
-    (kom-ding-on-wait-done-doc . "")
-    (kom-ding-on-priority-break-doc . "")
-    (kom-ding-on-new-letter-doc . "")
-    (kom-check-for-new-comments-doc . "")
-    (kom-check-commented-author-membership . "")
-    (kom-confirm-multiple-recipients-doc . "")
-
     ;;
     ;; Tags for variables
     ;;
@@ -2764,9 +2264,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-emacs-knows-iso-8859-1-tag . "Emacs can display ISO-8859-1:")
     (kom-bury-buffers-tag . "Bury buffers when changing LysKOM:")
 
-  (kom-personal-messages-in-window-tag . "Personal messages:      ")
     (kom-customize-in-window-tag       . "LysKOM customization:   ")
-    (kom-write-texts-in-window-tag     . "Author new texts:       ")
+    (kom-write-texts-in-window-tag     . "Author new articles:    ")
     (kom-prioritize-in-window-tag      . "Prioritize conferences: ")
     (kom-edit-filters-in-window-tag    . "Modify filters:         ")
     (kom-view-commented-in-window-tag  . "Review comments:        ")
@@ -2776,7 +2275,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-user-prompt-format-executing-tag . "Prompt format when executing:")
 
     (kom-higher-priority-breaks-tag . 
-"Read prioritized texts:                           ")
+"Read prioritized articles:                        ")
     (kom-created-texts-are-read-tag . 
 "Automatically read created texts:                 ")
     (kom-default-mark-tag           . 
@@ -2790,16 +2289,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-membership-default-priority-tag . 
 "Default priority for new memberships:             ")
     (kom-dashed-lines-tag . 
-"Dashed lines around the text body:                ")
+"Dashed lines around the article body:             ")
     (kom-autowrap-tag . 
 "Fill wide paragraphs before displaying:           ")
     (kom-show-author-at-end-tag .
 "Show the name of the author after the body:       ")
-
-    (kom-truncate-threshold-tag .
-"Truncate long texts:                              ")
-    (kom-truncate-show-lines-tag .
-"Lines to show of truncated texts:                 ")
 
     (kom-reading-puts-comments-in-pointers-last-tag . "Comment links are shown:")
     (kom-read-depth-first-tag . "Read order:")
@@ -2816,8 +2310,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 "Number of minutes of inactivity before session is hidden:      ")
     (kom-show-where-and-what-tag . 
 "Show where sessions are logged on from and what they are doing:    ")
-    (kom-show-since-and-when-tag . 
-"Show when sessions connected and how long they have been inactive: ")
 
 
 
@@ -2833,7 +2325,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-audio-player-tag . "Audio player program:")
     (kom-ding-on-new-letter-tag        . "When a letter arrives:             ")
-    (kom-ding-on-priority-break-tag    . "When a prioritized text arrives:   ")
+    (kom-ding-on-priority-break-tag    . "When a prioritized article arrives:")
     (kom-ding-on-wait-done-tag         . "When done waiting:                 ")
     (kom-ding-on-common-messages-tag   . "When a public message arrives:     ")
     (kom-ding-on-group-messages-tag    . "When a group message arrives:      ")
@@ -2872,28 +2364,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-default-language-tag . "Default language:  ")
     (kom-show-namedays-tag    . "Show today's names:")
     (kom-ispell-dictionary-tag . "Spelling dictionary:")
-
-    (kom-show-week-number-tag . "Show week number:")
-    (kom-membership-default-placement-tag . "Placement of new memberships:")
-    (kom-show-imported-importer-tag . "Show importer of imported messages:")
-    (kom-show-imported-envelope-sender-tag . "Show sender of imported messages:")
-    (kom-show-imported-external-recipients-tag . "Show external recipients of impoted messages:")
-    (kom-agree-text-tag . "Default text for Agree:")
-    (kom-silent-ansaphone-tag . "Beep when auto reply is on:")
-    (kom-default-session-priority-tag . "Default session priority:")
-    (kom-unsubscribe-makes-passive-tag . "Leaving a conference converts membership to passive:")
-    (kom-review-priority-tag . "Priority for review commands:")
-    (kom-show-creating-software-tag . "Show creating software:")
-    (kom-text-footer-format-tag . "Text footer format:")
-    (kom-long-lines-tag . "Long dashed lines:")
-    (kom-postpone-default-tag . "Default number of texts to postpone:")
-    (kom-allow-incompleteness-tag . "Allow incomplete information about unread texts:")
-    (kom-smileys-tag . "Show smileys graphically")
-    (kom-ignore-message-senders-tag . "Don't show messages from")
-    (kom-ignore-message-recipients-tag . "Don't show messages to")
-    (kom-text-footer-dash-length-tag . "Text footer length")
-    (kom-text-header-dash-length-tag . "Length of dashed line before text")
-    (kom-show-personal-message-date-tag . "Show date and time of messages")
     )
 )
 
@@ -2928,14 +2398,14 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   '((text
      text-text
      lyskom-button-view-text
-     (("View text" . lyskom-button-view-text)
+     (("View article" . lyskom-button-view-text)
       ("Review unconverted" . lyskom-button-review-noconversion)
       ("Review tree" . lyskom-button-review-tree)
-      ("Review root text" . lyskom-button-find-root)
+      ("Review root article" . lyskom-button-find-root)
       ("Write commend" . lyskom-button-comment-text)
       ("Write personal reply" . lyskom-button-private-comment-text)
-      ("Mark text" . lyskom-button-mark-text)
-      ("Unmark text" . lyskom-button-unmark-text))
+      ("Mark article" . lyskom-button-mark-text)
+      ("Unmark article" . lyskom-button-unmark-text))
      nil
 ;     ((nil lyskom-print-text footer lyskom-button-comment-text))
      )
@@ -2971,28 +2441,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (email
      email-text
      lyskom-button-open-email
-     (("Send mail" . lyskom-button-open-email)
-      ("Copy" . lyskom-button-copy-email))
-     nil)
-    (aux
-     aux-text
-     lyskom-button-info-aux
-     (("Information" . lyskom-button-info-aux)
-      ("Delete" . lyskom-button-delete-aux)))
-    (aux-edit-menu
-     nil
-     nil
-     (("Toggle \"secret\"" . lyskom-edit-toggle-secret-aux)
-      ("Toggle \"anonymous\"" . lyskom-edit-toggle-anonymous-aux)
-      ("Toggle \"inherited\""   . lyskom-edit-toggle-inherit-aux)
-      ("Delete"          . lyskom-edit-delete-aux)))
-    (prioritize-flag-menu
-     nil
-     lyskom-prioritize-flag-toggle
-     (("Toggle" . lyskom-prioritize-flag-toggle)
-      ("Set"    . lyskom-prioritize-flag-set)
-      ("Clear"  . lyskom-prioritize-flag-clear)))
-))
+     (("Skicka mail" . lyskom-button-open-email)
+      ("Kopiera" . lyskom-button-copy-email))
+     nil)))
 
 
 ;;;; ================================================================
@@ -3014,7 +2465,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
 (lyskom-language-strings kom-tell-phrases en
   '((kom-tell-silence		. "") ; Why ?
-    (kom-tell-send		. "Is trying to post a text.")
+    (kom-tell-send		. "Is trying to post an article.")
     (kom-tell-login		. "Is entering LysKOM.")
     (kom-tell-read		. "Is reading.")
     (kom-tell-1st-pres		. "Is writing the first presentation.")
@@ -3022,16 +2473,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-tell-write-footnote	. "Is writing a footnote.")
     (kom-tell-write-letter	. "Is writing a letter.")
     (kom-tell-write-reply	. "Is writing a personal reply.")
-    (kom-tell-write-text	. "Is writing a text.")
+    (kom-tell-write-text	. "Is writing an article.")
     (kom-tell-conf-pres		. "Is writing the presentation for a new conference.")
     (kom-tell-recover		. "Is restarting KOM. Sigh.")
     (kom-tell-wait		. "Is waiting.")
-    (kom-tell-regret		. "Decides to throw away the text.")
+    (kom-tell-regret		. "Decides to throw away the article.")
     (kom-tell-review		. "Is reviewing.")
     (kom-tell-change-name       . "Takes on a new name.")
     (kom-tell-change-supervisor . "Changes the supervisor of something.")
-    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")
-    (kom-tell-is-anonymous      . "Being secretive")))
+    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")))
 
 (if (and (boundp 'kom-tell-phrases)
          kom-tell-phrases)
@@ -3071,10 +2521,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-11 . "No read or write permission")
     (error-12 . "Illegal operation")
     (error-13 . "You are not a member of that conference")
-    (error-14 . "There is no text with that number")
-    (error-15 . "You cannot use global text number 0")
-    (error-16 . "There is no text with that local number")
-    (error-17 . "You cannot use local text number 0")
+    (error-14 . "There is no article with that number")
+    (error-15 . "You cannot use global article number 0")
+    (error-16 . "There is no article with that local number")
+    (error-17 . "You cannot use local article number 0")
     (error-18 . "Name too short, to long or containing illegal characters")
     (error-19 . "Index out of bounds")
     (error-20 . "The conference already exists")
@@ -3084,35 +2534,27 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (error-24 . "Error in the dtabase. Tough luck.")
     (error-25 . "Illegal misc-field. (Internal error)")
     (error-26 . "Illegal info type. (Bug in the client)")
-    (error-27 . "Already recipient of this text")
-    (error-28 . "Already comment to this text")
-    (error-29 . "Already footnote to this text")
-    (error-30 . "Not a recipient of this text")
-    (error-31 . "Not a comment to this text")
-    (error-32 . "Not a footnote to this text")
+    (error-27 . "Already recipient of this article")
+    (error-28 . "Already comment to this article")
+    (error-29 . "Already footnote to this article")
+    (error-30 . "Not a recipient of this article")
+    (error-31 . "Not a comment to this article")
+    (error-32 . "Not a footnote to this article")
     (error-33 . "Too many recipients")
     (error-34 . "Too many commentsp")
     (error-35 . "Too many footnotes")
     (error-36 . "Too many marks")
-    (error-37 . "You are not the author of that text")
+    (error-37 . "You are not the author of that article")
     (error-38 . "You cannot connect to the server")
     (error-39 . "Out of memory")
     (error-40 . "The server is gone crazy")
     (error-41 . "The client thinks that the server says that it does not understand the client")
     (error-42 . "No such session")
     (error-43 . "Invalid regular expression")
-    (error-44 . "Can't unmark a text that was not marked")
+    (error-44 . "Can't unmark an article that was not marked")
     (error-45 . "Temorary lossage. Please try again later")
     (error-46 . "Sending huge messages to the server is not a nice thing to do")
-    (error-47 . "Anonymous texts are not accepted by all recipients")
-    (error-48 . "Invalid extra information")
-    (error-49 . "Change of extra information not permitted")
-    (error-50 . "Unknown asynchronous message")
-    (error-51 . "Internal server error")
-    (error-52 . "Feature disabled in the server")
-    (error-53 . "Unable to send message")
-    (error-54 . "Invalid membership type")
-))
+    (error-47 . "Anonymous texts are not accepted by all recipients")))
 
 
      

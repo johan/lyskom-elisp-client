@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.16.2.1 1999-10-13 09:56:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.31 1999-06-29 14:21:15 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.16.2.1 1999-10-13 09:56:03 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -119,11 +119,6 @@ on such functions see the documentation for lyskom-add-button-action."
   (interactive)
   (lyskom-button-press (point)))
 
-(defun kom-menu-button-press ()
-  "Simulate a menu mouse button press at point."
-  (interactive)
-  (lyskom-button-menu (point) 'key))
-
 (defun kom-button-click (event &optional do-default)
   "Execute the default action of the active area under the mouse.
 If optional argument do-default is non-nil, call the default binding of
@@ -176,9 +171,8 @@ If there is no active area, then do something else."
   
 (defun kom-mouse-null (event)
   "Do nothing."
-  (interactive "@e")
   ;; This is here to pervent unwanted events when clicking mouse-3
-  )
+  (interactive "e"))
 
 (defun lyskom-make-button-menu (title entries buf arg text)
   "Create a menu keymap from a list of button actions."
@@ -190,12 +184,10 @@ If there is no active area, then do something else."
                (mapcar (function
                         (lambda (entry)
                           (vector (car entry)
-                                  (list (cdr entry)
-                                        buf
-                                        (if (listp arg)
-                                            (list 'quote arg)
-                                          arg)
-                                        text)
+                                  (` ((, (cdr entry)) 
+                                      (, buf)
+                                      (, arg)
+                                      (, text)))
                                   ':active t)))
                        entries)))
         (t (append (list 'keymap title)
@@ -216,15 +208,12 @@ If there is no active area, then do something else."
          (text  (get-text-property pos 'lyskom-button-text))
          (buf   (get-text-property pos 'lyskom-buffer))
          (data  (assq type lyskom-button-actions))
-         (title (if (get-text-property pos 'lyskom-button-menu-title)
-                    (apply 'lyskom-format
-                           (get-text-property pos 'lyskom-button-menu-title))
-                  (lyskom-format 
-                   (lyskom-get-string
-                    (or (intern-soft (concat (symbol-name type)
-                                             "-popup-title"))
-                        'generic-popup-title))
-                   text)))
+         (title (lyskom-format 
+                 (lyskom-get-string
+                  (or (intern-soft (concat (symbol-name type)
+                                           "-popup-title"))
+                      'generic-popup-title))
+                 text))
          (actl  (or (and data (elt data 3)) nil)))
     (cond ((null data) (goto-char pos))
           ((null actl) (goto-char pos))
@@ -239,36 +228,11 @@ If there is no active area, then do something else."
 	   ;; from simple keymaps to be title-less. A list consisting
 	   ;; of a single keymap works better. A patch is submittet to
 	   ;; the GNU folks. /davidk
-	   (if (eq event 'key)
-	       (lyskom-keyboard-menu title actl buf arg text)
-	     (let* ((menu (lyskom-make-button-menu title actl
-						   buf arg text)))
-	       (lyskom-do-popup-menu menu event)))))))
+           (let* ((menu (lyskom-make-button-menu title actl
+                                                 buf arg text)))
+             (lyskom-do-popup-menu menu event))))))
 
 
-(defun lyskom-keyboard-menu (title entries buf arg text)
-  "Do a keyboard menu selection."
-  (let ((prompt nil)
-        (maxlen 0)
-        (e entries)
-        (completion-ignore-case t))
-    (while e
-      (if (> (length (car (car e))) maxlen)
-          (setq maxlen (length (car (car e)))))
-      (setq e (cdr e)))
-    (setq prompt (concat 
-                  (substring title 0
-                             (min (length title)
-                                  (- (window-width (minibuffer-window))
-                                     maxlen 3))) ": "))
-
-    (let ((choice (completing-read prompt entries nil t 
-                                   (cons (car (car entries)) 0) nil)))
-      (when choice
-        (funcall (cdr (lyskom-string-assoc choice entries))
-                 buf arg text)))))
-
-       
 
 (defun lyskom-button-press (pos)
   "Execute the default action of the active area at POS if any."
@@ -412,12 +376,10 @@ the current match-data."
 
 
 	
-(defun lyskom-generate-button (type arg &optional text face menu-title)
+(defun lyskom-generate-button (type arg &optional text face)
   "Generate the properties for a button of type TYPE with argument ARG.
 Optional argument TEXT is the button text to be saved as a property and
-FACE is the default text face for the button. Optional argument MENU-TITLE
-defines the title for the popup menu. See lyskom-default-button for more
-information."
+FACE is the default text face for the button."
   (let* ((persno (cond ((boundp 'lyskom-pers-no) lyskom-pers-no)
                        ((and (boundp 'lyskom-buffer) lyskom-buffer)
                         (save-excursion
@@ -443,7 +405,6 @@ information."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
-                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((and (eq type 'text) numarg)
                  (list 'face (or face 'kom-text-no-face)
@@ -451,7 +412,6 @@ information."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
-                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((eq type 'url)
                  (list 'face (or face 'kom-active-face)
@@ -459,7 +419,6 @@ information."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg arg
-                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 (t
 		 (list 'face (or face 'kom-active-face)
@@ -467,7 +426,6 @@ information."
 		       'lyskom-button-text text
 		       'lyskom-button-type type
 		       'lyskom-button-arg arg
-                       'lyskom-button-menu-title menu-title
 		       'lyskom-buffer lyskom-buffer)))))
 
     (append (list 'rear-nonsticky t)
@@ -479,13 +437,10 @@ information."
         
            
 
-(defun lyskom-default-button (type arg &optional menu-title)
+(defun lyskom-default-button (type arg)
   "Generate a button of type TYPE from data in ARG. ARG can be almost any
 type of data and is converted to the proper argument type for buttons of
-type TYPE before being send to lyskom-generate-button. Optional argument
-MENU-TITLE is a list consisting of a format string or symbol and arguments
-for the format string. The arguments are not when the menu is popped
-up."
+type TYPE before being send to lyskom-generate-button."
   (and kom-text-properties
        (let (xarg text)
 	 (cond ((eq type 'conf)
@@ -494,11 +449,6 @@ up."
 			   (setq type 'pers))
 		       (setq xarg (conf-stat->conf-no arg)
 			     text (conf-stat->name arg)))
-                      ((lyskom-uconf-stat-p arg)
-		       (if (conf-type->letterbox (uconf-stat->conf-type arg))
-			   (setq type 'pers))
-		       (setq xarg (uconf-stat->conf-no arg)
-			     text (uconf-stat->name arg)))
 		      ((numberp arg)
                        (if (setq xarg (cache-get-conf-stat arg))
                            (progn
@@ -514,9 +464,7 @@ up."
 		(cond ((lyskom-conf-stat-p arg)
 		       (setq xarg (conf-stat->conf-no arg)
 			     text (conf-stat->name arg)))
-                      ((lyskom-uconf-stat-p arg)
-		       (setq xarg (uconf-stat->conf-no arg)
-			     text (uconf-stat->name arg)))		      ((lyskom-pers-stat-p arg)
+		      ((lyskom-pers-stat-p arg)
 		       (setq xarg (pers-stat->pers-no arg)
 			     text 
                              (or (conf-stat->name
@@ -543,7 +491,7 @@ up."
 		(cond ((stringp arg) (setq xarg nil text arg))
 		      (t (setq xarg nil text ""))))
 	       (t (setq xarg arg text "")))
-	 (lyskom-generate-button type xarg text nil menu-title))))
+	 (lyskom-generate-button type xarg text nil))))
                   
 
            
@@ -605,7 +553,7 @@ This is a LysKOM button action."
                (progn
                  (pop-to-buffer buf)
                  (lyskom-start-of-command 'kom-mark-text)
-                 (lyskom-mark-text arg nil))
+                 (lyskom-mark-text arg nil 1))
              (lyskom-end-of-command)))))
 
 (defun lyskom-button-unmark-text (buf arg text)
@@ -616,7 +564,7 @@ This is a LysKOM button action."
                (progn
                  (pop-to-buffer buf)
                  (lyskom-start-of-command 'kom-unmark-text)
-                 (lyskom-unmark-text arg nil))
+                 (lyskom-mark-text arg nil 0))
              (lyskom-end-of-command)))))
   
 
@@ -689,13 +637,10 @@ This is a LysKOM button action."
 This is a LysKOM button action."
   (kill-new text))
 
-(lyskom-external-function compose-mail)
 (defun lyskom-button-open-email (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and open TEXT as an e-mail address.
 This is a LysKOM button action."
-  (if (fboundp 'compose-mail)
-      (compose-mail text)
-    (mail nil text)))
+  (mail nil text))
 
 (defun lyskom-button-copy-url (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
@@ -851,7 +796,6 @@ MANAGER is the URL manager that started Netscape.
 
 This function attempts to load the URL in a running Netscape, but failing
 that, starts a new one."
-  (setq url (replace-in-string url "," "%2C"))
   (let* ((url-string (if (eq window-system 'win32)
                          (list url)
                        (list "-remote"
@@ -977,79 +921,3 @@ depending on the value of `kom-lynx-terminal'."
 
 (defun lyskom-button-send-mail (to)
   (mail nil to))
-
-;;;
-;;;     aux-item buttons
-;;;
-
-(defun lyskom-button-delete-aux (buf arg text)
-  (let ((aux nil))
-    (cond ((lyskom-aux-item-p arg))
-          ((listp arg)
-           (let ((items (cond ((eq 'text (car arg))
-                               (text-stat->aux-items 
-                                (blocking-do 'get-text-stat (elt arg 1))))
-                              ((eq 'conf (car arg))
-                               (conf-stat->aux-items 
-                                (blocking-do 'get-conf-stat (elt arg 1))))
-                              (t nil))))
-             (while items
-               (when (eq (aux-item->aux-no (car items)) (elt arg 2))
-                 (setq aux (car items))
-                 (setq items nil))
-               (setq items (cdr items))))))
-
-    (when aux
-      (lyskom-start-of-command nil)
-      (unwind-protect
-          (progn
-            (if (blocking-do (cond ((eq 'text (car arg)) 'modify-text-info)
-                                   ((eq 'conf (car arg)) 'modify-conf-info))
-                             (elt arg 1)
-                             (list (aux-item->aux-no aux))
-                             nil)
-                (cond ((eq 'text (car arg)) (cache-del-text-stat (elt arg 1)))
-                      ((eq 'conf (car arg)) (cache-del-conf-stat (elt arg 1))))
-              (lyskom-report-command-answer nil)))
-        (lyskom-end-of-command)))))
-          
-
-(defun lyskom-button-info-aux (buf arg text)
-  (pop-to-buffer buf)
-  (let ((aux nil))
-    (cond ((lyskom-aux-item-p arg))
-          ((listp arg) 
-           (let ((items (cond ((eq 'text (car arg))
-                               (text-stat->aux-items 
-                                (blocking-do 'get-text-stat (elt arg 1))))
-                              ((eq 'conf (car arg))
-                               (conf-stat->aux-items 
-                                (blocking-do 'get-conf-stat (elt arg 1))))
-                              (t nil))))
-             (while items
-               (when (eq (aux-item->aux-no (car items)) (elt arg 2))
-                 (setq aux (car items))
-                 (setq items nil))
-               (setq items (cdr items))))))
-              
-    (if aux
-        (progn
-          (lyskom-start-of-command nil)
-          (unwind-protect
-              (let ((data (lyskom-aux-item-definition-call 
-                           aux
-                           'info 
-                           aux
-                           (cond ((eq 'text (car arg)) 
-                                  (lyskom-format 'text-no (elt arg 1)))
-                                 ((eq 'conf (car arg))
-                                  (lyskom-format 'conference-no
-                                                 (blocking-do 'get-conf-stat
-                                                              (elt arg 1))))
-                                 (t "????")))))
-                (if data
-                    (lyskom-insert data)
-                  (lyskom-format-insert 'aux-item-no-info)))
-            (lyskom-end-of-command)))
-      (lyskom-format-insert 'cant-get-aux-item))))
-           

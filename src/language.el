@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.15 1999-08-25 07:17:38 byers Exp $
+;;;;; $Id: language.el,v 44.10.2.1 1999-10-13 09:56:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -164,13 +164,6 @@ create. ALIST is a mapping from symbols to strings."
 
 (put 'lyskom-language-strings 'lisp-indent-function 2)
 
-(defsubst lyskom-tell-string (key)
-  "Retrieve the phrase indexed by the key from the kom-tell-phrases
-assoc list."
-  (condition-case nil
-      (lyskom-get-string key 'kom-tell-phrases)
-    (lyskom-internal-error (message "Bad kom-tell-phrases") "")))
-
 (defsubst lyskom-get-string-internal (symbol category)
     (cdr (assq lyskom-language (get symbol category))))
 
@@ -179,24 +172,11 @@ assoc list."
 	  (list function (list symbol category ": string not found"))))
 
 (defun lyskom-get-string (symbol &optional category)
-  "Returns string associated with SYMBOL"
+  "Returns string assiciated with SYMBOL"
     (or (lyskom-get-string-internal symbol (or category 'lyskom-message))
         (lyskom-get-string-error 'lyskom-get-string
                                  symbol
                                  (or category 'lyskom-message))))
-
-(defun lyskom-get-string-sol (symbol &optional category)
-  "Returns string associated with SYMBOL
-If kom-long-lines is set, return the long form of the string, if it exists."
-  (or  (and kom-long-lines
-            (lyskom-get-string-internal (intern (concat (symbol-name symbol)
-                                                        "-long"))
-                                        (or category 'lyskom-message)))
-       (lyskom-get-string-internal symbol
-                                   (or category 'lyskom-message))
-       (lyskom-get-string-error 'lyskom-get-string
-                                symbol
-                                (or category 'lyskom-message))))
 
 
 (defun lyskom-get-strings (symbols &optional category)
@@ -258,6 +238,6 @@ if 'lyskom-menu is not found."
            t)))
 
 			      
-(eval-and-compile (provide 'lyskom-language))
+(provide 'lyskom-language)
 
 ;;; language.el ends here

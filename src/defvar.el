@@ -1,6 +1,6 @@
-;;;;; -*-coding: raw-text;-*-
+;;;;; -*-unibyte: t;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $
+;;;;; $Id: defvar.el,v 44.7.2.1 1999-10-13 09:55:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,13 +34,14 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.10 1999-06-25 20:17:14 byers Exp $\n"
+  "$Id: defvar.el,v 44.7.2.1 1999-10-13 09:55:52 byers Exp $\n"
   "Version for every file in the client.")
 
 
 (provide 'lyskom)
 
 ;; Just to get rid of a compiler warning
+(defvar enable-multibyte-characters)
 (defvar kom-dont-read-saved-variables)
 
 (defvar lyskom-local-variables nil
@@ -120,10 +121,16 @@ is saved before executing FORMS and restored when FORMS have finished."
       (set (car syms) (car vals))
       (setq syms (cdr syms)
             vals (cdr vals)))
-    (set-buffer-multibyte nil)))
+    (if (fboundp 'toggle-enable-multibyte-characters)
+	(toggle-enable-multibyte-characters -1))))
+    ;;(make-local-variable 'enable-multibyte-characters)
+    ;;(setq enable-multibyte-characters nil)))
 
          
 
+
+
+(if (not (fboundp 'def-kom-var))
 (defmacro def-kom-var (name value &rest args)
     "Define a variable with name NAME and initial value VALUE.
 Remaining args, ARGS may be
@@ -215,8 +222,6 @@ local-hook      A hook variable that is made local in LysKOM buffers."
         (setq arglist (cdr arglist)))
 
       (` (progn (dont-compile (if (and (boundp (quote (, name)))
-                                       (or (not (boundp lyskom-is-loaded))
-                                           (not lyskom-is-loaded))
                                        (listp kom-dont-read-saved-variables))
                                   (add-to-list 'kom-dont-read-saved-variables
                                                (quote (, name)))))
@@ -229,14 +234,14 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                  minibuffer
                                  widget-spec
                                  )))))))
-
+)
 
 (put 'def-kom-var 'edebug-form-spec
      '(&define name form &rest sexp))
 
 
 
-(eval-and-compile (provide 'lyskom-defvar))
+(provide 'lyskom-defvar)
 
 
 
