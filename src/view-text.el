@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.47 2001-01-18 21:19:42 joel Exp $
+;;;;; $Id: view-text.el,v 44.48 2001-01-28 21:16:11 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.47 2001-01-18 21:19:42 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.48 2001-01-28 21:16:11 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -126,7 +126,7 @@ Note that this function must not be called asynchronously."
                                                     text-stat)
                                                    'time-y-m-d-h-m))
 
-                     ;; Insert number of lines
+                   ;; Insert number of lines
 
 		   (lyskom-insert 
 		    (if (= 1 (text-stat->no-of-lines text-stat))
@@ -206,7 +206,9 @@ Note that this function must not be called asynchronously."
                              mx-reply-to)
                      )
 
-                   ;; All recipients and other header lines.
+
+
+                   ;; Insert all recipients and other header lines.
 
 		   (if (eq filter 'dontshow)
 		       (lyskom-mark-as-read
@@ -243,9 +245,7 @@ Note that this function must not be called asynchronously."
                                                      text-stat))
 			  )))
 
-                     ;;
-                     ;; Print aux-items that go in the header
-                     ;;
+                     ;; Insert aux-items that go in the header.
 
                      (let ((text nil))
                        (lyskom-traverse-aux aux
@@ -269,6 +269,8 @@ Note that this function must not be called asynchronously."
                            (lyskom-insert "\n"))))
 
 
+                     ;; If the text is marked, insert line saying so.
+
 		     (let ((num-marks (text-stat->no-of-marks text-stat))
 			   (is-marked-by-me (cache-text-is-marked
 					     (text-stat->text-no text-stat))))
@@ -284,10 +286,13 @@ Note that this function must not be called asynchronously."
 						      is-marked-by-me)))
 			   (lyskom-format-insert 'marked-by-several num-marks))))
 
+                     ;; Insert the text body.
+
 		     (lyskom-print-text text-stat text
 					mark-as-read text-no flat-review))
-		   
-		   
+
+                   ;; Insert aux-items that go in the footer.
+
                    (let ((text nil))
                        (lyskom-traverse-aux aux
                                             (text-stat->aux-items text-stat)
@@ -309,10 +314,58 @@ Note that this function must not be called asynchronously."
                            (lyskom-insert text)
                            (lyskom-insert "\n"))))
 
+                   ;; Insert fast replies.
+
+                   (let ((author-fast-replies nil)
+                         (other-fast-replies nil))
+                     (lyskom-traverse-aux aux (text-stat->aux-items text-stat)
+                      (when (eq (aux-item->tag aux) 2)
+                        (if (eq (text-stat->author text-stat)
+                                (aux-item->creator aux))
+                            (setq author-fast-replies
+                                  (cons aux author-fast-replies))
+                          (setq other-fast-replies
+                                (cons aux other-fast-replies)))))
+                     (when author-fast-replies
+                       (lyskom-insert
+                        (concat
+                         (lyskom-format 'author-fast-replies)
+                         "\n"
+                         (mapconcat (lambda (item)
+                                      (concat
+                                       (lyskom-format 'author-fast-reply-aux
+                                                      (aux-item->data item)
+                                                      (aux-item->creator item))
+                                       (lyskom-aux-item-terminating-button
+                                        item
+                                        text-stat)
+                                       "\n"))
+                                    (nreverse author-fast-replies)
+                                    ""))))
+                     (when other-fast-replies
+                       (lyskom-insert
+                        (concat
+                         (lyskom-format 'other-fast-replies)
+                         "\n"
+                         (mapconcat (lambda (item)
+                                      (concat
+                                       (lyskom-format 'other-fast-reply-aux
+                                                      (aux-item->data item)
+                                                      (aux-item->creator item))
+                                       (lyskom-aux-item-terminating-button
+                                        item
+                                        text-stat)
+                                       "\n"))
+                                    (nreverse other-fast-replies)
+                                    "")))))
+
+                   ;; Insert footnote/comment references.
 
 		   (if kom-reading-puts-comments-in-pointers-last
 		       (lyskom-view-text-handle-saved-comments text-stat))
-		   
+
+                   ;; Prefetch commented texts.
+
 		   (if (or follow-comments
 			   ;; Checking build-review-tree should not be
 			   ;; necessary, really /davidk

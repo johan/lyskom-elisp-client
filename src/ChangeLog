@@ -1,5 +1,17 @@
 2001-01-28  Joel Rosdahl  <joel@rosdahl.net>
 
+	* view-text.el (lyskom-view-text): Show fast replies made by
+	author first.
+
+	* english-strings.el: New strings for fast replies.
+
+	* swedish-strings.el: Ditto.
+
+	* aux-items.el (lyskom-print-fast-reply): Removed.
+
+	* aux-items.el: Added recommended-conf and
+	allowed-content-type aux items.
+
 	* edit-text.el (lyskom-edit-mode): Fixed typo found by Per
 	Starbäck.
 
