@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.6 1996-01-08 08:18:30 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.7 1996-01-12 17:07:35 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.6 1996-01-08 08:18:30 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.7 1996-01-12 17:07:35 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -204,7 +204,7 @@ Email-address:\n\nOther:\t")
     (done . "done.\n")
     (nope . "didn't work.\n")
 
-    (cant-find-supervisor . "Can't find supervisor of %#1s.\n")
+    (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
     (is-read-protected-contact-supervisor . "%#1s \344r closed.
 Send a letter to  %#2s to apply for membership.")
 
@@ -286,7 +286,7 @@ and you have finished reading. Please come back later.
     (text-to-delete-comment-from . "Remove comment from which article: ")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
-    (member-in-conf . "Subscribing to %#1s...")
+    (member-in-conf . "Subscribing to %#1M...")
     (add-member-in . "Adding %#1s as a subscriber to %#2s...")
     (unsubscribe-to . "Unsubscribing from %#1s...")
 
@@ -338,13 +338,13 @@ and you have finished reading. Please come back later.
     
     (conf-for-status . "Get status of which conference: ")
     (no-such-conf . "The conference doesn't exist.")
-    (status-record . "Status of conference %#1s (%#2s) %#3s\n\n")
+    (status-record . "Status of conference %#1M (%#2m) %#3s\n\n")
     (Mailbox . "Mailbox")
     (Protected . "Protected")
     (no-comments . "No comments")
     (closed . "Closed")
                    
-    (created-by . "Created by %31#1s %#2s\n")
+    (created-by . "%[%#3@Created by person %24#1:p%] %#4s(%#2P)\n")
     (created-at . "Created:%34#1s\n")
     (members .    "Number of subscribers: %19#1d\n")
     (garb-nice . "Expiration time (in days):%16#1d\n")
@@ -352,21 +352,22 @@ and you have finished reading. Please come back later.
     (highest-local-no . "Highest local number: %20#1d\n")
     (last-text-time . 
      "Time of last article: %20#1s (accordning to your cache)\n")
-    (no-of-motd . "Note on the door in article: %13#1d\n")
-    (superconf-is-no-name . "Superconference:       %19#1d %#2s\n")
-    (permitted-submitters-no-name . "Allowed authors:%25#1d %#2s\n")
-    (supervisor-is-no-name . "Supervisor:     %27#1d %#2s\n")
-    (presentation-no . "Presentation:    %25#1d\n")
-    (conf-has-motd . "\n%#1s has a note on the door:\n")
+    (no-of-motd . "Note on the door in article: %13#1n\n")
+    (superconf-is-no-name . "%[%#3@Superconference: %25#1:m%] %#4s(%#2M)\n")
+    (permitted-submitters-no-name . "%[%#3@Allowed authors: %25#1:m%] %#4s(%#2M)\n")
+    (supervisor-is-no-name . "%[%#3@Supervisor: %30#1:p%] %#4s(%#2P)\n")
+    (presentation-no . "Presentation:    %25#1n\n")
+    (conf-has-motd . "\n%#1M has a note on the door:\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List subscribers? ")
-    (conf-has-these-members . "\n%#1s has the following subscribers:\n")
+    (conf-has-these-members . "\n%#1M has the following subscribers:\n")
     (member-list-header . "Last entered       Unread  Name\n\n")
     (secret-membership . "--- Secret line ---\n")
+    (conf-membership-line . "%#1s%#2M\n")
     (pers-for-status . "Get status of which user: ")
     (no-such-pers . "The user doesn't exist.")
-    (pers-status-record . "Status of user %#1s (%#2d)\n")
+    (pers-status-record . "Status of user %#1P (%#2p)\n")
     (created-time .  "Created:%34#1s\n\n")
     (created-confs . "Conferences created:%22#1d\n")
     (created-persons . "Users created:%28#1d\n")
@@ -380,16 +381,18 @@ and you have finished reading. Please come back later.
 
     (read-texts . "Articles read:%28#1d\n")
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
-    (superconf . "Superconference:%26#1d %#2s\n")
-    (supervisor . "Supervisor:%32#1d %#2s\n")
+    (superconf . "%[%#3@Superconference:%31#1:m%] %#4s(%#2M)\n")
+    (supervisor . "%[%#3@Supervisor:%29#1:p%] %#4s(%#2P)\n")
     (member-of-confs . "Subscribed to (conferences):%14#1d\n")
     (presentation . "Presentation:    %25#1d\n")
     (show-membership-list-also-q . "List subscriptions? ")
     (not-allowed-see-confs . "You are not premitted to see which conferences %#1s subscribes to.\n")
-    (is-member-of . "\n%#1s subscribes to the following conferences:\n")
+    (is-member-of . "\n%#1P subscribes to the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
+    (pers-membership-line . "%#1s%#2s%#3M\n")
+    (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Send message to whom? (%s) ")
-    (his-total-unread . "\n%#1s has a total of %#2d unread articles.\n")
+    (his-total-unread . "\n%#1M has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
     (message-sent-to-user .
      "================================================================
@@ -556,7 +559,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (Recipient . "Recipient")
     (Extra-recipient . "CC")
     (send-at . "   Posted:     %#1s\n")
-    (sent-by . "   Posted by ")
+    (sent-by . "   Posted by %#1P\n")
     (recieved-at . "    Received: %#1s\n")
     (written-by . "by %#1s")
     (comment-to-text-by . "Comment to article %#1n by %#2P\n")
@@ -684,7 +687,7 @@ Group message to %#3s from %#2s (%#4s):
     (y-instring . "yY")
 
     (person-does-not-exist . "User %#1d (does not exist).")
-    (conf-does-not-exist . "Conference %#1d (does not exist).")
+    (conference-does-not-exist . "Conference %#1d (does not exist).")
     (person-is-anonymous . "Anonymous user")
 
     (process-signal . "Signal from the process.")
