@@ -1,5 +1,8 @@
 1999-10-13  David Byers  <davby@ida.liu.se>
 
+	* completing-read.el (lyskom-read-conf-internal): Don't try to get 
+	completion for all confs.
+
 	* view-text.el (lyskom-view-text): Use lyskom-mx-date-to-time.
 
 	* komtypes.el (lyskom-create-time): Added tzhr and tzmin to time.
