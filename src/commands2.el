@@ -1191,4 +1191,11 @@ current conference to another session."
 	 (t
 	  (signal 'lyskom-internal-error '("lyskom-remove-comment-chains")))))
       (-- len)))
+
+  ;; Delete the 'CONF entry if we selected 0 entries.
+  (cond
+   ((zerop today)
+    (read-list-delete-text nil lyskom-reading-list)
+    (read-list-delete-text nil lyskom-to-do-list)))
+
   (lyskom-end-of-command))
