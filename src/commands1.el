@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.128 2002-03-23 19:54:52 joel Exp $
+;;;;; $Id: commands1.el,v 44.129 2002-04-09 23:07:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.128 2002-03-23 19:54:52 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.129 2002-04-09 23:07:56 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3881,91 +3881,109 @@ must have printed something without a newline at the end of the buffer."
 
 (def-kom-command kom-add-comment (text-no-arg)
   "Add a text as a comment to another text."
-  (interactive "P")
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-comment-to)))
   (lyskom-add-sub-comment text-no-arg
-			  (lyskom-get-string 'text-to-add-comment-to)
 			  t))
 
 (def-kom-command kom-sub-comment (text-no-arg)
   "Remove a comment from a text."
-  (interactive "P")
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-comment-from)))
   (lyskom-add-sub-comment text-no-arg
-			  (lyskom-get-string 'text-to-delete-comment-from)
 			  nil))
 
-(defun lyskom-add-sub-comment (text-no-arg prompt do-add)
+(defun lyskom-add-sub-comment (text-no do-add)
   "Get the number of the text that is going to have a comment added to it or
 subtracted from it
 Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a comment should be subtracted.
         Otherwise a comment is added"
-  (let ((text-no (let ((current-prefix-arg text-no-arg))
-                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text))))
-    (if text-no
-        (let* ((comment-text-no  (lyskom-read-number
-                                  (lyskom-get-string
-                                   (if do-add 'text-to-add-q 'text-to-remove-q))
-                                  (if (eq text-no lyskom-current-text)
-                                      nil
-                                    lyskom-current-text))))
-          (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
-                                comment-text-no
-                                text-no)
-          (cache-del-text-stat text-no)
-          (cache-del-text-stat comment-text-no)
-          (lyskom-report-command-answer 
-           (blocking-do (if do-add 'add-comment 'sub-comment)
-                        comment-text-no
-                        text-no)))
-      (lyskom-format-insert (if do-add 
-                                'confusion-what-to-add-comment-to
-                              'confusion-what-to-sub-comment-from)))))
+  (if text-no
+    (let* ((completions (unless do-add
+                          (let ((text-stat (blocking-do 'get-text-stat text-no)))
+                            (when text-stat
+                              (mapcar 'misc-info->comm-in
+                                      (lyskom-misc-infos-from-list 'COMM-IN (text-stat->misc-info-list text-stat)))))))
+           (comment-text-no (lyskom-read-number
+                             (lyskom-format (if do-add 'text-to-add-q 'text-to-remove-q) text-no)
+                             (cond (do-add
+                                    (if (eq text-no lyskom-current-text)
+                                        nil
+                                      lyskom-current-text))
+                                   ((eq (length completions) 1)
+                                    (car completions))
+                                   ((memq lyskom-current-text completions)
+                                    lyskom-current-text)
+                                   (t nil))
+                             nil
+                             nil
+                             completions
+                             )))
+      (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
+                            comment-text-no
+                            text-no)
+      (cache-del-text-stat text-no)
+      (cache-del-text-stat comment-text-no)
+      (lyskom-report-command-answer 
+       (blocking-do (if do-add 'add-comment 'sub-comment)
+                    comment-text-no
+                    text-no)))
+    (lyskom-format-insert (if do-add 
+                              'confusion-what-to-add-comment-to
+                            'confusion-what-to-sub-comment-from))))
 
 (def-kom-command kom-add-footnote (text-no-arg)
   "Add a text as a footnote to another text."
-  (interactive "P")
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-add-footnote-to)))
   (lyskom-add-sub-footnote text-no-arg
-			  (lyskom-get-string 'text-to-add-footnote-to)
 			  t))
 
 (def-kom-command kom-sub-footnote (text-no-arg)
   "Remove a footnote from a text."
-  (interactive "P")
+  (interactive (list (lyskom-read-text-no-prefix-arg 'text-to-delete-footnote-from)))
   (lyskom-add-sub-footnote text-no-arg
-			  (lyskom-get-string 'text-to-delete-footnote-from)
 			  nil))
 
-(defun lyskom-add-sub-footnote (text-no-arg prompt do-add)
+(defun lyskom-add-sub-footnote (text-no do-add)
   "Get the number of the text that is going to have a footnote added to it or
 subtracted from it
 Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a footnote should be subtracted.
         Otherwise a footnote is added"
-  (let ((text-no (let ((current-prefix-arg text-no-arg))
-                    (lyskom-read-text-no-prefix-arg prompt nil lyskom-current-text))))
-    (if text-no
-        (let* ((footnote-text-no  (lyskom-read-number
-                                   (lyskom-get-string
-                                    (if do-add 
-                                        'text-to-add-footn-q 
-                                      'text-to-remove-footn-q))
-                                   (if (eq text-no lyskom-current-text)
-                                       nil
-                                     lyskom-current-text))))
-          (lyskom-format-insert (if do-add 'add-footnote-to 'sub-footnote-to)
-                                footnote-text-no
-                                text-no)
-          (cache-del-text-stat text-no)
-          (cache-del-text-stat footnote-text-no)
-          (lyskom-report-command-answer 
-           (blocking-do (if do-add 'add-footnote 'sub-footnote)
-                        footnote-text-no
-                        text-no)))
-      (lyskom-insert (if do-add 
-                         'confusion-what-to-add-footnote-to
-                       'confusion-what-to-sub-footnote-from)))))
+  (if text-no
+      (let* ((completions (unless do-add
+                          (let ((text-stat (blocking-do 'get-text-stat text-no)))
+                            (when text-stat
+                              (mapcar 'misc-info->footn-in
+                                      (lyskom-misc-infos-from-list 'FOOTN-IN (text-stat->misc-info-list text-stat)))))))
+             (footnote-text-no  (lyskom-read-number
+                                 (lyskom-format
+                                  (if do-add 'text-to-add-footn-q 'text-to-remove-footn-q)
+                                  text-no)
+                                 (cond (do-add
+                                        (if (eq text-no lyskom-current-text)
+                                            nil
+                                          lyskom-current-text))
+                                       ((eq (length completions) 1)
+                                        (car completions))
+                                       ((memq lyskom-current-text completions)
+                                        lyskom-current-text)
+                                       (t nil))
+                                 nil
+                                 nil
+                                 completions
+                                 )))
+        (lyskom-format-insert (if do-add 'add-footnote-to 'sub-footnote-to)
+                              footnote-text-no
+                              text-no)
+        (cache-del-text-stat text-no)
+        (cache-del-text-stat footnote-text-no)
+        (lyskom-report-command-answer 
+         (blocking-do (if do-add 'add-footnote 'sub-footnote)
+                      footnote-text-no
+                      text-no)))
+    (lyskom-insert (if do-add 
+                       'confusion-what-to-add-footnote-to
+                     'confusion-what-to-sub-footnote-from))))
 
 ;;; ================================================================
 ;;;                 Addera referens - Add cross reference

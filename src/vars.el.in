@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.169 2002-03-21 19:44:52 joel Exp $
+;;;;; $Id: vars.el.in,v 44.170 2002-04-09 23:07:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.169 2002-03-21 19:44:52 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.170 2002-04-09 23:07:57 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -709,7 +709,9 @@ to be displayed in the buffer."
 
 
 (def-kom-var kom-friends nil
-  "*List of people whose names should be formatted using kom-friends-face."
+  "*List of people whose names should be formatted using kom-friends-face.
+Also used in kom-who-is-on-and-friend. This is a list of integers (person
+numbers)."
   server)
 
 (def-kom-var kom-morons nil
@@ -1009,7 +1011,7 @@ Do not use this variable for proxy authentication.")
     ("kom.cd.chalmers.se" . "CD-KOM")
     ("community.roxen.com" . "Roxen Community KOM")
     ("kom.ds.hj.se" . "DSKOM")
-    ("sno.pp.se" . "SnoppKOM"))
+    ("kom.sno.pp.se" . "SnoppKOM"))
   "*An alist mapping server names to shorter identification strings")
 
 (def-kom-var kom-ansaphone-on nil

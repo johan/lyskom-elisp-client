@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.12 2002-02-24 20:23:26 joel Exp $
+;;;;; $Id: defvar.el,v 44.13 2002-04-09 23:07:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.12 2002-02-24 20:23:26 joel Exp $\n"
+  "$Id: defvar.el,v 44.13 2002-04-09 23:07:57 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -146,6 +146,9 @@ local-hook      A hook variable that is made local in LysKOM buffers."
           (widget-spec nil)
           (doc-string nil)
           (minibuffer nil)
+          (local-hook-doc nil)
+          (local-var-doc nil)
+          (server-doc nil)
           (arglist args))
       (while arglist
         (cond ((stringp (car arglist)) (setq doc-string (car arglist)))
@@ -157,6 +160,7 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                       lyskom-custom-variables))))))
               ((symbolp (car arglist))
                (cond ((eq (car arglist) 'server)
+                      (setq local-var-doc t server-doc t)
                       (setq elisp-block
                             (` ((if (and (not (memq (quote (, name))
                                                       lyskom-global-boolean-variables))
@@ -168,6 +172,7 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                                    (quote (, name)))))))
 
                      ((eq (car arglist) 'server-hook)
+                      (setq local-hook-doc t server-doc t)
                       (setq elisp-block
                             (` ((add-to-list 'lyskom-elisp-variables
                                              (quote (, name)))
@@ -175,6 +180,7 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                              (quote (, name)))))))
 
                      ((eq (car arglist) 'protected)
+                      (setq local-var-doc t)
                       (setq protected
                             (` ((put (quote (, name)) 'permanent-local t)
                                 (add-to-list 'lyskom-protected-variables
@@ -183,6 +189,7 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                              (quote (, name)))))))
 
                      ((eq (car arglist) 'inherited)
+                      (setq local-var-doc t)
                       (setq inherited
                             (` ((add-to-list 'lyskom-inherited-variables
                                              (quote (, name)))
@@ -193,11 +200,13 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                                              (quote (, name)))))))
 
                      ((eq (car arglist) 'local)
+                      (setq local-var-doc t)
                       (setq buffer-local
                             (` ((add-to-list 'lyskom-local-variables
                                              (quote (, name)))))))
 
                      ((eq (car arglist) 'local-hook)
+                      (setq local-hook-doc t)
                       (setq buffer-local
                             (` ((add-to-list 'lyskom-local-hooks
                                              (quote (, name)))))))
@@ -212,6 +221,25 @@ local-hook      A hook variable that is made local in LysKOM buffers."
               (t (error "LysKOM: Strange variable argument type: %S" 
                         (car arglist))))
         (setq arglist (cdr arglist)))
+
+      (when doc-string
+        (when (or local-var-doc local-hook-doc)
+          (setq doc-string (concat doc-string "\n")))
+        (when local-var-doc
+          (setq doc-string (concat doc-string "\nThis variable is buffer-local.")))
+        (when local-hook-doc
+          (setq doc-string (concat doc-string "\nThis variable is a buffer-local hook.")))
+        (setq doc-string (concat doc-string "\n\n\
+Setting this variable in .emacs may not yield the results you expect
+since that will affect all LysKOM sessions.")))
+
+      (when (and doc-string server-doc)
+        (setq doc-string (concat doc-string "
+
+This variable is normally stored on a per-session basis in the
+LysKOM server, but can be set in your .emacs simply by setting
+it using setq or defvar.")))
+
 
       (` (progn (dont-compile (if (and (boundp (quote (, name)))
                                        (or (not (boundp lyskom-is-loaded))
