@@ -5,6 +5,10 @@ Mon Mar 25 06:48:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* review.el (lyskom-review-comments): Se fotnoter först.
 
+Fri Mar 22 12:48:06 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-send): Felhanteringen buggade.
+
 Thu Mar 21 20:51:58 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-view-text): Markera filtrerade texter som
