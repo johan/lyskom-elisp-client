@@ -1,3 +1,12 @@
+Thu Jun  6 02:59:01 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Anropa clear-all-caches.
+
+	* cache.el (cache-clear): Ny funktion.
+	(cache-add,cache-del): Bytte namn på lokala variabler.
+	(clear-all-caches): Ny funktion.
+	(cache-create): Ny funktion.
+
 Wed May 29 13:10:54 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-read-number): Lägg till ett mellanslag
