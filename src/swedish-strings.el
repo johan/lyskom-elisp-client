@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.98 1999-12-07 10:29:38 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.99 1999-12-10 11:35:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.98 1999-12-07 10:29:38 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.99 1999-12-10 11:35:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -352,6 +352,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
     (text-to-delete-footnote-from . "Vilket inlägg vill du subtrahera en fotnot från:")
+    (text-has-no-recipients-r . "Inlägg %#1n har inga mottagare\n")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
     (member-in-conf . "Bli medlem i %#1M...")

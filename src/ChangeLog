@@ -1,3 +1,8 @@
+1999-12-10  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (kom-move-text): Supply better defaults for
+	conferences. 
+
 1999-12-07  David Kågedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-sv-mode-map): lyskom-keys was called
