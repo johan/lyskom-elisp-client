@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 39.1 1996-03-17 17:45:30 davidk Exp $
+;;;;; $Id: flags.el,v 39.2 1996-03-18 23:34:04 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 39.1 1996-03-17 17:45:30 davidk Exp $\n"))
+	      "$Id: flags.el,v 39.2 1996-03-18 23:34:04 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -351,5 +351,6 @@ It returns nil, and writes a message when an error occurs."
 	(condition-case err
 	    (read-from-string string)
 	  (invalid-read-syntax
-	   (lyskom-format-insert (lyskom-get-string 'error-in-options) var)
+	   (lyskom-format-insert (lyskom-get-string 'error-in-options)
+				 var string)
 	   nil)))))
