@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.10 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: mime.el,v 44.11 2004-11-11 07:14:59 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.10 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: mime.el,v 44.11 2004-11-11 07:14:59 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -126,7 +126,7 @@
     (setq content-type (match-string 0 data))
     (setq start (match-end 0)))
 
-  (while (string-match ";\\([^=;]*\\)\\(=\\([^;]*\\)\\)" data start)
+  (while (string-match ";\\s *\\([^=;]*\\)\\(=\\([^;]*\\)\\)" data start)
     (let ((param-name (intern (match-string 1 data)))
           (param-value (match-string 3 data)))
       (when (and (memq param-name '(charset format))

@@ -1,3 +1,9 @@
+2004-11-11  Pontus Freyhult  <pont@soua.net>
+
+	Handle UTF-8 postings created by Rasmus Stens Weblatte:
+	* mime.el (lyskom-mime-decode-content-type): Allow whitespace
+	after ";" in content-types.
+
 2004-11-03  Pontus Freyhult  <pont@soua.net>
 
 	Use kom-default-* as user variables, not lyskom-default-*:
