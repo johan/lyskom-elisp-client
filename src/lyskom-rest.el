@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.135 2001-05-21 12:39:25 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.136 2001-05-22 10:01:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.135 2001-05-21 12:39:25 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.136 2001-05-22 10:01:47 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -138,7 +138,8 @@
     (lyskom-insert-string 'nope)
     (lyskom-format-insert 'error-code
 			  (lyskom-get-error-text (or errno lyskom-errno))
-			  (or errno lyskom-errno)))
+			  (or errno lyskom-errno)
+                          (if errno "" lyskom-err-stat)))
   answer)
 
 (defun lyskom-current-error ()

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.136 2001-05-21 12:39:23 byers Exp $
+;;;;; $Id: english-strings.el,v 44.137 2001-05-22 10:01:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.136 2001-05-21 12:39:23 byers Exp $"))
+              "$Id: english-strings.el,v 44.137 2001-05-22 10:01:46 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1026,7 +1026,7 @@ Send a bug report.\n")
     (unread-letters . "unread letters")
 
     (bad-text-no-prefix . "Unable to translate prefix `%s' to a text number")
-    (error-code . "Error code %#2d: %#1s.\n")
+    (error-code . "Error code %#2d/%#3S: %#1s.\n")
     (error-in-kom-do-when-done . "The variable kom-do-when-done has an erroneous value.
 You should set it to a better value.\n")
     (extended-command . "LysKOM: ")
@@ -1333,7 +1333,9 @@ On since %#8s%#9s")
     (changed-faq-for-conf-failed . "Unable to change FAQ for %#1M to text %#3n.
 %#2?b%[Text %#2n is still the FAQ.
 %]%[%]%#4s")
-    
+    (faq-in-text . "FAQ in text %#1n %#3s%#4s")
+    (faq-in-text-by . "FAQ in text %#1n %#3sby %#2P %#4s")
+
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
 
