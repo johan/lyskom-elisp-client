@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.202 2002-02-26 07:37:05 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.203 2002-02-28 18:43:13 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.202 2002-02-26 07:37:05 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.203 2002-02-28 18:43:13 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -187,7 +187,11 @@ Email-adress:\nWWW:\t\n\nAnnat:\t")
     (start-new-session-same-server
      . "Du kör redan mot den servern. Vill du starta en ny session? ")
     (new-session-in-buffer . "\n\n---- Ny session startad %s ----\n\n")
-
+    (warning-about-uncompiled-client . "
+OBS: LysKOM-klienten är inte kompilerad. För att öka prestanda bör du köra en
+kompilerad version av klienten. Läs i den medföljande README-filen hur man
+gör det.
+")
 
     ;; From internal.el:
     (shaky-tcp . "Nu når jag inte servern. TCP/IP-förbindelsen är skakig%#1s")

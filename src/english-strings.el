@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.169 2002-02-26 07:37:04 joel Exp $
+;;;;; $Id: english-strings.el,v 44.170 2002-02-28 18:43:13 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.169 2002-02-26 07:37:04 joel Exp $"))
+              "$Id: english-strings.el,v 44.170 2002-02-28 18:43:13 joel Exp $"))
 
 
 ;;; ================================================================
@@ -209,8 +209,11 @@ Email address:\t\nWWW:\t\n\nOther:\t")
     (start-new-session-same-server
      . "You are already connected to that server. Do you want a new session? ")
     (new-session-in-buffer . "\n\n---- New session at %s ----\n\n")
-
-
+    (warning-about-uncompiled-client . "
+NOTE: The LysKOM client is not compiled. It is recommended to run a compiled
+client for performance reasons. Read the accompanying README to learn how to
+do that.
+")
 
     ; From internal.el:
     (shaky-tcp . "At the moment I can't reach the server. The TCP/IP connection is shaky%#1s")
