@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.183 2001-08-25 19:12:13 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.184 2001-10-09 18:41:05 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.183 2001-08-25 19:12:13 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.184 2001-10-09 18:41:05 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -87,6 +87,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "C-i")     'lyskom-sv-edit-insert-prefix)
+  (define-key lyskom-sv-edit-prefix (kbd "TAB")     'lyskom-sv-edit-insert-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-c")     'kom-edit-send)
   (define-key lyskom-sv-edit-prefix (kbd "C-s")     'kom-ispell-message)
   (define-key lyskom-sv-edit-prefix (kbd "C-k")     'kom-edit-quit)
