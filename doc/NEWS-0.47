@@ -70,6 +70,15 @@
 
 * Migreringsproblem och kompatibilitetsproblem
 
+** Om man använder teckenkodning iso-8859-15 i Gnu Emacs 21.2 (och
+   kanske andra inställningar), något som verkar vara default i vissa
+   Linux-distributioner, så går det inte att slå upp mötesnamn som
+   innehåller tecken utanför ASCII. Anledningen till detta är att
+   Emacs inte klarar att översätta från iso-8859-15 till iso-8859-1,
+   som är den teckenkodning som oftast används ihop med LysKOM. Använd
+   M-x set-language-environment och välj iso-8859-1 för att ställa in
+   en språkomgivning.
+
 ** Den som har definierat en egen uppsättning färger behöver lägga
    till några och se över definitionen av kom-first-line-face. Numera
    appliceras kom-first-line-face även om den är identisk med default.
@@ -204,10 +213,28 @@
 
 *** Det finns ytterligare några uppsättningar färger att välja mellan.
 
+*** Tryck M-m före ett kommando för att tillfälligt ändra om
+    återsekommandon läsmarkerar eller inte.
+
+*** Kommandot M-x kom-apropos är bra för dig som vill hitta bland de
+    elispvariabler och elispfunktioner som elispklienten består av.
+
+*** Återse omodifierat visar all tilläggsinformation på inlägg
+    (inklusive information av okänd sort) och inte bara en liten
+    delmängd.
+
 *** Utfyllnad med mellanslag av kommandon har förbättrats avsevärt.
 
 *** Det är lättare att välja alternativ i menyn man får upp när man
     trycker = på t.ex. inläggsnummer i inläggsbufferten.
+
+
+** LysKOM över SSH
+
+*** Det går numera att tunnla LysKOM genom SSH alldeles automagiskt.
+    Koden är endast testad med OpenSSH och förväntar sig engelska
+    meddelanden på ett visst format. Sätt variabeln kom-ssh-relay-host
+    för att aktivera funktionen.
 
 
 ** FAQ-hantering
@@ -227,9 +254,6 @@
 
 *** Prompten visar "Läsa nästa FAQ" när man håller på att återse
     FAQer.
-
-*** Kommandot M-x kom-apropos är bra för dig som vill hitta bland de
-    elispvariabler och elispfunktioner som elispklienten består av.
 
 
 ** Omdirigering av kommentarer
@@ -306,6 +330,18 @@
 
 
 ** Nya inställningar
+
+*** kom-presence-messages-in-echo-area ersätter kom-presence-messages,
+    som numera bara används internt i elispklienten (och som kan komma
+    att byta namn i nästa version av elispklienten).
+
+*** kom-format-html-authors är en lista som anger vilka författare man
+    accepterar HTML-inlägg från (alternativt vilka man inte accepterar
+    HTML från). Användbart för att till exempel inte formattera HTML
+    som har importerats från e-mail.
+
+*** kom-ssh-proxy-host anger vilken maskin man skall skapa en
+    ssh-tunnel till för att köra LysKOM genom.
 
 *** kom-edit-hide-add-button anger om knappen [Addera...] ska visas
     eller inte.
@@ -524,38 +560,27 @@
 
 ** Anmärkningar kan inte längre innehålla radbrytningar.
 
+** Content type sätts rätt på user-arean.
+
+** Stora heltal konverteras till flyttal av vissa versioner av Emacs.
+   Detta hanteras nu korrekt.
+
+** Inlägg skrivna med ISO-8859-15 konverteras inte till ISO-8859-1
+   innan de skickas till servern.
+
+** Prompten för att addera dold kopia är nu rätt.
+
+** Elispklienten gnäller nu om man har variabler i user-arean som inte
+   borde finnas där.
 
 
-* Förändringar från 0.47-BETA-1
 
-** Formatet som FAQer listas på när man går till ett möte med olästa
-   FAQer ser bättre ut.
 
-** Elispklienten gissar defaultspråk baserat på första inloggningen om
-   man inte har satt kom-default-language innan man drar igång
-   klienten.
+* Ytterligare förändringar sedan 0.47-BETA-2
 
-** Bindningen till 'a' är mer irriterande är förr.
+  Detta avsnitt innehåller detaljförändringar som ingår i andra saker
+  som står ovanför men som kan vara intressanta för den som kör en
+  betaversion.
 
-** Bakgrundsfärgerna för inlägg räknas ut automatiskt, baserat på
-   Emacs bakgrundsfärg.
+** Tunnling av KOM genom SSH integrerat. Se ovan.
 
-** Bindningarna fm för filtrera mottagare.
-
-** Förkortningen av inlägg vid flytta träd tar hänsyn till att vissa
-   inlägg har väldigt långa rader. Förkorningen till N rader betyder N
-   skärmrader, inte radbrytningar.
-
-** Hjälpfunktionen är helt omskriven. Nu är hjälptexterna XML-filer
-   som konverteras till Lisp-strukturer vid kompilering av klienten
-   (vilket alltså betyder att man inte får någon hjälp i en
-   okompilerad klient).
-
-** Lästa FAQer och liknande information läses om när man trycker R.
-
-** Saknas det externa diff-kommandot så får man ett prydligare fel när
-   man kör kommandon som kräver det.
-
-** Om man kommenterade flera inlägg av samma författare så ville
-   klienten lägga till den författaren som mottagare mer än en gång.
-   Det vill den inte längre.

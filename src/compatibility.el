@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.55 2002-06-23 15:25:31 byers Exp $
+;;;;; $Id: compatibility.el,v 44.56 2002-06-29 20:29:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.55 2002-06-23 15:25:31 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.56 2002-06-29 20:29:20 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -79,6 +79,26 @@ of the lyskom-provide-* functions instead."
             ;               (quote (, (car definition)))
             ;               (quote (, (car (cdr definition)))))))
               (eval-and-compile
+                (if (not (, predicate))
+                    (progn
+                      (, definition)
+                      (setq lyskom-compatibility-definitions
+                            (cons (quote (, (car (cdr definition))))
+                                  lyskom-compatibility-definitions))))))))
+
+(defmacro lyskom-compatibility-definition-ct (predicate definition)
+  "If PREDICATE is nil, evaluate DEFINITION at compile and run time.
+Definition should be a function definition of some kind, with syntax 
+similar to defun or defmacro.
+
+To simply define a function if it is not already defined, used one
+of the lyskom-provide-* functions instead."
+  (` (progn ;(eval-when-compile
+            ;  (if (not (, predicate))
+            ;      (message "Compatibility %S for %S"
+            ;               (quote (, (car definition)))
+            ;               (quote (, (car (cdr definition)))))))
+              (eval-when-compile
                 (if (not (, predicate))
                     (progn
                       (, definition)
@@ -141,7 +161,6 @@ of the lyskom-provide-* functions instead."
 ;;;
 
 (lyskom-compatibility-definition
-
     (condition-case nil
         (or (equal (kbd (identity "<down-mouse-2>"))
                    [down-mouse-2])
@@ -600,16 +619,22 @@ Otherwise treat \\ in NEWTEXT string as special:
 (defun lyskom-color-values (color)
   nil)
 
+(lyskom-external-function set-specifier)
+(lyskom-external-function make-specifier)
+(lyskom-external-function color-rgb-components)
+
+(lyskom-compatibility-definition (and (fboundp 'color-rgb-components) 
+                                      (fboundp 'make-specifier))
+    (defun lyskom-color-values (color)
+      (when (stringp color)
+        (let ((spec nil))
+          (set-specifier (setq spec (make-specifier 'color)) color)
+          (setq color spec)))
+      (color-rgb-components color)))
+
 (eval-and-compile
-  (cond ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
-        ((and (fboundp 'color-rgb-components)
-              (fboundp 'make-specifier))
-         (defun lyskom-color-values (color)
-           (when (stringp color)
-             (let ((spec nil))
-               (set-specifier (setq spec (make-specifier 'color)) color)
-               (setq color spec)))
-           (color-rgb-components color)))
+  (cond ((fboundp 'lyskom-color-values) nil)
+        ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
         ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values))))
 
 

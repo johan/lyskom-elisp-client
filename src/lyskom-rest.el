@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.165 2002-06-28 17:38:55 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.166 2002-06-29 20:29:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.165 2002-06-28 17:38:55 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.166 2002-06-29 20:29:20 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1909,6 +1909,9 @@ Deferred insertions are not supported."
 (lyskom-external-function w3-fetch)
 (lyskom-external-function w3-region)
 (lyskom-external-function smiley-region)
+(lyskom-external-function latin-unity-remap-region)
+
+(lyskom-try-require 'latin-unity)
 
 (defun lyskom-format-text-body (text &optional text-stat)
   "Format a text for insertion. Does parsing of special markers in the text."
@@ -1952,8 +1955,7 @@ Deferred insertions are not supported."
                                       (length tmp) 
                                       '(special-insert lyskom-postprocess-text)
                                       tmp))
-              (when (and (fboundp 'latin-unity-remap-region)
-                         (lyskom-try-require 'latin-unity))
+              (when (fboundp 'latin-unity-remap-region)
                 (add-text-properties 0
                                      (length tmp)
                                      '(special-insert lyskom-unity-text)
@@ -1964,6 +1966,11 @@ Deferred insertions are not supported."
   (condition-case nil
       (smiley-region start (min (point-max) (1+ end)))
     (error nil)))
+
+(defvar latin-unity-preferred-coding-system-list)
+(defvar latin-unity-iso-8859-1-aliases)
+(defvar latin-unity-cset-codesys-alist)
+(lyskom-external-function coding-system-property)
 
 (defun lyskom-unity-text (start end &rest args)
   (condition-case nil
