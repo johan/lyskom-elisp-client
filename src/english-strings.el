@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.23 1997-07-15 10:23:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.24 1997-07-17 10:33:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.23 1997-07-15 10:23:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.24 1997-07-17 10:33:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2431,6 +2431,18 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
 ;;; kom-tell-phrases-validation-list in vars.el if you add or remove
 ;;; one of these.
 
+(eval-when-compile (defvar kom-tell-phrases))
+
+(if (and (boundp 'kom-tell-phrases)
+         kom-tell-phrases)
+    (lyskom-language-strings kom-tell-phrases sv
+      (mapcar (function 
+               (lambda (x)
+                 (cond ((not (consp x)) x)
+                       ((not (consp (cdr x))) x)
+                       ((not (= (length (cdr x)) 1)) x)
+                       (t (cons (car x) (car (cdr x)))))))
+              kom-tell-phrases))
 (lyskom-language-strings kom-tell-phrases en
   '((kom-tell-silence		. "") ; Why ?
     (kom-tell-send		. "Is trying to post an article.")
@@ -2449,7 +2461,7 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
     (kom-tell-review		. "Is reviewing.")
     (kom-tell-change-name       . "Takes on a new name.")
     (kom-tell-change-supervisor . "Changes the supervisor of something.")
-    (kom-tell-next-lyskom	. "Moves to a different LysKOM.")))
+    (kom-tell-next-lyskom	. "Moves to a different LysKOM."))))
 
 
 ;; Placed here because this must NOT be evaluated before 

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.27 1997-07-15 10:23:41 byers Exp $
+;;;;; $Id: vars.el.in,v 44.28 1997-07-17 10:34:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.27 1997-07-15 10:23:41 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.28 1997-07-17 10:34:06 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -657,6 +657,21 @@ executing. "
   "*Non-nil means display namedays when running in swedish.
 This variable will eventually be replaced with something else."
   server)
+
+(def-kom-var kom-www-proxy nil
+  "*Non-nil indicates a WWW proxy to use for the connection.
+This is useful behind a firewall if the proxy supports the CONNECT
+method. 
+
+If this variable is a string, it is assumed to be a proxy
+specification for all LysKOM servers. If it is a list, it is assumed
+to be a list of pairs, (SERVER . PROXY) where SERVER is the server for
+which PROXY, a proxy specification is to be used. The special value t
+can be used for SERVER to indicate a default proxy.
+
+A proxy specification has the form \"HOST:PORT\" where HOST is the
+host name of the proxy and PORT is the port to connect to. The :PORT
+part is optional. If it is not specified, port 80 is assumed.")
 
 (def-kom-var kom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")

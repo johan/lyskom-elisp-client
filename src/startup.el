@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.20 1997-07-09 14:41:28 byers Exp $
+;;;;; $Id: startup.el,v 44.21 1997-07-17 10:33:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.20 1997-07-09 14:41:28 byers Exp $\n"))
+	      "$Id: startup.el,v 44.21 1997-07-17 10:33:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -113,7 +113,35 @@ See lyskom-mode for details."
 		    (t
 		     (setq buffer (generate-new-buffer host))
 		     (setq name (buffer-name buffer))))
-	      (setq proc (open-network-stream name buffer host port))
+              (let* ((proxy-host-string
+                      (cond ((stringp kom-www-proxy) kom-www-proxy)
+                            ((listp kom-www-proxy)
+                             (or (cdr (lyskom-string-assoc host kom-www-proxy))
+                                 (cdr (assq t kom-www-proxy))
+                                 nil))
+                            (t nil)))
+                     (proxy-host nil)
+                     (proxy-port nil)
+                     (match (string-match "\\(.*\\):\\([0-9]+\\)"
+                                          (or proxy-host-string ""))))
+                (setq proxy-host (or (and match
+                                          (match-string 1 proxy-host-string))
+                                     proxy-host-string)
+                      proxy-port (or (and match
+                                          (string-to-int
+                                           (match-string 2
+                                                         proxy-host-string)))
+                                     80))
+                (cond (proxy-host
+                       (setq proc (open-network-stream name buffer
+                                                       proxy-host
+                                                       proxy-port))
+                       (lyskom-process-send-string 
+                        proc
+                        (format "connect %s:%d\r\n\r\n"
+                                host port)))
+                      (t (setq proc (open-network-stream name buffer
+                                                         host port)))))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
 	      (if session-priority
