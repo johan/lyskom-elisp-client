@@ -1,3 +1,12 @@
+2001-07-11  Christer Ekholm  <che@init.se>
+
+	* swedish-strings.el, swedish-strings.el (lyskom-message): New
+	string names for kom-who-is-present-in-conference
+
+	* commands1.el (kom-who-is-present-in-conference): Bugfix and new
+	string names.
+
+	
 2001-07-11  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el (lyskom-help-strings): Added strings for
