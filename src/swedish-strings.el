@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.0 1996-08-30 14:48:13 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 44.1 1996-09-08 20:14:58 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.0 1996-08-30 14:48:13 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.1 1996-09-08 20:14:58 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -276,8 +276,9 @@ du har l\344st klart allting. Kom tillbaks senare.
     (conf-all-read . "%#1M - inga ol\344sta.\n")
     (no-in-conf . "Du \344r inte n\344rvarande i n\345got m\366te.\n")
 
-    (search-for-pers . "Ange s\366kvillkor (RETURN f\366r alla personer) ")
-    (search-for-conf . "Ange s\366kvillkor (RETURN f\366r alla m\366ten) ")
+    (search-for-pers . "Ange s\366kvillkor (RETURN f\366r alla personer): ")
+    (search-for-conf . "Ange s\366kvillkor (RETURN f\366r alla m\366ten): ")
+    (search-re . "Ange s\366kuttryck (regulj\344rt uttryck): ")
     (name-to-be-changed . "Ange det namn som skall \344ndras: ")
     (no-such-conf-or-pers . "M\366tet eller personen finns ej.\n")
     (new-name . "Nytt namn: ")
@@ -618,7 +619,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (review-conf-gone . "M\366tet finns inte.\n")
     (review-pers-gone . "Personen finns inte.\n")
     (review-cant-read-conf . "Du kan inte \345terse inl\344gg till ett slutet m\366te du inte \344r med i.\n")
-    (review-cant-read-letterbox . "Du kan inte \345terse in\344gg till n\345gon annans brevl\345da.\n")
+    (review-cant-read-letterbox . "Du kan inte \345terse inl\344gg till n\345gon annans brevl\345da.\n")
     (review-cant-read-empty . "M\366tet \344r tomt.\n")
     (cant-review-everything . "Du kan inte \345terse alla texter i LysKOM.\n")
 
