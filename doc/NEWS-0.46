@@ -23,6 +23,11 @@ tar-arkivet.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Om man gillar långa streckade linjer kan man få det på de flesta
+   håll. Slå på kom-long-lines och sätt kom-text-header-dash-length
+   och kom-text-footer-dash-length till så långa streck du vill ha
+   före och efter inläggstexten.
+
 ** Kommandot Återse lista visar information om vanlig läsning också,
    inte bara återseende. Det är alltså användbart i fler lägen än det
    gamla kommandot var.
