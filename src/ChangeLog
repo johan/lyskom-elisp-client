@@ -1,3 +1,9 @@
+Wed Aug 14 02:46:40 1991  Linus Tolke Y  (linus at lysator)
+
+	* lyskom-rest.el (lyskom-end-of-command,
+	  lyskom-insert-before-prompt): nu sl{nger den inte om lagrade
+	  meddelanden i omv{nd ordning. Vi anv{nder nu lyskom-queue.
+
 Tue Aug 13 03:05:27 1991  Linus Tolke Y  (linus at lysator)
 
 	* swedish-string.el, review.el (kom-review-stack): Fixat en
