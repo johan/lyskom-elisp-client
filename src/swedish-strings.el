@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.12 1993-08-20 21:57:55 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.13 1993-09-21 23:17:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.12 1993-08-20 21:57:55 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.13 1993-09-21 23:17:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -408,6 +408,8 @@ Ditt allm\344nna meddelande l\366d:
 
     (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2s\n")
     (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1s\n")
+    (you-have-unreads-special . "Du har %#1d okommenterade inl\344gg i %#2s\n")
+    (you-have-an-unread-special . "Du har 1 okommenterat inl\344gg i %#1s\n")
     (you-have-read-everything . "Du har sett alla nyheter\n")
     (total-unreads . "\nDu har %#1d ol\344sta inl\344gg.\n")
     (total-unread . "\nDu har 1 ol\344st inl\344gg.\n")
@@ -626,6 +628,8 @@ Personligt meddelande fr\345n %#1s (%#3s):
 
     ; From lyskom-rest.el:
 
+    (mode-line-unread " Ol\344sta")
+
     (error-code . "Felkod %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM v\344ntar p\345 svar fr\345n servern. V\344nta tills du f\345r en prompt.\n")
@@ -827,10 +831,10 @@ Cf. paragraph-start.")
   ;; emacs 19
   (if (string-match "^19" emacs-version)
       (progn
-	(define-key lyskom-mode-map [\344] 'lyskom-change-prefix)
-	(define-key lyskom-mode-map [\304] 'lyskom-change-prefix)
-	(define-key lyskom-mode-map [\345] 'lyskom-review-prefix)
-	(define-key lyskom-mode-map [\304] 'lyskom-review-prefix)
+	(define-key lyskom-mode-map [?\344] 'lyskom-change-prefix)
+	(define-key lyskom-mode-map [?\304] 'lyskom-change-prefix)
+	(define-key lyskom-mode-map [?\345] 'lyskom-review-prefix)
+	(define-key lyskom-mode-map [?\305] 'lyskom-review-prefix)
 
 	(define-key lyskom-mode-map [?l ?\344] 'kom-list-summary)
 	(define-key lyskom-mode-map [?l ?\304] 'kom-list-summary)

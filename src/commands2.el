@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.11 1993-08-20 21:56:28 linus Exp $
+;;;;; $Id: commands2.el,v 36.12 1993-09-21 23:17:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.11 1993-08-20 21:56:28 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.12 1993-09-21 23:17:20 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -593,6 +593,9 @@ lyskom-prefetch-all-confs."
 			      (t nil)) 'lyskom-list-news))
 
 
+(defvar lyskom-special-conf-name "\\`Inl.gg .t mig\\'"
+  "Regexp to match conf names that are special.")
+
 (defun lyskom-list-news (num-arg)
   "Print the number of unread articles to the user."
   (interactive)
@@ -607,9 +610,17 @@ lyskom-prefetch-all-confs."
 	    (if (or (not num-arg)
 		    (>= (-- num-arg) 0))
 		(lyskom-insert 
-		 (if (/= un 1)
-		     (lyskom-format 'you-have-unreads un name)
-		   (lyskom-format 'you-have-an-unread name))))
+		 (if (and (boundp 'lyskom-special-conf-name)
+			  (stringp lyskom-special-conf-name)
+			  (string-match lyskom-special-conf-name
+					(conf-stat->name
+					 (read-info->conf-stat info))))
+		     (if (/= un 1)
+			 (lyskom-format 'you-have-unreads-special un name)
+		       (lyskom-format 'you-have-an-unread-special name))
+		   (if (/= un 1)
+		       (lyskom-format 'you-have-unreads un name)
+		     (lyskom-format 'you-have-an-unread name)))))
 	    (setq sum (+ sum un)))))))
      (read-list->all-entries lyskom-to-do-list))
     (if (= 0 sum)
