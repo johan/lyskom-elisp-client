@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.86 2000-08-28 13:32:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.87 2000-08-28 15:07:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.86 2000-08-28 13:32:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.87 2000-08-28 15:07:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2712,7 +2712,8 @@ Uses Protocol A version 9 calls"
 			       (dynamic-session-info->session
 				(nth (1- total-users) who-list))))))
 	 (format-string (lyskom-info-line-format-string
-			 s-width "P" (if kom-deferred-printing "D" "s"))))
+			 s-width "P" (if kom-deferred-printing "D" "s")))
+         (collect (make-collector)))
     (lyskom-format-insert format-string
 			  ""
 			  (lyskom-get-string 'lyskom-name)
@@ -2733,12 +2734,14 @@ Uses Protocol A version 9 calls"
 			  (dynamic-session-info->session who-info)
 			  'lyskom-deferred-client-1
 			  nil nil nil	; Filled in later
-			  (dynamic-session-info->session who-info))
+			  (list (dynamic-session-info->session who-info)
+                                collect))
 		       (blocking-do-multiple
 			   ((name (get-client-name
 				   (dynamic-session-info->session who-info)))
 			    (version (get-client-version
 				      (dynamic-session-info->session who-info))))
+                         (lyskom-list-clients-collect name version collect)
 			 (concat name " " version)))))
 	(lyskom-format-insert
 	 format-string
@@ -2753,17 +2756,60 @@ Uses Protocol A version 9 calls"
                                       'total-users
                                     'total-visible-users) total-users
                                     (lyskom-client-date-string 
-                                     'time-format-exact)))))
+                                     'time-format-exact)))
+    (lyskom-format-insert "%#1D\n"
+                          (lyskom-create-defer-info
+                           'get-time nil
+                           'lyskom-list-clients-statistics-1
+                           nil nil nil collect))
+))
+
+
+(defun lyskom-list-clients-collect (client version collect)
+  "Collect client statistics"
+  (let* ((name (concat client " " version))
+         (el (assoc name (collector->value collect))))
+    (if el
+        (setcdr el (1+ (cdr el)))
+      (set-collector->value collect (cons (cons name 1)
+                                          (collector->value collect))))))
+
+(defun lyskom-list-clients-statistics-1 (time arg defer-info)
+  (initiate-get-time 'deferred
+                     'lyskom-list-clients-statistics-2 
+                     defer-info))
+
+(defun lyskom-list-clients-statistics-2 (time defer-info)
+  (lyskom-replace-deferred 
+   defer-info
+   (concat "\n"
+           (lyskom-get-string 'client-statistics)
+           (mapconcat (lambda (el)
+                        (lyskom-format 'client-statistics-line
+                                       (if (equal (car el) " ")
+                                           (lyskom-get-string 'Unknown)
+                                         (car el))
+                                       (cdr el)))
+                      (nreverse
+                       (sort (collector->value (defer-info->data defer-info))
+                             (lambda (a b)
+                               (string-lessp (car a) (car b)))))
+                      "\n")
+           "\n")))
+                                        
 
 
 (defun lyskom-deferred-client-1 (name defer-info)
   (initiate-get-client-version 'deferred
 			       'lyskom-deferred-client-2
-			       (defer-info->data defer-info)
+			       (elt (defer-info->data defer-info) 0)
 			       defer-info
-			       name))
+			       name
+                               (elt (defer-info->data defer-info) 1)
+                               ))
 
-(defun lyskom-deferred-client-2 (version defer-info name)
+(defun lyskom-deferred-client-2 (version defer-info name collect)
+  (lyskom-list-clients-collect name version collect)
   (lyskom-replace-deferred defer-info (if (zerop (length name))
 					  "-"
 					(concat name " " version))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.104 2000-08-28 13:32:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.105 2000-08-28 15:07:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.104 2000-08-28 13:32:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.105 2000-08-28 15:07:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -441,6 +441,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-active-users . "    A total of %#1d active user%#1?d%[%]%[s%] (%#2s.)\n")
     (total-visible-active-users
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
+    (client-statistics . "    Distribution of clients:\n")
+    (client-statistics-line . "    %=-25#1s: %#2d")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
@@ -887,6 +889,7 @@ for a text.
     (has-entered-r . "%#2@%#1P has entered %#3s.\n")
     (has-left . "%#1:P has left %#2s.")
     (has-left-r . "%#2@%#1P has left %#3s.\n")
+    (Unknown . "Unknown")
     (unknown . "unknown")
 
     (no-longer-member . "You are no longer a member of %#1M.\n")

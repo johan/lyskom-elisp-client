@@ -1,5 +1,24 @@
 2000-08-28  David Byers  <davby@ida.liu.se>
 
+	Make nearly all hooks local:
+	* vars.el.in (kom-quit-hook): Declare as server-hook.
+	(lyskom-view-text-hook): Declare as local-hook.
+	(lyskom-send-message-hook): Ditto.
+	(lyskom-login-hook): Ditto.
+	(lyskom-change-conf-hook): Ditto.
+	(lyskom-send-text-hook): Ditto.
+	(lyskom-send-message-exit-hook): Ditto.
+	(lyskom-personal-message-hook): Ditto.
+
+	Summary statistics at end of list:
+	* commands1.el (lyskom-list-clients-statistics-2): New function.
+	(lyskom-list-clients-statistics-1): New function.
+	(lyskom-list-clients-collect): New function.
+	(lyskom-deferred-client-2): Collect client statistics.
+	(kom-list-clients): Collect client statistics. Print client
+	statistics.
+
+	Improve FAQ handling:
 	* vars.el.in (lyskom-commands): Added kom-change-conf-faq.
 
 	* commands1.el (lyskom-change-conf-faq-2): New function.
