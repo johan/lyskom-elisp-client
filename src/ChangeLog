@@ -1,3 +1,14 @@
+Fri Feb  7 18:03:58 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Ny parameter,
+ 	force-prompt-update.
+
+	* language.el (lyskom-set-language): Uppdatera prompten.
+
+	* compatibility.el Bort bed rassq, rassoc och annat som finns i
+ 	alla Emacs vi stödjer. (replace-in-string): Ny funktion snodd från
+ 	XEmacs.
+
 Fri Feb  7 16:20:49 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* prefetch.el (lyskom-prefetch-text-list): Ny funktion.
@@ -6,9 +17,50 @@ Fri Feb  7 16:20:49 1997  David Kågedal  <davidk@lysator.liu.se>
 	(lyskom-prefetch-one-request): Hanter TEXT-LIST
 	(lyskom-prefetch-text-list-handler): Ny funktion.
 
+Fri Feb  7 16:36:32 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* vars.el.in (lyskom-setup-local-variables): Hantera
+ 	lyskom-local-hooks.
+
+	* defvar.el (def-kom-var): Lade till local-hook och server-hook.
+
+	* vars.el.in: Zappa event-joxet till förmån för vanliga hookar.
+
+	* utilities.el: Dito.
+
 Thu Feb  6 00:41:34 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* async.el (lyskom-async-new-text): Prefetch all the information.
+
+Tue Feb  4 10:52:19 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* defvar.el: Stoppade in edebug-form-spec för några makron.
+
+	* utilities.el (lyskom-string-assoc): Ny funktion.
+
+	* command.el (lyskom-read-extended-command): Använd inte backquote
+ 	för filtret (man kan inte edebugga då). Använd
+ 	lyskom-with-lyskom-minibuffer.
+	(lyskom-read-extended-command): Använd lyskom-string-assoc.
+
+Sun Feb  2 16:10:27 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-show-commented): Använd
+ 	lyskom-view-mode och använd lyskom-view-text för att stoppa in
+ 	texten i bufferten.
+
+	* buffers.el (lyskom-display-buffer): Gör intern-soft, inter
+ 	intern så att saknad kontrollvariabel inte orsakar fel.
+
+	* view-mode.el (lyskom-view-base-mode): Ny funktion, ny fil.
+	(lyskom-view-mode): Ny funktion
+	(lyskom-view-mode-map): Ny variabel.
+
+	* vars.el.in: Tog bort lyskom-list-of-edit-buffers.
+
+	* edit-text.el (lyskom-count-down-edits): Tog bort.
+	(lyskom-edit-send): Använd inte lyskom-count-down-edits.
+	(kom-edit-quit): Dito.
 
 Fri Jan 31 16:37:48 1997  David Kågedal  <davidk@lysator.liu.se>
 
@@ -17,10 +69,260 @@ Fri Jan 31 16:37:48 1997  David Kågedal  <davidk@lysator.liu.se>
 	(lyskom-prefetch-texttree): Nytt tredje argument som gör att den
  	inte prefetchar redan hämtade texter.
 
+Thu Jan 30 16:27:58 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* prioritize.el (lyskom-prioritize-replace-membership): Ny
+ 	funktion.
+	(lyskom-prioritize-remove-membership): Ny funktion
+	(lyskom-prioritize-add-membership): Ny funktion
+
+	* vars.el.in (lyskom-add-membership-event-hook): Ny variabel
+	(lyskom-replace-membership-event-hook): Dito
+	(lyskom-remove-membership-event-hook): Dito
+
+	* utilities.el (lyskom-signal-event): Ny funktion (experiment).
+	(lyskom-handle-event): Dito.
+	(lyskom-unhandle-event): Dito.
+
+	* completing-read.el (lyskom-complete-string-next-char): Använd
+ 	inte lyskom-blocking-process.
+
+	* services.el (lyskom-wait-queue): Använd inte
+ 	lyskom-blocking-process.
+
+	* macros.el (lyskom-blocking-do-multiple): Använd inte
+ 	lyskom-blocking-process.
+
+	* utilities.el (lyskom-unicase): Använd inte
+ 	lyskom-blocking-process.
+
+	* vars.el.in (lyskom-doing-default-command): Tog bort
+ 	lyskom-blocking-process
+
+Thu Jan 30 14:02:46 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * vars.el.in (lyskom-buffer): Ärv till minibufferar.
+        (lyskom-proc): Dito.
+
+        * defvar.el (lyskom-setup-minibuffer-variables): Ny funktion.
+        (lyskom-with-lyskom-minibuffer): Nytt makro.
+
+Wed Jan 29 14:35:20 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* utilities.el (lyskom-princ): Ny funktion.
+
+	* edit-text.el (lyskom-edit-insert-misc-conf): Använd
+ 	lyskom-princ, inte princ, annars försvinner text properties.
+	(lyskom-edit-insert-commented-author): Dito.
+	(lyskom-edit-insert-miscs): Ny goto-char för att få rätt rad
+ 	överst.
+	(lyskom-edit-send-check-recipients): Jag fattar inte att koden för
+ 	att kolla medlemskap för kommenterad författare någonsin
+ 	fungerade. Nu gör den det.
+
+	* completing-read.el (lyskom-minibuffer-local-must-match-map):
+ 	Definiera om keymap-parent i XEmacs.
+
+Mon Jan 27 15:40:05 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * swedish-strings.el (lyskom-sv-customize-map): Gör mappen
+        språkberoende.
+
+        * cache.el (lyskom-what-i-am-doing): Använd def-kom-var
+
+        * prefetch.el (lyskom-prefetch-in-action): Använd def-kom-var
+        (lyskom-inhibit-prefetch): Dito.
+        (lyskom-prefetch-stack): Dito.
+
+Sun Jan 26 15:44:30 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * filter-edit.el (lyskom-format-filter-pattern-insert): Använd
+        inte lyskom-emacs19-p
+
+        * lyskom-rest.el: Sätt inte lyskom-emacs19-p
+
+        * vars.el.in: Använd def-kom-var
+
+Sat Jan 25 20:56:53 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * compatibility.el (lyskom-xemacs-keysym): Ny variabel.
+        (lyskom-gnu-keysym): Ny variabel
+        (lyskom-keysym): Ny funktion.
+        (lyskom-keys): Ny funktion.
+
+        * swedish-strings.el,english-strings.el: Använd lyskom-keys.
+
+        * vars.el.in (lyskom-text-buttons): Lägg URL-regexparna i rätt
+        ordning.
+
+        * lyskom-buttons.el (lyskom-view-url-browse-url): Ny funktion.
+        (lyskom-button-open-url): Rensa whitespace i URLerna.
+
+Fri Jan 24 15:40:30 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * command.el (lyskom-command-name): Bugga inte ur om kommandot
+        inte finns.
+
+Thu Jan 23 13:24:59 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * vars.el.in (lyskom-text-buttons): Lade till <URL:> som specifik
+        knapp. Tillåt inte : i slutet av en URL.
+
+	* utilities.el (lyskom-make-face): Ny funktion.
+	(lyskom-setup-faces): Använd den.
+
+Sun Jan 19 12:05:24 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* edit-text.el (lyskom-dispatch-edit-text): Använd ny
+ 	bufferthantering.
+	(lyskom-edit-mode): Tog bort lyskom-protect-environment.
+
+	* utilities.el (lyskom-set-default): Ny funktion.
+	(lyskom-default-value): Bytt namn från
+ 	lyskom-default-symbol-value.
+
+	* macros.el (lyskom-protect-variable): Nytt makro
+	(lyskom-setq-default): Nytt makro
+
+Sat Jan 18 13:37:53 1997  David Byers  <davby@sen2.ida.liu.se>
+
+        * edit-text.el (lyskom-edit-mode): Anropa
+        lyskom-add-edit-mode-menus
+
+        * language.el (lyskom-set-language): Anropa lyskom-clear-menus.
+
+        * vars.el.in (lyskom-mode-menu-list): Ny variabel.
+
+	* compatibility.el (lyskom-xemacs-or-gnu): Nytt makro.
+
+Fri Jan 17 12:14:51 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Bygg menyer för
+ 	både XEmacs och Gnu Emacs.
+	(lyskom-button-menu): Använd popup-menu istf x-popup-menu.
+	(kom-popup-menu): Bytt namn från kom-mouse-3. Fungera i XEmacs.
+	(kom-button-click): Bytt namn från kom-mouse-2. Fungera i XEmacs.
+	(kom-button-press): Bytt namn från kom-key-mouse-2. 
+	(lyskom-button-menu): Fix i doc-sträng.
+
+	* compatibility.el (popup-menu): Ny funktion.
+
+	* swedish-strings.el, english-strings.el: Bytte ut
+ 	kom-mouse-* mor nya namn.
+
+	* filter-edit.el (lyskom-filter-edit-mode): Använd
+ 	lyskom-use-local-map.
+
+	* prioritize.el (lyskom-prioritize-mode): Använd
+ 	lyskom-use-local-map.
+
+	* edit-text.el (lyskom-edit-mode): Använd lyskom-use-local-map för
+ 	att sätta keymap.
+
+	* macros.el (lyskom-use-local-map): Ny funktion.
+
+	* startup.el (lyskom-clear-vars): Gör keymap-variabler
+ 	buffertlokala. Gör lyskom-language buffertlokal.
+
+	* language.el (lyskom-set-language-keymaps): Don't make a new
+ 	keymap every time through.
+
+	* swedish-strings.el,english-strings.el: Definierade om alla
+ 	prefixkommndon så de är språkspecifika.
+
+Thu Jan 16 09:36:39 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Bind svenska
+ 	tecken för både Gnu Emacs och XEmacs. 
+
+Wed Jan 15 17:40:46 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* flags.el (lyskom-read-options): Gör inte setq med ett argument.
+
+	* language.el (lyskom-set-language-keymaps): Skrev om med
+ 	set-keymap-parent. Experimentiellt.
+
+	* swedish-strings.el (lyskom-sv-mode-map): Bind inte [?\344] och
+ 	liknande. Det fungerar inte i XEmacs. Bind i stället [ä] direkt;
+ 	det fungerar i XEmacs och Gnu Emacs.
+	(lyskom-sv-prioritize-mode-map): Definiera inte M-up eller
+ 	liknande. Använd [( ... )]-notation i stället.
+
+	* english-strings.el (lyskom-en-prioritize-mode-map): Dito.
+
+Tue Jan 14 11:03:59 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-forget-created-buffer): Ny funktion.
+	(lyskom-create-buffer): Dito.
+	(lyskom-buffers-of-type): Dito.
+	(lyskom-first-buffer-of-type): Dito.
+	(lyskom-buffer-is-of-type): Dito.
+	(lyskom-add-buffer-of-type): Dito.
+	(lyskom-forget-buffer-of-type): Dito.
+	(lyskom-set-buffers-of-type): Dito.
+
+	* startup.el (lyskom-clear-vars): Tog bort kom-prompt-format. Lade
+ 	till kom-user-prompt-format, kom-user-prompt-format-executing,
+ 	kom-enabled-prompt-format och kom-enabled-prompt-format-executing
+ 	som lokala variabler.
+
+Sat Jan 11 14:01:49 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* slow.el (lyskom-get-entered-slow-command): Använd
+ 	lyskom-current-prompt-text istf lyskom-prompt-text.
+
+	* option-edit.el (lyskom-custom-variables): Tog bort
+ 	kom-prompt-format och lyskom-prompt-executing-default-command-text
+ 	och lyskom-prompt-text. Lade till kom-user-prompt-format och
+ 	kom-user-prompt-format-executing.
+	(lyskom-customize-buffer-format): Dito.
+
+	* vars.el.in (lyskom-elisp-variables): Dito. Lade till
+ 	kom-enabled-prompt-format och kom-enabled-prompt-format-executing.
+	(kom-user-prompt-format): Ny variabel.
+ 	(kom-user-prompt-format-executing): Dito.
+ 	(kom-enabled-prompt-format): Dito.
+	(lyskom-current-prompt-text): Dito.
+ 	(kom-enabled-prompt-format-executing): Dito. (kom-prompt-format):
+ 	Tog bort. (lyskom-prompt-text): Dito.
+ 	(lyskom-prompt-executing-default-command-text): Dito.
+
+	* command.el (lyskom-start-of-command): Använd inte
+ 	lyskom-prompt-executing-default-command-text
+
+	* swedish-strings.el, engligh-strings.el (lyskom-message): Lade
+ 	till prompt-several-messages, prompt-single-message,
+ 	secret-person, conference-no, person-no (lyskom-custom-strings):
+ 	Tog bort referenser till kom-prompt-format och lyskom-prompt-text
+ 	och lyskom-prompt-executing-default-command-text. Tog bort
+ 	prompt-modifier-messages och prompt-modifier-ansaphone.
+
+	* review.el (lyskom-find-root): Skrev om i iterativ version. Ny
+ 	parameterlista och måhända annorlunda beteende om det finns flera
+ 	urinlägg.
+
+	* commands1.el (lyskom-who-is-on-9): Använd
+ 	lyskom-default-pers-string.
+	(lyskom-who-is-on-8): Dito.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Använd
+ 	lyskom-default-pers-string för personer.
+	(lyskom-modify-prompt): Använd kom-user-prompt-* och
+ 	kom-enabled-prompt-* (lyskom-format-prompt): Ny funktion
+	(lyskom-build-prompt): Ny funktion. (lyskom-update-prompt): Sätt
+ 	lyskom-current-prompt-text.
+
+	* vars.el.in (lyskom-default-pers-string): Ny variabel.
+
 Thu Jan  9 11:06:19 1997  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Lägg inte till dubletter i
  	lyskom-buffer-list.
+
+Fri Jan  3 17:20:00 1997  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands1.el (lyskom-times): Så fånigt det blev på nyårsafton.
+ 	Alla har visst inte 12-timmarsklocka.
 
 Tue Dec 31 11:14:20 1996  David Kågedal  <davidk@lysator.liu.se>
 

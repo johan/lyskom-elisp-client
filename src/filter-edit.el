@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.3 1996-10-28 18:04:52 davidk Exp $
+;;;;; $Id: filter-edit.el,v 44.4 1997-02-07 18:07:39 byers Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.3 1996-10-28 18:04:52 davidk Exp $\n"))
+	      "$Id: filter-edit.el,v 44.4 1997-02-07 18:07:39 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -274,11 +274,7 @@ If NEG is non-nil, the first line will be negated."
 If NEG is non-nil, format the negation."
   (let (tmp)
     (insert
-     (format (if lyskom-emacs19-p
-		 "    %s %s %S"
-	       (if (stringp (cdr (car pat)))
-		   "    %s %s \"%s\""
-		 "    %s %s %s"))
+     (format "    %s %s %S"
 	     (cdr (assoc (car (car pat)) lyskom-filter-what))
 	     (if neg
 		 " != "
@@ -899,7 +895,7 @@ All key bindings:
   (setq buffer-read-only t)
   (setq filter-edit-change-flag nil)
   (buffer-disable-undo (current-buffer))
-  (use-local-map lyskom-filter-edit-map)
+  (lyskom-use-local-map lyskom-filter-edit-map)
   (setq mode-name "LysKOM Filter Edit")
   (setq major-mode 'lyskom-filter-edit-mode)
   (setq local-abbrev-table 'lyskom-filter-edit-abbrev-table)
@@ -916,10 +912,15 @@ All key bindings:
         (filters lyskom-filter-list)
         (server-name lyskom-server-name)
         (curwin (current-window-configuration)))
-    (pop-to-buffer (get-buffer-create 
-                    (lyskom-get-string 'filter-edit-buffer-name)))
+    (lyskom-display-buffer
+     (lyskom-get-buffer-create 'edit-filters
+                               (concat (buffer-name buf)
+                                       "-"
+                                       (lyskom-get-string 
+                                        'filter-edit-buffer-name))
+                               t))
     (let ((inhibit-read-only t))
-      (delete-region (point-min) (point-max)))
+      (erase-buffer))
     (lyskom-filter-edit-mode)
     (setq lyskom-buffer buf)
     (let ((inhibit-read-only t))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: language.el,v 44.7 1997-01-31 21:34:37 davidk Exp $
+;;;;; $Id: language.el,v 44.8 1997-02-07 18:07:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -112,10 +112,20 @@ used for identification, and the NAMEs are names of the language.")
   (mapcar
    (function
     (lambda (map)
-      (setcdr (symbol-value map)
-	      (eval (cdr (assq language
-			       (get map 'lyskom-language-keymap)))))))
+      (set-keymap-parent (symbol-value map)
+                         (eval (cdr (assq language
+                                          (get map
+                                               'lyskom-language-keymap)))))))
    lyskom-language-keymaps))
+
+;(defun lyskom-set-language-keymaps (language)
+;  (mapcar
+;   (function
+;    (lambda (map)
+;      (setcdr (symbol-value map)
+;	      (eval (cdr (assq language
+;			       (get map 'lyskom-language-keymap)))))))
+;   lyskom-language-keymaps))
 
 ;;; String catalogs
 
@@ -206,7 +216,8 @@ if 'lyskom-menu is not found."
   (setq lyskom-language language)
   (lyskom-set-language-vars language)
   (lyskom-set-language-keymaps language)
-  (lyskom-build-menus)) 
+  (lyskom-update-menus)
+  (lyskom-update-prompt t)) 
 
 			      
 (provide 'lyskom-language)

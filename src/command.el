@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: command.el,v 44.3 1996-12-30 17:52:19 davidk Exp $
+;;;;; $Id: command.el,v 44.4 1997-02-07 18:07:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -72,11 +72,6 @@
 	      (list 'lyskom-end-of-command))))
 
 
-;;(def-edebug-spec def-kom-command
-;;  (&define name lambda-list
-;;                [&optional stringp]   ; Match the doc string, if present.
-;;                ("interactive" interactive)
-;;                def-body))
 (put 'def-kom-command 'edebug-form-spec
      '(&define name lambda-list
 	       [&optional stringp]	; Match the doc string, if present.
@@ -91,7 +86,9 @@
 
 (defsubst lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (lyskom-get-string command 'lyskom-command)) 
+  (condition-case arg
+      (lyskom-get-string command 'lyskom-command)
+    (error nil)))
 
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
@@ -124,21 +121,18 @@
     ;; 		      (set-char-table-parent table (current-case-table))
     ;; 		      (aset table ?\} 345)
     ;; 		      (set-case-table table)))))
-    (setq name (completing-read (lyskom-get-string 'extended-command)
-				alternatives 
-				;; lyskom-is-administrator is buffer-local and
-				;; must be evalled before the call to 
-				;; completing-read
-				;; Yes, this is not beautiful
-				;;(list 'lambda '(alternative)	     
-				;;	(list 'lyskom-ok-command 'alternative
-				;;	      lyskom-is-administrator))
-				(` (lambda (alternative)
-				     (lyskom-ok-command
-				      alternative
-				      (, lyskom-is-administrator))))
-				t nil))
-    (cdr (assoc name alternatives))))
+    (lyskom-with-lyskom-minibuffer
+     (setq name (completing-read (lyskom-get-string 'extended-command)
+                                 alternatives 
+                                 ;; lyskom-is-administrator is buffer-local and
+                                 ;; must be evalled before the call to 
+                                 ;; completing-read
+                                 ;; Yes, this is not beautiful
+                                 (list 'lambda '(alternative)	     
+                                       (list 'lyskom-ok-command 'alternative
+                                             lyskom-is-administrator))
+                                 t nil)))
+    (cdr (lyskom-string-assoc name alternatives))))
 
 (defun lyskom-start-of-command (function &optional may-interrupt)
   "This function is run at the beginning of every LysKOM command.
@@ -183,8 +177,15 @@ chosen according to this"
       (if lyskom-current-prompt
           (let ((inhibit-read-only t))
             (goto-char (point-max))
-            (delete-char (- (length lyskom-prompt-text))))))
-    (lyskom-insert lyskom-prompt-executing-default-command-text))
+            (beginning-of-line)
+            (delete-region (point) (point-max)))))
+    (lyskom-insert (lyskom-modify-prompt 
+                    (cond ((stringp lyskom-current-prompt) 
+                           lyskom-current-prompt)
+                          ((symbolp lyskom-current-prompt)
+                           (lyskom-get-string lyskom-current-prompt))
+                          (t (format "%S" lyskom-current-prompt)))
+                    t)))
   (setq mode-line-process (lyskom-get-string 'mode-line-working))
   (if (pos-visible-in-window-p (point-max))
       (save-excursion
@@ -229,7 +230,8 @@ chosen according to this"
   (lyskom-prefetch-and-print-prompt)
   (run-hooks 'lyskom-after-command-hook)
   (if lyskom-idle-time-flag
-      (initiate-user-active 'background nil))
+      (save-excursion (set-buffer lyskom-buffer)
+                      (initiate-user-active 'background nil)))
   (if kom-inhibit-typeahead
       (discard-input))
   ;; lyskom-pending-commands should probably be a queue or a stack.

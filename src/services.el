@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.3 1996-10-20 02:57:04 davidk Exp $
+;;;;; $Id: services.el,v 44.4 1997-02-07 18:08:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.3 1996-10-20 02:57:04 davidk Exp $\n"))
+	      "$Id: services.el,v 44.4 1997-02-07 18:08:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -876,8 +876,8 @@ or get-text-stat."
   ;; which case there is a bug in the code
 
   (save-excursion
-    (set-buffer (process-buffer (or lyskom-proc
-				    lyskom-blocking-process)))
+    (set-buffer (or lyskom-buffer
+                    (process-buffer lyskom-proc)))
     ;; If this happens, we're in trouble
     (if lyskom-is-parsing
 	(lyskom-really-serious-bug))
@@ -901,8 +901,8 @@ or get-text-stat."
 (defun lyskom-wait-queue (queue)
   "Waits until all data on QUEUE has been processed"
   (save-excursion
-    (set-buffer (process-buffer (or lyskom-proc
-				    lyskom-blocking-process)))
+    (set-buffer (or lyskom-buffer
+                    (process-buffer lyskom-proc)))
     (let ((lyskom-blocking-return 'not-yet-gotten))
       (lyskom-run queue 'blocking-return (list t))
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)

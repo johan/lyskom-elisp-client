@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.3 1996-10-28 18:05:15 davidk Exp $
+;;;;; $Id: flags.el,v 44.4 1997-02-07 18:07:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.3 1996-10-28 18:05:15 davidk Exp $\n"))
+	      "$Id: flags.el,v 44.4 1997-02-07 18:07:42 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -204,8 +204,9 @@ If successful then set the buffer not-modified. Else print a warning."
   (lyskom-end-of-command))
 
 
-(defvar lyskom-options-done nil
-  "When we have read all options this is turned non-nil.")
+(def-kom-var lyskom-options-done nil
+  "When we have read all options this is turned non-nil."
+  local)
 
 ;;;============================================================
 ;;;  lyskom-save-options
@@ -290,7 +291,7 @@ If successful then set the buffer not-modified. Else print a warning."
       (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
 	(if (not pers-stat)  ;+++ Other error handler.
 	    (lyskom-insert-string 'you-dont-exist)
-	  (setq lyskom-other-clients-user-areas)
+	  (setq lyskom-other-clients-user-areas nil)
 	  (if (zerop (pers-stat->user-area pers-stat))
 	      (progn
 		;; (lyskom-tell-phrases-validate)
@@ -386,10 +387,10 @@ If successful then set the buffer not-modified. Else print a warning."
   (let ((len (string-to-int lyskom-options-text))
 	(start (progn (string-match "[0-9]+H" lyskom-options-text)
 		      (match-end 0))))
-    (prog1
-	(substring lyskom-options-text start (+ start len))
+    (let ((name (substring lyskom-options-text start (+ start len))))
       (setq lyskom-options-text (substring lyskom-options-text
-                                           (+ start len))))))
+                                           (+ start len)))
+      name)))
 
 (defun lyskom-set-var-from-string (var string)
   "This is a wrapper aroud read-from-string.
