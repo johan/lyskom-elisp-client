@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.322 2003-05-17 15:09:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.323 2003-06-01 18:10:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.322 2003-05-17 15:09:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.323 2003-06-01 18:10:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1728,6 +1728,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-review-mail-headers . "Jag förstår inte vilket inläggs brevhuvud du vill se.\n")
     (confusion-what-to-unread-root . "Jag förstår inte vilket inläggs urinlägg du vill markera oläst.\n")
     (confusion-what-to-find-root . "Jag förstår inte vilket inläggs urinlägg du vill återse.\n")
+    (could-not-find-root . "Kan inte identifiera urinlägget. Kommentarsstrukturen kanske är cirkulär.\n")
     (confusion-what-to-unread-root-review . "Jag förstår inte vilket inläggsträd du vill markera oläst.\n")
     (confusion-what-to-find-root-review . "Jag förstår inte vilket inläggsträd du vill återse.\n")
 
@@ -1818,7 +1819,7 @@ Antal sessioner:     %21#1d (totalt)
     (recommending-conf . "Rekommenderar %#1M%#2?b%[ (prioritet %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
     (has-recommended-conf . "%#1P har rekommenderat möte %#2M. Vill du bli medlem?\n")
     (accept-recommendation . "Gå med i %#1M? ")
-    (accepting-recommendataion . "Gå med i rekommenderat möte %#2M...")
+    (accepting-recommendation . "Gå med i rekommenderat möte %#2M...")
 
     (redirect-for-whom . "Dirigera om kommentarer för: ")
     (redirect-to-which-conf . "Dirigera om kommentarer till: ")
@@ -3052,17 +3053,22 @@ teckenkodning.
 
     (lyskom . "Inställningar för LysKOM")
     (lyskom-doc . "\
+Dessa tangenter fungerar utanför redigerbara textfält.
 \\[lyskom-customize-save-and-quit] för att spara och avsluta,
 \\[lyskom-customize-save] för att spara utan att avsluta
 \\[lyskom-customize-quit] för att avsluta utan att spara
 \\[widget-forward] flyttar till nästa inställning
 \\[widget-button-press] ändrar värdet
+Tryck C-h m för en fullständig lista av kommandon.
 
 Hjälptexter: [?] Visa hjälptext    [!] Göm hjälptext
 Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde
 
 Om rutan före inställningens namn är ikryssad kommer värdet att sparas
-i servern. Annars sparas det i din .emacs.")
+i servern. Annars sparas det i din .emacs.
+
+Klicka med musens mittenknapp på ledtexterna för att ändra värde eller
+ta fram menyer.")
 
     (section . "------------------------------------------------------------------------------\n")
     (look-and-feel-misc . "Diverse utseende och beteende\n")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.94 2003-05-17 15:09:20 byers Exp $
+;;;;; $Id: option-edit.el,v 44.95 2003-06-01 18:10:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.94 2003-05-17 15:09:20 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.95 2003-06-01 18:10:34 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -442,6 +442,54 @@ customize buffer but do not save them to the server."
         (widget-button-click event)
       (popup-mode-menu))))
 
+(defun lyskom-customize-mode ()
+  "Major mode for editing LysKOM settings.
+See the top of the buffer for localized help.
+
+These commands work outside editable text fields.
+\\[lyskom-customize-save-and-quit] to save and quit,
+\\[lyskom-customize-save-and-quit] to save and quit,
+\\[lyskom-customize-save] to save without quitting,
+\\[lyskom-customize-quit] to quit without saving.
+\\[widget-forward] moves to the next setting
+\\[widget-button-press] changes the value
+Press C-h m for a complete list of commands.
+
+Documentation:  [?] Show documentation    [!] Hide documentation
+Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify
+
+If the box before the name of the setting is selected, the setting will
+be saved in the server. Otherwise it will be saved in your .emacs.
+
+Click prompts with the middle mouse button to change values and bring 
+up menus.
+
+All key bindings:
+\\{lyskom-customize-map}
+"
+  (kill-all-local-variables)
+  (use-local-map lyskom-customize-map)
+  (make-local-variable 'lyskom-widgets)
+  (setq lyskom-widgets nil)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+  (condition-case nil
+      (lyskom-copy-face kom-active-face 'widget-button-face)
+    (error nil))
+  (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
+  (widget-setup)
+  (mapcar (function
+           (lambda (variable)
+             (widget-value-set (cdr variable)
+                               (save-excursion
+                                 (set-buffer lyskom-buffer)
+                                 (symbol-value (car variable))))))
+          lyskom-widgets)
+  (widget-setup)
+  (setq mode-name "LysKOM Settings")
+  (setq major-mode 'lyskom-customize-mode)
+  )
+
 (defun kom-customize ()
   "Open the customize buffer"
   (interactive)
@@ -453,27 +501,10 @@ customize buffer but do not save them to the server."
     (unwind-protect
         (progn
           (lyskom-start-of-command 'kom-customize)
-           (save-excursion
-             (set-buffer buf)
-             (kill-all-local-variables)
-             (make-local-variable 'lyskom-widgets)
-             (setq lyskom-widgets nil)
-             (let ((inhibit-read-only t))
-               (erase-buffer))
-             (use-local-map lyskom-customize-map)
-             (condition-case nil
-                 (lyskom-copy-face kom-active-face 'widget-button-face)
-               (error nil))
-             (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
-             (widget-setup)
-             (mapcar (function
-                      (lambda (variable)
-                        (widget-value-set (cdr variable)
-                                          (save-excursion
-                                            (set-buffer lyskom-buffer)
-                                            (symbol-value (car variable))))))
-                     lyskom-widgets)
-             (widget-setup))
+          (sit-for 0)
+          (save-excursion
+            (set-buffer buf)
+            (lyskom-customize-mode))
            (lyskom-display-buffer buf))
       (save-excursion
         (set-buffer lyskom-buffer)

@@ -1,4 +1,33 @@
+2003-06-01  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1046:
+	* option-edit.el (lyskom-customize-mode): New major mode.
+	(kom-customize): Use it.
+
+	Fix bug 1047:
+	* review.el (lyskom-find-root): Only visit each text once. This
+	also eliminates problems with cyclic structures.
+	(kom-find-root-review): Proper error message when the root cannot
+	be found (e.g. in when there are cycles in the comment graph).
+	(kom-find-root): Ditto.
+	(kom-unread-root): Ditto.
+
+	* swedish-strings.el,swedish-strings.el: Completed fix of 1038.
+	Per Starbäck, not Magnus Bark, provided the patch. Fixed that in
+	this file.
+
+2003-05-21  David Byers  <byers@lysator.liu.se>
+
+	* vars.el.in (lyskom-text-buttons): Do RFC-compliant URLs after
+	doing pseudo-urls since otherwise the first line will be marked
+	as a pseudo URL, rather than the whole thing being marked as a
+	real URL.
+
 2003-05-17  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 750:
+	* lyskom-buttons.el (kom-button-click): Pop up the menu if there
+	is no button action.
 
 	Fix bug 986:
 	* lyskom-buttons.el (lyskom-view-url-netscape): Support
@@ -8,7 +37,7 @@
 
 	Fix bug 1038:
 	* swedish-strings.el,english-strings.el: Fixed problem with
-	accepting-recommendation (patch from Magnus Bark).
+	accepting-recommendation (patch from Per Starbäck).
 
 	Fix bug 1039:
 	* commands1.el (lyskom-private-answer): Misc-list for personal

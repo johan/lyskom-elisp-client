@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.284 2003-05-17 15:09:19 byers Exp $
+;;;;; $Id: english-strings.el,v 44.285 2003-06-01 18:10:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.284 2003-05-17 15:09:19 byers Exp $"))
+              "$Id: english-strings.el,v 44.285 2003-06-01 18:10:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1694,6 +1694,7 @@ You must become an active member of the conference to enter it.\n")
     (confusion-what-to-unread-root . "I can't figure out which text's root you want to mark as unread.\n")
     (confusion-what-to-unread-root-review . "I can't figure out which tree you want to mark as unread.\n")
     (confusion-what-to-find-root . "I can't figure out which text's root you want to see.\n")
+    (could-not-find-root . "Unable to identify the root text. The comment structure may be cyclic.\n")
     (confusion-what-to-find-root-review . "I can't figure out which tree you want to review.\n")
 
     ;; Help stuff
@@ -1782,7 +1783,7 @@ Number of sessions:  %21#1d (total)
     (recommending-conf . "Recommending %#1M%#2?b%[ (priority %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
     (has-recommended-conf . "%#1P has recommended conference %#2M. Do you want to become a member?\n")
     (accept-recommendation . "Join conference %#1M? ")
-    (accepting-recommendataion . "Joining recommended conference %#2M...")
+    (accepting-recommendation . "Joining recommended conference %#2M...")
 
     (redirect-for-whom . "Redirect comments for whom: ")
     (redirect-to-which-conf . "Redirect comments to: ")
@@ -2936,18 +2937,24 @@ Select whether to execute command or keyboard macro.")
     ;;
 
     (lyskom . "Configuration of LysKOM")
-    (lyskom-doc . "\\[lyskom-customize-save-and-quit] to save and quit,
+    (lyskom-doc . "\
+These commands work outside editable text fields.
+\\[lyskom-customize-save-and-quit] to save and quit,
 \\[lyskom-customize-save-and-quit] to save and quit,
 \\[lyskom-customize-save] to save without quitting,
 \\[lyskom-customize-quit] to quit without saving.
 \\[widget-forward] moves to the next setting
 \\[widget-button-press] changes the value
+Press C-h m for a complete list of commands.
 
 Documentation:  [?] Show documentation    [!] Hide documentation
 Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify
 
 If the box before the name of the setting is selected, the setting will
-be saved in the server. Otherwise it will be saved in your .emacs.")
+be saved in the server. Otherwise it will be saved in your .emacs.
+
+Click prompts with the middle mouse button to change values and bring 
+up menus.")
 
 
 

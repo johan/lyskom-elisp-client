@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.51 2003-04-06 20:23:15 byers Exp $
+;;;;; $Id: review.el,v 44.52 2003-06-01 18:10:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.51 2003-04-06 20:23:15 byers Exp $\n"))
+	      "$Id: review.el,v 44.52 2003-06-01 18:10:34 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1275,7 +1275,7 @@ all review-related functions."
             (r (unless kom-review-uses-cache
                  (cache-del-text-stat (car r)))
                (lyskom-view-text (car r)))
-            (t (signal 'lyskom-internal-error "Could not find root")))
+            (t (lyskom-insert-string 'could-not-find-root)))
       )
     )
    (t
@@ -1291,10 +1291,12 @@ This command accepts text number prefix arguments \(see
   (if text-no
       (let* ((ts (blocking-do 'get-text-stat text-no))
              (r (lyskom-find-root ts t)))
-        (lyskom-traverse text-no r
-          (lyskom-format-insert 'marking-text-unread text-no)
-          (lyskom-report-command-answer
-           (lyskom-mark-unread text-no))))
+        (if r
+            (lyskom-traverse text-no r
+              (lyskom-format-insert 'marking-text-unread text-no)
+              (lyskom-report-command-answer
+               (lyskom-mark-unread text-no)))
+          (lyskom-insert-string 'could-not-find-root)))
     (lyskom-insert-string 'confusion-what-to-unread-root)))
 
 
@@ -1323,7 +1325,7 @@ all review-related functions."
               (lyskom-get-string 'more-than-one-root-review) ts)
              (lyskom-review-tree (car start)))
             (start (lyskom-review-tree (car start)))
-            (t (signal 'lyskom-internal-error "Could not find root")))))
+            (t (lyskom-insert-string 'could-not-find-root)))))
    (t (lyskom-insert-string 'confusion-what-to-find-root-review))))
 
 (def-kom-command kom-unread-root-review (text-no)
@@ -1353,41 +1355,46 @@ If ALL is set, return a list of all root texts."
                (head nil)
                (misclist nil)
                (tmp nil)
+               (seen nil)
                (result nil))
            (while queue
              (setq head (car queue))
              (setq queue (cdr queue))
              (setq tmp nil)
-             
+
              ;;
              ;; For each parent, add it to the queue
              ;;
-               
+
              (setq misclist (text-stat->misc-info-list head))
              (while misclist
                (cond ((eq (misc-info->type (car misclist)) 'COMM-TO)
-                      (unless kom-review-uses-cache
-                        (cache-del-text-stat (misc-info->comm-to (car misclist))))
-                      (setq tmp
-                            (cons
-                             (blocking-do 'get-text-stat
-                                          (misc-info->comm-to (car misclist)))
-                             tmp)))
+                      (if (memq (misc-info->comm-to (car misclist)) seen)
+                          (setq tmp (cons t tmp))
+                        (unless kom-review-uses-cache
+                          (cache-del-text-stat (misc-info->comm-to (car misclist))))
+                        (setq seen (cons (misc-info->comm-to (car misclist)) seen)
+                              tmp (cons
+                                   (blocking-do 'get-text-stat
+                                                (misc-info->comm-to (car misclist)))
+                                   tmp))))
                      ((eq (misc-info->type (car misclist)) 'FOOTN-TO)
-                      (unless kom-review-uses-cache
-                        (cache-del-text-stat (misc-info->footn-to (car misclist))))
-                      (setq tmp 
-                            (cons
-                             (blocking-do 'get-text-stat
-                                          (misc-info->footn-to (car misclist)))
-                             tmp)))) 
+                      (if (memq (misc-info->footn-to (car misclist)) seen)
+                          (setq tmp (cons t tmp))
+                        (unless kom-review-uses-cache
+                          (cache-del-text-stat (misc-info->footn-to (car misclist))))
+                        (setq seen (cons (misc-info->footn-to (car misclist)) seen)
+                              tmp (cons
+                                   (blocking-do 'get-text-stat
+                                                (misc-info->footn-to (car misclist)))
+                                   tmp)))))
                (setq misclist (cdr misclist)))
 
-	     ;;
-	     ;; Remove unreadable texts
-	     ;;
+             ;;
+             ;; Remove unreadable texts
+             ;;
 
-	     (setq tmp (delq nil tmp))
+             (setq tmp (delq nil tmp))
 
              ;;
              ;; If no parents were found, this is is a top-level text
@@ -1395,9 +1402,16 @@ If ALL is set, return a list of all root texts."
 
              (when (null tmp)
                (setq result (cons head result))
-               (if (not all) (setq queue nil)))
+               (unless all (setq queue nil)))
+
+             ;;
+             ;; Remove "I visited this parent already" markers
+             ;;
+
+             (setq tmp (delq t tmp))
              (setq queue (nconc tmp queue)))
-           (if all (mapcar 'text-stat->text-no result)
+           (if all 
+               (mapcar 'text-stat->text-no result)
              (text-stat->text-no (car result)))))
         (t nil)))
 
