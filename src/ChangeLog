@@ -1,3 +1,27 @@
+1999-12-05  David Byers  <davby@ida.liu.se>
+
+	* Makefile (SOURCES): Added mship-edit.el.
+
+1999-12-04  David Byers  <davby@ida.liu.se>
+
+	* mship-edit.el (lp--maybe-update-entry-for-conf): New function.
+	(lp--compute-format-string): Properties on unreads.
+	(lp--maybe-update-unreads): New function.
+	(lp--update-buffer): Support adding and removing memberships.
+
+	* deferred-insert.el (lyskom-replace-deferred): Perform the
+	deferred insertion in the right buffer.
+
+	* view-text.el (lyskom-mark-as-read-callback): New function.
+	(lyskom-mark-as-read): Call it.
+
+1999-12-03  David Byers  <davby@ida.liu.se>
+
+	* flags.el: Removed commented kom-edit-options stuff.
+
+	* swedish-strings.el (lyskom-sv-mode-map): Fixed remaininig
+	bindings of swedish characters.
+
 1999-12-03  David Byers  <davby@sen2.ida.liu.se>
 
 	* swedish-strings.el, english-strings.el (lyskom-command): Removed
