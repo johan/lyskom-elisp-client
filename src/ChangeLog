@@ -1,4 +1,15 @@
+Fri Dec  3 11:54:28 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-D
+
 1999-12-03  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Use lyskom-string-rassoc to find KOMSERVER
+	in kom-server-aliases.
+	(lyskom-read-server-name): Use lyskom-string-assoc to find server
+	name.
+
+	* utilities.el (lyskom-string-rassoc): New function.
 
 	* option-edit.el (lyskom-customize-buffer-format): Added
 	kom-server-priority and kom-server-priority-breaks.

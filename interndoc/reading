@@ -21,30 +21,34 @@
 
     There are several different types of read-infos:
 
-    CONF        Read texts in a conference. The read-info contains the 
-                conf-stat of the conference, a list of texts to read
-                and some other stuff (I don't remember exactly what.)
+    CONF         Read texts in a conference. The read-info contains
+                 the conf-stat of the conference, a list of texts to
+                 read and some other stuff (I don't remember exactly
+                 what.) 
 
-    COMM-IN     Read a comment to some other text. The read-info
-                contains the conf-stat in which the text is being
-                read, the priority of that conference, a list of
-                comments to a text (that presumably has just been
-                read), the text that has comments, and some other
-                stuff.
+    COMM-IN      Read a comment to some other text. The read-info
+                 contains the conf-stat in which the text is being
+                 read, the priority of that conference, a list of
+                 comments to a text (that presumably has just been
+                 read), the text that has comments, and some other
+                 stuff.
 
-    FOOTN-IN    Read a footnote to some other text. The read-info is
-                essentially the same as a COMM-IN.
+    FOOTN-IN     Read a footnote to some other text. The read-info is
+                 essentially the same as a COMM-IN.
 
-    REVIEW      Review one of more texts. The read-info contains the
-                priority the reviewing has, the list of texts to
-                review and some other stuff.
+    REVIEW       Review one of more texts. The read-info contains the
+                 priority the reviewing has, the list of texts to
+                 review and some other stuff.
 
-    REVIEW-TREE Review a comment tree. This is more or less the same
-                as a COMM-IN, but is used for reviewing.
+    REVIEW-TREE  Review a comment tree. This is more or less the same
+                 as a COMM-IN, but is used for reviewing.
 
-    REVIEW-MARK Review one or more marked texts. The read-info
-                contains the priority, list of texts to review and
-                other stuff that I don't know off-hand.
+    REVIEW-MARK  Review one or more marked texts. The read-info
+                 contains the priority, list of texts to review and
+                 other stuff that I don't know off-hand.
+
+    RE-EDIT-TEXT Text creation failed. The misc field of the read-info
+                 contains the buffer used for editing the text. 
 
     Two of the things that every single read-info has is a priority
     and a list of texts. The priority is used to determine when a text
@@ -56,19 +60,20 @@
     use the two lists for is temporary read-infos. If you enter a
     read-info in lyskom-reading-list and not on lyskom-to-do-list, it
     will be removed if the user goes to another conference. This is
-    the case with COMM-IN and FOOTN-IN entries. They are never entered 
-    on lyskom-to-do-list, and when you go to a new conference they are 
-    simply dropped. 
+    currently the case with COMM-IN, FOOTN-IN and RE-EDIT-TEXT entries
+    (and in versions prior to 0.46 was also the case with all REVIEW
+    infos.) They are never entered on lyskom-to-do-list, and when you
+    go to a new conference they are simply dropped.
 
 |   Most of the time you don't want read-infos to be dropped.
 |   Therefore it is important to enter them on both lyskom-to-do-list
 |   and lyskom-reading-list. It is also important that you enter the
-|   same read-info on both lists, and not just identical copies. If
+|   SAME read-info on both lists, and not just identical copies. If
 |   you enter identical copies, users will end up reading everything
 |   at least twice.
 
     To enter a REVIEW, REVIEW-TREE or REVIEW-MARK read-info, use the
-    function lyskom-review-enter-read-info to enter the same read-info 
+    function lyskom-review-enter-read-info to enter the same read-info
     into both lists. It's fun to use, and easy too!
 
 
@@ -80,7 +85,9 @@
     A CONF on lyskom-reading-list will generate a read next text
     prompt. A REVIEW, REVIEW-TREE of REVIEW-MARK will generate the
     corresponding review text prompt. A COMM-IN will generate a read
-    next comment, and FOOTN-IN a read next footnote prompt.
+    next comment, and FOOTN-IN a read next footnote prompt. A
+    RE-EDIT-TEXT will prompt the user to edit a failed text
+    submission.
 
     A CONF on lyskom-to-do-list will generate a go to next conference
     prompt. A REVIEW, REVIEW-TREE or REVIEW-MARK will generate a
