@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.103 2002-02-09 20:31:24 ceder Exp $
+ ;;;;; $Id: commands2.el,v 44.104 2002-02-18 21:40:50 ceder Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.103 2002-02-09 20:31:24 ceder Exp $\n"))
+               "$Id: commands2.el,v 44.104 2002-02-18 21:40:50 ceder Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -2551,6 +2551,15 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
 
  ;;; Author: Per Cederqvist
 
+
+(defun lyskom-create-text-buffer (text-no text text-stat)
+  "Create and return a buffer containing TEXT."
+  (let ((buf (generate-new-buffer (format "%d" text-no))))
+    (set-buffer buf)
+    (insert (text->decoded-text-mass text text-stat))
+    (set-buffer-modified-p nil)
+    buf))
+
 (def-kom-command kom-compare-texts (old new)
   "Show differences between text OLD and NEW.
 When called interactively, it will prompt for the NEW text first,
@@ -2565,16 +2574,10 @@ to the first text that NEW is a comment or footnote to."
 		  (lyskom-error (lyskom-get-string 'no-such-text-no n))
 		(car (lyskom-text-stat-commented-texts new-stat))))))
      (list o n)))
-  (let* ((old-text (blocking-do 'get-text old))
-	 (old-text-stat (blocking-do 'get-text-stat old))
-	 (new-text (blocking-do 'get-text new))
-	 (new-text-stat (blocking-do 'get-text-stat new))
-	 (old-buf (generate-new-buffer (format "%d" old)))
-	 (new-buf (generate-new-buffer (format "%d" new))))
-    (set-buffer old-buf)
-    (insert (text->decoded-text-mass old-text old-text-stat))
-    (set-buffer-modified-p nil)
-    (set-buffer new-buf)
-    (insert (text->decoded-text-mass new-text new-text-stat))
-    (set-buffer-modified-p nil)
-    (ediff-buffers old-buf new-buf)))
+  (blocking-do-multiple ((old-text (get-text old))
+			 (new-text (get-text new))
+			 (old-text-stat (get-text-stat old))
+			 (new-text-stat (get-text-stat new)))
+    (ediff-buffers
+     (lyskom-create-text-buffer old old-text old-text-stat)
+     (lyskom-create-text-buffer new new-text new-text-stat))))

@@ -1,3 +1,9 @@
+2002-02-18  Per Cederqvist  <ceder@moria>
+
+	* commands2.el (lyskom-create-text-buffer): New helper function.
+	(kom-compare-texts): Use blocking-do-multiple for efficiency and
+	lyskom-create-text-buffer to simplify the code.
+
 2002-02-09  Per Cederqvist  <ceder@lysator.liu.se>
 
 	New command: "Compare two texts".
