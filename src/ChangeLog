@@ -1,3 +1,15 @@
+2000-03-03  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-w3-region): Save restriction, make start
+	and end markers so that simplifying the body tag won't screw
+	things up.
+
+	* startup.el (lyskom-www-proxy-connect-filter): Match HTTP/1.1
+	responses (and also 1.2 and 1.3 and so on.)
+	(lyskom): Send additional headers to HTTP proxy.
+
+	* vars.el.in (kom-www-proxy-headers): New variable.
+
 2000-02-26    <davby@ida.liu.se>
 
 	* option-edit.el (lyskom-ispell-dictionary-widget): Protect this

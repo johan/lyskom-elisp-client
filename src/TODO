@@ -3,6 +3,15 @@
 Att göra i elisp-klienten
 =========================
 
+* INTRESSANTA SAKER
+
+** Man vill kunna skicka user-agent och proxy-authorization till
+   HTTP-proxyn. Se specen för HTTP 1.1, kapitel 11 och RFC 2069.
+
+        ftp://ftp.isi.edu/in-notes/rfc2616.txt
+        ftp://ftp.isi.edu/in-notes/rfc261y.txt
+
+
 * SHOWSTOPPERS
 
 ** Martin, hade vissa problem med inställningarna. User-arean såg OK

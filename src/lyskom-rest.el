@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.97 2000-01-10 23:26:53 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.98 2000-03-03 15:01:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.97 2000-01-10 23:26:53 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.98 2000-03-03 15:01:29 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -823,22 +823,23 @@ The position lyskom-last-viewed will always remain visible."
 (defun lyskom-do-insert (string)
   (let ((start (point)))
     (insert string)
-    (let ((bounds (next-text-property-bounds 1 (max 1 (1- start))
-                                             'special-insert))
-          (next (make-marker))
-          (fn nil))
-      (while bounds
-        (set-marker next (cdr bounds))
-        (setq fn (get-text-property (car bounds) 'special-insert))
-        (remove-text-properties (car bounds) (cdr bounds)
-                                '(special-insert))
-        (condition-case val
-            (funcall fn (car bounds) (cdr bounds))
-          (error (apply 'message "%S" val)))
-        (setq start next)
-        (setq bounds (next-text-property-bounds 1 start
-                                                'special-insert))))
-    ))
+    (condition-case var
+        (let ((bounds (next-text-property-bounds 1 (max (point-min) (1- start))
+                                                 'special-insert))
+              (next (make-marker))
+              (fn nil))
+          (while bounds
+            (set-marker next (cdr bounds))
+            (setq fn (get-text-property (car bounds) 'special-insert))
+            (remove-text-properties (car bounds) (cdr bounds)
+                                    '(special-insert))
+            (condition-case val
+                (funcall fn (car bounds) (cdr bounds))
+              (error (apply 'message "%S" val)))
+            (setq start next)
+            (setq bounds (next-text-property-bounds 1 start
+                                                    'special-insert))))
+      (error nil))))
 
 
 
@@ -1683,18 +1684,21 @@ in lyskom-messages."
 (lyskom-external-function w3-finish-drawing)
 (defun lyskom-w3-region (start end)
   (unwind-protect
-    (condition-case nil
-      (progn
-        (narrow-to-region start end)
-        (when kom-w3-simplify-body
-          (save-excursion
-            (let ((case-fold-search t))
-              (goto-char start)
-              (while (re-search-forward "<body[^>]*>" end t)
-                (replace-match "<body>")))))
-        (w3-region start end)
-        (w3-finish-drawing)
-        (add-text-properties (point-min) (point-max) '(end-closed nil)))
+    (condition-case var
+      (save-restriction
+        (let ((buffer-read-only nil))
+          (setq start (set-marker (make-marker) start))
+          (setq end (set-marker (make-marker) end))
+          (narrow-to-region start end)
+          (when kom-w3-simplify-body
+            (save-excursion
+              (let ((case-fold-search t))
+                (goto-char start)
+                (while (re-search-forward "<body[^>]*>" end t)
+                  (replace-match "<body>")))))
+          (w3-region start end)
+          (w3-finish-drawing)
+          (add-text-properties (point-min) (point-max) '(end-closed nil))))
       (error nil))))
 
 
