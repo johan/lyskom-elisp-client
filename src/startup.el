@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 40.0 1996-03-26 08:32:09 byers Exp $
+;;;;; $Id: startup.el,v 40.1 1996-03-29 03:07:30 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 40.0 1996-03-26 08:32:09 byers Exp $\n"))
+	      "$Id: startup.el,v 40.1 1996-03-29 03:07:30 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -141,13 +141,7 @@ See lyskom-mode for details."
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."
   (if lyskom-debug-communications-to-buffer
-      (lyskom-debug-insert proc "-----> " output)
-;;;      (save-excursion
-;;;	(set-buffer
-;;;	 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
-;;;	(goto-char (point-max))
-;;;	(insert "\n" (format "%s" proc) "-----> " output))
-    )
+      (lyskom-debug-insert proc "-----> " output))
   (cond
    ((string-match "^LysKOM\n" output)
     (set-process-filter proc 'lyskom-filter))))
