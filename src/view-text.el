@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.6 1997-03-11 13:49:17 byers Exp $
+;;;;; $Id: view-text.el,v 44.7 1997-03-13 08:27:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.6 1997-03-11 13:49:17 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.7 1997-03-13 08:27:58 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -410,13 +410,11 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
                      (make-string (- 42 (length name)) ?-)
                    ""))
          (text (lyskom-format "/%[%#3@%#1P%]/%#2s"
-                              conf-stat
+                              (or conf-stat name)
                               dashes
                               (text-properties-at
                                (defer-info->pos defer-info)))))
-    (lyskom-replace-deferred
-     defer-info
-     text)))
+    (lyskom-replace-deferred defer-info text)))
 
 (defun lyskom-print-text (text-stat text mark-as-read text-no)
   "Print a text. The header must already be printed.
