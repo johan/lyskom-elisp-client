@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.155 2004-06-23 18:24:29 byers Exp $
+;;;;; $Id: utilities.el,v 44.156 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.155 2004-06-23 18:24:29 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.156 2004-06-26 13:32:32 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -701,8 +701,8 @@ non-negative integer and 0 means the given text-no."
 ;;; The main function
 
 (defun lyskom-tnpa-apply-strategy (strategies filter-spec constraint-spec)
-  (let ((filter-locl (car (cdr (memq ':filter strategies))))
-        (constraint-locl (car (cdr (memq ':constraint strategies)))))
+  (let ((filter-locl (car (cdr (memq :filter strategies))))
+        (constraint-locl (car (cdr (memq :constraint strategies)))))
     (lyskom-traverse strategy strategies
       (if (memq strategy '(:filter :constraint :save))
           (lyskom-traverse-break)
@@ -730,12 +730,12 @@ non-negative integer and 0 means the given text-no."
   (when (listp prompt) (setq prompt (car prompt)))
   (let* ((command (or command lyskom-current-command this-command))
          (command-spec (cdr (assq command kom-pick-text-no-strategy-alist)))
-         (refer-spec (car (cdr (memq ':refer command-spec))))
+         (refer-spec (car (cdr (memq :refer command-spec))))
          (default-spec (cdr (assq t kom-pick-text-no-strategy-alist)))
-         (filter-spec (car (cdr (or (memq ':filter command-spec)
-                                    (memq ':filter default-spec)))))
-         (constraint-spec (car (cdr (or (memq ':constraint command-spec)
-                                        (memq ':constraint default-spec)))))
+         (filter-spec (car (cdr (or (memq :filter command-spec)
+                                    (memq :filter default-spec)))))
+         (constraint-spec (car (cdr (or (memq :constraint command-spec)
+                                        (memq :constraint default-spec)))))
          (text nil))
 
     (if refer-spec
@@ -1895,7 +1895,7 @@ has the bug in that algorithm fixed)."
 Any whitespace and newlines in TEXT will be ignored."
   (save-match-data
     (let ((text (replace-in-string text "\\s-+" "")))
-      (or (string-match "^\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$" text)
+      (or (string-match "^\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\|rtsp:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$" text)
           (string-match "^\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]$"  text)))))
 
 
@@ -2276,5 +2276,416 @@ It ignores leading spaces and tabs."
       (setq name (format "lyskom-gensym: %d" lyskom-gensym-index)))
     (intern name)))
 
-
 (put 'lyskom-with-magic-minibuffer 'edebug-form-spec '(body))
+
+
+
+;;; ================================================================
+;;; List text summaries
+
+(defvar lyskom-list-text-summary-params)
+(defvar lyskom-list-text-summary-params-persistent)
+(defvar lyskom-list-text-summary-format)
+
+(defsubst lyskom-list-text-summary-get (sym)
+  (or (plist-get lyskom-list-text-summary-params sym)
+      (plist-get lyskom-list-text-summary-params-persistent sym)))
+
+(defsubst lyskom-list-text-summary-put (sym val &optional persistent)
+  (if persistent
+      (setq lyskom-list-text-summary-params-persistent
+            (plist-put lyskom-list-text-summary-params-persistent sym val))
+    (setq lyskom-list-text-summary-params
+          (plist-put lyskom-list-text-summary-params sym val))))
+
+(defun lyskom-max-mark-width ()
+  "Return the maximum width of the user's symbolic mark strings."
+  (apply 'max 3 (mapcar (function (lambda (x) (length (car x))))
+                        kom-symbolic-marks-alist)))
+
+(defun lyskom-max-text-no-width ()
+  "Ask the server about the maximum text number width."
+  (length (int-to-string (blocking-do 'find-previous-text-no
+                                      lyskom-max-int))))
+
+(defun lyskom-symbolic-mark-type-string (mark-no &optional strict)
+  "Return a symbolic name string for the mark-type of MARK.
+If optional argument STRICT is non-nil, return nil if there is no symbolic
+ name for the mark type."
+  (or (car-safe (rassoc mark-no kom-symbolic-marks-alist))
+      (and (not strict) (int-to-string mark-no))))
+
+
+
+
+
+(defvar lyskom-text-summary-fields
+  '((mark-type :width lyskom-max-mark-width
+               :prompt mark-type
+               :align left
+               :format "s"
+               :output (lambda (text-stat)
+                         (let ((mark (or (lyskom-list-text-summary-get :mark)
+                                         (cache-text-is-marked 
+                                          (text-stat->text-no text-stat)))))
+                           (if mark
+                               (lyskom-symbolic-mark-type-string (mark->mark-type mark))
+                             "")))
+               )
+
+    (mark-no :width 3
+             :prompt mark-no
+             :align left
+             :format "s"
+             :output (lambda (text-stat)
+                       (let ((mark (cache-text-is-marked 
+                                    (text-stat->text-no text-stat))))
+                         (if mark (int-to-string (mark->mark-type mark)) "")))
+               )
+
+    (comments  :width 2
+               :prompt Comments
+               :align right
+               :format "s"
+               :output (lambda (text-stat)
+                         (if (zerop (length (lyskom-text-comments text-stat)))
+                             ""
+                           (int-to-string
+                            (length (lyskom-text-comments text-stat)))))
+               )
+
+    (mark-count :width 2
+                :prompt Num-marks
+                :align right
+                :format "s"
+                :output (lambda (text-stat)
+                          (if (zerop (text-stat->no-of-marks text-stat))
+                              ""
+                            (int-to-string (text-stat->no-of-marks text-stat))))
+                )
+
+    (text-no   :width lyskom-max-text-no-width
+               :prompt Texts
+               :align left
+               :format "n"
+               :output (lambda (text-stat) (text-stat->text-no text-stat)))
+
+    (written   :width (lambda ()
+                        (max (length (lyskom-format-time 'time))
+                             (length (lyskom-format-time
+                                      'timeformat-yyyy-mm-dd))))
+               :prompt Written
+               :align left
+               :format "s"
+               :output (lambda (text-stat)
+                         (let ((now (lyskom-current-server-time))
+                               (time (or (lyskom-mx-date-to-time
+                                          (car (lyskom-get-aux-item 
+                                                (text-stat->aux-items text-stat) 21)))
+                                         (text-stat->creation-time text-stat))))
+                           (if (and (= (time->year now) (time->year time))
+                                    (= (time->mon now) (time->mon time))
+                                    (= (time->mday now) (time->mday time)))
+                               (lyskom-format-time 'time time)
+                             (lyskom-format-time 'timeformat-yyyy-mm-dd 
+                                                 time))))
+               )
+
+    (lines     :width 5
+               :prompt Lines
+               :align right
+               :align left
+               :format "d"
+               :output (lambda (text-stat)
+                         (text-stat->no-of-lines text-stat))
+               )
+
+    (author    :width nil
+               :weight 50.0
+               :prompt Author
+               :align left
+               :format "P"
+               :output (lambda (text-stat)
+                         (let ((mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
+                               (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16))))
+                           (if (or mx-from mx-author)
+                               (lyskom-format-mx-author mx-from mx-author)
+                             (text-stat->author text-stat))))
+               )
+
+    (subject   :width nil
+               :weight 100.0
+               :prompt Subject
+               :align left
+               :format "s"
+               :output (lambda (text-stat)
+                         (lyskom-list-text-summary-subject text-stat))
+               )
+    )
+  "Specification of fields that can be included in text summary lists.
+
+Each element is a cons (KEY . PLIST), where KEY is the name of the 
+field type (arbitrary symbol). and PLIST is a property list, which 
+may include the following properties:
+
+    :width      Witdh of the field. Function, number or nil.
+    :weight     Weight for dynamically sized field. Floating point.
+    :prompt     Heading for the column. Symbol.
+    :align      Alignment of the column. Either left or right.
+    :format     Format code for the column. For lyskom-format.
+    :output     Function that outputs the column.
+
+If width is nil, the field is dynamically sized. All dynamically sized
+fields share the available width, according to their respective weights.
+Columns will always be at least as wide as the column heading.
+
+Note that weight must be a floating-point number, or the arithmetic
+used to comput dynamic columns will not work. The weight is only used
+for dynamic columns."
+  )
+
+
+(defun lyskom-list-text-summary-subject (text-stat)
+  "Handle subject field for a text summary listing."
+  (let* ((mode (lyskom-list-text-summary-get :subject-mode))
+         (indent (lyskom-list-text-summary-get :subject-indent))
+         (text (lyskom-list-text-summary-get :text))
+         (txt (text->decoded-text-mass text text-stat))
+         (eos (and txt (string-match (regexp-quote "\n") txt)))
+         (subject (if eos (substring txt 0 eos) "")))
+
+    (cond ((eq mode 'unique)
+           (if (lyskom-string-member 
+                subject (lyskom-list-text-summary-get :subjects))
+               (throw 'lyskom-list-text-summary-abort t)
+             (lyskom-list-text-summary-put
+              :subjects (cons subject (lyskom-list-text-summary-get :subjects))
+              t)))
+
+          ((eq mode 'thread)
+           (when (and (not (eq indent 0))
+                      (string-equal (lyskom-list-text-summary-get :subject-last)
+                                    subject))
+             (setq subject ""))))
+
+    (unless (string-equal "" subject)
+      (lyskom-list-text-summary-put :subject-last subject t))
+
+    (lyskom-format "%#1@%#2r"
+                   (lyskom-default-button 'text (text-stat->text-no text-stat))
+                   (concat (cond ((not indent) "")
+                                 ((>= indent 10)
+                                  (format ">>>[%d]>>>" indent))
+                                 (t (make-string indent ?\>)))
+                           subject))
+
+    ))
+
+
+;; Sub-optimal (i.e. too much code) implementation for the sake of
+;; clarity. It is possible to implement this with far less computation
+;; and fewer variables, but the code tends to be harder to understand.
+
+(defun lyskom-summary-line-format-string (spec)
+  "Return header and format string for text summary lines.
+SPEC is the specification for the line. It is a list of symbols
+that must exist as keys in lyskom-text-summary-fields and strings,
+which must be valid for lyskom-format (i.e. with percent signs
+doubled.
+
+Returns a cons of the header string and a format string for the
+"
+  (let ((total-field-width 0)
+        (field-width-list nil)
+        (dynamic-width nil)
+        (dynamic-weight 0))
+
+    ;; Compute dynamic widths
+
+    (lyskom-traverse el spec
+      (if (stringp el)
+          (setq total-field-width (+ total-field-width 
+                                     (lyskom-string-width el)))
+        (let* ((field-spec (cdr (assq el lyskom-text-summary-fields)))
+               (prompt (plist-get field-spec :prompt))
+               (dw (plist-get field-spec :weight))
+               (w1 (plist-get field-spec :width))
+               (w2 (cond ((functionp w1) (funcall w1))
+                         ((numberp w1) w1)
+                         ((null w1) nil))))
+          (if (null w2)
+              (setq dynamic-weight (+ dynamic-weight dw))
+            (setq w2 (max w2 (if prompt (lyskom-string-width (lyskom-get-string prompt)) 0)))
+            (setq total-field-width (+ total-field-width w2)))
+          (setq field-width-list (cons w2 field-width-list)))))
+
+    (setq dynamic-width (- (1- (window-width)) total-field-width)
+          field-width-list (nreverse field-width-list))
+
+    ;; Now dynamic-width contains the total width allocated to dynamically
+    ;; sized fields. We will calculate the individual field widths like 
+    ;; this:
+    ;;
+    ;; field-width := floor(dynamic-width / num-dynamic-fields)
+    ;; dynamic-width := dynamic-width - field-width
+    ;; num-dynamic-fields := num-dynamic-fields - 1
+    ;;
+    ;; This spreads the available space as equally as possible and 
+    ;; eliminates any possibility of round-off errors since everything
+    ;; can be implemented using integer arithmetic.
+
+    (let ((field-no 0)
+          (format-string "")
+          (header-string ""))
+      (lyskom-traverse el spec
+        (if (stringp el)
+            (setq format-string (concat format-string el)
+                  header-string (concat header-string (lyskom-format el)))
+          (let* ((field-spec (cdr (assq el lyskom-text-summary-fields)))
+                 (prompt (plist-get field-spec :prompt))
+                 (width (car field-width-list)))
+
+            (unless width
+              (let* ((dw (plist-get field-spec :weight))
+                     (frac (floor (* dynamic-width (/ dw dynamic-weight)))))
+                (setq width (max (if prompt
+                                     (lyskom-string-width
+                                      (lyskom-get-string prompt))
+                                   0)
+                                 frac))
+                (setq dynamic-width (- dynamic-width width))
+                (setq dynamic-weight (- dynamic-weight dw))))
+
+            (setq field-no (1+ field-no)
+                  format-string
+                  (concat format-string
+                          (format "%%%s%s%d#%d%s"
+                                  (if (null (car field-width-list)) "=" "")
+                                  (if (eq (plist-get field-spec :align) 'left)
+                                      "-" "")
+                                  width 
+                                  field-no
+                                  (plist-get field-spec :format)))
+                  header-string 
+                  (concat header-string
+                          (lyskom-format
+                           (format "%%%s%d#1s"
+                                   (if (eq (plist-get field-spec :align) 'left)
+                                       "-" "")
+                                   width)
+                           (if prompt (lyskom-get-string prompt) "")))
+                  field-width-list (cdr field-width-list)
+                  ))))
+      (cons header-string format-string))))
+
+
+
+(defun lyskom-list-text-summary-print (spec &rest args)
+  (setq lyskom-list-text-summary-params args)
+
+  (if (or (null (lyskom-list-text-summary-get :text-stat))
+          (null (lyskom-list-text-summary-get :text)))
+      (lyskom-format-insert 'could-not-read 
+                            (lyskom-list-text-summary-get :text-no))
+
+    (catch 'lyskom-list-text-summary-abort
+      (apply 'lyskom-format-insert
+             lyskom-list-text-summary-format
+             (delq 'CONSTANT-STRING
+                   (mapcar (lambda (el)
+                             (if (stringp el) 'CONSTANT-STRING
+                               (let* ((field-spec (cdr (assq el lyskom-text-summary-fields)))
+                                      (output (plist-get field-spec :output)))
+                                 (funcall output (lyskom-list-text-summary-get :text-stat)))))
+                           spec)))
+      (lyskom-insert "\n"))
+    ))
+
+
+(defun lyskom-list-text-summary (text-list spec &rest args)
+  "List a summary of texts in TEXT-LIST according to SPEC.
+TEXT-LIST is a list of text numbers or marks. SPEC is a list
+of symbols and constant strings. The symbols must be keys in
+lyskom-text-summary-fields.
+
+Args is a list of keywords, some of which may have arguments
+
+    :unique           Only print the first text with a specific subject
+    :comment-order    Print texts in comment order, with indented subjects
+    :filter FN        Filter function (see below)
+    :filter-args ARGS Filter arguments (see below).
+
+The filter function is applied to each element of text-list. It is passed
+the text-list element as its first argument, and elements of :filter-args
+as its remaining arguments. The text will be listed only if the filter
+function returns non-nil."
+
+  (setq spec (or spec 
+                 '(text-no " " written " " lines " " 
+                           comments " " author " " subject)))
+
+  (let* ((text-no nil)
+         (indent 0)
+         (comment-order nil)
+         (filter-function nil)
+         (filter-args nil)
+         (lyskom-list-text-summary-tmp (lyskom-summary-line-format-string spec))
+         (lyskom-list-text-summary-params nil)
+         (lyskom-list-text-summary-params-persistent nil)
+         (lyskom-list-text-summary-format (cdr lyskom-list-text-summary-tmp)))
+
+    (lyskom-list-text-summary-put :subject-mode nil t)
+
+    (while args
+      (cond ((eq (car args) :unique)
+             (lyskom-list-text-summary-put :subject-mode 'unique t))
+            ((eq (car args) :comment-order)  
+             (setq comment-order t)
+             (lyskom-list-text-summary-put :subject-mode 'thread t))
+            ((eq (car args) :filter)
+             (setq filter-function (car (cdr args))
+                   args (cdr args)))
+            ((eq (car args) :filter-args)
+             (setq filter-args (car (cdr args))
+                   args (cdr args))))
+      (setq args (cdr args)))
+
+    (lyskom-insert (car lyskom-list-text-summary-tmp))
+    (lyskom-insert "\n")
+
+    (lyskom-list-text-summary-put :subject-indent 0)
+
+    (while text-list
+      (setq text-no (car text-list) text-list (cdr text-list))
+
+      (when (or (null filter-function)
+                (apply filter-function text-no filter-args))
+
+        (cond 
+         ((eq text-no 'in) (setq indent (1+ indent)))
+         ((eq text-no 'out) (setq indent (1- indent)))
+         (t (let (text text-stat mark)
+              (cond ((lyskom-mark-p text-no) 
+                     (setq mark text-no text-no (mark->text-no text-no)))
+                    ((numberp text-no)))
+
+              (blocking-do-multiple ((text-stat (get-text-stat text-no))
+                                     (text (get-text text-no)))
+              (lyskom-list-text-summary-print spec
+                                              :text-no text-no
+                                              :text-stat text-stat
+                                              :text text
+                                              :mark mark
+                                              :subject-indent indent)
+              (sit-for 0)
+
+              (when comment-order
+                (let ((comments (lyskom-text-comments text-stat)))
+                  (setq text-list (cons 'out text-list))
+                  (lyskom-traverse comment-no (nreverse comments)
+                    (when (memq comment-no text-list)
+                      (setq text-list (cons comment-no 
+                                            (delq comment-no text-list)))))
+                  (setq text-list (cons 'in text-list))))))
+            ))))))
+

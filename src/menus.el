@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.32 2004-04-13 14:39:51 jhs Exp $
+;;;;; $Id: menus.el,v 44.33 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.32 2004-04-13 14:39:51 jhs Exp $\n"))
+	      "$Id: menus.el,v 44.33 2004-06-26 13:32:32 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -342,6 +342,28 @@
 
 (defvar lyskom-popup-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
+
+;;; ================================================================
+;;; Hack for swedish bindings and shortcuts
+
+(defvar lyskom-swedish-bindings 
+  `((å . (aring Aring ,(elt (kbd "å") 0) ,(elt (kbd "Å") 0)
+                   å Å 229 197 2277 2245 3909 3941))
+    (ä . (adiaeresis Adiaeresis ,(elt (kbd "ä") 0) ,(elt (kbd "Ä") 0)
+                        ä Ä 228 196 2276 2244 3908 3940)))
+  "Hack to deal with binding swedish characters")
+
+(defvar lyskom-swedish-bindings-reverse
+  (let ((tmp nil)
+        (seq lyskom-swedish-bindings))
+    (while seq
+      (let ((el (car seq)))
+        (setq tmp (nconc tmp (mapcar (lambda (x)
+                                       (cons x (car el)))
+                                     (cdr el)))))
+      (setq seq (cdr seq)))
+    tmp)
+  "Hack to deal with binding swedish characters")
 
 (defun lyskom-menu-guess-shortcuts (keymap &optional prefix result force)
   (lyskom-traverse-keymap

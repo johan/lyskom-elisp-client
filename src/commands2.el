@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.206 2004-06-23 18:24:29 byers Exp $
+;;;;; $Id: commands2.el,v 44.207 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.206 2004-06-23 18:24:29 byers Exp $\n"))
+              "$Id: commands2.el,v 44.207 2004-06-26 13:32:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1112,189 +1112,11 @@ the text on one line."
         (setq r (1+ r))))
     (setq read-info (read-list->nth read-list r))
     (when read-info
-      (lyskom-do-list-summary
-       (text-list->texts (read-info->text-list read-info))
-       unique))
-    ))
+      (lyskom-list-text-summary 
+        (text-list->texts (read-info->text-list read-info))
+        '(text-no " " written " " lines " " comments " " author " " subject)
+        (if unique :unique :comment-order)))))
 
-(defun lyskom-do-list-summary (texts &optional unique)
-  "List a summary of the texts in TEXTS.
-The summary contains the date, number of lines, author and subject of the text
-on one line."
-  (let ((time (lyskom-current-server-time))
-        (texts (copy-sequence texts))
-        (indent 0)
-        (unique-subjects nil))
-
-    ;; The header.
-    (lyskom-format-insert (lyskom-construct-summary-format-string t nil t)
-                          (lyskom-get-string 'Texts)
-                          (lyskom-get-string 'Written)
-                          (lyskom-get-string 'Lines)
-                          (lyskom-get-string 'Author)
-                          (lyskom-get-string 'Subject)
-                          nil
-                          (lyskom-get-string 'Comments))
-
-    ;; The summary lines.
-    (let ((text-no nil)
-          (last-subject ""))
-      (while texts
-        (setq text-no (car texts) texts (cdr texts))
-        (cond 
-         ((eq text-no 'in) (setq indent (1+ indent)))
-         ((eq text-no 'out) (setq indent (1- indent)))
-         (t (blocking-do-multiple ((text-stat (get-text-stat text-no))
-                                   (text (get-text text-no)))
-              (let* ((txt (text->decoded-text-mass text text-stat))
-                     (eos (and txt (string-match (regexp-quote "\n") txt)))
-                     (subject (and eos (substring txt 0 eos))))
-                (when (or (not unique)
-                          (and (not (lyskom-string-member subject unique-subjects))
-                               (setq unique-subjects (cons subject unique-subjects))))
-                  (lyskom-print-summary-line 
-                   (lyskom-construct-summary-format-string nil nil t)
-                   text-stat
-                   (if (and (> indent 0) (string-equal subject last-subject))
-                       ""
-                     subject)
-                   text-no
-                   (time->year time)
-                   (time->mon time)
-                   (time->mday time)
-                   indent))
-                (setq last-subject subject)
-                (let ((comments (lyskom-text-comments text-stat)))
-                  (setq texts (cons 'out texts))
-                  (lyskom-traverse comment-no (nreverse comments)
-                    (when (memq comment-no texts)
-                      (setq texts (cons comment-no (delq comment-no texts)))))
-                  (setq texts (cons 'in texts)))))
-            (sit-for 0)))))))
-
-
-(defun lyskom-print-summary-line (format-string text-stat subject text-no year mon mday indent)
-  "Handle the info, fetch the author and print it.
-
-The year, mon and mday are there to be able to choose format on the
-day.  Format is HH:MM(:SS) if the text is written today, otherwise
-YYYY-MM-DD."
-  (if (null text-stat)	;+++ B{ttre felhantering.
-      (lyskom-format-insert 'could-not-read text-no)
-    (let* ((lines (text-stat->no-of-lines text-stat))
-           (mx-date (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 21)))
-           (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
-           (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16)))
-           (time (or (lyskom-mx-date-to-time mx-date)
-                     (text-stat->creation-time text-stat)))
-           (time (if (and (= year (time->year time))
-                          (= mon (time->mon time))
-                          (= mday (time->mday time)))
-                     (lyskom-format-time 'time time)
-                   (lyskom-format-time 'timeformat-yyyy-mm-dd time))))
-      (lyskom-format-insert format-string
-                            text-no
-                            time
-                            lines
-                            (if (or mx-from mx-author)
-                                (lyskom-format-mx-author mx-from mx-author)
-                              (text-stat->author text-stat))
-                            (lyskom-default-button 'text text-no)
-                            (concat 
-                             (if (>= indent 10)
-                                 (format ">>>[%d]>>>" indent)
-                               (make-string indent ?\>))
-                             subject)
-                            (length (lyskom-text-comments text-stat))))))
-
-
-(defun lyskom-max-text-no-width ()
-  "Ask the server about the maximum text number width."
-  (length (int-to-string (blocking-do 'find-previous-text-no
-                                      lyskom-max-int))))
-
-
-(defun lyskom-construct-summary-format-string (header 
-                                               include-mark-field 
-                                               &optional include-comments-field)
-  "Returns a format string suitable for printing text summaries.  If
-HEADER is non-nil, a header format string is contructed, otherwise a
-format string for a summary row.  If (and only if) INCLUDE-MARK-FIELD
-is non-nil, a field where the mark string can be put will be
-included."
-  (let* ((mark-field-width (when include-mark-field
-                             (max (length (lyskom-get-string 'mark-type))
-                                  (lyskom-max-mark-width))))
-         (comments-field-width (when include-comments-field 2))
-         (text-no-width (lyskom-max-text-no-width))
-         (text-no-field-width (max (length (lyskom-get-string 'Texts))
-                                   text-no-width))
-         (written-field-width (max (length (lyskom-get-string 'Written))
-                                   (length (lyskom-format-time 'time))
-                                   (length (lyskom-format-time
-                                            'timeformat-yyyy-mm-dd))))
-         (lines-field-width (max (length (lyskom-get-string 'Lines))
-                                 5))
-         (author-and-subject-fields-width
-          (max (+ (length (lyskom-get-string 'Author))
-                  1
-                  (length (lyskom-get-string 'Subject)))
-               (- (lyskom-window-width)
-                  (+ (if include-mark-field (1+ mark-field-width) 0)
-                     (if include-comments-field (1+ comments-field-width) 0)
-                     text-no-field-width
-                     1
-                     written-field-width
-                     1
-                     lines-field-width
-                     1)
-                  1)))
-         (author-field-width (max (length (lyskom-get-string 'Author))
-                                  (/ author-and-subject-fields-width 3)))
-         (subject-field-width (- author-and-subject-fields-width
-                                 author-field-width
-                                 1)))
-    (if header
-        (concat (if include-mark-field
-                    (concat "%-" (int-to-string mark-field-width) "#6s"
-                            " ")
-                  "")
-                "%-" (int-to-string text-no-field-width) "#1s"
-                " "
-                "%-" (int-to-string written-field-width) "#2s"
-                " "
-                "%-" (int-to-string lines-field-width) "#3s"
-                " "
-                (if include-comments-field
-                    (concat "%-" (int-to-string comments-field-width) "#7s"
-                            " ")
-                  "")
-                "%-" (int-to-string author-field-width) "#4s"
-                " "
-                "%#5s"
-                "\n")
-      (concat (if include-mark-field
-                  (concat "%-" (int-to-string mark-field-width) "#7s"
-                          " ")
-                "")
-              "%-" (int-to-string text-no-field-width) "#1n"
-              " "
-              "%-" (int-to-string written-field-width) "#2s"
-              " "
-              "%" (int-to-string lines-field-width) "#3d"
-              " "
-              (if include-comments-field
-                  (concat "%#7?z%[%"
-                          (int-to-string comments-field-width)
-                          "#7d%]%[" 
-                          (make-string comments-field-width ?\ )
-                          "%]"
-                          " ")
-                "")
-              "%=-" (int-to-string (1- author-field-width)) "#4P"
-              "  "
-              "%[%#5@%=-" (int-to-string subject-field-width) "#6r%]"
-              "\n"))))
 
 ;;; ============================================================
 ;;; kom-list-marks                      Lista markeringar
@@ -1311,76 +1133,19 @@ will be prompted for the mark."
     (setq which-mark (lyskom-read-mark-type
                       (lyskom-get-string 'list-which-mark)
                       t)))
-  (let ((marks
-         (sort (listify-vector (blocking-do 'get-marks))
-               (lambda (a b) (< (mark->mark-type a) (mark->mark-type b)))))
-        (time (lyskom-current-server-time)))
 
-    ;; Start fetching all text-stats and text to list them.
-    (lyskom-format-insert (lyskom-construct-summary-format-string t t)
-                          (lyskom-get-string 'Texts)
-                          (lyskom-get-string 'Written)
-                          (lyskom-get-string 'Lines)
-                          (lyskom-get-string 'Author)
-                          (lyskom-get-string 'Subject)
-                          (lyskom-get-string 'mark-type))
-    (lyskom-traverse
-        mark marks
-      (when (or (null which-mark)
-                (eq (mark->mark-type mark) which-mark))
-        (let* ((text-no (mark->text-no mark))
-               (text-stat (blocking-do 'get-text-stat text-no))
-               (text (blocking-do 'get-text text-no))
-            ;; We could do som optimization here. 
-            ;; We really don't need the whole text.
-            )
-          (lyskom-print-mark-summary-line (lyskom-construct-summary-format-string nil t)
-                                          mark text-stat text text-no 
-                                          (time->year time) (time->yday time))
-          (sit-for 0))))
-    ))
+  ;; Start fetching all text-stats and text to list them.
 
-(defun lyskom-print-mark-summary-line (format-string mark text-stat text text-no year day)
-  "Handle the info, fetch the author and print it.
-Args: FORMAT-STRING TEXT-STAT TEXT TEXT-NO YEAR DAY.
+  (lyskom-list-text-summary
+    (sort (listify-vector (blocking-do 'get-marks))
+          (lambda (a b) (< (mark->mark-type a)
+                           (mark->mark-type b))))
+    '(mark-type " " text-no " " written " " lines " " mark-count " " author " " subject)
+    :filter (lambda (mark which-mark)
+              (or (null which-mark)
+                  (eq (mark->mark-type mark) which-mark)))
+    :filter-args (list which-mark)))
 
-The year and day is there to be able to choose format on the day.
-Format is HH:MM(:SS) if the text is written today, otherwise
-YYYY-MM-DD."
-  (if (not (and text-stat text))	;+++ B{ttre felhantering.
-      (lyskom-format-insert 'could-not-read text-no)
-    (let* ((lines (text-stat->no-of-lines text-stat))
-           (txt (text->decoded-text-mass text text-stat))
-           (eos (string-match (regexp-quote "\n") txt))
-           (subject (substring txt 0 eos))
-           (time (text-stat->creation-time text-stat))
-           (time (if (and (= year (time->year time))
-                          (= day (time->yday time)))
-                     (lyskom-format-time 'time time)
-                   (lyskom-format-time 'timeformat-yyyy-mm-dd time))))
-      (lyskom-format-insert format-string
-                            text-no
-                            time
-                            lines
-                            (text-stat->author text-stat)
-                            (lyskom-default-button 'text
-                                                   text-no)
-                            subject
-                            (mark->symbolic-mark-type mark)))))
-
-(defun lyskom-symbolic-mark-type-string (mark-no &optional strict)
-  "Return a symbolic name string for the mark-type of MARK.
-If optional argument STRICT is non-nil, return nil if there is no symbolic
- name for the mark type."
-  (or (car-safe (rassoc mark-no kom-symbolic-marks-alist))
-      (and (not strict) (int-to-string mark-no))))
-
-(defun lyskom-max-mark-width ()
-  "Return the maximum width of the user's symbolic mark strings."
-  (max 3
-       (apply 'max
-              (mapcar (function (lambda (x) (length (car x))))
-                      kom-symbolic-marks-alist))))
 
 ;;; ============================================================
 ;;;     kom-who-am-i - Vem är jag

@@ -1,3 +1,50 @@
+2004-06-26  David Byers  <byers@lysator.liu.se>
+
+	Fix Emacs 19.34 compatibility problems:
+	* compatibility.el (map-keymap): Bug fix-
+
+	* menus.el (lyskom-swedish-bindings): Moved here from vars.el.in
+	to make Emacs 19.34 work again.
+	(lyskom-swedish-bindings-reverse): Ditto.
+
+2004-06-25  David Byers  <byers@lysator.liu.se>
+
+	New abstraction for listing texts:
+	* faqs.el (lyskom-present-unread-faqs): Implement using new
+	functions.
+	(lyskom-do-list-faqs): Ditto.
+
+	* commands2.el (lyskom-do-list-summary): Removed. Not used.
+	(lyskom-list-summary): Implement using new functions.
+	(lyskom-print-summary-line): Not used any more. Removed.
+	(lyskom-construct-summary-format-string): Ditto.
+
+	* utilities.el (lyskom-max-text-no-width): Moved here from
+	commands2.el.
+	(lyskom-symbolic-mark-type-string): Ditto.
+	(lyskom-max-text-no-width): Ditto.
+
+	* commands2.el (kom-list-marks): Implement using
+	lyskom-list-text-summary. Show number of marks for each text.
+	(lyskom-print-mark-summary-line): No longer used. Removed.
+	(lyskom-max-mark-width): Cleaned up this code a little.
+
+	* utilities.el (lyskom-list-text-summary-get): New support function.
+	(lyskom-list-text-summary-put): Ditto.
+	(lyskom-text-summary-fields): New variable.
+	(lyskom-list-text-summary-subject): New support function.
+	(lyskom-summary-line-format-string): Ditto.
+	(lyskom-list-text-summary-print): Ditto.
+	(lyskom-list-text-summary): Generic function for printing lists of
+	texts. Incorporates support for all features in older text list
+	functions.
+
+2004-06-24  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1362:
+	* parse.el (lyskom-parse-float): Relaxed the regexp matching
+	floats to avoid terminating the parse too early.
+
 2004-06-23  David Byers  <byers@lysator.liu.se>
 
 	Make kom-join-all-conferences more responsive:

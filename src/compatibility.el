@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.68 2004-01-01 22:01:38 byers Exp $
+;;;;; $Id: compatibility.el,v 44.69 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.68 2004-01-01 22:01:38 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.69 2004-06-26 13:32:32 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -149,15 +149,15 @@ KEYS should be a string in the format used for saving keyboard macros
 ;; except that the sort-first argument is ignored.
 
 (lyskom-function-alias map-keymap (fn keymap &optional sort-first)
+  "Map FN over all bindings in KEYMAP."
   (let ((r 0))
     (when (keymapp keymap)
       (when (symbolp keymap) (setq keymap (symbol-value keymap)))
       (let ((keymap (cdr keymap))
             (el nil))
         (while (and keymap (not (keymapp keymap)))
-          (setq el (car keymap)
-                keymap (cdr keymap))
-          (cond ((vectorp keymap)
+          (setq el (car keymap) keymap (cdr keymap))
+          (cond ((vectorp el)
                  (while (< r (length el))
                    (if (aref el r)
                        (funcall fn r (aref el r)))
@@ -564,7 +564,32 @@ Otherwise treat \\ in NEWTEXT string as special:
   (lyskom-make-self-evaluating :default-help-echo)
   (lyskom-make-self-evaluating :group)
   (lyskom-make-self-evaluating :automatic)
-  (lyskom-make-self-evaluating :read-only))
+  (lyskom-make-self-evaluating :read-only)
+  (lyskom-make-self-evaluating :filter)
+  (lyskom-make-self-evaluating :filter-args)
+  (lyskom-make-self-evaluating :constraint)
+  (lyskom-make-self-evaluating :save)
+  (lyskom-make-self-evaluating :refer)
+  (lyskom-make-self-evaluating :width)
+  (lyskom-make-self-evaluating :prompt)
+  (lyskom-make-self-evaluating :align)
+  (lyskom-make-self-evaluating :format)
+  (lyskom-make-self-evaluating :output)
+  (lyskom-make-self-evaluating :subject-mode)
+  (lyskom-make-self-evaluating :subject-indent)
+  (lyskom-make-self-evaluating :text)
+  (lyskom-make-self-evaluating :text-stat)
+  (lyskom-make-self-evaluating :text-no)
+  (lyskom-make-self-evaluating :subjects)
+  (lyskom-make-self-evaluating :subject-last)
+  (lyskom-make-self-evaluating :comment-order)
+  (lyskom-make-self-evaluating :unique)
+  (lyskom-make-self-evaluating :weight)
+  (lyskom-make-self-evaluating :prompt-format)
+  (lyskom-make-self-evaluating :dead-ok)
+  (lyskom-make-self-evaluating :mark)
+  (lyskom-make-self-evaluating :may-interrupt)
+)
 
 
 ;;; ================================================================

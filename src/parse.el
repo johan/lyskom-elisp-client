@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.58 2004-02-29 18:02:20 byers Exp $
+;;;;; $Id: parse.el,v 44.59 2004-06-26 13:32:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.58 2004-02-29 18:02:20 byers Exp $\n"))
+	      "$Id: parse.el,v 44.59 2004-06-26 13:32:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -134,7 +134,7 @@ Signal lyskom-protocol-error if the next token is not a number."
 Signal lyskom-parse-incomplete if the number is not followed by whitespace.
 Signal lyskom-protocol-error if the next token is not a number."
   (goto-char lyskom-parse-pos)
-  (cond ((looking-at "[ \n]*[-+]?[0-9]*\\(\\.[0-9]*\\)?\\([eE][-+]?[0-9]+\\)?")
+  (cond ((looking-at "[ \n]*[-+]?[0-9]*\\(\\.\\([0-9]*\\([eE]\\([-+]?[0-9]*\\)?\\)?\\)?\\)?")
          (if (char-after (match-end 0))
              (progn (setq lyskom-parse-pos (goto-char (match-end 0)))
                     (string-to-number (match-string 0)))
