@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.14 1999-08-09 15:15:21 byers Exp $
+;;;;; $Id: aux-items.el,v 44.15 1999-08-21 22:07:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.14 1999-08-09 15:15:21 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.15 1999-08-21 22:07:35 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -95,6 +95,17 @@
 
 (defun lyskom-find-aux-item-definition (aux)
   (assq (aux-item->tag aux) lyskom-aux-item-definitions))
+
+(defun lyskom-match-aux-items (item-list predicate)
+  "Return a list of all aux-items in ITEM-LIST that match PREDICATE.
+PREDICATE should receives a single aux-item as its argument and should
+return non-nil if the item is to be included in the list."
+  (let ((result nil))
+    (while item-list
+      (when (funcall predicate (car item-list))
+        (setq result (cons (car item-list) result)))
+      (setq item-list (cdr item-list)))
+    (nreverse result)))
 
 (defun lyskom-aux-item-terminating-button (item obj)
   (if obj

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.71 1999-08-18 20:24:08 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.72 1999-08-21 22:07:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.71 1999-08-18 20:24:08 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.72 1999-08-21 22:07:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1321,6 +1321,19 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (invitation-mt-type . "inbjuden")
     (passive-mt-type . "passiv")
     (secret-mt-type . "hemlig")
+
+    (not-author-try-anyway-p . "Du är inte författare till inlägget. Vill du försöka ändå? ")
+    (what-no-comments-no . "Vilken text vill du inte ha kommentarer till: ")
+    (adding-no-comments . "Begär att inte få kommentarer till inlägg %#1n...")
+    (already-no-comments . "Inlägg %#1n har redan begäran om inga kommentarer.\n")
+
+    (what-private-answer-no . "Vilken text vill du ha personligt svar till: ")
+    (adding-private-answer . "Begär att endast få personligt svar till inlägg %#1n...")
+    (already-private-answer . "Inlägg %#1n har redan begäran om enbart personliga svar.\n")
+
+    (what-request-confirm-no . "Vilken text vill du ha läsbekräftelse till: ")
+    (adding-request-confirm . "Begär läsbekräftelse till inlägg %#1n...")
+    (already-request-confirm . "Inlägg %#1n har redan begäran om läsbekräftelse.\n")
 ))
 
 
@@ -1472,6 +1485,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (kom-add-footnote	      . "Addera fotnot")
     (kom-sub-footnote	      . "Subtrahera fotnot")
+
+    (kom-add-no-comments      . "Förhindra kommentarer")
+    (kom-add-private-answer   . "Begär personligt svar")
+    (kom-add-request-confirm  . "Begär läsbekräftelse")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
