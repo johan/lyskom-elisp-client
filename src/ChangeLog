@@ -1,3 +1,9 @@
+2000-06-11  Johan Sundström  <jhs@lysator.liu.se>
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): A zero prefix
+	argument now means "always ask for the argument" -- just as it
+	said it did in the NEWS file! Good idea; let's implement it! :-)
+
 2000-06-11  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* view-text.el (lyskom-follow-comments): Documentation update.

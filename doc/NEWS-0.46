@@ -23,9 +23,9 @@
     --------------
 
     Om du använder Gnu Emacs 20.x så måste du se till att du har stöd
-    för multibytetecken påslaget. Detta är tvärt emot rekommendationen 
+    för multibytetecken påslaget. Detta är tvärt emot rekommendationen
     för 0.45. Klienten fungerar antagligen med multibyteteckenstödet
-    avslaget, men du kan få smärre problem eftersom det finns buggar i 
+    avslaget, men du kan få smärre problem eftersom det finns buggar i
     Emacs som syns när man inte har multibyteteckenstödet på.
 
     Titta i dina inställningar (filen .emacs i din hemkatalog). Om du
@@ -38,7 +38,7 @@
     satt rätt. Oftast skall det vara något i stil med iso_8859_1.
 
     Starta inte Emacs med flaggan --unibyte. Det kan ställa till
-    problem för på samma sätt som standard-display-european.
+    problem för dig på samma sätt som standard-display-european.
 
 
     Kompilering
@@ -51,12 +51,12 @@
 
     Kompilera för den version av Emacs som du tänker använda. Om du
     kompilerar med Gnu Emacs 19.34 så borde resultatet fungera i alla
-    versioner av Emacs sedan 19.34, men säker kan man aldrig vara, och 
+    versioner av Emacs sedan 19.34, men säker kan man aldrig vara, och
     dessutom kommer klienten att gå långsammare än den egentligen
     behöver.
 
                             David Byers     <byers@lysator.liu.se>
-                            Johan Sunström  <johan@id3.org>
+                            Johan Sundström   <jhs@lysator.liu.se>
 
 
 
@@ -79,7 +79,7 @@
 ** Skriva inlägg
 
 *** Frågan om alla mottagare till ett inlägg är relevanta ställs
-    enbart om det finns mer än en fullvärdig mottagare. 
+    enbart om det finns mer än en fullvärdig mottagare.
     Extrakopiemottagare och för kännedom räknas inte.
 
 *** Om man trycker C-u före i (Skriv inlägg) så får man välja vilket
@@ -108,7 +108,7 @@
     vill bekräfta läsning.
 
 *** Nytt kommando: Begär personligt svar lägger till information om
-    att författaren vill ha personliga svar, inte vanliga kommentarer. 
+    att författaren vill ha personliga svar, inte vanliga kommentarer.
     Det går fortfarande att kommentera vanligt, men upplysta klienter
     kommer att gnälla lite extra om saken.
 
@@ -125,7 +125,7 @@
     mottagare.
 
 *** Funktionen kom-insert-last-info-nodename stoppar in en referens
-    till den senaste info-noden man var på i aktuell buffert. 
+    till den senaste info-noden man var på i aktuell buffert.
     Funktionen kom-yank-info-nodename kopierar en referens till den
     info-nod man för tillfället är på (använd C-y för att stoppa in
     den i en buffert).
@@ -135,9 +135,16 @@
     inläggsbufferten finns kvar så ploppas den upp direkt.
 
 *** När man adderar mottagare så får man en fråga om huruvida man vill
-    att framtida kommentarer också skall hamna i den nya mottagaren. 
+    att framtida kommentarer också skall hamna i den nya mottagaren.
     Detta har tillkommit eftersom halva LysKOM verkar ha glömt att man
-    kan använda extra-kopiemottagare.
+    kan använda extra-kopiemottagare. Om du hör till det fåtal som vet
+    hur man adderar extra kopior (C-c C-a C-e i edit-mode, a "Addera
+    extra kopiemottagare" i kombuffern) och använder Addera mottagare
+    med urskillning och avsikt och inte vill få frågan, kan du lägga
+    till följande i din .emacs:
+
+	(remove-hook 'lyskom-add-sub-recipients-hook
+		     'lyskom-annoying-verify-add-rcpt)
 
 *** Edit-moden har stöd för "Roxen IS style bug/todo-list". Kommandot
     sitter på C-c C-b i edit-moden. Om du inte vet vad det här är så
@@ -234,12 +241,16 @@
 *** Om man raderar ett inlägg som man har markerat så avmarkeras det
     automatiskt.
 
+*** När du återser ett inlägg du markerat, ser du inom parentes vilken
+    markering du satt på det.
+
 
 ** Medlemskap, möten och olästa
 
-*** Prefix till Lista Möten anger hur många olästa som skall finnas
-    för att mötet skall visa. Anger man noll så kommer alla möten att
-    visas.
+*** Prefix till Lista Möten anger hur många olästa som minst skall
+    finnas för att mötet skall visa. Anger man noll så kommer alla
+    möten att visas. Anger man ett värde under noll, visas alla möten
+    med som mest så många olästa.
 
 *** Nytt kommando: Ändra mötestyp. Man kan ändra mötestype (hemligt,
     skrivskyddat med mera) i efterhand.
@@ -259,7 +270,7 @@
     sätta prioritet noll på möten om man vill. Notera dock att
     läsnivån är normalt satt till 1.
 
-*** När man utträder ur ett möte så blir man först passiv medlem. 
+*** När man utträder ur ett möte så blir man först passiv medlem.
     Utträder man igen utträder man på riktigt.
 
 *** Man kan ange prioritet när man adderar andra till möten. Vissa
@@ -278,7 +289,7 @@
 
 ** Personliga meddelanden, vilkalistan och in- och utloggning
 
-*** Det går att filtrera personliga, grupp- och alarmmeddelanden. 
+*** Det går att filtrera personliga, grupp- och alarmmeddelanden.
     Variabeln kom-ignore-message-senders är en lista av avsändare vars
     meddelanden inte skall visas. kom-ignore-message-recipients är en
     lista av mottagare som man inte vill se meddelanden till.
@@ -312,16 +323,16 @@
     tillfället är den här konstruktionen bara meningsfull för
     kom-ding-on-personal-messages, kom-ding-on-group-messages och
     kom-ding-on-common-messages.
-  
+
     Vad menar han egentligen?
-  
+
     Jo. Om det är så att man inte vill ha pip när det kommer
     meddelanden till "NL:", två pip när det kommer meddelanden till
     "Matbeställningar (@) Linköping", och ett pip alltid annars så kan
     man sätta kom-ding-on-group-messages till
-  
+
                    ((3225 . nil) (3051 . 2) (t . 1))
-  
+
     Nyckeln är alltså ett mötesnummer. Den magiska nyckeln t används
     om ingen annan nyckel passar. För kom-ding-on-group-messages är
     nyckeln meddelandets mottagare. För kom-ding-on-personal-messages
@@ -380,14 +391,15 @@
 
 ** Inställningar
 
-*** Kommandot Ändra variabler är borta.
+*** Kommandot Ändra variabler är borta. Använd Inställningar (för)
+    LysKOM i stället.
 
-*** Man kan spara godtyckliga variabler i servern eller i sin .emacs. 
+*** Man kan spara godtyckliga variabler i servern eller i sin .emacs.
     Det är bara att sätta dem innan man laddar lyskom.elc så läser
     inte klienten de variablerna från servern.
 
 *** I inställningsbufferten finns det en kryssruta för att säga att en
-    variabel skall sparas i servern. Ikryssad så sparas den i servern. 
+    variabel skall sparas i servern. Ikryssad så sparas den i servern.
     Inte ikryssad så hamnar den i .emacs.
 
 
@@ -408,8 +420,8 @@
 
    Variabeln kom-server-priority ger en prioritet till LysKOM-servern.
    För att en session skall avbryta en annan så måste den avbrytande
-   sessionen ha högre prioritet än det möte man för tillfället läser i 
-   den avbrutna sessionen. 
+   sessionen ha högre prioritet än det möte man för tillfället läser i
+   den avbrutna sessionen.
 
    Variabeln kom-server-priority-breaks styr när avbrotten får ske.
    Värdet express betyder att avbrott skall ske direkt.
@@ -418,7 +430,7 @@
    kommentarskedja. letters betyder efter aktuell kommentarskedja om
    det har kommit brev. after-conf betyder efter aktuellt möte.
    after-conf-letters betyder efter aktuellt möte om det har kommit
-   brev. 
+   brev.
 
    Om man sätter kom-server-priority-breaks till when-done så får man
    prompt om att gå till nästa LysKOM om man läser ut allting i en
@@ -429,10 +441,11 @@
 ** Diverse blandat och allmänt
 
 *** Negativt prefixargument till de flesta funktioner som vill ha
-    textnummer betyder texten N stek tillbaks i bufferten. Till
-    exempel skall "K" vara samma som "C-u - 1 k" när man står sist i
+    textnummer betyder texten N steg tillbaks i bufferten. Till
+    exempel skall "K" vara samma som "- 1 k" när man står sist i
     bufferten. Prefixargument noll betyder att klienten alltid skall
-    prompta efter ett inläggsnummer.
+    prompta efter ett inläggsnummer. Ett positivt prefixargument anger
+    textnumret direkt.
 
 *** Precis som man kan markera personer man gillar med variabeln
     kom-friends så kan man markera idioter med variebln kom-morons. De
@@ -460,7 +473,7 @@
 
 *** När man scrollar mindre än en skärmsida så markeras den sista
     synliga raden i blått så att det blir lättare att hitta var man
-    skall börja läsa igen. Markeringen hålls kvar i ungefär en sekund. 
+    skall börja läsa igen. Markeringen hålls kvar i ungefär en sekund.
     Utseendet styrs av kom-mark-face.
 
 *** C-M-p och C-M-n går bakåt respektive framåt till föregående/nästa
@@ -507,10 +520,10 @@
 **** Om författaren till ett inlägg har begärt att alla som läser det
      skall bekräfta läsning så frågar elispklienten om man vill
      bekräfta varje gång inlägget visas (tills man har bekräftat det
-    förstås.)
+     förstås.)
 
 **** Möten kan ha FAQer. Kommandona Ta bort FAQ, Addera FAQ och Återse
-     FAQ (bunden till åq) används för att manipulera och läsa FAQer. 
+     FAQ (bunden till å q) används för att manipulera och läsa FAQer.
      Servern raderar aldrig en FAQ automatiskt, oavsett hur gammal den
      är.
 
@@ -524,10 +537,10 @@
 *** Tilläggsinformation i inläggsbufferten
 
 **** Det går att skapa korsreferenser till andra inlägg eller möten
-     genom att trycka på C-c C-a C-x. Korsreferenser är bra när man
-     vill hänvisa till ett annat inlägg eller till ett möte. De visas
-     samlat, och eftersom klienterna vet vad de är så kan de lätt visa
-     det som hänvisas till.
+     genom att trycka på C-c C-a C-x (tänk "add cross-reference").
+     Korsreferenser är bra när man vill hänvisa till ett annat inlägg
+     eller till ett möte. De visas samlat, och eftersom klienterna vet
+     vad de är så kan de lätt visa det som hänvisas till.
 
 **** Genom att trycka på C-c C-x C-b så kan man begära att alla som
      läser inlägget bekräftar detta. Elispklienten frågar om man vill
@@ -551,7 +564,7 @@
      som lade till tillägget inte visas för någon annan (informationen
      lagras dock i servern) och ärvd innebär att tillägget kopieras
      till kommentarer som skrivs till inlägget.
-     
+
      Notera att servern helt godtyckligt kan ta bort eller lägga till
      flaggor, utan någon som helst varning, och gör ofta detta. Lita
      inte på att du blir anonym bara för att du begär det...
@@ -582,7 +595,7 @@
 ** Edit-moden har en bättre placering av nya mottagare.
 
 ** Återse senaste visar inte inlägget med sparade inställningar
-   (user-arean). 
+   (user-arean).
 
 ** Pipfunktionen hänger inte om man försöker spela en ljudfil med ett
    program som inte finns.
@@ -598,7 +611,7 @@
 ** Den automatiska radbrytningen är smartare. Den borde till exempel
    klara av headerrader i sladdpost.
 
-** Anslutningen via HTTP-proxy är lite bättre. 
+** Anslutningen via HTTP-proxy är lite bättre.
 
 ** Igenkänningen av info-referenser är bättre.
 
@@ -626,7 +639,7 @@
 
 ** Automatisk addering av mottagare när man kommenterar och det
    kommenterades författare inte är med i någon mottagare är
-   robustare. 
+   robustare.
 
 ** Användningen av gamla och utrangerade serveranrop har minskats.
 
