@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.4 1996-10-11 11:12:48 nisse Exp $
+;;;;; $Id: edit-text.el,v 44.5 1996-10-24 09:47:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.4 1996-10-11 11:12:48 nisse Exp $\n"))
+	      "$Id: edit-text.el,v 44.5 1996-10-24 09:47:45 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -208,14 +208,10 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
       (set-buffer buf)
       (save-excursion
 	(if (markerp stream) (goto-char stream))
-	(princ (concat string
-		       (format " <%d> " (if conf-stat
-					    (conf-stat->conf-no conf-stat)
-					  number))
-		       (if conf-stat
-			   (conf-stat->name conf-stat)
-			 "")
-		       "\n")
+	(princ (lyskom-format "%#1s <%#2m> %#3M\n" 
+                              string
+                              (or conf-stat number)
+                              (or conf-stat ""))
 	       stream)))))
 
 
@@ -229,9 +225,10 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
 
 (defun lyskom-edit-insert-commented-author (conf-stat string stream number)
   (princ (lyskom-format 'comment-to-by
-			string number 
+			string
+                        number
 			(if conf-stat
-			    (lyskom-format 'by (conf-stat->name conf-stat))
+			    (lyskom-format 'by conf-stat)
 			  ""))
 	 stream)
   )

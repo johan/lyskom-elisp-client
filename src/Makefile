@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.8 1996-10-21 00:59:12 davidk Exp $
+# $Id: Makefile,v 44.9 1996-10-24 09:47:24 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.8 1996-10-21 00:59:12 davidk Exp $
+# $Id: Makefile,v 44.9 1996-10-24 09:47:24 byers Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -56,9 +56,10 @@ PARTS-EL = komtypes.el clienttypes.el  deferred-insert.el utilities.el \
 	prioritize.el flags.el messages.el ansaphone.el remote-control.el \
 	menus.el slow.el \
 	elib-string.el  \
+	option-edit.el \
 	lyskom-rest.el
-HEADER-EL = vars.el macros.el language.el
-HEADER-ELC = vars.elc macros.elc deferred-insert.elc
+HEADER-EL = vars.el macros.el compatibility.el language.el
+HEADER-ELC = vars.elc macros.elc compatibility.elc language.elc
 SWEDISH-EL = swedish-strings.el
 SWEDISH-ELC = swedish-strings.elc
 ENGLISH-EL = english-strings.el
@@ -76,6 +77,7 @@ SRC-ELC = komtypes.elc clienttypes.elc deferred-insert.elc utilities.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc messages.elc ansaphone.elc \
 	remote-control.elc menus.elc slow.elc elib-string.elc \
+	option-edit.elc \
 	lyskom-rest.elc 
 PARTS-ELC = $(SRC-ELC)
 
@@ -97,7 +99,7 @@ lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(ENGLISH-EL) $(PARTS-EL)
 	cat $(HEADER-EL) $(SWEDISH-EL) $(ENGLISH-EL) $(PARTS-EL) > lyskom.el
 
 lyskom.elc: lyskom.el
-	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
+	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
 
 .PHONY: check
 check: 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.19 1996-10-21 00:59:24 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.20 1996-10-24 09:47:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.19 1996-10-21 00:59:24 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.20 1996-10-24 09:47:56 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2090,7 +2090,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(delq proc lyskom-sessions-with-unread))
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t)
-  (lyskom-format-insert 'closed-connection sentinel)
+  (lyskom-format-insert 'closed-connection sentinel (current-time-string))
   (setq mode-line-process (lyskom-get-string 'mode-line-down))
   (beep)
   (lyskom-scroll))

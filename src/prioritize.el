@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.2 1996-10-10 13:59:47 davidk Exp $
+;;;;; $Id: prioritize.el,v 44.3 1996-10-24 09:48:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.2 1996-10-10 13:59:47 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 44.3 1996-10-24 09:48:07 byers Exp $\n"))
 
 
 
@@ -618,7 +618,7 @@ of conferences you are a member of."
                       (lyskom-display-buffer 
                        tmp-buffer
                        'kom-prioritize-in-window
-                       'kom-dont-restore-after-prioritize)
+                       'kom-dont-restore-window-after-prioritize)
                       (setq lyskom-prioritize-entry-list
                             (nreverse (collector->value
                                        collector)))

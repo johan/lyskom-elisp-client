@@ -3,21 +3,34 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-prefix-kommandon änndras inte vid språkbyten.
+    Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
 
-Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+    prefix-kommandon änndras inte vid språkbyten.
 
-Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
-endast i ett möte (säg IÅM) innan det prefetchas får man två
-parallella prefetcher på samma möte.
+    Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
+    endast i ett möte (säg IÅM) innan det prefetchas får man två
+    parallella prefetcher på samma möte.
+
+    I vilkalistan borde nog hemliga personer skrivas ut med någon
+    annan text än "Ej närvarande i något möte"
+
+    Gå med i möten startar inte prefetch på mötet.
+
+    Gå ur mötet man prefetchar genererar en bug.
+
+    kom-recover (antagligen lyskom-refetch) är en no-op.
+
+    Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
+    endast i ett möte (säg IÅM) innan det prefetchas får man två
+    parallella prefetcher på samma möte.
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
 
     Lista nyheter visar fel innan prefetchen har hämtat alla mappar.
 
-Efter återse senaste fick jag fel prompt. Jag vill ha återse
-nästa-prompten direkt om det finns texter som matchar villkoret.
+    Efter återse senaste fick jag fel prompt. Jag vill ha återse
+    nästa-prompten direkt om det finns texter som matchar villkoret.
 
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
@@ -28,8 +41,6 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
     kom-review-tree måste nog skrivas om så den inte är så förbaskat
     rekursiv. Man överskrider ibland max-specpdl-size eller något
     sådant.
-
-    Bygga Ändra Variabler mha widget.el.
 
     Fixa så LysKOM och complete.el fungerar ihop genom att sätta om
     samma mappar som complete.el gör, till wrappers runt complete.el
@@ -170,4 +181,6 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
     När det frågas om alla mottagare av ett inlägg är relevanta så
     vore det bra om bufferten scrollades upp så att man fick se dem...
     [FIXAT]
+
+    Bygga Ändra Variabler mha widget.el. [FIXAT]
 

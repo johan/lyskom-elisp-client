@@ -1,6 +1,23 @@
+Thu Oct 24 10:38:06 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el,swedish-strings.el (lyskom-message): Ändra
+ 	comment-to-by, by
+	(lyskom-sv-edit-mode-map): Lade till bindningar av musknappar.
+
+	* edit-text.el (lyskom-edit-insert-misc-conf): Sätt properties på
+ 	mötesnumret. (lyskom-edit-insert-commented-author): Dito.
+
 Tue Oct 22 02:47:55 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* language.el: Tog bort lyskom-language-symbols.
+
+Mon Oct 21 12:41:46 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-display-buffer): Lägg till en
+ 	kill-buffer-hoom även om man gör display i samma fönster.
+
+	* english-strings.el (lyskom-button-actions): Lade till email som
+ 	action.
 
 Mon Oct 21 00:54:00 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -73,6 +90,21 @@ Sun Oct 20 03:46:22 1996  David Kågedal  <davidk@lysator.liu.se>
 	(lyskom-language-var): Nytt makro.
 	(lyskom-language-var-internal): Ny funktion.
 	(lyskom-language-vars): Ny variabel.
+
+Thu Oct 17 16:28:54 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el (lyskom-custom-strings): Lade in i
+ 	english-strings.el
+	(lyskom-customize-map): Dito.
+
+Wed Oct 16 11:24:41 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* async.el (lyskom-show-logged-out-person): Gjorde så att
+ 	kom-presence-messages kan vara en lista av vilka som skall visas.
+	(lyskom-show-logged-in-person): Dito.
+	(lyskom-show-changed-person): Dito.
+	(lyskom-show-presence): Ny funktion.
+
 
 Tue Oct 15 03:30:31 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -237,6 +269,13 @@ Wed Oct  9 15:59:06 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* swedish-strings.el (menu): Lade till nya menynamn
 
+Tue Oct  8 18:06:02 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-default-button): Försök sätta
+ 	lyskom-button-text även om argumentet inte anger det genom att
+ 	göra cache-get-* på personer och möten. Lev med att man kanske
+ 	inte alltid får tag på texten.
+
 Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* vars.el.in (lyskom-inherited-variables): Lade till
@@ -271,8 +310,6 @@ Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
 
 Tue Oct  8 04:44:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
-	* lyskom-buttons.el (lyskom-make-button-menu): Kopiera listorna.
-
 	* lyskom-rest.el: Anropa lyskom-build-menus på toppnivån.
 
 	* menus.el (lyskom-background-menu): Ny funktion.
@@ -283,9 +320,61 @@ Tue Oct  8 03:55:40 1996  David Kågedal  <kg@infovav.se>
 	(lyskom-mouse-3): Använd en keymap som meny.
 	(lyskom-button-menu): Bytte namn från lyskom-mouse-3.
 
+Tue Oct  8 04:44:29 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Kopiera listorna.
+
+	* lyskom-rest.el: Anropa lyskom-build-menus på toppnivån.
+
+	* menus.el (lyskom-background-menu): Ny funktion.
+
 Tue Oct  8 02:10:10 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* menus.el : Ny fil. Menyer i lyskom-mode. 
+	
+Tue Oct  8 03:55:40 1996  David Kågedal  <kg@infovav.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Ny funktion.
+	(lyskom-mouse-3): Använd en keymap som meny.
+	(lyskom-button-menu): Bytte namn från lyskom-mouse-3.
+
+Tue Oct  8 02:10:10 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* menus.el : Ny fil. Menyer i lyskom-mode. 
+
+Mon Oct  7 12:10:01 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* option-edit.el (lyskom-custom-variables): Lade till
+ 	kom-ding-on-new-letter.
+	(lyskom-customize-buffer-format): Dito.
+
+	* swedish-strings.el (lyskom-custom-strings): Lade till
+ 	kom-ding-on-new-letter.
+
+	* async.el (lyskom-async-new-text): Pip vid brev.
+
+	* vars.el.in (kom-ding-on-new-letter): Ny variabel.
+	(lyskom-elisp-variables): Lade till den.
+
+	* completing-read.el (lyskom-read-conf-internal): Bugfix. Hantera
+ 	TAB på namn som inte finns med vissa predikatkombinationer.
+
+Sun Oct  6 16:28:13 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* compatibility.el (compiled-function-p): Definiera
+ 	compiled-function-p, inte byte-code-function-p så klagar XEmacs
+ 	mindre.
+ 	
+	* utilities.el (functionp): Använd compiled-function-p.
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Hantera
+ 	email-urler också.
+
+	* swedish-strings.el (lyskom-strings): Lade till
+ 	email-popup-title.
+
+	* vars.el.in (lyskom-text-buttons): Lade till regexp för
+ 	mail-adresser.
 
 Sun Oct  6 10:11:25 1996  David Kågedal  <kg@infovav.se>
 
@@ -348,6 +437,41 @@ Sat Oct  5 19:23:13 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-trim-buffer): Sätt inhibit-read-only.
 
+Sat Oct  5 14:58:44 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-set-partial-window-configuration): Hantera
+ 	att fönster byter buffert på rätt sätt.
+
+	* vars.el.in (lyskom-elisp-variables): Lade till
+ 	kom-customize-format.
+
+	* swedish-strings.el (lyskom-customize-map): Flyttade hit
+ 	variabeln.
+	(lyskom-custom-strings): Dito.
+	(lyskom-commands): Lade till kom-customize.
+
+	* prioritize.el (kom-prioritize): Använda
+ 	kom-dont-restore-window-after-prioritize
+
+Thu Oct  3 09:49:37 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands1.el (lyskom-who-is-on-9): Hantera prefixargumentet - på
+ 	Rätt Sätt.
+
+	* commands2.el (kom-set-unread): Sätt in sträng med \n på slutet.
+
+	* startup.el (lyskom-clear-vars): Use lyskom-protect-environment.
+	(kom-start-anew): Set lyskom-current-conf to nil.
+
+	* compatibility.el: Flyttade kompatibilitetsfunktioner hit.
+
+	* utilities.el: Flyttade kompatiibilitetsfunktioner till
+ 	compatibility.el.
+	
+	* macros.el: Dito
+
+	* vars.el.in (lyskom-prefetch-limit): Sätt default till 10.
+
 Thu Oct  3 01:30:03 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-binsearch-internal): Tro inte att två
@@ -374,6 +498,28 @@ Wed Oct  2 16:41:53 1996  David Kågedal  <davidk@lysator.liu.se>
 	* lyskom-rest.el (lyskom-list-unread): Ny implementation.
 	(lyskom-binsearch): Ny funktion.
 	(lyskom-binsearch-internal): Ny funktion.
+
+Wed Oct  2 16:37:31 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* parse.el (lyskom-parse-bitstring): Mikrooptimeringar i
+ 	parse-koden för mindre consning och mindre bytekod.
+	(Många funktioner) Testa inte TAB och RET som whitespace.
+
+Tue Oct  1 15:27:12 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* utilities.el (lyskom-set-partial-window-configuration): Ny
+ 	funktion.
+	(lyskom-reset-window-configuration-hook): Använd den.
+	(buffer-live-p): Ny kompatibilitetsfunktion. Jag är trött på Emacs
+ 	19.28.
+
+Mon Sep 30 11:03:07 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): Lade
+ 	till formatkod för att få in tiden också.
+
+	* lyskom-rest.el (lyskom-sentinel): Lade till current-time-string
+ 	i argumentlistan vid onormalt stäng session.
 
 Mon Sep 30 01:25:23 1996  David Kågedal  <kg@infovav.se>
 
@@ -444,6 +590,12 @@ Fri Sep 27 01:47:13 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (lyskom-add-membership): Använd prefetch för att
  	hämta mappen istället.
+
+Thu Sep 26 10:19:11 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* option-edit.el (lyskom-widget-kbd-macro-action): Sätt buffert
+ 	via property istf hårdkodat namn.
+	(lyskom-kbd-macro-widget): Sätt :macro-buffer propery på widgeten.
 
 Thu Sep 26 00:08:32 1996  David Kågedal  <davidk@lysator.liu.se>
 
