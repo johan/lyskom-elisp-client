@@ -1,3 +1,15 @@
+2003-01-12  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in: More documentation updates.
+
+	* lyskom-rest.el (lyskom-beep): List arguments were not handled
+	correctly (the default key, t, was not used).
+
+2003-01-11  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in: Documented some more variables. Variables that have
+	been documented properly have "**" at the start of the docstring.
+
 2003-01-09  David Byers  <david.byers@swipnet.se>
 
 	* vars.el.in: Started working on variable documentation.

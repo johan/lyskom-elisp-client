@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: docgen.el,v 44.4 2003-01-09 21:41:43 byers Exp $
+;;;;; $Id: docgen.el,v 44.5 2003-01-12 16:53:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,6 +33,26 @@
 
 
 ;;; TO DO
+;;;
+;;; Variable documentation requires considerably more flexibility
+;;; than command documentation:
+;;;
+;;; * Generate segmentedlist elements. Look for two-column
+;;;   indented parts in the documentation.
+;;;
+;;; * Highlight code (e.g. `t', `nil', `other' usw. Handle 
+;;;   references to elisp functions and elisp variables.
+;;;
+;;; * Format examples. I don't think we can do this consistently
+;;;   without any markup. MAybe by looking for indented blocks
+;;;   where some line in a block does not match a segmentedlist 
+;;;   format.
+;;;
+;;; In variables, warn for undocumented (no **) def-kom-vared
+;;; variables that start with kom-
+;;;
+;;; Generate DTD fragments so we can use entities for command and
+;;; variable references (e.g. &fn:kom-mark-text;) in XML.
 ;;;
 ;;; Read templates from a file, so we don't hard-code the
 ;;; format here.
