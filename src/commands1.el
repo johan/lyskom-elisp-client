@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.21 1997-07-02 17:45:55 byers Exp $
+;;;;; $Id: commands1.el,v 44.22 1997-07-03 09:32:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.21 1997-07-02 17:45:55 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.22 1997-07-03 09:32:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1908,7 +1908,7 @@ If MARK-NO == 0, review all marked texts."
            (lyskom-format "%#1s och %#2s har namnsdag i dag."
                           (elt dlist 0) (elt dlist 1)))
           (t (format "%s och %s har namnsdag i dag."
-                     (mapconcat 'identity (butlast dlist 1) ", ")
+                     (mapconcat 'identity (lyskom-butlast dlist 1) ", ")
                      (elt dlist (1- (length dlist))))))))
 
 
