@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.10 1993-08-20 07:34:59 linus Exp $
+;;;;; $Id: commands2.el,v 36.11 1993-08-20 21:56:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.10 1993-08-20 07:34:59 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.11 1993-08-20 21:56:28 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -644,7 +644,7 @@ When a text is received the new text is displayed."
 		     (read-info->priority
 		      (read-list->first lyskom-to-do-list))
 		     -2)))
-    (lyskom-tell-internat 'kom-tell-wait)
+    (lyskom-tell-server kom-mercial)
     (if (= waitfor -2)
 	(lyskom-insert-string 'waiting-for-anything)
       (lyskom-format-insert 'waiting-higher-than waitfor))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 36.2 1993-08-20 09:00:06 linus Exp $
+;;;;; $Id: flags.el,v 36.3 1993-08-20 21:57:02 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 36.2 1993-08-20 09:00:06 linus Exp $\n"))
+	      "$Id: flags.el,v 36.3 1993-08-20 21:57:02 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -159,6 +159,7 @@ If successful then set the buffer not-modified. Else print a warning."
   "Reads the user-area and sets the variables according to the choises.
 Also run lyskom-login-hook (regardless of whether the person has a userarea
 or not."
+  (lyskom-halt 'main)
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (initiate-get-pers-stat 'options 'lyskom-read-options-2 lyskom-pers-no)))
@@ -173,6 +174,7 @@ or not."
 	      (prog1
 		  (setq lyskom-do-when-starting kom-do-when-starting)
 		(run-hooks 'lyskom-login-hook)
+		(lyskom-resume 'main)
 		(setq lyskom-options-done t))
 	    (initiate-get-text 'options 'lyskom-read-options-eval
 			       (pers-stat->user-area pers-stat))))
@@ -252,6 +254,7 @@ or not."
 		(while (stringp (cdr (car (cdr pos))))
 		  (setq pos (cdr pos)))
 		(setcdr pos nil))))))
+  (lyskom-resume 'main)
   (setq lyskom-options-done t))
 
 

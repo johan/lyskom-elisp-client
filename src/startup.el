@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 36.5 1993-07-28 18:30:40 linus Exp $
+;;;;; $Id: startup.el,v 36.6 1993-08-20 21:57:37 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 36.5 1993-07-28 18:30:40 linus Exp $\n"))
+	      "$Id: startup.el,v 36.6 1993-08-20 21:57:37 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -254,14 +254,14 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
 	     (zerop (conf-stat->presentation conf-stat))
 	     (not (zerop (conf-stat->no-of-texts conf-stat))))
 	(lyskom-insert-string 'presentation-encouragement))
+    (lyskom-read-options) 
     (lyskom-collect 'main)
     (initiate-get-membership 'main nil pers-no)
     (initiate-get-unread-confs 'main nil pers-no)
     (initiate-get-marks 'main nil)
     (initiate-who-is-on 'main nil)
     (initiate-who-am-i 'main nil)
-    (lyskom-use 'main 'lyskom-prefetch nil)
-    (lyskom-read-options))))
+    (lyskom-use 'main 'lyskom-prefetch nil))))
 
 
 (defun lyskom-refetch ()
@@ -374,9 +374,16 @@ WANT-PERSONS is t for persons, nil for confs."
     (setq lyskom-executing-command nil)
     (kom-start-anew))
    (t
-    (initiate-login 'main 'lyskom-start-anew-login-2
+    (initiate-login 'main 'lyskom-add-for-new-person
 		    pers-no password pers-no lyskom-pers-no)
     )))
+
+(defun lyskom-add-for-new-person (reply pers-no lyskom-pers-no)
+  "Add a news person as member in the default presentation conference."
+  (initiate-add-member 'main 'lyskom-start-anew-login-2
+		       (server-info->conf-pres-conf lyskom-server-info)
+		       pers-no 100 1
+		       pers-no lyskom-pers-no))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.12 1993-08-20 09:18:37 linus Exp $
+;;;;; $Id: edit-text.el,v 36.13 1993-08-20 21:56:45 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.12 1993-08-20 09:18:37 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.13 1993-08-20 21:56:45 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -74,6 +74,13 @@ Does lyskom-end-of-command."
       (switch-to-buffer buffer))
      ((eq kom-write-texts-in-window 'other)
       (switch-to-buffer-other-window buffer))
+     ((and (eq kom-write-texts-in-window 'other-frame)
+	   (not (eq (selected-frame) (next-frame))))
+      (select-frame (next-frame)))
+     ((eq kom-write-texts-in-window 'new-frame)
+      (make-local-variable 'lyskom-is-dedicated-edit-window)
+      (setq lyskom-is-dedicated-edit-window t)
+      (switch-to-buffer-other-frame buffer))
      (t
       (switch-to-buffer buffer)))
     (if (boundp 'lyskom-filter-old-buffer)
@@ -221,6 +228,22 @@ First element is a type-tag."
 ;;; ================================================================
 ;;;                   lyskom-edit-mode
 
+(defvar lyskom-edit-mode-hook nil
+  "*List of functions to be called when entering lyskom-edit-mode.
+Watch out! None of these functions are allowed to do kill-all-local-variables
+because kom-edit-send and other functions depend on some variables to be able
+to enter the text in the correct lyskom-process.")
+
+(defvar lyskom-edit-mode-mode-hook nil
+  "*List of functions to be called when entering lyskom-edit-mode.
+Watch out! None of these functions are allowed to do kill-all-local-variables
+because kom-edit-send and other functions depend on some variables to be able
+to enter the text in the correct lyskom-process.
+
+This one differs from lyskom-edit-mode-hook in that it is called before
+the lyskom-special key bindings are added.")
+
+
 (defun lyskom-edit-mode ()
   "\\<lyskom-edit-mode-map>Mode for editing texts for LysKOM.
 Commands:
@@ -304,6 +327,11 @@ Entry to this mode runs lyskom-edit-mode-hook."
 				  buffer)))
 	(if kom-dont-restore-window-after-editing
 	    (bury-buffer)
+	  (save-excursion
+	    (if (boundp 'lyskom-is-dedicated-edit-window)
+		(condition-case error
+		    (delete-frame)
+		  (error))))
 	  (set-window-configuration lyskom-edit-return-to-configuration)
 	  (set-buffer (window-buffer (selected-window))))
 	(goto-char (point-max)))))
@@ -313,9 +341,16 @@ Entry to this mode runs lyskom-edit-mode-hook."
   "Kill the text (if any) written so far and continue reading."
   (interactive)
   (let ((edit-buffer (current-buffer)))
-    ;; Select the old configuration.
-    (set-window-configuration lyskom-edit-return-to-configuration)
-    (set-buffer (window-buffer (selected-window)))
+    (if kom-dont-restore-window-after-editing
+	(bury-buffer)
+      ;; Select the old configuration.
+      (save-excursion
+	(if (boundp 'lyskom-is-dedicated-edit-window)
+	    (condition-case error
+		(delete-frame)
+	      (error))))
+      (set-window-configuration lyskom-edit-return-to-configuration)
+      (set-buffer (window-buffer (selected-window))))
     (goto-char (point-max))
     (setq lyskom-is-writing nil)
     (lyskom-tell-internat 'kom-tell-regret)

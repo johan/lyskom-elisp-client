@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.13 1993-08-20 07:34:44 linus Exp $
+;;;;; $Id: commands1.el,v 36.14 1993-08-20 21:56:05 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.13 1993-08-20 07:34:44 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.14 1993-08-20 21:56:05 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -490,7 +490,13 @@ the name of the person."
   (lyskom-start-of-command 'kom-sub-self)
   (lyskom-completing-read 'main 'lyskom-sub-member-2
 			  (lyskom-get-string 'leave-what-conf)
-			  nil nil ""
+			  nil nil 
+			  (let ((ccn (if (zerop lyskom-current-conf)
+					 ""
+				       (conf-stat->name
+					(blocking-do 'get-conf-stat 
+						     lyskom-current-conf)))))
+			    (or ccn ""))
 			  lyskom-pers-no))
 
 
@@ -947,22 +953,29 @@ If optional argument is non-nil then dont ask for confirmation."
   "Change presentation for a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-change-presentation)
-  (lyskom-completing-read
-   'main 'lyskom-change-presentation-or-motd
-   (lyskom-get-string 'what-to-change-pres-you)
-   nil 'empty "" 'pres))
+  (lyskom-change-pres-or-motd-2
+   (let ((no (lyskom-read-conf-no (lyskom-get-string 'what-to-change-pres-you)
+				  'all t)))
+     (if (zerop no)
+	 (setq no lyskom-pers-no))
+     (blocking-do 'get-conf-stat no))
+   'pres))
 
 
 (defun kom-change-conf-motd ()
   "Change motd for a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-change-conf-motd)
-  (lyskom-completing-read
-   'main 'lyskom-change-presentation-or-motd
-   (lyskom-get-string 'who-to-put-motd-for)
-   nil 'empty "" 'motd))
+  (lyskom-change-pres-or-motd-2
+   (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
+				  'all t)))
+     (if (zerop no)
+	 (setq no lyskom-pers-no))
+     (blocking-do 'get-conf-stat no))
+   'motd))
 
 
+;;; Obsolet
 (defun lyskom-change-presentation-or-motd (conf-no type)
   "Change the presentation or motd of CONF-NO.
 TYPE is either 'pres or 'motd, depending on what should be changed."
@@ -977,18 +990,18 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 TYPE is either 'pres or 'motd, depending on what should be changed."
   (cond
    ((null conf-stat)			;+++ annan felhantering
-      (lyskom-insert-string 'cant-get-conf-stat)
-      (lyskom-end-of-command))
+    (lyskom-insert-string 'cant-get-conf-stat)
+    (lyskom-end-of-command))
    ((or lyskom-is-administrator
 	(lyskom-member-p (conf-stat->supervisor conf-stat))
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
-      (initiate-get-text 'main 'lyskom-change-pres-or-motd-3
-			 (cond
-			  ((eq type 'pres)
-			   (conf-stat->presentation conf-stat))
-			  ((eq type 'motd)
-			   (conf-stat->msg-of-day conf-stat)))
-			 conf-stat type))
+    (lyskom-change-pres-or-motd-3 
+     (blocking-do 'get-text (cond
+			     ((eq type 'pres)
+			      (conf-stat->presentation conf-stat))
+			     ((eq type 'motd)
+			      (conf-stat->msg-of-day conf-stat))))
+     conf-stat type))
    (t
       (lyskom-format-insert 'not-supervisor-for
 			    (conf-stat->name conf-stat))
@@ -1015,7 +1028,8 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    (if (and text-mass
 	    (string-match "\n" (text->text-mass text-mass)))
        (substring (text->text-mass text-mass) (match-end 0))
-     (if (eq type 'pres)
+     (if (and (eq type 'pres)
+	      (conf-type->letterbox (conf-stat->conf-type conf-stat)))
 	 (lyskom-get-string 'presentation-form)
        ""))
    (cond
