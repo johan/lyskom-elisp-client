@@ -1,3 +1,107 @@
+Tue Jul 16 10:25:47 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* swedish-strings.el (lyskom-strings): Bytte \345 -> \344 på en
+ 	del håll. Bytte \345 -> \366 på en del andra.
+
+	* commands1.el (kom-delete-conf): Sätt mustmatch till t i anropet
+ 	till lyskom-read-conf-stat.
+
+	* swedish-strings.el,english-strings.el (lyskom-strings): Lade
+ 	till saving-settings-done, ändrade saving-settings.
+	(lyskom-commands): Lade till kom-save-options.
+
+	* flags.el (kom-save-options): Nytt kommando.
+
+	* commands2.el (kom-send-message): Bugfix: sända allmänt
+ 	meddelande fungerar igen.
+
+Mon Jul 15 12:14:26 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Kräv match vid
+ 	läsning av möte.
+
+	* parse.el (lyskom-parse-conf-type): Korrigera hanteringen av
+ 	korta conf-types. Den satte in 'space på femte bitten...
+
+	* lyskom-rest.el (lyskom-format-conf-type): Formattera långa
+ 	conf-types enbart om server klarar sådana.
+
+	* services.el (initiate-set-last-read-2): Ny funktion.
+	(initiate-set-last-read): Fungerar även med servrar som inte kan
+ 	set-last-read.
+
+	* review.el (lyskom-review-by-to): Ställ markören före mötesnamnet
+ 	när man frågar till vilket möte.
+
+	* startup.el (lyskom-setup-client-check-version): Ny funktion.
+
+	* vars.el.in (lyskom-server-features): Ny variabel.
+	(lyskom-server-supports): Ny variabel.
+	(lyskom-long-conf-types-flag): Ny variabel
+	(lyskom-set-last-read-flag): Ny variabel
+	(lyskom-uconf-stats-flag): Ny variabel
+	(lyskom-z-lookup-flag): Ny variabel
+	(lyskom-accept-async-flag): Ny variabel
+
+	* startup.el (lyskom-clear-vars): Gör lyskom-server-supports,
+ 	diverse flaggor och lyskom-server-version buffertlokala. (lyskom):
+ 	Anropa lyskom-setup-client-for-server-version.
+	(lyskom-setup-client-for-server-version): Ny funktion.
+
+	* vars.el.in (lyskom-server-version): Lade till
+ 	lyskom-server-version.
+
+	* startup.el (lyskom): Tilldela lyskom-server-version så andra
+ 	funktioner kan få information om serverversionen på ett enkelt
+ 	sätt.
+
+Sun Jul 14 13:55:53 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-rest.el (j-or-n-p): Lade till parametern quittable (C-g
+ 	avbryter och signalerar quit)
+	(lyskom-ja-or-nej-p): Gör inte lyskom-end-of-command vid quit.
+	(lyskom-j-or-n-p): Gör inte lyskom-end-of-command vid quit; ny
+ 	parameter quittable.
+
+	* vars.el.in: Lade till kom-check-commented-author-membership.
+
+	* completing-read.el (lyskom-read-conf-internal): Hantera att case
+ 	inte spelar någon roll i strängar (så tex "lysator" ger en exakt
+ 	match.) (lyskom-completing-member): Ny funktion för att leta
+ 	strängar i listor.
+
+	* commands1.el (lyskom-comment-recipients): Konfirmera multipla
+ 	mottagare bara om kom-confirm-multiple-recipients är before.
+
+	* swedish-strings.el, english-strings.el (lyskom-strings): Lade
+ 	till comment-all-relevant-p.
+
+	* completing-read.el (lyskom-read-conf-internal-verify-type):
+ 	Fixade så inte ingen match accepterades som conf.
+	(lyskom-lookup-conf-by-name): Specialhantering av tomma strängen.
+	(lyskom-read-conf-internal): Returnera rätt conf-stat om strängen
+ 	matchar prefix på någon conf och hela namnet på någon annan.
+
+Fri Jul 12 17:11:52 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands1.el (kom-status-session): Ny funktion. Se även
+ 	lyskom-status-session och lyskom-status-session-2
+
+	* english-strings.el,swedish-strings.el (lyskom-strings): Lade
+ 	till strängar för sessionsstatus. Lade till Status för session
+ 	till kommandona.
+
+	* completing-read.el (lyskom-read-session-no): Definiera
+ 	lyskom-blocking-process; det fungerar inte alls annars.
+
+	* ChangeLog: Saknar motivation att skrica lic. Formatterate därför
+ 	istället om mina gamla, felformatterade ChangeLog-entries.
+
+Wed Jul 10 12:39:47 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* startup.el (kom-start-anew): Patch so sojge kan slippa se lappar
+ 	på dörren. Markerad med +++SOJGE.
+
 Mon Jul  8 10:37:48 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* startup.el (lyskom-clear-vars): Gjorde fler variabler
@@ -115,26 +219,26 @@ Thu Jun 20 01:08:00 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Tue Jun 11 09:25:24 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * parse.el (lyskom-parse-conf-type): Hanterar Any-Conf-Type.
-    (lyskom-maybe-parse-1-or-0): Ny funktion.
+	* parse.el (lyskom-parse-conf-type): Hanterar Any-Conf-Type.
+	(lyskom-maybe-parse-1-or-0): Ny funktion.
 
-    * english-strings.el,swedish-strings.el (lyskom-strings): Lade till
-    anonymous-allowed.
+	* english-strings.el,swedish-strings.el (lyskom-strings): Lade
+ 	till anonymous-allowed.
 
-    * commands1.el (kom-create-conf): Fråga om man får skriva anonyma
-    texter.
+	* commands1.el (kom-create-conf): Fråga om man får skriva anonyma
+ 	texter.
 
-    * komtypes.el (conf-type->anarchy): Ny funktion.
-    (lyskom-create-conf-type): Hantera anarkibiten.
-    (conf-type->rsv1): Ny funktion.
-    (conf-type->rsv2): Ny funktion.
-    (conf-type->rsv3): Ny funktion.
+	* komtypes.el (conf-type->anarchy): Ny funktion.
+	(lyskom-create-conf-type): Hantera anarkibiten.
+	(conf-type->rsv1): Ny funktion.
+	(conf-type->rsv2): Ny funktion.
+	(conf-type->rsv3): Ny funktion.
 
-    * lyskom-rest.el (lyskom-format-conf-type): Skicka alltid
-    extended-conf-type till servern.
+	* lyskom-rest.el (lyskom-format-conf-type): Skicka alltid
+ 	extended-conf-type till servern.
 
-    * commands2.el (kom-change-conf-type): Fråga om man får skriva anonyma
-    texter.
+	* commands2.el (kom-change-conf-type): Fråga om man får skriva
+ 	anonyma texter.
 
 Thu Jun  6 02:59:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -157,9 +261,9 @@ Wed May 29 13:10:54 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Mon May 27 10:39:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * startup.el (lyskom): Sätt face-scheme här och inte i vars.el
-    
-    * vars.el.in: Ta bort sättning av face-scheme
+	* startup.el (lyskom): Sätt face-scheme här och inte i vars.el
+
+	* vars.el.in: Ta bort sättning av face-scheme
 
 Sun May 26 03:01:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -175,8 +279,9 @@ Fri May 24 03:24:37 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Wed May 22 16:56:49 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * startup.el (lyskom-clear-vars): Gör kom-friends,
-    kom-permanent-filter-list, kom-session-filter-list buffertlokala
+	* startup.el (lyskom-clear-vars): Gör
+ 	kom-friends,kom-permanent-filter-list, kom-session-filter-list
+ 	buffertlokala
 
 
 Wed May 22 06:27:46 1996  David Kågedal  <davidk@lysator.liu.se>
@@ -208,18 +313,18 @@ Mon May 20 11:29:39 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Thu May  9 11:50:39 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * commands1.el (kom-list-clients): Lade till en kommentar.
+	* commands1.el (kom-list-clients): Lade till en kommentar.
 
-    * services.el (initiate-find-next-text-no): Ny funktion.
-    (initiate-find-previous-text-no): Ny funktion.
+	* services.el (initiate-find-next-text-no): Ny funktion.
+	(initiate-find-previous-text-no): Ny funktion.
 
-    * swedish-strings.el,english-strings.el (lyskom-strings): Lade till
-    cant-review-everything.
+	* swedish-strings.el,english-strings.el (lyskom-strings): Lade
+	tll cant-review-everything.
 
-    * review.el (lyskom-get-texts-globally): Ny funktion.
-    (lyskom-get-texts-by-to): Anropa lyskom-get-texts-globally för att
-    åtserse globalt. (lyskom-review-by-to): Tillåt återse av alla till
-    allt.
+	* review.el (lyskom-get-texts-globally): Ny funktion.
+	(lyskom-get-texts-by-to): Anropa lyskom-get-texts-globally för att
+ 	åtserse globalt. (lyskom-review-by-to): Tillåt återse av alla till
+ 	allt.
 
 Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -252,9 +357,9 @@ Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Tue May  7 11:00:46 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * review.el (lyskom-review-by-to): Använd blocking-do-multiple för att
-    snabba upp första utskriften. (lyskom-get-texts-by-and-to): Använd
-    blocking-do-multiple för att skynda på uppstarten.
+	* review.el (lyskom-review-by-to): Använd blocking-do-multiple för
+ 	att snabba upp första utskriften. (lyskom-get-texts-by-and-to):
+ 	Använd blocking-do-multiple för att skynda på uppstarten.
 
 Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -303,18 +408,18 @@ Mon May  6 00:27:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Sun May  5 12:53:49 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * remote-control.el (lyskom-remote-list-messages-1): Lista i rätt
-    ordning. En fatal bug rättad. (lyskom-remote-list-messages): Lista
-    meddelanden i rätt ordning. (lyskom-remote-erase-messages): Rättade en
-    fatal bug.
+	* remote-control.el (lyskom-remote-list-messages-1): Lista i rätt
+ 	ordning. En fatal bug rättad. (lyskom-remote-list-messages): Lista
+ 	meddelanden i rätt ordning. (lyskom-remote-erase-messages):
+ 	Rättade en fatal bug.
 
-    * completing-read.el (lyskom-read-conf-name-internal): Lade till
-    predikatet persnone för att stöda ändringen i kom-start-anew.
-    (lyskom-read-conf-name-internal-verify-type): Lade till predikatet
-    persnone.
+	* completing-read.el (lyskom-read-conf-name-internal): Lade till
+ 	predikatet persnone för att stöda ändringen i kom-start-anew.
+	(lyskom-read-conf-name-internal-verify-type): Lade till predikatet
+ 	persnone.
 
-    * startup.el (kom-start-anew): kom-start-anew läser in personnamn så
-    att gamla personer har prioritet över nya.
+	* startup.el (kom-start-anew): kom-start-anew läser in personnamn
+ 	så att gamla personer har prioritet över nya.
 
 Sun May  5 03:18:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -374,32 +479,33 @@ Sat May  4 00:07:06 1996  David Kågedal  <davidk@lysator.liu.se>
 	* vars.el.in (lyskom-default-conf-string): Ny variabel.
 
 	* commands1.el (kom-who-is-on): Sätt lyskom-default-conf-string
-	lokalt.
+ 	lokalt.
 
 Fri May  3 10:13:12 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * english-strings.el,swedish-strings.el (lyskom-prioritize-mode-map):
-    Lade till M-DEL som bindning för kom-prioritize-deselect-all
+	* english-strings.el,swedish-strings.el
+ 	(lyskom-prioritize-mode-map): Lade till M-DEL som bindning för
+ 	kom-prioritize-deselect-all
 
-    * prioritize.el (kom-prioritize-deselect-all): Lade till detta
-    kommando.
+	* prioritize.el (kom-prioritize-deselect-all): Lade till detta
+ 	kommando.
 
-    * review.el (lyskom-check-review-access): Hantera tomma möten rätt.
-    (lyskom-get-texts-by-and-to): Optimera hantering av återse av en
-    flitig författare till ett litet möte.
+	* review.el (lyskom-check-review-access): Hantera tomma möten
+ 	rätt. (lyskom-get-texts-by-and-to): Optimera hantering av återse
+ 	av en flitig författare till ett litet möte.
 
-    * swedish-strings.el,english-strings.el (lyskom-strings): Några nya
-    strängar för rapportering av fel i återse.
+	* swedish-strings.el,english-strings.el (lyskom-strings): Några
+ 	nya strängar för rapportering av fel i återse.
 
-    * review.el (lyskom-get-texts-by): Skrev om så den blev effektivare.
-    Sätt maxinkrement till lyskom-fetch-map-nos. Kontrollera att man
-    verkligen får läsa conf-mappen. (lyskom-get-texts-generic): Tog bort
-    denna eftersom den bara användes av lyskom-get-texts-by.
-    (lyskom-get-texts-to): Inlineade koden från lyskom-get-texts-generic.
-    Sätt maxinkrement till lyskom-fetch-map-nos.
-    (lyskom-get-texts-by-and-to): Startinkrement satt till
-    lyskom-fetch-map-nos, kontrollera att man verkligen får läsa
-    conf-mappen. (lyskom-check-review-access): Ny funktion.
+	* review.el (lyskom-get-texts-by): Skrev om så den blev
+ 	effektivare. Sätt maxinkrement till lyskom-fetch-map-nos.
+ 	Kontrollera att man verkligen får läsa conf-mappen.
+ 	(lyskom-get-texts-generic): Tog bort denna eftersom den bara
+ 	användes av lyskom-get-texts-by. (lyskom-get-texts-to): Inlineade
+ 	koden från lyskom-get-texts-generic. Sätt maxinkrement till
+ 	lyskom-fetch-map-nos. (lyskom-get-texts-by-and-to): Startinkrement
+ 	satt till lyskom-fetch-map-nos, kontrollera att man verkligen får
+ 	läsa conf-mappen. (lyskom-check-review-access): Ny funktion.
 
 Fri May  3 03:24:38 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -457,27 +563,27 @@ Thu May  2 18:47:18 1996  David Kågedal  <davidk@lysator.liu.se>
 	format på de strängar som används i
 	lyskom-print-delayed-header-comm.
 
-	* english-strings.el (lyskom-strings): 
+	* english-strings.el (lyskom-strings):
 
 Thu May  2 16:37:53 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * swedish-strings.el,english-strings.el (lyskom-commands): Lade in
-    kom-review-all (lyskom-mode-map): Lade in kom-review-all på "}A" och
-    "åa ". Bytte ut åttabitarstecken mot oktala koder.
+	* swedish-strings.el,english-strings.el (lyskom-commands): Lade in
+ 	kom-review-all (lyskom-mode-map): Lade in kom-review-all på "}A"
+ 	och "åa ". Bytte ut åttabitarstecken mot oktala koder.
 
-    * review.el (kom-review-first): Hantera prefixargument.
-    (lyskom-review-by-to): Använd strängen everything för att skriva ut
-    "alla". (lyskom-get-texts-generic): Hantera återse alla.
-    (lyskom-get-texts-by): Hantera återse alla.
-    (lyskom-get-texts-by-and-to): Returnera rätt antal inlägg vid återse
-    första. (lyskom-get-texts-by-and-to): Hantera återse alla.
-    (kom-review-all): Lade till detta kommando.
+	* review.el (kom-review-first): Hantera prefixargument.
+	(lyskom-review-by-to): Använd strängen everything för att skriva
+ 	ut "alla". (lyskom-get-texts-generic): Hantera återse alla.
+	(lyskom-get-texts-by): Hantera återse alla.
+	(lyskom-get-texts-by-and-to): Returnera rätt antal inlägg vid
+ 	återse första. (lyskom-get-texts-by-and-to): Hantera återse alla.
+	(kom-review-all): Lade till detta kommando.
 
-    * english-strings.el,english-strings.el (lyskom-strings): Lade till
-    everything som sträng.
+	* english-strings.el,english-strings.el (lyskom-strings): Lade
+ 	till everything som sträng.
 
-    * review.el (kom-review-first): Hantera prefixargument.
-    
+	* review.el (kom-review-first): Hantera prefixargument.
+
 Thu May  2 15:20:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (kom-display-time): Skydda med condition-case.
@@ -505,7 +611,7 @@ Thu May  2 15:20:19 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Thu May  2 15:03:58 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * prioritize.el (kom-prioritize-reprioritize): Rättade ett fel.
+	* prioritize.el (kom-prioritize-reprioritize): Rättade ett fel.
 
 Wed May  1 20:53:30 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -518,37 +624,38 @@ Wed May  1 20:53:30 1996  David Kågedal  <davidk@lysator.liu.se>
 	* services.el (z-initiate-get-map): Dito.
 
 	* commands1.el (lyskom-sub-member): Sänkte inte
-	lyskom-last-conf-fetched som den borde.
+ 	lyskom-last-conf-fetched som den borde.
 
 Wed May  1 11:34:02 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * english-strings.el,swedish-strings.el (lyskom-strings): Lade till
-    newline i några strängar. Lade till några strängar, rättade andra.
+	* english-strings.el,swedish-strings.el (lyskom-strings): Lade
+ 	till newline i några strängar. Lade till några strängar, rättade
+ 	andra.
 
-    * prioritize.el (kom-prioritize-help): Ny funktion
-    (lyskom-prioritize-mode): Bättre doc-sträng
+	* prioritize.el (kom-prioritize-help): Ny funktion
+	(lyskom-prioritize-mode): Bättre doc-sträng
 
-    * english-strings.el, swedish-strings.el (lyskom-prioritize-mode-map):
-    Byggde om keymappen lite.
+	* english-strings.el, swedish-strings.el
+ 	(lyskom-prioritize-mode-map): Byggde om keymappen lite.
 
-    * lyskom-rest.el (lyskom-format-aux-help): Generera knappar för ?M och
-    ?P även om argumentet inte är en conf-stat.
+	* lyskom-rest.el (lyskom-format-aux-help): Generera knappar för ?M
+ 	och ?P även om argumentet inte är en conf-stat.
 
-    * lyskom-buttons.el (lyskom-default-button): Hantera knappskapande för
-    möten och personer utan att ha hela conf-staten.
+	* lyskom-buttons.el (lyskom-default-button): Hantera knappskapande
+ 	för möten och personer utan att ha hela conf-staten.
 
-    * cache.el (cache-construct-uconf-stat): Rättade en bug.
+	* cache.el (cache-construct-uconf-stat): Rättade en bug.
 
-    * komtypes.el (lyskom-uconf-stat-p): Lade till denna funktion.
-    (uconf-stat->garb-nice): Rättade en bug.
+	* komtypes.el (lyskom-uconf-stat-p): Lade till denna funktion.
+	(uconf-stat->garb-nice): Rättade en bug.
 
-    * english-strings.el, swedish-strings.el (lyskom-button-actions):
-    Kommenterade bort särbehandling av textnumret i inläggsfoten.
+	* english-strings.el, swedish-strings.el (lyskom-button-actions):
+ 	Kommenterade bort särbehandling av textnumret i inläggsfoten.
 
 Mon Apr 29 09:24:16 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * review.el (lyskom-get-texts-by): Fixade så inte information om
-    hemliga texter returneras.
+	* review.el (lyskom-get-texts-by): Fixade så inte information om
+ 	hemliga texter returneras.
 
 Mon Apr 29 02:26:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -571,13 +678,13 @@ Sat Apr 27 02:48:51 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Thu Apr 25 14:04:26 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * prioritize.el (kom-prioritize-set-priority): Sätt mark när man
-    trycker "p".
-
+	* prioritize.el (kom-prioritize-set-priority): Sätt mark när man
+ 	trycker "p".
+	
 Fri Apr 26 00:01:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-delayed-header-comm): Nu borde den
-	skriva saker på rätt ställe.
+ 	skriva saker på rätt ställe.
 
 	* services.el (initiate-set-client-version): Ny funktion.
 	(initiate-get-client-name): Ny funktion.
@@ -615,37 +722,38 @@ Thu Apr 25 01:42:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Wed Apr 24 17:49:29 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * review.el (lyskom-get-texts-by-and-to): Fixade bug som gjorde att
-    man kunde missa de allra första texterna i ett möte om man återsåg
-    senaste.
+	* review.el (lyskom-get-texts-by-and-to): Fixade bug som gjorde
+ 	att man kunde missa de allra första texterna i ett möte om man
+ 	återsåg senaste.
 
 Tue Apr 23 00:47:17 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-start-of-command): Anta att
-	lyskom-first-time-around är definierad.
+ 	lyskom-first-time-around är definierad.
 
 Tue Apr 23 11:26:57 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * startup.el (kom-start-anew): Rensa completing-read-cachen innan
-    försök att konvertera det inmatade användarnamnet.
+	* startup.el (kom-start-anew): Rensa completing-read-cachen innan
+ 	försök att konvertera det inmatade användarnamnet.
 
-    * english-strings.el (lyskom-button-actions): Lade till hints för
-    sista inläggsnumret som skrivs ut.
+	* english-strings.el (lyskom-button-actions): Lade till hints för
+ 	sista inläggsnumret som skrivs ut.
 
-    * swedish-strings.el (lyskom-button-actions): Lade till hints för
-    sista inläggsnumret som skrivs ut.
+	* swedish-strings.el (lyskom-button-actions): Lade till hints för
+ 	sista inläggsnumret som skrivs ut.
 
-    * vars.el.in (kom-inhibit-typeahead): Lade till kom-inhibit-typeahead.
+	* vars.el.in (kom-inhibit-typeahead): Lade till
+ 	kom-inhibit-typeahead.
 
-    * lyskom-rest.el (lyskom-end-of-command): Återimplementerade
-    bortkastning av typeahead.
+	* lyskom-rest.el (lyskom-end-of-command): Återimplementerade
+ 	bortkastning av typeahead.
 
-    * view-text.el (lyskom-print-text): Lade till sättning av
-    lyskom-current-function och lyskom-current-function-phase.
+	* view-text.el (lyskom-print-text): Lade till sättning av
+ 	lyskom-current-function och lyskom-current-function-phase.
 
-    * lyskom-buttons.el (lyskom-get-button-hint): Ny funktion.
-    (lyskom-generate-button): Använd lyskom-get-button-hint för att hitta
-    hinten.
+	* lyskom-buttons.el (lyskom-get-button-hint): Ny funktion.
+	(lyskom-generate-button): Använd lyskom-get-button-hint för att
+ 	hitta hinten.
 
 Wed Apr 24 03:44:31 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -691,115 +799,119 @@ Tue Apr 16 23:47:01 1996  David Kågedal  <davidk@lysator.liu.se>
 Sun Apr 14 23:44:45 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-follow-comments): Felaktiga parametrar i
-	ett anrop till lyskom-view-text.
+ 	ett anrop till lyskom-view-text.
 
 Wed Apr 10 10:16:20 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * prioritize.el (kom-prioritize): En numera avrättad bug gjorde att
-    medlemskapslistan blev reverserad.
+	* prioritize.el (kom-prioritize): En numera avrättad bug gjorde
+ 	att medlemskapslistan blev reverserad.
 
 Mon Apr  8 18:42:12 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * prioritize.el: Skrev om från scratch.
+	* prioritize.el: Skrev om från scratch.
 
 Sat Apr  6 18:13:25 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * lyskom-rest.el (lyskom-insert): Fixade lyskom-insert så den ger
-    rätt beteende om kom-continuous-scrolling inte är satt.
+	* lyskom-rest.el (lyskom-insert): Fixade lyskom-insert så den ger
+ 	rätt beteende om kom-continuous-scrolling inte är satt.
 
 Thu Apr  4 10:36:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * lyskom-rest.el (lyskom-insert): Gör lyskom-scroll i lyskom-insert
-    bara om kom-continuous-scrolling är satt. (lyskom-start-of-command):
-    Tilldela nil till lyskom-is-waiting varje gång ett nytt kommando
-    startas. (lyskom-print-prompt): Tog bort tilldelningar av
-    lyskom-is-waiting.
+	* lyskom-rest.el (lyskom-insert): Gör lyskom-scroll i
+ 	lyskom-insert bara om kom-continuous-scrolling är satt.
+ 	(lyskom-start-of-command): Tilldela nil till lyskom-is-waiting
+ 	varje gång ett nytt kommando startas. (lyskom-print-prompt): Tog
+ 	bort tilldelningar av lyskom-is-waiting.
 
-    * vars.el.in (kom-continuous-scrolling): Ny variabel.
-    (lyskom-elisp-variables): Lade till kom-continuous-scrolling.
+	* vars.el.in (kom-continuous-scrolling): Ny variabel.
+	(lyskom-elisp-variables): Lade till kom-continuous-scrolling.
 
-    * english-strings.el, swedish-strings.el (lyskom-mode-map): Lade till
-    kom-review-first.
+	* english-strings.el, swedish-strings.el (lyskom-mode-map): Lade
+ 	till kom-review-first.
 
-    * swedish-strings.el, english-strings.el (lyskom-strings): Lade till
-    lyskom-review-how-many.
+	* swedish-strings.el, english-strings.el (lyskom-strings): Lade
+ 	till lyskom-review-how-many.
 
-    * review.el (lyskom-get-texts-by-to): Skrev helt om den här funktionen
-    så den anropar olika funktioner för att göra jobbet beroende på
-    inputmönster. (lyskom-get-texts-by-and-to): Ny funktion som hämtar
-    texter av en person till ett möte. (lyskom-get-texts-generic): Ny
-    funktion som hämtar texter av en person eller till ett möte.
-    (lyskom-get-texts-by): Ny funktion som hämtar texter av en person.
-    (lyskom-get-texts-to): Ny funktion som hämtar texter till ett möte.
+	* review.el (lyskom-get-texts-by-to): Skrev helt om den här
+ 	funktionen så den anropar olika funktioner för att göra jobbet
+ 	beroende på inputmönster. (lyskom-get-texts-by-and-to): Ny
+ 	funktion som hämtar texter av en person till ett möte.
+ 	(lyskom-get-texts-generic): Ny funktion som hämtar texter av en
+ 	person eller till ett möte.
+	(lyskom-get-texts-by): Ny funktion som hämtar texter av en person.
+	(lyskom-get-texts-to): Ny funktion som hämtar texter till ett
+ 	möte.
 
 Wed Apr  3 12:33:45 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* commands1.el (lyskom-create-conf-handler-2): Testa inte om mötet
-	är hemligt. Detta görs i kom-create-conf istället.
+ 	är hemligt. Detta görs i kom-create-conf istället.
 
 Wed Apr  3 12:56:19 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * english-strings.el, swedish-strings.el (lyskom-strings): Lade till
-    confusion-what-to-view. (lyskom-mode-map): Lade till tangentbindningar
-    för lyskom-view-previous-commented-text.
+	* english-strings.el, swedish-strings.el (lyskom-strings): Lade
+ 	till confusion-what-to-view. (lyskom-mode-map): Lade till
+ 	tangentbindningar för lyskom-view-previous-commented-text.
 
-    * commands1.el (kom-view-previous-commented-text): Lade till denna
-    funktion (skriven av Teddy).
+	* commands1.el (kom-view-previous-commented-text): Lade till denna
+ 	funktion (skriven av Teddy).
 
-    * lyskom-rest.el (lyskom-insert): Lade in ett anrop till lyskom-scroll
-    om point hamnar utanför skärmen. Detta får betraktas som ett
-    experiment.
+	* lyskom-rest.el (lyskom-insert): Lade in ett anrop till
+ 	lyskom-scroll om point hamnar utanför skärmen. Detta får betraktas
+ 	som ett experiment.
 
-    * review.el (lyskom-get-texts-by-to): Fixade buggar i David Kågedals
-    version och tog bort den gamla versionen.
+	* review.el (lyskom-get-texts-by-to): Fixade buggar i David
+ 	Kågedals version och tog bort den gamla versionen.
 
-    * utilities.el (nfirst): Flyttade från review.el
+	* utilities.el (nfirst): Flyttade från review.el
 
 Tue Apr  2 15:15:11 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * Blev av med alla kompilatorvarningar genom att ta bort
-    kompatibilitetskod för Emacs 18 och Lucid Emacs.
+	* Blev av med alla kompilatorvarningar genom att ta bort
+ 	kompatibilitetskod för Emacs 18 och Lucid Emacs.
 
-    * lyskom-rest: Tog bort kompatibilitetskod i kom-initial-digit-view.
+	* lyskom-rest: Tog bort kompatibilitetskod i
+ 	kom-initial-digit-view.
 
-    * prioritize.el: Tog bort referenser till kom-buffer.
+	* prioritize.el: Tog bort referenser till kom-buffer.
 
-    * macros.el: Lade till kompatibilitetsbindning av frame-width.
+	* macros.el: Lade till kompatibilitetsbindning av frame-width.
 
-    * flags.el: Lade till dummydefinition av original-user-variable-p så
-    en kompilatorvarning försvann.
+	* flags.el: Lade till dummydefinition av original-user-variable-p
+ 	så en kompilatorvarning försvann.
 
-    * utilities.el: Lade till regexpp.
+	* utilities.el: Lade till regexpp.
 
-    * filter.el: Dokumenterade lyskom-filter-hack. Använd
-    lyskom-apo-timeous-s och lyskom-apo-timeout-ms i lyskom-filter-text-p.
-    Skydda anrop till filterfunktionerne i lyskom-check-filter-list med
-    condition-case för att undvika otrevligheter. Fixade bug i kompilering
-    av tomma filter. Flyttade regexpp till utilities.el. Använd
-    def-kom-command till användarkommandon.
+	* filter.el: Dokumenterade lyskom-filter-hack. Använd
+ 	lyskom-apo-timeous-s och lyskom-apo-timeout-ms i
+ 	lyskom-filter-text-p. Skydda anrop till filterfunktionerne i
+ 	lyskom-check-filter-list med condition-case för att undvika
+ 	otrevligheter. Fixade bug i kompilering av tomma filter. Flyttade
+ 	regexpp till utilities.el. Använd def-kom-command till
+ 	användarkommandon.
 
-    * completing-read.el: Lade till hantering af typen conflogin för alla
-    inloggade personer eller möten. Tog bort emacs 18-kompatibilitet i
-    anrop till completing-read.
+	* completing-read.el: Lade till hantering af typen conflogin för
+ 	alla inloggade personer eller möten. Tog bort emacs
+ 	18-kompatibilitet i anrop till completing-read.
 
-    * edit-text.el: lyskom-edit-text anropar inte längre
-    lyskom-end-of-command. Tog bort Emacs 18.55-kompatibilitet från anrop
-    till processs-kill-without-query. Tog bort variabeln kom-buffer. Tog
-    bort kompatibilitet med Emacs 18 och Lucid emacs från
-    kom-edit-insert-digit-text. Anropar alltid lyskom-send-transform-text
-    när texter skickas in. Införde kom-cite-string som i stället för ">"
-    framför kommentarer. Flyttade sit-for i lyskom-edit-get-commented för
-    att få bort momentana markörförflyttningar vid insättning av
-    kommenterad text.
+	* edit-text.el: lyskom-edit-text anropar inte längre
+ 	lyskom-end-of-command. Tog bort Emacs 18.55-kompatibilitet från
+ 	anrop till processs-kill-without-query. Tog bort variabeln
+ 	kom-buffer. Tog bort kompatibilitet med Emacs 18 och Lucid emacs
+ 	från kom-edit-insert-digit-text. Anropar alltid
+ 	lyskom-send-transform-text när texter skickas in. Införde
+ 	kom-cite-string som i stället för ">" framför kommentarer.
+ 	Flyttade sit-for i lyskom-edit-get-commented för att få bort
+ 	momentana markörförflyttningar vid insättning av kommenterad text.
 
-    * commands1.el: Gjorde om alla kommentarfunktioner med def-kom-command
-    och tog bort explicita lyskom-end-of-command.
+	* commands1.el: Gjorde om alla kommentarfunktioner med
+ 	def-kom-command och tog bort explicita lyskom-end-of-command.
 
-    * commands2.el: Tog bort lite kompatibilitet med Emacs 18. Använd
-    lyskom-beep för att pipa när vänta avslutas.
-    (kom-set-session-priority): Använd lyskom-read-num-range. Skrev om
-    referenser till debugger-old-buffer för att slippa
-    kompileringsvarningar. 
+	* commands2.el: Tog bort lite kompatibilitet med Emacs 18. Använd
+ 	lyskom-beep för att pipa när vänta avslutas.
+	(kom-set-session-priority): Använd lyskom-read-num-range. Skrev om
+ 	referenser till debugger-old-buffer för att slippa
+ 	kompileringsvarningar.
 
 Tue Apr  2 00:45:27 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -812,32 +924,33 @@ Tue Apr  2 00:45:27 1996  David Kågedal  <davidk@lysator.liu.se>
 
 Mon Apr  1 14:57:53 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * commands1.el: Prioritet sätts mellan 1 och 255, aldrig till noll.
-    Man blir inte längree erbjuden att skriva presentation till hemliga
-    möten. Fixade några formatsträngar. Använde def-kom-command på några
-    fler ställen.
+	* commands1.el: Prioritet sätts mellan 1 och 255, aldrig till
+ 	noll. Man blir inte längree erbjuden att skriva presentation till
+ 	hemliga möten. Fixade några formatsträngar. Använde
+ 	def-kom-command på några fler ställen.
 
-    * english-strings.el: Nya appreciation och abuse strängar (från
-    misc/F}-uppmuntran).
+	* english-strings.el: Nya appreciation och abuse strängar (från
+ 	misc/F}-uppmuntran).
 
-    * cache.el: Ersatte anrop till eval med anrop till symbol-value.
+	* cache.el: Ersatte anrop till eval med anrop till symbol-value.
 
-    * internal.el (lyskom-check-call): Skydda anrop till kom-queue-resume
-    med unwind-protect.
+	* internal.el (lyskom-check-call): Skydda anrop till
+ 	kom-queue-resume med unwind-protect.
 
-    * lyskom-rest.el (lyskom-insert-before-prompt): Flytta inte point vid
-    insert. Det är *irriterande*. lyskom-modify-prompt: Lade in antal
-    inspelade meddelanden i prompten (om man har några).
+	* lyskom-rest.el (lyskom-insert-before-prompt): Flytta inte point
+ 	vid insert. Det är *irriterande*. lyskom-modify-prompt: Lade in
+ 	antal inspelade meddelanden i prompten (om man har några).
 
-    * utilities.el, filter-edit.el, macros.el, filter.el: Flyttade några
-    funktioner till utilities.el.
+	* utilities.el, filter-edit.el, macros.el, filter.el: Flyttade
+ 	några funktioner till utilities.el.
 
-    * Anrop till lyskom-message har nu en korrekt formatsträng som första
-    argument.
+	* Anrop till lyskom-message har nu en korrekt formatsträng som
+ 	första argument.
 
-    * lyskom-rest.el (lyskom-print-prompt): Sätt lyskom-is-waiting till
-    nil om man inte är vid sista prompten. lyskom-is-waiting måste vara
-    nil om asynkrona texter skall sparas och inte skrivas ut.
+	* lyskom-rest.el (lyskom-print-prompt): Sätt lyskom-is-waiting
+ 	till nil om man inte är vid sista prompten. lyskom-is-waiting
+ 	måste vara nil om asynkrona texter skall sparas och inte skrivas
+ 	ut.
 
 Sat Mar 30 00:33:32 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -866,15 +979,15 @@ Thu Mar 28 15:11:27 1996  David Kågedal  <davidk@lysator.liu.se>
  	uppdateras.
 
 	* view-text.el (lyskom-follow-comments): Se till att kommentarer
-	till fotnoter som läses omedelbart läggs på lässtacken.
+ 	till fotnoter som läses omedelbart läggs på lässtacken.
 
 Wed Mar 27 16:19:57 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * Version 0.40.1 release
+	* Version 0.40.1 release
 
 Tue Mar 26 15:54:22 1996  David Byers  <davby@sen2.ida.liu.se>
 
-    * edit-text.el: Bättre hantering av okända headrar.
+	* edit-text.el: Bättre hantering av okända headrar.
 
 Tue Mar 26 12:22:34 1996  David Byers  <byers@lysator.liu.se>
 
@@ -980,8 +1093,8 @@ Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
  	lyskom-current-subject.
 
 	* services.el, lyskom-rest.el, lyskom-buttons.el, view-text.el,
- 	macros.el: Lade till ställbar timeout till accept-process-output
-	i form av variablerna lyskom-apo-timeout-s och lyskom-apo-timeout-ms
+ 	macros.el: Lade till ställbar timeout till accept-process-output i
+ 	form av variablerna lyskom-apo-timeout-s och lyskom-apo-timeout-ms
 
 	* filter-edit.el: lyskom-format-filter-pattern klarar av att
  	skriva i en skrivskyddad buffert.
@@ -1053,20 +1166,20 @@ Fri Mar 15 16:28:17 1996  David Byers  <byers@lysator.liu.se>
 Thu Mar 14 09:01:48 1996  David Byers  <byers@lysator.liu.se>
 
 	* filter-edit.el: filter-edit-save now recompiles filters when
-	saving, thus making the changes actually stick.
+ 	saving, thus making the changes actually stick.
 
 	* filter.el: make-filter now does the right thing with empty
-	filters.
+ 	filters.
 
 Wed Mar 13 14:30:08 1996  David Byers  <byers@lysator.liu.se>
 
-	* view-text.el, vars.el.in: decode-time kommer inte att användas
-	i emacs < 19.28.
+	* view-text.el, vars.el.in: decode-time kommer inte att användas i
+ 	emacs < 19.28.
 
-	* macros.el: lyskom-blocking-do-multiple kan avbrytas. 
+	* macros.el: lyskom-blocking-do-multiple kan avbrytas.
 
 	* vars.el.in: Fler variabler i lyskom-elisp-variables.
-  	Omflyttningar, rättad dokumentation. Färger allokerat fail-safe.
+ 	Omflyttningar, rättad dokumentation. Färger allokerat fail-safe.
 
 Tue Mar 12 17:45:16 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -1075,7 +1188,7 @@ Tue Mar 12 17:45:16 1996  David Kågedal  <davidk@lysator.liu.se>
 Mon Mar 11 11:30:45 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el: kom-initial-digit-view: Corrected variable name
-	so first digit is not lost.
+ 	so first digit is not lost.
 
 Fri Mar  8 23:02:18 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -1101,16 +1214,16 @@ Mon Mar  4 21:54:24 1996  David K}gedal  <davidk@lysator.liu.se>
 	* commands2.el (lyskom-set-motd-2): Kludge.
 
 	* startup.el (lyskom): Kontrollera att motd-of-lyskom verkligen
-	finns.
+ 	finns.
 
 Mon Mar  4 11:29:53 1996  David Byers  <byers@lysator.liu.se>
 
 	* filter.el, commands1.el, commands2.el, review.el: Ändrade anrop
-	av lyskom-read-conf-no till mustmatch så den inte returnerar nil
-	till oförberedda funktioner.
+ 	av lyskom-read-conf-no till mustmatch så den inte returnerar nil
+ 	till oförberedda funktioner.
 
 	* swedish-strings.el, english-strings.el: Ändrade memberships-line
-	så datumet skrivs ut med fix bredd.
+ 	så datumet skrivs ut med fix bredd.
 
 Sat Mar  2 00:11:02 1996  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1150,7 +1263,7 @@ Tue Feb 27 03:26:01 1996  David K}gedal  <davidk@lysator.liu.se>
 Mon Feb 26 12:31:30 1996  David Byers  <byers@lysator.liu.se>
 
 	* completing-read.el: Fixade bug i inläsning av mötesnamn och
-	mötesstatus.
+ 	mötesstatus.
 
 Sat Feb 24 20:00:45 1996  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1160,7 +1273,7 @@ Sat Feb 24 20:00:45 1996  David K}gedal  <davidk@lysator.liu.se>
 Sat Feb 24 20:00:45 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-visible-membership): Gör så att möten med
-	prioritet 0 alltid är inaktiva.
+ 	prioritet 0 alltid är inaktiva.
 
 Fri Feb 23 13:27:46 1996  David Byers  <byers@lysator.liu.se>
 
@@ -1226,20 +1339,20 @@ Sat Feb 17 00:24:23 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* commands1.el (lyskom-fixup-and-go-to-conf): Tog bort.
 	(lyskom-add-member-by-no): Anropa lyskom-add-member-answer för att
-	uppdatera cache mm.
+ 	uppdatera cache mm.
 
 Fri Feb 16 12:42:15 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el: lyskom-is-read är nu asynkron eftersom den
-	anropas av lyskom-create-text-handler.
+ 	anropas av lyskom-create-text-handler.
 
 	* view-text.el: Gjorde så lyskom-print-date-and-time och
-	lyskom-return-date-and-time kan ta ett extra agurment
+ 	lyskom-return-date-and-time kan ta ett extra agurment
 	(formatsträng) vilket gör att den kan användas istf
-	lyskom-return-time. 
+ 	lyskom-return-time.
 
 	* commands2.el: Bytte ut lyskom-return-time mot
-	lyskom-return-date-and-time i alla funktioner.
+ 	lyskom-return-date-and-time i alla funktioner.
 
 Fri Feb 16 05:41:31 1996  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1284,7 +1397,7 @@ Sun Feb 11 23:08:01 1996  David K}gedal  <davidk@lysator.liu.se>
 	* async.el (lyskom-is-in-minibuffer): Använd den.
 
 	* startup.el (kom-start-anew): Förhindra minibuffertmeddelanden
-	under lösenordsinmatning.
+ 	under lösenordsinmatning.
 
 Thu Feb  8 17:12:06 1996  David Byers  <byers@lysator.liu.se>
 
@@ -1306,11 +1419,11 @@ Tue Feb  6 17:52:34 1996  David K}gedal  <davidk@lysator.liu.se>
 Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Lade till kom-print-complex-dates, fixade fel som
-	uppstod vid tidigare incheckning. Tog bort ett antal symboler som
-	stod fel i filen. Lade till kom-ansaphone-replies.
+ 	uppstod vid tidigare incheckning. Tog bort ett antal symboler som
+ 	stod fel i filen. Lade till kom-ansaphone-replies.
 
 	* view-text.el: lyskom-print-date-and-time kan nu skriva ut idag
-	och igår.
+ 	och igår.
 
 	* english-strings.el, swedish-strings.el: Lade till idag och igår.
 
@@ -1318,8 +1431,8 @@ Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 
 Mon Feb  5 12:32:23 1996  David Byers  <byers@lysator.liu.se>
 
-	* ansaphone.el: Fixade bug i hantering av allmänna
-	meddelanden. Flyttade ut kom-ansaphone-replies.
+	* ansaphone.el: Fixade bug i hantering av allmänna meddelanden.
+ 	Flyttade ut kom-ansaphone-replies.
 
 Sun Feb  4 03:02:40 1996  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1341,20 +1454,20 @@ Fri Feb  2 06:41:29 1996  David K}gedal  <davidk@lysator.liu.se>
 Thu Feb  1 10:30:54 1996  David Byers  <byers@lysator.liu.se>
 
 	* commands1.el, commands2.el: Some more interactive functions
-			accept optional arguments.
+ 			accept optional arguments.
 
 	* async.el: Add optional arg to unconditionally inhibit beeps when
-			handling personal messages.
+ 			handling personal messages.
 
 	* lyskom-buttons.el: Bug fixes, changed mouse-3 menus.
 
 	* lyskom-rest.el: New function lyskom-beep. Only signal priority
-		break when kom-ding-on-priority-break is set.
+ 		break when kom-ding-on-priority-break is set.
 
 	* async.el: kom-ding-on-personal-messages replaced by three
-		    variables, kom-ding-on-personal-messages,
-		    kom-ding-on-group-messages,
-		    kom-ding-on-common-messages.
+ 		    variables, kom-ding-on-personal-messages,
+ 		    kom-ding-on-group-messages,
+ 		    kom-ding-on-common-messages.
 	
 Mon Jan 29 17:23:36 1996  David Byers  <byers@lysator.liu.se>
 
@@ -1363,7 +1476,7 @@ Mon Jan 29 17:23:36 1996  David Byers  <byers@lysator.liu.se>
 	* lyskom-rest.el: New function lyskom-beep. New mouse-3 menus.
 
 	* async.el: kom-ding-on-personal-message replaced by three
-	  variables.
+ 	  variables.
 
 	* lyskom-buttons.el: Rewritten
 
@@ -1411,26 +1524,25 @@ Mon Jan 22 17:27:59 1996  David Byers  <byers@lysator.liu.se>
 	* commands2.el: kom-throw-out-session: Use lyskom-read-session-no.
 
 	* completing-read.el: Added lyskom-read-session-no to read session
-	  numbers of logged-in users. 
+ 	  numbers of logged-in users.
 
 	* startup.el: lyskom-session-no is defined again.
 
-	* english-strings.el: Added strings.	
+	* english-strings.el: Added strings.
 
 	* swedish-strings.el: Fixed prioritize mode keymap. Added some
-	  strings. 
+ 	  strings.
 
 	* ansaphone.el: New file. Answering machine.
 
 	* remote-control.el: New file. Remote control of session.
 
-	* messages.el: New file. Framework for handling personal
-	  messages. 
+	* messages.el: New file. Framework for handling personal messages.
 
 	* async.el: Rewrote handling of personal messages to used a
-	  handler queue. See messages.el. Functions that print personal
-	  messages now accept time strings and know how to print very old
-	  messages. 
+ 	  handler queue. See messages.el. Functions that print personal
+ 	  messages now accept time strings and know how to print very old
+ 	  messages.
 
 Sun Jan 21 18:38:26 1996  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1444,9 +1556,9 @@ Fri Jan 19 19:21:25 1996  David Byers  <byers@lysator.liu.se>
 	* lyskom-rest.el: Rewrote ISO conversion to work in-place.
 
 	* lyskom-buttons.el: Fixed to URLs work in non-windowed emacses.
-	  Removes lyskom-button-match-data from the props and added
-	  lyskom-button-string which is the entire match (the button
-	  title, basically.)
+ 	  Removes lyskom-button-match-data from the props and added
+ 	  lyskom-button-string which is the entire match (the button
+ 	  title, basically.)
 
 	* filter.el: Fixed bug in kom-list-filters
 	
@@ -1594,7 +1706,7 @@ Fri Nov 24 02:54:25 1995  David K}gedal  <davidk@lysator.liu.se>
 Mon Nov 20 01:47:47 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (lyskom-elisp-variables): La till
-	   kom-ding-on-personal-messages.
+ 	   kom-ding-on-personal-messages.
 
 Sun Nov 19 14:58:59 1995  David Byers  <byers@lysator.liu.se>
 
@@ -1603,26 +1715,26 @@ Sun Nov 19 14:58:59 1995  David Byers  <byers@lysator.liu.se>
 Sat Nov 18 12:13:59 1995  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-read-number): Don't call
-	  lyskom-end-of-command.
+ 	  lyskom-end-of-command.
 
 	* commands2.el (kom-set-unread): Fixed bug in handling prefix arg.
-	  Explicitly unwind-protect functions that call lyskom-read-number
-	  to they call lyskom-end-of-command on C-g
+ 	  Explicitly unwind-protect functions that call lyskom-read-number
+ 	  to they call lyskom-end-of-command on C-g
 
 	* flags.el (lyskom-read-options-eval): Read filters correctly.
 
 	* commands1.el (kom-go-to-conf) split in two since other functions
-	  may need to go to a conference without user interaction.
-	  Explicitly unwind-protect functions that call lyskom-read-number
-	  to they call lyskom-end-of-command on C-g
+ 	  may need to go to a conference without user interaction.
+ 	  Explicitly unwind-protect functions that call lyskom-read-number
+ 	  to they call lyskom-end-of-command on C-g
 
 	* startup.el (kom-start-anew): Changed assignment to free variable
-	  lyskom-who-am-i to a let statement. I still don't know if it's
-	  necessary at all.
+ 	  lyskom-who-am-i to a let statement. I still don't know if it's
+ 	  necessary at all.
 
 	* services.el (z-initiate-get-map): changed
-	  lyskom-do-initiate-get-map to initiate-get-map since the former
-	  does not exits. Added initiate-get-uconf-stat
+ 	  lyskom-do-initiate-get-map to initiate-get-map since the former
+ 	  does not exits. Added initiate-get-uconf-stat
 
 	* cache.el: Handle uconf-stats
 
@@ -1744,33 +1856,30 @@ Sat Oct 28 08:27:02 1995  David K}gedal  <davidk@lysator.liu.se>
 	   kortnamn f|r k{nda servrar.
 
 	* lyskom-rest.el (lyskom-mode-name-from-host): Anv{nd
-	   lyskom-server-aliases.
+ 	   lyskom-server-aliases.
 
 Fri Oct 27 15:45:01 1995  David Byers  <byers@lysator.liu.se>
 
 	* Earlier changes (I forgot to add to the ChangeLog)
-	  lyskom-rest.el: New lyskom-format
-	  swedish-strings.el: New format strings
-	  english-strings.el: New format strings
-	  filter.el: Filters now byte-compiled functions
-	  async.el: Handle group messages
+ 	  lyskom-rest.el: New lyskom-format swedish-strings.el: New format
+ 	  strings english-strings.el: New format strings filter.el:
+ 	  Filters now byte-compiled functions async.el: Handle group
+ 	  messages
 
 	* async.el: skrev och tog bort (tills vidare) autologout
-	  swedish-strings.el: Lade till anonym person, nya bindningar
-	  english-strings.el:_ Lade till anonym person, nya bindningar
-	  commands1.el: Uteslut, Utträd, Addera/Ta bort kommentar,
-			mottagare
-          commands2.el: Visa user-arean, kom-buffer->lyskom-buffer, Ändra
-			mötestyp. 
-	  edit-text.el: kom-edit-send-anonymously
-	  filter-edit.el: kom-buffer->lyskom-buffer, deklarera en variabel
-	  filter.el: Handle text with no recipients
-	  lyskom-buttons.el: kom-buffer->lyskom-buffer, fix bug with boundp   
-	  lyskom-rest.el: Handle anonymous person in print routines
-	  services.el: initiate-create-anonymous-text
-	  vars.el.in: Add kom-quit-when-idle
-	  view-text.el: Handle anonymous person
-	  startup.el: kom-buffer->lyskom-buffer
+ 	  swedish-strings.el: Lade till anonym person, nya bindningar
+ 	  english-strings.el:_ Lade till anonym person, nya bindningar
+ 	  commands1.el: Uteslut, Utträd, Addera/Ta bort kommentar,
+ 	  mottagare commands2.el: Visa user-arean,
+ 	  kom-buffer->lyskom-buffer, Ändra mötestyp. edit-text.el:
+ 	  kom-edit-send-anonymously filter-edit.el:
+ 	  kom-buffer->lyskom-buffer, deklarera en variabel filter.el:
+ 	  Handle text with no recipients lyskom-buttons.el:
+ 	  kom-buffer->lyskom-buffer, fix bug with boundp lyskom-rest.el:
+ 	  Handle anonymous person in print routines services.el:
+ 	  initiate-create-anonymous-text vars.el.in: Add
+ 	  kom-quit-when-idle view-text.el: Handle anonymous person
+ 	  startup.el: kom-buffer->lyskom-buffer
 	
 Fri Oct 27 03:36:58 1995  David K}gedal  <davidk@lysator.liu.se>
 
@@ -1782,25 +1891,22 @@ Wed Oct 25 05:26:48 1995  David K}gedal  <davidk@lysator.liu.se>
 	
 	* vars.el.in (kom-max-buffer-size): Ny variabel
 
-	* lyskom-rest.el (lyskom-trim-buffer): Ny funktion som använder den
+	* lyskom-rest.el (lyskom-trim-buffer): Ny funktion som använder
+ 	den
 
 Wed Mar  1 18:42:05 1995  David Byers  <byers@lysator.liu.se>
 
-	*  Fler {ndringar gjorda.
-	   view-text.el: fler argument till lyskom-view-text
-	   lyskom-rest.el: konvertering av nya stränglistor till swascii
-	   vars.el.in: nya variabler
-	   startup.el: spara servernamnet i en variabel
-	   flags.el: ny funktion f|r att spara user-arean fr}n en funktion
-	   filter.el: ny fil
-	   filter-edit.el: ny fil
-	   Makefile: ta med ignore-edit och ignore
-	   swedish-strings.el: nya str{ngar och keymappar
-	   english-strings.el: samma
-	   commands2.el: defaultargument till s{nda meddelande
-                         {ndringar i lyskom-view-next-text
-           services.el: multiple-blocking-do
-	   async.el: support for default recipient of personal messages
+	* Fler {ndringar gjorda. view-text.el: fler argument till
+ 	   lyskom-view-text lyskom-rest.el: konvertering av nya
+ 	   stränglistor till swascii vars.el.in: nya variabler startup.el:
+ 	   spara servernamnet i en variabel flags.el: ny funktion f|r att
+ 	   spara user-arean fr}n en funktion filter.el: ny fil
+ 	   filter-edit.el: ny fil Makefile: ta med ignore-edit och ignore
+ 	   swedish-strings.el: nya str{ngar och keymappar
+ 	   english-strings.el: samma commands2.el: defaultargument till
+ 	   s{nda meddelande {ndringar i lyskom-view-next-text services.el:
+ 	   multiple-blocking-do async.el: support for default recipient of
+ 	   personal messages
 
 Thu Feb 23 21:24:25 1995  Linus Tolke Y  <linus@lysator.liu.se>
 

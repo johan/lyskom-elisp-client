@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.2 1996-07-08 09:46:12 byers Exp $
+;;;;; $Id: edit-text.el,v 41.3 1996-07-17 08:59:40 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.2 1996-07-08 09:46:12 byers Exp $\n"))
+	      "$Id: edit-text.el,v 41.3 1996-07-17 08:59:40 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -60,11 +60,14 @@ See lyskom-edit-handler.")
   "Status variable for an edit-buffer.")
 
 ;;; Error signaled by lyskom-edit-parse-headers
+(put 'lyskom-edit-text-abort 'error-conditions
+     '(error lyskom-error lyskom-edit-error lyskom-abort-edit))
+
 (put 'lyskom-unknown-header 'error-conditions
-     '(error lyskom-error lyskom-unknown-header lyskom-edit-error))
+     '(error lyskom-error lyskom-edit-error lyskom-unknown-header))
 
 (put 'lyskom-no-subject 'error-conditions
-     '(error lyskom-error lyskom-no-subject lyskom-edit-error))
+     '(error lyskom-error lyskom-edit-error lyskom-no-subject))
 
 (defun lyskom-edit-text (proc misc-list subject body
 			      &optional handler &rest data)
@@ -356,6 +359,10 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		(setq headers (lyskom-edit-parse-headers)
 		      misc-list (apply 'lyskom-create-misc-list (cdr headers))
 		      subject (car headers)))
+              ;;
+              ;; Check that there is a subject
+              ;;
+
 	      (if (string= subject "")
 		  (let ((old (point)))
 		    (goto-char (point-min))
@@ -366,8 +373,26 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		    (end-of-line)
 		    (if (/= (point) old)
 			(signal 'lyskom-no-subject '(enter-subject-idi)))))
+
+              ;;
+              ;; Check the recipients
+              ;;
+
+              (let ((extra-headers
+                     (lyskom-edit-send-check-recipients misc-list
+                                                        subject)))
+                (if extra-headers
+                    (setq misc-list (apply 'lyskom-create-misc-list
+                                           (cdr (nconc headers
+                                                       extra-headers))))))
+
+              ;;
+              ;; Transform the message text
+              ;;
+
 	      (setq message
-                (lyskom-send-transform-text (lyskom-edit-extract-text)))
+                    (lyskom-send-transform-text (lyskom-edit-extract-text)))
+
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
 		(set-buffer (process-buffer lyskom-proc))
@@ -377,11 +402,11 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		(setq lyskom-is-writing nil)
 		(lyskom-tell-internat 'kom-tell-send)
 		(funcall send-function
-                 'sending
-                 'lyskom-create-text-handler
-                 (concat subject "\n" message)
-                 misc-list
-                 buffer)))
+                         'sending
+                         'lyskom-create-text-handler
+                         (concat subject "\n" message)
+                         misc-list
+                         buffer)))
 	    (if kom-dont-restore-window-after-editing
 		(bury-buffer)
 	      (save-excursion
@@ -394,10 +419,12 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	      (set-buffer (window-buffer (selected-window))))
 	    (goto-char (point-max))))
     ;;
-    ;; Catch no-subject
+    ;; Catch no-subject and other things
     ;;
 
-    (lyskom-edit-error
+    (lyskom-abort-edit
+     (apply 'lyskom-message (cdr-safe err)))
+    (lyskom-no-subject
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
      (lyskom-beep lyskom-ding-on-no-subject)
@@ -413,6 +440,119 @@ Entry to this mode runs lyskom-edit-mode-hook."
        (error nil)))
     (lyskom-unknown-header
      (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
+
+
+(defun lyskom-edit-send-check-recipients (misc-list subject) 
+  "Check that the recipients of this text are OK. Ask the user to
+confirm multiple recipients; check that the author of the commented
+text is a member of some recipient of this text."
+  (let* ((comm-to-list nil)
+         (recipient-list nil)
+         (author-list nil)
+         (membership-list nil)
+         (check-rcpt-membership-list nil)
+         (extra-headers nil)
+         (me (save-excursion (set-buffer (process-buffer lyskom-proc))
+                             lyskom-pers-no))
+         (num-me 0))
+
+    ;;
+    ;; List all texts this text is a comment to
+    ;;
+
+    (lyskom-traverse misc (cdr misc-list)
+      (cond ((eq (car misc) 'comm-to)
+             (setq comm-to-list (cons (cdr misc)
+                                      comm-to-list)))
+            ((or (eq (car misc) 'recpt)
+                 (eq (car misc) 'cc-recpt))
+             (if (eq (cdr misc) me) (setq num-me (1+ num-me)))
+             (setq recipient-list (cons (cdr misc) recipient-list)))))
+
+    ;;
+    ;; Confirm multiple recipients
+    ;;
+    
+    (if (and kom-confirm-multiple-recipients
+             (not (eq kom-confirm-multiple-recipients 'before))
+             (> (- (length recipient-list) num-me) 1))
+        (if (not (lyskom-j-or-n-p (lyskom-format 'comment-all-relevant-p) t))
+            (signal 'lyskom-edit-text-abort (list "%s" 
+                                                  (lyskom-get-string 
+                                                   'please-edit-recipients)))))
+
+    (if kom-check-commented-author-membership
+        (progn
+
+          ;;
+          ;; For each commented text, get the author
+          ;;
+        
+          (setq author-list (mapcar 
+                             (function (lambda (x)
+                                         (text-stat->author
+                                          (blocking-do 'get-text-stat x))))
+                             comm-to-list))
+
+          ;;
+          ;; For each author, check that the author is a member of one of
+          ;; the recipients (I'd like a quick server call for this, rather
+          ;; than get the entire membership for the author).
+          ;;
+
+    
+          (lyskom-message (lyskom-get-string 'checking-rcpt))
+          (save-excursion
+            (set-buffer (process-buffer lyskom-proc))
+            (mapcar (function (lambda (check-recipient-author-map-variable)
+                                (initiate-get-membership
+                                 'sending
+                                 (function
+                                  (lambda (x y)
+                                    (setq check-rcpt-membership-list
+                                          (cons
+                                           (cons y x)
+                                           check-rcpt-membership-list))))
+                                 check-recipient-author-map-variable
+                                 check-recipient-author-map-variable)))
+                    author-list)
+            (lyskom-wait-queue 'sending))
+
+          (lyskom-message (lyskom-get-string 'checking-rcpt-done))
+
+
+          (setq membership-list
+                (mapcar
+                 (function (lambda (x)
+                             (cons (car x)
+                                   (mapcar 'membership->conf-no
+                                           (listify-vector (cdr x))))))
+                 check-rcpt-membership-list))
+
+          (while membership-list
+            (if (not (lyskom-edit-check-membership (cdr (car membership-list))
+                                                   recipient-list))
+                (if (lyskom-j-or-n-p
+                     (let ((kom-deferred-printing nil))
+                       (lyskom-format 'add-recipient-p
+                                      (car (car membership-list)))) t)
+                    (setq extra-headers
+                          (nconc (list 'recpt (car (car membership-list)))
+                                 extra-headers))))
+            (setq membership-list (cdr membership-list)))))
+    extra-headers))
+
+
+(defun lyskom-edit-check-membership (membership conf-list)
+  (let ((found nil))
+    (while (and conf-list (not found))
+      (setq found (or found
+                      (memq (car conf-list) membership)))
+      (setq conf-list (cdr conf-list)))
+    found))
+  
+
+    
 
 
 (defun lyskom-send-transform-text (message)
@@ -548,7 +688,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (let ((marker (point-min-marker))
 	(edit-buffer (current-buffer))
 	(insert-at (point-min-marker))
-	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "")))
+	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
     (lyskom-save-excursion
      ;;(save-excursion
      (set-buffer (process-buffer lyskom-proc))

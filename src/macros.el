@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 41.1 1996-05-20 16:28:39 davidk Exp $
+;;;;; $Id: macros.el,v 41.2 1996-07-17 08:59:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 41.1 1996-05-20 16:28:39 davidk Exp $\n"))
+	      "$Id: macros.el,v 41.2 1996-07-17 08:59:57 byers Exp $\n"))
 
 
 
@@ -224,8 +224,11 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
       
       (defun facep (x)
         "Return t if X is a face name or an internal face vector."
-        (and (or (internal-facep x)
-                 (and (symbolp x) (assq x global-face-data)))
+        (and (or (and (fboundp 'internal-facep)
+                      (internal-facep x))
+                 (and (symbolp x) 
+                      (boundp 'global-face-data)
+                      (assq x global-face-data)))
              t))))
 
 (if (not (fboundp 'save-selected-window))

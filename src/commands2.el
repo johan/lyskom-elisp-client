@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.8 1996-07-09 08:28:19 byers Exp $
+;;;;; $Id: commands2.el,v 41.9 1996-07-17 08:59:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.8 1996-07-09 08:28:19 byers Exp $\n"))
+	      "$Id: commands2.el,v 41.9 1996-07-17 08:59:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -442,7 +442,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			   (cons lyskom-last-personal-message-sender 0)
 			 ""))) t))))
     (if (zerop target)
-	(lyskom-insert 'message-all-info)
+	(lyskom-insert (lyskom-get-string 'message-all-info))
       (lyskom-format-insert 'message-recipient-info target))
     (lyskom-send-message target message)))
   

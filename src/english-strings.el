@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.11 1996-07-09 08:28:25 byers Exp $
+;;;;; $Id: english-strings.el,v 41.12 1996-07-17 08:59:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.11 1996-07-09 08:28:25 byers Exp $"))
+              "$Id: english-strings.el,v 41.12 1996-07-17 08:59:44 byers Exp $"))
 
 
 
@@ -362,6 +362,12 @@ Read all about it at http://www.lysator.liu.se/history/")
     (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
     (sub-comment-to . "Removing article %#1n as a comment to article %#2n...")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
+    (comment-all-relevant-p . "There are multiple recipients. Are they all relevant? ")
+    (please-edit-recipients . "Modify the recipient list and send the article again.")
+    (add-recipient-p . "Add recipient %#1P? ")
+    (checking-rcpt . "Checking recipients...")
+    (checking-rcpt-done . "Checking recipients...done")
+
     (matching-regexp . "Conferences/users matching `%#1s'\n")
 
     ; From commands2.el:
@@ -713,7 +719,8 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (new-prio . "%6#1d")
 
     ; From flags.el:
-    (saving-settings . "Saving options")
+    (saving-settings . "Saving options...")
+    (saving-settings-done . "Saving options...done")
     (hang-on . "Wait a moment...\n")
     (could-not-save-options . "Couldn't save options.")
     (could-not-create-area . "Couldn't create the article.\n")
@@ -902,6 +909,12 @@ Text:
     (who-i-am-client . "The programs is lyskom.el, version %#1s.\n")
     (who-i-am-server . "This is %#1s, version %#2s.\n")
     (who-i-am-emacs . "Running under %#1s.\n")
+    (session-status . "Session %#1d is %#2P <%#2p>
+%#5s %#7s %#4M
+Using %#6D from %#3s\n")
+    (status-for-session . "Session status for whom? ")
+    (doing-where-conn . "in")
+    (doing-nowhere-conn . "but is")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -998,6 +1011,7 @@ Text:
     (kom-unset-conf-motd        "Remove note (from the door)")
     (kom-save-text              "Save article (in file)")
     (kom-edit-options           "Change options")
+    (kom-save-options           "Save options")
     (kom-shutdown-server        "Shut down (server)")
     (kom-enable-adm-caps        "Become administrator")
     (kom-disable-adm-caps       "Become (normal) user")
@@ -1026,6 +1040,8 @@ Text:
     (kom-remote-list-messages "Remote control list messages")
     (kom-remote-erase-messages "Remote control erase messages")
     (kom-remote-quit "Remote control quit")
+
+    (kom-status-session "Status (of a) session")
     )
   "A list of LysKOM-commands recognized by the extended parser.")
 
@@ -1185,6 +1201,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "ra " 'kom-review-all)
   (define-key lyskom-mode-map "sc" 'kom-status-conf)
   (define-key lyskom-mode-map "su" 'kom-status-person)
+  (define-key lyskom-mode-map "ss" 'kom-status-session)
 
   ;; Running in buffer
 

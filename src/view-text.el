@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.6 1996-07-15 19:31:57 davidk Exp $
+;;;;; $Id: view-text.el,v 41.7 1996-07-17 09:00:31 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.6 1996-07-15 19:31:57 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.7 1996-07-17 09:00:31 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -130,9 +130,10 @@ Note that this function must not be called asynchronously."
 			  ((eq type 'COMM-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
 			       nil
-			     (lyskom-print-header-comm
-			      (misc-info->comm-in misc)
-			      misc)))
+                             (if lyskom-show-comments ; +++SOJGE
+                                 (lyskom-print-header-comm
+                                  (misc-info->comm-in misc)
+                                  misc))))
 			  ((eq type 'FOOTN-IN)
 			   (if kom-reading-puts-comments-in-pointers-last
 			       nil
@@ -212,7 +213,8 @@ lyskom-reading-list."
        ((eq (misc-info->type misc) 'FOOTN-IN)
 	(setq list (cons (misc-info->footn-in misc) list)))
        ((eq (misc-info->type misc) 'COMM-IN)
-	(setq list (cons (misc-info->comm-in misc) list)))))
+        (if lyskom-show-comments        ; +++SOJGE
+            (setq list (cons (misc-info->comm-in misc) list))))))
 
     (let ((comments nil))
       (lyskom-traverse no list
@@ -442,7 +444,8 @@ Args: TEXT-STAT of the text being read."
     (let ((type (misc-info->type misc)))
       (cond
        ((eq type 'COMM-IN)
-	(lyskom-print-header-comm (misc-info->comm-in misc) misc))
+        (if lyskom-show-comments        ;+++SOJGE
+            (lyskom-print-header-comm (misc-info->comm-in misc) misc)))
        ((eq type 'FOOTN-IN)
 	(lyskom-print-header-comm (misc-info->footn-in misc) misc))))))
 

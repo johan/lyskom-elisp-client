@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.4 1996-07-08 09:46:08 byers Exp $
+;;;;; $Id: completing-read.el,v 41.5 1996-07-17 08:59:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.4 1996-07-08 09:46:08 byers Exp $\n"))
+       "$Id: completing-read.el,v 41.5 1996-07-17 08:59:36 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -223,7 +223,9 @@ PREDICATE or nil if no name matches. See lyskom-read-conf-internal for
 a documentation of PREDICATE."
   (let ((lyskom-blocking-process (or lyskom-blocking-process
                                      lyskom-proc)))
-    (lyskom-read-conf-internal string predicate 'lyskom-lookup)))
+    (if (string= string "")
+        nil
+      (lyskom-read-conf-internal string predicate 'lyskom-lookup))))
 
 
 (defun lyskom-read-conf-internal (string predicate all)
@@ -246,8 +248,7 @@ function work as a name-to-conf-stat translator."
                               (listify-vector (conf-list->conf-nos x-list))))
          (candidate-type-list 
           (and x-list (listify-vector (conf-list->conf-types x-list))))
-         (result-list nil)
-         (get-conf-stat-done nil))
+         (result-list nil))
 
     ;;
     ;;  login-list now contains a list of logins, IF the predicate
@@ -259,8 +260,6 @@ function work as a name-to-conf-stat translator."
     ;;  Now set result-list to the conf-stats that fulfill the
     ;;  predicate, fetching the conf-stats asynchronously.
     ;;
-
-    (setq get-conf-stat-done nil)
 
     (save-excursion
       (set-buffer (process-buffer lyskom-blocking-process))
@@ -291,13 +290,20 @@ function work as a name-to-conf-stat translator."
     (cond 
 
      ((eq all 'lyskom-lookup)
-      (let ((specials (lyskom-read-conf-expand-specials string
+      (let ((names (mapcar 'conf-stat->name result-list))
+            (specials (lyskom-read-conf-expand-specials string
                                                         predicate
                                                         login-list
                                                         x-list)))
 
-        (cond ((>= (length result-list) 1)
+        (cond ((= (length result-list) 1)
                (car result-list))
+              ((and (> (length result-list) 1)
+                    (lyskom-completing-member string names))
+               (elt result-list
+                    (- (length result-list)
+                       (length (lyskom-completing-member string names)))))
+
               (specials (lyskom-read-conf-lookup-specials string
                                                           predicate
                                                           login-list
@@ -401,7 +407,7 @@ function work as a name-to-conf-stat translator."
             (found nil))
         (if specials (setq name-list (nconc specials name-list)))
 
-        (cond ((member string name-list) t) ; Exact match
+        (cond ((lyskom-completing-member string name-list) t) ; Exact match
               ((= (length name-list) 1) (car name-list))
               ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                              string) nil)
@@ -414,6 +420,15 @@ function work as a name-to-conf-stat translator."
                           (list string))))))))))
 
 
+
+(defun lyskom-completing-member (string list)
+  "Check case-insensitively if STRING is a member of LIST"
+  (let (result)
+  (while (and list (not result))
+    (if (string= (downcase string) (downcase (car list)))
+        (setq result list)
+      (setq list (cdr list))))
+  result))
 
 
 (defun lyskom-complete-collect (_fn_ _seq_ &optional _initial_)
@@ -438,10 +453,13 @@ argument INITIAL is the initial value to give FN."
   (or (and (memq 'all predicate)
            conf-no)
       (and (memq 'conf predicate)
+           conf-type
            (not (conf-type->letterbox conf-type)))
       (and (memq 'pers predicate) 
+           conf-type
            (conf-type->letterbox conf-type))
       (and (memq 'login predicate)
+           conf-type
            (memq conf-no logins))
       (and (memq 'none predicate) 
            (and (null conf-no)
@@ -739,7 +757,9 @@ If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field.
 If ONLY-ONE is non-nil only one session number will be returned."
   (lyskom-completing-clear-cache)
-  (let (result data done)
+  (let (result data done
+               (lyskom-blocking-process lyskom-proc))
+
     (while (not done)
       (setq data (lyskom-read-session-no-aux prompt t initial))
       (cond ((and (string= data "") (not empty)))

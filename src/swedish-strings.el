@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.11 1996-07-09 08:28:44 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.12 1996-07-17 09:00:16 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.11 1996-07-09 08:28:44 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.12 1996-07-17 09:00:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -333,22 +333,22 @@ du har l\344st klart allting. Kom tillbaks senare.
     (no-marked-texts-mark . 
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
 
-    (weekdays . ["söndag" "måndag" "tisdag" "onsdag" "torsdag"
-		 "fredag" "lördag" "söndag"])
-    (time-is . "Det är %#1s %#2s(enligt servern).")
+    (weekdays . ["s\366ndag" "m\345ndag" "tisdag" "onsdag" "torsdag"
+		 "fredag" "l\366rdag" "s\366ndag"])
+    (time-is . "Det \344r %#1s %#2s(enligt servern).")
     (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
-    (xmaseve . "\nJulafton! Har du \345ppnat dina julklappar \344n?")
+    (xmaseve . "\nJulafton! Har du \366ppnat dina julklappar \344n?")
     (xmasday . "Juldagen.")
     (newyearday . "Gott nytt %#1d!")
     (newyearevelate . "Mindre \344n en timme kvar...")
     (newyeareve . "Gott nytt \345r!")
-    (cgdag . "Konungens födelsedag")
+    (cgdag . "Konungens f\366delsedag")
     (sixjune . "Sveriges nationaldag och svenska flaggans dag")
-    (holdnose . "Håll för näsan...")
+    (holdnose . "H\345ll f\366r n\344san...")
     (lysbday . "
 P\345 denna dag, \345r 1973, grundades Lysator, och det var en stor dag
-i svensk datorhistoria. L\344s mer på http://www.lysator.liu.se/history/")
+i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
 
 
     (total-users . "    Sammanlagt %#1d anv\344ndare.\n")
@@ -365,6 +365,11 @@ i svensk datorhistoria. L\344s mer på http://www.lysator.liu.se/history/")
     (add-comment-to . "Adderar text %#1n som kommentar till text %#2n...")
     (sub-comment-to . "Subtraherar text %#1n som kommentar till text %#2n...")
     (comment-keep-recpt-p ."Ska %#1s vara mottagare? ")
+    (comment-all-relevant-p . "Inl\344gget har flera mottagare. \304r alla relevanta? ")
+    (please-edit-recipients . "\304ndra mottagarlistan och skicka in inlägget igen.")
+    (checking-rcpt . "Kontrollerar mottagare...")
+    (checking-rcpt-done . "Kontrollerar mottagare...klart")
+    (add-recipient-p . "Addera %#1P som mottagare? ")
     (matching-regexp . "M\366ten/personer som matchar '%#1s'\n")
 
     ; From commands2.el:
@@ -397,7 +402,7 @@ i svensk datorhistoria. L\344s mer på http://www.lysator.liu.se/history/")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan ocks\345? ")
-    (show-membership-info-q . "Visa antalet olästa? ")
+    (show-membership-info-q . "Visa antalet ol\344sta? ")
     (conf-has-these-members . "\n%#1M har f\366ljande medlemmar:\n")
     (member-list-header . "Senast inne         Osett  Namn\n\n")
     (secret-membership . "*** Hemlig rad ***\n")
@@ -446,14 +451,14 @@ Ditt allm\344nna meddelande l\366d:
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-all-info . "S\344nd allm\345nt meddelande\n")
+    (message-all-info . "S\344nd allm\344nt meddelande\n")
     (message-recipient-info . "S\344nd meddelande till %#1M\n")
     (message-nope .
   "Du kunde inte skicka meddelandet. Mottagaren var kanske inte inloggad.
 Meddelandet du f\366rs\366kte s\344nda till %#1M var:
 %#2t\n")
     (only-last . "Endast l\344sa senaste (0 - %#1d) i %#2s? ")
-    (only-error . "N\345t gick galet. Sorry.\n")
+    (only-error . "N\345got gick galet. Sorry.\n")
 
     (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2M\n")
     (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1M\n")
@@ -584,9 +589,9 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
 
     (review-conf-gone . "M\366tet finns inte.\n")
     (review-pers-gone . "Personen finns inte.\n")
-    (review-cant-read-conf . "Du kan inte \345terse inl\344gg till ett slutet m\366te du inte \345r med i.\n")
+    (review-cant-read-conf . "Du kan inte \345terse inl\344gg till ett slutet m\366te du inte \344r med i.\n")
     (review-cant-read-letterbox . "Du kan inte \345terse in\344gg till n\345gon annans brevl\345da.\n")
-    (review-cant-read-empty . "M\366tet är tomt.\n")
+    (review-cant-read-empty . "M\366tet \344r tomt.\n")
     (cant-review-everything . "Du kan inte \345terse alla texter i LysKOM.\n")
 
     ; From edit-text.el:
@@ -719,7 +724,7 @@ Gruppmeddelande till %#3M\nfr\345n %#2P (%#4s):
     (cannot-get-membership . "Kan ej h\344mta medlemsskap f\366r dig.")
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
     (prioritize-help .
-"u,n Flytta m\345te, SPC markera, p prioritera markerade, q avsluta, C-h m hj\344lp")
+"u,n Flytta m\366te, SPC markera, p prioritera markerade, q avsluta, C-h m hj\344lp")
     (your-priorities . " Prioritet  M\366tesnamn
 ----------------------------------------------------------------------------
 ")
@@ -734,7 +739,8 @@ Gruppmeddelande till %#3M\nfr\345n %#2P (%#4s):
     (new-prio . "%6#1d")
 
     ; From flags.el:
-    (saving-settings . "Sparar inst\344llningarna")
+    (saving-settings . "Sparar inst\344llningarna...")
+    (saving-settings-done . "Sparar inst\344llningarna...klart")
     (hang-on . "V\344nta ett tag...\n")
     (could-not-save-options . "Kunde ej spara inst\344llningarna.\n")
     (could-not-create-area . "Kunde ej skapa texten.\n")
@@ -845,7 +851,7 @@ Felmeddelande: %#1s**************************************************")
     (filter-in-conf . "I vilket m\366te (Alla)? ")
     (filter-subject . "Filtrera vilket \344rende? ")
     (filter-which-text . "Filtrera inl\344gg som inneh\345ller: ")
-    (filter-author . "Filtrera vilken f\345rfattare? ")
+    (filter-author . "Filtrera vilken f\366rfattare? ")
     (permanent . "(permanent)")
     (temporary . "(tillf\344llig)")
     (filter-edit-buffer-name . "*LysKOM Filter Edit*")
@@ -921,11 +927,18 @@ Text:
     (url-popup-title  . "URL %#1s")
     (generic-popup-title . "%#1s")
 
-    (who-i-am-not-present . "%#1P \344 inte n\344rvarande i n\345got m\366te\n")
-    (who-i-am-present . "%#1P är närvarande i %#2M\n")
+    (who-i-am-not-present . "%#1P \344r inte n\344rvarande i n\345got m\366te\n")
+    (who-i-am-present . "%#1P \344r n\344rvarande i %#2M\n")
     (who-i-am-client . "Programmet heter lyskom.el, version %#1s.\n")
-    (who-i-am-server . "Detta är %#1s, version %#2s.\n")
+    (who-i-am-server . "Detta \344r %#1s, version %#2s.\n")
     (who-i-am-emacs . "Det k\366rs under %#1s.\n")
+
+    (session-status . "Session %#1d \344r %#2P <%#2p>
+%#5s %#7s %#4M
+K\366r %#6D fr\345n %#3s\n")
+    (status-for-session . "Sessionsstatus f\366r vilken person? ")
+    (doing-where-conn . "i")
+    (doing-nowhere-conn . "men är")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -1023,6 +1036,7 @@ Text:
     (kom-unset-conf-motd	"Ta bort lapp p\345 d\366rren")
     (kom-save-text		"Spara text (p\345 fil)")
     (kom-edit-options		"\304ndra variabler")
+    (kom-save-options           "Spara variabler")
     (kom-shutdown-server        "St\344ng av servern")
     (kom-enable-adm-caps        "\326verg\345 till administrat\366rsmod")
     (kom-disable-adm-caps       "\326verg\345 till normalmod")
@@ -1051,6 +1065,8 @@ Text:
     (kom-remote-list-messages "Fj\344rrkontrollera lista meddelanden")
     (kom-remote-erase-messages "Fj\344rrkontrollera radera meddelanden")
     (kom-remote-quit "Fj\344rrkontrollera avsluta")
+
+    (kom-status-session "Status (f\366r) session")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
@@ -1247,6 +1263,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "sm" 'kom-status-conf)
   (define-key lyskom-mode-map "sp" 'kom-status-person)
+  (define-key lyskom-mode-map "ss" 'kom-status-session)
 
   ;; Running in buffer
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 41.3 1996-07-08 09:46:26 byers Exp $
+;;;;; $Id: review.el,v 41.4 1996-07-17 09:00:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 41.3 1996-07-08 09:46:26 byers Exp $\n"))
+	      "$Id: review.el,v 41.4 1996-07-17 09:00:03 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -136,9 +136,9 @@ The defaults for this command is the conference that you are in."
               ;; (not (zerop by))
               (if (zerop lyskom-current-conf)
                   ""
-                (conf-stat->name
-                 (blocking-do 'get-conf-stat
-                              lyskom-current-conf)))
+                (cons (conf-stat->name
+                         (blocking-do 'get-conf-stat
+                                      lyskom-current-conf)) 0))
               t)))
 
     (if (not (zerop to))
