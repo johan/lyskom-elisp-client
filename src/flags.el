@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 35.3 1991-09-29 04:12:18 ceder Exp $
+;;;;; $Id: flags.el,v 35.4 1992-07-26 23:33:28 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 35.3 1991-09-29 04:12:18 ceder Exp $\n"))
+	      "$Id: flags.el,v 35.4 1992-07-26 23:33:28 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -152,6 +152,9 @@ If successful then set the buffer not-modified. Else print a warning."
   (lyskom-end-of-command))
 
 
+(defvar lyskom-options-done nil
+  "When we have read all options this is turned non-nil.")
+
 (defun lyskom-read-options ()
   "Reads the user-area and sets the variables according to the choises.
 Also run lyskom-login-hook (regardless of whether the person has a userarea
@@ -169,7 +172,8 @@ or not."
 	  (if (zerop (pers-stat->user-area pers-stat))
 	      (prog1
 		  (setq lyskom-do-when-starting kom-do-when-starting)
-		(run-hooks 'lyskom-login-hook))
+		(run-hooks 'lyskom-login-hook)
+		(setq lyskom-options-done t))
 	    (initiate-get-text 'options 'lyskom-read-options-eval
 			       (pers-stat->user-area pers-stat))))
     (lyskom-insert-string 'you-dont-exist)))
@@ -247,7 +251,8 @@ or not."
 	      (progn
 		(while (stringp (cdr (car (cdr pos))))
 		  (setq pos (cdr pos)))
-		(setcdr pos nil)))))))
+		(setcdr pos nil))))))
+  (setq lyskom-options-done t))
 
 
 (defun lyskom-read-options-eval-get-holerith ()
