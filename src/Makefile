@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.5 1991-09-16 18:02:02 linus Exp $
+# $Id: Makefile,v 35.6 1991-09-16 19:31:37 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.5 1991-09-16 18:02:02 linus Exp $
+# $Id: Makefile,v 35.6 1991-09-16 19:31:37 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.5  1991-09-16 18:02:02  linus
+# Revision 35.6  1991-09-16 19:31:37  linus
+# Makefile now works with new doc-file names.
+#
+# Revision 35.5  1991/09/16  18:02:02  linus
 # * M ci     Makefile
 # * A ci     makealfa.l
 # =====================================================
@@ -110,9 +113,7 @@ tags:
 	etags $(HEADER-EL) $(PARTS-EL)
 
 doc:
-	(VER=`grep lyskom-clientversion vars.el | \
-	 sed -n 's/^.*defconst.*lyskom-clientversion.*"\(.*\)".*$$/\1/p'`;\
-	 (cd ../doc ; make elisp-client elisp-client-$${VER}.txt) ; )
+	(cd ../doc ; make elisp-client elisp-client.txt) ; )
 
 
 install: lyskom.elc lyskom.el doc
@@ -120,15 +121,19 @@ install: lyskom.elc lyskom.el doc
 	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
 	(VER=`grep lyskom-clientversion lyskom.el | \
 	 sed -n 's/^.*defconst.*lyskom-clientversion.*"\(.*\)".*$$/\1/p'`;\
-	 cp lyskom.el /usr/local/ftp/pub/lyskom/lyskom-$${VER}.el;\
-	 cp lyskom.elc /usr/local/ftp/pub/lyskom/lyskom-$${VER}.elc;\
+	 cp lyskom.elc lyskom-$${VER}.elc;\
+	 compress lyskom-$${VER}.elc;\
+	 mv lyskom-$${VER}.elc.Z /usr/local/ftp/pub/lyskom/;\
 	 cp lyskom.el lyskom-$${VER}.el;\
 	 compress lyskom-$${VER}.el;\
+	 cp lyskom-$${VER}.el.Z /usr/local/ftp/pub/lyskom/;\
 	 mv lyskom-$${VER}.el.Z ../old-versions/;\
-	 cp ../doc/elisp-client \
-	     /usr/local/ftp/pub/lyskom/elisp-client-$${VER}.info; \
-	 cp ../doc/elisp-client-$${VER}.txt \
-	     /usr/local/ftp/pub/lyskom/elisp-client-$${VER}.txt; \
+	 cp ../doc/elisp-client ../doc/elisp-client.txt .;\
+	 compress elisp-client elisp-client.txt;\
+	 mv elisp-client.Z \
+		/usr/local/ftp/pub/lyskom/elisp-client-$${VER}.info.Z; \
+	 mv elisp-client.txt.Z \
+	     /usr/local/ftp/pub/lyskom/elisp-client-$${VER}.txt.Z; \
 	 cp ../doc/elisp-client /usr/gnu/emacs/info; \
 	)
 
@@ -151,9 +156,7 @@ distrib distribution: lyskom.el lyskom.elc doc
 	cat distribution-README lyskom.el  > distribution/lyskom.el
 	$(RM) lyskom.el
 	cat distribution-README lyskom.elc > distribution/lyskom.elc
-	(VER=`grep lyskom-clientversion vars.el | \
-	 sed -n 's/^.*defconst.*lyskom-clientversion.*"\(.*\)".*$$/\1/p'`;\
-	 cp ../doc/elisp-client-$${VER}.txt ../doc/elisp-client distribution)
+	cp ../doc/elisp-client.txt ../doc/elisp-client distribution
 	cd distribution; \
 	  shar -v -cCmx -l 50 -o PARTS README Makefile $(HEADER-EL) $(PARTS-EL)
 	cd distribution; \
@@ -164,9 +167,9 @@ distrib distribution: lyskom.el lyskom.elc doc
 	  ( $(RM) lyskom.elc ; \
 	    sed 's/kom\.lysator\.liu\.se/obel18.ida.liu.se/g' > lyskom.elc )\
 	  < lyskom.elc ; \
-	  chmod 644 lyskom.el lyskom.elc elisp-client-*.txt
+	  chmod 644 lyskom.el lyskom.elc elisp-client.txt
 	cd distribution; \
-	  shar -v -cCmx -l 50 -o DOC elisp-client-*.txt
+	  shar -v -cCmx -l 50 -o DOC elisp-client.txt
 	cd distribution; \
 	  shar -v -cCmx -l 50 -o IDOC elisp-client
 
