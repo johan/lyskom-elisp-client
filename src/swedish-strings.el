@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.301 2003-03-15 23:00:51 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.302 2003-03-15 23:14:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.301 2003-03-15 23:00:51 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.302 2003-03-15 23:14:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2120,6 +2120,8 @@ teckenkodning.
     (kom-unread-root-review   . "Oläsmarkera träd")
     (kom-unread-last-normally-read
      			      . "Oläsmarkera igen")
+    (kom-unread-all           . "Oläsmarkera alla")
+    (kom-unread-first         . "Oläsmarkera första")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -2534,6 +2536,8 @@ teckenkodning.
   (define-key lyskom-sv-unread-prefix (kbd "s") 'kom-unread-by-to)
   (define-key lyskom-sv-unread-prefix (kbd "y") 'kom-unread-more)
   (define-key lyskom-sv-unread-prefix (kbd "t") 'kom-unread-root-review)
+  (define-key lyskom-sv-unread-prefix (kbd "A") 'kom-unread-all)
+  (define-key lyskom-sv-unread-prefix (kbd "f") 'kom-unread-first)
 
   (define-key lyskom-sv-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-sv-review-prefix (kbd "0") 'kom-initial-digit-view)

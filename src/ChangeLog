@@ -1,3 +1,9 @@
+2003-03-16  David Byers  <david.byers@swipnet.se>
+
+	Work on bug 984:
+	* review.el (kom-unread-all): New command.
+	(kom-unread-first): New command
+
 2003-03-15  David Byers  <david.byers@swipnet.se>
 
 	Work on bug 984:
