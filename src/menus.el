@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: menus.el,v 44.17 1997-12-28 19:16:35 byers Exp $
+;;;;; $Id: menus.el,v 44.18 1998-03-12 18:54:54 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.17 1997-12-28 19:16:35 byers Exp $\n"))
+	      "$Id: menus.el,v 44.18 1998-03-12 18:54:54 davidk Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -270,7 +270,7 @@
             (apply (car (car result))
                    (cdr (car result))))
            ((commandp (car result))
-            (call-interactively (car (nreverse result))))
+            (call-interactively (car result)))
            ((functionp (car result))
             (funcall (car result)))
            (t nil)))))

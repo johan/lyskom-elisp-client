@@ -1,3 +1,7 @@
+Thu Mar 12 19:51:06 1998  David Kagedal  <davidk@lysator.liu.se>
+
+	* menus.el (lyskom-do-popup-menu): Tog bort ett extra nreverse.
+
 Mon Feb 23 22:41:38 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (lyskom-face-schemes): Det stod fel i kom-mark-face i
