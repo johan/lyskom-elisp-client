@@ -1,3 +1,10 @@
+1999-07-02  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el (lyskom-en-filter-edit-map): Use kbd. Added
+	C-c C-c as command to quit.
+
+	* swedish-strings.el (lyskom-sv-filter-edit-map): Same here.
+
 1999-06-30  Per Cederqvist  <ceder@signum.se>
 
 	* swedish-strings.el, english-strings.el (lyskom-message): Added
