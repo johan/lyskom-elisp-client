@@ -34,8 +34,8 @@ EOF
 
     cd ${elc_dir}
     gunzip -c ${el_dir}/lyskom.el.gz > ${elc_dir}/lyskom-elisp-client.el
-    cp ${el_dir}/help.* ${elc_dir}
+    cp ${el_dir}/help-*.xml ${elc_dir}
     ${FLAVOR} ${byte_compile_options} lyskom-elisp-client.el
-    rm -f ${elc_dir}/*.el ${elc_dir}/help.*
+    rm -f ${elc_dir}/*.el ${elc_dir}/help-*.xml
 fi
 exit 0
