@@ -1,3 +1,32 @@
+2001-11-19  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (lyskom-button-actions): added "remove" option to the
+	recpt-type menu. Better argument names for the lambda-functions in
+	recpt-type 
+
+	* lyskom-buttons.el (lyskom-generate-button): do a car on
+	menu-title so we get an errormessage if it's not a cons when the
+	button is generated in stead of when it's used.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): new
+	string: lyskom-button-recpt-type-sub.
+
+	* edit-text.el (lyskom-edit-insert-misc-conf): use lyskom-format
+	to add text properties for the recipient type.
+	(lyskom-edit-do-add-recipient/copy): use save-excursion in stead
+	of lyskom-save-excursion.
+	(lyskom-edit-sub-recipient/copy): new function.
+
+2001-11-14  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* vars.el.in (lyskom-button-actions): added remove alternative for
+	recpt-type buttons.
+
+	* edit-text.el (lyskom-edit-sub-recipient/copy): new function.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): new
+	string: lyskom-button-recpt-type-sub.
+
 2001-11-17  Per Cederqvist  <ceder@moria>
 
 	Use content types as specified in the current version of the
