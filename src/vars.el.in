@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.255 2003-08-13 20:31:52 byers Exp $
+;;;;; $Id: vars.el.in,v 44.256 2003-08-13 21:35:01 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.255 2003-08-13 20:31:52 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.256 2003-08-13 21:35:01 qha Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2383,10 +2383,11 @@ Values other than those described are reserved for future use."
 (def-kom-var kom-default-language nil
   "**The default language for LysKOM.
 
-When set to non-`nil', this variable should be set to a symbol
-indicating the default language for LysKOM. The symbol name must be
-the ISO 630 code for the desired language (e.g. `sv' for Swedish and
-`en' for English). Available languages depend on how LysKOM was built.
+When set to non-`nil', this variable should be set to a list of
+symbols or a symbol indicating the prefered language(s) for LysKOM.
+Each symbol name must be the ISO 630 code for a desired language (e.g.
+`sv' for Swedish and `en' for English). Available languages depend on
+how LysKOM was built.
 
 All valid choices are listed in `lyskom-languages'."
   common language symbol-list
