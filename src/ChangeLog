@@ -1,3 +1,8 @@
+Wed Aug 28 05:18:27 1991  Per Cederqvist  (ceder at lysator)
+
+	* commands2.el (lyskom-status-pers-2), swedish-strings.el
+	  (lyskom-strings): Fixade ledtexten vid skapade personer.
+
 Fri Aug 23 02:38:58 1991  Linus Tolke Y  (linus at robin)
 
 	* swedish-strings.el (lyskom-strings): Tagit bort ett space f|r
