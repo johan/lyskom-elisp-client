@@ -1,3 +1,8 @@
+Mon Sep  9 16:35:39 1991  Lars Willf|r  (willfor at robin)
+
+	* async.el och swedish-strings.el: Nu visas tiden (enligt
+	  klienten) n{r man f}r ett personligt eller allm{nt meddelande.
+
 Sun Sep  8 21:51:41 1991  Per Cederqvist  (ceder at robin)
 
 	* commands1.el (lyskom-jump): Stabiliserat. Nu g|rs n}got vettigt

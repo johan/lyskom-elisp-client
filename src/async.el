@@ -13,7 +13,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.1 1991-08-21 15:44:49 linus Exp $\n"))
+	      "$Id: async.el,v 35.2 1991-09-09 14:39:10 willfor Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -286,13 +286,15 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
 		       ((stringp sender) sender)
 		       (sender (conf-stat->name sender))
 		       (t (lyskom-get-string 'unknown)))
-		      message)
+		      message
+		      (substring (current-time-string) 11 19))
      (lyskom-format 'message-from
 		      (cond
 		       ((stringp sender) sender)
 		       (sender (conf-stat->name sender))
 		       (t (lyskom-get-string 'unknown)))
-		      message)))
+		      message
+		      (substring (current-time-string) 11 19))))
   (lyskom-insert-before-prompt
    "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n")
   (beep))
