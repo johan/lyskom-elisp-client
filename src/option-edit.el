@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.13 1997-07-15 10:23:25 byers Exp $
+;;;;; $Id: option-edit.el,v 44.14 1997-07-29 14:53:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.13 1997-07-15 10:23:25 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.14 1997-07-29 14:53:28 byers Exp $\n"))
 
 ;;; ======================================================================
 ;;; Require Per Abrahamsens widget package, version 0.991 or later.
@@ -408,7 +408,9 @@ customize buffer but do not save them to the server."
                                        :size 0)
                                (const (ask nil)))))
     (kom-reading-puts-comments-in-pointers-last (toggle (before after)))
-    (kom-autowrap (toggle (on off)))
+    (kom-autowrap (choice ((const (on t))
+                           (const (off nil))
+                           (number nil :tag max-text-length))))
     (kom-dashed-lines (toggle (on off)))
     (kom-show-author-at-end (toggle (on off)))
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))

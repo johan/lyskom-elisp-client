@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 44.4 1997-07-02 17:46:39 byers Exp $
+;;;;; $Id: filter.el,v 44.5 1997-07-29 14:53:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.4 1997-07-02 17:46:39 byers Exp $\n"))
+	      "$Id: filter.el,v 44.5 1997-07-29 14:53:14 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -558,8 +558,13 @@ the current text"
           (lyskom-insert-string 'no-recipient)
             
         (lyskom-add-filter
-         (make-filter (list (cons 'subject lyskom-current-subject)
-                            (cons 'recipient-no filter-recipient))
+         (make-filter (list 
+                       (cons 'subject-re 
+                             (concat "\\([rR][eE]: *\\)*"
+                                     (replace-in-string
+                                      (regexp-quote lyskom-current-subject)
+                                      "[ \t]+" "[ \t]+")))
+                       (cons 'recipient-no filter-recipient))
                       (list (cons 'action 'skip-tree)
                             (cons 'expire t))))
         (lyskom-format-insert 'super-jump

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.20 1997-07-17 10:33:40 byers Exp $
+;;;;; $Id: edit-text.el,v 44.21 1997-07-29 14:53:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.20 1997-07-17 10:33:40 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.21 1997-07-29 14:53:04 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -407,6 +407,12 @@ Put this in lyskom-send-text-hook"
   (kom-ispell-message)
   t)
 
+
+(eval-when-compile
+  (defvar ispell-dictionary nil)
+  (defvar ispell-message-text-end nil)
+  (defvar ispell-message-start-skip nil)
+  (defvar ispell-message-end-skip nil))
 
 (defun kom-ispell-message ()
   "Check spelling of the text.

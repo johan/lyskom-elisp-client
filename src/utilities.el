@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 44.19 1997-07-11 09:54:58 byers Exp $
+;;;;; $Id: utilities.el,v 44.20 1997-07-29 14:53:44 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.19 1997-07-11 09:54:58 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.20 1997-07-29 14:53:44 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -143,6 +143,25 @@
       (setq l (cons n l))
       (setq n (* 2 n)))
     (apply '+ l)))
+
+
+(defun lyskom-try-require (feature &optional message &rest args)
+  "Load the feature FEATURE using require. 
+If optional MESSAGE is non-nil, use it as a LysKOM format string 
+taking one string argument to print an error message. Remaining
+arguments are used as arguments for the format string.
+
+Returns t if the feature is loaded or can be loaded, and nil otherwise."
+  (or (featurep 'feature)
+      (condition-case nil
+          (progn (require feature)
+                 t)
+        (error 
+         (when message
+           (apply 'lyskom-format-insert-before-prompt message (symbol-name feature) args))
+         nil))))
+                               
+      
 
 (defun lyskom-emacs-version ()
   (cond ((string-match "^XEmacs" (emacs-version)) 'xemacs)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.13 1997-07-15 10:23:15 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.14 1997-07-29 14:53:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -487,6 +487,12 @@ This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (kom-view arg))))
 
+(defun lyskom-button-review-noconversion (buf arg text)
+  "In the LysKOM buffer BUF, view the text ARG without conversion. 
+Last argument TEXT is ignored. This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (kom-review-noconversion arg))))
 
 (defun lyskom-button-review-tree (buf arg text)
   "In the LysKOM buffer BUF, view the text ARG. Last argument TEXT is ignored.
