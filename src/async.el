@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.14 1999-06-10 13:49:43 byers Exp $
+;;;;; $Id: async.el,v 44.15 1999-06-14 14:19:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.14 1999-06-10 13:49:43 byers Exp $\n"))
+	      "$Id: async.el,v 44.15 1999-06-14 14:19:13 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -222,12 +222,19 @@ this function shall be with current-buffer the BUFFER."
       (let ((text-no (lyskom-parse-num))
             (conf-no (lyskom-parse-num))
             (misc-type (lyskom-parse-num)))
-        (lyskom-save-excursion
-          (set-buffer buffer)
-          (cache-del-conf-stat conf-no)
-          (cache-del-text-stat text-no)
-          ;; FIXME: Code here.
-          )))
+        (cond ((eq misc-type 0) (setq misc-type 'RECPT))
+              ((eq misc-type 1) (setq misc-type 'CC-RECPT))
+              ((eq misc-type 15) (setq misc-type 'BCC-RECPT)))
+        (when (symbolp misc-type)
+          (lyskom-save-excursion
+            (set-buffer buffer)
+            (cache-del-text-stat text-no)
+            (cache-del-conf-stat conf-no)
+            (initiate-get-text-stat 'follow
+                                    'lyskom-async-new-recipient
+                                    text-no
+                                    text-no conf-no misc-type)
+            ))))
 
      ((eq msg-no 17)                    ; Deleted recipient
       (let ((text-no (lyskom-parse-num))
@@ -522,6 +529,54 @@ converted, before insertion."
                  (recenter -1))))))))))
   
 
+
+;;; ================================================================
+;;; New recipient
+
+;;; The text stat and might have been cached and thus invalid. Check
+;;; for this. The conf-stat for the conf-no is almost certainly 
+;;; invalid.
+
+(defun lyskom-async-new-recipient (text-stat text-no conf-no misc-type)
+  "Handle a new recipient message"
+
+  ;; Check if we are added. A new letter!
+  (when (and (eq  conf-no lyskom-pers-no)
+             (not (eq (text-stat->author text-stat) lyskom-pers-no)))
+    (lyskom-beep kom-ding-on-new-letter))
+
+  ;; If the text is read in another conference, mark it as read here too
+  ;; unless the new recipient is the mailbox
+  (if (and (lyskom-text-read-at-least-once-p text-stat t)
+           (not (eq conf-no lyskom-pers-no)))
+      (initiate-mark-as-read 'follow
+                             nil
+                             conf-no 
+                             (list text-no))
+
+    ;; Text is previously unread or in the mailbox
+    (let ((local-no nil))
+      (lyskom-traverse misc-info (text-stat->misc-info-list text-stat)
+        (when (and (eq (misc-info->type misc-info) misc-type)
+                   (eq (misc-info->recipient-no misc-info) conf-no))
+          (setq local-no (misc-info->local-no misc-info))))
+      (if (null local-no) (error "No local no"))
+      (initiate-get-conf-stat 'async 'lyskom-add-new-text
+                              conf-no
+                              text-no
+                              local-no)
+      (lyskom-prefetch-text-all text-no)
+      (lyskom-run 'async 'lyskom-default-new-recipient-hook text-stat)
+      (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))))
+
+(defun lyskom-default-new-recipient-hook (text-stat)
+  (when (and (not lyskom-dont-change-prompt) ;We shall change it
+             (not lyskom-executing-command)) ;We have time to do it.
+    (lyskom-update-prompt))
+  (run-hooks 'lyskom-new-recipient-hook))
+
+
+
 ;;; ================================================================
 ;;;            Functions for dealing with a new or deleted text
 
@@ -546,9 +601,7 @@ converted, before insertion."
   (if (and (not lyskom-dont-change-prompt) ;We shall change it
 	   (not lyskom-executing-command)) ;We have time to do it.
       (lyskom-update-prompt))
-
-  (let ((no-message nil))
-    (run-hooks 'lyskom-deleted-text-hook)))
+  (run-hooks 'lyskom-deleted-text-hook))
 
 (defun lyskom-async-new-text (text-stat)
   "Take care of a message that a new text has been created."

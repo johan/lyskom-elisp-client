@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.16 1999-06-13 15:01:04 byers Exp $
+;;;;; $Id: view-text.el,v 44.17 1999-06-14 14:19:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.16 1999-06-13 15:01:04 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.17 1999-06-14 14:19:20 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -388,9 +388,12 @@ recipients to it that the user is a member in."
       res)))
 
 
-(defun lyskom-text-read-at-least-once-p (text-stat)
+(defun lyskom-text-read-at-least-once-p (text-stat &optional bg)
   "Return t if TEXT-STAT has been marked as read in any of the recipients
-the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
+the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil.
+
+If BG is non-nil, this function is run in the background and must not use
+blocking-do."
   (if text-stat
       (let* ((misc-info-list (text-stat->misc-info-list text-stat))
              (misc-item nil)
@@ -405,8 +408,11 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
           (cond ((or (eq type 'RECPT) 
                      (eq type 'BCC-RECPT)
                      (eq type 'CC-RECPT))
-                 (setq membership (lyskom-get-membership
-                                   (misc-info->recipient-no misc-item)))
+                 (setq membership (if bg
+                                      (lyskom-try-get-membership
+                                       (misc-info->recipient-no misc-item))
+                                    (lyskom-get-membership
+                                     (misc-info->recipient-no misc-item))))
                  (when membership
                    (setq is-member t)
                    (when (or (<= (misc-info->local-no misc-item)
