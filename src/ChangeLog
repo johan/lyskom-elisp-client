@@ -1,8 +1,13 @@
 Fri Aug  2 00:00:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* services.el (initiate-user-active): Ny funktion.
+
 	* lyskom-rest.el (lyskom-start-of-command): Kolla om sessionen är
  	död.
 	(lyskom-update-prompt): Se till att point hamnar rätt.
+	(lyskom-update-prompt): Hantera tom prompt på ett bättre sätt.
+	(lyskom-end-of-command): Skicka user-active om protokollversionen
+ 	är minst 9.
 
 	* english-strings.el, swedish-strings.el (lyskom-strings): La till
  	dead-session.
