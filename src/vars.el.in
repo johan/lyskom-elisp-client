@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.157 2002-01-02 14:32:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.158 2002-01-07 16:47:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.157 2002-01-02 14:32:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.158 2002-01-07 16:47:30 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1114,6 +1114,14 @@ each time ."
 ;;; Language-dependent variables
 ;;;
 
+(def-kom-var lyskom-month-names nil
+  "A list of month names.
+Each element is a cons cell consisting of the name of the month
+\(a symbol) and the number of the month (1-12). Each month may
+appear more than once"
+  local
+  inherited)
+
 (def-kom-var lyskom-onoff-table nil
   "A completion table for on and off selections."
   local)
@@ -1273,21 +1281,36 @@ each time ."
 	   (lyskom-edit-sub-recipient/copy
 	    (car recpt-and-buffer)
 	    (cadr recpt-and-buffer))))))
-    (add-recipient
-     add-recipient
+    (add-recipient-or-xref
+     add-recipient-or-xref
      (lambda (buffer argument text) nil)
-     ((lyskom-button-recpt-type-recipient
+     ((lyskom-button-recpt-add-recipient
        . (lambda (buffer buffer text)
            (set-buffer buffer)
 	   (kom-edit-add-recipient)))
-      (lyskom-button-recpt-type-copy
+      (lyskom-button-recpt-add-copy
        . (lambda (buffer buffer text)
            (set-buffer buffer)
 	   (kom-edit-add-copy)))
-      (lyskom-button-recpt-type-bcc
+      (lyskom-button-recpt-add-bcc
        . (lambda (buffer buffer text)
            (set-buffer buffer)
-	   (kom-edit-add-bcc)))))
+	   (kom-edit-add-bcc)))
+      (lyskom-button-aux-type-xref
+       . (lambda (buffer recpt-and-buffer text)
+           (save-excursion
+             (set-buffer recpt-and-buffer)
+             (kom-edit-add-cross-reference))))
+      (lyskom-button-aux-type-no-comments
+       . (lambda (buffer recpt-and-buffer text)
+           (save-excursion
+             (set-buffer recpt-and-buffer)
+             (kom-edit-add-no-comments))))
+      (lyskom-button-aux-type-personal-comments
+       . (lambda (buffer recpt-and-buffer text)
+           (save-excursion
+             (set-buffer recpt-and-buffer)
+             (kom-edit-add-personal-comments))))))
     )
   "This variable defines valid button types in LysKOM. Each element is a
 list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).

@@ -43,7 +43,7 @@
 
     * XEmacs version 20.4, 21.1 and 21.2.
     * Gnu Emacs version 19.34 [1]
-    * Gnu Emacs version 20.5 and newer [2]
+    * Gnu Emacs version 20.7 and newer [2]
 
     [1] You'll have to replace the included custom package, and if you 
         use Gnus, you may have to update that as well.
@@ -91,7 +91,7 @@
       <URL:http://www.cs.indiana.edu/elisp/w3/w3.html> and included in
       many distributions of Emacs. If w3 is not installed, LysKOM will
       be unable to display HTML.
-    
+
     * calc (optional)
 
       LysKOM uses calc to implement the "Compute" command. If you want
@@ -241,8 +241,11 @@
 3.  Reporting bugs
 
     Before reporting a bug, please check that it is not one of the
-    known issues below. Report bugs to bug-lyskom@lysator.liu.se. 
-    Please give us the following information (at least):
+    known issues below. Please report bugs by posting them to the
+    bugzilla at http://bugzilla.lysator.liu.se/. You can also e-mail
+    bug reports to bug-lyskom@lysator.liu.se. 
+
+    To evaluate your bug report we need the following information:
 
     o   The LysKOM version you are using. This is shown when you start
         LysKOM and is also contained in the variable
@@ -259,10 +262,11 @@
         which packages you have loaded. If possible, try to reproduce
         the bug with Emacs started with the -q command line switch.
 
-    The command kom-bug-report may come in handy. It gives us a lot of 
-    information that you might not think of (such as what the internal 
-    data structures look like).
-
+    The command kom-bug-report may come in handy. It gives us a lot of
+    information that you might not think of (such as what the internal
+    data structures look like). If you post a bug report to our
+    bugzilla, please make the result of kom-bug-report an attachment
+    to your bug report.
 
 
 4. Known issues

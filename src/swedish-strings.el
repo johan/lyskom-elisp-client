@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.193 2002-01-02 14:32:41 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.194 2002-01-07 16:47:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.193 2002-01-02 14:32:41 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.194 2002-01-07 16:47:30 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -814,11 +814,13 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (carbon-copy-prefix . "[Ee]")
     (blank-carbon-copy-prefix . "[Dd]")
     (add-recipient . "Addera mottagare")
+    (add-recipient-or-xref . "Addera...")
 
     (secret-aux-flag . "hemlig")
     (anonymous-aux-flag . "anonym")
     (inherit-aux-flag  . "ärvd")
-    (aux-item-prefix . "> ")
+    (aux-item-prefix . "[*]")
+    (aux-item-prefix-regexp . "\\[\\*\\]\\s-*")
     (comment-item-prefix . "#\\s-*")
     (text-no-comment . "%#1d %#2s /%#3d rad%#3?d%[%]%[er%]/ %#4P %#5?b%[ [anonymt]%]%[%]\n")
     (cant-fcc-text-file-error . "Kan inte spara inlägg %#1n till \"%#2s\" (%#3s: %#4s).\n")
@@ -1268,8 +1270,8 @@ Text:
     (aux-popup-title  . "Tilläggsinformation")
     (timestamp-popup-title . "Tidsstämpel %#1s")
     (recpt-type-popup-title . "Mottagartyp: %#1s")
-    (add-recpt-button-text . "[Addera mottagare]")
-    (add-recpt-button-text-regex . "\\[Addera mottagare\\]")
+    (add-recpt-button-text . "[Addera...]")
+    (add-recpt-button-text-regex . "\\[Addera\.\.\.\\]")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
@@ -1291,7 +1293,12 @@ Uppkopplad sedan %#8s%#9s")
     (one-day . "en dag")
     (one-hour . "en timme")
     (one-minute . "en minut")
+    (years . "år")
+    (year . "år")
+    (months . "månader")
+    (month . "månad")
     (days . "dagar")
+    (day . "dag")
     (hours . "timmar")
     (minutes . "minuter")
     (and . "och")
@@ -1589,6 +1596,13 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-recpt-type-copy . "Extra kopia")
     (lyskom-button-recpt-type-bcc . "Dold kopia")
     (lyskom-button-recpt-type-sub . "Subtrahera")
+    (lyskom-button-recpt-add-recipient . "Mottagare")
+    (lyskom-button-recpt-add-copy . "Extra-kopiemottagare")
+    (lyskom-button-recpt-add-bcc . "Dold-kopiamottagare")
+    (lyskom-button-aux-type-xref . "Referens till möte/person/inlägg")
+    (lyskom-button-aux-type-no-comments . "Begäran om inga kommentarer")
+    (lyskom-button-aux-type-personal-comments . "Begäran om personligt svar")
+
     (lyskom-edit-toggle-secret-aux-action . "Växla \"hemlig\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Växla \"anonym\"")
     (lyskom-edit-toggle-inherit-aux-action   . "Växla \"ärvd\"")
@@ -1597,6 +1611,20 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-prioritize-flag-set-action . "Sätt på")
     (lyskom-prioritize-flag-clear-action . "Stäng av")
 ))
+
+(lyskom-language-var lyskom-month-names sv
+  '(("jan" . 1)  ("januari" . 1)
+    ("feb" . 2)  ("februari" . 2)
+    ("mar" . 3)  ("mars" . 3)
+    ("apr" . 4)  ("april" . 4)
+    ("maj" . 5)  ("maj" . 5)
+    ("jun" . 6)  ("juni" . 6)
+    ("jul" . 7)  ("juli" . 7)
+    ("aug" . 8)  ("augusti" . 8)
+    ("sep" . 9)  ("september" . 9)
+    ("okt" . 10) ("oktober" . 10)
+    ("nov" . 11) ("november" . 11)
+    ("dec" . 12) ("december" . 12)))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.88 2002-01-03 15:47:40 byers Exp $
+;;;;; $Id: utilities.el,v 44.89 2002-01-07 16:47:30 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.88 2002-01-03 15:47:40 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.89 2002-01-07 16:47:30 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1300,3 +1300,97 @@ Returns a cons of (LOCAL . GLOBAL)"
       (setq last-index index)
       (setq index (+ lowest (/ (- highest lowest) 2))))
     (cons last-index result)))
+
+(defvar lyskom-year-window-start 80
+  "Windowing threshold for YY year specifications.
+Years below this are considered in the 21st century. Years above this
+in the 20th century")
+
+(defun lyskom-parse-date (arg)
+  "Parse ARG as a date."
+  (let ((month-regexp (concat "\\("
+                              (mapconcat (lambda (el)
+                                           (regexp-quote (car el)))
+                                         lyskom-month-names
+                                         "\\|")
+                              "\\)"))
+        (dmy-regexp (concat "\\("
+                            (mapconcat (lambda (el)
+                                         (regexp-quote (lyskom-get-string el)))
+                                       '(years year months month days day)
+                                       "\\|")
+                            "\\)"))
+        (test-date (format-time-string "%x" '(20 0)))
+        year month day di mi yi)
+
+  ;; Look at test-date to see where dates in ambiguous cases should go
+
+    (cond ((string-match "01.*16.*70" test-date) (setq di 2 mi 1 yi 3))
+          ((string-match "01.*70.*16" test-date) (setq di 3 mi 1 yi 2))
+          ((string-match "16.*01.*70" test-date) (setq di 1 mi 2 yi 3))
+          ((string-match "16.*70.*01" test-date) (setq di 1 mi 3 yi 2))
+          ((string-match "70.*01.*16" test-date) (setq di 3 mi 2 yi 1))
+          ((string-match "70.*16.*01" test-date) (setq di 2 mi 3 yi 1)))
+
+     (cond ((string-match "\\([0-9][0-9][0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)" arg)
+           ;; YYYY-MM-DD
+           (setq year (string-to-int (match-string 1 arg))
+                 month (string-to-int (match-string (if (> mi di) 3 2) arg))
+                 day (string-to-int (match-string (if (> di mi) 2 3) arg)))
+           (when (> month 12) (setq month day day month))
+           )
+          ((string-match "\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9][0-9][0-9]?\\)" arg)
+           ;; YYYY-MM-DD
+           (setq year (string-to-int (match-string 3 arg))
+                 month (string-to-int (match-string (if (> mi di) 2 1) arg))
+                 day (string-to-int (match-string (if (> di mi) 1 2) arg)))
+           (when (> month 12) (setq month day day month))
+           )
+          ((string-match "\\([0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)" arg)
+           (setq year (string-to-int (match-string yi arg))
+                 month (string-to-int (match-string mi arg))
+                 day (string-to-int (match-string di arg)))
+           (when (> month 12) (setq month day day month))
+           )
+          ((string-match "\\([0-9][0-9]\\)/\\([0-9][0-9]\\)" arg)
+           ;; Ambiguous:
+           ;; MM/DD       Euro
+           ;; DD/MM       US
+           (let ((a (string-to-int (match-string 1 arg)))
+                 (b (string-to-int (match-string 2 arg))))
+             (cond ((> a 12) (setq month b day a))
+                   ((> b 12) (setq month a day b))
+                   ((> di mi) (setq month b day a))
+                   (t (setq month a day b))))
+           )
+          ((string-match (format "%s \\([0-9][0-9]?\\)" month-regexp) arg)
+           ;; Ambiguous:
+           ;; Month DD
+           )
+          ((string-match (format "%s,? \\([0-9][0-9][0-9][0-9]\\)" month-regexp) arg)
+           ;; Ambiguous:
+           ;; Month YYYY
+           )
+          ((string-match (format "\\([0-9][0-9]?\\) %s" month-regexp) arg)
+           ;; DD Month
+           )
+          ((string-match (format "\\([0-9][0-9]?\\) %s \\([0-9][0-9][0-9][0-9]\\)" month-regexp) arg)
+           ;; DD Month YYYY
+           )
+          ((string-match (format "%s \\([0-9][0-9]?\\), \\([0-9][0-9][0-9]?[0-9]?\\)" month-regexp) arg)
+           ;; Month DD, YYYY
+           )
+          ((string-match (format "\\([0-9][0-9]?\\) %s, \\([0-9][0-9][0-9]?[0-9]?\\)" month-regexp) arg)
+           ;; DD Month, YYYY
+           )
+          ((string-match (format "-\\([0-9]+\\) %s" dmy-regexp) arg)
+           ;; -NN days, months, years
+           )
+          )
+
+    (if (< year lyskom-year-window-start)
+        (setq year (+ 2000 year))
+      (setq year (+ 1900 year)))
+
+    (list year month day)
+    ))
