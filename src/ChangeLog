@@ -1,5 +1,7 @@
 2000-03-22  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el (signum): New compatibility function.
+
 	* mship-edit.el: Support for hidden entries in motion and entry
 	movement commands.
 	(lp--next-visible-entry): New function.
