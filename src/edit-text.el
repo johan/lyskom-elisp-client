@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.90 2002-01-07 16:47:29 byers Exp $
+;;;;; $Id: edit-text.el,v 44.91 2002-01-07 22:33:52 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.90 2002-01-07 16:47:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.91 2002-01-07 22:33:52 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1407,7 +1407,7 @@ RECPT-TYPE is the type of recipient to add."
     (delete-region (point) (save-excursion (forward-line 1) (point)))))
 
 
-(defun lyskom-edit-insert-aux-item-flags (flags)
+(defun lyskom-edit-generate-aux-item-flags (flags)
   (save-excursion
     (let ((str (mapconcat 'identity
                           (delq nil
@@ -1420,9 +1420,11 @@ RECPT-TYPE is the type of recipient to add."
                                       (lyskom-get-string 'inherit-aux-flag))))
                           ", ")))
       (when (not (string= str ""))
-          (end-of-line)
-          (insert (format " [%s]" str))))))
+        (format " [%s]" str)))))
 
+(defun lyskom-edit-insert-aux-item-flags (flags)
+  (end-of-line)
+  (insert (lyskom-edit-generate-aux-item-flags flags)))
 
 (defun lyskom-edit-toggle-aux-item-flag (buf arg text flag)
   (beginning-of-line)
