@@ -1,3 +1,10 @@
+Wed Aug 18 17:10:18 1993  Linus Tolke Y  (linus@bodil)
+
+	* lyskom-rest.el (lyskom-read-string): No longer does
+	  lyskom-end-of-command when quit is typed.
+	* commands1.el, commands2.el, startup.el, lyskom-rest.el
+	  (lyskom-j-or-n-p, lyskom-ja-or-nej-p): New functions.
+
 Mon Aug 16 18:36:59 1993  Linus Tolke Y  (linus@rune)
 
 	* lyskom-rest.el, swedish-strings.el (kom-extended-command):
