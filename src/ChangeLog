@@ -1,3 +1,8 @@
+Sat Aug 17 04:30:01 1991  Linus Tolke Y  (linus at lysator)
+
+	* vars.el (lyskom-elisp-variables): Nu {r den defconst f|r att man
+	  skall kunna {ndra mellan versionerna.
+
 Thu Aug 15 18:43:17 1991  Per Cederqvist  (ceder at lysator)
 
 	* startup.el (lyskom-mode): (put 'lyskom-mode 'mode-class 'special)
