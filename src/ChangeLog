@@ -1,3 +1,14 @@
+2005-01-12  David Byers  <byers@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-sv-mode-map): Added M-c for
+	kom-toggle-cache-prefix.
+
+	* english-strings.el (lyskom-en-mode-map): Same.
+
+	* review.el (kom-toggle-cache-prefix): New function. M-c will
+	toggle whether review uses the cache or not (like M-m toggles if
+	review marks as read).
+
 2005-01-12  Pontus Freyhult  <pont@soua.net>
 
 	Fix bug 1402:
