@@ -52,9 +52,14 @@ uuencode lyskom.el.gz |
 # H{r skickar vi info-filen.
 ( cd ../doc ; make elisp-client )
 gzip < ../doc/elisp-client |
-uuencode elisp-client |
+uuencode elisp-client.gz |
+Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
+for fil in `cd ../doc ; echo elisp-client-?`
+do
+	gzip < ../doc/$fil |
+	uuencode ${fil}.gz |
 	Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
-
+done
 
 # Klaus Zeuge <sojge@Minsk.DoCS.UU.SE>
 # Message-Id: <9308312234.AA17309@Minsk.DoCS.UU.SE>
