@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.200 2002-04-27 17:38:37 qha Exp $
+;;;;; $Id: english-strings.el,v 44.201 2002-04-27 18:30:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.200 2002-04-27 17:38:37 qha Exp $"))
+              "$Id: english-strings.el,v 44.201 2002-04-27 18:30:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -879,7 +879,7 @@ Help: \\[describe-mode] ---")
     (which-conf-to-link . "Add link to conference: ")
 
     ; From view-text.el:
-    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4n line%#4?d%[%]%[s%]/ %#5P%#6?b%[%#6s%]%[%]\n")
+    (view-text-first-line . "%#7$%#2@%#1n %#3s /%#4d line%#4?d%[%]%[s%]/ %#5P%#6?b%[%#6s%]%[%]\n")
 
     (marked-by-you . "Marked by you (type: %#1s).\n")
     (marked-by-you-and-others . "Marked by you (type: %#2s) and %#1?d%[someone else%]%[%#1d others%].\n")

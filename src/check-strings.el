@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.15 2002-04-21 21:32:15 byers Exp $
+;;;;; $Id: check-strings.el,v 44.16 2002-04-27 18:30:33 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -35,6 +35,9 @@
   (or noninteractive
       (lcs-setup-message-buffer))
 
+  (lcs-message t "Checking face schemes")
+  (lcs-check-face-schemes)
+
   (lcs-message t "Checking variables")
   (lcs-check-language-vars)
   (lcs-check-lyskom-commands (mapcar 'car
@@ -55,6 +58,23 @@
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
+
+(defun lcs-check-face-schemes ()
+  "Check that all face schemes seem to be OK."
+  (lyskom-traverse scheme lyskom-face-schemes
+    (let ((faces (mapcar 'car (cdr scheme)))
+          (tmp nil))
+      (lyskom-traverse expected-face lyskom-faces
+        (if (setq tmp (memq expected-face faces))
+            (progn (when (memq expected-face (cdr tmp))
+                     (lcs-message nil "(%s) Duplicate face in scheme: %s"
+                                  (car scheme) expected-face))
+                   (setq faces (delq expected-face faces)))
+          (lcs-message nil "(%s) Face scheme missing face: %s"
+                       (car scheme) expected-face)))
+      (lyskom-traverse extra-face faces
+        (lcs-message nil "(%s) Face scheme contains unknown face: %s"
+                     (car scheme) extra-face)))))
 
 (defun lcs-check-language-vars ()
   "Check that all language-specific variables exist in all languages"
