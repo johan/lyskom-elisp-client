@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.149 2002-06-22 18:07:45 byers Exp $
+;;;;; $Id: commands1.el,v 44.150 2002-07-23 18:28:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.149 2002-06-22 18:07:45 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.150 2002-07-23 18:28:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1653,7 +1653,7 @@ Those that you are not a member in will be marked with an asterisk."
 
 (defun lyskom-list-pers-print (conf-z)
   "Print name of the person CONF-NO for kom-list-persons."
-  (lyskom-format-insert "%[%#1@%4#2:p %#2P%]\n"
+  (lyskom-format-insert "%[%#1@%5#2:p %#2P%]\n"
 			(lyskom-default-button 'pers (conf-z-info->conf-no conf-z))
 			conf-z))
 
@@ -1760,7 +1760,7 @@ Those that you are not a member in will be marked with an asterisk."
 					(conf-stat->supervisor cs)
 					(conf-stat->super-conf cs))))
       (aset counter 3 (1+ (elt counter 3)))
-      (lyskom-format-insert "%[%#1@%4#2:m %#3c %4#4s %#5s %#2M%]\n"
+      (lyskom-format-insert "%[%#1@%5#2:m %#3c %4#4s %#5s %#2M%]\n"
                             (lyskom-default-button 'conf (conf-stat->conf-no cs))
                             cs
                             (lyskom-list-conf-membership-char (conf-stat->conf-no cs))
@@ -1864,7 +1864,7 @@ be converted so that the search is case sensitive."
         (if (conf-z-info-list->conf-z-infos conf-list)
             (lyskom-traverse czi (conf-z-info-list->conf-z-infos conf-list)
               (lyskom-format-insert
-               "%[%#1@%4#2:m %#3c %#2:M%]\n"
+               "%[%#1@%5#2:m %#3c %#2:M%]\n"
                (lyskom-default-button
                 'conf (conf-z-info->conf-no czi))
                czi
@@ -2906,7 +2906,7 @@ Uses Protocol A version 8 calls"
 	     format-string-2
 	     ""
 	     (lyskom-return-username who-info)
-	     (concat "(" (who-info->doing-what who-info) ")"))))
+	     (concat "(" (string-replace-match "\n" (who-info->doing-what who-info) " ") ")"))))
       (setq who-list (cdr who-list)))
       
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 1) ?-)
@@ -3036,7 +3036,7 @@ Uses Protocol A version 9 calls"
 	       format-string-2
 	       ""
 	       username
-	       (concat "(" (dynamic-session-info->what-am-i-doing who-info)
+	       (concat "(" (string-replace-match "\n" (dynamic-session-info->what-am-i-doing who-info) " ")
 		       ")"))))
 	(if kom-show-since-and-when
 	    (let ((active 
@@ -3459,6 +3459,8 @@ WHO-INFOS that are potential sessions."
 					   (who-info->doing-what info))
 			     (match-string 1 (who-info->doing-what info))
 			   (who-info->doing-what info))))
+             (when (string-match "\n" string)
+               (string-replace-match "\n" string " "))
 	     (if (string= string "")
 		 (lyskom-get-string 'unknown-doing-what)
 	       string))
@@ -3506,6 +3508,8 @@ WHO-INFOS that are potential sessions."
 			       (match-string
 				1 (dynamic-session-info->what-am-i-doing info))
 			     (dynamic-session-info->what-am-i-doing info))))
+               (when (string-match "\n" string)
+                 (string-replace-match "\n" string " "))
 	       (if (string= string "")
 		   (lyskom-get-string 'unknown-doing-what)
 		 string))

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.203 2002-06-26 20:19:28 byers Exp $
+;;;;; $Id: vars.el.in,v 44.204 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.203 2002-06-26 20:19:28 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.204 2002-07-23 18:28:41 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -131,6 +131,14 @@ the item immediately, without requiring the user to press RET to confirm."
 (def-kom-var kom-edit-hide-add-button nil
   "*If non-nil, hide the add button shown after the headers when editing
 a text."
+  server
+)
+
+(def-kom-var kom-max-overlays 120
+  "*Maximum number of overlays to use to highlight texts.
+Each text uses one, two, three or four overlays, depending on settings.
+Must be a positive integer or nil. If nil, the number of overlays will
+be unlimited. Behavior of non-positive and non-nil values is undefined."
   server
 )
 
@@ -523,6 +531,10 @@ position (generally the most recent prompt) will always be visible."
   "*Non-nil means delay printing of some information not in the cache.
 You might want to turn this off to have the old, linear behaviour."
   server)
+
+(def-kom-var lyskom-overlay-pool nil  
+  "Pool of overlays"
+  local)
 
 (def-kom-var lyskom-defer-indicator "[...]"
   "String to display while LysKOM is waiting for the real string.")
@@ -919,10 +931,10 @@ conference and person buttons are not expected.")
 
     ;; URLs
 
-    ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^\t \012\014\"<>|.,!(){}?'`:]" 
+    ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      pseudo-url 0 nil kom-url-face)
 
-    ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^\t \012\014\"<>|.,!(){}?'`:]" 
+    ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      url 0 nil kom-url-face)
     ("<URL:\\s-*\\([^>]*\\)\\s-*>"
      url 1 1 kom-url-face)
@@ -983,7 +995,7 @@ to some URL viewers."
                             lyskom-view-url-windows)
 			   ("netscape"
 			    ".*"
-			    "Netscape Navigator"
+			    "Netscape Navigator/Mozilla"
 			    lyskom-view-url-netscape)
 			   ("\\(emacs\\|dired\\)"
 			    "\\(ftp\\|file\\)"
@@ -1029,11 +1041,12 @@ be tried."
   server)
 
 (def-kom-var kom-netscape-command "netscape"
-  "*Command to run to start Netscape.
+  "*Command to run to start Netscape or Mozilla.
 
-If a string, it should be a command that starts Netscape with no
-arguments. If a list, the first element must be a command that starts
-Netscape. The remaining elements are used as arguments to Netscape.
+If a string, it should be a command that starts Netscape or Mozilla 
+with no arguments. If a list, the first element must be a command 
+that starts Netscape. The remaining elements are used as arguments 
+to Netscape.
 
 For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
 is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)"

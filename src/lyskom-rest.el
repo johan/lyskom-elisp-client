@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.169 2002-07-16 02:30:04 jhs Exp $
+;;;;; $Id: lyskom-rest.el,v 44.170 2002-07-23 18:28:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.169 2002-07-16 02:30:04 jhs Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.170 2002-07-23 18:28:40 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1178,14 +1178,29 @@ Args: FORMAT-STRING &rest ARGS"
                            result))
     result))
 
+(defun lyskom-limited-make-overlay (start end)
+  (let ((val (lyskom-xemacs-or-gnu
+              (make-extent start end)
+              (make-overlay start end))))
+  (when (lyskom-plusp kom-max-overlays)
+    (let ((old (nthcdr (1- kom-max-overlays) lyskom-overlay-pool))) ;
+      (setq lyskom-overlay-pool 
+            (lyskom-nbutlast lyskom-overlay-pool 
+                             (- (length lyskom-overlay-pool)
+                                kom-max-overlays)))
+      (mapcar 'delete-overlay old))
+    (setq lyskom-overlay-pool (cons val lyskom-overlay-pool)))
+  val))
+
+
 (defun lyskom-special-insert-overlay (start end args)
   (lyskom-xemacs-or-gnu
-   (let ((overlay (make-extent start end)))
+   (let ((overlay (lyskom-limited-make-overlay start end)))
      (while args
        (set-extent-property overlay (car args) (car (cdr args)))
        (setq args (nthcdr 2 args)))
      (set-extent-priority overlay 1000))
-   (let ((overlay (make-overlay start end)))
+   (let ((overlay (lyskom-limited-make-overlay start end)))
      (while args
        (overlay-put overlay (car args) (car (cdr args)))
        (setq args (nthcdr 2 args))))))
@@ -1197,15 +1212,15 @@ Args: FORMAT-STRING &rest ARGS"
   "Insert delayed overlays according to FORMAT-STATE."
   (lyskom-traverse overlay (format-state->delayed-overlays format-state)
     (lyskom-xemacs-or-gnu
-     (let ((overlay (make-extent (+ start (aref overlay 0))
-                                 (+ start (aref overlay 1))))
+     (let ((overlay (lyskom-limited-make-overlay (+ start (aref overlay 0))
+                                                 (+ start (aref overlay 1))))
            (args (aref overlay 2)))
        (while args
          (set-extent-property overlay (car args) (car (cdr args)))
          (setq args (nthcdr 2 args)))
        (set-extent-priority overlay 1000))
-     (let ((overlay (make-overlay (+ start (aref overlay 0))
-                                  (+ start (aref overlay 1))))
+     (let ((overlay (lyskom-limited-make-overlay (+ start (aref overlay 0))
+                                                 (+ start (aref overlay 1))))
            (args (aref overlay 2)))
        (while args
          (overlay-put overlay (car args) (car (cdr args)))

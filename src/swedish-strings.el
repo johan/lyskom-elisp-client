@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.258 2002-07-11 14:25:54 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.259 2002-07-23 18:28:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.258 2002-07-11 14:25:54 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.259 2002-07-23 18:28:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1806,6 +1806,7 @@ kommandot \"Spara variabler\".\n\n")
 
     (keyboard-cancel . "Avbryt")
     (keyboard-menu-help . "(välj: C-n, C-p; bekräfta: RET)")
+    (customize-help . "Se början av bufferten för mer information")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2684,8 +2685,8 @@ kommandot \"Spara variabler\".\n\n")
     (viewer-program . "WWW-läsare")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (alla)")
-    (netscape-viewer      . "Netscape Navigator (alla)")
-    (windows-viewer       . "Windows standard eller Netscape (alla)")
+    (netscape-viewer      . "Netscape/Mozilla (alla)")
+    (windows-viewer       . "Windows standard eller Netscape/Mozilla (alla)")
     (emacs-w3-viewer      . "Emacs W3-mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer   . "Emacs Dired (FTP)")
@@ -3342,7 +3343,7 @@ i servern. Annars sparas det i din .emacs.")
   Mosaic.")
 
     (kom-netscape-command-doc . "\
-  Denna inställning anger kommandot för att köra Netscape.")
+  Denna inställning anger kommandot för att köra Netscape eller Mozilla.")
 
     (kom-galeon-command-doc . "\
   Denna inställning anger kommandot för att köra Galeon.")
@@ -3746,7 +3747,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-windows-browser-command-tag . "Kommando för att starta en WWW-läsare i Windows:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")
-    (kom-netscape-command-tag . "Kommando för att starta Netscape Navigator:")
+    (kom-netscape-command-tag . "Kommando för att starta Netscape eller Mozilla:")
     (kom-galeon-command-tag . "Kommando för att starta Galeon:")
 
     (kom-symbolic-marks-alist-tag . "Symboliska markeringstyper:")
