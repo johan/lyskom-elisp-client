@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.33 1999-06-13 15:27:23 byers Exp $
+;;;;; $Id: commands2.el,v 44.34 1999-06-20 11:26:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.33 1999-06-13 15:27:23 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.34 1999-06-20 11:26:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2015,6 +2015,14 @@ is alive."
                                          
 
 
+(defun lyskom-default-agree-string (&optional text)
+  (unless text (setq text kom-agree-text))
+  (cond ((null text) (lyskom-get-string 'default-agree-string))
+        ((stringp text) text)
+        ((functionp text) (funcall text))
+        ((listp text) (lyskom-default-agree-string
+                       (elt text (random (length kom-agree-text)))))))
+
 (def-kom-command kom-agree (&optional text-no)
   "Convenience function to add agreement."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no
@@ -2022,7 +2030,7 @@ is alive."
   (lyskom-format-insert 'agreeing text-no)
   (lyskom-fast-reply text-no
                      (lyskom-read-string (lyskom-get-string 'agree-prompt)
-                                         (lyskom-get-string 'default-agree-string)
+                                         (lyskom-default-agree-string)
                                          'lyskom-fast-reply-history)))
     
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.6 1998-06-02 12:14:15 byers Exp $
+;;;;; $Id: check-strings.el,v 44.7 1999-06-20 11:26:27 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -11,6 +11,11 @@
 ;;;;
 ;;;;  or by M-x lyskom-check-strings
 ;;;;
+;;;; TODO:
+;;;; Check that all -tag and -doc strings correspond to an existing variable
+;;;; Check that all server-local variables have -tag and -doc strings.
+;;;; Check that all server-local variables are in the settings buffer
+;;;; Check that all server-local variables have a widget definition
 ;;;;
 
 (require 'lyskom)
@@ -27,11 +32,31 @@
   (or noninteractive
       (lcs-setup-message-buffer))
 
-  (lcs-message t "Languages: %s" (mapcar 'car lyskom-languages))
+  (lcs-message t "Checking variables")
+  (lcs-check-lyskom-commands (mapcar 'car
+                                     (lcs-all-category-string
+                                      'lyskom-command)))
+
+  (lcs-message t "Checking languages: %s" (mapcar 'car lyskom-languages))
+  (lcs-check-key-bindings (mapcar 'car (lcs-all-category-string
+                                        'lyskom-command))
+                          'lyskom-mode-map)
   (mapcar 'lcs-check-category lyskom-language-categories)
 
   (or noninteractive
       (display-buffer lcs-message-buffer)))
+
+(defun lcs-check-lyskom-commands (commands)
+  "Check the lyskom-commands variable"
+  (let ((tmp (copy-sequence lyskom-commands)))
+    (mapcar (lambda (el)
+              (if (memq el lyskom-commands)
+                  (setq tmp (delq el tmp))
+                (lcs-message nil "(%s) Missing in lyskom-commands" el)))
+            commands)
+    (mapcar (lambda (el)
+              (lcs-message nil "(%s) Unknown command in lyskom-commands" el))
+            tmp)))
 
 (defun lcs-check-category (category)
   "Check the strings in CATEGORY."
@@ -80,6 +105,30 @@ STRINGS is a list of (language . string)."
     (if langs
 	(lcs-message nil "(%s:%s) Missing languages %s"
 		     category name langs))))
+
+(defun lcs-check-key-bindings (commands keymap)
+  "Check the commands in CATEGORY named NAME for bindings 
+in lyskom-X-mode-map"
+  (let* ((langs (mapcar 'car lyskom-languages))
+         (keymaps (get keymap 'lyskom-language-keymap))
+         (all-missing nil))
+    (while commands
+      (let ((lang-c (copy-sequence langs)))
+        (mapcar (lambda (lang)
+                  (when (where-is-internal (car commands)
+                                           (symbol-value (cdr (assq lang keymaps))))
+                    (setq lang-c (delq lang lang-c))))
+                langs)
+        (cond ((equal lang-c langs) (setq all-missing
+                                          (cons (car commands) all-missing)))
+              (lang-c 
+               (lcs-message nil "(%s:%s) Missing binding in %s" keymap 
+                            (car commands) lang-c)))
+        (setq commands (cdr commands))))
+    (mapcar (lambda (el)
+              (lcs-message nil "(%s:%s) Missing in %s" keymap el langs))
+            all-missing)))
+
 
 (defun lcs-check-string (category name lang string)
   "Check the string in CATEGORY named NAME in language LANG.
