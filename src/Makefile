@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.102 2002-09-08 15:18:41 byers Exp $
+# $Id: Makefile,v 44.103 2002-09-16 22:14:16 byers Exp $
 
 # Useful targets:
 #
@@ -36,7 +36,7 @@
 # Version of the client.
 #
 # Also remember to change version number in ../doc/Makefile!
-CLIENTVERSION = 0.47
+CLIENTVERSION = 0.47.1-BETA-1
 
 ######################################################################
 
@@ -47,7 +47,7 @@ EMACS = xemacs
 LANGUAGES = english swedish
 
 # These files are included in all distribution archives.
-DOCFILES = ../doc/NEWS-0.47
+DOCFILES = ../doc/NEWS-0.47 ../doc/NEWS-0.47.1
 
 # Default target.
 TARGET = lyskom.elc
@@ -257,7 +257,7 @@ $(RELEASE-BASE-SRC).buildstamp: \
 	cd $(RELEASE-BASE-SRC) && autoconf
 	cd $(RELEASE-BASE-SRC) && ./configure --prefix=$(DEFAULTPREFIX) \
 					      --with-lispdir=$(DEFAULTLISPDIR)
-	cd $(RELEASE-BASE-SRC) && rm config.log config.status config.cache
+	cd $(RELEASE-BASE-SRC) && rm -f config.log config.status config.cache
 	touch $@
 
 ############################################################

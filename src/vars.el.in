@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.209 2002-09-14 21:28:06 byers Exp $
+;;;;; $Id: vars.el.in,v 44.210 2002-09-16 22:14:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.209 2002-09-14 21:28:06 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.210 2002-09-16 22:14:16 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -139,6 +139,10 @@ if the variable is in kom-dont-read-saved-variables."
  * A negative prefix argument will try to find the text-no
    of the text `arg' messages above point from the current
    kom buffer.")
+
+(defconst lyskom-old-farts-text-prompt-strategy
+  kom-old-farts-text-prompt-strategy
+  "Obsolete: Alias for kom-old-farts-text-prompt-strategy.")
 
 (def-kom-var kom-pick-text-no-strategy-alist
       '((kom-comment-previous . ((t   . lyskom-get-previous-text)
