@@ -1,5 +1,10 @@
 2001-04-01  Joel Rosdahl  <joel@rosdahl.net>
 
+	* swedish-strings.el (lyskom-message): Added hint about a second
+	unsubscription to passivate-done.
+
+	* english-strings.el (lyskom-message): Ditto.
+
 	* swedish-strings.el (lyskom-custom-strings): Small cosmetic
 	fixes.
 
