@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.14 2000-09-02 14:23:11 byers Exp $
+# $Id: distribution-Makefile.in,v 44.1 2000-09-02 17:43:30 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -8,7 +8,7 @@
 # Gnu Emacs 19.34 or later, or XEmacs 19.15 or 20.2 or later.
 # ======================================================================
 
-EMACS=emacs
+EMACS=@emacs@
 
 
 # ======================================================================
@@ -17,8 +17,9 @@ EMACS=emacs
 # INFODIR is where documentation goes (if there is any)
 # ======================================================================
 
-LISPDIR=/usr/local/share/emacs/site-lisp
-INFODIR=/usr/local/info
+prefix=@prefix@
+LISPDIR=@lispdir@
+INFODIR=@infodir@
 
 
 # ======================================================================
@@ -32,7 +33,7 @@ INFODIR=/usr/local/info
 # The first language in the list will be the default language.
 # ======================================================================
 
-LANGUAGES=swedish english
+LANGUAGES=@languages@
 
 
 # ======================================================================
@@ -108,6 +109,7 @@ lyskom-@@CLIENTVERSION@@.el: $(HEADER) $(SOURCES)
 
 install: lyskom-@@CLIENTVERSION@@.elc
 	cp lyskom-@@CLIENTVERSION@@.el lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)
+	ln -sf $(LISPDIR)/lyskom-@@CLIENTVERSION@@.el $(LISPDIR)/lyskom.el
 	ln -sf $(LISPDIR)/lyskom-@@CLIENTVERSION@@.elc $(LISPDIR)/lyskom.elc
 
 clean:

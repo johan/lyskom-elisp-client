@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.66 2000-09-01 14:13:17 byers Exp $
+# $Id: Makefile,v 44.67 2000-09-02 17:43:28 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.66 2000-09-01 14:13:17 byers Exp $
+# $Id: Makefile,v 44.67 2000-09-02 17:43:28 byers Exp $
 #
 
 
@@ -47,6 +47,8 @@ FTPDIR=/home/davby/www-pub
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 LISPDIR = /usr/gnu/share/emacs/site-lisp
 LANGUAGES = swedish english
+DEFAULTLISPDIR=/usr/local/share/emacs/site-lisp
+DEFAULTPREFIX=/usr/local
 
 SHELL = /bin/sh
 RM = /bin/rm -f
@@ -107,11 +109,13 @@ HEADER = 	header.el \
 		language.el
 
 MISC =		envcheck.el \
-		lpath.el
+		lpath.el \
+		autoconf.el
 
-DISTFILES =     Makefile \
-		README \
-		COPYING
+DISTFILES =     README \
+		COPYING \
+		Makefile.in \
+		configure.in
 
 DISTSRC = $(DISTFILES:%=distribution-%)
 HEADER-ELC = $(HEADER:%.el=%.elc)
@@ -167,7 +171,7 @@ install: $(TARGET) $(TARGET-EL)
 
 release: release-files release-cleanup release-move
 
-release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) $(TARGET-EL)
+release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	mkdir lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
@@ -177,17 +181,25 @@ release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) $(TARGET-EL)
 	for i in $(DOCFILES) ; do \
 		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
 	done
-	(cd lyskom-$(CLIENTVERSION); make lyskom-$(CLIENTVERSION).el)
+	( cd lyskom-$(CLIENTVERSION); \
+	autoconf ; \
+	./configure --prefix=$(DEFAULTPREFIX) --with-lispdir=$(DEFAULTLISPDIR) ; \
+	make lyskom-$(CLIENTVERSION).el )
 	chmod -R u+rw,g+r,o+r lyskom-$(CLIENTVERSION)
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar
+	zip -R9y lyskom-$(CLIENTVERSION).zip 'lyskom-$(CLIENTVERSION)/*'
 
 release-cleanup:
-	$(RM) -rf lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
+	$(RM) -rf lyskom-$(CLIENTVERSION) \
+		  lyskom-$(CLIENTVERSION).tar.gz \
+		  lyskom-$(CLIENTVERSION).zip \
+		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 
 release-move: release-files
 	if [ -d $(FTPDIR) ]; then \
 		mv lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR) ; \
+		mv lyskom-$(CLIENTVERSION).zip $(FTPDIR) ; \
 		mv $(TARGET-EL) $(FTPDIR)/lyskom-$(CLIENTVERSION).el ; \
 	else \
 		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
@@ -216,9 +228,7 @@ clean:
 	$(RM) -rf lyskom-$(CLIENTVERSION) \
 		  lyskom-$(CLIENTVERSION).tar \
 		  lyskom-$(CLIENTVERSION).tar.gz \
+		  lyskom-$(CLIENTVERSION).zip \
 		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 	$(RM) *~ *.elc $(GENERIC-CLEAN)
 	$(RM) -r build-stamp lyskom-elisp-client*
-
-distclean: clean
-	$(RM) $(GENERIC-DIST-CLEAN) vars.el

@@ -1,5 +1,7 @@
 2000-09-02  David Byers  <davby@ida.liu.se>
 
+	* Makefile (release-files): Build zip file too.
+
 	* command.el (lyskom-command-match-string-regexp): New function.
 	(lyskom-completing-strip-command): New function.
 	(lyskom-complete-command): Record exact matches when iterating
