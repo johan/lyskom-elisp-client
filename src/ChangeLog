@@ -1,5 +1,8 @@
 Fri Oct 25 16:22:03 1991  Linus Tolke Y  (linus at lysator)
 
+	* lyskom-rest.el (lyskom-maybe-do-when-starting): Now the commands
+	  are executed with the kom-buffer as a selected-buffer.
+
 	* vars.el (kom-page-before-command): Default nil.
 
 Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
