@@ -1,5 +1,7 @@
 Thu Aug 15 21:15:10 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* Version 0.43.2 släppt.
+
 	* startup.el (lyskom): Återanvänd inte levande sessioner.
 
 Wed Aug 14 17:03:17 1996  David Kågedal  <davidk@lysator.liu.se>
