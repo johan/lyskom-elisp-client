@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.250 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.251 2002-06-12 21:21:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.250 2002-06-12 18:29:32 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.251 2002-06-12 21:21:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2714,6 +2714,10 @@ kommandot \"Spara variabler\".\n\n")
 
     (prompt-for-text-no . "Fråga efter textnummer")
 
+    (all-others . "Alla andra")
+    (some-person . "Person")
+    (format-html . "Formattera HTML:")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3627,6 +3631,9 @@ i servern. Annars sparas det i din .emacs.")
     (kom-edit-hide-add-button-doc . "\
   Om detta är påslaget så kommer knappen [Addera...] att visas efter
   mottagare och tilläggsinformation när man skriver inlägg.")
+    (kom-format-html-authors-doc . "\
+  Den här inställningen styr vilka författares HTML-meddelanden som
+  elispklienten kommer att försöka formattera.")
 
 
     ;;
@@ -3802,6 +3809,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-async-highlight-dashed-lines-tag . "Annorlunda bakgrundsfärg före och efter meddelanden:")
     (kom-async-highlight-text-body-tag . "Annorlunda bakgrundsfärg på meddelanden:")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
+    (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
     )
 )
 

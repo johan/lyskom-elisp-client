@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.75 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: option-edit.el,v 44.76 2002-06-12 21:21:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.75 2002-06-12 18:29:32 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.76 2002-06-12 21:21:52 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -181,6 +181,7 @@
     [kom-show-imported-envelope-sender]
     [kom-smileys]
     [kom-w3-simplify-body]
+    [kom-format-html-authors]
     "\n"
     [kom-highlight-first-line]
     [kom-highlight-dashed-lines]
@@ -694,6 +695,10 @@ customize buffer but do not save them to the server."
     (kom-show-personal-message-date (toggle (on off)))
     (kom-mercial (string))
     (kom-w3-simplify-body (toggle (on off)))
+    (kom-format-html-authors (repeat (cons ((choice ((person nil :tag some-person :lyskom-predicate (pers))
+                                                     (const (all-others t) :format "%t\n"))
+                                                    :format "%[%v%]")
+                                            (toggle (yes no) :tag format-html)))))
     (kom-bury-buffers (toggle (on off)))
     (kom-ansaphone-replies (ansaphone))
     (kom-complete-numbers-before-names (toggle (on off)))
