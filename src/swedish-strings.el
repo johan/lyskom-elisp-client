@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.150 2001-02-02 23:24:10 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.151 2001-02-20 20:44:16 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.150 2001-02-02 23:24:10 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.151 2001-02-20 20:44:16 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -1305,9 +1305,9 @@ Uppkopplad sedan %#8s%#9s")
     
     (agreeing . "Håller med om inlägg %#1n...")
     (fast-replying . "Kort replik till inlägg %#1n...")
-    (author-fast-replies . "Av författaren tillagd information:")
+    (author-fast-replies . "Anmärkningar av författaren:")
     (author-fast-reply-aux . "  \"%#1t\"")
-    (other-fast-replies . "Tillagd information:")
+    (other-fast-replies . "Repliker:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
