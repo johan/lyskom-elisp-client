@@ -1,0 +1,277 @@
+
+
+		  LYSKOM EXTENDED STRING FORMATTING
+			    By David Byers
+
+
+CONTENTS
+
+	1 .................................... The Format String
+	2 .................................... Format Directives
+	  2.1 ................................ Format Letters
+	  2.2 ................................ Format Arguments
+	  2.3 ................................ Format Flags
+          2.4 ................................ Conditionals
+        3 .................................... Formatting Functions
+	  3.1 ................................ Main Functions
+	  3.2 ................................ Auxiliary functions
+	  3.3 ................................ Related functions
+	4 .................................... Format States
+
+
+
+1. THE FORMAT STRING
+
+The format string is a character string which is inserted verbatim
+into the result string with the exception of special format directives
+which cause values from the argument list to be inserted.
+
+
+2. FORMAT DIRECTIVES
+
+The syntax of all format directives is
+
+     %[pad-length]#[arg-no][flags][format-letter][letter-options]
+
+pad-length is the length of the resulting string. If it is negative,
+is will be left-justified in the length, otherwise
+right-justified. This field is optional.
+
+arg-no is the argument number from the argument list to insert, and
+must be prefixed by a hash mark when it exists. This field is
+mandatory for all format directives that use an argument.
+
+flags are optional flags applicable to certain format letters. When
+not applicable, the flags field is ignored. Flags are optional.
+
+format-letter is one of the format letters given below. It determines
+how the given argument is inserted.
+
+
+2.1 Format Letters
+
+% - Insert a percent character. This directive does not use an
+    argument. 
+
+s - Insert a string. If the argument is a character string it is
+    inserted verbatim. If it is a symbol, the name of the symbol is
+    inserted. 
+
+d - Insert an integer in decimal format.
+
+o - Insert an integer in octal format.
+
+x - Insert an integer in hexadecimal format. 
+
+c - Interpret and insert an integer as a single character.
+
+@ - The argument must be a valid text property list, and will be
+    inserted into the buffer at the point of this directive provided
+    one of the lyskom-format-insert functions was called. The extent
+    of the format in the buffer is to the end of the current subformat
+    string or the entire format string if processing is at the top
+    level. 
+
+[ - Begin subformat. This directive does not use an argument.
+
+] - Exit subformat. This directive does not use an argument.
+
+M - The argument must be a conf-stat, conf-no or character string.
+    This directive inserts the name of the conference or the character
+    string. If the argument is a conf-stat or integer, text properties
+    appropriate for conferences are added.
+
+m - The argument must be a conf-stat or an integer. The directive
+    inserts the conference number or the integer in decimal format and 
+    adds text properties as appropriate for conferences.
+
+P - The argument must be a conf-stat or a character string. This
+    direcive works similarly to %M, but assums the conf-stat, conf-no
+    or string represents a LysKOM user, not a regular conference.
+
+p - The argument must be a conf-stat or integer. This directive works
+    similarly to %m, but assumes the conf-stat or integer representes
+    a LysKOM user, not a regular conference.
+
+t - The argument must be a character string or a text structure. The
+    text is inserted and appropriate text properties added. The first
+    line of the text is NOT assumed to be the subject line.
+
+n - The argument must be an integer or a text-stat. The integer or
+    text-no is inserted and appropriate text properties added.
+
+r - The argument is a string and will be formatted as a subject line.
+
+? - A conditional. The type of argument depends on letter-options.
+    Currently implemented letter-options are "d" for one-or-more and
+    "b" for booleans.
+
+
+
+2.2 Format Arguments
+
+The type of argument appropriate for each format directive is
+presented above. In addition, all format directives accept a
+format-props structure as an argument. The format-props structure
+contains a regular argument as shown above and text properties to be
+applied to the extent of the text inserted by the directive.
+
+The format-props structure is constructed using the make-format-props
+function which takes the regular format argument and the property list
+as its two arguments.
+
+The %[ direcive also accepts format-props structures as its (optional)
+argument, but ignores the regular argument part of the structure, but
+applies the text properties to the entire subformat result. Thus,
+
+	(lyskom-format-insert "%[%#1@From: %#2P]\n" 
+		(make-format-props nil '(face blue))
+		pers-conf-stat)
+
+would format the entire line blue.
+
+
+2.3 Format Flags
+
+The M, m, P, p, r and n directives accept the : character as a flag.
+If it is supplied, the regular text properties are not inserted.
+
+All format directives accept the = character as a flag. Using this
+flag ensures that the result will be truncated to the field width. In
+a MULE-enabled Emacs with a functioning string-width function fields
+will be truncated correctly even if some characters occupy multiple
+columns.
+
+
+
+2.4 Conditionals
+
+The "?" format letter introduces a conditional in the format string.
+The letter-options component of a format directive specifies the type
+of conditional. The formatter then chooses between a set of subformat
+strings (surrounded by "%[ %]") depending no the type of conditional
+and the argument. For a binary condition the format direcive will have
+the following general form:
+
+                %#[n]?[type]%[then-part%]%[else-part%]
+
+The then-part subformat is chosen if the conditional evaluates to
+true; otherwise the else part is chosen.
+
+The following conditionals are implemented:
+
+d - One or more. This is used for singular/plural endings. The
+    argument must be an integer. The first subformat is chosen if the
+    integer is one; the second is chosen if the integer is not one.
+
+    For example (lyskom-format "%#1d orange%#1?d%[s%]%[%]"
+    num-oranges) will output "1 orange" if num-oranges is one and "5
+    oranges" if num-oranges is five.
+
+b - Boolean. The first subformat is chosen if the argument is non-nil
+    and the second if the argument is nil. You could format a boolean
+    variable "answer" as "yes" or "no" for t and nil using
+    (lyskom-format "%#1?b%[yes%]%[no%]" answer).
+
+
+
+3. FORMATTING FUNCTIONS
+
+The following functions are used to format strings. Please take the
+time to understand them all.
+
+
+(lyskom-format [format-string] &rest [args])
+
+Returns the formatted string for format-string and args. Deferred
+printing will not be in effect since the entire string has to be
+returned. Don't use this if you intend to insert the string into the
+LysKOM buffer; use lyskom-format-insert instead.
+
+
+(lyskom-format-insert [format-string] &rest [args])
+
+Formats and inserts the string generated by format-string and args at
+the end of the buffer. The effect is similar to calling lyskom-insert
+on the result of lyskom-format, but this function allows deferred
+insertion to take place. 
+
+
+(lyskom-format-insert-at-point [format-string] &rest [args])
+
+Just like lyskom-format-insert, but inserts the string at point and
+not at the end of the buffer. This is probably what you want in other
+buffers than the LysKOM buffer since it behaves like a regular insert.
+
+
+(lyskom-format-insert-before-prompt [format-string] &rest [args])
+
+Formats and inserts the string generated by format-string and args
+before the current prompt or the next prompt. This function is in
+effect identical to calling lyskom-insert-before-prompt on the result
+of lyskom-format.
+
+
+(lyskom-do-format [format-string] &optional [args] [allow-defer])
+
+This is the top-level function of the formatting spaghetti. It takes a
+format string, list of arguments and a flag saying whether to allow
+deferred printing or not and returns a format state, not a string.
+
+
+(lyskom-format-aux [format-state] [allow-defer])
+
+This internal function is the top-level function for internal calls. 
+lyskom-for-format does some housekeeping like changing buffers,
+building a format-state and error reporting that this function does
+not perform. This function is called recursively for subformat
+strings. It traverses the format string, bit by bit, updating the
+format state as it goes and calls lyskom-format-aux-help to deal with
+each individual format directive.
+
+
+(lyskom-format-aux-help [format-state]
+                        [pad-length]
+                        [arg-no]
+                        [format-letter]
+                        [equals-flag]
+                        [colon-flag]
+                        [face-flag]
+                        [pad-letter]
+                        [allow-defer])
+
+This function takes care of a single format directive. The arguments
+represent components of the format directive. The function body is
+mostly a big cond statement with one branch for each format letter
+followed by code to truncate or pad the result and finally an update
+to the format state. This function calls lyskom-format-aux to handle
+subformat strings.
+
+
+(lyskom-format-do-binary-predicate [option] 
+                                   [format-state]
+                                   [allow-defer])
+
+This function formats a binary predicate. The option argument
+specifies which branch to take.
+
+
+(lyskom-format-enter-subformat [format-state] [allow-defer])
+
+Recursively calls lyskom-format-aux and performs necessary
+housekeeping to handle a subformat string. It is used by
+lyskom-format-do-binary-predicate and lyskom-format-aux-help.
+
+
+(lyskom-format-skip-subformat [format-state])
+
+Skips the next subformat string in the format state. This function is
+used by lyskom-format-do-binary-predicate. It handles nested subformat
+strings correctly.
+
+
+(lyskom-tweak-format-state [format-state])
+
+Internal housekeeping routine. This function is used to apply text
+properties to a format state primarily when the @ format letter has
+been used.
