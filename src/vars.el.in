@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.6 1996-06-08 11:40:01 byers Exp $
+;;;;; $Id: vars.el.in,v 41.7 1996-06-30 03:42:38 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.6 1996-06-08 11:40:01 byers Exp $\n"
+  "$Id: vars.el.in,v 41.7 1996-06-30 03:42:38 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -1238,7 +1238,12 @@ in lyskom-face-schemes."
 
 ;;; Look for X resources specifying faces.
 
-(if (eq window-system 'x)
+(defun lyskom-setup-faces ()
+  "Initalize the faces in the LysKOM client.
+This sets the face scheme according to `kom-default-face-scheme', and
+also reads the proper X resources."
+  (lyskom-set-face-scheme kom-default-face-scheme)
+  (if (eq window-system 'x)
     (let* ((set-p (function
 		   (lambda (face-name resource)
 		     (x-get-resource (concat face-name ".attribute" resource)
@@ -1265,4 +1270,4 @@ in lyskom-face-schemes."
 	    (if (eq it 'on) (make-face-italic face nil t))
 	    (if (eq it 'off) (make-face-unitalic face nil t))
 	    (if ul (set-face-underline-p face (eq ul 'on))))))
-       lyskom-faces)))
+       lyskom-faces))))

@@ -1,5 +1,9 @@
 Sun Jun 23 02:16:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* startup.el (lyskom): Anropa lyskom-setup-faces
+
+	* vars.el.in (lyskom-setup-faces): Ny funktion.
+
 	* edit-text.el (lyskom-edit-parse-headers): Kör
  	lyskom-swascii-header-subject genom regexp-quote innan matchning.
 
