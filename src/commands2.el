@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.37 1999-06-26 20:48:06 byers Exp $
+;;;;; $Id: commands2.el,v 44.38 1999-06-28 13:45:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.37 1999-06-26 20:48:06 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.38 1999-06-28 13:45:29 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -615,18 +615,19 @@ send. If DONTSHOW is non-nil, don't display the sent message."
     ))
 
 (defun lyskom-send-message-trim-newlines ()
-  (let ((size (length lyskom-message-string)))
-    (while (and (> size 0)
-                (eq ?\n (aref lyskom-message-string (1- size))))
-      (setq size (1- size)))
-    (cond ((and (eq size 0)
-                (not (lyskom-j-or-n-p (lyskom-get-string 
-                                       'send-empty-message-p))))
-           (setq lyskom-message-string nil))
-          ((eq size 0)
-           (setq lyskom-message-string ""))
-          (t (setq lyskom-message-string (substring lyskom-message-string 
-                                                    0 size))))))
+  (when (stringp lyskom-message-string)
+    (let ((size (length lyskom-message-string)))
+      (while (and (> size 0)
+                  (eq ?\n (aref lyskom-message-string (1- size))))
+        (setq size (1- size)))
+      (cond ((and (eq size 0)
+                  (not (lyskom-j-or-n-p (lyskom-get-string 
+                                         'send-empty-message-p))))
+             (setq lyskom-message-string nil))
+            ((eq size 0)
+             (setq lyskom-message-string ""))
+            (t (setq lyskom-message-string (substring lyskom-message-string 
+                                                      0 size)))))))
 
 (lyskom-external-function lyskom-resize-minibuffer-mode)
 (lyskom-external-function resize-minibuffer-setup)
@@ -1552,7 +1553,7 @@ membership info."
                                 255
                                 (lyskom-get-string 'set-session-priority)
                                 t
-                                100))))
+                                (or kom-default-session-priority 100)))))
     (setq lyskom-session-priority pri)
     (lyskom-refetch)))
 

@@ -1,3 +1,16 @@
+1999-06-28  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-set-session-priority): Default priority is
+	kom-default-session-priority, not 100.
+
+	* startup.el (kom-start-anew): Set the session priority from
+	kom-default-session-priority.
+
+	* vars.el.in (kom-default-session-priority): New variable.
+
+	* commands2.el (lyskom-send-message-trim-newlines): Don't trim
+	newlines if the message is not a string.
+
 1999-06-27  David Byers  <davby@ida.liu.se>
 
 	* services.el (initiate-set-membership-type): Don't delete the
