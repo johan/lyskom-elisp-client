@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.3 1996-09-25 17:29:36 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.4 1996-09-29 15:18:34 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -42,6 +42,8 @@
 ;;;;    Thomas Bellman
 ;;;;    Linus Tolke
 ;;;;    Inge Wallin
+;;;;    David K}gedal
+;;;;    David Byers
 ;;;;   and others.
 ;;;;
 ;;;; Some ideas stolen from lpmud.el written by Lars Willf|r and Thomas Bellman
@@ -74,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.3 1996-09-25 17:29:36 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.4 1996-09-29 15:18:34 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1597,13 +1599,12 @@ chosen according to this"
 (defun lyskom-end-of-command ()
   "Print prompt, maybe scroll, prefetch info."
   (message "")
-  (let ((start 0))
-    (while (and lyskom-to-be-printed-before-prompt
-                (lyskom-queue->first lyskom-to-be-printed-before-prompt))
-      (setq start (point-max))
-      (lyskom-insert (car (lyskom-queue->first 
-                           lyskom-to-be-printed-before-prompt)))
-      (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt)))
+  (while (and lyskom-to-be-printed-before-prompt
+	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
+    (if (not (bolp)) (lyskom-insert "\n"))
+    (lyskom-insert (car (lyskom-queue->first 
+			 lyskom-to-be-printed-before-prompt)))
+    (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt))
   (setq lyskom-executing-command nil)
   (setq lyskom-current-command nil)
   (setq lyskom-current-prompt nil)	; Already set in s-o-c really
@@ -1768,9 +1769,11 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
     'next-text)
    ((not (read-list-isempty lyskom-to-do-list))
     'next-conf)
-   ((and lyskom-membership-is-read
-	 (= lyskom-last-conf-received
-	    (lyskom-membership-highest-index)))
+   ;; This is not really true. The pretech may still be fetching the
+   ;; membership. One possible way is to test for a non-numeric,
+   ;; non-nil value. Or even better, introduce a test function to
+   ;; isolate the test.
+   (lyskom-membership-is-read
     'when-done)
    (t 'unknown)))
 
@@ -1808,10 +1811,10 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 
 (defun lyskom-prefetch-and-print-prompt ()
   "Prefetch info if needed. Print prompt if not already printed."
-  (if (< (lyskom-known-texts)
-         lyskom-prefetch-conf-tresh)
-      (lyskom-prefetch-conf))
-  (lyskom-prefetch-text)
+  ;; (if (< (lyskom-known-texts)
+  ;; 	    lyskom-prefetch-conf-tresh)
+  ;; 	 (lyskom-prefetch-conf))
+  ;; (lyskom-prefetch-text)
   (if (and lyskom-is-waiting
 	   (listp lyskom-is-waiting)
            (eval lyskom-is-waiting))
@@ -1851,121 +1854,129 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 ;;      (lyskom-prefetch-conf))
 ;;    (lyskom-run 'main 'lyskom-prefetch-all-confs num-arg continuation)))
 
+;; (defun lyskom-prefetch-all-confs ()
+;;   "Gets all conferences using prefetch."
+;;   (while (not (lyskom-prefetch-done))
+;;     (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
+;; 	     (lyskom-prefetch-confs lyskom-max-int))
+;; 	 (lyskom-prefetch-conf))
+;;     (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms)))
+
+;; +++PREFETCH
+
 (defun lyskom-prefetch-all-confs ()
   "Gets all conferences using prefetch."
-  (while (not (lyskom-prefetch-done))
-    (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
-	  (lyskom-prefetch-confs lyskom-max-int))
-      (lyskom-prefetch-conf))
-    (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms)))
+  (while (numberp lyskom-membership-is-read)
+    (lyskom-continue-prefetch))  )
 
 ;; ---------------------------------------------------------
 ;; prefetch conf-stats
 
 
-(defun lyskom-prefetch-conf ()
-  "Fetch conf-stats for next few conferences from lyskom-membership.
-This is the main prefetch things function.
-
-This is initiated by lyskom-refetch.
-
-The following variables and functions are involved:
-lyskom-last-conf-fetched, lyskom-last-conf-received, lyskom-last-conf-done
-\(this functions variables).
-lyskom-membership, lyskom-unread-confs (set at login).
-Functions:
-lyskom-prefetch-conf, starts the ball going, later verifies that everything
-is done.
-lyskom-prefetch-handle-conf, starts the ball for a conf.
-
-Idea:
-This functions fetches one conf from lyskom-unread-confs, creates an empty
-read-list entry and fires away a lyskom-prefetch-handle-conf. The 
-lyskom-prefetch-handle-conf fills the read-list entry with articles to be
-read. When all articles are fetched then lyskom-prefetch-handle-conf
-will increase lyskom-last-conf-done and call lyskom-prefetch-conf that fetches
-the next conf.
-
-If we start reading before everything is fetched then two things will happen.
-For every thing we do (every prompt we get) there will be another 
-lyskom-prefetch-conf started and possibly another thread of 
-lyskom-prefetch-handle-conf. This will not be a problem.
-
-List news and other things that require the correct count of articles will
-have to wait. The correct way of waiting is to use lyskom-prefetch-all-confs.
-
-If we just want to know wether we have fetched all info or not we do the test
-\(lyskom-prefetch-done)."
-  
-  ;; Algoritm:
-  ;;
-
-  (let ((lyskom-prefetch-confs lyskom-prefetch-confs))
-    (while (and (< lyskom-last-conf-fetched
-		   (lyskom-membership-highest-index))
-		(< (- lyskom-last-conf-fetched lyskom-last-conf-received)
-		   lyskom-prefetch-confs))
-      (++ lyskom-last-conf-fetched)
-      (let ((membership (elt lyskom-membership lyskom-last-conf-fetched)))
-	(if (lyskom-conf-no-list-member (membership->conf-no membership)
-					lyskom-unread-confs)
-	    (initiate-get-conf-stat 'main 'lyskom-prefetch-handle-conf
-				    (membership->conf-no membership)
-				    membership)
-	  (++ lyskom-last-conf-done)
-	  (++ lyskom-prefetch-confs)
-	  (++ lyskom-last-conf-received))))))
-
-
-(defun lyskom-prefetch-done ()
-  "Returns t if lyskom has fetched all its info."
-  (>= lyskom-last-conf-done
-      (lyskom-membership-highest-index)))
+;; (defun lyskom-prefetch-conf ()
+;;   "Fetch conf-stats for next few conferences from lyskom-membership.
+;; This is the main prefetch things function.
+;; 
+;; This is initiated by lyskom-refetch.
+;; 
+;; The following variables and functions are involved:
+;; lyskom-last-conf-fetched, lyskom-last-conf-received, lyskom-last-conf-done
+;; \(this functions variables).
+;; lyskom-membership, lyskom-unread-confs (set at login).
+;; Functions:
+;; lyskom-prefetch-conf, starts the ball going, later verifies that everything
+;; is done.
+;; lyskom-prefetch-handle-conf, starts the ball for a conf.
+;; 
+;; Idea:
+;; This functions fetches one conf from lyskom-unread-confs, creates an empty
+;; read-list entry and fires away a lyskom-prefetch-handle-conf. The 
+;; lyskom-prefetch-handle-conf fills the read-list entry with articles to be
+;; read. When all articles are fetched then lyskom-prefetch-handle-conf
+;; will increase lyskom-last-conf-done and call lyskom-prefetch-conf that fetches
+;; the next conf.
+;; 
+;; If we start reading before everything is fetched then two things will happen.
+;; For every thing we do (every prompt we get) there will be another 
+;; lyskom-prefetch-conf started and possibly another thread of 
+;; lyskom-prefetch-handle-conf. This will not be a problem.
+;; 
+;; List news and other things that require the correct count of articles will
+;; have to wait. The correct way of waiting is to use lyskom-prefetch-all-confs.
+;; 
+;; If we just want to know wether we have fetched all info or not we do the test
+;; \(lyskom-prefetch-done)."
+;;   
+;;   ;; Algoritm:
+;;   ;;
+;; 
+;;   (let ((lyskom-prefetch-confs lyskom-prefetch-confs))
+;;     (while (and (< lyskom-last-conf-fetched
+;; 		      (lyskom-membership-highest-index))
+;; 		   (< (- lyskom-last-conf-fetched lyskom-last-conf-received)
+;; 		      lyskom-prefetch-confs))
+;; 	 (++ lyskom-last-conf-fetched)
+;; 	 (let ((membership (elt lyskom-membership lyskom-last-conf-fetched)))
+;; 	   (if (lyskom-conf-no-list-member (membership->conf-no membership)
+;; 					   lyskom-unread-confs)
+;; 	       (initiate-get-conf-stat 'main 'lyskom-prefetch-handle-conf
+;; 				       (membership->conf-no membership)
+;; 				       membership)
+;; 	     (++ lyskom-last-conf-done)
+;; 	     (++ lyskom-prefetch-confs)
+;; 	     (++ lyskom-last-conf-received))))))
 
 
-(defun lyskom-prefetch-handle-conf (conf-stat membership)
-  "Check if there is any unread texts in a conference.
-Args: CONF-STAT MEMBERSHIP"
-  (++ lyskom-last-conf-received)
-  (cond
-   ((and (lyskom-visible-membership membership)
-	 (> (+ (conf-stat->first-local-no conf-stat)
-	       (conf-stat->no-of-texts conf-stat)
-	       -1)
-	    (membership->last-text-read membership)))
-    ;; There are (probably) some unread texts in this conf.
-    (initiate-get-map 'prefetch 'lyskom-prefetch-handle-map
-		      (conf-stat->conf-no conf-stat)
-		      (1+ (membership->last-text-read membership))
-		      (+ (conf-stat->no-of-texts conf-stat)
-			 (conf-stat->first-local-no conf-stat)
-			 (- (membership->last-text-read membership)))
-		      membership
-		      conf-stat))
-   (t 
-    ;; Consider this conference handled
-    (++ lyskom-last-conf-done)
-    (lyskom-prefetch-and-print-prompt))))
+;; (defun lyskom-prefetch-done ()
+;;   "Returns t if lyskom has fetched all its info."
+;;   (>= lyskom-last-conf-done
+;; 	 (lyskom-membership-highest-index)))
 
 
-(defun lyskom-prefetch-handle-map (map membership conf-stat)
-  "Add info about unread texts in a conf to the lyskom-to-do-list.
-Args: MAP MEMBERSHIP CONF-STAT.
-MAP is the mapping from local to global text-nos for (at least) all
-texts after membership->last-text-read. MEMBERSHIP is info about the
-user's membership in the conference."
-  (++ lyskom-last-conf-done)
-  (let ((unread (lyskom-list-unread map membership)))
-    (cond
-     (unread
-      (read-list-enter-read-info
-         (lyskom-create-read-info
-	    'CONF
-	    conf-stat
-	    (membership->priority membership)
-	    (lyskom-create-text-list unread))
-	 lyskom-to-do-list))))
-  (lyskom-prefetch-and-print-prompt))
+;; (defun lyskom-prefetch-handle-conf (conf-stat membership)
+;;   "Check if there is any unread texts in a conference.
+;; Args: CONF-STAT MEMBERSHIP"
+;;   (++ lyskom-last-conf-received)
+;;   (cond
+;;    ((and (lyskom-visible-membership membership)
+;; 	    (> (+ (conf-stat->first-local-no conf-stat)
+;; 		  (conf-stat->no-of-texts conf-stat)
+;; 		  -1)
+;; 	       (membership->last-text-read membership)))
+;;     ;; There are (probably) some unread texts in this conf.
+;;     ;; (initiate-get-map 'prefetch nil ;; 'lyskom-prefetch-handle-map
+;;     (initiate-get-map 'prefetch nil 'lyskom-prefetch-handle-map
+;; 			 (conf-stat->conf-no conf-stat)
+;; 			 (1+ (membership->last-text-read membership))
+;; 			 (+ (conf-stat->no-of-texts conf-stat)
+;; 			    (conf-stat->first-local-no conf-stat)
+;; 			    (- (membership->last-text-read membership)))
+;; 			 membership
+;; 			 conf-stat))
+;;    (t 
+;;     ;; Consider this conference handled
+;;     (++ lyskom-last-conf-done)
+;;     (lyskom-prefetch-and-print-prompt))))
+
+
+;; (defun lyskom-prefetch-handle-map (map membership conf-stat)
+;;   "Add info about unread texts in a conf to the lyskom-to-do-list.
+;; Args: MAP MEMBERSHIP CONF-STAT.
+;; MAP is the mapping from local to global text-nos for (at least) all
+;; texts after membership->last-text-read. MEMBERSHIP is info about the
+;; user's membership in the conference."
+;;   (++ lyskom-last-conf-done)
+;;   (let ((unread (lyskom-list-unread map membership)))
+;;     (cond
+;; 	(unread
+;; 	 (read-list-enter-read-info
+;; 	    (lyskom-create-read-info
+;; 	       'CONF
+;; 	       conf-stat
+;; 	       (membership->priority membership)
+;; 	       (lyskom-create-text-list unread))
+;; 	    lyskom-to-do-list))))
+;;   (lyskom-prefetch-and-print-prompt))
 
 
 (defun lyskom-list-unread (map membership)
@@ -1990,87 +2001,87 @@ The list consists of text-nos."
     res))
 
 
-(defun lyskom-conf-fetched-p (conf-no)
-  "Return t if CONF-NO has been prefetched."
-  (let ((n lyskom-last-conf-received)
-	(result nil))
-    (while (and (not result)
-		(>= n 0))
-      (if (= (membership->conf-no (elt lyskom-membership n))
-	     conf-no)
-	  (setq result t))
-      (-- n))
-    result))
+;; (defun lyskom-conf-fetched-p (conf-no)
+;;   "Return t if CONF-NO has been prefetched."
+;;   (let ((n lyskom-last-conf-received)
+;; 	   (result nil))
+;;     (while (and (not result)
+;; 		   (>= n 0))
+;; 	 (if (= (membership->conf-no (elt lyskom-membership n))
+;; 		conf-no)
+;; 	     (setq result t))
+;; 	 (-- n))
+;;     result))
 
 
 ;;-------------------------------------------------------
 ;; prefetch text-stats
 
-(defun lyskom-prefetch-text ()
-  "Make sure that at least lyskom-prefetch-texts texts are fetched."
-  (lyskom-prefetch-from-rlist
-   (lyskom-prefetch-from-rlist lyskom-prefetch-texts
-			       (read-list->all-entries lyskom-reading-list))
-   (read-list->all-entries lyskom-to-do-list)))
+;; (defun lyskom-prefetch-text ()
+;;   "Make sure that at least lyskom-prefetch-texts texts are fetched."
+;;   (lyskom-prefetch-from-rlist
+;;    (lyskom-prefetch-from-rlist lyskom-prefetch-texts
+;; 				  (read-list->all-entries lyskom-reading-list))
+;;    (read-list->all-entries lyskom-to-do-list)))
 
 
-(defun lyskom-prefetch-from-rlist (n-texts rlist)
-  "Prefetch first N-TEXTS texts from RLIST.
-Returns number of texts that could not be fetched.
-RLIST is a list of reading-info."
-  (cond
-   ((< n-texts 1)
-    0)
-   ((null rlist)
-    n-texts)
-   (t
-    (lyskom-prefetch-from-rlist
-     (lyskom-prefetch-from-list
-      n-texts
-      (cdr (read-info->text-list (car rlist))))
-     (cdr rlist)))))
+;; (defun lyskom-prefetch-from-rlist (n-texts rlist)
+;;   "Prefetch first N-TEXTS texts from RLIST.
+;; Returns number of texts that could not be fetched.
+;; RLIST is a list of reading-info."
+;;   (cond
+;;    ((< n-texts 1)
+;;     0)
+;;    ((null rlist)
+;;     n-texts)
+;;    (t
+;;     (lyskom-prefetch-from-rlist
+;; 	(lyskom-prefetch-from-list
+;; 	 n-texts
+;; 	 (cdr (read-info->text-list (car rlist))))
+;; 	(cdr rlist)))))
 
 
-(defun lyskom-prefetch-from-list (n-texts list)
-  "Prefetch first N-TEXTS texts from LIST.
-Returns number of texts that could not be fetched.
-RLIST is a list of text-nos. Texts whose text-no is present on
-lyskom-fetched-texts are not fetched."
-  (while (and (not (null list)) (> n-texts 0))
-    ;; Fetch this text - but only if we are not already fetching it.
-    (if (memq (car list) lyskom-fetched-texts)
-	nil				;already fetched (but maybe not yet
-					;received).
-      (initiate-get-text-stat 'prefetch 'lyskom-prefetch-comment-stats
-			      (car list))
-      (initiate-get-text 'prefetch nil (car list))
-      (setq lyskom-fetched-texts (cons (car list) lyskom-fetched-texts)))
-    (setq list (cdr list))
-    (-- n-texts))
-  n-texts)
+;; (defun lyskom-prefetch-from-list (n-texts list)
+;;   "Prefetch first N-TEXTS texts from LIST.
+;; Returns number of texts that could not be fetched.
+;; RLIST is a list of text-nos. Texts whose text-no is present on
+;; lyskom-fetched-texts are not fetched."
+;;   (while (and (not (null list)) (> n-texts 0))
+;;     ;; Fetch this text - but only if we are not already fetching it.
+;;     (if (memq (car list) lyskom-fetched-texts)
+;; 	   nil				;already fetched (but maybe not yet
+;; 					   ;received).
+;; 	 (initiate-get-text-stat 'prefetch 'lyskom-prefetch-comment-stats
+;; 				 (car list))
+;; 	 (initiate-get-text 'prefetch nil (car list))
+;; 	 (setq lyskom-fetched-texts (cons (car list) lyskom-fetched-texts)))
+;;     (setq list (cdr list))
+;;     (-- n-texts))
+;;   n-texts)
 
-(defun lyskom-prefetch-comment-stats (text-stat)
-  "Prefetch the text-stats of the comments to this text."
-  (let ((misc (text-stat->misc-info-list text-stat)))
-    (while misc
-      (cond ((eq 'COMM-IN (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'prefetch nil
-				     (misc-info->comm-in (car misc))))
-	    ((eq 'FOOTN-IN (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'prefetch nil
-				     (misc-info->footn-in (car misc))))
-	    ((eq 'COMM-TO (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'prefetch nil
-				     (misc-info->comm-to (car misc))))
-	    ((eq 'FOOTN-TO (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'prefetch nil
-				     (misc-info->footn-to (car misc))))
-	    ((or (eq 'RCPT (misc-info->type (car misc)))
-		 (eq 'CC-RCPT (misc-info->type (car misc))))
-	     (initiate-get-conf-stat 'prefetch nil
-				     (misc-info->recipient-no (car misc))))
-	    (t nil))
-      (setq misc (cdr misc)))))
+;; (defun lyskom-prefetch-comment-stats (text-stat)
+;;   "Prefetch the text-stats of the comments to this text."
+;;   (let ((misc (text-stat->misc-info-list text-stat)))
+;;     (while misc
+;; 	 (cond ((eq 'COMM-IN (misc-info->type (car misc)))
+;; 		(initiate-get-text-stat 'prefetch nil
+;; 					(misc-info->comm-in (car misc))))
+;; 	       ((eq 'FOOTN-IN (misc-info->type (car misc)))
+;; 		(initiate-get-text-stat 'prefetch nil
+;; 					(misc-info->footn-in (car misc))))
+;; 	       ((eq 'COMM-TO (misc-info->type (car misc)))
+;; 		(initiate-get-text-stat 'prefetch nil
+;; 					(misc-info->comm-to (car misc))))
+;; 	       ((eq 'FOOTN-TO (misc-info->type (car misc)))
+;; 		(initiate-get-text-stat 'prefetch nil
+;; 					(misc-info->footn-to (car misc))))
+;; 	       ((or (eq 'RCPT (misc-info->type (car misc)))
+;; 		    (eq 'CC-RCPT (misc-info->type (car misc))))
+;; 		(initiate-get-conf-stat 'prefetch nil
+;; 					(misc-info->recipient-no (car misc))))
+;; 	       (t nil))
+;; 	 (setq misc (cdr misc)))))
 
 ;;;; ================================================================
 
@@ -2330,7 +2341,9 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	  ;; (lyskom-protocol-error
 	  ;;   (lyskom-message "%s" (lyskom-get-string 'protocol-error) err))
 	  )
-      
+
+      (setq lyskom-quit-flag (or lyskom-quit-flag quit-flag))
+      (setq quit-flag nil)
       ;; Restore selected buffer and match data.
       (store-match-data old-match-data)
       (set-buffer lyskom-filter-old-buffer))))

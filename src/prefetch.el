@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.0 1996-08-30 14:47:33 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.1 1996-09-29 15:18:47 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.0 1996-08-30 14:47:33 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.1 1996-09-29 15:18:47 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -86,7 +86,9 @@ lyskom-queue.
 		       are done.
 		       For every membership-part we fetch the conf-stats
 		       before continuing with the next part.
-(MEMBERSHIPISREAD) -   Just sets the lyskom-membership-is-read variable to t.
+('MEMBERSHIPISREAD) -  Just sets the lyskom-membership-is-read variable to t.
+('ALL-CONF-TEXTS) -    All text in all conferences.
+('CONF-TEXTS) -        All text in one conference.
 
 
 See further documentation in the source code.")
@@ -119,6 +121,11 @@ See further documentation in the source code.")
   "t when the prefetch-process is started and going.")
 
 
+(defvar lyskom-inhibit-prefetch nil
+  "Set this to a non-nil value locally to inhibit the prefetch.
+This is used to prevent the prefetch code to reenter itself.")
+
+
 (defvar lyskom-pending-prefetch 0
   "Variable counting the number of unfinished prefetch requests.")
 
@@ -140,7 +147,8 @@ at a time.")
   "Sets up the prefetch process in lyskom."
 ;+++ Much more could be done here.
   (setq lyskom-prefetch-stack (lyskom-stack-create))
-  (setq lyskom-pending-prefetch 0))
+  (setq lyskom-pending-prefetch 0)
+  (setq lyskom-membership-is-read 0))
 
 
 (defun lyskom-prefetch-conf (conf-no &optional queue)
@@ -225,22 +233,25 @@ lyskom-prefetch-stack."
   (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-map (conf-no first-local &optional queue)
+(defun lyskom-prefetch-map (conf-no first-local membership &optional queue)
   "Prefetches a map for conf CONFNO starting att FIRST-LOCAL."
   (if queue
-      (lyskom-queue-enter queue (list 'CONFSTATFORMAP conf-no first-local))
-    (lyskom-stack-push lyskom-prefetch-stack (list 'CONFSTATFORMAP
-						   conf-no first-local)))
+      (lyskom-queue-enter queue (list 'CONFSTATFORMAP
+				      conf-no first-local membership))
+    (lyskom-stack-push lyskom-prefetch-stack
+		       (list 'CONFSTATFORMAP
+			     conf-no first-local membership)))
   (lyskom-continue-prefetch))
 
 
-(defun lyskom-prefetch-map-using-conf-stat (conf-stat first-local
+(defun lyskom-prefetch-map-using-conf-stat (conf-stat first-local membership
 						      &optional queue)
   "Prefetches a map for conf CONFSTAT starting att FIRST-LOCAL."
   (if queue
-      (lyskom-queue-enter queue (list 'MAP conf-stat first-local))
+      (lyskom-queue-enter queue (list 'MAP conf-stat first-local membership))
     (lyskom-stack-push lyskom-prefetch-stack (list 'MAP
-						   conf-stat first-local)))
+						   conf-stat first-local
+						   membership)))
   (lyskom-continue-prefetch))
 
 
@@ -265,6 +276,24 @@ lyskom-prefetch-stack."
   (lyskom-continue-prefetch))
 
 
+(defun lyskom-prefetch-all-conf-texts (&optional queue)
+  "Prefetches the texts in all conferences."
+  (if queue
+      (lyskom-queue-enter queue (list 'ALL-CONF-TEXTS))
+    (lyskom-stack-push lyskom-prefetch-stack (list 'ALL-CONF-TEXTS)))
+  (lyskom-continue-prefetch))
+
+
+(defun lyskom-prefetch-conf-texts (text-list &optional queue)
+  "Prefetches the texts in all conferences."
+  (if (null (text-list->texts text-list))
+      nil
+    (if queue
+	(lyskom-queue-enter queue (list 'CONF-TEXTS text-list))
+      (lyskom-stack-push lyskom-prefetch-stack (list 'CONF-TEXTS text-list))))
+  (lyskom-continue-prefetch))
+
+
 ;;; ================================================================
 ;;;           Functions internal to the prefetch package
 
@@ -283,14 +312,20 @@ lyskom-prefetch-stack."
 (defun lyskom-continue-prefetch ()
   "Called after each prefetch is finished and also when the whole prefetch
 process is started. Used to keep prefetch going."
-  (if lyskom-prefetch-in-action
-      (let ((lyskom-prefetch-in-action nil)) ; Make sure we don't call this 
+  (if (not lyskom-inhibit-prefetch)
+      (let ((lyskom-inhibit-prefetch t)) ; Make sure we don't call this 
 					; recursively
 	(while (and (< lyskom-pending-prefetch
 		       lyskom-prefetch-limit)
 		    (lyskom-prefetch-one-item)
-		    ;; Only increase lyskom-pending-prefetch if there 
-		    ;; was something to get.
+		    ;; Only increase lyskom-pending-prefetch if a server
+		    ;; call was made.
+		    ;;
+		    ;; The return value from lyskom-prefetch-one-item
+		    ;; is whether it has sent a server call, but it
+		    ;; should really be if the prefetch-stack has been
+		    ;; altered. See the comment in
+		    ;; lyskom-prefetch-one-item.
 		    (++ lyskom-pending-prefetch))))))
 
 
@@ -360,14 +395,39 @@ Return t if an element was prefetched, otherwise return nil."
 	    (lyskom-prefetch-one-request element queue)
 	    (setq result t)))
 
-	 ;; Special request
+	 ;; Special requests
 	 ((and (listp element)
-	       (eq (car element) 'MEMBERSHIPISREAD))
-	  (setq lyskom-membership-is-read t))
-       
+	       (memq (car element) '(MEMBERSHIPISREAD ALL-CONF-TEXTS)))
+	  (if (eq (car element) 'MEMBERSHIPISREAD)
+	      (setq lyskom-membership-is-read t)
+	    ;; Temporarily disabled
+	    (let ((queue (lyskom-queue-create)))
+	      (setcar prefetch-list queue)
+	      (mapcar
+	       (lambda (read-info)
+		 (mapcar
+		  (lambda (text-no)
+		    (lyskom-prefetch-text-all text-no queue))
+		  (text-list->texts (read-info->text-list read-info))))
+	       (read-list->all-entries lyskom-to-do-list))
+	      (lyskom-queue-enter queue 'FINISHED)))
+
+	  ;; This is an ugly hack. If this function returns a non-nil
+	  ;; value, lyskom-prefetch-continue will assume that a server
+	  ;; call was made and increase lyskom-pending-prefetch. But
+	  ;; no server call has been made, so we decrease
+	  ;; lyskom-pending-prefetch "in advance". The reason that
+	  ;; this sets result to t is that we want the loop in
+	  ;; lyskom-continue-prefetch to keep running, as there is no
+	  ;; server response that will wake the prefetch up in the
+	  ;; future.
+	  ;;(-- lyskom-pending-prefetch)
+	  ;;(setq result t)
+	  )
+
 	 (t (signal 'lyskom-internal-error 
 		    '(lyskom-prefetch-one-item ": unknown key"))))
-
+	
 	(setq prefetch-list rest-list)
 	(if (not (or prefetch-list
 		     (lyskom-stack-isempty list-stack)))
@@ -411,7 +471,8 @@ Return t if an element was prefetched, otherwise return nil."
       (lyskom-prefetch-handler)))
    ((eq (car request) 'CONFSTATFORMAP)
     (initiate-get-conf-stat 'prefetch 'lyskom-prefetch-confstatformap-handler
-			    (nth 1 request) (nth 2 request) queue))
+			    (nth 1 request) (nth 2 request) (nth 3 request)
+			    queue))
    ((eq (car request) 'MAP)
     (initiate-get-map 'prefetch 'lyskom-prefetch-map-handler
 		      (conf-stat->conf-no (nth 1 request))
@@ -419,11 +480,13 @@ Return t if an element was prefetched, otherwise return nil."
 		      lyskom-fetch-map-nos
 		      (nth 1 request)
 		      (+ lyskom-fetch-map-nos (nth 2 request))
+		      (nth 3 request)
 		      queue))
    ((eq (car request) 'MARKS)
     (initiate-get-marks 'prefetch 'lyskom-prefetch-marks-handler queue))
    ((eq (car request) 'WHOBUFFER)
     (initiate-who-is-on 'prefetch 'lyskom-prefetch-whobuffer-handler queue))
+   
    (t (signal 'lyskom-internal-error
 	      (list "lyskom-prefetch-one-request - unknown key:"
 		    (car request))))))
@@ -504,53 +567,57 @@ Put the requests on QUEUE."
   (lyskom-start-prefetch))
 
 
-(defun lyskom-prefetch-membership-handler (membership pers-no queue)
+(defun lyskom-prefetch-membership-handler (memberships pers-no queue)
   "Handle the return of the membership prefetch call."
   (lyskom-stop-prefetch)
-  (let ((list (listify-vector membership)))
-    (lyskom-add-membership-to-membership membership)
+  (let ((list (listify-vector memberships)))
+    (lyskom-add-membership-to-membership memberships)
     (while list
-      (lyskom-prefetch-map (membership->conf-no (car list))
-			   (1+ (membership->last-text-read (car list)))
-			   queue)
+      (if (lyskom-visible-membership (car list))
+	  (lyskom-prefetch-map (membership->conf-no (car list))
+			       (1+ (membership->last-text-read (car list)))
+			       (car list)
+			       queue))
       (setq list (cdr list)))
     (if (and (numberp lyskom-membership-is-read)
-	     (< (length membership) lyskom-fetch-membership-length))
+	     (< (length memberships) lyskom-fetch-membership-length))
 	(progn
 	  (setq lyskom-membership-is-read 'almost)
 	  (lyskom-queue-enter queue (list 'MEMBERSHIPISREAD)))
       (setq lyskom-membership-is-read (+ lyskom-membership-is-read
 					 lyskom-fetch-membership-length))
-      (lyskom-prefetch-membership pers-no queue)))
+      (lyskom-prefetch-membership pers-no queue)
+      ))
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
 
 
-(defun lyskom-prefetch-confstatformap-handler (conf-stat first-local queue)
+(defun lyskom-prefetch-confstatformap-handler (conf-stat first-local
+							 membership queue)
   "Now that we have the conf-stat we can fetch the map."
   (lyskom-stop-prefetch)
-  (lyskom-prefetch-map-using-conf-stat conf-stat first-local queue)
+  (lyskom-prefetch-map-using-conf-stat conf-stat first-local membership queue)
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
 
 
-(defun lyskom-prefetch-map-handler (map conf-stat first-local queue)
+(defun lyskom-prefetch-map-handler (map conf-stat first-local membership queue)
   "Handle the return of the membership prefetch call.
 Maps are `cached' in lyskom-to-do-list."
   (lyskom-stop-prefetch)
-  (if map
-      (let ((list (listify-vector (map->text-nos map))))
-	;; +++ Check kom-session-priority
-	(if list
-	    (lyskom-prefetch-map-using-conf-stat 
-	     conf-stat (+ first-local lyskom-fetch-map-nos)
-	     queue))
-	(lyskom-enter-map-in-to-do-list map conf-stat)))
+  (when map
+    (if (not (zerop (length (map->text-nos map))))
+	(lyskom-prefetch-map-using-conf-stat 
+	 conf-stat (+ first-local lyskom-fetch-map-nos)
+	 membership
+	 queue))
+    (lyskom-enter-map-in-to-do-list map conf-stat membership))
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch)
+  (lyskom-update-prompt)
   (lyskom-set-mode-line))
 
 (defun lyskom-prefetch-marks-handler (marks queue)
@@ -567,7 +634,8 @@ Maps are `cached' in lyskom-to-do-list."
 
 (defun lyskom-prefetch-whobuffer-handler (who-is-on queue)
   "Handle the who-is-on info. The goal here is to get an updated who-buffer."
-  (cache-initiate-who-info-buffer who-is-on)  ;+++ should be done later
+  ;+++ should be done later
+  (cache-initiate-who-info-buffer who-is-on lyskom-buffer)
   (-- lyskom-pending-prefetch)
   )
 

@@ -3,6 +3,11 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Lista nyheter visar fel innan prefetchen har hämtat alla mappar.
+
+Efter återse senaste fick jag fel prompt. Jag vill ha återse
+nästa-prompten direkt om det finns texter som matchar villkoret.
+
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
     Problemet är att s xxxx hanteras i lyskom-read-conf-internal som
