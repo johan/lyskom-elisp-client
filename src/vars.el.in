@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.279 2004-01-01 22:01:39 byers Exp $
+;;;;; $Id: vars.el.in,v 44.280 2004-01-01 22:31:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.279 2004-01-01 22:01:39 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.280 2004-01-01 22:31:29 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3128,6 +3128,28 @@ the server as the user's current activity when everything is read.
 Users are encouraged to use their best sense of humor."
   server)
 
+
+(defconst lyskom-commands-not-in-menu
+  '(
+    kom-unread-previous-commented-text
+    kom-create-aux-item
+    kom-become-nonanonymous
+    kom-become-anonymous
+    kom-send-alarm
+    kom-get-abuse
+    kom-get-appreciation
+    kom-list-clients
+    kom-view-previous-commented-text
+    kom-membership
+    kom-delete-text
+    kom-quick-mode
+    kom-slow-mode
+    kom-busy-wait
+    kom-comment-previous
+    kom-private-answer-previous
+    kom-change-language
+    )
+  "Commands that are not supposed to appear in menus.")
 
 (defconst lyskom-commands
   '(
