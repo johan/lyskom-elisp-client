@@ -1,3 +1,12 @@
+Wed Jul  8 13:12:48 1998  David Kagedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom): Den frågade inte om man ville fortsätta med
+	en gammal session om man försökte starta en ny mot samma server.
+
+Fri Jul  3 13:52:46 1998  David Kagedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom-mode): Stavfel i dokumentationen.
+
 1998-06-10  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-current-time): Ny funktion.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.31 1998-06-14 14:16:02 byers Exp $
+;;;;; $Id: startup.el,v 44.32 1998-07-08 11:14:28 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.31 1998-06-14 14:16:02 byers Exp $\n"))
+	      "$Id: startup.el,v 44.32 1998-07-08 11:14:28 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -105,9 +105,14 @@ See lyskom-mode for details."
 	   (name nil)
 	   (proc nil)
            (buffer (car duplicate-buffers))
+	   ;; (alive (lyskom-buffer-p buffer))
            (reused-buffer nil))
       
 
+      ;;<<<<<<< startup.el
+      ;;      (if (and buffer
+      ;;	       alive
+      ;;=======
       (if (and (lyskom-buffer-p buffer nil)
 	       (not (prog1
 			(j-or-n-p (lyskom-get-string
@@ -648,7 +653,7 @@ alias name is entered, the corresponding address is returned."
   "\\<lyskom-mode-map>Mode for LysKOM client.
 Commands:
 \\[kom-next-command]	Do the default action. This can be to read the next text,select
-n	ext conference with unread texts or whatever the prompt says.
+	next conference with unread texts or whatever the prompt says.
 \\[kom-go-to-conf]	Go to a conference. LysKOM will ask you for a conference
 	and make you a member of it if you are not already.
 \\[kom-list-conferences]	List conferences matching a given string.
@@ -678,7 +683,7 @@ n	ext conference with unread texts or whatever the prompt says.
 \\[describe-mode]	Display this help text.
 
 \\[kom-busy-wait]	Put the lyskom-session in wait mode. The next created text with 
-	a priotity higher that that of the next conference you are going
+	a priority higher than that of the next conference you are going
 	to will be read directly when it is created.
 \\[kom-set-unread]	Mark a number of texts as unread.
 \\[kom-jump]	Skip (mark as read) all the comments to this article recursively.
