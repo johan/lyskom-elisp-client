@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.129 2001-04-21 16:21:43 joel Exp $
+;;;;; $Id: english-strings.el,v 44.130 2001-04-21 17:53:49 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.129 2001-04-21 16:21:43 joel Exp $"))
+              "$Id: english-strings.el,v 44.130 2001-04-21 17:53:49 joel Exp $"))
 
 
 ;;; ================================================================
@@ -2313,9 +2313,9 @@ Select whether to execute command or keyboard macro.")
     (ask-every-time . "Ask every time         ")
     (fixed-priority . "Fixed priority")
 
-    (messages-in-lyskom-buffer . "In the LysKOM buffer  ")
+    (messages-in-lyskom-buffer . "In the LysKOM buffer")
     (discard-messages .          "Nowhere - discard them")
-    (in-named-buffer .           "In a named buffer     ")
+    (in-named-buffer .           "In a named buffer:")
 
     (everybody-rcpt . "Everybody                                ")
     (group-rcpt .     "The recipient of the last group message  ")
@@ -2354,9 +2354,9 @@ Select whether to execute command or keyboard macro.")
     (specific-placement . "Specific location")
     (priority . "Priority")
     (same-as-conf . "Same as current conference")
-    (custom-format . "Custom format")
+    (custom-format . "Custom format:")
     (default-format . "Standard format")
-    (a-string . "The string")
+    (a-string . "A string:")
     (some-string . "A random string")
     (unspecified . "Unspecified")
 
@@ -3316,7 +3316,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 
     (kom-symbolic-marks-alist-tag . "Symbolic mark types:")
 
-    (kom-cite-string-tag . "Quotation indicator: ")
+    (kom-cite-string-tag . "Quotation indicator:")
     (kom-confirm-multiple-recipients-tag . 
 "Confirm multiple recipients:         ")
     (kom-check-commented-author-membership-tag . 

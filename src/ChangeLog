@@ -1,5 +1,12 @@
 2001-04-21  Joel Rosdahl  <joel@rosdahl.net>
 
+	* option-edit.el (lyskom-widget-string-action): Nicer prompt
+	strings.
+	(lyskom-widget-number-action): Ditto.
+
+	* swedish-strings.el (lyskom-custom-strings): Nicer prompt
+	strings.
+
 	* option-edit.el (lyskom-widget-mark-association-action): Set
 	default values.
 

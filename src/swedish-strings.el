@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.159 2001-04-21 16:21:44 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.160 2001-04-21 17:53:51 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.159 2001-04-21 16:21:44 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.160 2001-04-21 17:53:51 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -2350,9 +2350,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (ask-every-time . "Fråga varje gång      ")
     (fixed-priority . "Fast prioritet")
 
-    (messages-in-lyskom-buffer . "I LysKOM-bufferten ")
-    (discard-messages .          "Ingenstans         ")
-    (in-named-buffer .           "I namngiven buffert")
+    (messages-in-lyskom-buffer . "I LysKOM-bufferten  ")
+    (discard-messages .          "Ingenstans          ")
+    (in-named-buffer .           "I namngiven buffert:")
 
     (everybody-rcpt .       "Alla                              ")
     (group-rcpt .           "Senaste gruppmeddelandes mottagare")
@@ -2392,9 +2392,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (specific-placement . "Specifik plats")
     (priority . "Prioritet")
     (same-as-conf . "Samma som aktuellt möte")
-    (custom-format . "Eget format")
+    (custom-format . "Eget format:")
     (default-format . "Standardformat")
-    (a-string . "En text")
+    (a-string . "En text:")
     (some-string . "En slumpmässig text")
     (unspecified . "Ospecificerat")
 
@@ -3357,7 +3357,7 @@ i servern. Annars sparas det i din .emacs.")
 
     (kom-symbolic-marks-alist-tag . "Symboliska markeringstyper:")
 
-    (kom-cite-string-tag . "Citatmarkering: ")
+    (kom-cite-string-tag . "Citatmarkering:")
     (kom-confirm-multiple-recipients-tag . 
 "Bekräfta multipla mottagare:                   ")
     (kom-check-commented-author-membership-tag . 
