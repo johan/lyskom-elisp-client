@@ -1,5 +1,58 @@
 2002-05-22  David Byers  <david.byers@swipnet.se>
 
+	More work on 468:
+	* commands2.el (kom-compare-texts): Use ediff-diff-program and
+	diff-command for the error message since ediff seems to use
+	ediff-diff-program, but diff-command is a good backup guess.
+
+	Fix bug 506:	
+	* commands2.el (lyskom-display-help-item): Print key binding for
+	each command.
+
+	* startup.el (kom-start-anew): Set default global language
+	(default bindings for kom-default-language and lyskom-language) on
+	first login. This is usually what we want.
+
+	* commands2.el (kom-status-person): Print motd after aux-items.
+	Otherwise it looks really bad.
+
+	* faqs.el (lyskom-startup-check-faqs): Rewrote completely.
+
+	* commands1.el (lyskom-go-to-empty-conf): Use
+	lyskom-enter-conf-print-unread to print data on entry to conf.
+
+	* lyskom-rest.el (lyskom-enter-conf-print-unread): New function
+	prints number of unreads and unread faqs when entering a
+	conference.
+	(lyskom-enter-conf): Call it.
+
+	* faqs.el (lyskom-get-unread-faqs): New function split from
+	lyskom-check-for-read-faqs.
+	(lyskom-presend-unread-faqs): Ditto.
+
+	* commands1.el (lyskom-go-to-empty-conf): Use
+	lyskom-enter-conf-print-unread.
+
+	Fix bug 567:
+	* startup.el (kom-start-anew): It seems that the forms inside an
+	unwind-protect were a bit off. There were several unwind-forms,
+	where I think there should have only been one (I know for sure
+	that some of the code was not intended to be an unwind-form). I
+	moved forms so lyskom-end-of-command is the only unwind-form.
+	(lyskom-refetch): Moved updating of read FAQs and rejected
+	invitations here.
+	(kom-start-anew): Moved call to lyskom-refetch to late in the
+	body. Thus we will not clear any caches after starting the
+	prefetch and we can put other forms into lyskom-refetch that rely
+	on lyskom-pers-no being set.
+
+	* commands2.el (kom-help): Don't allow the user to enter an empty
+	string for the category since this causes a failure.
+	(lyskom-fast-reply): Prevent creation of fast-reply aux-items that
+	contain line breaks or are otherwise inappropriate.
+	(lyskom-check-fast-reply-message): New function to define what
+	inappropriate is.
+
 	* utilities.el (lyskom-get-color-highlight): Handle the case of
 	the color parameter being nil.
 

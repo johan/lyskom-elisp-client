@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.70 2002-05-07 20:12:12 byers Exp $
+;;;;; $Id: startup.el,v 44.71 2002-05-22 21:40:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.70 2002-05-07 20:12:12 byers Exp $\n"))
+	      "$Id: startup.el,v 44.71 2002-05-22 21:40:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -551,46 +551,40 @@ shown to other users."
 	    ;; fill the cache?
 	    (let ((lyskom-who-am-i (blocking-do 'who-am-i)))
 	      (if lyskom-who-am-i (setq lyskom-session-no lyskom-who-am-i))))
-          ;; Start the prefetch
+
+          ;; If login succeeded, clear the caches and set the language
+
+          (if login-successful
+              (progn (clear-all-caches)
+                     (unless (eq lyskom-language kom-default-language)   
+                       (when (lyskom-set-language kom-default-language 'local)
+                         (unless lyskom-have-one-login
+                           (lyskom-set-language kom-default-language 'global)
+                           (setq-default kom-default-language kom-default-language)
+                           (setq-default lyskom-language kom-default-language))
+                         (lyskom-format-insert 
+                          'language-set-to
+                          (lyskom-language-name kom-default-language))))
+                     (setq lyskom-have-one-login t))
+            (setq lyskom-pers-no old-me))
+
+          ;; Show motd and encourage writing a presentation
+
+          (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+            (if (and conf-stat
+                     (/= (conf-stat->msg-of-day conf-stat) 0))
+                (progn
+                  (lyskom-insert-string 'you-have-motd)
+                  (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
+            (if (and conf-stat
+                     (zerop (conf-stat->presentation conf-stat))
+                     (not (zerop (conf-stat->no-of-texts conf-stat))))
+                (lyskom-insert-string 'presentation-encouragement)))
+
+          (setq lyskom-is-new-user nil)
+
+          ;; Start the prefetch and update some basic caches
           (lyskom-refetch))
-	  
-      ;; If login succeeded, clear the caches and set the language
-
-      (if login-successful
-	  (progn (clear-all-caches)
-                 (unless (eq lyskom-language kom-default-language)   
-                   (when (lyskom-set-language kom-default-language 'local)
-                     (unless lyskom-have-one-login
-                       (lyskom-set-language kom-default-language 'global))
-                     (lyskom-format-insert-before-prompt 
-                      'language-set-to
-                      (lyskom-language-name kom-default-language))))
-                 (setq lyskom-have-one-login t))
-	(setq lyskom-pers-no old-me))
-
-      ;; Show motd and encourage writing a presentation
-
-      (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-        (if (and conf-stat
-                 (/= (conf-stat->msg-of-day conf-stat) 0))
-            (progn
-              (lyskom-insert-string 'you-have-motd)
-              (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
-        (if (and conf-stat
-                 (zerop (conf-stat->presentation conf-stat))
-                 (not (zerop (conf-stat->no-of-texts conf-stat))))
-            (lyskom-insert-string 'presentation-encouragement)))
-
-      (setq lyskom-is-new-user nil)
-
-      ;; Do some FAQ handling
-      (condition-case nil
-          (progn (lyskom-update-read-faqs)
-                 (lyskom-update-rejected-recommendations)
-                 (lyskom-startup-check-faqs)
-                 (lyskom-startup-check-recommended-memberships))
-        (error nil)
-        (quit nil))
 
       (lyskom-end-of-command)))
 
@@ -628,7 +622,14 @@ This is called at login and after prioritize and set-unread."
       (lyskom-traverse conf-no (nreverse (conf-no-list->conf-nos unreads))
         (lyskom-prefetch-one-membership conf-no lyskom-pers-no))))
   (lyskom-start-prefetch)
-)
+
+  (condition-case nil
+      (progn (lyskom-update-read-faqs)
+             (lyskom-update-rejected-recommendations)
+             (lyskom-startup-check-faqs)
+             (lyskom-startup-check-recommended-memberships))
+    (error nil)
+    (quit nil)))
 
 
 (defun lyskom-set-membership (membership)

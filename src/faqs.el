@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.3 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: faqs.el,v 44.4 2002-05-22 21:40:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.3 2002-04-21 21:32:16 byers Exp $\n"))
+              "$Id: faqs.el,v 44.4 2002-05-22 21:40:50 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless (lyskom-faq-is-read conf-no text-no)
@@ -358,19 +358,23 @@ The text to add is passed in TEXT-NO"
 ;;; Special have-you-read-the-FAQ-checking stuff
 
 (defun lyskom-startup-check-faqs ()
-  (lyskom-check-for-read-faqs 0 (server-info->aux-item-list lyskom-server-info)))
+  (let ((faq-list (lyskom-get-unread-faqs nil)))
+    (when faq-list
+      (lyskom-format-insert 'server-has-new-faq (length faq-list))
+      (lyskom-present-unread-faqs nil faq-list))))
 
-(defun lyskom-change-conf-check-faqs (conf-stat)
-  (lyskom-check-for-read-faqs (conf-stat->conf-no conf-stat)
-                              (conf-stat->aux-items conf-stat)))
-
-(defun lyskom-check-for-read-faqs (conf-no aux-list)
-  (let ((faq-list
-         (filter-list (lambda (faq)
-                        (not (lyskom-faq-is-read conf-no faq)))
-                      (mapcar (lambda (aux)
-                                (string-to-int (aux-item->data aux)))
-                              (lyskom-get-aux-item aux-list 14)))))
+(defun lyskom-get-unread-faqs (conf-stat)
+  "Return a list of unread FAQs for conf CONF-STAT."
+  (let* ((conf-no (and conf-stat (conf-stat->conf-no conf-stat)))
+         (aux-list (if conf-stat
+                       (conf-stat->aux-items conf-stat)
+                     (server-info->aux-item-list lyskom-server-info)))
+         (faq-list
+          (filter-list (lambda (faq)
+                         (not (lyskom-faq-is-read conf-no faq)))
+                       (mapcar (lambda (aux)
+                                 (string-to-int (aux-item->data aux)))
+                               (lyskom-get-aux-item aux-list 14)))))
 
     ;; Filter out FAQs that don't exist
     (let ((collector (make-collector)))
@@ -387,11 +391,16 @@ The text to add is passed in TEXT-NO"
       (lyskom-wait-queue 'background)
       (setq faq-list (nreverse (collector->value collector))))
 
-    (when faq-list
-      (when kom-auto-list-faqs
-        (lyskom-format-insert 'there-are-faqs (length faq-list) conf-no)
-        (lyskom-do-list-summary faq-list))
+    faq-list))
 
-      (when kom-auto-review-faqs
-        (lyskom-do-review-faq faq-list)))))
+(defun lyskom-present-unread-faqs (conf-stat faq-list)
+  "Present a list of unread FAQs in an appropriate manner."
+  (when faq-list
+    (when kom-auto-list-faqs
+      (lyskom-format-insert 'unread-faqs-header (length faq-list) 
+                            (and conf-stat (conf-stat->conf-no conf-stat)))
+      (lyskom-do-list-summary faq-list))
+
+    (when kom-auto-review-faqs
+      (lyskom-do-review-faq faq-list))))
 
