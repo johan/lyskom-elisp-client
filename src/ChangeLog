@@ -1,5 +1,7 @@
 2002-02-24  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* vars.el.in (kom-server-aliases): Added com.lysator.liu.se.
+
 	* swedish-strings.el: Corrected terminology in
 	quit-in-spite-of-unsent.
 
