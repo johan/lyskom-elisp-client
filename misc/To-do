@@ -67,6 +67,7 @@ bort ur den h{r filen.
   Ta bort lyskom-message-of-the-day	- klart.
   Ge adm.r{ttigheter }t n}gon annan.
   Tvinga n}gon att logga ut.  		- klart.
+  S{tt till}tna f|rfattare.
 
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
