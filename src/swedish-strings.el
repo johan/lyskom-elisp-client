@@ -12,7 +12,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.1 1991-08-21 15:45:20 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.2 1991-08-23 00:41:10 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
@@ -355,7 +355,7 @@ Lyskom-sessionen är avslutad.
     (first-n . "första %#1d")
     (info-by-whom . "%#1s av vem: ")
     (info-to-conf . "%#1s till möte: ")
-    (info-by-to . " %#1s av %#2s till %#3s framåt.")
+    (info-by-to . "%#1s av %#2s till %#3s framåt.")
     (all-confs . "alla möten")
     (no-get-conf . "Du får inte hämta mötet.\n")
     (no-get-pers . "Du får inte hämta personen.\n")
