@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 35.2 1991-09-15 10:05:03 linus Exp $
+;;;;; $Id: prioritize.el,v 35.3 1991-09-16 16:18:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -28,7 +28,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 35.2 1991-09-15 10:05:03 linus Exp $\n"))
+	      "$Id: prioritize.el,v 35.3 1991-09-16 16:18:20 linus Exp $\n"))
 
 
 
@@ -101,7 +101,7 @@ to move conferences and \\[kom-prioritize-set-priority] to alter the priority."
 
       (let ((buffer-read-only nil))
 	(erase-buffer)
-	(insert (lyskom-get-string 'your-membship)))
+	(lyskom-insert-string 'your-membship))
       
       (set-buffer buffer)		;initiate-* must be done in 
 					;LysKOM buffer.
@@ -122,10 +122,10 @@ Args: CONF-STAT BUFFER."
       (set-buffer buffer)
       (goto-char (point-max))
       (let ((buffer-read-only nil))
-	(insert (lyskom-format 'prio-row
-			       (membership->priority membership)
-			       (conf-stat->conf-no conf-stat)
-			       (conf-stat->name conf-stat)))))))
+	(lyskom-format-insert 'prio-row
+			      (membership->priority membership)
+			      (conf-stat->conf-no conf-stat)
+			      (conf-stat->name conf-stat))))))
 
 
 (defun lyskom-prioritize-3 (buffer)
