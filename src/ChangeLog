@@ -1,5 +1,7 @@
 Fri Jan 14 01:07:39 1994  Linus Tolke Y  (linus@bodil)
 
+	* Distribuerat version 0.38.1		??:??
+
 	* async.el: removed extra function.
 	  completing-read.el: fixed lyskom-blocking-process hack.
 	  edit-text.el: Added missing defvars. 
