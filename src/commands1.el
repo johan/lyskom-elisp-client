@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.25 1997-07-15 10:22:58 byers Exp $
+;;;;; $Id: commands1.el,v 44.26 1997-09-10 13:14:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.25 1997-07-15 10:22:58 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.26 1997-09-10 13:14:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -681,7 +681,8 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
   (if (null text-stat)
       (progn
         (lyskom-insert-string 'confusion-what-to-comment))
-    (let ((ccrep))
+    (let ((ccrep nil)
+          (bccrep nil))
       (lyskom-tell-internat (if (eq type 'comment)
                                 'kom-tell-write-comment
                               'kom-tell-write-footnote))
@@ -701,22 +702,30 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
                                 ccrep))
               (setq data (cons (blocking-do 'get-conf-stat
                                             (misc-info->recipient-no misc-info))
+                               data)))
+             ((and (eq type 'footnote)
+                   (eq 'BCC-RECPT (misc-info->type misc-info)))
+              (setq bccrep (cons (misc-info->recipient-no misc-info) 
+                                 bccrep))
+              (setq data (cons (blocking-do 'get-conf-stat
+                                            (misc-info->recipient-no misc-info))
                                data))))))
          (text-stat->misc-info-list text-stat))
         (lyskom-comment-recipients data lyskom-proc text-stat
-                                   subject type ccrep)))))
+                                   subject type ccrep bccrep)))))
 
 
 (defun lyskom-comment-recipients (data lyskom-proc text-stat
-				       subject type ccrep)
+				       subject type ccrep bccrep)
   "Compute recipients to a comment to a text.
-Args: DATA, LYSKOM-PROC TEXT-STAT SUBJECT TYPE CCREP.
+Args: DATA, LYSKOM-PROC TEXT-STAT SUBJECT TYPE CCREP BCCREP.
 DATA is a list of all the recipients that should receive this text.
 If DATA contains more than one conference the user is asked (using y-or-n-p)
 if all conferences really should receive the text.
 The call is continued to the lyskom-edit-text.
 TYPE is info whether this is going to be a comment of footnote.
-CCREP is a list of all recipients that are going to be cc-recipients."
+CCREP is a list of all recipients that are going to be cc-recipients.
+BCCREP is a list of all recipient that are going to be bcc-recipients."
 
   (condition-case nil
       ;; Catch any quits
@@ -753,10 +762,12 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 		(setq recver
 		      (append recver
 			      (list
-			       (cons (if (memq (conf-stat->conf-no conf-stat)
-					       ccrep)
-					 'cc-recpt
-				       'recpt)
+			       (cons (cond
+                                      ((memq (conf-stat->conf-no conf-stat) 
+                                             ccrep) 'cc-recpt)
+                                      ((memq (conf-stat->conf-no conf-stat)
+                                             bccrep) 'bcc-recpt)
+                                      (t 'recpt))
 				     (conf-stat->comm-conf conf-stat)))))
 		(if (lyskom-get-membership (conf-stat->conf-no conf-stat))
 		    (setq member t))
@@ -936,7 +947,8 @@ Don't ask for confirmation."
 	 (type (misc-info->type info)))
     (cond ((null misc-list) '())
 	  ((or (eq type 'RECPT)
-	       (eq type 'CC-RECPT))
+	       (eq type 'CC-RECPT)
+               (eq type 'BCC-RECPT))
 	   (append (list (intern (downcase (symbol-name type)))
 			 (misc-info->recipient-no info))
 		   (lyskom-get-recipients-from-misc-list
@@ -2555,6 +2567,16 @@ the user has used a prefix command argument."
                               'add-copy
                               conf)))
 
+(def-kom-command kom-add-bcc (text-no-arg)
+  "Add a cc recipient to a text. If the argument TEXT-NO-ARG is non-nil,
+the user has used a prefix command argument."
+  (interactive "P")
+  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-bccrcpt)))
+	(lyskom-add-sub-recipient text-no-arg
+                              (lyskom-get-string 'text-to-add-bcc)
+                              'add-bcc
+                              conf)))
+
 (def-kom-command kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
 the user has used a prefix command argument."
@@ -2631,6 +2653,18 @@ command argument."
 			      text-no
 			      (conf-stat->conf-no conf-to-add-to)
 			      'cc-recpt))
+
+                ((eq action 'add-bcc)
+		 (lyskom-format-insert 'adding-name-as-copy
+				       conf-to-add-to
+				       text-stat)
+		 (setq lyskom-last-added-bccrcpt
+		       (conf-stat->conf-no conf-to-add-to))
+		 (blocking-do 'add-recipient
+			      text-no
+			      (conf-stat->conf-no conf-to-add-to)
+			      'bcc-recpt))
+                 
 
 		((eq action 'sub)
 		 (lyskom-format-insert 'remove-name-as-recipient

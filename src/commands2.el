@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.15 1997-08-18 12:26:37 byers Exp $
+;;;;; $Id: commands2.el,v 44.16 1997-09-10 13:14:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.15 1997-08-18 12:26:37 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.16 1997-09-10 13:14:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -972,11 +972,13 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
                         (function
                          (lambda (arg)
                            (format "%s - %s" 
-                                   (if (fboundp 'map-keymap)
-                                       (if (symbolp (car arg))
-                                           (format "%s" (car arg))
-                                         (format "%c" (car arg)))
-                                     (format "%c" (car arg)))
+                                   (if (fboundp 'key-description)
+                                       (key-description (car arg))
+                                     (cond ((symbolp (car arg))
+                                            (format "%s" (car arg)))
+                                           ((characterp (car arg))
+                                            (format "%c" (car arg)))
+                                           (t (format "%S" (car arg)))))
                                    (or (lyskom-command-name (cdr arg))
                                        (and (keymapp (cdr arg))
                                             (lyskom-get-string

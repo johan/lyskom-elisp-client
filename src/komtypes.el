@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.1 1997-02-13 11:31:40 davidk Exp $
+;;;;; $Id: komtypes.el,v 44.2 1997-09-10 13:15:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.1 1997-02-13 11:31:40 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 44.2 1997-09-10 13:15:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -682,7 +682,8 @@ Both vectors should be of the same length."
 				sender
 				sent-at)
   "Create a misc-info from all parameters.
-TYPE is one of RECPT, CC-RECPT COMM-TO COMM-IN FOOTN-TO or FOOTN-IN."
+TYPE is one of RECPT, CC-RECPT, BCC-RECPT, COMM-TO, COMM-IN, 
+FOOTN-TO or FOOTN-IN."
   (cons
    'MISC-INFO
    (vector type recipient-no local-no rec-time comm-to comm-in 

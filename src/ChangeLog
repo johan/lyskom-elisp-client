@@ -1,3 +1,81 @@
+Wed Sep 10 11:23:33 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-replace-miscs): Ny funktion.
+	(lyskom-edit-translate-miscs): Ny funktion.
+	(lyskom-edit-move-recipients): Ny funktion.
+	(kom-edit-move-recipients): Ny funktion.
+	(lyskom-edit-add-recipient/copy): Tar ett extra argument
+ 	what-to-do.
+
+	* compatibility.el (lyskom-xemacs-keysym): Lade till C-å och C-ä
+	(lyskom-gnu-keysym): Dito.
+	(characerp): Lade till definition för icke-MULEiserade Emacsen.
+
+	* english-strings.el,swedish-strings.el (lyskom-sv-edit-mode-map):
+ 	Bytte ut alla C-c <bokstav> mot C-c C-<bokstav>
+
+	* edit-text.el (kom-edit-add-comment): Ny funktion.
+
+	* swedish-strings.el (lyskom-message): Lade till text-to-comment-q
+
+	* edit-text.el (kom-edit-insert-text): Lade till window-argumented
+ 	till kom-edit-insert-text.
+
+Tue Sep  9 12:05:32 1997  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (lyskom-help): Fixade buggen.
+
+Mon Sep  8 15:49:30 1997  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el,swedish-strings.el (lyskom-sv-edit-mode-map):
+ 	Bind förhelvete inte C-c k!
+
+Thu Sep  4 18:07:14 1997  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (kom-add-bcc): Nytt kommando
+
+	* services.el (initiate-add-recipient): Stöd för bcc-recpt.
+
+	* lyskom-rest.el (lyskom-format-misc-item): Stöd för bcc-recpt.
+
+	* vars.el.in (lyskom-bcc-flag): Ny variabel.
+
+	* edit-text.el (kom-edit-add-bcc): Ny funktion.
+
+	* vars.el.in (lyskom-last-added-bccrcpt): Ny variabel.
+
+	* commands1.el (lyskom-comment-recipients): Lade till stöd för
+ 	bcc-recpt.
+	(lyskom-add-sub-recipient): Dito.
+
+	* english-strings.el, swedish-strings.el (lyskom-message): Lade
+ 	till BCC-RECPT relaterade strängar.
+
+	* view-text.el (lyskom-view-text): Hantera BCC-RECPT
+	(lyskom-text-read-p): Dito.
+	(lyskom-text-read-at-least-once-p): Dito.
+	(lyskom-mark-as-read): Dito.
+	(lyskom-print-header-recpt): Dito.
+
+	* prefetch.el (lyskom-prefetch-text-all-handler): Hantera BCC-RECPT
+	(lyskom-prefetch-texttree-handler): Dito.
+	(lyskom-prefetch-texts-handler): Dito.
+
+	* lyskom-rest.el (lyskom-is-read-handler): Hantera BCC-RECPT.
+
+	* komtypes.el (lyskom-create-misc-info): Uppdaterade doc-strängen.
+
+	* filter.el (kom-super-jump): Hantera BCC-RECPT
+
+	* commands1.el (lyskom-get-recipients-from-misc-list): Hantera
+ 	BCC-RECPT
+
+	* async.el (lyskom-async-new-text): Stöd för BCC-RECPT
+
+	* filter.el (lyskom-filter-text-p-2): Stöd för BCC-RECPT
+
+	* parse.el (lyskom-parse-misc-info-list-sub): Parsea bcc-recpt.
+
 Mon Aug 18 10:15:45 1997  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (find-face): Deklarerade extern.

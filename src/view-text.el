@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 44.8 1997-07-12 13:11:46 byers Exp $
+;;;;; $Id: view-text.el,v 44.9 1997-09-10 13:15:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.8 1997-07-12 13:11:46 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.9 1997-09-10 13:15:39 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -129,6 +129,7 @@ Note that this function must not be called asynchronously."
 		       (let ((type (misc-info->type misc)))
 			 (cond
 			  ((or (eq type 'RECPT)
+                               (eq type 'BCC-RECPT)
 			       (eq type 'CC-RECPT))
 			   (lyskom-print-header-recpt 
 			    (misc-info->recipient-no misc)
@@ -304,7 +305,9 @@ recipients to it that the user is a member in."
       (let* ((misc-info (elt misc-info-list i))
 	     (type (misc-info->type misc-info)))
 	(cond
-	 ((or (eq type 'RECPT) (eq type 'CC-RECPT))
+	 ((or (eq type 'RECPT) 
+              (eq type 'BCC-RECPT)
+              (eq type 'CC-RECPT))
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
@@ -339,7 +342,9 @@ the user is a member of. Uses blocking-do. Returns t if TEXT-STAT is nil."
           (setq misc-item (car misc-info-list))
           (setq type (misc-info->type misc-item))
           (setq misc-info-list (cdr misc-info-list))
-          (cond ((or (eq type 'RECPT) (eq type 'CC-RECPT))
+          (cond ((or (eq type 'RECPT) 
+                     (eq type 'BCC-RECPT)
+                     (eq type 'CC-RECPT))
                  (setq membership (lyskom-get-membership
                                    (misc-info->recipient-no misc-item)))
                  (when membership
@@ -524,6 +529,7 @@ the client. That is done by lyskom-is-read."
     (lyskom-traverse
      misc-info misc-info-list
      (if (and (or (eq (misc-info->type misc-info) 'RECPT)
+                  (eq (misc-info->type misc-info) 'BCC-RECPT)
 		  (eq (misc-info->type misc-info) 'CC-RECPT))
 	      ;; The whole membership list might not be fetched
 	      ;; yet. So we better mark it as read in all conferences.
@@ -539,7 +545,11 @@ the client. That is done by lyskom-is-read."
   (lyskom-format-insert "%#1s: %#2M <%#3d>\n"
 			(cond ((eq (misc-info->type misc) 'RECPT)
 			       (lyskom-get-string 'Recipient))
-			      (t (lyskom-get-string 'Extra-recipient)))
+                              ((eq (misc-info->type misc) 'BCC-RECPT)
+                               (lyskom-get-string 'Hidden-recipient))
+                              ((eq (misc-info->type misc) 'CC-RECPT)
+                               (lyskom-get-string 'Extra-recipient))
+                              (t (lyskom-get-string 'Strange-recipient)))
 			conf-no
 			(misc-info->local-no misc))
   (if (misc-info->sent-at misc)

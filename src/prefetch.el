@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.9 1997-04-15 22:33:48 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.10 1997-09-10 13:15:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.9 1997-04-15 22:33:48 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.10 1997-09-10 13:15:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -561,6 +561,7 @@ Put the requests on QUEUE."
    (let ((type (misc-info->type misc)))
      (cond
       ((or (eq type 'RECPT)
+           (eq type 'BCC-RECPT)
 	   (eq type 'CC-RECPT))
        (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
       ((eq type 'COMM-IN)
@@ -592,6 +593,7 @@ Put the requests on QUEUE."
      (let ((type (misc-info->type misc)))
        (cond
 	((or (eq type 'RECPT)
+             (eq type 'BCC-RECPT)
 	     (eq type 'CC-RECPT))
 	 (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
 	((eq type 'COMM-IN)
@@ -698,6 +700,7 @@ Put the requests on QUEUE."
     (let ((type (misc-info->type misc)))
       (cond
        ((or (eq type 'RECPT)
+            (eq type 'BCC-RECPT)
 	    (eq type 'CC-RECPT))
 	(lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
        ((eq type 'COMM-IN)

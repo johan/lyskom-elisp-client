@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.44 1997-08-18 12:27:18 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.45 1997-09-10 13:15:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.44 1997-08-18 12:27:18 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.45 1997-09-10 13:15:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -389,6 +389,7 @@ lyskom-mark-as-read."
   (lyskom-traverse
       misc (text-stat->misc-info-list text-stat)
     (if (or (eq 'RECPT (misc-info->type misc))
+            (eq 'BCC-RECPT (misc-info->type misc))
 	    (eq 'CC-RECPT (misc-info->type misc)))
 	(let ((membership (lyskom-try-get-membership
 			   (misc-info->recipient-no misc))))
@@ -2767,7 +2768,9 @@ Other objects are converted correctly."
 	   ((eq (car misc-item) 'recpt) 0)
 	   ((eq (car misc-item) 'cc-recpt) 1)
 	   ((eq (car misc-item) 'comm-to) 2)
-	   ((eq (car misc-item) 'footn-to) 4))
+	   ((eq (car misc-item) 'footn-to) 4)
+           ((eq (car misc-item) 'bcc-recpt) 
+            (if lyskom-bcc-flag 15 1)))
 	  (cdr misc-item)))
 
 
