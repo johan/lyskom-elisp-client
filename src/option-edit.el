@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.45 2000-08-11 15:00:57 byers Exp $
+;;;;; $Id: option-edit.el,v 44.46 2000-08-29 16:15:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.45 2000-08-11 15:00:57 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.46 2000-08-29 16:15:10 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -140,6 +140,7 @@
     [kom-complete-numbers-before-names]
     [kom-continuous-scrolling]
     [kom-inhibit-typeahead]
+    [kom-confirm-add-recipients]
     "\n"
     [kom-higher-priority-breaks]
     [kom-review-priority]
@@ -460,6 +461,10 @@ customize buffer but do not save them to the server."
   (lyskom-get-string s 'lyskom-custom-strings))
 
 
+(defvar lyskom-custom-variables-missing '(kom-permanent-filter-list
+                                          kom-quit-hook)
+  "List of user variables not in lyskom-custom-variables.")
+
 (defvar lyskom-custom-variables
   '((kom-personal-messages-in-window (open-window))
     (kom-write-texts-in-window (open-window))
@@ -657,6 +662,7 @@ customize buffer but do not save them to the server."
     (kom-saved-file-name (file))
     (kom-follow-attachments (toggle (yes no)))
     (kom-show-unread-in-frame-title (toggle (yes no)))
+    (kom-confirm-add-recipients (toggle (yes no)))
 ))
 
 (defvar lyskom-widget-functions 

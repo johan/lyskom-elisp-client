@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.15 2000-08-23 10:43:34 byers Exp $
+;;;;; $Id: buffers.el,v 44.16 2000-08-29 16:15:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.15 2000-08-23 10:43:34 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.16 2000-08-29 16:15:01 byers Exp $\n"))
 
 
 ;;;;
@@ -343,8 +343,23 @@ categories")
 (add-hook 'kill-buffer-query-functions 'lyskom-quit-query)
 (add-hook 'kill-emacs-query-functions 'lyskom-quit-query)
 
+(defun lyskom-recode-buffer-name (name)
+  (cond ((and (multibyte-string-p name) (not enable-multibyte-characters))
+	 (encode-coding-string name 
+			       (or (and lyskom-language
+					(lyskom-language-coding
+					 lyskom-language))
+				   'raw-text)))
+	((and (not (multibyte-string-p name)) enable-multibyte-characters)
+	 (decode-coding-string name 
+			       (or (and lyskom-language
+					(lyskom-language-coding
+					 lyskom-language))
+				   'raw-text)))
+	(t name)))
+
 (defun lyskom-generate-new-buffer (name)
-  (setq name (lyskom-maybe-recode-string name))
+  (setq name (lyskom-recode-buffer-name name))
   (let ((buf (generate-new-buffer name)))
     (save-excursion
       (set-buffer buf))
@@ -356,7 +371,7 @@ If UNIQUE is non-nil, re-use the first existing buffer of category
 CATEGORY, renaming it and killing its local variables.
 
 The created buffer is made a child of the current buffer."
-  (setq name (lyskom-maybe-recode-string name))
+  (setq name (lyskom-recode-buffer-name name))
   (let ((buffers (lyskom-buffers-of-category category))
         (buffer nil))
     (if (and unique buffers)

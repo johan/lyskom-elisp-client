@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.19 2000-03-11 15:11:06 byers Exp $
+;;;;; $Id: language.el,v 44.20 2000-08-29 16:15:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -160,7 +160,29 @@ create. ALIST is a mapping from symbols to strings."
   (list 'lyskom-language-strings-internal
 	(list 'quote category)
 	(list 'quote language)
-	alist)) 
+	alist))
+
+(defun lyskom-language-missing-string-internal (category string languages)
+  (let ((old-missing (assq 'lyskom-missing-languages (get string category))))
+    (if old-missing
+        (setcdr old-missing (append languages (cdr old-missing)))
+      (put string category (cons (cons 'lyskom-missing-languages languages)
+                                 (get string category))))))
+
+(defun lyskom-language-ending-mismatch-internal (category string l1 l2)
+  (let ((old-mismatch (assq 'lyskom-ending-mismatch (get string category))))
+    (if old-mismatch
+        (setcdr old-mismatch (append (list (cons l1 l2) (cons l2 l1))
+                                     (cdr old-mismatch)))
+      (put string category (cons (cons 'lyskom-ending-mismatch 
+                                       (list (cons l1 l2) (cons l2 l1)))
+                                 (get string category))))))
+
+(defmacro lyskom-language-missing-string (category string &rest languages)
+  `(lyskom-language-missing-string-internal ',category ',string ',languages))
+
+(defmacro lyskom-language-ending-mismatch (category string l1 l2)
+  `(lyskom-language-ending-mismatch-internal ',category ',string ',l1 ',l2))
 
 (put 'lyskom-language-strings 'lisp-indent-function 2)
 

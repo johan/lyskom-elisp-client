@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.60 2000-08-23 10:54:22 byers Exp $
+# $Id: Makefile,v 44.61 2000-08-29 16:15:00 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.60 2000-08-23 10:54:22 byers Exp $
+# $Id: Makefile,v 44.61 2000-08-29 16:15:00 byers Exp $
 #
 
 
@@ -36,7 +36,7 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.46-BETA-O
+CLIENTVERSION = 0.46-BETA-P
 DOCFILES=NEWS-0.46
 DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
@@ -122,7 +122,7 @@ all: $(TARGET)
 
 vars.el: vars.el.in Makefile
 	rm -f vars.el
-	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/' < vars.el.in > vars.el
+	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < vars.el.in > vars.el
 	chmod 444 vars.el
 
 %.elc: %.el _header.el
@@ -171,11 +171,13 @@ release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) $(TARGET-EL)
 	mkdir lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
-		cp distribution-$$i lyskom-$(CLIENTVERSION)/$$i ; \
+	    sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' < distribution-$$i \
+					> lyskom-$(CLIENTVERSION)/$$i; \
 	done
 	for i in $(DOCFILES) ; do \
 		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
 	done
+	(cd lyskom-$(CLIENTVERSION); make lyskom-$(CLIENTVERSION).el)
 	chmod -R u+rw,g+r,o+r lyskom-$(CLIENTVERSION)
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar

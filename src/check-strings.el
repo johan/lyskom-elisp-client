@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.10 1999-11-19 13:37:22 byers Exp $
+;;;;; $Id: check-strings.el,v 44.11 2000-08-29 16:15:02 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -20,6 +20,14 @@
   "String categories where ending mismatches are OK.")
 
 (defvar lcs-message-buffer "*LysKOM string check*")
+
+(defun lcs-expected-missing-langs (category name)
+  (cdr (assq 'lyskom-missing-languages (get name category))))
+
+(defun lcs-ignore-ending-mismatch (category name l1 l2)
+  (and name category l1 l2
+       (member (cons l1 l2)
+               (cdr (assq 'lyskom-ending-mismatch (get name category))))))
 
 (defun lyskom-check-strings ()
   "Check the strings in LysKOM for sanity."
@@ -79,6 +87,7 @@ STRINGS is a list of (language . string)."
 ;;  (lcs-message t "Checking %s:%s" category name)
   (let ((format-list 'uninitialized)
 	(first-str nil)
+	(first-lang nil)
 	(langs (mapcar 'car lyskom-languages)))
     (while strings
       (let* ((lang (car (car strings)))
@@ -92,13 +101,19 @@ STRINGS is a list of (language . string)."
               (and 
                (not (memq category lcs-dont-check-ending-categories))
                (or (lcs-check-string-ending first-str str)
+                   (lcs-ignore-ending-mismatch category name first-lang lang)
                    (lcs-message nil "(%s:%s) Ending mismatch\n    %S\n    %S"
                                category name first-str str))))
 	  (setq format-list flist
-		first-str str))
+		first-str str
+                first-lang lang))
 
 	(setq strings (cdr strings)
 	      langs (delq lang langs))))
+
+    (mapcar (lambda (el)
+              (setq langs (delq el langs)))
+            (lcs-expected-missing-langs category name))
 
     (if langs
 	(lcs-message nil "(%s:%s) Missing languages %s"
@@ -197,9 +212,29 @@ Check that all server-stored variables are customizeable."
         (cust-vars-all (append lyskom-elisp-variables 
                                lyskom-global-boolean-variables 
                                lyskom-global-non-boolean-variables)))
+
+    ;; Check that variables have widget definitions and are in the
+    ;; customize buffer, or are declared missing and really *are*
+    ;; missing.
+
     (mapcar 
      (lambda (var)
-       (cond ((not (memq var cust-vars-widgets))
+       (cond ((memq var lyskom-custom-variables-missing)
+              (if (memq var cust-vars-widgets)
+                  (lcs-message nil "(%s:%s) Widget definition for variable declared as missing."
+                               'lyskom-custom-variables var))
+              (if (memq var cust-vars-in-buffer)
+                  (lcs-message nil "(%s:%s) Variable declared as missing in custom buffer."
+                               'lyskom-custom-variables var))
+              (if (lyskom-get-string-internal (intern (format "%s-tag" var))
+                                              'lyskom-custom-strings)
+                  (lcs-message nil "(%s:%s) Tag string for variable declared as missing."
+                               'lyskom-custom-strings var))
+              (if (lyskom-get-string-internal (intern (format "%s-doc" var))
+                                              'lyskom-custom-strings)
+                  (lcs-message nil "(%s:%s) Doc string for variable declared as missing."
+                               'lyskom-custom-strings var)))
+             ((not (memq var cust-vars-widgets))
               (lcs-message nil "(%s:%s) No widget definition for variable."
                            'lyskom-custom-variables var))
              ((not (memq var cust-vars-in-buffer))

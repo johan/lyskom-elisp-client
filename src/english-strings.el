@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.106 2000-08-28 15:12:30 byers Exp $
+;;;;; $Id: english-strings.el,v 44.107 2000-08-29 16:15:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.106 2000-08-28 15:12:30 byers Exp $"))
+              "$Id: english-strings.el,v 44.107 2000-08-29 16:15:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -130,8 +130,12 @@
 ;;(defvar lyskom-swascii-header-subject nil
 ;;  "The swascii version of lyskom-header-subject.")
 
-(defconst lyskom-strings-missing
-  '(cgdag sixjune holdnose))
+(lyskom-language-missing-string lyskom-message cgdag en)
+(lyskom-language-missing-string lyskom-message sixjune en)
+(lyskom-language-missing-string lyskom-message holdnose en)
+
+(lyskom-language-ending-mismatch lyskom-message carbon-copy-prefix en sv)
+(lyskom-language-ending-mismatch lyskom-message blank-carbon-copy-prefix en sv)
 
 ;;; Formely known as lyskom-strings
 (lyskom-language-strings lyskom-message en 
@@ -148,6 +152,11 @@
     (what-is-your-name . "What is your name? ")
     (password . "Your Password? ")
     (wrong-password . "Incorrect password.\n")
+    (wrong-password-help . "
+If you have forgotten your password you may be able to get a new one
+by e-mailing the site administrators at one of the addresses listed
+below:\n")
+    (wrong-password-email . "* %#1t\n")
     (are-logged-in . "You have entered LysKOM. Please wait...\n")
     (you-have-motd . "\nYou have a notice on your mailbox:\n\n")
     (lyskom-motd-was-garbed . "\nThe login message does not exist!
@@ -442,7 +451,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    A total of %#1d visible active user%#1?d%[%]%[s%] (%#2s.)\n")
     (client-statistics . "    Distribution of clients:\n")
-    (client-statistics-line . "    %=-35#1s: %4#2d")
+    (client-statistics-line . "    %=-35#1s: %3#2d")
     (who-to-add-q . "Add who/what as a recipient? ")
     (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
     (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
@@ -3165,6 +3174,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-created-texts-are-saved-doc . "\
   If this variable is set to a file name, all texts you write will be 
   saved to that file. Texts that could not be created are not saved.")
+    (kom-confirm-add-recipients-doc . "\
+  When this is on and you add a recipient to a text, the client will
+  ask if comments to the text should also be sent to the new
+  recipient. When this is off, comments will always be sent to the new
+  recipient. For most people it is a good idea to leave this on.")
 
     ;;
     ;; Tags for variables
@@ -3245,13 +3259,13 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 "Default message recipient:")
 
     (kom-audio-player-tag . "Audio player program:")
-    (kom-ding-on-new-letter-tag        . "When a letter arrives:             ")
-    (kom-ding-on-priority-break-tag    . "When a prioritized text arrives:   ")
-    (kom-ding-on-wait-done-tag         . "When done waiting:                 ")
-    (kom-ding-on-common-messages-tag   . "When a public message arrives:     ")
-    (kom-ding-on-group-messages-tag    . "When a group message arrives:      ")
-    (kom-ding-on-personal-messages-tag . "When a personal message arrives:   ")
-    (kom-ding-on-no-subject-tag     .    "When you forget the subject line:  ")
+    (kom-ding-on-new-letter-tag        . "When a letter arrives:            ")
+    (kom-ding-on-priority-break-tag    . "When a prioritized text arrives:  ")
+    (kom-ding-on-wait-done-tag         . "When done waiting:                ")
+    (kom-ding-on-common-messages-tag   . "When a public message arrives:    ")
+    (kom-ding-on-group-messages-tag    . "When a group message arrives:     ")
+    (kom-ding-on-personal-messages-tag . "When a personal message arrives:  ")
+    (kom-ding-on-no-subject-tag     .    "When you forget the subject line: ")
 
     (lyskom-filter-outgoing-messages-tag . "Show automatic messages:")
     (kom-friends-tag . "Friends and other special people:")
@@ -3319,6 +3333,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-follow-attachments-tag . "Read imported attachments as texts:")
     (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar:")
     (kom-created-texts-are-saved-tag . "Save created texts:")
+    (kom-confirm-add-recipients-tag . "Ask if comments shoulw be sent to new recipients:")
     )
 )
 

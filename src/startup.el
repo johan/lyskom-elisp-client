@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.51 2000-08-23 10:43:49 byers Exp $
+;;;;; $Id: startup.el,v 44.52 2000-08-29 16:15:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.51 2000-08-23 10:43:49 byers Exp $\n"))
+	      "$Id: startup.el,v 44.52 2000-08-29 16:15:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -260,7 +260,6 @@ See lyskom-mode for details."
 	       'connection-done
 	       (version-info->software-version lyskom-server-version-info))
 
-	      ;; FIXME: Only do this if we have the required features!
               (when (lyskom-have-call 85)
                 (setq lyskom-collate-table (blocking-do 'get-collate-table)))
 	      (if (not (zerop (server-info->motd-of-lyskom
@@ -486,6 +485,17 @@ See lyskom-mode for details."
                                             nil nil nil nil nil nil nil nil)))
 			  (setq login-successful t))
 		      (lyskom-insert-string 'wrong-password)
+                      (when (lyskom-get-aux-item 
+                             (server-info->aux-item-list lyskom-server-info)
+                             13)        ; e-mail
+                        (lyskom-insert 'wrong-password-help)
+                        (mapcar (lambda (el)
+                                  (lyskom-format-insert 'wrong-password-email
+                                                        (aux-item->data el)))
+                                (lyskom-get-aux-item 
+                                 (server-info->aux-item-list lyskom-server-info)
+                                 13)    ; e-mail
+                                ))
 		      (setq new-me nil))
 		    (setq lyskom-is-new-user nil))))
 	    

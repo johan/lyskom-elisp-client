@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.135 2000-08-28 15:12:32 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.136 2000-08-29 16:15:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.135 2000-08-28 15:12:32 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.136 2000-08-29 16:15:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -143,6 +143,11 @@
     (what-is-your-name . "Vad heter du? ")
     (password . "Lösenord? ")
     (wrong-password . "Fel lösen.\n")
+    (wrong-password-help . "
+Du kan skicka e-mail till någon av nedanstående adresser för att få
+ett nytt lösenord eller för att få din gamla person raderad så att du
+kan skapa en ny:\n")
+    (wrong-password-email . "* %#1t\n")
     (are-logged-in . "Du är nu inloggad. Vänta ett tag.\n")
     (you-have-motd . "\nDu har en lapp på dörren:\n\n")
     (lyskom-motd-was-garbed . "\nLoginmeddelandet finns inte!
@@ -437,7 +442,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (total-visible-active-users
      . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (client-statistics . "    Klienternas fördelning:\n")
-    (client-statistics-line . "    %=-35#1s: %=4#2d")
+    (client-statistics-line . "    %=-35#1s: %3#2d")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
     (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare för kännedom? ")
@@ -3212,6 +3217,12 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är ett filnamn så sparas alla inlägg man skriver till den
   filen i ungefär samma format som de har när man läser dem. Inlägg
   som inte kan skapas sparas inte.")
+    (kom-confirm-add-recipients-doc . "\
+  Om detta är påslaget och man adderar en mottagare till ett inlägg så
+  frågar klienten om man vill att kommentarer till inlägget också
+  skall skickas till den nya mottagaren. Om detta är avslaget så
+  kommer kommentarer alltid att skickas även till den nya mottagaren. 
+  Det är oftast bra att ha påslaget.")
 
 
     ;;
@@ -3293,12 +3304,12 @@ i servern. Annars sparas det i din .emacs.")
 "Defaultmottagare för meddelanden:")
 
     (kom-audio-player-tag . "Ljudspelarprogram:")
-    (kom-ding-on-new-letter-tag        . "När det kommer brev:               ")
-    (kom-ding-on-priority-break-tag    . "När det kommer prioriterade inlägg:")
-    (kom-ding-on-wait-done-tag         . "När man har väntat klart:          ")
-    (kom-ding-on-common-messages-tag   . "Vid alarmmeddelanden:              ")
-    (kom-ding-on-group-messages-tag    . "Vid gruppmeddelanden:              ")
-    (kom-ding-on-personal-messages-tag . "Vid personliga meddelanden:        ")
+    (kom-ding-on-new-letter-tag        . "När det kommer brev:                ")
+    (kom-ding-on-priority-break-tag    . "När det kommer prioriterade inlägg: ")
+    (kom-ding-on-wait-done-tag         . "När man har väntat klart:           ")
+    (kom-ding-on-common-messages-tag   . "Vid alarmmeddelanden:               ")
+    (kom-ding-on-group-messages-tag    . "Vid gruppmeddelanden:               ")
+    (kom-ding-on-personal-messages-tag . "Vid personliga meddelanden:         ")
     (kom-ding-on-no-subject-tag     . "När ärenderad saknas:              ")
 
     (lyskom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
@@ -3367,6 +3378,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt:")
     (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden:")
     (kom-created-texts-are-saved-tag . "Spara författade inlägg:")
+    (kom-confirm-add-recipients-tag . "Fråga om kommentarer skall sändas till nya mottagare:")
     )
 )
 

@@ -1,3 +1,55 @@
+2000-08-29  David Byers  <davby@ida.liu.se>
+
+	* check-strings.el: Support strings and user variables declared as
+	missing to eliminate spurious warnings. Support expected ending
+	mismatches.
+
+	* language.el (lyskom-language-missing-string-internal): New
+	function. 
+	(lyskom-language-missing-string): New macro.
+
+	* startup.el (kom-start-anew): Print e-mail address for server
+	admin if user does not enter the correct password.
+
+2000-08-29  David Byers  <davby@sen2.ida.liu.se>
+
+	Correct multibytedness of buffer names:
+	* buffers.el (lyskom-recode-buffer-name): New function.
+	(lyskom-generate-new-buffer): Use it instead of
+	lyskom-maybe-recode-string.
+	(lyskom-get-buffer-create): Same here.
+
+2000-08-29  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-add-recipient/copy): Obey
+	kom-confirm-add-recipients.
+
+	Fix question whether to add cc-recipient:
+	* commands1.el (lyskom-add-helper): Inline check for cc-recipient.
+	Removed call to lyskom-last-added-rcpt.
+	(lyskom-verify-add-recipient): Removed.
+
+	* vars.el.in (kom-confirm-add-recipients): New variable.
+	(lyskom-add-recipient-hook): Removed.
+
+	Fix defaults for sub and move recipients:
+	* commands1.el (kom-sub-recipient): Use lyskom-last-sub-recipient
+	if it is one of the recipients. If a default recipient does not
+	exist, try the next.
+	(lyskom-default-recpt-for-sub): New function.
+	(kom-sub-recipient): Use lyskom-default-recpt-for-sub.
+
+	* vars.el.in (lyskom-last-added-rcpt): Made local.
+	(lyskom-last-added-ccrcpt): Ditto.
+	(lyskom-last-added-bccrcpt): Ditto.
+	(lyskom-last-sub-rcpt): New variable.
+
+	Bugfix for status session:
+	* commands1.el (lyskom-deferred-client-1): Work even when
+	defer-info data is just the session number.
+	(lyskom-deferred-client-2): Handle case when there is no
+	collector. 
+
 2000-08-28  David Byers  <davby@ida.liu.se>
 
 	Make nearly all hooks local:
