@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 43.1 1996-08-10 11:56:11 byers Exp $
+;;;;; $Id: internal.el,v 43.2 1996-08-14 04:18:46 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 43.1 1996-08-10 11:56:11 byers Exp $\n"))
+	      "$Id: internal.el,v 43.2 1996-08-14 04:18:46 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -318,6 +318,12 @@ Return a dotted pair consisting of the QUEUE-NAME and the new queue."
       (nconc lyskom-call-data new-queue-list))
     (car new-queue-list)))
 
+(defun lyskom-set-queue-priority (queue-name priority)
+  (put queue-name 'lyskom-queue-priority priority))
+
+(defun lyskom-queue-priority (queue-name)
+  (or (get queue-name 'lyskom-queue-priority)
+      0))
 
 (defun lyskom-call-add (queue-name type &rest data)
   "Add an entry to the kom-queue QUEUE-NAME. The entry is of type TYPE
@@ -333,33 +339,44 @@ and third argument DATA contains the rest of the necessary data."
   "Send a packet to the server.
 Add info on lyskom-pending-calls. Update lyskom-ref-no.
 Args: KOM-QUEUE STRING."
-  (let ((str (concat lyskom-ref-no string "\n")))
-    (if (>= lyskom-number-of-pending-calls
-	    lyskom-max-pending-calls)
-	(lyskom-queue-enter lyskom-output-queue str)
-      (lyskom-process-send-string lyskom-proc str)
-      (++ lyskom-number-of-pending-calls)))
+
+  ;; Queue it
+  (lyskom-queue-enter (aref lyskom-output-queues
+			    (lyskom-queue-priority kom-queue))
+		      (cons lyskom-ref-no string))
   (setq lyskom-pending-calls
-	(cons
-	 (cons lyskom-ref-no
-	       kom-queue)
-	 lyskom-pending-calls))
-  (++ lyskom-ref-no))
+	(cons (cons lyskom-ref-no kom-queue)
+	      lyskom-pending-calls))
+  (++ lyskom-ref-no)
+  
+  ;; Send something from the output queues
+  (lyskom-check-output-queues))
+
+(defun lyskom-check-output-queues ()
+  "Check for pending calls to the server.
+Send calls from queues with higher priority first, and make sure that at
+most lyskom-max-pending-calls are sent to the server at the same time."
+  (catch 'done
+    (let ((i 9))
+      (while (< lyskom-number-of-pending-calls
+		lyskom-max-pending-calls)
+	(while (lyskom-queue-isempty (aref lyskom-output-queues i))
+	  (-- i)
+	  (if (< i 0) (throw 'done nil)))
+	(let ((entry (lyskom-queue-delete-first
+		      (aref lyskom-output-queues i))))
+	  (++ lyskom-number-of-pending-calls)
+	  (lyskom-process-send-string
+	   lyskom-proc
+	   (concat (car entry) (cdr entry) "\n")))))))
 
 (defun lyskom-decrease-pending-calls ()
   "A reply has come.
 Send a pending call or decrease lyskom-number-of-pending-calls."
-  (cond
-   ((and (<= lyskom-number-of-pending-calls lyskom-max-pending-calls)
-	 (lyskom-queue->first lyskom-output-queue))
-    (lyskom-process-send-string
-     lyskom-proc
-     (lyskom-queue->first lyskom-output-queue))
-    (lyskom-queue-delete-first lyskom-output-queue))
-   (t
-    (-- lyskom-number-of-pending-calls)
-    (if (< lyskom-number-of-pending-calls 0)
-	(setq lyskom-number-of-pending-calls 0)))))
+  (-- lyskom-number-of-pending-calls)
+  (if (< lyskom-number-of-pending-calls 0)
+      (setq lyskom-number-of-pending-calls 0))
+  (lyskom-check-output-queues))
 	
 
 (defun lyskom-process-send-string (process string)

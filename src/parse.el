@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 43.1 1996-08-09 20:56:39 davidk Exp $
+;;;;; $Id: parse.el,v 43.2 1996-08-14 04:18:52 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 43.1 1996-08-09 20:56:39 davidk Exp $\n"))
+	      "$Id: parse.el,v 43.2 1996-08-14 04:18:52 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -811,7 +811,7 @@ i.e creates the buffer, sets all markers and pointers."
   "Parse the results of a successful call and call the handler."
   (lyskom-save-excursion
    (set-buffer buffer)
-   (let* ((kom-queue (cdr (assoc ref-no lyskom-pending-calls)))
+   (let* ((kom-queue (cdr (assq ref-no lyskom-pending-calls)))
 	  (call-info (lyskom-locate-ref-no kom-queue ref-no)))
      (set-buffer lyskom-unparsed-buffer)
      (if call-info
@@ -880,7 +880,7 @@ CALL-INFO is destructively changed to
   "Parse the result of an unsuccessful call and call the handler."
   (lyskom-save-excursion
     (set-buffer buffer)
-    (let* ((kom-queue (cdr (assoc ref-no lyskom-pending-calls)))
+    (let* ((kom-queue (cdr (assq ref-no lyskom-pending-calls)))
 	   (call-info (lyskom-locate-ref-no kom-queue ref-no))
 	   errno)
       (set-buffer lyskom-unparsed-buffer)
