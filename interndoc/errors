@@ -1,0 +1,62 @@
+
+
+                       PRINTING ERROR MESSAGES
+                             David Byers
+
+
+    This file describes how errors can be reported to the user.
+
+    All developers should know this.
+
+
+
+    VARIABLES
+
+    The client has the following variables that are relevant to error
+    reporting:
+
+    lyskom-errno (variable). The last error reported by the server (or
+    possibly the result of the last command).
+
+    lyskom-err-stat (variable). The most recent error status
+    information reported by the server.
+
+    lyskom-error-codes (variable). This variable maps error names to
+    error codes. It exists so that we can use symbolic error names in
+    other places.
+
+    lyskom-error-texts (strings). This string set contains default
+    error strings for all errors. These are used when no specific
+    error string is available when reporting an error.
+
+
+    REPORTING ERRORS
+
+    There are too many functions for reporting errors.
+
+
+    lyskom-report-command-answer reports the result of a command. It
+    will print "done" or "didn't work", a newline and a description of
+    the error, if there was one. Use this to report how a command
+    goes. You should insert a text such as "Doing something..."
+    without a newline at the end before calling this function.
+
+    lyskom-insert-error inserts an error message. It is used by
+    lyskom-report-command-answer to print the error message. It uses
+    lyskom-get-error-text to get the error string.
+
+    lyskom-get-error-text returns the text for an error. By supplying
+    the optional error-descriptions argument you can supply a list of
+    context-specific error messages.
+
+    lyskom-current-error returns a string describing the most recently
+    reported error. Its functionality is really subsumed by
+    lyskom-get-error-text.
+
+
+    CONTEXT-SENSITIVE ERROR REPORTING
+
+    You can supply an alist of context-specific error strings to most
+    of the above functions. The list is an alist where the car is an
+    error code (symbolic or numeric) and the cdr is the error string
+    to insert for that error.

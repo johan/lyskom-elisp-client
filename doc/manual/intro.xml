@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                      "docbook/dtd/xml/4.2/docbookx.dtd" [
+  <!ENTITY % fnc SYSTEM "fnc.ent">
+  <!ENTITY % var SYSTEM "var.ent">
+
+  %fnc;   <!-- LysKOM functions -->
+  %var;   <!-- LysKOM variables -->
+]>
+
+<book lang="en">
+  <chapter>
+    <title>Introduction to LysKOM</title>
+
+    <para>
+      LysKOM is an electronic conferencing system, similar in
+      function, but different in execution, to the many message
+      message boards that have come into existence on the Internet.
+    </para>
+
+    <para>
+      The concepts behind LysKOM date back to the 1970s, when
+      researchers in Stockholm developed QZ-KOM, the first bulletin
+      board system in Sweden. In many ways, LysKOM is a direct
+      descendent of QZ-KOM, designed to be familiar to users of QZ-KOM
+      and its derivatives.
+    </para>
+
+    <para>
+      Unlike QZ-KOM and most of its derivatives, LysKOM is a
+      client-server system and there are a number of clients to choose
+      from, of which the Emacs Lisp client (commonly known as the
+      elisp client) is the best, most feature-rich, most portable and
+      most popular. Other popular clients include a web-based client
+      (WebKOM) and a Windows-based client (WinKOM). There are several
+      other clients in varying states of completeness.
+    </para>
+
+  </chapter>
+</book>

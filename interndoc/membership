@@ -1,0 +1,129 @@
+
+                    HOW THE MEMBERSHIP LIST WORKS
+                             David Byers
+
+
+    This file aims to explain how the client stores the memberships of
+    a person.
+
+    If you are working with the membership list in any way, such as
+    changing priorities or positions, you absolutely need to know
+    this.
+
+
+
+1.  API
+
+    There are a number of functions for managing the membership list,
+    many of which are internal to membership list management. This
+    section describes the functions that should be used.
+
+    lyskom-add-memberships-to-membership
+    lyskom-insert-membership
+    lyskom-replace-membership
+    lyskom-remove-membership
+    lyskom-membership-position
+    lyskom-membership-length
+    lyskom-init-membership
+    lyskom-get-membership
+    lyskom-try-get-membership
+
+    All other membership-related functions in reading.el are internal.
+
+
+
+2.  History
+
+    The membership list was formerly stored in lyskom-membership, but
+    due to the extreme inefficiency of this, it had to be changed.
+    There were two problems with storing the membership list as a
+    simple list:
+
+    a. Every time new data was inserted into the list the entire list
+       had to be sorted. After sorting the entire list had to be
+       scanned to update the position field of all memberships.
+
+    b. Finding a membership corresponding to a conference required a
+       linear scan over the entire membership list.
+
+    A lot of time was wasted particularly when logging on due to the
+    structure of the data. A data structure that could be maintained
+    in sorted order at all times and supported rapid lookup of
+    memberships would have been better.
+
+
+    The first attempt at upgrading was a linear list backed by an
+    assoc list mapping conference numbers to memberships. Since assoc
+    lists are searched by the C kernel, this eliminated point b, but
+    there were problems maintaining consitency between the list and
+    the assoc list.
+
+
+    The second attempt involved replacing the list with an AVL tree.
+    The AVL tree supports O(log n) insertion, resulting in an overall
+    time to build the initial tree during logon to O(n log n). The
+    assoc list was replaced by a hash table for even more rapid lookup
+    of conference numbers (is is still an assoc list if hash tables
+    are not supported).
+
+    The AVL tree solution performed well, but altering priorities and
+    positions was difficult since these were used as sort keys in the
+    AVL tree.
+
+
+
+3.  Current data structure
+
+    The current impleentation has replaced the AVL tree with a doubly
+    linked list that is maintained in sort order. Insertions are done
+    by linear search of the list from the front or back. A heuristic
+    determines which end to start at. The result is that inserting an
+    element that is to go last on the list is always a constant-time
+    operation. Since data being inserted during login is usually close
+    to pre-sorted and inserted in order, this reduces the time to
+    build the initial list to an O(n) operation.
+
+
+3.1 Insertions
+
+    Insertions are handled by lyskom-membership-list-insert. Based on
+    the priority of the new membership and the prioriries of the first
+    and last element, this function decides whether to call
+    lyskom-membership-list-append or lyskom-membership-list-prepend.
+
+    lyskom-membership-list-prepend searches the membership list from
+    the front until it finds the position where the new membership
+    should go. lyskom-membership-list-append does the same, but
+    searches from the end of the list.
+
+    When the position is located, the new membership is inserted into
+    the list. Both functions then scan the list from the new element
+    towards the end, adjusting the position field of each membership
+    to ensure that no two memberships have the same position.
+
+
+3.2 Deletions
+
+    Deletions are handled by lyskom-membership-list-delete. This
+    function unlinks the element to be deleted from the list and scans
+    the list from that position forward, decrementing all position
+    fields by one.
+
+
+3.3 Movement
+
+    Movements are handled by lyskom-membership-list-move. Starting
+    with the element that has been changed, this function scans either
+    forward or backwards in the list for the position to which the
+    element should move, adjusting the position of all elements along
+    the way. It then moves the element within the list.
+
+
+
+
+4. Notes
+
+   The client will keep the membership list sorted in order of
+   priority, and the data structures reflect this order. That means
+   that the membership position in the server may differ from the
+   position recorded in the client.
