@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.11 2003-04-06 20:23:15 byers Exp $
+;;;;; $Id: faqs.el,v 44.12 2003-07-27 20:40:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.11 2003-04-06 20:23:15 byers Exp $\n"))
+              "$Id: faqs.el,v 44.12 2003-07-27 20:40:41 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -465,3 +465,34 @@ create a new FAQ."
     (when kom-auto-review-faqs
       (lyskom-do-review-faq faq-list t))))
 
+
+(def-kom-command kom-list-faqs (conf-stat)
+  "List all FAQs for a conference."
+  (interactive (list (lyskom-read-conf-stat "Conference: " 
+                                            '(conf)
+                                            nil
+                                            lyskom-current-conf
+                                            t)))
+  (lyskom-do-list-faqs conf-stat
+                       (lyskom-get-aux-item 
+                        (conf-stat->aux-items conf-stat)
+                        14)))
+
+(def-kom-command kom-list-server-faqs ()
+  "List all FAQs for a conference."
+  (interactive)
+  (lyskom-do-list-faqs
+   nil
+   (lyskom-get-aux-item (server-info->aux-item-list
+                         (blocking-do 'get-server-info)) 14)))
+
+
+(defun lyskom-do-list-faqs (conf-stat faq-list)
+  (cond (faq-list
+         (lyskom-format-insert 'all-faqs-header 
+                               (and conf-stat
+                                    (conf-stat->conf-no conf-stat)))
+         (lyskom-do-list-summary (mapcar (lambda (faq)
+                                           (string-to-int (aux-item->data faq)))
+                                         faq-list)))
+        (t (lyskom-format-insert 'conf-has-no-faq conf-stat))))

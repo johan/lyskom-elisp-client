@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.93 2003-07-02 19:10:02 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.94 2003-07-27 20:40:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.93 2003-07-02 19:10:02 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.94 2003-07-27 20:40:41 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -365,15 +365,6 @@ lyskom-text-buttons. Returns the modified string."
         (start 0)
         (el nil))
 
-    ;; Do links from kom-text-links last -- they have precedence
-    ;; Do the first recipient last so links for that rcpt have prio
-    (lyskom-traverse rcpt rcpts
-      (lyskom-button-add-links text (cdr (assq rcpt kom-text-links))))
-
-    ;; Do global links from kom-text-links very last
-    (lyskom-button-add-links text (cdr (assq t kom-text-links)))
-
-
     ;; Do other text buttons
     (while blist
       (setq el (car blist))
@@ -432,7 +423,16 @@ lyskom-text-buttons. Returns the modified string."
              text)
             (setq start (match-end 0)))
           (setq start (1+ (match-beginning 0)))))
-      (setq blist (cdr blist))))
+      (setq blist (cdr blist)))
+
+    ;; Do links from kom-text-links last -- they have precedence
+    ;; Do the first recipient last so links for that rcpt have prio
+    (lyskom-traverse rcpt rcpts
+      (lyskom-button-add-links text (cdr (assq rcpt kom-text-links))))
+
+    ;; Do global links from kom-text-links very last
+    (lyskom-button-add-links text (cdr (assq t kom-text-links)))
+    )
   text)
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.169 2003-07-27 14:17:23 byers Exp $
+;;;;; $Id: commands2.el,v 44.170 2003-07-27 20:40:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.169 2003-07-27 14:17:23 byers Exp $\n"))
+              "$Id: commands2.el,v 44.170 2003-07-27 20:40:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -490,6 +490,7 @@ This command accepts text number prefix arguments \(see
         (let ((membership-list 
                (blocking-do 'get-membership
                             (conf-stat->conf-no conf-stat)))
+              (deferred-mships nil)
               (lyskom-count-var 0)
               (lyskom-passive-count-var 0))
 
@@ -511,63 +512,73 @@ This command accepts text number prefix arguments \(see
 
              ;; "Print a row describing the membership of
              ;; MEMBER-CONF-STAT
-             (let ((member-conf-stat
-                    (blocking-do 'get-conf-stat 
-                                 (membership->conf-no membership))))
-               (if (or (null member-conf-stat)
-                       (null membership))
-                   (lyskom-insert-string 'secret-membership)
-                 (lyskom-format-insert
-                  "%#1@%-17#2s"
-                  (if (membership-type->passive
-                       (membership->type membership))
-                      `(face ,kom-dim-face)
-                    nil)
-                  (lyskom-format-time
-                   'date-and-time
-                   (membership->last-time-read membership)))
-                 (let ((unread (- (+ (conf-stat->first-local-no
-                                      member-conf-stat)
-                                     (conf-stat->no-of-texts
-                                      member-conf-stat))
-                                  (membership->last-text-read membership)
-                                  (length (membership->read-texts
-                                           membership))
-                                  1)))
-                   (lyskom-format-insert
-                    'pers-membership-line
-                    (if (zerop unread) "          " (format "%9d " unread))
-                    (if (= (conf-stat->conf-no conf-stat)
-                           (conf-stat->supervisor member-conf-stat))
-                        (lyskom-get-string 'is-supervisor-mark)
-                      "  ")
-                    member-conf-stat
-                    (lyskom-return-membership-type
-                     (membership->type membership))
-                    (if (membership-type->passive
-                         (membership->type membership))
-                        `(face ,kom-dim-face)
-                      nil)
-                    )
-                   (when (and (membership->created-by membership)
-                              (not (zerop (membership->created-by membership)))
-                              (not (eq (conf-stat->conf-no conf-stat)
-                                       (membership->created-by membership))))
-                     (lyskom-format-insert 'pers-membership-line-2
-                                           (lyskom-format-time
-                                            'date-and-time
-                                            (membership->created-at membership))
-                                           (membership->created-by membership)))
-                   (if (membership-type->passive (membership->type membership))
-                       (setq lyskom-passive-count-var
-                             (+ lyskom-passive-count-var unread))
-                     (setq lyskom-count-var (+ lyskom-count-var unread))))))))
+             (if (membership-type->passive 
+                  (membership->type membership))
+                 (setq deferred-mships 
+                       (cons membership deferred-mships))
+               (setq lyskom-count-var
+                     (+ lyskom-count-var
+                        (lyskom-status-pers-list-one-membership conf-stat membership)))))
+            (lyskom-traverse membership (nreverse deferred-mships)
+              (setq lyskom-passive-count-var
+                     (+ lyskom-passive-count-var
+                        (lyskom-status-pers-list-one-membership conf-stat membership)))))
 
           ;; "Print the total number of unread texts for the person CONF-STAT."
           (lyskom-format-insert 'his-total-unread 
                                 conf-stat
                                 lyskom-count-var
                                 lyskom-passive-count-var))))))
+
+(defun lyskom-status-pers-list-one-membership (conf-stat membership)
+  (let ((member-conf-stat
+         (blocking-do 'get-conf-stat 
+                      (membership->conf-no membership))))
+    (if (or (null member-conf-stat)
+            (null membership))
+        (lyskom-insert-string 'secret-membership)
+      (lyskom-format-insert
+       "%#1@%-17#2s"
+       (if (membership-type->passive
+            (membership->type membership))
+           `(face ,kom-dim-face)
+         nil)
+       (lyskom-format-time
+        'date-and-time
+        (membership->last-time-read membership)))
+      (let ((unread (- (+ (conf-stat->first-local-no
+                           member-conf-stat)
+                          (conf-stat->no-of-texts
+                           member-conf-stat))
+                       (membership->last-text-read membership)
+                       (length (membership->read-texts
+                                membership))
+                       1)))
+        (lyskom-format-insert
+         'pers-membership-line
+         (if (zerop unread) "          " (format "%9d " unread))
+         (if (= (conf-stat->conf-no conf-stat)
+                (conf-stat->supervisor member-conf-stat))
+             (lyskom-get-string 'is-supervisor-mark)
+           "  ")
+         member-conf-stat
+         (lyskom-return-membership-type
+          (membership->type membership))
+         (if (membership-type->passive
+              (membership->type membership))
+             `(face ,kom-dim-face)
+           nil)
+         )
+        (when (and (membership->created-by membership)
+                   (not (zerop (membership->created-by membership)))
+                   (not (eq (conf-stat->conf-no conf-stat)
+                            (membership->created-by membership))))
+          (lyskom-format-insert 'pers-membership-line-2
+                                (lyskom-format-time
+                                 'date-and-time
+                                 (membership->created-at membership))
+                                (membership->created-by membership)))
+        unread))))
 
 
 

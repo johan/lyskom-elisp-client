@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.288 2003-07-27 14:17:24 byers Exp $
+;;;;; $Id: english-strings.el,v 44.289 2003-07-27 20:40:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.288 2003-07-27 14:17:24 byers Exp $"))
+              "$Id: english-strings.el,v 44.289 2003-07-27 20:40:41 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1498,6 +1498,7 @@ On since %#8s%#9s")
     (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
     (server-has-new-faq . "\nThere %#1?d%[is a new FAQ%]%[are %#1d new FAQs%] for the server.\n")
     (unread-faqs-header . "\nUnread FAQ%#1?d%[%]%[s%] for %#2?b%[%#2M%]%[the server%]::\n")
+    (all-faqs-header . "All FAQs for %#1?b%[%#1M%]%[the server%]:\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
@@ -2159,6 +2160,8 @@ environment to one that uses \"%#2s\" to encode text.
     (kom-leave-all-conferences . "Leave (almost) all conferences")
     (kom-limit-import         . "Limit imported texts")
     (kom-change-message-flag  . "Change reception (of) group messages")
+    (kom-list-faqs            . "List FAQs")
+    (kom-list-server-faqs     . "List server-FAQs")
     ))
 
 (lyskom-language-var global lyskom-language-codes en
@@ -2465,6 +2468,8 @@ environment to one that uses \"%#2s\" to encode text.
   (define-key lyskom-en-list-prefix (kbd "M") 'kom-membership)
   (define-key lyskom-en-list-prefix (kbd "s") 'kom-list-summary)
   (define-key lyskom-en-list-prefix (kbd "f") 'kom-list-filters)
+  (define-key lyskom-en-list-prefix (kbd "q") 'kom-list-faqs)
+  (define-key lyskom-en-list-prefix (kbd "Q") 'kom-list-server-faqs)
 
   (define-key lyskom-en-next-prefix (kbd "t") 'kom-view-next-new-text)
   (define-key lyskom-en-next-prefix (kbd "c") 'kom-go-to-next-conf)
