@@ -1,5 +1,8 @@
 Tue Aug 20 22:58:03 1991  Linus Tolke Y  (linus at lysator)
 
+	* commands2.el (kom-postpone): Klarar nu {ven fallet att man g|r
+	  uppskjut p} fler inl{gg {n man har ol{sta.
+
 	* vars.el, flags.el (lyskom-elisp-variables,
 	  lyskom-read-options-eval): Till{gg av en lyskom-login-hook.
 
