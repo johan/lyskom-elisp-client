@@ -1,3 +1,9 @@
+Sun Aug 18 02:07:59 1991  Linus Tolke Y  (linus at lysator)
+
+	* commands2.el, swedish-strings.el (lyskom-status-conf,
+	  lyskom-status-pers-2): Nu skriver den ut n{r personer och m|ten
+	  skapades.
+
 Sat Aug 17 04:30:01 1991  Linus Tolke Y  (linus at lysator)
 
 	* vars.el (lyskom-elisp-variables): Nu {r den defconst f|r att man

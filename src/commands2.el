@@ -142,6 +142,9 @@ Calls initiate-get-conf-stat and prints using lyskom-status-conf."
 			     "(")
 			   (conf-stat->name creator)")")
 		 ""))))
+    (lyskom-format-insert 'created-at
+			  (lyskom-return-time
+			   (conf-stat->creation-time conf-stat)))
     (lyskom-insert
      (lyskom-format 'members
 	     (conf-stat->no-of-members conf-stat)))
@@ -300,6 +303,9 @@ is the one we are interested in."
     (lyskom-format-insert 'pers-status-record
 			  (conf-stat->name conf-stat)
 			  (conf-stat->conf-no conf-stat))
+    (lyskom-format-insert 'created-time
+			  (lyskom-return-time
+			   (conf-stat->creation-time conf-stat)))
 
     (lyskom-format-insert 'created-confs
 			  (pers-stat->created-confs pers-stat))
