@@ -1,3 +1,13 @@
+2000-05-30  Johan Sundström  <jhs@lysator.liu.se>
+
+	* view-text.el (lyskom-filter-signature-hook): New function. Would
+	probably be nice to add as a configuration option too, instead of
+	being just hookable. :-]
+	(lyskom-text-is-mail-p): New ad-hoc support function.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Added
+	the string reformat-signature.
+
 2000-05-29  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-is-loaded): Don't bind

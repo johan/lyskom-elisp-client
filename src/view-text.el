@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.39 2000-05-29 01:39:03 jhs Exp $
+;;;;; $Id: view-text.el,v 44.40 2000-05-30 01:41:48 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.39 2000-05-29 01:39:03 jhs Exp $\n"))
+	      "$Id: view-text.el,v 44.40 2000-05-30 01:41:48 jhs Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -332,6 +332,30 @@ Note that this function must not be called asynchronously."
                  (setq aux-items (cdr aux-items))))
              )))
     todo))
+
+
+(defun lyskom-text-is-mail-p (text-stat)
+  "Ad-hoc test to determine whether a text is a mail by peeking at aux-items."
+  (lyskom-match-aux-items
+   (text-stat->aux-items text-stat)
+   (lambda (aux-item)
+     (let ((tag (aux-item->tag aux-item)))
+       (or (and (> tag 15)	; 16:mx-author,	17:mx-from,	18:mx-reply-to,
+		(< tag 22))	; 19:mx-to,	20:mx-cc,	21:mx-date,
+	   (= 24 tag))))))	; 24:mx-headers
+
+(defun lyskom-filter-signature-hook ()
+  "Filter out the signature of imported mail messages. Most useful
+when put in your `lyskom-view-text-hook'."
+  (unless (eq 'kom-review-noconversion lyskom-current-command)
+    (when (lyskom-text-is-mail-p text-stat)
+      (let* ((body (text->text-mass text))
+	     (sign (string-match "^-- $" body)))
+	(when sign
+	  (set-text->text-mass text (substring body 0 sign))
+	  (lyskom-signal-reformatted-text 'reformat-signature))))))
+
+;(add-hook 'lyskom-view-text-hook 'lyskom-filter-signature-hook)
 
 
 
