@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.12 1993-12-14 02:22:24 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.13 1993-12-19 18:01:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.12 1993-12-14 02:22:24 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.13 1993-12-19 18:01:23 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -293,7 +293,9 @@ o
   "View text number TEXT-NO."
   (interactive "P")
   (let ((kom-page-before-command nil))
-    (lyskom-start-of-command 'kom-view))
+    (lyskom-start-of-command 'kom-view)
+    (lyskom-tell-internat 'kom-tell-review)
+    )
   (if (setq text-no (cond ((null text-no) nil)
 			  ((listp text-no) (car text-no))
 			  (t text-no)))
