@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.122 2000-07-03 10:50:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.123 2000-07-05 10:14:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.122 2000-07-03 10:50:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.123 2000-07-05 10:14:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1376,9 +1376,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (passive-mt-type . "passiv")
     (secret-mt-type . "hemlig")
 
-    (Invitation-mt-type . "inbjuden")
-    (Passive-mt-type . "passiv")
-    (Secret-mt-type . "hemlig")
+    (Invitation-mt-type . "Inbjuden")
+    (Passive-mt-type . "Passiv")
+    (Secret-mt-type . "Hemlig")
 
     (not-author-try-anyway-p . "Du är inte författare till inlägget. Vill du försöka ändå? ")
     (what-no-comments-no . "Vilken text vill du inte ha kommentarer till: ")
@@ -1445,9 +1445,43 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (confusion-what-to-find-root . "Jag förstår inte vilket inläggs urinlägg du vill återse.\n")
     (confusion-what-to-find-root-review . "Jag förstår inte vilket inläggsträd du vill återse.\n")
 
+
+    ;; Button actions
+
+    (lyskom-button-view-text-action . "Återse texten")
+    (lyskom-button-review-noconversion-action . "Återse omodifierat")
+    (lyskom-button-review-tree-action . "Återse träd")
+    (lyskom-button-find-root-action . "Återse urinlägget")
+    (lyskom-button-comment-text-action . "Kommentera texten")
+    (lyskom-button-private-comment-text-action . "Personligt svar")
+    (lyskom-button-mark-text-action . "Markera texten")
+    (lyskom-button-unmark-text-action . "Avmarkera texten")
+    (lyskom-button-save-text-action . "Arkivera")
+    (lyskom-button-view-conf-presentation-action . "Visa presentation")
+    (lyskom-button-view-conf-status-action . "Visa mötesstatus")
+    (lyskom-button-goto-conf-action . "Gå till mötet")
+    (lyskom-button-send-message-action . "Skicka gruppmeddelande")
+    (lyskom-button-add-self-action . "Bli medlem i mötet")
+    (lyskom-button-sub-self-action . "Utträd ur mötet")
+    (lyskom-button-view-pers-presentation-action . "Visa presentation")
+    (lyskom-button-view-pers-status-action . "Visa personstatus")
+    (lyskom-button-mail-action . "Skicka brev")
+    (lyskom-button-send-message-action . "Sänd meddelande")
+    (lyskom-button-open-url-action . "Öppna")
+    (lyskom-button-copy-url-action . "Kopiera")
+    (lyskom-button-goto-info-node-action . "Öppna")
+    (lyskom-button-open-email-action . "Skicka mail")
+    (lyskom-button-copy-email-action . "Kopiera")
+    (lyskom-button-info-aux-action . "Information")
+    (lyskom-button-delete-aux-action . "Radera")
+    (lyskom-edit-toggle-secret-aux-action . "Växla \"hemlig\"")
+    (lyskom-edit-toggle-anonymous-aux-action . "Växla \"anonym\"")
+    (lyskom-edit-toggle-inherit-aux-action   . "Växla \"ärvd\"")
+    (lyskom-edit-delete-aux-action          . "Ta bort")
+    (lyskom-prioritize-flag-toggle-action . "Växla")
+    (lyskom-prioritize-flag-set-action . "Sätt på")
+    (lyskom-prioritize-flag-clear-action . "Stäng av")
 ))
-
-
 
 
 ;;; ================================================================
@@ -3290,95 +3324,6 @@ i servern. Annars sparas det i din .emacs.")
 (lyskom-language-var kom-ispell-dictionary sv
   "svenska")
 
-
-;;;; ============================================================
-;;;; Text buttom menuse go here. This will probably be moved back
-;;;; to vars.el.in when the strings have been replaced by
-;;;; symbols, but for now they'll stay here.
-
-
-(lyskom-language-var lyskom-button-actions sv
-  '((text
-     text-text
-     lyskom-button-view-text
-     (("Återse texten" . lyskom-button-view-text)
-      ("Återse omodifierat" . lyskom-button-review-noconversion)
-      ("Återse träd" . lyskom-button-review-tree)
-      ("Återse urinlägget" . lyskom-button-find-root)
-      ("Kommentera texten" . lyskom-button-comment-text)
-      ("Personligt svar" . lyskom-button-private-comment-text)
-      ("Markera texten" . lyskom-button-mark-text)
-      ("Avmarkera texten" . lyskom-button-unmark-text)
-      ("Arkivera" . lyskom-button-save-text)
-      )
-     nil
-;     ((nil lyskom-print-text footer lyskom-button-comment-text))
-     )
-    (conf 
-     conf-text
-     lyskom-button-view-conf-presentation
-     (("Visa presentation" . lyskom-button-view-conf-presentation)
-      ("Visa mötesstatus" . lyskom-button-view-conf-status)
-      ("Gå till mötet" . lyskom-button-goto-conf)
-      ("Skicka gruppmeddelande" . lyskom-button-send-message)
-      ("Bli medlem i mötet" . lyskom-button-add-self)
-      ("Utträd ur mötet" . lyskom-button-sub-self))
-     ((kom-list-news . lyskom-button-goto-conf)
-      (kom-membership . lyskom-button-goto-conf)))
-    (pers 
-     pers-text
-     lyskom-button-view-pers-presentation
-     (("Visa presentation" . 
-                             lyskom-button-view-pers-presentation)
-      ("Visa personstatus" . lyskom-button-view-pers-status)
-      ("Skicka brev" . lyskom-button-mail)
-      ("Sänd meddelande" . lyskom-button-send-message))
-     nil)
-    (url 
-     url-text
-     lyskom-button-open-url
-     (("Öppna" . lyskom-button-open-url)
-      ("Kopiera" . lyskom-button-copy-url))
-     nil)
-    (info-node 
-     info-node-text
-     lyskom-button-goto-info-node
-     (("Öppna" . lyskom-button-goto-info-node))
-     nil)
-    (email
-     email-text
-     lyskom-button-open-email
-     (("Skicka mail" . lyskom-button-open-email)
-      ("Kopiera" . lyskom-button-copy-email))
-     nil)
-    (aux
-     aux-text
-     lyskom-button-info-aux
-     (("Information" . lyskom-button-info-aux)
-      ("Radera" . lyskom-button-delete-aux))
-     nil)
-    (aux-edit-menu
-     nil
-     aux-edit-menu-text
-     (("Växla \"hemlig\"" . lyskom-edit-toggle-secret-aux)
-      ("Växla \"anonym\"" . lyskom-edit-toggle-anonymous-aux)
-      ("Växla \"ärvd\""   . lyskom-edit-toggle-inherit-aux)
-      ("Ta bort"          . lyskom-edit-delete-aux))
-     nil)
-    (prioritize-flag-menu
-     nil
-     lyskom-prioritize-flag-toggle
-     (("Växla" . lyskom-prioritize-flag-toggle)
-      ("Sätt på" . lyskom-prioritize-flag-set)
-      ("Stäng av" . lyskom-prioritize-flag-clear))
-     nil)
-    (func
-     nil
-     lyskom-button-apply
-     nil
-     nil)
-))
-        
 
 ;;;; ================================================================
 ;;;; Tell phrases should really be configured with the default

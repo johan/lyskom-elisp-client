@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.107 2000-07-03 10:50:14 byers Exp $
+;;;;; $Id: vars.el.in,v 44.108 2000-07-05 10:14:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.107 2000-07-03 10:50:14 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.108 2000-07-05 10:14:38 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1081,7 +1081,86 @@ at random and used. This element may be a string, function or list."
   server
   inherited)
 
-(def-kom-var lyskom-button-actions nil
+(def-kom-var lyskom-button-actions
+  '((text
+     text-popup-title
+     lyskom-button-view-text
+     ((lyskom-button-view-text-action . lyskom-button-view-text)
+      (lyskom-button-review-noconversion-action . lyskom-button-review-noconversion)
+      (lyskom-button-review-tree-action . lyskom-button-review-tree)
+      (lyskom-button-find-root-action . lyskom-button-find-root)
+      (lyskom-button-comment-text-action . lyskom-button-comment-text)
+      (lyskom-button-private-comment-text-action . lyskom-button-private-comment-text)
+      (lyskom-button-mark-text-action . lyskom-button-mark-text)
+      (lyskom-button-unmark-text-action . lyskom-button-unmark-text)
+      (lyskom-button-save-text-action . lyskom-button-save-text)
+      )
+     nil
+     ;; ((nil lyskom-print-text footer lyskom-button-comment-text))
+     )
+    (conf 
+     conf-popup-title
+     lyskom-button-view-conf-presentation
+     ((lyskom-button-view-conf-presentation-action . lyskom-button-view-conf-presentation)
+      (lyskom-button-view-conf-status-action . lyskom-button-view-conf-status)
+      (lyskom-button-goto-conf-action . lyskom-button-goto-conf)
+      (lyskom-button-send-message-action . lyskom-button-send-message)
+      (lyskom-button-add-self-action . lyskom-button-add-self)
+      (lyskom-button-sub-self-action . lyskom-button-sub-self))
+     ((kom-list-news . lyskom-button-goto-conf)
+      (kom-membership . lyskom-button-goto-conf)))
+    (pers 
+     pers-popup-title
+     lyskom-button-view-pers-presentation
+     ((lyskom-button-view-pers-presentation-action . lyskom-button-view-pers-presentation)
+      (lyskom-button-view-pers-status-action . lyskom-button-view-pers-status)
+      (lyskom-button-mail-action . lyskom-button-mail)
+      (lyskom-button-send-message-action . lyskom-button-send-message))
+     nil)
+    (url 
+     url-popup-title
+     lyskom-button-open-url
+     ((lyskom-button-open-url-action . lyskom-button-open-url)
+      (lyskom-button-copy-url-action . lyskom-button-copy-url))
+     nil)
+    (info-node 
+     generic-popup-title
+     lyskom-button-goto-info-node
+     ((lyskom-button-goto-info-node-action . lyskom-button-goto-info-node))
+     nil)
+    (email
+     generig-popup-title
+     lyskom-button-open-email
+     ((lyskom-button-open-email-action . lyskom-button-open-email)
+      (lyskom-button-copy-email-action . lyskom-button-copy-email))
+     nil)
+    (aux
+     aux-popup-title
+     lyskom-button-info-aux
+     ((lyskom-button-info-aux-action . lyskom-button-info-aux)
+      (lyskom-button-delete-aux-action . lyskom-button-delete-aux))
+     nil)
+    (aux-edit-menu
+     nil
+     aux-edit-menu-text
+     ((lyskom-edit-toggle-secret-aux-action . lyskom-edit-toggle-secret-aux)
+      (lyskom-edit-toggle-anonymous-aux-action . lyskom-edit-toggle-anonymous-aux)
+      (lyskom-edit-toggle-inherit-aux-action . lyskom-edit-toggle-inherit-aux)
+      (lyskom-edit-delete-aux-action . lyskom-edit-delete-aux))
+     nil)
+    (prioritize-flag-menu
+     nil
+     lyskom-prioritize-flag-toggle
+     ((lyskom-prioritize-flag-toggle-action . lyskom-prioritize-flag-toggle)
+      (lyskom-prioritize-flag-set-action . lyskom-prioritize-flag-set)
+      (lyskom-prioritize-flag-clear-action . lyskom-prioritize-flag-clear))
+     nil)
+    (func
+     nil
+     lyskom-button-apply
+     nil
+     nil)
+    )
   "This variable defines valid button types in LysKOM. Each element is a
 list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).
 TYPE is the button type the entry defines

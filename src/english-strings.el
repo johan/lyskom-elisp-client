@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.93 2000-07-03 10:50:03 byers Exp $
+;;;;; $Id: english-strings.el,v 44.94 2000-07-05 10:14:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.93 2000-07-03 10:50:03 byers Exp $"))
+              "$Id: english-strings.el,v 44.94 2000-07-05 10:14:33 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1408,6 +1408,42 @@ You must become an active member of the conference to enter it.\n")
 
     (review-noconversion-q . "Review which text unconverted?")
     (review-commented-q . "Review the commented for which text?")
+
+
+    (lyskom-button-view-text-action . "View text")
+    (lyskom-button-review-noconversion-action . "Review unconverted")
+    (lyskom-button-review-tree-action . "Review tree")
+    (lyskom-button-find-root-action . "Review root text")
+    (lyskom-button-comment-text-action . "Write commend")
+    (lyskom-button-private-comment-text-action . "Write personal reply")
+    (lyskom-button-mark-text-action . "Mark text")
+    (lyskom-button-unmark-text-action . "Unmark text")
+    (lyskom-button-save-text-action . "Save archive copy")
+    (lyskom-button-view-conf-presentation-action . "View presentation")
+    (lyskom-button-view-conf-status-action . "View conference status")
+    (lyskom-button-goto-conf-action . "Go to conference")
+    (lyskom-button-send-message-action . "Send group message")
+    (lyskom-button-add-self-action . "Join conference")
+    (lyskom-button-sub-self-action . "Leave conference")
+    (lyskom-button-view-pers-presentation-action . "View presentation")
+    (lyskom-button-view-pers-status-action . "View user status")
+    (lyskom-button-mail-action . "Send letter")
+    (lyskom-button-send-message-action . "Send personal message")
+    (lyskom-button-open-url-action . "Open")
+    (lyskom-button-copy-url-action . "Copy")
+    (lyskom-button-goto-info-node-action . "Open")
+    (lyskom-button-open-email-action . "Send mail")
+    (lyskom-button-copy-email-action . "Copy")
+    (lyskom-button-info-aux-action . "Information")
+    (lyskom-button-delete-aux-action . "Delete")
+    (lyskom-edit-toggle-secret-aux-action . "Toggle \"secret\"")
+    (lyskom-edit-toggle-anonymous-aux-action . "Toggle \"anonymous\"")
+    (lyskom-edit-toggle-inherit-aux-action . "Toggle \"inherited\"")
+    (lyskom-edit-delete-aux-action . "Delete")
+    (lyskom-prioritize-flag-toggle-action . "Toggle")
+    (lyskom-prioritize-flag-set-action . "Set")
+    (lyskom-prioritize-flag-clear-action . "Clear")
+
     ))
 
 
