@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.1 1991-10-05 17:45:25 linus Exp $
+;;;;; $Id: english-strings.el,v 35.2 1991-10-05 18:15:29 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -25,7 +25,7 @@
 ;;;; ================================================================
 ;;;; ================================================================
 ;;;;
-;;;; File: swedish-strings.el
+;;;; File: english-strings.el
 ;;;;
 ;;;; This file contains all strings in the LysKOM elisp client.
 ;;;; Language:     English.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.1 1991-10-05 17:45:25 linus Exp $\n"))
+	      "$Id: english-strings.el,v 35.2 1991-10-05 18:15:29 linus Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Text follows this line, Submit: C-c C-c, Kill: C-c C-k, Help: C-h m ---"
