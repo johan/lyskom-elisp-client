@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.15 1991-10-28 10:44:45 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 35.16 1991-10-28 22:31:21 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.15 1991-10-28 10:44:45 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.16 1991-10-28 22:31:21 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -392,6 +392,8 @@ Lyskom-sessionen är avslutad.
     (does-not-exist . "Detta kommando finns inte.")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
+    (buggreport-compilestart . "Compiling...")
+    (buggreport-compileend . "Compiling...done")
     (buggreport-description . "Detta gjorde jag:
 (Fyll i dina kommenarer)\n\n\n
 N{r du skrivit klart skall du skicka in din buggrapport till
@@ -403,13 +405,14 @@ Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN.
 M{rk kuvertet LysKOM buggrapport.\n\n")
     (buggreport-internals . "LysKOMs interna information:\n\n")
     (buggreport-version . "lyskom-version:")
-    (buggreport-pending-calls . "lyskom-pending-calls:")
-    (buggreport-call-data . "\nlyskom-call-data:")
+    (buggreport-emacs-version . "emacs-version:")
+    (buggreport-system-id . "system-id:")
+    (buggreport-ctl-arrow-doc . "ctrl-doc:")
     (buggreport-unparsed . "\nlyskom-unparsed-buffer:")
-    (buggreport-reading-list . "\nlyskom-reading-list:")
-    (buggreport-to-do-list . "\nlyskom-to-do-list:")
+    (buggreport-command-keys . "Nyss tryckta tangenter:")
     (buggreport-backtrace . "\n*Backtrace*:\n%#1s\n")
     (buggreport-communications . "\nlyskom-debug-communications-to-buffer-buffer:")
+    (buggreport-all-kom-variables . "\n\nAndra variabler:\n***** *********")
     (buggreport-instead-of-byte-comp . "byte-code(\"byte-string\"")
     (buggreport-subject . "Bugg-rapport elisp-klienten version %#1s")
 

@@ -1,3 +1,8 @@
+Mon Oct 28 23:29:39 1991  Linus Tolke Y  (linus at lysator)
+
+	* commands2.el, swedish-strings.el (kom-compile-bug-report):
+	  Rewritten to provide us with more information.
+
 Mon Oct 28 11:39:21 1991  Per Cederqvist  (ceder at robin)
 
 	* swedish-strings.el (lyskom-edit-mode-map): kom-edit-add-copy
