@@ -1,3 +1,9 @@
+Tue Aug 31 12:23:25 1993  Linus Tolke Y  (linus@astrid)
+
+	* completing-read.el (lyskom-read-conf-name): Works with emacs-18.
+	(lyskom-read-conf-name-internal): Works correctly when complete
+	but not unique.
+
 Fri Aug 20 09:56:47 1993  Linus Tolke Y  (linus@dell)
 
 	* startup.el (lyskom-start-anew-create-handler,
