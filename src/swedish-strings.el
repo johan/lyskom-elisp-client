@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.235 2002-04-27 18:30:33 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.236 2002-04-28 14:06:25 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.235 2002-04-27 18:30:33 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.236 2002-04-28 14:06:25 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -601,6 +601,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-membership-line . "%#1s%#2M %#3s\n")
     (conf-membership-line-2 . "                            Adderad %#1s av %#2P\n")
     (pers-for-status . "Vem vill du se statusen för? ")
+    (text-to-see-author-status-of . "Vilken texts författare vill du statusen för? ")
     (no-such-pers . "Det finns ingen sådan person.\n")
     (pers-status-record . "Status för person %#1P (%#1p)\n")
     (created-time .  "Skapad:%34#1s\n\n")

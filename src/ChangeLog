@@ -1,3 +1,12 @@
+2002-04-28  Johan Sundström  <jhs@lysator.liu.se>
+
+	* commands2.el (kom-status-person): When a prefix argument is
+	given, review the presentation of the author of that text (as given
+	by lyskom-read-text-no-prefix-arg), otherwise behave as usual.
+
+	* swedish-strings.el, english-strings.el (lyskom-message): 
+	Added text-to-see-author-status-of.
+
 2002-04-28  David Byers  <david.byers@swipnet.se>
 
 	* header.el: When detecting a buggy read-kbd-macro, attempt to

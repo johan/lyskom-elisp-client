@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.124 2002-04-27 21:21:55 ceder Exp $
+;;;;; $Id: commands2.el,v 44.125 2002-04-28 14:06:25 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.124 2002-04-27 21:21:55 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.125 2002-04-28 14:06:25 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -351,11 +351,16 @@ otherwise: the conference is read with lyskom-completing-read."
 ;;; Heavily enhanced: Inge Wallin (lyskom-status-pers-3 and beyond)
 
 
-(def-kom-command kom-status-person (&optional pers-no)
-  "Prints status for a person."
-  (interactive)
+(def-kom-command kom-status-person (&optional text-or-pers-no)
+  "Prints status for a person. If a prefix argument is given, the status of the
+author of that text will be shown."
+  (interactive (and current-prefix-arg ; only peek at textno:s when prefixed!
+		    (list (lyskom-read-text-no-prefix-arg
+			   'text-to-see-author-status-of))))
   (let ((pers-no
-         (or pers-no
+         (or (when (interactive-p)
+	       (text-stat->author (blocking-do 'get-text-stat text-or-pers-no)))
+	     text-or-pers-no
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
                                   '(pers) nil "" t)))
         (kom-print-seconds-in-time-strings nil)
