@@ -1,3 +1,8 @@
+Tue Aug  4 08:07:14 1992  Linus Tolke Y  (linus@robin)
+
+	* reading.el (lyskom-enter-map-in-to-do-list): 0 is removed, not
+	  substituted with nil.
+
 Mon Aug  3 05:55:46 1992  Linus Tolke Y  (linus@robin)
 
 	* swedish-string.el (lyskom-mode-map): ]terse urinl{gget added on

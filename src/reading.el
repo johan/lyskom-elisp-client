@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 35.1 1992-07-30 19:49:26 linus Exp $
+;;;;; $Id: reading.el,v 35.2 1992-08-04 07:41:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 35.1 1992-07-30 19:49:26 linus Exp $\n"))
+	      "$Id: reading.el,v 35.2 1992-08-04 07:41:23 linus Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat)
@@ -57,9 +57,8 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
 			       (mapcar
 				(function
 				 (lambda (k)
-				   (if (zerop k) nil k)))
-				list) 
-			       nil)))))
+				   (if (zerop k) nil (list k))))
+				list))))))
 	    (read-list-enter-read-info info lyskom-to-do-list)
 	    (setq list nil)))))))
 
