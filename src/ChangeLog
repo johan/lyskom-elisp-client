@@ -1,3 +1,18 @@
+Sun Oct 29 07:30:14 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (skip-first-zeros): Ny funktion.
+
+	* commands1.el
+	   (kom-add-member,kom-add-self,lyskom-add-member-by-no,
+	   lyskom-try-add-member,lyskom-add-membership): Skrev om
+	   blockande, och ser till att uppdatera
+	   lyskom-last-conf-received. 
+	   (kom-sub-member,kom-sub-self,lyskom-sub-member): Flyttade
+	   lyskom-end-of-command till de f|rsta tv}.
+
+	* cache.el (cache-initiate-who-info-buffer): Bytte kom-buffer mot
+	   lyskom-buffer.
+
 Sat Oct 28 08:27:02 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* clienttypes.el: Bytte ut en del defun mot defsubst.
