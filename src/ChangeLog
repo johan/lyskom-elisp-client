@@ -1,5 +1,11 @@
 Sun Jan  4 01:42:08 1998  David Kågedal  <davidk@lysator.liu.se>
 
+	* services.el (lyskom-ok-to-send-new-calls): Ny variabel
+	(blocking-return,blocking-do): Sätt den.
+
+	* internal.el (lyskom-check-output-queues): Kolla
+	lyskom-ok-to-send-new-calls.
+
 	* utilities.el (lyskom-next-apo-timeout): Gjorde om till en defun.
 	(lyskom-reset-apo-timeout): Dito.
 	(lyskom-accept-process-output): Dito.

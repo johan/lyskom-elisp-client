@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.11 1997-11-30 17:19:29 byers Exp $
+;;;;; $Id: services.el,v 44.12 1998-01-04 14:42:15 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.11 1997-11-30 17:19:29 byers Exp $\n"))
+	      "$Id: services.el,v 44.12 1998-01-04 14:42:15 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1119,9 +1119,21 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
 (defvar lyskom-blocking-return nil
   "Return from blocking-do.")
 
+;; This variable is used to prevent "starvation" of the blocking-do call.
+;; When there are heavy prefetch going on in the background and a
+;; blocking-do call is made there is a good chance that the
+;; accept-process-output call will not return within a reasonable
+;; time, because there will always be data to read from the server,
+;; which means that Emacs will call lyskom-filter instead of returning
+;; from accept-process-output.
+(defvar lyskom-ok-to-send-new-calls t
+  "This variable controls whether calls are passed to the server.
+If it is nil, all outgoing calls are inhibited.")
+
 (defun blocking-return (retval)
   "Sets blocking variable."
-  (setq lyskom-blocking-return retval))
+  (setq lyskom-blocking-return retval
+	lyskom-ok-to-send-new-calls nil))
 
 (defun blocking-do (command &rest data)
   "Does the COMMAND agains the lyskom-server and returns the result.
@@ -1144,11 +1156,21 @@ or get-text-stat."
 				  (symbol-name command)))
 	     'blocking 'blocking-return
 	     data)
+
+      ;; This should not be necessary, but for robustness sake...
+      ;; There are occasions when it is needed.
+      (setq lyskom-ok-to-send-new-calls t)
+
       (while (and (eq lyskom-blocking-return 'not-yet-gotten)
 		  (memq (process-status lyskom-proc) '(open run))
 		  ;; The following test should probably be removed
 		  (not lyskom-quit-flag))
         (lyskom-accept-process-output))
+
+      ;; OK to continue with prefetch and stuff again
+      (setq lyskom-ok-to-send-new-calls t)
+      (lyskom-check-output-queues)
+      
       (if (or lyskom-quit-flag quit-flag)
           (signal 'quit nil))
       (setq lyskom-quit-flag nil)
