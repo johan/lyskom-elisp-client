@@ -1,5 +1,5 @@
-#
-# $Id: Makefile,v 38.8 1995-10-23 11:55:09 byers Exp $
+# -*- Makefile -*-
+# $Id: Makefile,v 38.9 1995-10-28 07:36:21 davidk Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.8 1995-10-23 11:55:09 byers Exp $
+# $Id: Makefile,v 38.9 1995-10-28 07:36:21 davidk Exp $
 #
 
 CLIENTVERSION = 0.39
@@ -75,7 +75,6 @@ vars.elc: vars.el macros.elc
 
 macros.elc: macros.el
 	$(EMACS-BATCH) -f batch-byte-compile $*.el
-	
 
 # influenced by autoconf? Yes.
 vars.el: vars.el.in Makefile
@@ -126,7 +125,7 @@ installatlysator: lyskom-$(CLIENTVERSION).elc lyskom.el
 
 lyskom-$(CLIENTVERSION).elc: lyskom.el
 	$(EMACS-BATCH) -f batch-byte-compile lyskom.el
-	mv lyskom.elc lyskom-$(CLIENTVERSION).elc
+	cp lyskom.elc lyskom-$(CLIENTVERSION).elc
 
 lyskom.elc-compatibility: lyskom.el
 	$(EMACS-BATCH) -l ./compatibility.el -f batch-byte-compile lyskom.el
