@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.13 1996-07-23 13:17:25 byers Exp $
+;;;;; $Id: swedish-strings.el,v 41.14 1996-07-25 06:53:19 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.13 1996-07-23 13:17:25 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.14 1996-07-25 06:53:19 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -770,8 +770,8 @@ Skicka en bugrapport.\n")
 
     ; From lyskom-rest.el:
 
-    (mode-line-unread . " Ol\344sta")
-    (mode-line-letters . " brev")
+    (mode-line-unread . " Ol\344sta ")
+    (mode-line-letters . "brev ")
 
     (error-code . "Felkod %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")

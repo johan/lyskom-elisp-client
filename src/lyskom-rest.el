@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.15 1996-07-23 13:17:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.16 1996-07-25 06:53:16 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.15 1996-07-23 13:17:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.16 1996-07-25 06:53:16 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -582,10 +582,10 @@ CONF can be a a conf-stat or a string."
 			    (read-info->conf-stat (car read-info-list))))
 			(setq letters len))
 		    (setq total-unread (+ total-unread len))))
-	      (setq read-info-list (cdr read-info-list))))))
+	      (setq read-info-list (cdr read-info-list)))))
       (if (= unread -1)
 	  (setq unread 0))
-
+      
       (if (null name)
 	  nil
 	(setq mode-line-conf-name 
@@ -603,20 +603,20 @@ CONF can be a a conf-stat or a string."
 	(if (not kom-emacs-knows-iso-8859-1)
 	    (setq mode-line-conf-name
 		  (iso-8859-1-to-swascii mode-line-conf-name))))
-
+      
       (if (zerop total-unread)
 	  (setq lyskom-sessions-with-unread
 		(delq lyskom-proc lyskom-sessions-with-unread))
-	(or (assq lyskom-proc lyskom-sessions-with-unread)
+	(or (memq lyskom-proc lyskom-sessions-with-unread)
 	    (setq lyskom-sessions-with-unread
 		  (cons lyskom-proc lyskom-sessions-with-unread))))
       (if (zerop letters)
 	  (setq lyskom-sessions-with-unread-letters
 		(delq lyskom-proc lyskom-sessions-with-unread-letters))
-	(or (assq lyskom-proc lyskom-sessions-with-unread-letters)
+	(or (memq lyskom-proc lyskom-sessions-with-unread-letters)
 	    (setq lyskom-sessions-with-unread-letters
 		  (cons lyskom-proc lyskom-sessions-with-unread-letters)))))
-  (force-mode-line-update))
+    (force-mode-line-update)))
 
 
 ;;; ================================================================
@@ -2490,7 +2490,8 @@ from the value of kom-tell-phrases-internal."
 
 
 (or (memq 'lyskom-unread-mode-line global-mode-string)
-    (nconc global-mode-string (list 'lyskom-unread-mode-line)))
+    (setq global-mode-string
+	  (append '("" lyskom-unread-mode-line) global-mode-string)))
 (setq lyskom-unread-mode-line
       (list (list 'lyskom-sessions-with-unread 
 		  (let ((str (lyskom-get-string 'mode-line-unread)))
@@ -2501,7 +2502,8 @@ from the value of kom-tell-phrases-internal."
 		  (let ((str (lyskom-get-string 'mode-line-letters)))
 		    (if kom-emacs-knows-iso-8859-1
 			str
-		      (iso-8859-1-to-swascii str))))))
+		      (iso-8859-1-to-swascii str))))
+	    " "))
 		 
 
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.11 1996-07-23 13:16:39 byers Exp $
+;;;;; $Id: commands1.el,v 41.12 1996-07-25 06:53:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.11 1996-07-23 13:16:39 byers Exp $\n"))
+	      "$Id: commands1.el,v 41.12 1996-07-25 06:53:09 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -890,7 +890,7 @@ Don't ask for confirmation."
     (initiate-logout 'main nil)
     (setq lyskom-sessions-with-unread
 	  (delq lyskom-proc lyskom-sessions-with-unread))
-    (setq lyskom-sessions-with-unread
+    (setq lyskom-sessions-with-unread-letters
 	  (delq lyskom-proc lyskom-sessions-with-unread-letters))
     (set-process-sentinel lyskom-proc nil)
     (delete-process lyskom-proc)
