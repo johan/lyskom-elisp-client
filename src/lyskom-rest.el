@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.150 2002-04-14 15:15:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.151 2002-04-16 07:41:02 davidk Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.150 2002-04-14 15:15:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.151 2002-04-16 07:41:02 davidk Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -426,7 +426,7 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				    priority
 				    is-review-tree
 				    (not is-review)
-				    (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))))
+				    (memq type '(REVIEW REVIEW-MARK))))
 	    (if mark-as-read
 		(lyskom-is-read text-no)
 	      (read-list-delete-text nil lyskom-reading-list)
