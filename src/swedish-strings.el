@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.105 2000-03-11 15:11:11 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.106 2000-03-15 17:15:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.105 2000-03-11 15:11:11 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.106 2000-03-15 17:15:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1052,6 +1052,7 @@ Du bör sätta den till ett bättre värde.\n")
 Lyskom-sessionen onormalt stängd.
 Felmeddelande: %#1s**************************************************")
     (dead-session . "LysKOM-sessionen är inte aktiv.")
+    (not-lyskom-buffer . "Detta är inte en aktiv LysKOM-session.")
     (error-not-found . "Fel nummer %#1d. Ingen klartextförklaring finns.")
 
     ;; Useful in more place than one:
@@ -1392,6 +1393,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (you-are-nonanonymous . "Du är inte längre anonym.\n")
     (you-are-already-anonymous . "Du är redan någorlunda anonym.\n")
     (you-are-already-nonanonymous . "Du är redan icke-anonym.\n")
+
+    (start-keep-alive . "Sänder data %#1d sekunders mellanrum för att hålla förbindelsen aktiv.")
+    (stop-keep-alive . "Data sänds inte längre för att hålla förbindelsen aktiv.")
 ))
 
 
@@ -1551,6 +1555,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-review-mail-headers  . "Återse brevhuvud")
     (kom-become-anonymous     . "Bli anonym")
     (kom-become-nonanonymous  . "Bli icke-anonym (träd fram ur skuggorna)")
+
+    (kom-keep-alive           . "Håll förbindelsen aktiv")
+    (kom-stop-keep-alive      . "Avbryt håll förbindelsen aktiv")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
@@ -3044,6 +3051,11 @@ i servern. Annars sparas det i din .emacs.")
   ett mötesnamn eller ett mötesnummer vid inläsning av mötesnamn, så
   tolkar klienten det i första hand som ett nummer. När detta är avslaget
   så tolkas det i första hand som ett mötesnamn.")
+    (kom-keep-alive-interval-doc . "\
+  Antalet sekunder som skall gå mellan de meddelanden som används för att
+  hålla nätverkskopplingen till LysKOM-servern aktiv. Om din förbindelse
+  kopplar ned efter en stunds inaktivitet så kan du sätta detta till ungefär 
+  hälften och sedan ge kommandot \"Håll förbindelsen aktiv\".")
 
 
     ;;
@@ -3192,6 +3204,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-server-priority-tag . "Sessionsprioritet")
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn")
+    (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång")
     )
 )
 

@@ -1,5 +1,27 @@
 2000-03-15  David Byers  <davby@ida.liu.se>
 
+	* option-edit.el (lyskom-create-widget): Use `-' and not `!' in
+	help button when documentation is visible.
+	(lyskom-customize-buffer-format): Added kom-keep-alive-interval.
+	(lyskom-custom-variables): Ditto.
+
+	* command.el (lyskom-start-of-command): Print special message if
+	called in something that does not look like it has ever been a
+	LysKOM buffer.
+
+	* commands2.el (lyskom-keep-alive-timers): New variable.
+	(lyskom-keep-alive-callback): New function.
+	(kom-keep-alive): New command.
+	(lyskom-keep-alive): New function.
+	(kom-stop-keep-alive): New command.
+	(lyskom-stop-keep-alive): New function.
+
+	* vars.el.in (kom-keep-alive-interval): New variable.
+
+	* lyskom-rest.el (lyskom-debug-insert): Fixed bug that caused
+	debug output to be inserted in LysKOM buffer (took five seconds to
+	do, has been put off for *years*).
+
 	* Release av 0.46-BETA-H
 
 	* view-text.el (lyskom-format-mx-author): Make mx-from clickable.

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.95 2000-03-15 15:45:10 byers Exp $
+;;;;; $Id: vars.el.in,v 44.96 2000-03-15 17:15:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.95 2000-03-15 15:45:10 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.96 2000-03-15 17:15:52 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -662,6 +662,9 @@ various LysKOM elements.")
 A number means wrap articles shorter than the number (in bytes)."
   server)
 
+(def-kom-var kom-keep-alive-interval 180
+  "*The number of seconds between periodic requests used to keep the session alive"
+  server)
 
 ;;;
 ;;; lyskom-button-actions has been moved to swedish-strings.el on account
@@ -1253,6 +1256,9 @@ Users are encouraged to use their best sense of humor."
     kom-review-mail-headers
     kom-become-anonymous
     kom-become-nonanonymous
+
+    kom-keep-alive
+    kom-stop-keep-alive
     ))
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.98 2000-03-03 15:01:29 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.99 2000-03-15 17:15:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.98 2000-03-03 15:01:29 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.99 2000-03-15 17:15:45 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3225,6 +3225,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(save-excursion
 	  (save-selected-window
 	    (select-window win)
+            (set-buffer buf)
 	    (let ((move (eobp)))
 	      (save-excursion
 		(goto-char (point-max))
