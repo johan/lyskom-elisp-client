@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.35 2000-09-09 11:59:21 byers Exp $
+;;;;; $Id: command.el,v 44.36 2000-09-09 12:01:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.35 2000-09-09 11:59:21 byers Exp $\n"))
+	      "$Id: command.el,v 44.36 2000-09-09 12:01:11 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -237,8 +237,8 @@
        (setq name (lyskom-read-from-minibuffer prompt
 					       nil
 					       lyskom-command-completion-map
-					       'lyskom-command-history
 					       nil
+					       'lyskom-command-history
 					       t)))
      (lyskom-lookup-command-by-name name (lambda (alt)
                                            (lyskom-ok-command 
