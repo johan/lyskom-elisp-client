@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.7 2003-05-04 17:23:29 byers Exp $
+;;;;; $Id: names.el,v 44.8 2003-05-04 19:24:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.7 2003-05-04 17:23:29 byers Exp $\n"))
+	      "$Id: names.el,v 44.8 2003-05-04 19:24:55 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -2107,7 +2107,7 @@ texten på rätt språk."
                                 (2 . ("Aamu" "Jemina"))
                                 (3 . ("Valo"))
                                 (4 . ("Armi" "Ronja"))
-                                (5 . ("asser"))
+                                (5 . ("Asser"))
                                 (6 . ("Terhi" "Teija" "Tiia" "Tea" "Terhikki"))
                                 (7 . ("Riku" "Rikhard"))
                                 (8 . ("Laina"))
@@ -2133,10 +2133,10 @@ texten på rätt språk."
                                 (28 . ("Onni"))
                                 ))
                           (3 . (
-                                (1 . ("Alpo" "alvi" "Alpi"))
+                                (1 . ("Alpo" "Alvi" "Alpi"))
                                 (2 . ("Virve" "Virva"))
                                 (3 . ("Kauko"))
-                                (4 . ("Ari" "arsi" "Atro"))
+                                (4 . ("Ari" "Arsi" "Atro"))
                                 (5 . ("Laila" "Leila"))
                                 (6 . ("Tarmo"))
                                 (7 . ("Tarja" "Taru"))
@@ -2207,7 +2207,7 @@ texten på rätt språk."
                                 (7 . ("Helmi" "Kastehelmi"))
                                 (8 . ("Heino"))
                                 (9 . ("Timo"))
-                                (10 . ("aino" "Aina" "ainikki"))
+                                (10 . ("Aino" "Aina" "ainikki"))
                                 (11 . ("Osmo"))
                                 (12 . ("Liotta"))
                                 (13 . ("Kukka" "Floora"))
@@ -2216,7 +2216,7 @@ texten på rätt språk."
                                 (16 . ("Esteri" "Essi" "Ester"))
                                 (17 . ("Maila" "Maili" "Mailis" "Rebekka"))
                                 (18 . ("Erkki" "Eero" "Eerikki" "Eerika"))
-                                (19 . ("Emilia" "emma" "emmi" "Milla" "Milja" "Milka" "Amalia"))
+                                (19 . ("Emilia" "Emma" "Emmi" "Milla" "Milja" "Milka" "Amalia"))
                                 (20 . ("Lilja" "Karoliina" "Lilli"))
                                 (21 . ("Kosti" "Konsta" "Konstantin"))
                                 (22 . ("Hemmikki" "Hemmo"))
@@ -2618,7 +2618,7 @@ Namnsdagar enligt någon finlandssvenskt namnlängd."
                                 (25 . ("Urban"))
                                 (26 . ("Vilhelmina" "Minna"))
                                 (27 . ("Ingeborg"))
-                                (28 . ("alma"))
+                                (28 . ("Alma"))
                                 (29 . ("Orvar" "Oliver" "Olivia"))
                                 (30 . ("Rurik"))
                                 (31 . ("Helge" "Helga"))
@@ -3768,7 +3768,7 @@ språk."
                                 (14 . ("Martti" "Tuomi"))
                                 (15 . ("Ari" "Rohkima" "Runo"))
                                 (16 . ("Irina" "Irinja" "Irja" "Rauha" "Lempi" "Leonid" "Heini" "Aliisa"))
-                                (17 . ("Simeoni" "Simana" "aake" "Sosima"))
+                                (17 . ("Simeoni" "Simana" "Aake" "Sosima"))
                                 (18 . ("Johannes" "Juhani" "Hannele" "Hanni"))
                                 (19 . ("Johannes" "Juhani" "Juha" "Nuutti"))
                                 (20 . ("Feodor" "Heikki" "Aleksanteri" "Ale"))
@@ -3874,7 +3874,7 @@ språk."
                                 (23 . ("Rohkima" "Runo" "Viljo" "Tuukka"))
                                 (24 . ("Kristiina" "Kirsti" "Kirsi" "Tiina" "Boris"))
                                 (25 . ("Anna" "Anni" "Piia" "Ruusa"))
-                                (26 . ("Jorma" "Jarmo" "Paraske" "eeva"))
+                                (26 . ("Jorma" "Jarmo" "Paraske" "Eeva"))
                                 (27 . ("Leimo" "Pauno"))
                                 (28 . ("Timo"))
                                 (29 . ("Tea" "Teija" "Serafiima" "Fiina"))
@@ -3902,7 +3902,7 @@ språk."
                                 (18 . ("Lauri"))
                                 (19 . ("Antti" "Antero"))
                                 (20 . ("Samuel" "Samuli"))
-                                (21 . ("Tatu" "Assi" "Usko" "Avrami" "aapo"))
+                                (21 . ("Tatu" "Assi" "Usko" "Avrami" "Aapo"))
                                 (22 . ("Ake" "Laila"))
                                 (23 . ("Reino"))
                                 (24 . ("Tyko" "Siiri" "Sirkka"))
@@ -3919,7 +3919,7 @@ språk."
                                 (2 . ("Johannes" "Juhani" "Veli" "Veikko"))
                                 (3 . ("Anto" "Isto" "Ari" "Viici"))
                                 (4 . ("Mooses" "Irma" "Irmeli"))
-                                (5 . ("Sakari" "Elisabet" "Liisa" "Elisa" "elsa"))
+                                (5 . ("Sakari" "Elisabet" "Liisa" "Elisa" "Elsa"))
                                 (6 . ("Raisa" "Raija"))
                                 (7 . ("Johannes" "Juhani" "Juha"))
                                 (8 . ("Maria" "Mari" "Maija" "Marjatta" "Meeri"))
