@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.48 1999-06-22 13:36:59 byers Exp $
+;;;;; $Id: english-strings.el,v 44.49 1999-06-23 12:25:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.48 1999-06-22 13:36:59 byers Exp $"))
+              "$Id: english-strings.el,v 44.49 1999-06-23 12:25:27 byers Exp $"))
 
 
 ;;; ================================================================
@@ -292,12 +292,25 @@ Send a letter to  %#2P to apply for membership.\n")
 --------------------------------------------
   LysKOM session finished
   You are now disconnected from the server
---------------------------------------------\n")
+--------------------------------------------
+")
+    (session-ended-long . "
+-------------------------------------------------------------------------------
+  LysKOM session finished
+  You are now disconnected from the server
+-------------------------------------------------------------------------------
+")
     (session-auto-ended . "
 ============================================================
 Disconnecting from LysKOM since all connections are in use
 and you have finished reading. Please come back later.
 ============================================================\n\n")
+    (session-auto-ended-long . "
+===============================================================================
+Disconnecting from LysKOM since all connections are in use
+and you have finished reading. Please come back later.
+===============================================================================
+\n")
     (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
     (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
@@ -351,11 +364,14 @@ and you have finished reading. Please come back later.
     (text-to-move . "Which text do you want to move: ")
     (text-to-add-comment-to . "Add comment to which article:")
     (text-to-delete-comment-from . "Remove comment from which article:")
+    (text-to-add-footnote-to . "Add footnote to which article:")
+    (text-to-delete-footnote-from . "Remove footnote from which article:")
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M...")
     (add-member-in . "Adding %#1P as a member of %#2M...")
     (unsubscribe-to . "Leaving %#1M...")
+    (passivate-done . "You are now a passive member of %#1M.\n")
 
     (exclude-from . "Removing %#1P from %#2M...")
 
@@ -414,8 +430,12 @@ Read all about it at http://www.lysator.liu.se/history/")
     (moving-name . "Moving text %#3n from %#1M to %#2M...")
     (text-to-add-q . "Add which article as a comment? ")
     (text-to-remove-q . "Remove which article as a comment? ")
+    (text-to-add-footn-q . "Add which article as a footnote? ")
+    (text-to-remove-footn-q . "Remove which article as a footnote? ")
     (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
     (sub-comment-to . "Removing article %#1n as a comment to article %#2n...")
+    (add-footnote-to . "Adding article %#1n as a footnote to text %#2n...")
+    (sub-footnote-to . "Removing article %#1n as a footnote to article %#2n...")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
     (comment-all-relevant-p . "There are multiple recipients. Are they all relevant? ")
     (please-edit-recipients . "Modify the recipient list and send the article again.")
@@ -522,19 +542,33 @@ Read all about it at http://www.lysator.liu.se/history/")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
     (his-total-unread . "\n%#1M has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
-    (message-sent-to-user .
-     "================================================================
+    (message-sent-to-user . "\
+================================================================
 Your message for %#2M:
 
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-sent-to-all . 
-     "================================================================
+    (message-sent-to-all . "\
+================================================================
 Your public message:
 
 %#1t
 ----------------------------------------------------------------
+")
+    (message-sent-to-user-long . "\
+===============================================================================
+Your message for %#2M:
+
+%#1t
+-------------------------------------------------------------------------------
+")
+    (message-sent-to-all-long . "\
+===============================================================================
+Your public message:
+
+%#1t
+-------------------------------------------------------------------------------
 ")
     (message-use-alarm-instead . "Use %#1s to send alarm messages.\n")
     (message-all-info . "Send alarm\n")
@@ -774,6 +808,14 @@ but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
 for an article.
 ===========================================================\n")
+    (lyskom-is-full-long . "\
+===============================================================================
+Message from the LysKOM-system: Somebody tried to connect,
+but failed since all connections available to LysKOM are in
+use. Please leave and return later if you are just waiting
+for an article.
+===============================================================================
+")
     (has-entered . "%#1:P has entered %#2s.")
     (has-entered-r . "%#2@%#1P has entered %#3s.\n")
     (has-left . "%#1:P has left %#2s.")
@@ -785,27 +827,49 @@ for an article.
     (have-become-member . "You have become a member of %#1M\n")
 
 
-    (message-broadcast .
-"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-broadcast . "\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Alarm from %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-from . 
-"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-broadcast-long . "\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Alarm from %#1P (%#3s):
+
+%#2t
+-------------------------------------------------------------------------------
+")
+    (message-from . "\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Personal message from %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-from-to .
-"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-from-long . "\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Personal message from %#1P (%#3s):
+
+%#2t
+-------------------------------------------------------------------------------
+")
+    (message-from-to ."\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Group message to %#3M\nfrom %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------
-")    (text-is-created . "Article %#1n has been created!")
+")
+    (message-from-to-long ."\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Group message to %#3M\nfrom %#2P (%#4s):
+
+%#1t
+-------------------------------------------------------------------------------
+")
+    (text-is-created . "Article %#1n has been created!")
 
     ; Used in mode-line-process
     (mode-line-waiting . ": waiting")
@@ -837,7 +901,7 @@ Group message to %#3M\nfrom %#2P (%#4s):
     (prioritize-help .
 "u,n Move conference, SPC select, p prioritize selection, q quit, C-h m help")
     (your-priorities . " Priority   Conference
-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 ")
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
@@ -1003,6 +1067,11 @@ Error message: %#1s**************************************************")
 %#1t
 ----------------------------------------------------------------------
 ")
+    (ansaphone-message-long . "Ansaphone message:
+-------------------------------------------------------------------------------
+%#1t
+-------------------------------------------------------------------------------
+")
     (ansaphone-state . "The Ansaphone is %#1s.")
     (ansaphone-state-r . "The Ansaphone is now %#1s.\n")
     (ansaphone-messages-gone . "Recorded messages have been erased.")
@@ -1017,7 +1086,11 @@ Error message: %#1s**************************************************")
 %#3t
 ----------------------------------------------------------------------
 ")
-    (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
+    (remote-set-message-long . "Remote control (%#1P %#2s): Ansaphone message:
+-------------------------------------------------------------------------------
+%#3t
+-------------------------------------------------------------------------------
+")    (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
     (remote-list-messages . "Remote control (%#1P %#2s): Listed recorded messages\n")
     (remote-quit . "Remote control (%#1P %#2s): Quit\n")
 
@@ -1221,10 +1294,10 @@ By accepting the invitation you will continue to be a member of %#1M.
 If you decline the invitation you will not be a member of the conference.
 ")
     (accept-invitation . "Do you want to accept the invitation now? ")
-    (decline-invitation . "You are no longer a member of %#1M\n")
     (enter-passive . "You are a passive member of %#1M.
 You must become an active member of the conference to enter it.\n")
     (convert-passive . "Vill du bli aktiv medlem i %#1M? ")
+    (bug-secret-mship . "You are a secret member of %#1M\n")
 
     (invitation-mt-type . "invited")
     (passive-mt-type . "passive")
@@ -1373,6 +1446,9 @@ You must become an active member of the conference to enter it.\n")
     (kom-add-faq              . "Add FAQ")
     (kom-del-faq              . "Remove FAQ")
     (kom-review-faq           . "View FAQ")
+
+    (kom-sub-footnote         . "Remove footnote")
+    (kom-add-footnote         . "Add footnote")
     ))
 
 (lyskom-language-var lyskom-language-codes en

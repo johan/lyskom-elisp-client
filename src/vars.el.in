@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.67 1999-06-22 14:54:39 byers Exp $
+;;;;; $Id: vars.el.in,v 44.68 1999-06-23 12:25:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.67 1999-06-22 14:54:39 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.68 1999-06-23 12:25:29 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -880,11 +880,11 @@ at random and used. This element may be a string, function or list."
 
 (def-kom-var kom-default-language nil
   "*Which language to use for new sessions."
-  server inherited protected)
+  server 
+  inherited
+  protected)
 
-(def-kom-var lyskom-language nil
-  ;; One might extend this into a list of languages, sorted in
-  ;; preference order.
+(def-kom-var lyskom-language kom-default-language
   "The language currently in use."
   local
   inherited
