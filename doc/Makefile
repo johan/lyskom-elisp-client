@@ -1,12 +1,12 @@
 #
-# $Id: Makefile,v 41.0 1996-05-02 19:20:35 davidk Exp $
-# Copyright (C) 1991  Lysator Academic Computer Association.
+# $Id: Makefile,v 41.1 1996-08-07 16:22:53 davidk Exp $
+# Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
 # 
 # LysKOM is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by 
-# the Free Software Foundation; either version 1, or (at your option) 
+# the Free Software Foundation; either version 2, or (at your option) 
 # any later version.
 # 
 # LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -23,7 +23,11 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 41.0  1996-05-02 19:20:35  davidk
+# Revision 41.1  1996-08-07 16:22:53  davidk
+# Uppdaterade copyright.
+# Separerade install och release.
+#
+# Revision 41.0  1996/05/02 19:20:35  davidk
 # Nytt revisionsnummer: 41.0
 #
 # Revision 40.0  1996/03/26 08:28:01  byers
@@ -49,6 +53,9 @@
 # If you edit this, make sure it works afterwards also. /Linus
 
 RM = rm -f
+
+INFODIR = /usr/gnu/info
+FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 
 all: elisp-client elisp-client.txt elisp-client.dvi
 .PHONY: all
@@ -86,14 +93,16 @@ elisp-client.dvi: $(INDEXES)
 
 .PHONY: install
 install: elisp-client elisp-client.txt
-	cp elisp-client elisp-client-? /usr/gnu/info
+	cp elisp-client elisp-client-? $(INFODIR)
+
+release: elisp-client elisp-client.txt
 	(VER=`grep "^Dokumentationen uppdaterad till klient version " elisp-client.texinfo | \
 	sed -n 's/^.* version \(.*\)$$/\1/p'` ; \
 	tar cf elisp-client.info-$${VER}.tar elisp-client elisp-client-? ; \
 	gzip elisp-client.info-$${VER}.tar; \
 	gzip < elisp-client.txt > elisp-client.txt-$${VER}.gz; \
 	mv elisp-client.info-$${VER}.tar.gz elisp-client.txt-$${VER}.gz \
-	 /usr/ftp/pub/lyskom/elisp-client; )
+	 $(FTPDIR); )
 
 
 smallclean:
