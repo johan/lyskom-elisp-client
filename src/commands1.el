@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.11 1991-11-24 02:49:24 ceder Exp $
+;;;;; $Id: commands1.el,v 35.12 1992-01-06 18:50:30 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.11 1991-11-24 02:49:24 ceder Exp $\n"))
+	      "$Id: commands1.el,v 35.12 1992-01-06 18:50:30 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1009,7 +1009,7 @@ back on lyskom-to-do-list."
   (interactive)
   (lyskom-start-of-command 'kom-go-to-conf)
   (lyskom-completing-read 'main 'lyskom-go-to-conf-handler
-			  (lyskom-get-string 'go-to-conf) nil nil ""))
+			  (lyskom-get-string 'go-to-conf-p) nil nil ""))
 
 
 (defun lyskom-go-to-conf-handler (conf &optional pers-conf-stat)
