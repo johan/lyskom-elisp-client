@@ -137,13 +137,6 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 
-** Om man gör "Endast" kan klienten bete sig konstigt en kort stund,
-   och ibland får man inte läsa så många texter som man ville. Denna
-   bug har hängt med så länge som kommandot har funnits, men kommer 
-   antagligen att fixas till viss del (så man får läsa rätt antal
-   texter) så fort som jag har tid över. Don't hold your breath, med
-   andra ord.
-
 ** Under XEmacs verkar interaktion med klienten gå trögt när det
    kommer mycket data från servern. Såvitt vi kan avgöra kan vi inte
    göra något åt saken utan massiv omskrivning av hur XEmacs
