@@ -25,6 +25,11 @@ Fri Nov 29 14:50:11 1996  David Kågedal  <davidk@lysator.liu.se>
 	* startup.el (kom-start-anew): Sätt inte om lyskom-pers-no om man
  	avbröt under lösenordsinmatningen.
 
+Wed Nov 20 04:03:46 1996  David Kågedal  <kg@infovav.se>
+
+	* language.el (lyskom-languages): Ny variabel.
+	(lyskom-define-language): Sätt den.
+
 Mon Nov 11 10:06:28 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* parse.el (lyskom-parse-bitstring): Gjorde inte rätt när strängen
