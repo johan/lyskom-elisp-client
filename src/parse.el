@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.3 1996-10-06 05:18:27 davidk Exp $
+;;;;; $Id: parse.el,v 44.4 1996-10-24 09:48:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.3 1996-10-06 05:18:27 davidk Exp $\n"))
+	      "$Id: parse.el,v 44.4 1996-10-24 09:48:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -60,10 +60,7 @@
 (defun lyskom-parse-skip-rest-of-token ()
   "Skip to the next whitespace"
   (let ((c (lyskom-parse-char)))
-    (while (not (or (= c ?\ )
-                    (= c ?\n)
-                    (= c ?\t)
-                    (= c ?\r)))
+    (while (not (or (= c ?\ ) (= c ?\n)))
       (setq c (lyskom-parse-char)))))
 
 (defun lyskom-parse-nonwhite-char ()
@@ -72,7 +69,8 @@ increase lyskom-parse-pos. Signal lyskom-parse-incomplete if
 the buffer lyskom-unparsed-buffer is exhausted."
   (let ((char (lyskom-parse-char)))
     (cond
-     ((or (eq char ? ) (eq char ?\t) (eq char ?\n) (eq char ?\r))
+     ((or (= char ? )
+          (= char ?\n))
       (lyskom-parse-nonwhite-char))
      (t char))))
 
@@ -183,8 +181,8 @@ Signal lyskom-protocol-error if it was neither 1 nor 0.
 Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
   (let ((char (lyskom-parse-nonwhite-char)))
     (cond
-     ((eq char ?0) nil)
-     ((eq char ?1) t)
+     ((= char ?0) nil)
+     ((= char ?1) t)
      (t (signal 'lyskom-protocol-error
 		(list 'lyskom-parse-1-or-0 char
 		      lyskom-parse-pos
@@ -204,24 +202,20 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
                                 default (cdr default)
                                 char (lyskom-parse-char)))
             ((or (= char ?\ )
-                 (= char ?\t) 
-                 (= char ?\n)
-                 (= char ?\r)) 
-             (while default
-               (setq result (cons (car default) result))
-               (setq default (cdr default))))
+                 (= char ?\n))
+             (setq result (nconc (nreverse result) default))
+             (setq default nil))
 
             (t (signal 'lyskom-protocol-error
                        (list 'lyskom-parse-bitstring char
                              lyskom-parse-pos
                              (buffer-string))))))
     (if (not (or (= char ?\ )
-                 (= char ?\t) 
-                 (= char ?\n)
-                 (= char ?\r)))
-        (lyskom-parse-skip-rest-of-token))
-    (nreverse result)))
-
+                 (= char ?\n)))
+        (progn
+          (lyskom-parse-skip-rest-of-token)
+          (nreverse result))
+      result)))
 
 
 (defun lyskom-parse-time ()
@@ -326,9 +320,9 @@ result is assigned to the element."
   (let ((n (lyskom-parse-num))		;Number of misc-items to parse.
 	(char (lyskom-parse-nonwhite-char)))
     (cond
-     ((eq char ?*)			;Empty list.
+     ((= char ?*)			;Empty list.
       nil)
-     ((eq char ?{)			;Start of list.
+     ((= char ?{)			;Start of list.
       (prog1
 	  (lyskom-parse-misc-info-list-sub n)
 	(lyskom-expect-char ?})))
@@ -913,11 +907,11 @@ functions and variables that are connected with the lyskom-buffer."
 					; cause hard-to-repair
 					; problems
 	       (cond
-		((eq key ?=)		;The call succeeded.
+		((= key ?=)		;The call succeeded.
 		 (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		((eq key ?%)		;The call was not successful.
+		((= key ?%)		;The call was not successful.
 		 (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-		((eq key ?:)		;An asynchronous message.
+		((= key ?:)		;An asynchronous message.
 		 (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
 	       (delete-region (point-min) lyskom-parse-pos))
 	   ;; One reply is now parsed.

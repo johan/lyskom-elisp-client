@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.5 1996-10-08 17:00:33 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.6 1996-10-24 09:47:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -227,6 +227,11 @@ lyskom-text-buttons. Returns the modified string."
                                         nil
                                         (lyskom-button-get-text el text)
                                         (lyskom-button-get-face el)))
+               ((eq (elt el 1) 'email)
+                (lyskom-generate-button 'email
+                                        nil
+                                        (lyskom-button-get-text el text)
+                                        (lyskom-button-get-face el)))
                (t nil))
          text)
         (setq start (match-end 0)))
@@ -351,7 +356,16 @@ type TYPE before being send to lyskom-generate-button."
 			   (setq type 'pers))
 		       (setq xarg (conf-stat->conf-no arg)
 			     text (conf-stat->name arg)))
-		      ((numberp arg) (setq text "" xarg arg))
+		      ((numberp arg)
+                       (if (setq xarg (cache-get-conf-stat arg))
+                           (progn
+                             (if (conf-type->letterbox
+                                  (conf-stat->conf-type xarg))
+                                 (setq type 'pers))
+                             (setq text (conf-stat->name xarg))
+                             (setq xarg (conf-stat->conf-no xarg)))
+                         (setq text ""
+                               xarg arg)))
 		      (t (setq text "" xarg 0))))
 	       ((eq type 'pers)
 		(cond ((lyskom-conf-stat-p arg)
@@ -359,8 +373,17 @@ type TYPE before being send to lyskom-generate-button."
 			     text (conf-stat->name arg)))
 		      ((lyskom-pers-stat-p arg)
 		       (setq xarg (pers-stat->pers-no arg)
-			     text ""))
-		      ((numberp arg) (setq text "" xarg arg))
+			     text 
+                             (or (conf-stat->name
+                                  (cache-get-conf-stat
+                                   (pers-stat->pers-no arg)))
+                                 "")))
+		      ((numberp arg) 
+                       (setq text
+                             (or (conf-stat->name
+                                  (cache-get-conf-stat arg))
+                                 "")
+                             xarg arg))
 		      (t (setq text "" xarg 0))))
 	       ((eq type 'text)
 		(cond ((stringp arg) (setq xarg (string-to-number arg)
@@ -508,6 +531,16 @@ This is a LysKOM button action."
   (cond ((not (integerp arg)) nil)
         (t (pop-to-buffer buf)
            (kom-send-message arg nil))))
+
+(defun lyskom-button-copy-email (but arg text)
+  "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.
+This is a LysKOM button action."
+  (kill-new text))
+
+(defun lyskom-button-open-email (but arg text)
+  "In the LysKOM buffer BUF, ignore ARG and open TEXT as an e-mail address.
+This is a LysKOM button action."
+  (mail nil text))
 
 (defun lyskom-button-copy-url (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.3 1996-10-11 11:01:59 nisse Exp $
+;;;;; $Id: async.el,v 44.4 1996-10-24 09:47:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.3 1996-10-11 11:01:59 nisse Exp $\n"))
+	      "$Id: async.el,v 44.4 1996-10-24 09:47:28 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -137,8 +137,7 @@ this function shall be with current-buffer the BUFFER."
 	 (set-buffer buffer)
 	 (if (and lyskom-pers-no
 		  (not (zerop lyskom-pers-no))
-		  (/= pers-no lyskom-pers-no))
-					; Don't show myself.
+		  (/= pers-no lyskom-pers-no)) ; Don't show myself.
 	     (initiate-get-conf-stat 'follow
 				     'lyskom-show-logged-in-person
 				     pers-no))
@@ -202,17 +201,29 @@ this function shall be with current-buffer the BUFFER."
       (lyskom-skip-tokens tokens)))))
 
 
+(defsubst lyskom-show-presence (num flag)
+  "Returns non-nil if presence messages for NUM should be displayed
+according to the value of FLAG."
+  (cond ((null flag) nil)
+        ((and (listp flag)
+              (memq num flag)) t)
+        ((not (listp flag)) t)))
+
+
 (defun lyskom-show-logged-in-person (conf-stat)
   "Visa p} kommandoraden vem som loggat in."
   (cond
    ((lyskom-is-in-minibuffer))
-   (kom-presence-messages
+   ((lyskom-show-presence (conf-stat->conf-no conf-stat)
+                          kom-presence-messages)
     (lyskom-message
      "%s"
      (lyskom-format 'has-entered (or conf-stat
 				     (lyskom-get-string 'secret-person))))))
+
   (cond
-   (kom-presence-messages-in-buffer
+   ((lyskom-show-presence (conf-stat->conf-no conf-stat)
+                          kom-presence-messages-in-buffer)
     (if conf-stat
 	(lyskom-format-insert-before-prompt 'has-entered-r conf-stat
 					    (and kom-text-properties
@@ -227,13 +238,15 @@ this function shall be with current-buffer the BUFFER."
   "Visa p} kommandoraden vem som loggat ut."
   (cond
    ((lyskom-is-in-minibuffer))
-   (kom-presence-messages
+   ((lyskom-show-presence (conf-stat->conf-no conf-stat) 
+                          kom-presence-messages)
     (lyskom-message
      "%s"
      (lyskom-format 'has-left (or conf-stat
 				  (lyskom-get-string 'secret-person))))))
   (cond
-   (kom-presence-messages-in-buffer
+   ((lyskom-show-presence (conf-stat->conf-no conf-stat)
+                          kom-presence-messages-in-buffer)
     (if conf-stat
 	(lyskom-format-insert-before-prompt 'has-left-r conf-stat
 					    (and kom-text-properties
@@ -244,13 +257,14 @@ this function shall be with current-buffer the BUFFER."
 					       '(face kom-presence-face)))))))
 
 
+
 (defun lyskom-show-changed-person (personconfstat conf-num doing)
   "Tells the user what another person is doing."
   (if personconfstat			;+++ Annan felhantering
       (progn
 	(cond
-	 ((lyskom-is-in-minibuffer))
-	 ((and kom-presence-messages
+	 ((and (lyskom-show-presence (conf-stat->conf-no personconfstat)
+                                     kom-presence-messages)
 	       (or (= 0 conf-num)
 		   (eq conf-num lyskom-current-conf))
 	       (/= 0 (length doing)))
@@ -261,7 +275,8 @@ this function shall be with current-buffer the BUFFER."
 				  (substring doing 1))))
 		     string))))
 	(cond
-	 ((and (eq kom-presence-messages-in-buffer t)
+	 ((and (lyskom-show-presence (conf-stat->conf-no personconfstat)
+                                     kom-presence-messages-in-buffer)
 	       (or (= 0 conf-num)
 		   (eq conf-num lyskom-current-conf))
 	       (/= 0 (length doing)))
@@ -429,7 +444,12 @@ converted, before insertion."
 	    (eq type 'CC-RECPT))
 	;; add on lyskom-reading-list and lyskom-to-do-list if
 	;; this recipient is a recipient that has been checked.
-	(initiate-get-conf-stat 'async 'lyskom-add-new-text
+	(if (and (eq  (misc-info->recipient-no misc-info)
+                      lyskom-pers-no)
+                 (not (eq (text-stat->author text-stat)
+                          lyskom-pers-no)))
+            (lyskom-beep kom-ding-on-new-letter))
+        (initiate-get-conf-stat 'async 'lyskom-add-new-text
 				(misc-info->recipient-no misc-info)
 				(text-stat->text-no text-stat)
 				(misc-info->local-no misc-info)))

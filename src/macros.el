@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.5 1996-10-21 00:59:27 davidk Exp $
+;;;;; $Id: macros.el,v 44.6 1996-10-24 09:48:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,38 +33,9 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.5 1996-10-21 00:59:27 davidk Exp $\n"))
+	      "$Id: macros.el,v 44.6 1996-10-24 09:48:00 byers Exp $\n"))
 
 
-;;; ======================================================================
-;;; Use lyskom-provide to supply a definition that is only to be used
-;;; if no definition already exists. The definition will be evaluated at
-;;; both compile and run time.
-;;;
-;;; lyskom-provide-macros behaves like defmacro
-;;; lyskom-provide-function behaves like defun
-;;; lyskom-provide-subst behaves like defsubst
-;;;
-
-(defmacro lyskom-provide (definer name rest)
-  (` (progn (eval-when-compile 
-              (if (not (fboundp (quote (, name))))
-                  (message "Compatibility %S for %S"
-                           (quote (, definer))
-                           (quote (, name)))))
-            (eval-and-compile 
-              (if (not (fboundp (quote (, name))))
-                  ((, definer) (, name) (,@ rest)))))))
-
-(defmacro lyskom-provide-macro (name &rest rest)
-  (` (lyskom-provide defmacro (, name) (, rest))))
-
-(defmacro lyskom-provide-function (name &rest rest)
-  (` (lyskom-provide defun (, name) (, rest))))
-
-
-(defmacro lyskom-provide-subst (name &rest rest)
-  (` (lyskom-provide defsubst (, name) (, rest))))
 
 
 ;;; ======================================================================
@@ -210,56 +181,6 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 (put 'blocking-do-multiple 'lisp-indent-function 1)
 
 
-
-;;; ============================================================
-;;; General compatibility macros and functions
-;;;
-;;; These are functions that may not be available in every version of
-;;; GNU Emacs 19. Replacement functions are defined here.
-;;;
-;;; Compatibility for other Emascs version should be placed in
-;;; external compatibility files so as not to sully compilation with
-;;; too many compiler warnings.
-;;;
-
-(lyskom-provide-macro byte-code-function-p (obj)
-  (` (compiled-function-p (, obj))))
-
-(lyskom-provide-subst internal-facep (x)
-  (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
-
-(lyskom-provide-function facep (x)
-  "Return t if X is a face name or an internal face vector."
-  (and (or (and (fboundp 'internal-facep)
-                (internal-facep x))
-           (and (symbolp x) 
-                (boundp 'global-face-data)
-                (assq x global-face-data)))
-       t))
-
-
-(lyskom-provide-macro save-selected-window (&rest body)
-  "Execute BODY, then select the window that was selected before BODY."
-  (list 'let
-        '((save-selected-window-window (selected-window)))
-        (list 'unwind-protect
-              (cons 'progn body)
-              (list 'select-window 'save-selected-window-window))))
-
-(if (not (fboundp 'frame-width))
-    (fset 'frame-width 'screen-width))
-
-(lyskom-provide-function match-string (num &optional string)
-  "Return string of text matched by last search.
-NUM specifies which parenthesized expression in the last regexp.
- Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
-Zero means the entire text matched by the whole regexp or whole string.
-STRING should be given if the last search was by `string-match' on STRING."
-  (if (match-beginning num)
-      (if string
-	  (substring string (match-beginning num) (match-end num))
-	(buffer-substring (match-beginning num) (match-end num)))))
-
 ;;; ======================================================================
 ;;; These macros do magic things to the compiler to avoid gratuitous
 ;;; compiler warnings.
@@ -277,46 +198,24 @@ STRING should be given if the last search was by `string-match' on STRING."
 (defmacro lyskom-end-of-compilation ()
   (` 
    (eval-when-compile
-     (if (and (boundp 'byte-compile-unresolved-functions)
-              (consp (car-safe byte-compile-unresolved-functions))
-              (symbolp (car-safe (car-safe 
-                                  byte-compile-unresolved-functions))))
-         (mapcar (function (lambda (x)
-                             (setq byte-compile-unresolved-functions
-                                   (delq
-                                    (assq x
-                                          byte-compile-unresolved-functions)
+     (progn
+       (if (and (boundp 'byte-compile-unresolved-functions)
+                (consp (car-safe byte-compile-unresolved-functions))
+                (symbolp (car-safe (car-safe 
                                     byte-compile-unresolved-functions))))
-                 lyskom-expected-unresolved-functions)))))
-
-
-;;; ======================================================================
-;;; Definition of map-keymap that hopefully works like the one in XEmacs
-;;; except that the sort-first argument is ignored.
-;;;
-
-(lyskom-provide-function map-keymap (fn keymap &optional sort-first)
-  (let ((r 0))
-    (cond ((vectorp keymap)
-           (while (< r (length keymap))
-             (if (aref keymap r)
-                 (funcall fn r (aref keymap r)))
-             (setq r (1+ r))))
-          (t (mapcar (function 
-                      (lambda (x)
-			;; It might be an inherited keymap
-                        (if (consp x)
-			    (funcall fn (car x) (cdr x)))))
-                     (cdr keymap))))))
-
-
-(lyskom-provide-function set-keymap-parent (keymap new-parent)
-   (let ((tail keymap))
-     (while (and tail (cdr tail) (not (eq (car (cdr tail)) 'keymap)))
-       (setq tail (cdr tail)))
-     (if tail
-         (setcdr tail new-parent))))
-
+           (mapcar (function (lambda (x)
+                               (setq byte-compile-unresolved-functions
+                                     (delq
+                                      (assq x
+                                            byte-compile-unresolved-functions)
+                                      byte-compile-unresolved-functions))))
+                   lyskom-expected-unresolved-functions))
+       (if lyskom-compatibility-definitions
+           (message "Compatibility definitions: %s"
+                    (mapconcat '(lambda (sym)
+                                  (symbol-name sym))
+                               lyskom-compatibility-definitions
+                               ", ")))))))
 
 ;;; ================================================================
 ;;;         Faces
@@ -328,12 +227,8 @@ STRING should be given if the last search was by `string-match' on STRING."
 
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
-
 (provide 'lyskom-macros)
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-provide-macro 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-provide-function 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-provide-subst 'lisp-indent-hook 2)
 ;;; end: 

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.14 1996-10-21 01:07:43 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.15 1996-10-24 09:48:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.14 1996-10-21 01:07:43 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.15 1996-10-24 09:48:22 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -85,6 +85,9 @@ a string or buffer means edit in the indicated buffer.
 
 This variable is stored in the LysKOM server.")
 
+(defvar kom-customize-format 'long
+  "*Format of the customize buffer. Must be long or short.")
+
 (defvar kom-prompt-format "%s"
   "*Basic format for LysKOM prompts. Needs to be a valid format
 string. The only format specifier should be a single \"%s\", which
@@ -108,11 +111,12 @@ This variable is stored in the LysKOM server.")
 (defvar kom-prioritize-in-window nil
   "*Where to prioritize conferences. See kom-write-texts-in-window")
 
-(defvar kom-dont-restore-after-customize nil
-  "*If non-nil then don't restore the window configuration after customizing
+(defvar kom-dont-restore-window-after-customize nil
+  "*Non-nil means don't restore the window configuration after customizing
 LysKOM.")
 
-(defvar kom-dont-restore-after-prioritize nil
+
+(defvar kom-dont-restore-window-after-prioritize nil
   "*If non-nil then don't restore the window configuration after prioritizing
 conferences.")
 
@@ -341,6 +345,12 @@ kom-show-personal-messages-in-buffer decides which buffer to pop.
 
 This variable is stored in the LysKOM server.")
 
+(defvar kom-ding-on-new-letter nil
+  "*Non-nil means ding if a message arrives in the letter box. See 
+kom-ding-on-priority-break for valid values.
+
+This variable is stored in the LysKOM server.")
+
 (defvar kom-ding-on-priority-break 1
   "*Non-nil means ding if a higher priority text or conference breaks in.
 A number means the number of times to ding. A string is an argument for the
@@ -456,6 +466,11 @@ This variable is not saved in the LysKOM server.")
 \"<>|\\]*[^\t \012
 \"<>|.,!(){}?'`]" 
      url 0 nil kom-url-face)
+
+    ;; Email
+
+    ("[^()<>@,;:\"\\\\ - ]+@\\S-+\\(\\.[^ - <>;,.'\"!:?)]+\\)+"
+     email 0 0 kom-url-face)
 
     ;; JySKom enhancements
 
@@ -766,6 +781,7 @@ This variable is stored in the LysKOM server.")
       lyskom-z-lookup-flag
       lyskom-server-supports
       lyskom-collate-table
+      lyskom-server-name
       lyskom-language
       )
     "Variables that all buffers associated with a LysKOM buffer inherit."))
@@ -902,6 +918,7 @@ This variable is stored in the LysKOM server.")
 (defconst lyskom-elisp-variables
   '(kom-permissive-completion
     kom-bury-buffers
+    kom-ding-on-new-letter
     kom-ding-on-personal-messages
     kom-ding-on-group-messages
     kom-ding-on-common-messages
@@ -928,6 +945,7 @@ This variable is stored in the LysKOM server.")
     kom-write-texts-in-window
     kom-prioritize-in-window
     kom-customize-in-window
+    kom-customize-format
     kom-cite-string
     kom-remote-control
     kom-remote-controllers
@@ -1275,7 +1293,7 @@ article in one of the first lyskom-fetch-membership-length conferences.
 
 This variable is not saved in the LysKOM server.")
 
-(defvar lyskom-prefetch-limit 1
+(defvar lyskom-prefetch-limit 10
   "Number of prefetch requests the client will try to keep going
 at a time.")
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.6 1996-10-11 11:11:26 nisse Exp $
+;;;;; $Id: commands2.el,v 44.7 1996-10-24 09:47:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.6 1996-10-11 11:11:26 nisse Exp $\n"))
+	      "$Id: commands2.el,v 44.7 1996-10-24 09:47:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -610,7 +610,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   (interactive "P")
   (setq conf-no (or conf-no lyskom-current-conf))
   (if (and (zerop lyskom-current-conf) (null conf-no))
-      (lyskom-insert-string 'not-present-anywhere)
+      (progn
+        (lyskom-insert-string 'not-present-anywhere)
+        (lyskom-insert-string "\n"))
     (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
       (if (null conf-stat)              ;+++ annan errorhantering
           (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
