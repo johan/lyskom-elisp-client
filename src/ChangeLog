@@ -1,3 +1,10 @@
+2002-09-22  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* lyskom-rest.el (lyskom-minimum-triangle-size): This was formerly
+	named lyskom-minimum-triagle-size, with a spelling error in the
+	"triangle".
+	(lyskom-fill-message): Updated for the above change.
+
 2002-09-19  David Byers  <davby@metzengerstein.dyndns.org>
 
 	* Release of 0.47.1-BETA-2
