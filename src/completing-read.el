@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.9 1996-02-17 15:36:10 byers Exp $
+;;;;; $Id: completing-read.el,v 38.10 1996-02-27 09:38:53 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.9 1996-02-17 15:36:10 byers Exp $\n"))
+	      "$Id: completing-read.el,v 38.10 1996-02-27 09:38:53 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -62,7 +62,7 @@
   "Keymap used for reading LysKOM names.")
 
 
-(defun lyskom-read-conf-no (prompt type &optional empty initial)
+(defun lyskom-read-conf-no (prompt type &optional empty initial mustmatch)
   "Returns the conf-no of a conf or person read by lyskom-read-conf-name.
 The question is prompted with PROMPT.
 Only the conferences of TYPE are allowed.
@@ -74,12 +74,14 @@ The TYPE allows for subsets of the entire Lyskom-name space:
 If EMPTY is non-nil then the empty string is allowed (returns 0).
 INITIAL is the initial contents of the input field."
   (let (read)
-    (while (and (string= (setq read
-			       (lyskom-read-conf-name prompt type nil initial))
-			 "")
-		(not empty)))
+    (while (and
+            (string= 
+             (setq read
+                   (lyskom-read-conf-name prompt type mustmatch initial))
+             "")
+            (not empty)))
     (if (string= read "")
-	0
+        0
       (lyskom-read-conf-name-internal read type 'conf-no))))
 
 
@@ -93,14 +95,14 @@ The TYPE allows for subsets of the entire Lyskom-name space:
 * logins only persons that are logged in right now.
 
 If EMPTY is non-nil then the empty string is allowed (returns nil)."
-  (let ((no (lyskom-read-conf-no prompt type empty initial)))
-    (if (zerop no)
+  (let ((no (lyskom-read-conf-no prompt type empty initial t)))
+    (if (or (null no) (zerop no))
 	nil
       (blocking-do 'get-conf-stat no))))
 
 (defun lyskom-read-conf-name (prompt type 
-				     &optional mustmatch 
-				     initial)
+                                     &optional mustmatch 
+                                     initial)
   "Read a LysKOM name, prompting with PROMPT.
 The TYPE allows for subsets of the entire Lyskom-name space:
 * all
@@ -113,25 +115,25 @@ The fourth argument INITIAL is the initial contents of the input-buffer.
 
 Returns the name."
   (let* ((completion-ignore-case t)
-	 ; When lyskom-read-conf-name-internal is called the current-buffer
-	 ; is the minibuffer and the buffer-local variable lyskom-proc is not
-	 ; correct. Then the variable lyskom-blocking-process must be set
-	 ; instead. It is not buffer-local but scopes the let.
-	 (lyskom-blocking-process lyskom-proc)
-	 (minibuffer-local-completion-map 
-	  lyskom-minibuffer-local-completion-map)
-	 (minibuffer-local-must-match-map 
-	  lyskom-minibuffer-local-must-match-map))
+         ;; When lyskom-read-conf-name-internal is called the current-buffer
+         ;; is the minibuffer and the buffer-local variable lyskom-proc is not
+         ;; correct. Then the variable lyskom-blocking-process must be set
+         ;; instead. It is not buffer-local but scopes the let.
+         (lyskom-blocking-process lyskom-proc)
+         (minibuffer-local-completion-map 
+          lyskom-minibuffer-local-completion-map)
+         (minibuffer-local-must-match-map 
+          lyskom-minibuffer-local-must-match-map))
     (condition-case error
-	(completing-read prompt 
-			 'lyskom-read-conf-name-internal
-			 type
-			 mustmatch
-			 initial
-			 'lyskom-name-hist)
-      (wrong-number-of-arguments ; This is for emacs 18.
+        (completing-read prompt 
+                         'lyskom-read-conf-name-internal
+                         type
+                         mustmatch
+                         initial
+                         'lyskom-name-hist)
+      (wrong-number-of-arguments        ; This is for emacs 18.
        (completing-read prompt 'lyskom-read-conf-name-internal
-			type mustmatch)))
+                        type mustmatch)))
     ))
 
 
@@ -164,141 +166,173 @@ If third argument ALL is nil then we are called from try-completion.
 If third argument ALL is 'conf-no then we are called from lyskom name
 to conf-no translator."
   (let* ((alllogins (and (string= string "")
-			 (eq predicate 'logins)))
-	 (list (if (not alllogins)
-		   (blocking-do 'lookup-name string)))
-	 (nos (listify-vector (conf-list->conf-nos list)))
-	 (parlist (if (memq predicate '(pers confs))
-		      (let ((nos nos)
-			    (typs (listify-vector (conf-list->conf-types list)))
-			    res)
-			(while nos
-			  (setq res (cons (cons (car nos) (car typs)) res))
-			  (setq nos (cdr nos)
-				typs (cdr typs)))
-			res)))
-	 (logins (and (eq predicate 'logins)
-		      (mapcar
-		       (function (lambda (ele)
-				   (who-info->pers-no ele)))
-		       (listify-vector (blocking-do 'who-is-on)))))
-	 (mappedlist (cond
-		      (alllogins
-		       logins)
-		      ((eq predicate 'all)
-		       nos)
-		      ((eq predicate 'confs)
-		       (apply 'append 
-			(mapcar (function 
-				 (lambda (par)
-				   (and (not (conf-type->letterbox (cdr par)))
-					(list (car par)))))
-				parlist)))
-		      ((eq predicate 'pers)
-		       (apply 'append
-			(mapcar (function
-				 (lambda (par)
-				   (and (conf-type->letterbox (cdr par))
-					(list (car par)))))
-				parlist)))
-		      ((eq predicate 'logins)
-		       (let ((nos (sort nos '<))
-			     ;; We need logins later on
-			     (lis (sort (copy-sequence logins) '<))
-			     res)
-			 (while (and nos
-				     lis)
-			   (if (= (car nos) (car lis))
-			       (setq res (cons (car nos) res)))
-			   (if (> (car nos)
-				  (car lis))
-			       (setq lis (cdr lis))
-			     (setq nos (cdr nos))))
-			 res)))))
+                         (eq predicate 'logins)))
+         (list (if (not alllogins)
+                   (blocking-do 'lookup-name string)))
+         (nos (listify-vector (conf-list->conf-nos list)))
+         (parlist (if (memq predicate '(pers confs))
+                      (let ((nos nos)
+                            (typs (listify-vector 
+                                   (conf-list->conf-types list)))
+                            res)
+                        (while nos
+                          (setq res (cons (cons (car nos) (car typs)) res))
+                          (setq nos (cdr nos)
+                                typs (cdr typs)))
+                        res)))
+         (logins (and (eq predicate 'logins)
+                      (mapcar
+                       (function (lambda (ele)
+                                   (who-info->pers-no ele)))
+                       (listify-vector (blocking-do 'who-is-on)))))
+         (mappedlist (cond
+                      (alllogins
+                       logins)
+                      ((eq predicate 'all)
+                       nos)
+                      ((eq predicate 'confs)
+                       (apply 'append 
+                              (mapcar (function 
+                                       (lambda (par)
+                                         (and 
+                                          (not
+                                           (conf-type->letterbox (cdr par)))
+                                              (list (car par)))))
+                                      parlist)))
+                      ((eq predicate 'pers)
+                       (apply 'append
+                              (mapcar (function
+                                       (lambda (par)
+                                         (and (conf-type->letterbox (cdr par))
+                                              (list (car par)))))
+                                      parlist)))
+                      ((eq predicate 'logins)
+                       (let ((nos (sort nos '<))
+                             ;; We need logins later on
+                             (lis (sort (copy-sequence logins) '<))
+                             res)
+                         (while (and nos
+                                     lis)
+                           (if (= (car nos) (car lis))
+                               (setq res (cons (car nos) res)))
+                           (if (> (car nos)
+                                  (car lis))
+                               (setq lis (cdr lis))
+                             (setq nos (cdr nos))))
+                         res)))))
     (cond
+     ;;
+     ;; Called from internal name to conf-no translator
+     ;;
      ((eq all 'conf-no)
       (cond
        ((= (length mappedlist) 1)
-	(car mappedlist))
+        (car mappedlist))
        (t (let ((found nil))
-	    (while (and (not found) mappedlist)
-	      (if (string= string
-			   (conf-stat->name (blocking-do 'get-conf-stat
-							 (car mappedlist))))
-		  (setq found (car mappedlist)))
-	      (setq mappedlist (cdr mappedlist)))
-	    (cond
-	     (found)
-	     ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-			    string)
-	      (let* ((no (string-to-int (substring string
-						   (match-beginning 1)
-						   (match-end 1))))
-		     (cs (blocking-do 'get-conf-stat no)))
-		(if (lyskom-read-conf-name-internal-verify-type
-		     cs predicate logins)
-		    no))))))))
-
+            (while (and (not found) mappedlist)
+              (if (string= string
+                           (conf-stat->name (blocking-do 'get-conf-stat
+                                                         (car mappedlist))))
+                  (setq found (car mappedlist)))
+              (setq mappedlist (cdr mappedlist)))
+            (cond
+             (found)
+             ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                            string)
+              (let* ((no (string-to-int (substring string
+                                                   (match-beginning 1)
+                                                   (match-end 1))))
+                     (cs (blocking-do 'get-conf-stat no)))
+                (if (lyskom-read-conf-name-internal-verify-type
+                     cs predicate logins)
+                    no))))))))
+     ;;
+     ;; FIXME
+     ;;
+     ;; Called from completing read. Should return t for exact match
+     ;; and nil otherwise. This causes a problem when a string is an
+     ;; exact match AND a prefix. In this case we return nil even
+     ;; though that appears to be contrary to the documentation for
+     ;; programmed completion.
+     ;;
+     ;; The problem is caused by Emacs expanding our string with
+     ;; try-completion and then calling us back with all set to lambda
+     ;; and the expanded string. What happened was that we'd enter
+     ;; something that was a prefix but not a match which would expand
+     ;; to a prefix that was also a match, which would be accepted!
+     ;;
      ((eq all 'lambda)
-      (or (= (length mappedlist) 1)
-	  (let ((found nil))
-	    (while (and (not found)
-			mappedlist)
-	      (if (string= string 
-			   (conf-stat->name (blocking-do 'get-conf-stat 
-							 (car mappedlist))))
-		  (setq found t))
-	      (setq mappedlist (cdr mappedlist)))
-	    (cond
-	     (found)
-	     ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
-			    string)
-	      (let* ((no (string-to-int (substring string
-						   (match-beginning 1)
-						   (match-end 1))))
-		     (cs (blocking-do 'get-conf-stat no)))
-		(if (lyskom-read-conf-name-internal-verify-type
-		     cs predicate logins)
-		    string)))))))
+      (= (length mappedlist) 1))
+     
+     ;;
+     ;; Called from all-completions. Returns a list of all possible
+     ;; completions.
+     ;;
      (all
       (let ((names (mapcar (function (lambda (no)
-				       (conf-stat->name 
-					(blocking-do 'get-conf-stat no))))
-			   mappedlist)))
-	(if (and (string-match (lyskom-get-string 'person-or-conf-no-regexp)
-			       string)
-		 (let* ((no (string-to-int (substring string
-						      (match-beginning 1)
-						      (match-end 1))))
-			(cs (blocking-do 'get-conf-stat no)))
-		   (lyskom-read-conf-name-internal-verify-type cs 
-							       predicate
-							       logins)))
-	    (cons string names)
-	  names)))
+                                       (conf-stat->name 
+                                        (blocking-do 'get-conf-stat no))))
+                           mappedlist)))
+        (if (and (string-match (lyskom-get-string 'person-or-conf-no-regexp)
+                               string)
+                 (let* ((no (string-to-int (substring string
+                                                      (match-beginning 1)
+                                                      (match-end 1))))
+                        (cs (blocking-do 'get-conf-stat no)))
+                   (lyskom-read-conf-name-internal-verify-type cs 
+                                                               predicate
+                                                               logins)))
+            (cons string names)
+          names)))
 	    
+     ;;
+     ;; No completions available on the string and we were called from
+     ;; try-completion. Try to expand as a person or conference number
+     ;; string instead of a real name.
+     ;;
+
      ((= (length mappedlist) 0)
       (if (string-match (lyskom-get-string 'person-or-conf-no-regexp)
-			string)
-	  (let* ((no (string-to-int (substring string
-					       (match-beginning 1)
-					       (match-end 1))))
-		 (cs (blocking-do 'get-conf-stat no)))
-	    (if (lyskom-read-conf-name-internal-verify-type
-		 cs predicate logins)
-		t))))
+                        string)
+          (let* ((no (string-to-int (substring string
+                                               (match-beginning 1)
+                                               (match-end 1))))
+                 (cs (blocking-do 'get-conf-stat no)))
+            (if (lyskom-read-conf-name-internal-verify-type
+                 cs predicate logins)
+                t))))
 
-     (t					; Some matches, maybe exact?
+     ;;
+     ;; FIXME
+     ;;
+     ;; Called from try-completion. Should return t if the string is
+     ;; an exact match or the completion of the string. We return t if
+     ;; the string is an exact match even if it is also a prefix. I'm
+     ;; not sure this is the right thing to do, but it seems to
+     ;; work...
+     ;;
+     (t                                 ; Some matches, maybe exact?
       (let ((strings (mapcar (function
-			      (lambda (no)
-				(list (conf-stat->name 
-				       (blocking-do 'get-conf-stat no)))))
-			     mappedlist)))
-	(if (= (length strings) 1)
-	    (if (string= string (car (car strings)))
-		t				; Exact
-	      (car (car strings)))
-	(lyskom-try-complete-partials string strings)))))))
+                              (lambda (no)
+                                (list (conf-stat->name 
+                                       (blocking-do 'get-conf-stat no)))))
+                             mappedlist))
+            (found nil))
+
+        (while (and (not found)
+                    mappedlist)
+          (if (string= string 
+                       (conf-stat->name (blocking-do 'get-conf-stat 
+                                                     (car mappedlist))))
+              (setq found t))
+          (setq mappedlist (cdr mappedlist)))
+
+        (cond (found t)
+              ((= (length strings) 1)
+               (if (string= string (car (car strings)))
+                   t                       ; Exact
+                 (car (car strings))))
+              (t (lyskom-try-complete-partials string strings))))))))
 
 
 (defun lyskom-try-complete-partials (string alist)
