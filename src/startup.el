@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.73 2002-05-25 18:22:39 byers Exp $
+;;;;; $Id: startup.el,v 44.74 2002-06-22 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.73 2002-05-25 18:22:39 byers Exp $\n"))
+	      "$Id: startup.el,v 44.74 2002-06-22 17:13:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -158,27 +158,27 @@ clients of the event. See lyskom-mode for details on lyskom."
 		    (t
 		     (setq buffer (lyskom-generate-new-buffer host))
 		     (setq name (buffer-name buffer))))
-              (let* ((proxy-host-string
+              (let* ((www-proxy-host-string
                       (cond ((stringp kom-www-proxy) kom-www-proxy)
                             ((listp kom-www-proxy)
                              (or (cdr (lyskom-string-assoc host kom-www-proxy))
                                  (cdr (assq t kom-www-proxy))
                                  nil))
                             (t nil)))
-                     (proxy-host nil)
-                     (proxy-port nil)
+                     (www-proxy-host nil)
+                     (www-proxy-port nil)
                      (match (string-match "\\(.*\\):\\([0-9]+\\)"
-                                          (or proxy-host-string "")))
+                                          (or www-proxy-host-string "")))
                      (headers nil))
-                (setq proxy-host (or (and match
-                                          (match-string 1 proxy-host-string))
-                                     proxy-host-string)
-                      proxy-port (or (and match
+                (setq www-proxy-host (or (and match
+                                          (match-string 1 www-proxy-host-string))
+                                     www-proxy-host-string)
+                      www-proxy-port (or (and match
                                           (string-to-int
                                            (match-string 2
-                                                         proxy-host-string)))
+                                                         www-proxy-host-string)))
                                      80))
-                (cond (proxy-host
+                (cond (www-proxy-host
                        (setq headers 
                              (cond ((stringp kom-www-proxy-headers)
                                     (list kom-www-proxy-headers))
@@ -187,12 +187,12 @@ clients of the event. See lyskom-mode for details on lyskom."
                                     kom-www-proxy-headers)
                                    ((and (listp kom-www-proxy-headers)
                                          (consp (car kom-www-proxy-headers)))
-                                    (cdr (or (lyskom-string-assoc proxy-host
+                                    (cdr (or (lyskom-string-assoc www-proxy-host
                                                                   kom-www-proxy-headers)
                                              (assq t kom-www-proxy-headers))))))
-                       (setq proc (open-network-stream name buffer
-                                                       proxy-host
-                                                       proxy-port))
+                       (setq proc (lyskom-open-network-stream name buffer
+                                                              www-proxy-host
+                                                              www-proxy-port))
                        ;; We do explicit coding
                        (set-process-coding-system proc 'no-conversion 'no-conversion)
 
@@ -227,8 +227,8 @@ clients of the event. See lyskom-mode for details on lyskom."
 			 (accept-process-output proc))
 		       ;; Now the proxy has connected to the kom server
 		       )
-                      (t (setq proc (open-network-stream name buffer
-                                                         host port))
+                      (t (setq proc (lyskom-open-network-stream name buffer
+                                                                host port))
                          ;; We do explicit coding
                          (set-process-coding-system proc 'no-conversion 'no-conversion))))
 	      (switch-to-buffer buffer)
@@ -343,6 +343,73 @@ clients of the event. See lyskom-mode for details on lyskom."
 	 (string-match "^\r\n" output))
     (set-process-filter proc 'lyskom-connect-filter))))
 
+(defun lyskom-open-network-stream (name buffer host service)
+  (let ((relay (lyskom-setup-ssh-relay host service buffer)))
+    (if relay
+        (open-network-stream name
+                             buffer
+                             "127.0.0.1"
+                             (get relay 'relay-port))
+    (open-network-stream name
+                         buffer
+                         host
+                         service))))
+
+
+(defun lyskom-setup-ssh-relay (server port kom-buffer)
+  (when kom-ssh-relay-host
+    (let* ((procname (format "ssh<%s:%s:%d>" kom-ssh-relay-host server port))
+           (bufname (concat " *" procname "*"))
+           (proc (get-process procname))
+           (msg (concat " ssh connection to " kom-ssh-relay-host "..."))
+           (procsym (intern procname))
+           (relay-port (and proc
+                            (eq (process-status proc) 'run)
+                            (get procsym 'relay-port))))
+      (unwind-protect
+          (save-excursion
+            (set-buffer (get-buffer-create bufname))
+            (if relay-port
+                (message (setq msg (concat "Using" msg)))
+              (when proc (delete-process proc))
+              (setq relay-port (+ 10000 (random 20000)))
+              (put procsym 'relay-host 
+                   (if (string-match "@" kom-ssh-relay-host)
+                       (substring kom-ssh-relay-host (1+ (match-beginning 0)))
+                     kom-ssh-relay-host))
+              (put procsym 'relay-port relay-port)
+              (put procsym 'num-connected 0)
+              (message (setq msg (concat "Opening" msg)))
+              (goto-char (point-max))
+              (insert "\n--- new connection ---\n")
+              (setq proc (start-process
+                          procname
+                          bufname
+                          "ssh" "-n" "-x"
+                          "-L" (format "%d:%s:%d" relay-port server port)
+                          kom-ssh-relay-host
+                          "sh -c \"while :; do echo ok; sleep 600; done\""))
+              (process-kill-without-query proc))
+            (while (progn
+                     (goto-char (point-max))
+                     (re-search-backward "^--- .* ---$" nil t)
+                     (not (re-search-forward "^ok$" nil t)))
+              (if (re-search-forward "\\<refused\\|error\\|key not found\\>" nil t)
+                  (error "Couldn't connect: %s"
+                         (buffer-substring-no-properties
+                          (progn (beginning-of-line) (point))
+                          (progn (skip-chars-forward "^\n\r") (point)))))
+              (sleep-for 0.5))
+            (setq proc nil)
+            (message (concat msg "done")))
+        (if proc (delete-process proc)))
+
+      (save-excursion 
+        (set-buffer kom-buffer)
+        (put procsym 'num-connected (1+ (or (get procsym 'num-connected) 0)))
+        (make-local-variable 'lyskom-ssh-proxy)
+        (setq lyskom-ssh-proxy procsym))
+      )))
 
 
 (defun lyskom-setup-client-for-server-version ()
@@ -364,57 +431,6 @@ clients of the event. See lyskom-mode for details on lyskom."
   (when (>= protocol-version 8)
     (lyskom-set-feature long-conf-types t))))
 
-
-;;;(defun lyskom-setup-client-check-version (spec version)
-;;;  (let ((relation (elt spec 0))
-;;;        (major (elt spec 1))
-;;;        (minor (elt spec 2))
-;;;        (revision (elt spec 3)))
-;;;    (cond ((eq relation '=)
-;;;           (and (or (null major) (= major (elt version 0)))
-;;;                (or (null minor) (= minor (elt version 1)))
-;;;                (or (null revision) (= revision (elt version 2)))))
-;;;          ((eq relation '>=)
-;;;           (or (and (= (elt version 0) major)
-;;;                    (= (elt version 1) minor)
-;;;                    (>= (elt version 2) revision))
-;;;               (and (= (elt version 0) major)
-;;;                    (> (elt version 1) minor))
-;;;               (and (> (elt version 0) major))))
-;;;          ((eq relation '<)
-;;;           (or (and (= (elt version 0) major)
-;;;                    (= (elt version 1) minor)
-;;;                    (< (elt version 2) revision))
-;;;               (and (= (elt version 0) major)
-;;;                    (< (elt version 1) minor))
-;;;               (and (< (elt version 0) major)))))))
-
-
-;;;(defun lyskom-setup-client-for-server-version ()
-;;; "Set up the supports list and flags for the current server. See
-;;;variable documentation for lyskom-server-feautres"
-;;;  (let ((result nil)
-;;;        (flags nil))
-;;;    (mapcar (function
-;;;             (lambda (spec)
-;;;               (let ((spec-version (elt spec 0))
-;;;                     (plist (elt spec 1)))
-;;;                 (if (and (lyskom-setup-client-check-version 
-;;;                           spec-version
-;;;                           lyskom-server-version))
-;;;                     (mapcar
-;;;                      (function
-;;;                       (lambda (x)
-;;;                         (cond ((consp x) (setq result (cons x result)))
-;;;                               ((symbolp x) (setq flags (cons x flags)))
-;;;                               (t (setq result (cons (cons x t) 
-;;;                                                     result))))))
-;;;                      plist)))))
-;;;            lyskom-server-features)
-;;;    (mapcar (function (lambda (x) (set x t))) flags)
-;;;    (setq lyskom-server-supports result)))
-                                             
-                                                                 
 
 (defun lyskom-connect-filter (proc output)
   "Receive connection acknowledgement from server."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.254 2002-06-20 22:38:55 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.255 2002-06-22 17:13:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.254 2002-06-20 22:38:55 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.255 2002-06-22 17:13:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -635,7 +635,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (member-of-confs . "Medlem i (antal möten):%18#1d\n")
     (presentation . "Presentation:    %24#1n\n")
     (show-membership-list-also-q . "Vill du se vilka möten personen är medlem i också? ")
-    (not-allowed-see-confs . "Du får inte se vilka möten %#1P är medlem i.\n")
+    (not-allowed-see-confs . "%#1P är inte medlem i några möten.\n")
     (is-member-of . "\n%#1P är medlem i följande möten:\n")
     (membership-list-header . "Senast inne           Osett  Namn\n\n")
     (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
@@ -1794,7 +1794,9 @@ kommandot \"Spara variabler\".\n\n")
     (aux-world-readable-name . "Läsbart utan inloggning")
     (aux-elisp-client-read-faq-name . "Läst FAQ")
     (aux-elisp-client-rejected-invitation-name . "Avvisad inbjudan")
-    
+
+    (review-marking-as-read . "Återse läsmarkerar")
+    (review-not-marking-as-read . "Återse läsmarkerar inte")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2241,6 +2243,8 @@ kommandot \"Spara variabler\".\n\n")
   (define-key lyskom-sv-mode-map [Ä] 'lyskom-sv-change-prefix)
   (define-key lyskom-sv-mode-map [Å] 'lyskom-sv-review-prefix)
   (define-key lyskom-sv-mode-map [å] 'lyskom-sv-review-prefix)
+
+  (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
 
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)

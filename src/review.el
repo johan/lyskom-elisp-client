@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.40 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: review.el,v 44.41 2002-06-22 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.40 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: review.el,v 44.41 2002-06-22 17:13:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -71,6 +71,25 @@
 (defun lyskom-remove-zeroes (a)
   "Returns a copy of list where all zeroes are removed."
   (delq 0 (copy-sequence a)))
+
+
+;;; ================================================================
+;;; Temoporary change of mark-as-read
+
+(defun kom-toggle-mark-as-read-prefix ()
+  "Read one key sequence and run one command with state of
+kom-review-marks-texts-as-read toggled."
+  (interactive)
+  (let* ((kom-review-marks-texts-as-read (not kom-review-marks-texts-as-read))
+         (sequence (read-key-sequence
+                    (format "%s: " 
+                            (lyskom-get-string
+                             (if kom-review-marks-texts-as-read 
+                                 'review-marking-as-read
+                               'review-not-marking-as-read)))))
+         (command (lookup-key (current-local-map) sequence)))
+    (when (commandp command)
+      (call-interactively command))))
 
 
 ;;; ================================================================

@@ -1,3 +1,19 @@
+2002-06-22  David Byers  <david.byers@swipnet.se>
+
+	* startup.el (lyskom): Renamed all proxy-* variables to
+	www-proxy-*. Changed open-network-stream to
+	lyskom-open-network-stream in order to support ssh proxies.
+	(lyskom-open-network-stream): New function.
+	(lyskom-setup-ssh-proxy): New function.
+	(lyskom): Use lyskom-open-network-stream to open network
+	connections.
+
+2002-06-14  David Byers  <david.byers@swipnet.se>
+
+	* review.el (kom-toggle-mark-as-read-prefix): New function toggles
+	state of kom-review-marks-as-read and then runs one single command
+	with the state toggled.
+
 2002-06-21  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* swedish-strings.el, english-strings.el: kom-change-language no

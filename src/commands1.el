@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.147 2002-06-12 18:29:32 byers Exp $
+;;;;; $Id: commands1.el,v 44.148 2002-06-22 17:13:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.147 2002-06-12 18:29:32 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.148 2002-06-22 17:13:02 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1220,7 +1220,24 @@ Don't ask for confirmation."
     (lyskom-insert-string (lyskom-get-string-sol 'session-ended))
     (lyskom-scroll)
     (setq mode-line-process (lyskom-get-string 'mode-line-down))
-    (run-hooks 'kom-quit-hook))
+    (run-hooks 'kom-quit-hook)
+
+    (when (boundp 'lyskom-ssh-proxy)
+      (let* ((numleft (1- (get lyskom-ssh-proxy 'num-connected)))
+             (procname (symbol-name lyskom-ssh-proxy))
+             (bufname (concat " *" procname "*"))
+             (proc (get-process procname)))
+        (put lyskom-ssh-proxy 'num-connected numleft)
+        (when (and (<= numleft 0) proc)
+          (string-match "^ssh<\\([^:]*\\)" procname)
+          (message "Closing ssh connection to %s"
+                   (or (match-string 1 procname) "unknown host"))
+          (delete-process proc)
+          (when (get-buffer bufname)
+            (save-excursion
+              (set-buffer bufname)
+              (goto-char (point-max))
+              (insert "\n--- closed connection ---\n")))))))
   
 
 ;;; ================================================================

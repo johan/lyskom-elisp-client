@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.219 2002-06-20 22:38:55 joel Exp $
+;;;;; $Id: english-strings.el,v 44.220 2002-06-22 17:13:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.219 2002-06-20 22:38:55 joel Exp $"))
+              "$Id: english-strings.el,v 44.220 2002-06-22 17:13:02 byers Exp $"))
 
 
 ;;; ================================================================
@@ -653,7 +653,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (member-of-confs . "Member of (conferences):%18#1d\n")
     (presentation . "Presentation:    %25#1n\n")
     (show-membership-list-also-q . "List memberships? ")
-    (not-allowed-see-confs . "You are not permitted to see which conferences %#1P is a member of.\n")
+    (not-allowed-see-confs . "%#1P is not a member of any conferences.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
     (membership-list-header . "Last access          Unread  Conference\n\n")
     (pers-membership-line . "%#1s%#2s%#3M %#4s\n")
@@ -1782,6 +1782,9 @@ have been removed, you can fix the problem by giving the command
     (aux-world-readable-name . "World-readable")
     (aux-elisp-client-read-faq-name . "Read FAQ")
     (aux-elisp-client-rejected-invitation-name . "Rejected invitation")
+
+    (review-marking-as-read . "Review marks as read")
+    (review-not-marking-as-read . "Review does not mark as read")
     ))
 
 
@@ -2215,6 +2218,8 @@ have been removed, you can fix the problem by giving the command
   (define-key lyskom-en-mode-map (kbd "s") 'lyskom-en-S-prefix)
   (define-key lyskom-en-mode-map (kbd "b") 'lyskom-en-previous-prefix)
   (define-key lyskom-en-mode-map (kbd "w") 'lyskom-en-who-prefix)
+
+  (define-key lyskom-en-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
 
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
