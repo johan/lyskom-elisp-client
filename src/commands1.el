@@ -1560,8 +1560,9 @@ MY-SESSION-NO is the session number of the running session."
 (defun lyskom-return-username (who-info)
   "Takes the username from the WHO-INFO and returns it on a better format."
   (let* ((username (who-info->username who-info))
-	 (type (or (string-match "\\(\\w+\\)%\\(.+\\)@\\(\\w+\\)" username)
-		   (string-match "\\(\\w+\\)@\\(\\w+\\)" username))))
+	 (type (or 
+		(string-match "\\([^%@.]+\\)%\\(.+\\)@\\([^%@.]+\\)" username)
+		(string-match "\\([^%@.]+\\)@\\([^%@.]+\\)" username))))
     (if type
 	(let ((name (substring username 0 (match-end 1)))
 	      (sent (if (match-beginning 3)

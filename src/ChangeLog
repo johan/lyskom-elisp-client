@@ -1,5 +1,8 @@
 Fri Aug 16 18:24:35 1991  Linus Tolke Y  (linus at lysator)
 
+	* commands1.el (lyskom-return-username): Nu kan den {ven matcha
+	  maskinnamn som har andra tecken {n bokst{ver i sig.
+
 	* vars.el (lyskom-elisp-variables): Lagt till lyskom-prompt-text
 	  och lyskom-prompt-executing-default-command-text till listan av
 	  variabler som sparas f|r denna klient.
