@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.8 1996-01-21 17:54:31 davidk Exp $
+;;;;; $Id: async.el,v 38.9 1996-01-22 12:34:58 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.8 1996-01-21 17:54:31 davidk Exp $\n"))
+	      "$Id: async.el,v 38.9 1996-01-22 12:34:58 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -276,7 +276,7 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
 	(if (stringp sender) sender (conf-stat->name sender)))
   (setq lyskom-last-group-message-recipient
 	(if (and recipient
-		 (/= recipient
+		 (/= (conf-stat->conf-no recipient)
 		     lyskom-pers-no))
 	    (conf-stat->name recipient)
 	  nil))

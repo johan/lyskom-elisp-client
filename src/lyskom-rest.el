@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.19 1996-01-21 17:54:51 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.20 1996-01-22 12:35:03 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.19 1996-01-21 17:54:51 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.20 1996-01-22 12:35:03 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1227,13 +1227,13 @@ Args: FORMAT-STRING &rest ARGS"
 	    (kill-buffer tmpbuf))))
        ((and (fboundp 'format-decode-buffer)
 	     (string-match "\\`enriched:" text))
-	(let ((tmpbuf (generate-new-buffer "lyskom-html")))
+	(let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
 	  (unwind-protect
 	      (save-excursion
 		(set-buffer tmpbuf)
 		(insert (substring text 9))
 		(format-decode-buffer 'text/enriched)
-		(buffer-string))
+		(substring (buffer-string) 0 -1)) ; Remove the \n
 	    (kill-buffer tmpbuf))))
        (t
 	(lyskom-button-transform-text text)))
