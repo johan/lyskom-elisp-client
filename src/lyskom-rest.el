@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.210 2003-08-02 22:08:38 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.211 2003-08-04 07:49:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.210 2003-08-02 22:08:38 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.211 2003-08-04 07:49:31 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1254,7 +1254,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(:.\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxlcCSDF%?]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\|-?[0-9]+\\.[0-9]+\\|-?[0-9]+\\.[0-9]+\\.[0-9]+\\)?\\(:.\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxlcfgCSDF%?]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
@@ -1397,6 +1397,8 @@ Deferred insertions are not supported."
     (let ((format-length (length (format-state->format-string format-state)))
         (arg-no nil)
         (pad-length nil)
+        (frac-min nil)
+        (frac-max nil)
         (pad-string nil)
         (format-letter nil)
         (colon-flag nil)
@@ -1445,12 +1447,17 @@ Deferred insertions are not supported."
         (set-format-state->start format-state
                                  (match-end 0))
 
+        (when (match-beginning 2)
+          (save-match-data
+            (let* ((s (match-string 2 (format-state->format-string format-state))))
+              (cond ((or (string-match "\\(-?[0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" s)
+                         (string-match "\\(-?[0-9]+\\)\\.\\([0-9]+\\)" s))
+                     (setq pad-length (string-to-int (match-string 1 s)))
+                     (setq frac-min (string-to-int (match-string 2 s)))
+                     (setq frac-max (string-to-int (or (match-string 3 s) (match-string 2 s)))))
+                    (t (setq pad-length (string-to-int s)))))))
+
 	(setq equals-flag (match-beginning 1)
-	      pad-length (if (match-beginning 2)
-			     (string-to-int (match-string 
-                                             2 (format-state->format-string
-                                                format-state)))
-			   nil)
 	      arg-no (if (match-beginning 5)
 			 (string-to-int (match-string 
                                          5 (format-state->format-string
@@ -1487,6 +1494,8 @@ Deferred insertions are not supported."
             (lyskom-format-aux-help 
              format-state
              pad-length
+             frac-min
+             frac-max
              arg-no
              format-letter
              equals-flag
@@ -1509,6 +1518,8 @@ Deferred insertions are not supported."
 
 (defun lyskom-format-aux-help (format-state
                                pad-length
+                               frac-min
+                               frac-max
                                arg-no
                                format-letter
                                equals-flag
@@ -1576,6 +1587,45 @@ Deferred insertions are not supported."
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error (expected int)"))))))
+
+     ((or (= format-letter ?g)
+          (= format-letter ?f)
+          (= format-letter ?e))
+      (setq result (cond ((numberp arg) 
+                          (format (if frac-max
+                                      (format "%%.%d%c" 
+                                              frac-max
+                                              format-letter)
+                                      (format "%%%c" format-letter))
+                                  arg))
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error (expected number)")))))
+      (save-match-data
+        (when (and (string-match "\\." result)
+                   (string-match "\\.?0+$" result))
+          (setq result (substring result 0 (match-beginning 0))))
+        (when (and frac-min (> frac-min 0))
+          (if (string-match "\\.\\([0-9]*\\)$" result)
+              (setq result 
+                    (concat result
+                            (make-string 
+                             (max 0 
+                                  (- frac-min
+                                     (length (match-string 1 result))))
+                             ?0)))
+            (setq result
+                  (concat result
+                          "."
+                          (make-string frac-min ?0)))))))
+
+     ((= format-letter ?f)
+      (setq result (cond ((numberp arg) (format "%f" arg))
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error (expected number)"))))))
+
+
      ;;
      ;;  Format a character by converting it to a string and inserting
      ;;  it into the result list

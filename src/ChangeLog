@@ -1,5 +1,13 @@
 2003-08-03  David Byers  <byers@lysator.liu.se>
 
+	* commands2.el (kom-status-server): Show statistics about the
+	server.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Added support for
+	formatting floats.
+	(lyskom-format-aux): Support setting fraction length for floats.
+	(lyskom-format-units): New function.
+
 	Support get-stats server call:
 	* utilities.el (lyskom-get-server-stats): New function.
 
