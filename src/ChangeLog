@@ -1,5 +1,45 @@
 2003-08-14  David Byers  <byers@lysator.liu.se>
 
+	Show more stats in non-extended display:
+	* commands2.el (kom-status-server): Show text, conf and person
+	statistics in the default display.
+
+	Cace get-stats-description:
+	* services.el (initiate-get-stats-description): Use cache.
+
+	* vars.el.in (lyskom-stats-description): New variable.
+
+	* parse.el (lyskom-parse-stats-description): Cache result.
+
+	Show some boottime info:
+	* commands2.el (kom-status-server): Show server start time and
+	soem basic statistics in the default display.
+
+	Cache static-server-info:
+	* parse.el (lyskom-parse-static-server-info): Update cache.
+
+	* services.el (initiate-get-boottime-info): Use cache.
+
+	More fine-grained control over extended status:
+	* commands2.el (kom-status-server): Only show full server stats if
+	the appropriate extended status information is on.
+
+	* utilities.el (lyskom-extended-status-information): New function.
+
+	* commands2.el (kom-status-conf): Set
+	kom-extended-status-information to t on entry if it contains conf.
+	(kom-status-server): Set kom-extended-status-information to t on
+	entry if it contains server.
+	(kom-status-person): Set kom-extended-status-information to t on
+	entry if it contains pers.
+
+	* aux-items.el (lyskom-print-elisp-client-read-faq): Use
+	lyskom-extended-status-information to check for extended status
+	information.
+
+	* vars.el.in (kom-extended-status-information): Updated variable
+	documentation.
+
 	Fix bug 1080:
 	* commands2.el (kom-status-server): Use point-max, not point, to
 	figure out where insertion starts and ends (lyskom-insert always

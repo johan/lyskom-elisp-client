@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.139 2003-08-04 07:49:32 byers Exp $
+;;;;; $Id: utilities.el,v 44.140 2003-08-14 12:01:29 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.139 2003-08-04 07:49:32 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.140 2003-08-14 12:01:29 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2034,4 +2034,44 @@ base unit \(which implicitly has a count of 1)."
         result)))
    ""))
 
+(defun lyskom-format-time-units (val &optional what)
+  "Format VAL as values per time unit in such a way that the
+result is readable (i.e. whole numbers, if possible). WHAT is
+the unit measured."
+  (let ((last-unit nil))
+    (if (eq val 0) 
+        (lyskom-format "0%#1?b%[ %#1s%]%[%]/%#2s" 
+                       what
+                       (lyskom-get-string 'unit-hour))
+      (lyskom-traverse unit '((unit-second . 1)
+                              (unit-minute . 60)
+                              (unit-hour . 60)
+                              (unit-day . 24)
+                              (unit-month . 30)
+                              (unit-year . 12))
+        (setq val (* val (cdr unit)))
+        (setq last-unit unit)
+        (when (> val 1)
+          (lyskom-traverse-break)))
+      (lyskom-format "%0.0.4#1f%#2?b%[ %#2s%]%[%]/%#3s" val
+                     what (lyskom-get-string (car last-unit))))))
+
+
+
+
+(defun lyskom-extended-status-information (tag)
+  "Return non-nil is extended status information indicated by TAG
+should be shown."
+  (cond ((eq kom-extended-status-information t) t)
+        ((assq tag kom-extended-status-information) 
+         (cdr (assq tag kom-extended-status-information)))
+        ((cdr (assq t kom-extended-status-information)))))
+
+(defun lyskom-extended-status-override (tag)
+  "Return a new value for kom-extended-status-information that
+reflects an override of the value by the value of TAG."
+  (cond ((eq kom-extended-status-information t) t)
+        ((assq tag kom-extended-status-information)
+         (cdr (assq tag kom-extended-status-information)))
+        (t kom-extended-status-information)))
 
