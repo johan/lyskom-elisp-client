@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.63 2000-05-28 17:38:16 jhs Exp $
+;;;;; $Id: edit-text.el,v 44.64 2000-05-31 15:35:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.63 2000-05-28 17:38:16 jhs Exp $\n"))
+	      "$Id: edit-text.el,v 44.64 2000-05-31 15:35:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1010,8 +1010,7 @@ given, prepend each line with your commenting prefix (or '>')."
   (lyskom-edit-get-commented
    'lyskom-edit-insert-commented
    (list (cond ((and arg (listp arg)) "")
-	       (t (or (lyskom-default-value 'kom-cite-string)
-		      62)))))) ; '>'
+	       (t nil)))))
 
 
 (defun kom-edit-insert-buglist ()
@@ -1039,12 +1038,8 @@ given, prepend each line with your commenting prefix (or '>')."
         (window (selected-window)))
     (set-buffer lyskom-buffer)
     (lyskom-collect 'edit)
-    (initiate-get-text 'edit
-                       nil
-                       no)
-    (initiate-get-text-stat 'edit
-                            nil
-                            no)
+    (initiate-get-text 'edit nil no)
+    (initiate-get-text-stat 'edit nil no)
     (lyskom-use 'edit 'lyskom-edit-insert-commented buffer window)
     (set-buffer buffer)
     (sit-for 0)))
@@ -1724,12 +1719,11 @@ the with-output-to-temp-buffer command is issued to make them both apear."
 
 (defun lyskom-edit-insert-commented (text text-stat editing-buffer window &optional prefix)
   "Handles the TEXT and TEXT-STAT from the return of the call of the text.
-When given a PREFIX string, that is prepended to each inserted line."
+When given a PREFIX string, that is prepended to each inserted line.
+If PREFIX is nil, use the default prefix (kom-cite-string or \">\"."
   (if (and text text-stat)
       (let ((str (text->decoded-text-mass text text-stat))
-	    (prefix (or prefix ; FIXME: kludge that should be removed; it's here just
-			(lyskom-default-value 'kom-cite-string); because I didn't see
-			62)))  ; how to patch kom-edit-insert-text to behave. :-/    /jhs
+	    (prefix (or prefix (lyskom-default-value 'kom-cite-string) ">")))
         (set-buffer editing-buffer)
         (and (not (bolp))
              (insert "\n"))

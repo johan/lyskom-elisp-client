@@ -1268,7 +1268,7 @@ entry with an adjacent priority."
   (let ((cur (current-column)))
     (funcall fn)
     (when (and (boundp 'lyskom-buffer-category)
-               lyskom-buffer-category 'prioritize)
+               (eq lyskom-buffer-category 'prioritize))
       (let ((last-entry (lp--get-last-visible-entry ))
             (first-entry (lp--next-visible-entry 0)))
         (cond ((null last-entry)
