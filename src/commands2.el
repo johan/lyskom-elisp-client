@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.120 2002-04-21 21:32:15 byers Exp $
+;;;;; $Id: commands2.el,v 44.121 2002-04-24 12:51:58 davidk Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.120 2002-04-21 21:32:15 byers Exp $\n"))
+              "$Id: commands2.el,v 44.121 2002-04-24 12:51:58 davidk Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2011,9 +2011,12 @@ Return-value: 'no-session if there is no suitable session to switch to
 ;;; Ändra språk
 ;;;
 
-(def-kom-command kom-change-language ()
-  "Change the current language in LysKOM"
-  (interactive)
+(def-kom-command kom-change-language (&optional global)
+  "Change the current language in LysKOM
+
+The optional argument GLOBAL indicates that the change should have a
+global effect, including changes to key binding."
+  (interactive "P")
   (let* ((completion-ignore-case t)
          (table (lyskom-available-language-list))
          (language (lyskom-completing-read
@@ -2025,7 +2028,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                     'lyskom-language-history)))
     (when (lyskom-string-assoc language table)
       (lyskom-set-language (cdr (lyskom-string-assoc language table)) 
-                           'local))))
+                           (if global 'global 'local)))))
 
 
 
