@@ -1,0 +1,30 @@
+
+Checklista för att göra en ny release
+=====================================
+
+ * Se till att NEWS-xx är uppdaterad.
+
+ * Se till att versionsnumret i Makefile är rätt
+
+ * Se till att allt är incheckat
+
+ * Se till att allt går att kompilera och köra. Även den engelska
+versionen.
+
+ * Uppdatera revisionsnumret
+
+	$ cd elisp-client
+	$ cvs tag -r 43.0
+
+ * Bygg om
+
+	$ cd src
+	$ make clean
+	$ make
+
+ * Installera på Lysator och ftp
+
+	$ make install
+
+ * Ändra versionsnumret i Makefilen
+
