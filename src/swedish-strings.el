@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $
+;;;;; $Id: swedish-strings.el,v 38.1.2.1 1995-01-07 12:56:51 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.1 1994-01-14 00:28:43 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.1.2.1 1995-01-07 12:56:51 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -503,6 +503,8 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (throwing-out . "Kastar nu ut session %#1d... ")
     (postpone-prompt . "Hur lite vill du l\344sa nu? ")
 
+    (matching-regexp . "Möten/personer som matchar '%#1s'\n")
+
     ; From review.el:
     (latest-n . "senaste %#1d")
     (first-n . "f\366rsta %#1d")
@@ -602,6 +604,13 @@ Allm\344nt meddelande fr\345n %#1s (%#3s):
 Personligt meddelande fr\345n %#1s (%#3s):
 
 %#2s
+----------------------------------------------------------------
+")
+    (message-from-to .
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
+
+%#1s
 ----------------------------------------------------------------
 ")
     (text-is-created . "Text %#1d \344r skapad!")
@@ -729,6 +738,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-list-conferences 	"Lista m\366ten") 
     (kom-list-persons		"Lista personer")
     (kom-list-news              "Lista nyheter")
+    (kom-list-re                "Lista (med) regexpar")
     (kom-membership		"Lista medlemsskap")
     (kom-postpone		"Uppskjuta l\344sning")
     (kom-prioritize		"Prioritera m\366ten")
@@ -798,9 +808,6 @@ Felmeddelande: %#1s**************************************************")
     (kom-set-motd               "S\344tt loginmeddelande")
     (kom-remove-motd            "Ta bort loginmeddelande")
     (kom-force-logout           "Kasta ut en session")
-    (kom-list-files		"Lista filarean")
-    (kom-put-file		"Ladda upp fil")
-    (kom-get-file		"Ladda ner fil")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
@@ -886,6 +893,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "lN" 'kom-list-news-old)
   (define-key lyskom-mode-map "lp" 'kom-list-persons)
   (define-key lyskom-mode-map "ls" 'kom-membership)
+  (define-key lyskom-mode-map "lr" 'kom-list-re)
   (define-key lyskom-mode-map "l{" 'kom-list-summary)
   (define-key lyskom-mode-map "l[" 'kom-list-summary)
   (define-key lyskom-mode-map "l\344" 'kom-list-summary) ; 8-bit emacs
@@ -1163,17 +1171,3 @@ Users are encouraged to use their best sense of humor.")
     (lyskom-run 'main 'lyskom-end-of-command)))
 
 
-;; Vars}god sojge, en massa j{ttebra funktioner.
-
-(defun kom-put-file (filename)
-  (interactive "fVilken fil vill du ladda upp? ")
-  (copy-file filename (concat "/ftp@ftp.lysator.liu.se:/open/" 
-			      (file-name-nondirectory filename))))
-
-(defun kom-get-file (filename)
-  (interactive "sVilken fil vill du ladda ner? ")
-  (copy-file (concat "/ftp@ftp.lysator.liu.se:/open/" filename) filename))
-
-(defun kom-list-files ()
-  (interactive)
-  (list-directory "/ftp@ftp.lysator.liu.se:/open"))
