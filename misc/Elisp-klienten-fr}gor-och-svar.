@@ -2251,3 +2251,23 @@ Variabeln kom-default-mark får inte ha värdet t utan det måste vara
 ett nummer mellan 1 och 255.
 Hur skall vi göra för att detta skall framgå tydligare? (Det behövs)
 (89964) -----------------------------------
+
+91456 1991-08-20  17:32  /13 rader/ Linus Tolke Y
+Kommentar till text 89964 av Linus Tolke Y
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <41>
+[rende: Man kan markera igen i version 0.34
+------------------------------------------------------------
+*rodna*
+Det ovanst}ende st{mmer helt och h}llet. Det {r bara det
+att om man k|r en klient med version 0.33 eller 0.33.1 och har
+sparat sin user-area s} s}tts denna variabel till t n{r man
+loggar in. Detta {r fixat i version 0.34. Den kommer att s{ttas
+till 1 f|r de som har sparat sin user-area med en klient version
+0.33 eller 0.33.1. Dvs alla markeringar blir med markering 1.
+
+Obs obs. Om du har satt denna variabel till nil n{r du sparade med
+0.33 eller 0.33.1 s} m}ste du {ndra den (med kommandot
+[ndra variabler) och s{tta den till n}got annat nil eller ett
+nummer f|r d} {r den 0 och markering med nummer 0 tar bort
+alla markeringar.
+(91456) -----------------------------------
