@@ -1,5 +1,11 @@
 Thu Jul 30 03:54:50 1992  Linus Tolke Y  (linus@lysator)
 
+	* prefetch.el (lyskom-prefetch-membership-handler): Wrong call to map.
+
+	* lyskom-rest.el: Removed old prefetch-functions.	
+
+	* lyskom-rest.el (lyskom-end-of-command): lyskom-after-command-hook.
+
 	* reading.el: New file, to contain functions that sets
 	  lyskom-membership, lyskom-to-do-list and lyskom-reading-list.
 
