@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.7 1997-07-29 14:53:31 byers Exp $
+;;;;; $Id: parse.el,v 44.8 1997-08-12 12:58:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.7 1997-07-29 14:53:31 byers Exp $\n"))
+	      "$Id: parse.el,v 44.8 1997-08-12 12:58:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -123,7 +123,7 @@ Signal lyskom-protocol-error if the next token is not a number."
     (goto-char (point-max))
     (signal 'lyskom-parse-incomplete nil))
    (t (signal 'lyskom-protocol-error
-              (list "Expected number, got " (lyskom-string-to-parse)))))
+              (list ref-no "Expected number, got " (lyskom-string-to-parse)))))
 
 )
 
@@ -178,11 +178,11 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
         (char (lyskom-parse-nonwhite-char))
 	(continue t))
     (while (and continue default)
-      (cond ((= char ?0) (setq result (cons nil result)
+      (cond ((eq char ?0) (setq result (cons nil result)
 			       default (cdr default)
 			       char (lyskom-parse-char)))
 
-            ((= char ?1) (setq result (cons t result)
+            ((eq char ?1) (setq result (cons t result)
 			       default (cdr default)
 			       char (lyskom-parse-char)))
             ((or (= char ?\ )
@@ -195,8 +195,8 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
                        (list 'lyskom-parse-bitstring char
                              lyskom-parse-pos
                              (buffer-string))))))
-    (if (not (or (= char ?\ )
-                 (= char ?\n)))
+    (if (not (or (eq char ?\ )
+                 (eq char ?\n)))
 	;; This occurs when the received string is longer than
 	;; expected.
         (progn
