@@ -1,0 +1,27 @@
+SORT=20020701001
+SV.TITLE=Bugrapporter via Bugzilla
+SV.TEXT=<p>
+SV.TEXT=  <i>Juni 2002</i> &bull; Numera ligger alla bugrapporter och
+SV.TEXT=  förbättringsförslag för elispklienten i <a
+SV.TEXT=  href="http://bugzilla.lysator.liu.se/">Lysators
+SV.TEXT=  bugzilla</a>.
+SV.TEXT=</p>
+SV.TEXT=<p>
+SV.TEXT=  Här kan du rösta på din favoritbug och, rapportera
+SV.TEXT=  buggar och lägga in nya förbättringsförslag.
+SV.TEXT=</p>
+
+EN.TITLE=Bugrapporter via Bugzilla
+EN.DATE=June 2002
+EN.TEXT=<p>
+EN.TEXT=  <i>June 2002</i> &bull; Since some time all bug reports
+EN.TEXT=  and feature requests for the elisp client are listed in <a
+EN.TEXT=  href="http://bugzilla.lysator.liu.se/">Lysator's
+EN.TEXT=  bugzilla</a>.
+EN.TEXT=</p>
+EN.TEXT=
+EN.TEXT=<p>
+EN.TEXT=  Use bugzilla to vote for your favorite bug and to report
+EN.TEXT=  new bugs and suggest enhancements.
+EN.TEXT=</p>
+

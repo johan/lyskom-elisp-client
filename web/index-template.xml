@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet href="elisp-client.css" type="text/css"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>
+      <lang id="sv">Elispklienten för LysKOM</lang>
+      <lang id="en">The LysKOM Elisp Client</lang>
+    </title>
+    <link rel="stylesheet" type="text/css" href="elisp-client.css" />
+  </head>
+
+  <body>
+
+    <table class="title">
+      <tr valign="middle">
+        <td align="left">
+          <h1>
+            <i>
+              <lang id="sv">Elispklienten för LysKOM</lang>
+              <lang id="en">The LysKOM Elisp Client</lang>
+            </i>
+          </h1>
+        </td>
+        <td align="right">
+          <a href="/"><img class="icon" src="http://www.lysator.liu.se/icons/lyslogo-icon.gif" alt="" /></a>
+          <a href="/Main.html"><img class="icon" src="http://www.lysator.liu.se/icons/wwwlysator.gif" alt="" /></a>
+          <a href="/lyskom/"><img class="icon" src="http://www.lysator.liu.se/icons/lyskom.gif" alt="" /></a>
+          <img class="icon" src="http://www.lysator.liu.se/icons/elispclient.gif" alt="" />
+          <br />
+          <lang id="sv"><a href="index.en.html">[In English]</a></lang>
+          <lang id="en"><a href="index.sv.html">[På svenska]</a></lang>
+        </td>
+      </tr>
+    </table>
+
+
+    <table class="main">
+      <colgroup>
+        <col width="35%" />
+        <col width="*" />
+      </colgroup>
+      <tr valign="top">
+        <td>
+
+<!-- Facts box -->
+
+          <table class="box">
+            <tr>
+              <td class="boxtitle">
+                <b>
+                  <lang id="sv">Faktaruta</lang>
+                  <lang id="en">Quick Facts</lang>
+                </b>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td class="boxmain">
+                <b>
+                  <lang id="sv">Initiativtagare:</lang>
+                  <lang id="en">Founder:</lang>
+                </b>
+                <br />
+                <a href="http://www.lysator.liu.se/~ceder/">Per Cederqvist</a> <a href="mailto:ceder@lysator.liu.se">&lt;ceder@lysator.liu.se&gt;</a>
+                <br /><br />
+                <b>
+                  <lang id="sv">Underhållare:</lang>
+                  <lang id="en">Maintaners:</lang>
+                </b>
+                <br />
+                <a href="http://www.lysator.liu.se/~byers/">David Byers</a> <a href="mailto:byers@lysator.liu.se">&lt;byers@lysator.liu.se&gt;</a><br />
+                Johan Sundström  <a href="mailto:jhs@lysator.liu.se">&lt;jhs@lysator.liu.se&gt;</a><br />
+                Ulrik Haugen  <a href="mailto:qha@lysator.liu.se">&lt;qha@lysator.liu.se&gt;</a><br />
+                <a href="http://joel.rosdahl.net/">Joel Rosdahl</a> <a href="mailto:joel@lysator.liu.se">&lt;joel@lysator.liu.se&gt;</a>
+                <br /><br />
+                <b>Version:</b>
+                0.47 (Augusti 2002)
+                <br /><br />
+                <b>Status:</b>
+                <br />
+                Stabil<br />
+                Utvecklas aktivt<br />
+                Används mycket
+                <br /><br />
+                <b>
+                  <lang id="sv">Systemkrav:</lang>
+                  <lang id="en">Requirements:</lang>
+                </b>
+                <br />
+                Gnu Emacs 21.x 
+                  <lang id="sv">(rekommenderas)</lang>
+                  <lang id="en">(recommended)</lang>
+                <br />
+                Gnu Emacs 20.7<br />
+                XEmacs 21.4
+              </td>
+            </tr>
+          </table>
+
+          <br />
+
+<!-- Links box -->
+
+          <table class="box" cellspacing="0">
+            <tr>
+              <td class="boxtitle">
+                <b>
+                  <lang id="sv">Länkar</lang>
+                  <lang id="en">Links</lang>
+                </b>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td class="boxmain">
+                <b>Download:</b>
+                <br />
+                <table border="0" cellspacing="2" cellpadding="0" width="100%">
+                  <tr valign="top">
+                    <td>
+                      <lang id="sv">Alla versioner (FTP):</lang>
+                      <lang id="en">All versions (FTP):</lang>
+                    </td>
+                    <td>
+                      <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/">Lysators FTP</a>
+                    </td>
+                  </tr>
+                  <tr valign="top">
+                    <td colspan="2">
+                      <br /><i>Version 0.47:</i>
+                    </td>
+                  </tr>
+                  <tr valign="top">
+                    <td>
+                      <lang id="sv">Alla språk:</lang>
+                      <lang id="en">All languages:</lang>
+                    </td>
+                    <td><a href="lyskom-all-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-all-0.47.zip">zipfil</a></td>
+                  </tr>
+                  <tr valign="top">
+                    <td>
+                      <lang id="sv">Svenska:</lang>
+                      <lang id="en">Swedish:</lang>
+                    </td>
+                    <td><a href="lyskom-swedish-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-swedish-0.47.zip">zipfil</a></td>
+                  </tr>
+                  <tr valign="top">
+                    <td>
+                      <lang id="sv">Engelska:</lang>
+                      <lang id="en">English:</lang>
+                    </td>
+                    <td><a href="lyskom-english-0.47.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-english-0.47.zip">zipfil</a></td>
+                  </tr>
+                  <tr valign="top">
+                    <td>
+                      <lang id="sv">Linuxpaket:</lang>
+                      <lang id="en">Linux packages:</lang>
+                    </td>
+                    <td>
+                      <!-- a href="lyskom-elisp-client_0.47-1_all.deb" -->Debian<!-- /a --><br />
+                      <!-- a href="lyskom-elisp-client_0.47.rpm" -->RedHat RPM<!-- /a -->
+                    </td>
+                  </tr>
+                </table>
+                
+                <br /><br />
+                <b>
+                  <lang id="sv">Dokumentation (föråldrad)</lang>
+                  <lang id="en">Documentation (obsolete)</lang>
+                </b>
+                <br />
+                <a href="lyskom-manual.html">
+                  Nybörjarintroduktion till LysKOM</a><br />
+                <a href="lyslat.html">Lisas lathund för kommandon i elispklienten</a><br />
+                <a href="elisp-client.html">Den fullständiga dokumentationen</a><br />
+                <a href="elisp-faq.html">Ofta ställda frågor om elispklienten</a><br />
+                
+                <br /><br />
+                <b>Bugzilla:</b>
+                <br />
+                <a href="http://bugzilla.lysator.liu.se/">http:&#47;&#47;bugzilla.lysator.liu.se&#47;</a>
+                
+                <br /><br />
+                <b>CVS:</b>
+                <br />
+                <a href="http://cvs.lysator.liu.se/viewcvs/viewcvs.cgi/?cvsroot=lyskom-elisp-client">Lysator ViewCVS</a>
+                <br /><br />
+                <b>
+                  <lang id="sv">Alla NEWS-filer:</lang>
+                  <lang id="en">All NEWS files:</lang>
+                </b>
+                <br />
+                <a href="doc/NEWS-0.47">0.47</a>
+                <a href="doc/NEWS-0.46.1">0.46.1</a>
+                <a href="doc/NEWS-0.46">0.46</a>
+                <a href="doc/NEWS-0.45.1">0.45.1</a>
+                <a href="doc/NEWS-0.45">0.45</a>
+                <a href="doc/NEWS-0.44.1">0.44.1</a>
+                <a href="doc/NEWS-0.44">0.44</a>
+                <a href="doc/NEWS-0.43">0.43</a>
+                <a href="doc/NEWS-0.42">0.42</a>
+                <a href="doc/NEWS-0.41">0.41</a>
+                <a href="doc/NEWS-0.40">0.40</a>
+                <a href="doc/NEWS-0.39">0.39</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="body">
+          <!-- CONTENT -->
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" align="right">
+          <p>
+            <a href="http://jigsaw.w3.org/css-validator/check/referer">
+              <img src="vcss.png" alt="Valid CSS 1.0" class="icon" />
+            </a>
+            <a href="http://validator.w3.org/check/referer">
+              <img src="valid-xhtml10.png" alt="Valid XHTML 1.0" class="icon" />
+            </a>
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
