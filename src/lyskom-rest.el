@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.244 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.245 2004-10-29 06:19:08 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.244 2004-10-19 14:05:12 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.245 2004-10-29 06:19:08 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2235,14 +2235,14 @@ in lyskom-messages."
 
 (defun lyskom-format-image (text text-stat)
   (if kom-format-show-images
-      (let ((cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
-	    (content-type (and cti (aux-item->data (car cti))))
-	    (msg "")
-	    (imagetype (intern 
-			; FIXME: Can the media type contain more than letters and -?
-			(string-replace-match "^.*/\\([-a-zA-Z]*\\)\\(.\\|\n\\)*" 
-					      content-type "\\1")))
-	    (imagedata text))
+      (let* ((cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
+	     (content-type (and cti (aux-item->data (car cti))))
+	     (msg "")
+	     (imagetype (intern 
+			 ; FIXME: Can the media type contain more than letters and -?
+			 (string-replace-match "^.*/\\([-a-zA-Z]*\\)\\(.\\|\n\\)*" 
+					       content-type "\\1")))
+	     (imagedata text))
 	(condition-case nil
 	    (lyskom-xemacs-or-gnu
 	     (set-extent-end-glyph ; XEmacs
