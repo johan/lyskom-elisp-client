@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.73 2000-08-31 12:29:55 byers Exp $
+;;;;; $Id: utilities.el,v 44.74 2000-09-02 13:23:03 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.73 2000-08-31 12:29:55 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.74 2000-09-02 13:23:03 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -312,9 +312,12 @@ TYPE should be `list' or `vector'."
   "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~\200\201\202\203\204\205\206\207\210\211\212\213\214\215\216\217\220\221\222\223\224\225\226\227\230\231\232\233\234\235\236\237 !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
-(defsubst lyskom-maybe-recode-string (s &optional coding)
-  "Change the encoding of S when multibyte characters are not supported"
-  (if (multibyte-string-p s)
+(defsubst lyskom-maybe-recode-string (s &optional coding force)
+  "Change the encoding of S for when multibyte characters are not supported.
+Optional second argument CODING is the coding system to use. If optional
+third argument FORCE is non-nil, always encode multibyte strings, otherwise
+only encode when multibyte strings are not supported."
+  (if (and (multibyte-string-p s) (or force (not enable-multibyte-characters)))
       (encode-coding-string s (or coding
                                   (and lyskom-language
                                        (lyskom-language-coding lyskom-language))
@@ -327,11 +330,11 @@ characters are enabled. This function is destructive unless optional copy
 is non-nil."
   (cond (enable-multibyte-characters table)
 	(copy (mapcar (lambda (el)
-			(cons (lyskom-maybe-recode-string (car el))
+			(cons (lyskom-maybe-recode-string (car el) nil t)
 			      (cdr el)))
                       table))
 	(t (lyskom-traverse el table
-		(setcar el (lyskom-maybe-recode-string (car el))))
+		(setcar el (lyskom-maybe-recode-string (car el) nil t)))
 	   table)))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.50 2000-08-23 10:43:45 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.51 2000-09-02 13:22:58 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.50 2000-08-23 10:43:45 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.51 2000-09-02 13:22:58 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -161,15 +161,15 @@ If there is no active area, then do something else."
   ;; Use the command as the event for simplicity.  Note that the menu
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
-  (let ((title (lyskom-maybe-recode-string title 'iso-8859-1)))
+  (let ((title (lyskom-maybe-recode-string title 'iso-8859-1 t)))
     (when (> (length title) 44) (setq title (concat (substring title 0 40)
                                                     " ...")))
     (cond ((string-match "XEmacs" (emacs-version))
-           (cons (lyskom-maybe-recode-string title 'iso-8859-1)
+           (cons (lyskom-maybe-recode-string title 'iso-8859-1 t)
                  (mapcar (function
                           (lambda (entry)
                             (vector (lyskom-maybe-recode-string
-                                     (lyskom-get-string (car entry)) 'iso-8859-1)
+                                     (lyskom-get-string (car entry)) 'iso-8859-1 t)
                                     (list (cdr entry)
                                           buf
                                           (if (listp arg)
@@ -183,7 +183,7 @@ If there is no active area, then do something else."
                                          (let ((tmp (copy-tree entry)))
                                            (setcar tmp (lyskom-maybe-recode-string
                                                         (lyskom-get-string (car tmp))
-                                                        'iso-8859-1))
+                                                        'iso-8859-1 t))
                                            (cons (` ((, (cdr entry)) 
                                                      (, buf)
                                                      (, arg)

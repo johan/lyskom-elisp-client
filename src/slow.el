@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.11 2000-09-01 13:15:52 byers Exp $
+;;;;; $Id: slow.el,v 44.12 2000-09-02 13:23:02 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -93,10 +93,10 @@ Currently the prompt is assumed to be on the last line of the buffer."
   (interactive "@e")
   (let ((pos (event-closest-point event)))
     (if (and (lyskom-slow-on-prompt-line pos)
-             (<= (save-excursion (lyskom-slow-start-of-line) pos)))
+             (<= (lyskom-slow-start-of-line) pos)))
         (let ((fn (lookup-key global-map (this-command-keys))))
           (when (commandp fn) (call-interactively fn)))
-      (kom-button-click event))))
+      (kom-button-click event)))
 
 (defun kom-slow-button-press ()
   "Run kom-button-press unless on the prompt line."
@@ -160,9 +160,7 @@ Currently the prompt is assumed to be on the last line of the buffer."
                             longest)))
 	  (when (lyskom-string= (lyskom-unicase longest) (lyskom-unicase text))
             (if (or have-space eager-completion)
-                (lyskom-format-insert-before-prompt
-                 'command-completions
-                 (mapconcat 'identity completes "\n ")))
+		(lyskom-slow-list-completions completes))
             (unless (or eager-completion (eq ?\  (char-before (point))) (insert " "))))
           ))
 	 (t (signal 'lyskom-internal-error '()))))))
@@ -210,15 +208,19 @@ If the completion was not exact it returns nil."
       (delete-region (cdr command) (point-max))
       (call-interactively (car command))))))
 
+(defun lyskom-slow-list-completions (completes)
+  "List strings in COMPLETES as possible completions for a command."
+  (cond (completes (lyskom-format-insert-before-prompt
+		    'command-completions
+		    (mapconcat 'identity (sort completes 'string-lessp) "\n ")))
+	(t (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command)))))  
+
 (defun kom-slow-list-completions ()
   (interactive)
   (save-excursion
-    (let* ((text (lyskom-get-entered-slow-command))
-           (completes (and text (all-completions text 'lyskom-complete-command))))
-      (cond (completes (lyskom-format-insert-before-prompt
-                        'command-completions
-                        (mapconcat 'identity completes "\n ")))
-            (t (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command)))))))
+    (lyskom-slow-list-completions 
+     (all-completions (or (lyskom-get-entered-slow-command) "")
+		      'lyskom-complete-command))))
 
 
 (defun kom-slow-mode ()
