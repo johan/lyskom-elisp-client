@@ -1,3 +1,10 @@
+1999-12-13  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-recursive-prompt-update): New variable.
+	(lyskom-update-all-prompts): Set lyskom-recursive-prompt-update to
+	avoid endlessly recursing into this function (via lyskom-beep,
+	sit-for and the filter function.)
+
 1999-12-10  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (kom-move-text): Supply better defaults for
