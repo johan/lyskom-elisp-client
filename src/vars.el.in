@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.21 1997-07-02 17:47:31 byers Exp $
+;;;;; $Id: vars.el.in,v 44.22 1997-07-06 14:27:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.21 1997-07-02 17:47:31 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.22 1997-07-06 14:27:51 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -496,7 +496,7 @@ various LysKOM elements.")
 
     ;; Email
 
-    ("[^()<>@,;:\"\\\\ - ]+@[^ - <>;,.'\"!:?) \t\012]+\\(\\.[^ - <>;,.'\"!:?)]+\\)+"
+    ("[^()<>@,;:\"\\\\\000- ]+@[^\000- <>;,.'\"!:?) \t\012\014]+\\(\\.[^\000- <>;,.'\"!:?)]+\\)+"
      email 0 0 kom-url-face)
 
     ;; JySKom enhancements
@@ -707,11 +707,11 @@ don't send a reply.
 If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent."
   server)
 
-(def-kom-var kom-default-language 'sv
+(def-kom-var kom-default-language nil
   "*Which lagnuage to use for new sessions."
   server inherited protected)
 
-(def-kom-var lyskom-language 'sv
+(def-kom-var lyskom-language nil
   ;; One might extend this into a list of languages, sorted in
   ;; preference order.
   "The language currently in use."
@@ -740,6 +740,11 @@ If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent."
 (def-kom-var lyskom-onoff-table nil
   "A completion table for on and off selections."
   local)
+
+(def-kom-var lyskom-language-codes nil
+  "A list of ISO 639 language codes"
+  local)
+(put 'lyskom-language-codes 'lyskom-language-force t)
 
 (def-kom-var lyskom-filter-predicate-list nil
       "A list of legal filter comparison predicates."
