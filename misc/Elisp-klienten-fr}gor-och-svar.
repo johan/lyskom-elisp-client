@@ -880,3 +880,43 @@ meddelanderad och du kan nu trycka `?' och f} en lista p} vilka
 kommandon som finns.
 ...
 (134612) -----------------------------------
+
+139810 1991-11-12  21:48  /8 rader/ Chrisp
+Mottagare: LysKOM (-) \vrigt <236>
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <204>
+    S{nt:     1991-11-12 22:18
+    S{nt av Linus Tolke Y
+[rende: Utvidga?
+------------------------------------------------------------
+En sak som jag funderat |ver {r i vilket m|te jag ska l{gga in f|rslag
+p} {ndringar i KOM. Jag vet inte ens *var* f|r{ndringarna ska g|ras, i
+KOM eller i klienten.
+  Detta tror jag kan h|ra hem i en klient, men det kommer h{r i alla
+fall: Om man kommenterar ett inl{gg, varf|r kommer inte det man
+kommenterar i ett eget f|nster. Det k{nns s} pinsamt att inte kunna
+l{sa det... Ett annat knep vore att f} kom i ett annat f|nster, s} att
+man kan }terse och g|ra som man vill. /Chrisp
+(139810) -----------------------------------
+Kommentar i text 139946 av Linus Tolke Y
+
+139946 1991-11-12  22:31  /14 rader/ Linus Tolke Y
+Kommentar till text 139810 av Chrisp
+Mottagare: LysKOM (-) \vrigt <237>
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <205>
+[rende: Utvidga? beh|vs det verkligen?
+------------------------------------------------------------
+Det du kommentera kommer i ett annat f|nster om du s{gger
+kom-write-texts-in-window till 'other. Vill du har det du kommenterar
+i ett speciellt f|nster (om du t.ex har 4 emacs-f|nster och du
+vill att ett speciellt av dessa skall anv{ndas f|r att skriva
+din kommentar s} kan du s{tta kom-write-texts-in-window till
+antingen det f|nstret eller ocks} bufferten som visas i det
+f|nster du vill anv{nda.
+
+Oavsett v{rdet kan du alltid byta tillbaka till *kom*-bufferten och
+l{sa, }terse, kolla status, b|rja skriva andra inl{gg mm.
+
+Oavsett v{rdet p} variabeln kan du ocks} n{r som helst i
+*kom*-edit bufferten trycka C-c } k f|r att }terse den text
+du kommenterar eller fotnoterar.
+(139946) -----------------------------------
