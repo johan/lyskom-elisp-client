@@ -44,6 +44,8 @@ Buggar
 
 Allmänna förbättringar
 
+    Fixa klart z-initiate-get-map.
+
     När man skickar in en kommentar borde klienten kolla att inga nya
     kommentarer till texten har skrivits under tiden.
 
