@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.13 1992-08-03 04:10:05 linus Exp $
+;;;;; $Id: startup.el,v 35.14 1992-08-12 04:40:27 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.13 1992-08-03 04:10:05 linus Exp $\n"))
+	      "$Id: startup.el,v 35.14 1992-08-12 04:40:27 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -346,7 +346,8 @@ Information required for this:
 	  (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
 					   lyskom-pers-no
 					   lyskom-membership-is-read
-					   lyskom-fetch-membership-length)))
+					   lyskom-fetch-membership-length)
+	(setq lyskom-membership-is-read t)))
     (let ((reverse (reverse lyskom-membership)))
       (while reverse
 	(lyskom-prefetch-conf (membership->conf-no (car reverse)))
@@ -392,7 +393,7 @@ If not, fetch next conf-stat from REST-MEMBERSHIPLIST."
 (defun lyskom-decide-unread-map (map conf)
   "Enters this map in the lyskom-to-do-list and returns to lyskom-start-anew-login-3."
   (lyskom-enter-map-in-to-do-list map conf)
-  (lyskom-start-anew-login-3 'cont))
+  (lyskom-fetch-until-we-have-an-unread))
 
 
 (defun lyskom-print-name (conf-stat)
