@@ -1,3 +1,7 @@
+2000-11-29  David Byers  <davby@sen5.ida.liu.se>
+
+	* Release av 0.46.1-BETA-3
+
 2000-11-27  Joel Rosdahl  <joel@rosdahl.net>
 
 	* debian/control (Depends): Saner dependency default.
