@@ -1,5 +1,8 @@
 Wed May  1 20:53:30 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* lyskom-buttons.el (lyskom-generate-button): La till
+	'(rear-nonsticky t) till alla knappar.
+
 	* internal.el (lyskom-queue-collect-p): Kommenterade bort denna
  	funktion.
 	
