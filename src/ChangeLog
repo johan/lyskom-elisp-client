@@ -1,3 +1,9 @@
+Mon Oct 27 11:09:35 1997  David Kågedal  <davidk@lysator.liu.se>
+
+	* flags.el (kom-edit-options-send): Fixade parentesfel.
+	
+	* review.el (lyskom-get-texts-by-and-to): Fixade felskrivning.
+
 Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 
 	* view-text.el (lyskom-print-text): Hantera

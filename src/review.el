@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.10 1997-10-23 12:19:16 byers Exp $
+;;;;; $Id: review.el,v 44.11 1997-10-27 13:29:57 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.10 1997-10-23 12:19:16 byers Exp $\n"))
+	      "$Id: review.el,v 44.11 1997-10-27 13:29:57 davidk Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -552,8 +552,8 @@ Args: persno confno num &optional again pstart cstart"
 
      ((and (eq lyskom-pers-no persno)
            confstat
-           (or (conf-type->letterbox (conf-stat->type confstat))
-               (and (conf-type->rd_prot (conf-stat->type confstat))
+           (or (conf-type->letterbox (conf-stat->conf-type confstat))
+               (and (conf-type->rd_prot (conf-stat->conf-type confstat))
                     (null (map->text-nos 
                            (blocking-do 'get-map
                                         (conf-stat->conf-no conf)
