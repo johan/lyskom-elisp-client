@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.2 2000-08-31 13:16:31 mattias Exp $
+# $Id: Makefile,v 44.3 2002-03-22 18:18:20 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -31,10 +31,6 @@ lisp:
 doc:
 	( cd doc; $(MAKE) )
 
-install:
-	( cd src; $(MAKE) install )
-	( cd doc; $(MAKE) install )
-
 release:
 	( cd src; $(MAKE) release )
 	( cd doc; $(MAKE) release )
@@ -44,9 +40,6 @@ clean:
 	( cd src; ${MAKE} clean )
 	( cd doc; ${MAKE} clean )
 	( cd misc; ${MAKE} clean )
-
-distclean: clean
-	( cd src; ${MAKE} distclean )
 
 debian-package:
 	( cd src; $(MAKE) debian-package )
