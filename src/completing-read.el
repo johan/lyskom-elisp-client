@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.20 1999-07-12 16:49:45 ceder Exp $
+;;;;; $Id: completing-read.el,v 44.21 1999-10-09 16:13:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.20 1999-07-12 16:49:45 ceder Exp $\n"))
+       "$Id: completing-read.el,v 44.21 1999-10-09 16:13:21 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -953,9 +953,8 @@ the LysKOM rules of string matching."
 					 lyskom-session-no)
 				     "*" " "))
 			 (session-info->pers-no info)
-			 (if (uconf-stat->name confconfstat)
-			     confconfstat
-			   (lyskom-get-string 'not-present-anywhere)))
+			 (or confconfstat
+                             (lyskom-get-string 'not-present-anywhere)))
 			(lyskom-format-insert
 			 format-string-p
 			 ""

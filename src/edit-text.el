@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.42 1999-08-25 19:50:04 byers Exp $
+;;;;; $Id: edit-text.el,v 44.43 1999-10-09 16:13:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.42 1999-08-25 19:50:04 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.43 1999-10-09 16:13:22 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1032,6 +1032,31 @@ text is a member of some recipient of this text."
           (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
     (sit-for 0)))
 
+
+;;; ============================================================
+;;; Info node stuff
+
+(defun kom-yank-info-nodename ()
+  "Put the current Info-node on the kill-ring."
+  (interactive)
+  (kill-new (format "*Note %s: (%s)%s,"
+		    Info-current-node
+		    (file-name-nondirectory Info-current-file)
+		    Info-current-node)))
+
+(defun kom-insert-last-info-nodename ()
+  "Insert a reference to the most recently visited info node."
+  (interactive)
+  (condition-case nil
+      (let ((link nil))
+        (save-excursion
+          (set-buffer (get-buffer "*info*"))
+          (setq link (format "*Note %s: (%s)%s,"
+                             Info-current-node
+                             (file-name-nondirectory Info-current-file)
+                             Info-current-node)))
+        (insert link))
+    (error (lyskom-message (lyskom-get-string 'cant-find-info-node)))))
 
 ;;; ================================================================
 ;;;	  Add recipient, copy-recipient - Addera mottagare 
