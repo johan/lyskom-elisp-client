@@ -1,3 +1,11 @@
+2000-06-11  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Documentation update.
+	Only review texts that can be read.
+
+	* review.el (lyskom-review-comments): Only review texts that can
+	be read.
+
 2000-06-10  Johan Sundström  <jhs@lysator.liu.se>
 
 	* vars.el.in (lyskom-add-sub-recipients-hook): New hook.

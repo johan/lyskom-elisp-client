@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.42 2000-06-05 11:04:26 byers Exp $
+;;;;; $Id: view-text.el,v 44.43 2000-06-10 23:16:35 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.42 2000-06-05 11:04:26 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.43 2000-06-10 23:16:35 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -371,9 +371,10 @@ when put in your `lyskom-view-text-hook'."
 This will essentially fix the reading list and issue calls for the cache to be
 filled.
 
-Arguments are: TEXT-STAT CONF-STAT PRIORITY REVIEW-TREE
+Arguments are: TEXT-STAT CONF-STAT MARK-AS-READ PRIORITY REVIEW-TREE
 TEXT-STAT is the current text.
 CONF-STAT the current conference
+If MARK-AS-READ is non-nil the texts will be marked as read.
 PRIORITY the priority of the reading.
 If REVIEW-TREE is non-nil then build an entry of type 'REVIEW-TREE in the 
 lyskom-reading-list."
@@ -406,8 +407,8 @@ lyskom-reading-list."
                    kom-follow-attachments
                    (not (memq no mx-attachments-in)))
                (let ((text-stat (blocking-do 'get-text-stat no)))
-                 (if (or review-tree
-                         (and text-stat
+                 (if (and text-stat
+                          (or review-tree
                               (not (lyskom-text-read-p text-stat))))
                      (setq comments (cons no comments)))))
               ((memq no mx-attachments-in)

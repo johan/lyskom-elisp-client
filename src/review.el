@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.27 2000-06-05 11:04:21 byers Exp $
+;;;;; $Id: review.el,v 44.28 2000-06-10 23:16:34 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.27 2000-06-05 11:04:21 byers Exp $\n"))
+	      "$Id: review.el,v 44.28 2000-06-10 23:16:34 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1216,7 +1216,7 @@ text is shown and a REVIEW list is built to shown the other ones."
 				   'FOOTN-IN misc-info-list)
 				  (lyskom-misc-infos-from-list 
 				   'COMM-IN misc-info-list))))
-	 (text-nos (and misc-infos
+	 (all-text-nos (and misc-infos
 			(mapcar
 			 (function
 			  (lambda (misc-info)
@@ -1224,7 +1224,14 @@ text is shown and a REVIEW list is built to shown the other ones."
 				       'COMM-IN)
 				(misc-info->comm-in misc-info)
 			      (misc-info->footn-in misc-info))))
-			 misc-infos))))
+			 misc-infos)))
+         text-nos)
+    ;; Only try to review texts that we can read.
+    (while all-text-nos
+      (if (blocking-do 'get-text-stat (car all-text-nos))
+          (setq text-nos (cons (car all-text-nos) text-nos)))
+      (setq all-text-nos (cdr all-text-nos)))
+
     (if text-nos
 	(progn
 	  (lyskom-format-insert 'review-text-no (car text-nos))
