@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.146 2003-08-26 18:19:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.147 2003-08-27 11:02:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.146 2003-08-26 18:19:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.147 2003-08-27 11:02:59 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2152,19 +2152,21 @@ suitable for use as initial input in a magic minibuffer."
 
 (defun lyskom-completing-read (prompt table &optional predicate
                                       require-match init hist def)
-  (lyskom-ignore def)
-  (lyskom-with-lyskom-minibuffer
-   (lyskom-with-magic-minibuffer
-    (let ((res (completing-read prompt table predicate require-match init hist)))
-      (if (or (null res) (equal res "")) def res)))))
+  (let ((this-command this-command))
+    (lyskom-ignore def)
+    (lyskom-with-lyskom-minibuffer
+     (lyskom-with-magic-minibuffer
+      (let ((res (completing-read prompt table predicate require-match init hist)))
+        (if (or (null res) (equal res "")) def res))))))
 
 (defun lyskom-read-from-minibuffer (prompt 
                                     &optional initial-contents
                                     keymap read hist def)
-  (lyskom-ignore def)
-  (lyskom-with-lyskom-minibuffer
-   (lyskom-with-magic-minibuffer
-    (or (read-from-minibuffer prompt initial-contents keymap read hist) def))))
+  (let ((this-command this-command))
+    (lyskom-ignore def)
+    (lyskom-with-lyskom-minibuffer
+     (lyskom-with-magic-minibuffer
+      (or (read-from-minibuffer prompt initial-contents keymap read hist) def)))))
 
 (defun lyskom-set-connection-time-format (val)
   "Change protocol time format to UTC if VAL is non-nil."

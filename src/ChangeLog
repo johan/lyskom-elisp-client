@@ -1,3 +1,9 @@
+2003-08-27  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-completing-read): Protect the value of
+	this-command from alteration.
+	(lyskom-read-from-minibuffer): Same here.
+
 2003-08-26  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el (lyskom-magic-minibuffer-mangle-initial):
