@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.4 1997-02-19 08:35:29 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.5 1997-10-12 10:31:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.4 1997-02-19 08:35:29 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.5 1997-10-12 10:31:42 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -642,6 +642,6 @@ The element last pushed is first in the list."
   (setcdr collector (cons value (cdr collector))))
 
 
-(provide 'lyskom-clienttypes)
+(eval-and-compile (provide 'lyskom-clienttypes))
 
 ;;; clienttypes.el ends here

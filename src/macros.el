@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.14 1997-09-21 11:43:12 byers Exp $
+;;;;; $Id: macros.el,v 44.15 1997-10-12 10:31:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.14 1997-09-21 11:43:12 byers Exp $\n"))
+	      "$Id: macros.el,v 44.15 1997-10-12 10:31:46 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -201,8 +201,6 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
-(provide 'lyskom-macros)
-
 
 ;;; ============================================================
 ;;; Keymap handling
@@ -263,6 +261,8 @@ the current buffer, and its value is copied from the LysKOM buffer."
 (defmacro lyskom-setq-default (name value)
   (` (lyskom-set-default (quote (, name))
                          (, value))))
+
+(eval-and-compile (provide 'lyskom-macros))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

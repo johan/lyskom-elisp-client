@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 44.8 1997-09-28 11:38:45 byers Exp $
+;;;;; $Id: services.el,v 44.9 1997-10-12 10:31:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.8 1997-09-28 11:38:45 byers Exp $\n"))
+	      "$Id: services.el,v 44.9 1997-10-12 10:31:50 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1081,6 +1081,6 @@ or get-text-stat."
 
 
 
-(provide 'lyskom-services)
+(eval-and-compile (provide 'lyskom-services))
 
 ;;; services.el ends here
