@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.119 2002-09-15 14:52:00 byers Exp $
+;;;;; $Id: utilities.el,v 44.120 2002-09-15 17:20:40 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.119 2002-09-15 14:52:00 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.120 2002-09-15 17:20:40 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -767,8 +767,6 @@ its first argument and remaining list items appended to the argument list."
                 (setq text-no (lyskom-read-number prompt default))))))
           (setq how (cdr how)))))
     (cond
-     ((stringp text-no) ;; a strategy failure error message
-      (lyskom-error text-no))
      ((and (null current-prefix-arg)
            (or always-prompt
                (lyskom-read-text-no-prompt-p lyskom-current-command)))
@@ -777,6 +775,8 @@ its first argument and remaining list items appended to the argument list."
                                 ((lyskom-plusp text-no) text-no)
                                 (t (lyskom-default-value
                                     'lyskom-current-text)))))
+     ((stringp text-no) ;; a strategy failure error message
+      (lyskom-error text-no))
      ((and (lyskom-plusp text-no)) ;; a proper text-no
       text-no)
      ((null current-prefix-arg) ;; a fall-back when no strategy had kicked in
