@@ -1,3 +1,8 @@
+Tue Jan  6 06:12:39 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* services.el (lyskom-wait-queue): Här skulle man visst också
+ 	återställa lyskom-ok-to-send-new-calls.
+
 Sun Jan  4 01:42:08 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* services.el (lyskom-blocking-do-multiple): Använd
