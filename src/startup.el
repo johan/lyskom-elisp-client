@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 39.1 1996-03-16 11:32:35 davidk Exp $
+;;;;; $Id: startup.el,v 39.2 1996-03-25 17:03:55 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 39.1 1996-03-16 11:32:35 davidk Exp $\n"))
+	      "$Id: startup.el,v 39.2 1996-03-25 17:03:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -225,7 +225,8 @@ See lyskom-mode for details."
 		     (zerop (conf-stat->presentation conf-stat))
 		     (not (zerop (conf-stat->no-of-texts conf-stat))))
 		(lyskom-insert-string 'presentation-encouragement)))
-	  (lyskom-read-options) 
+	  (if (not lyskom-dont-read-user-area)
+	      (lyskom-read-options))
 	  (lyskom-refetch)
 	  ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
 	  (cache-set-marked-texts (blocking-do 'get-marks))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 39.3 1996-03-25 15:42:21 davidk Exp $
+;;;;; $Id: edit-text.el,v 39.4 1996-03-25 17:03:40 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 39.3 1996-03-25 15:42:21 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 39.4 1996-03-25 17:03:40 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -376,6 +376,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		    (if (/= (point) old)
 			(signal 'lyskom-no-subject '(enter-subject-idi)))))
 	      (setq message (lyskom-edit-extract-text))
+          (if (fboundp 'lyskom-send-transform-text)
+              (setq message (lyskom-send-transform-text message)))
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
 		(set-buffer (process-buffer lyskom-proc))
@@ -384,9 +386,12 @@ Entry to this mode runs lyskom-edit-mode-hook."
 		    (setq lyskom-dont-change-prompt t))
 		(setq lyskom-is-writing nil)
 		(lyskom-tell-internat 'kom-tell-send)
-		(funcall send-function 'sending 'lyskom-create-text-handler
-			 (concat subject "\n" message) misc-list
-			 buffer)))
+		(funcall send-function
+                 'sending
+                 'lyskom-create-text-handler
+                 (concat subject "\n" message)
+                 misc-list
+                 buffer)))
 	    (if kom-dont-restore-window-after-editing
 		(bury-buffer)
 	      (save-excursion
@@ -398,11 +403,45 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	      (set-window-configuration lyskom-edit-return-to-configuration)
 	      (set-buffer (window-buffer (selected-window))))
 	    (goto-char (point-max))))
+    ;;
+    ;; Catch no-subject
+    ;;
+
     (lyskom-edit-error
-     (if (cdr (cdr err))
-	 (goto-char (car (cdr (cdr err)))))
+     (if (cdr-safe (cdr-safe err))
+	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
      (lyskom-beep lyskom-ding-on-no-subject)
-     (lyskom-message (lyskom-get-string (car (cdr err)))))))
+     (lyskom-message (lyskom-get-string (car (cdr err))))
+     (condition-case arg
+         (let ((text ""))
+           (save-excursion
+             (set-buffer (process-buffer lyskom-proc))
+             (if (and (string= "kom.lysator.liu.se" lyskom-server-name)
+                      (eq lyskom-pers-no 698))
+                 (setq text "Ärende, IDI!")))
+           (save-excursion (insert text)))
+       (error nil)))))
+
+
+(defun lyskom-send-transform-text (message)
+  (if lyskom-format-experimental
+      (condition-case err
+          (let ((buf (generate-new-buffer "lyskom-enriched")))
+            (unwind-protect
+                (save-excursion
+                  (set-buffer buf)
+                  (insert message)
+                  (goto-char (point-min))
+                  (format-encode-buffer 'text/enriched)
+                  (goto-char (point-min))
+                  (search-forward "\n\n")
+                  (if (not (string= (buffer-substring (point)
+						      (point-max)) message))
+                      (concat "enriched:\n" (buffer-string))
+                    message))
+              (kill-buffer buf)))
+        (error message))
+    message))
 
 
 (defun kom-edit-quit ()

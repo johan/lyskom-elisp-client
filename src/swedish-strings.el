@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 39.5 1996-03-25 15:48:11 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 39.6 1996-03-25 17:03:59 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 39.5 1996-03-25 15:48:11 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 39.6 1996-03-25 17:03:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -357,7 +357,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (no-comments . "original")
     (closed . "slutet")
 
-    (created-by . "%[%#3@Skapat av person %25#1:p%] %#4s(%#2P)\n")
+    (created-by . "Skapat av person %25#1p %#3s(%#2P)\n")
     (created-at . "Skapad:%35#1s\n")
     (members .    "Antal medlemmar: %25#1d\n")
     (garb-nice . "Livsl\344ngd p\345 inl\344gg (dagar):%14#1d\n")
@@ -366,9 +366,9 @@ du har l\344st klart allting. Kom tillbaks senare.
     (last-text-time . 
      "Tid f\366r senaste inl\344gg: %18#1s (st\345r det i din cache)\n")
     (no-of-motd . "Lapp p\345 d\366rren i text nummer: %12#1n\n")
-    (superconf-is-no-name . "%[%#3@Superm\366te:       %25#1:m%] %#4s(%#2M)\n")
-    (permitted-submitters-no-name . "%[%#3@Till\345tna f\366rfattare:%22#1:m%] %#4s(%#2M)\n")
-    (supervisor-is-no-name . "%[%#3@Organisat\366r:     %25#1:p%] %#4s(%#2P)\n")
+    (superconf-is-no-name . "Superm\366te:       %25#1m %#3s(%#2M)\n")
+    (permitted-submitters-no-name . "Till\345tna f\366rfattare:%22#1m %#3s(%#2M)\n")
+    (supervisor-is-no-name . "Organisat\366r:     %25#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
     (conf-has-motd . "\n%#1M har en lapp p\345 d\366rren:\n")
 
@@ -395,8 +395,8 @@ du har l\344st klart allting. Kom tillbaks senare.
     (read-texts . "L\344sta texter:%28#1d\n")
     (marked-texts . "Markerade texter:%24#1d\n")
     (time-for-last-letter . "Tid f\366r senaste brev:%20#1s (st\345r det i din cache)\n")
-    (superconf . "%[%#3@Superm\366te:%31#1:m%] %#4s(%#2M)\n")
-    (supervisor . "%[%#3@Organisat\366r:%29#1:p%] %#4s(%#2P)\n")
+    (superconf . "Superm\366te:%31#1m %#3s(%#2M)\n")
+    (supervisor . "Organisat\366r:%29#1p %#3s(%#2P)\n")
     (member-of-confs . "Medlem i (antal m\366ten):%18#1d\n")
     (presentation . "Presentation:    %24#1n\n")
     (show-membership-list-also-q . "Vill du se vilka m\366ten personen \344r medlem i ocks\345? ")
@@ -450,7 +450,7 @@ Meddelandet du f\366rs\366kte s\344nda till %#1M var:
     (could-not-read . "Du fick inte l\344sa denna text (%#1n).\n")
     (multiple-choice . "Flera alternativ finns.")
     (does-not-exist . "Detta kommando finns inte.")
-    (summary-line . "%=-7#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
+    (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
     (what-mark-to-list . "Vilken markering vill du lista? ")
     (you-have-marks . "Du har %#1d inl\344gg markerade markerade med %#2d.\n")
@@ -815,7 +815,7 @@ Felmeddelande: %#1s**************************************************")
     (ansaphone-new-message . "Nytt automatsvar: ")
     (ansaphone-message . "Svarsmeddelande:
 ----------------------------------------------------------------------
-%#1s
+%#1t
 ----------------------------------------------------------------------
 ")
     (ansaphone-state . "Automatsvar \344r nu %#1s.")
@@ -829,7 +829,7 @@ Felmeddelande: %#1s**************************************************")
     (remote-erase-messages . "Fj\344rrstyrning (%#1P %#2s): Sparade meddelanden raderade\n")
     (remote-set-message . "Fj\344rrstyrning (%#1P %#2s): Svarsmeddelande:
 ----------------------------------------------------------------------
-%#3s
+%#3t
 ----------------------------------------------------------------------
 ")
     (remote-set-ansaphone . "Fj\344rrstyrning (%#1P %#2s): Automatsvar \344r nu %#3s\n")
@@ -1005,8 +1005,8 @@ Text:
       "A list of legal filter conditions and their textual representation.")
 
 (defvar lyskom-filter-actions
-      '((dontshow . "Visa inte")
-        (skip-text . "Hoppa \366ver")
+      '((skip-text . "Hoppa \366ver")
+        (dontshow . "Visa inte")
         (skip-tree . "Hoppa \366ver kommentarer"))
       "A list of legal filter actions an their textual representation.")
                                
@@ -1066,8 +1066,8 @@ Cf. paragraph-start.")
 	(define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
 	(define-key lyskom-mode-map [mouse-3] 'kom-mouse-null)
 	(define-key lyskom-mode-map "*" 'kom-key-mouse-2)
-	(define-key lyskom-mode-map "\M-f" 'kom-next-link)
-	(define-key lyskom-mode-map "\M-b" 'kom-previous-link)
+	(define-key lyskom-mode-map "\C-i" 'kom-next-link)
+	(define-key lyskom-mode-map "\M-\C-i" 'kom-previous-link)
 	))
   ;;(define-key lyskom-mode-map "vi" 'vilka)
   
@@ -1278,6 +1278,77 @@ Cf. paragraph-start.")
   "*Default message to send when the ansaphone is on.
 
 This variable is stored in the LysKOM server.")
+
+
+;;;; ============================================================
+;;;; Text buttom menuse go here. This will probably be moved back
+;;;; to vars.el.in when the strings have been replaced by
+;;;; symbols, but for now they'll stay here.
+
+
+(defvar lyskom-button-actions
+  '((text
+     text-text
+     lyskom-button-view-text
+     (("Återse texten" . lyskom-button-view-text)
+      ("Återse träd" . lyskom-button-review-tree)
+      ("Återse urinlägget" . lyskom-button-find-root)
+      ("Kommentera texten" . lyskom-button-comment-text)
+      ("Personligt svar" . lyskom-button-private-comment-text)
+      ("Markera texten" . lyskom-button-mark-text)
+      ("Avmarkera texten" . lyskom-button-unmark-text))
+     nil)
+    (conf 
+     conf-text
+     lyskom-button-view-conf-presentation
+     (("Visa presentation" . lyskom-button-view-conf-presentation)
+      ("Visa mötesstatus" . lyskom-button-view-conf-status)
+      ("Gå till mötet" . lyskom-button-goto-conf)
+      ("Skicka gruppmeddelande" . lyskom-button-send-message)
+      ("Bli medlem i mötet" . lyskom-button-add-self)
+      ("Utträd ur mötet" . lyskom-button-sub-self))
+     ((kom-list-news . lyskom-button-goto-conf)))
+    (pers 
+     pers-text
+     lyskom-button-view-pers-presentation
+     (("Visa presentation" . 
+                             lyskom-button-view-pers-presentation)
+      ("Visa personstatus" . lyskom-button-view-pers-status)
+      ("Skicka brev" . lyskom-button-mail)
+      ("Sänd meddelande" . lyskom-button-send-message))
+     nil)
+    (url 
+     url-text
+     lyskom-button-open-url
+     (("Öppna" . lyskom-button-open-url)
+      ("Kopiera" . lyskom-button-copy-url))
+     nil))
+
+"This variable defines valid button types in LysKOM. Each element is a
+list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).
+TYPE is the button type the entry defines
+LABEL is a textual representation for the button type, used in menu titles. If
+      it is a symbol, that symbol will be looked up using lyskom-get-string.
+DEFAULT is the default action to take on a click. It must be a function.
+ACTIONS are other possible actions. The format of this entry is described 
+        below.
+HINTS is a list of hints to override the default action. This is described 
+      below.
+
+The ACTIONS entry is used to construct a pop-up menu. It is a list consisting 
+of lists with the format (STRING . FUNCTION). STRING is the menu label and
+FUNCTION is the function to call when the menu item is selected.
+
+The HINTS entry is used to generate hints that the default action should be 
+overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
+as interactive LysKOM command and HINT is a function to call. When a button
+is generated while the command COMMAND is being executed, HINT is used as a 
+hint for a new default action. The user has the option to ignore or used the 
+hint.
+
+Also see the function \"kom-add-button-action\".
+
+This variable is not saved in the LysKOM server.")
         
 
 ;;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 39.1 1996-03-21 20:28:09 davidk Exp $
+;;;;; $Id: filter.el,v 39.2 1996-03-25 17:03:48 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -147,7 +147,7 @@ Returns nil if no such attribute is present."
     
 (defun lyskom-filter-text-p-2 (text-stat)
   (if (null text-stat)
-      nil
+      (setq lyskom-filter-hack nil)
     (progn
       ;;
       ;; Collect information from the server
@@ -574,7 +574,7 @@ the current text"
 		    (list (cons 'action 'skip-tree)
 			  (cons 'expire t))))
 		  (lyskom-format-insert 'super-jump
-					lyskom-current-subject
+					(copy-sequence lyskom-current-subject)
 					conf-stat))))))
     (lyskom-end-of-command)))
 

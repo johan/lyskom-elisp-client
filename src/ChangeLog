@@ -1,3 +1,18 @@
+Mon Mar 25 16:22:42 1996  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el: Formatteringen täcker inte padding.
+
+	* Release av elispklient 0.40
+
+	* swedish-strings.el,english-strings.el: Bugfixar
+
+	* filter.el: Bugfixar
+
+	* vars.el.in, lyskom-rest.el, startup.el: Gjorde så färger sätts
+ 	vid load, inte vid inloggning. Bytte några defaultfärger.
+
+	* Makefile: Satte versionsnummer till 0.40
+
 Mon Mar 25 06:48:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* parse.el (lyskom-parse-unparsed): Se till att meddelandet
@@ -5,6 +20,15 @@ Mon Mar 25 06:48:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* review.el (lyskom-review-comments): Se fotnoter först.
 
+Fri Mar 22 13:49:23 1996  David Byers  <byers@lysator.liu.se>
+
+	* filter.el: Fixade buggar.
+
+	* edit-text.el: Fixad buggar. Lade in så man kan skicka in
+ 	enriched text om lyskom-format-experimental är satt.
+
+	* lyskom-rest.el (lyskom-format-text-body): Fixade buggar.
+	
 Fri Mar 22 12:48:06 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-send): Felhanteringen buggade.
@@ -51,6 +75,12 @@ Tue Mar 19 00:03:23 1996  David Kågedal  <davidk@lysator.liu.se>
 	* async.el (lyskom-parse-async): Ignorera kom-presence-messages.
 
 Mon Mar 18 12:34:47 1996  David Byers  <byers@lysator.liu.se>
+
+	* startup.el: Lade till så man kan låta bli att läsa user-arean
+ 	vid inloggning via variabeln lyskom-dont-read-user-area,
+
+	* view-text.el: Gjorde så text props inte hamnar i
+ 	lyskom-current-subject.
 
 	* services.el, lyskom-rest.el, lyskom-buttons.el, view-text.el,
  	macros.el: Lade till ställbar timeout till accept-process-output
