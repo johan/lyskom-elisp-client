@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 38.2 1995-10-25 09:37:54 davidk Exp $
+;;;;; $Id: komtypes.el,v 38.3 1996-01-13 06:50:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 38.2 1995-10-25 09:37:54 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 38.3 1996-01-13 06:50:39 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -812,21 +812,21 @@ TYPE is one of RECPT, CC-RECPT COMM-TO COMM-IN FOOTN-TO or FOOTN-IN."
 ;;; Constructor:
 
 (defsubst lyskom-create-privs (wheel
-			    admin
-			    statistic
-			    create_pers
-			    create_conf
-			    change_name
-			    flg7
-			    flg8
-			    flg9
-			    flg10
-			    flg11
-			    flg12
-			    flg13
-			    flg14
-			    flg15
-			    flg16)
+			       admin
+			       statistic
+			       create_pers
+			       create_conf
+			       change_name
+			       flg7
+			       flg8
+			       flg9
+			       flg10
+			       flg11
+			       flg12
+			       flg13
+			       flg14
+			       flg15
+			       flg16)
   "Create a privs from all parameters."
   (cons
    'PRIVS

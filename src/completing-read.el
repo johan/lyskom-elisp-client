@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.3 1995-10-28 07:36:27 davidk Exp $
+;;;;; $Id: completing-read.el,v 38.4 1996-01-13 06:50:25 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.3 1995-10-28 07:36:27 davidk Exp $\n"))
+	      "$Id: completing-read.el,v 38.4 1996-01-13 06:50:25 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -150,6 +150,11 @@ Logins is a list of conf-nos (only significant when PREDICATE is logins)."
 	   (memq (conf-stat->conf-no cs) logins))))
 
 
+;; +++ Where should this be put?
+(defsubst listify-vector (vector)
+  "Turn VECTOR into a list"
+  (append vector nil))
+
 (defun lyskom-read-conf-name-internal (string predicate all)
   "The \"try-completion\" for the lyskom-read name.
 STRING is the string to be matched.
@@ -166,10 +171,10 @@ to conf-no translator."
 			 (eq predicate 'logins)))
 	 (list (if (not alllogins)
 		   (blocking-do 'lookup-name string)))
-	 (nos (append (conf-list->conf-nos list) nil))
+	 (nos (listify-vector (conf-list->conf-nos list)))
 	 (parlist (if (memq predicate '(pers confs))
 		      (let ((nos nos)
-			    (typs (append (conf-list->conf-types list) nil))
+			    (typs (listify-vector (conf-list->conf-types list)))
 			    res)
 			(while nos
 			  (setq res (cons (cons (car nos) (car typs)) res))
@@ -180,7 +185,7 @@ to conf-no translator."
 		      (mapcar
 		       (function (lambda (ele)
 				   (who-info->pers-no ele)))
-		       (append (blocking-do 'who-is-on) nil))))
+		       (listify-vector (blocking-do 'who-is-on)))))
 	 (mappedlist (cond
 		      (alllogins
 		       logins)
@@ -276,8 +281,6 @@ to conf-no translator."
 	    (cons string names)
 	  names)))
 	    
-     ((= (length mappedlist) 1)
-      t)
      ((= (length mappedlist) 0)
       (if (string-match (lyskom-get-string 'person-or-conf-no-regexp)
 			string)
@@ -289,13 +292,16 @@ to conf-no translator."
 		 cs predicate logins)
 		t))))
 
-     (t					; No exact match
-      (lyskom-try-complete-partials 
-       string
-       (mapcar (function (lambda (no)
-			   (list (conf-stat->name 
-				  (blocking-do 'get-conf-stat no)))))
-	       mappedlist))))))
+     (t					; Some matches, maybe exact?
+      (let ((strings (mapcar (function
+			      (lambda (no)
+				(list (conf-stat->name 
+				       (blocking-do 'get-conf-stat no)))))
+			     mappedlist)))
+	(if (and (= (length strings) 1)
+		 (string= string (car (car strings))))
+	    t				; Exact
+	(lyskom-try-complete-partials string strings)))))))
 
 
 (defun lyskom-try-complete-partials (string alist)

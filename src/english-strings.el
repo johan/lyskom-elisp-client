@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.7 1996-01-12 17:07:35 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.8 1996-01-13 06:50:34 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.7 1996-01-12 17:07:35 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.8 1996-01-13 06:50:34 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -194,7 +194,7 @@ Email-address:\n\nOther:\t")
     (no-comment-to . "There is no commented article.\n")
 
     (who-letter-to . "Send a letter to whom: ")
-    (has-motd . "%#1s has a note on the door:\n\n")
+    (has-motd . "%#1P has a note on the door:\n\n")
     (motd-persist-q . "Send the letter? ")
 
     (who-to-add . "Whom do you want to add: ")
@@ -855,7 +855,7 @@ Error message: %#1s**************************************************")
     (kom-filter-text            "Filter contents")
     (kom-list-filters           "List filters")
     (kom-show-user-area         "Show user area")
-    (kom-change-conference-type "Change conference type")
+    (kom-change-conf-type "Change conference type")
     )
   "A list of LysKOM-commands recognized by the extended parser.")
 
