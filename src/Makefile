@@ -93,10 +93,6 @@ distrib distribution: lyskom.el lyskom.elc doc
 	cp distribution-makefile distribution/Makefile
 	cp distribution-README distribution/README
 	cp $(HEADER-EL) $(PARTS-EL) distribution
-	awk 'BEGIN	 { on = 1 } \
-	     $$0 == ";^" { on = 0 } \
-			 { if (on == 1) print } \
-	     $$0 == ";v" { on = 1 }' async.el > distribution/async.el
 	cat distribution-README vars.el > distribution/vars.el
 	cp README distribution
 	cat distribution-README lyskom.el  > distribution/lyskom.el
