@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.60 2000-03-15 15:45:04 byers Exp $
+;;;;; $Id: commands2.el,v 44.61 2000-03-15 17:15:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.60 2000-03-15 15:45:04 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.61 2000-03-15 17:15:40 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2263,3 +2263,53 @@ Return-value: 'no-session if there is no suitable session to switch to
                        (lyskom-format-insert "%#1t" (aux-item->data el))
                        (lyskom-insert "\n"))
                      headers)))))
+
+
+;;; ============================================================
+;;; Keep-alive
+;;; Author: ceder, byers
+
+
+(def-kom-var lyskom-keep-alive-timers nil
+  "List of all active keep alive timers"
+  local)
+
+(defun lyskom-keep-alive-callback (buffer)
+  (condition-case nil
+    (save-excursion (set-buffer buffer)
+                    (if (eq (process-status lyskom-proc) 'open)
+                        (initiate-get-time 'keep nil)
+                      (lyskom-stop-keep-alive)))
+    (error (lyskom-stop-keep-alive))))
+
+(def-kom-command kom-keep-alive ()
+  "Keep the LysKOM session alive by sending a request every once in a while.
+The variable kom-keep-alive-interval controls the frequency of the request."
+  (interactive)
+  (set-buffer lyskom-buffer)
+  (lyskom-stop-keep-alive)
+  (lyskom-keep-alive)
+  (unless (eq (current-buffer) lyskom-buffer)
+    (lyskom-message 'start-keep-alive kom-keep-alive-interval))
+  (lyskom-format-insert 'start-keep-alive kom-keep-alive-interval)
+  (lyskom-insert "\n"))
+  
+(defun lyskom-keep-alive ()
+  (setq lyskom-keep-alive-timers
+	(cons
+	 (run-with-timer kom-keep-alive-interval kom-keep-alive-interval 'lyskom-keep-alive-callback (current-buffer))
+	 lyskom-keep-alive-timers)))
+
+(def-kom-command kom-stop-keep-alive ()
+  "Stop sending periodic requests to keep the session alive."
+  (interactive)
+  (lyskom-stop-keep-alive)
+  (unless (eq (current-buffer) lyskom-buffer)
+    (lyskom-message "%#1s" 'stop-keep-alive))
+  (lyskom-insert 'stop-keep-alive)
+  (lyskom-insert "\n"))
+
+
+(defun lyskom-stop-keep-alive ()
+  (mapcar 'cancel-timer lyskom-keep-alive-timers)
+  (setq lyskom-keep-alive-timers nil))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.80 2000-03-15 15:45:06 byers Exp $
+;;;;; $Id: english-strings.el,v 44.81 2000-03-15 17:15:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.80 2000-03-15 15:45:06 byers Exp $"))
+              "$Id: english-strings.el,v 44.81 2000-03-15 17:15:42 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1040,6 +1040,7 @@ You should set it to a better value.\n")
 
     (process-signal . "Signal from the process.")
     (dead-session . "No active LysKOM session.")
+    (not-lyskom-buffer . "This is not an active LysKOM session")
     (closed-connection . "
 **************************************************
 %#2s
@@ -1385,6 +1386,9 @@ You must become an active member of the conference to enter it.\n")
     (you-are-nonanonymous . "You are no longer anonymous.\n")
     (you-are-already-anonymous . "You are already somewhat anonymous.\n")
     (you-are-already-nonanonymous . "You are alreay non-anonymous.\n")
+
+    (start-keep-alive . "Sending data at %#1d second intervals to keep the connection active.")
+    (stop-keep-alive . "No longer keeping connection active by sending extra data.")
     ))
 
 
@@ -1541,6 +1545,9 @@ You must become an active member of the conference to enter it.\n")
 
     (kom-become-anonymous     . "Become anonymous")
     (kom-become-nonanonymous  . "Become non-anonymous (come forth into the light)")
+
+    (kom-keep-alive           . "Keep connection alive")
+    (kom-stop-keep-alive      . "Stop keeping connection alive")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -2988,6 +2995,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
    number or a conference name, the client will accept it as a conference 
    number, if possible. When this is off, the text will be accepted as
    a conference name first and number second.")
+    (kom-keep-alive-interval-doc . "\
+  The number of seconds between calls to the server used to keep the
+  network connection to the LysKOM server active. If your network connection
+  shuts down after a period of inactivity, set this to approximately half
+  that period and use the command `Keep connection alive'.")
 
     ;;
     ;; Tags for variables
@@ -3135,6 +3147,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-server-priority-tag . "Session priority")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names")
+    (kom-keep-alive-interval-tag . "Keep connection alive interval")
     )
 )
 
