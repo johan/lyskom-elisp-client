@@ -619,7 +619,7 @@ clicked on."
                (blocking-do 'query-read-texts
                             lyskom-pers-no
                             (membership->conf-no (lp--entry->membership entry)))))
-          (lyskom-replace-membership mship lyskom-membership)
+          (lyskom-replace-membership mship)
           (set-lp--entry->membership entry mship)
           (when (eq flag 'passive)
             (cond ((membership-type->passive (membership->type mship))
@@ -1127,9 +1127,9 @@ Entry to this mode runs lyskom-prioritize-mode-hook."
   (lp--update-mode-line)
   (setq buffer-read-only t)
   (lyskom-use-local-map lp--mode-map)
-;;  (lyskom-add-hook 'lyskom-add-membership-hook
-;;                   'lyskom-prioritize-add-membership
-;;                   t)
+  (lyskom-add-hook 'lyskom-add-membership-hook
+                   'lp--add-membership-callback
+                    t)
 ;;  (lyskom-add-hook 'lyskom-remove-membership-hook 
 ;;                   'lyskom-prioritize-remove-membership
 ;;                   t)
@@ -1191,5 +1191,6 @@ Medlemskap för %#1M på %#2s
 (provide 'mship-edit)
 
 ;;; mship-edit.el ends here
+;;; Local Variables:
 ;;; eval: (put 'lp--save-excursion 'edebug-form-spec t)
 ;;; end:

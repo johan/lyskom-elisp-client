@@ -5,12 +5,32 @@ Att göra i elisp-klienten
 
 * SHOWSTOPPERS
 
-** Om man går ur ett möte i en server som inte har set-membership-type 
-   så försöker klienten ändå att göra set-membership-type
-   (commands1.el, lyskom-sub-member.)
+** Man får illegal consp nil i processfiltret när man går med i eller
+   ändrar prioritet på ett möte ibland. Sällan. Jag gick med i
+   programmering i TokKOM med kom-handle-membership uppe. När jag
+   tryckte + så blev det fel. Tror det är i callbacken. Det verkar
+   vara timingberoende och cacheberoende på något vis. Jag har fått
+   det på andra sätt också.
+
+** Inställningsbufferten är buggig. Om man har en inställning i
+   servern och markerar att den skall sparas i .emacs så sparas
+   defaultvärdet och inte det aktuella värdet. Buggligt ju! Jag undrar 
+   om det kan bli fel när man går åt andra hållet också.
+
+   Antagligen är det fixat nu.
+
 
 ** När man går med i ett möte så sorteras inte medlemskapet in korrekt 
    i medlemskapslistan.
+
+   Problemet uppstår framförallt med 1.9-servers som inte vet hur man
+   skall handskas med medlemskapspositioner. Hanteringen av
+   medlemskapen i lyskom-insert-membership med vänner är också
+   suspekt. Den måste sätta in på rätt position, om man kan
+   positionen, och därefter uppdatera de andra elementens position.
+
+   Antagligen fixat, men Stacken uppgraderade sin server så det är
+   svårare att testa nu.
 
 
 * MULEification
@@ -19,8 +39,6 @@ Att göra i elisp-klienten
   a multibyte charset.) They do not affect users of unibyte charsets.
 
 ** Encode/decode appropriate aux-items.
-
-** Binding of f ä.
 
 ** In edit-filter mode, check how subject åäö is handled.
 
@@ -64,7 +82,7 @@ Att göra i elisp-klienten
    asynchronous calls too.
 
 ** Look over all callbacks and see to it that they don't use
-   lyskom-wait-queue, lyskom-collet, lyskom-use, lyskom-list-use,
+   lyskom-wait-queue, lyskom-collect, lyskom-use, lyskom-list-use,
    blocking-do or multiple-blocking do since this is detrimental to
    performance and possibly incompatible with the current parser.
 
@@ -305,6 +323,8 @@ j-or-n-p.
 
 
 * FÖRBÄTTRINGAR
+
+** Kopiera inställningar från en server till en annan.
 
 ** PRIORITERA MÖTEN
     

@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.46 1999-12-07 10:29:13 davidk Exp $
+# $Id: Makefile,v 44.47 2000-01-10 23:26:44 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.46 1999-12-07 10:29:13 davidk Exp $
+# $Id: Makefile,v 44.47 2000-01-10 23:26:44 byers Exp $
 #
 
 
@@ -47,7 +47,7 @@ LANGUAGES = swedish english
 
 SHELL = /bin/sh
 RM = /bin/rm -f
-EMACS=emacs
+EMACS=xemacs
 EMACS-BATCH = $(EMACS) -batch
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS

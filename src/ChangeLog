@@ -1,3 +1,96 @@
+2000-01-03  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-private-answer-soon): Fix buggy nesting.
+	How the *hell* does this happen?
+
+1999-12-21  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-region): Never signal errors in
+ 	fill-region.
+
+1999-12-20  David Byers  <davby@ida.liu.se>
+
+	* services.el (initiate-create-anonymous-text): Work. Put STRING
+	in front of message string so lyskom-format-objects recognizes
+	what it is.
+
+1999-12-18  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-next-command): Use unwind-protect to
+	reset lyskom-doing-default-command because Gnu Emacs loses when
+	you let a buffer-local variable and change buffers inside the let
+	body (it resets the value in buffer current when leaving the let)
+
+1999-12-13  David Byers  <davby@ida.liu.se>
+
+	* reading.el: Set buffer to lyskom-buffer in several
+	membership-related functions.
+
+	* lyskom-rest.el (lyskom-try-get-membership): Set buffer to
+ 	lyskom-buffer.
+	(lyskom-get-membership): Same here.
+
+1999-12-11  David Byers  <davby@ida.liu.se>
+
+	* option-edit.el: Honor properties specified in
+	lyskom-custom-variables by using lyskom-build-simple-widget-spec
+	to build all widgets.
+ 	(lyskom-build-simple-widget-spec): New function.
+	
+
+	* reading.el (lyskom-do-insert-membership): New function.
+	(lyskom-replace-membership): Use lyskom-do-insert-membership and
+	lyskom-do-remove-membership.
+	(lyskom-do-remove-membership): New function.
+	(lyskom-remove-membership): Use it.
+
+	* commands1.el (lyskom-sub-member): Don't call
+	lyskom-remove-membership with membership-list arg.
+
+	* async.el (lyskom-async-forced-leave-conf): Don't call
+	lyskom-remove-membership with membership-list arg.
+
+	* mship-edit.el (lyskom-prioritize-flag-toggle): Don't call
+	lyskom-replace-members with membership-list arg.
+
+	* commands2.el (kom-set-unread): Don't call lyskom-replace-members
+ 	with membership-list arg.
+
+	* async.el (lyskom-async-new-membership): Don't call
+	lyskom-replace-members with membership-list arg.
+
+	* reading.el (lyskom-insert-membership): Insert the membership at
+	the correct position in the membership list.
+
+	* commands1.el (lyskom-add-membership): Call without
+	membership-list argument.
+
+	* startup.el (lyskom-set-membership): Use lyskom-sort-membership.
+
+	* lyskom-rest.el (lyskom-membership-<): Consider positions as well 
+	as priorities.
+
+	* commands1.el (lyskom-try-add-member): Added
+ 	need-extra-information parameter.
+	(kom-add-member): Call lyskom-try-add-member with
+ 	need-extra-information.
+	(kom-add-self): Same here.
+	(kom-change-priority): Same here.
+	(lyskom-add-member-by-no): Same here.
+	(lyskom-add-member-answer): Accept answer containing position
+	parameter. Set position of new membership using position parameter 
+	if it is not supplied by the server.
+
+1999-12-10  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-sub-member): Don't try to passivate unless
+	we have passive memberships in the server.
+
+	* option-edit.el (lyskom-customize-apply): Set the default value
+	of a variable when the user says not to save it in the server.
+	(lyskom-customize-send): Set variables in the Emacs buffer using
+	setq-default. Don't quote nil or t in the output.
+
 2000-01-10  David Byers  <davby@ida.liu.se>
 
 	* flags.el (lyskom-read-options-eval): Add format argument to

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.96 2000-01-06 12:47:12 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.97 2000-01-10 23:26:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.96 2000-01-06 12:47:12 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.97 2000-01-10 23:26:53 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -244,32 +244,40 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 
 (defun lyskom-next-command ()
   "Run next command."
-  (let ((lyskom-doing-default-command t))
-    (cond
-     ((eq lyskom-command-to-do 'next-pri-text)
-      (lyskom-view-priority-text))
-     ((eq lyskom-command-to-do 'next-text)
-      (kom-view-next-text))
-     ((eq lyskom-command-to-do 'reedit-text)
-      (kom-re-edit-next-text))
-     ((eq lyskom-command-to-do 'next-pri-session)
-      (kom-go-to-pri-session))
-     ((eq lyskom-command-to-do 'next-conf)
-      (kom-go-to-next-conf))
-     ((eq lyskom-command-to-do 'next-pri-conf)
-      (lyskom-go-to-pri-conf))
-     ((eq lyskom-command-to-do 'when-done)
-      (let ((command (lyskom-what-to-do-when-done)))
-	(cond
-	 ((or (stringp command)
-              (vectorp command))
-	  (execute-kbd-macro command))
-         ((commandp command) (call-interactively command))
-         (t (lyskom-start-of-command nil) (lyskom-end-of-command)))))
-     ((eq lyskom-command-to-do 'unknown)
-      (lyskom-insert
-       (lyskom-get-string 'wait-for-server)))
-     (t (signal 'lyskom-internal-error '(kom-next-command))))))
+  (let ((saved-buffer (current-buffer)))
+    (unwind-protect 
+        (progn
+          (setq lyskom-doing-default-command t)
+          (cond
+           ((eq lyskom-command-to-do 'next-pri-text)
+            (lyskom-view-priority-text))
+           ((eq lyskom-command-to-do 'next-text)
+            (kom-view-next-text))
+           ((eq lyskom-command-to-do 'reedit-text)
+            (kom-re-edit-next-text))
+           ((eq lyskom-command-to-do 'next-pri-session)
+            (kom-go-to-pri-session))
+           ((eq lyskom-command-to-do 'next-conf)
+            (kom-go-to-next-conf))
+           ((eq lyskom-command-to-do 'next-pri-conf)
+            (lyskom-go-to-pri-conf))
+           ((eq lyskom-command-to-do 'when-done)
+            (let ((command (lyskom-what-to-do-when-done)))
+              (cond
+               ((or (stringp command)
+                    (vectorp command))
+                (execute-kbd-macro command))
+               ((commandp command) (call-interactively command))
+               (t (lyskom-start-of-command nil) (lyskom-end-of-command)))))
+           ((eq lyskom-command-to-do 'unknown)
+            (lyskom-insert
+             (lyskom-get-string 'wait-for-server)))
+           (t (signal 'lyskom-internal-error '(kom-next-command)))))
+      (condition-case nil
+          (save-excursion
+            (set-buffer saved-buffer)
+            (setq lyskom-doing-default-command nil))
+        (error nil)))))
 
 
 ;;; ================================================================
@@ -718,17 +726,19 @@ instead.
 This function does not use blocking-do.
 
 Optional argument mship-list is the membership list to look in."
-  (let ((list lyskom-membership)
-	(found nil))
-    (while (and (not found) (not (null list)))
-      (if (= conf-no (membership->conf-no (car list)))
-	  (setq found (car list)))
-      (setq list (cdr list)))
-    (if (and found
-             (or want-passive
-                 (not (membership-type->passive (membership->type found)))))
-        found
-      nil)))
+  (save-excursion
+    (set-buffer lyskom-buffer)
+    (let ((list lyskom-membership)
+          (found nil))
+      (while (and (not found) (not (null list)))
+        (if (= conf-no (membership->conf-no (car list)))
+            (setq found (car list)))
+        (setq list (cdr list)))
+      (if (and found
+               (or want-passive
+                   (not (membership-type->passive (membership->type found)))))
+          found
+        nil))))
 
 (defun lyskom-get-membership (conf-no &optional want-passive)
   "Get the membership for CONF-NO, or nil if the user is not a member of
@@ -736,18 +746,20 @@ CONF-NO.
 
 If the membership list is not fully prefetched and the membership can't be
 found in lyskom-membership, a blocking call to the server is made."
-  (or (lyskom-try-get-membership conf-no want-passive)
-      (and (not (lyskom-membership-is-read))
-	   (let ((membership
-		  (blocking-do 'query-read-texts lyskom-pers-no conf-no)))
-	     (if (and membership (lyskom-visible-membership membership))
-		 (lyskom-add-membership membership conf-no))
-    (if (and membership
-             (or want-passive
-                 (not (membership-type->passive
-                       (membership->type membership)))))
-        membership
-      nil)))))
+  (save-excursion
+    (set-buffer lyskom-buffer)
+    (or (lyskom-try-get-membership conf-no want-passive)
+        (and (not (lyskom-membership-is-read))
+             (let ((membership
+                    (blocking-do 'query-read-texts lyskom-pers-no conf-no)))
+               (if (and membership (lyskom-visible-membership membership))
+                   (lyskom-add-membership membership conf-no))
+               (if (and membership
+                        (or want-passive
+                            (not (membership-type->passive
+                                  (membership->type membership)))))
+                   membership
+                 nil))))))
 
 
 ;;;; ================================================================
@@ -1835,7 +1847,9 @@ in lyskom-messages."
               (backward-char 1)
               (delete-horizontal-space))
           (error nil)))
-      (fill-region start (min end (point-max)) justify nosqueeze to-eop))))
+      (condition-case nil
+          (fill-region start (min end (point-max)) justify nosqueeze to-eop)
+        (error nil)))))
 
 (defun lyskom-fill-message (text)
   "Try to reformat a message."
@@ -3065,8 +3079,15 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
 
 (defun lyskom-membership-< (a b)
   "Retuns t if A has a higher priority than B. A and B are memberships."
-  (> (membership->priority a)
-     (membership->priority b)))
+  (cond ((> (membership->priority a)
+            (membership->priority b)) t)
+        ((and (= (membership->priority a)
+                 (membership->priority b))
+              (numberp (membership->position a))
+              (numberp (membership->position b)))
+         (< (membership->position a)
+            (membership->position b)))
+        (t nil)))
 
 
 (defun impl ()

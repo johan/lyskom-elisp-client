@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.28 1999-11-17 23:11:29 byers Exp $
+;;;;; $Id: async.el,v 44.29 2000-01-10 23:26:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.28 1999-11-17 23:11:29 byers Exp $\n"))
+	      "$Id: async.el,v 44.29 2000-01-10 23:26:47 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -276,7 +276,7 @@ this function shall be with current-buffer the BUFFER."
   (if conf-stat
       (lyskom-format-insert-before-prompt 'no-longer-member conf-stat)
     (lyskom-format-insert-before-prompt 'no-longer-member-n conf-no))
-  (lyskom-remove-membership conf-no lyskom-membership)
+  (lyskom-remove-membership conf-no)
   (when (eq conf-no lyskom-current-conf)
     (lyskom-leave-current-conf))
   (read-list-delete-read-info conf-no lyskom-to-do-list)
@@ -298,7 +298,7 @@ this function shall be with current-buffer the BUFFER."
          conf-conf-stat))
 
     (cond ((membership-type->passive (membership->type membership))
-           (lyskom-replace-membership membership lyskom-membership)
+           (lyskom-replace-membership membership)
            (when (eq conf-no lyskom-current-conf)
              (lyskom-leave-current-conf))
            (read-list-delete-read-info conf-no lyskom-to-do-list)
@@ -310,7 +310,7 @@ this function shall be with current-buffer the BUFFER."
           ;; FIXME: Maybe fix this.
 
           (cur-mship
-           (lyskom-replace-membership membership lyskom-membership))
+           (lyskom-replace-membership membership))
 
           ;; Not a member. Completely new. Deal with it.
           (t (lyskom-add-membership membership conf-no))))))
