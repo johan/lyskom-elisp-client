@@ -1,3 +1,28 @@
+Fri May  3 10:13:12 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * english-strings.el,swedish-strings.el (lyskom-prioritize-mode-map):
+    Lade till M-DEL som bindning för kom-prioritize-deselect-all
+
+    * prioritize.el (kom-prioritize-deselect-all): Lade till detta
+    kommando.
+
+    * review.el (lyskom-check-review-access): Hantera tomma möten rätt.
+    (lyskom-get-texts-by-and-to): Optimera hantering av återse av en
+    flitig författare till ett litet möte.
+
+    * swedish-strings.el,english-strings.el (lyskom-strings): Några nya
+    strängar för rapportering av fel i återse.
+
+    * review.el (lyskom-get-texts-by): Skrev om så den blev effektivare.
+    Sätt maxinkrement till lyskom-fetch-map-nos. Kontrollera att man
+    verkligen får läsa conf-mappen. (lyskom-get-texts-generic): Tog bort
+    denna eftersom den bara användes av lyskom-get-texts-by.
+    (lyskom-get-texts-to): Inlineade koden från lyskom-get-texts-generic.
+    Sätt maxinkrement till lyskom-fetch-map-nos.
+    (lyskom-get-texts-by-and-to): Startinkrement satt till
+    lyskom-fetch-map-nos, kontrollera att man verkligen får läsa
+    conf-mappen. (lyskom-check-review-access): Ny funktion.
+
 Thu May  2 18:47:18 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* 0.41 release
