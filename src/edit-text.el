@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.0 1996-08-30 14:46:11 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.1 1996-09-25 17:29:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.0 1996-08-30 14:46:11 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.1 1996-09-25 17:29:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -95,26 +95,35 @@ Does lyskom-end-of-command."
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
 					    lyskom-list-of-edit-buffers))
-	(process-kill-without-query (get-buffer-process (current-buffer)) t)
-    (cond
-     ((and (or (bufferp kom-write-texts-in-window)
-	       (stringp kom-write-texts-in-window))
-	   (get-buffer-window kom-write-texts-in-window))
-      (select-window (get-buffer-window kom-write-texts-in-window))
-      (switch-to-buffer buffer))
-     ((eq kom-write-texts-in-window 'other)
-      (switch-to-buffer-other-window buffer))
-     ((and (eq kom-write-texts-in-window 'other-frame)
-	   (not (eq (selected-frame) (next-frame))))
-      (select-frame (next-frame)))
-     ((eq kom-write-texts-in-window 'new-frame)
-      (make-local-variable 'lyskom-is-dedicated-edit-window)
-      (setq lyskom-is-dedicated-edit-window t)
-      (switch-to-buffer-other-frame buffer))
-     (t
-      (switch-to-buffer buffer)))
-    (lyskom-edit-mode)
-    (setq lyskom-proc proc)
+    (process-kill-without-query (get-buffer-process (current-buffer)) t)
+
+    (lyskom-associate-buffer buffer)
+    (lyskom-display-buffer buffer
+                           'kom-write-texts-in-window
+                           'kom-dont-restore-window-after-editing)
+    
+
+;;;    (cond
+;;;     ((and (or (bufferp kom-write-texts-in-window)
+;;;	       (stringp kom-write-texts-in-window))
+;;;	   (get-buffer-window kom-write-texts-in-window))
+;;;      (select-window (get-buffer-window kom-write-texts-in-window))
+;;;      (switch-to-buffer buffer))
+;;;     ((eq kom-write-texts-in-window 'other)
+;;;      (switch-to-buffer-other-window buffer))
+;;;     ((and (eq kom-write-texts-in-window 'other-frame)
+;;;	   (not (eq (selected-frame) (next-frame))))
+;;;      (select-frame (next-frame))
+;;;      (switch-to-buffer buffer))
+;;;     ((eq kom-write-texts-in-window 'new-frame)
+;;;      (switch-to-buffer-other-frame buffer)
+;;;      (make-local-variable 'lyskom-is-dedicated-edit-window)
+;;;      (setq lyskom-is-dedicated-edit-window t))
+;;;     (t
+;;;      (switch-to-buffer buffer)))
+
+    (lyskom-protect-environment
+     (lyskom-edit-mode))
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
     (make-local-variable 'lyskom-edit-return-to-configuration)
@@ -131,7 +140,7 @@ Does lyskom-end-of-command."
     (if (not (looking-at "\\s-*$"))
         (goto-char (point-max)))
     (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
-  (set-buffer (process-buffer lyskom-proc))
+  (set-buffer lyskom-buffer)
   )
 
 
@@ -143,7 +152,7 @@ comm-to		-> Kommentar till text %d.
 footn-to	-> Fotnot till text %d."
   (let ((edit-buffer (current-buffer))
 	(where-put-misc (point-min-marker))
-	(main-buffer (process-buffer lyskom-proc)))
+	(main-buffer lyskom-buffer))
     (set-buffer main-buffer)
     (setq misc-list (cdr misc-list))
     (while (not (null misc-list))
@@ -313,7 +322,6 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (auto-fill-mode 1)
   (make-local-variable 'paragraph-start)
   (make-local-variable 'paragraph-separate)
-  (make-local-variable 'lyskom-proc)
   (setq paragraph-start (concat "^" 
 				(regexp-quote 
 				 lyskom-header-separator)
@@ -394,7 +402,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 
 	      (setq mode-name "LysKOM sending")
 	      (save-excursion
-		(set-buffer (process-buffer lyskom-proc))
+		(set-buffer lyskom-buffer)
 		;; Don't change the prompt if we won't see our own text
 		(if kom-created-texts-are-read
 		    (setq lyskom-dont-change-prompt t))
@@ -406,16 +414,18 @@ Entry to this mode runs lyskom-edit-mode-hook."
                          (concat subject "\n" message)
                          misc-list
                          buffer)))
-	    (if kom-dont-restore-window-after-editing
-		(bury-buffer)
-	      (save-excursion
-		(if (and (boundp 'lyskom-is-dedicated-edit-window)
-			 lyskom-is-dedicated-edit-window)
-		    (condition-case error
-			(delete-frame)
-		      (error))))
-	      (set-window-configuration lyskom-edit-return-to-configuration)
-	      (set-buffer (window-buffer (selected-window))))
+            (lyskom-undisplay-buffer)
+;;;	    (if kom-dont-restore-window-after-editing
+;;;		(bury-buffer)
+;;;	      (save-excursion
+;;;		(if (and (boundp 'lyskom-is-dedicated-edit-window)
+;;;			 lyskom-is-dedicated-edit-window)
+;;;		    (condition-case error
+;;;			(delete-frame)
+;;;		      (error))))
+;;;	      (set-window-configuration lyskom-edit-return-to-configuration)
+;;;	      (set-buffer (window-buffer (selected-window))))
+
 	    (goto-char (point-max))))
     ;;
     ;; Catch no-subject and other things
@@ -431,7 +441,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
      (condition-case arg
          (let ((text ""))
            (save-excursion
-             (set-buffer (process-buffer lyskom-proc))
+             (set-buffer lyskom-buffer)
              (if (and (string= "kom.lysator.liu.se" lyskom-server-name)
                       (eq lyskom-pers-no 698))
                  (setq text "Ärende, IDI!")))
@@ -451,7 +461,7 @@ text is a member of some recipient of this text."
          (author-is-member nil)
          (collector (make-collector))
          (extra-headers nil)
-         (me (save-excursion (set-buffer (process-buffer lyskom-proc))
+         (me (save-excursion (set-buffer lyskom-buffer)
                              lyskom-pers-no))
          (num-me 0))
 
@@ -523,7 +533,7 @@ text is a member of some recipient of this text."
           ;;
 
           (save-excursion
-            (set-buffer (process-buffer lyskom-proc))
+            (set-buffer lyskom-buffer)
             (mapcar (function
                      (lambda (author-number)
                        (lyskom-collect 'sending)
@@ -634,7 +644,7 @@ text is a member of some recipient of this text."
 		    (format "%s" (lyskom-get-string 'which-text-include)))))
 		 ((prefix-numeric-value current-prefix-arg)))))
   (let ((buffer (current-buffer)))
-    (set-buffer (process-buffer lyskom-proc))
+    (set-buffer lyskom-buffer)
     (initiate-get-text 'edit 'lyskom-edit-insert-commented no buffer)
     (set-buffer buffer)
     (sit-for 0)))
@@ -658,7 +668,7 @@ text is a member of some recipient of this text."
         (cond
          (no
           (goto-char p)
-          (set-buffer (process-buffer lyskom-proc))
+          (set-buffer lyskom-buffer)
           (initiate-get-text 'edit thendo no buffer)
           (set-buffer buffer))
          (t
@@ -695,7 +705,7 @@ text is a member of some recipient of this text."
 	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
     (lyskom-save-excursion
      ;;(save-excursion
-     (set-buffer (process-buffer lyskom-proc))
+     (set-buffer lyskom-buffer)
      ;; +++ The information about msg-of-day might be old. We should
      ;; make sure it is up-to-date.
      (let ((text-no (conf-stat->msg-of-day conf-stat)))
@@ -863,7 +873,7 @@ Point must be located on the line where the subject is."
 
       ;; Apply handler.
 
-      (set-buffer (process-buffer lyskom-proc))
+      (set-buffer lyskom-buffer)
       (if hnd
 	  (apply hnd text-no dta)))
     

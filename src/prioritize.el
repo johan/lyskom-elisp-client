@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.0 1996-08-30 14:47:37 davidk Exp $
+;;;;; $Id: prioritize.el,v 44.1 1996-09-25 17:29:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.0 1996-08-30 14:47:37 davidk Exp $\n"))
+	      "$Id: prioritize.el,v 44.1 1996-09-25 17:29:47 byers Exp $\n"))
 
 
 
@@ -555,8 +555,7 @@ the same as the entry above it, but to not move it."
   "Quit from the prioritization mode."
   (interactive)
   (lyskom-prioritize-tell-server)
-  (bury-buffer)
-  (switch-to-buffer lyskom-buffer))
+  (lyskom-undisplay-buffer))
 
 
 
@@ -606,17 +605,16 @@ of conferences you are a member of."
                           (string (concat (lyskom-mode-name-from-host)
                                           " prioritize: "
                                           lyskom-server-name)))
+                     (lyskom-associate-buffer tmp-buffer)
                      (set-buffer tmp-buffer)
-                     (make-local-variable 'lyskom-buffer)
                      (make-local-variable 'lyskom-pers-no)
                      (make-local-variable 'lyskom-prioritize-entry-list)
                      (setq lyskom-prioritize-entry-list nil)
-                     (setq lyskom-buffer buffer)
                      (setq lyskom-pers-no pers-no)
 
                      (setq mode-line-buffer-identification string)
 
-                     (lyskom-prioritize-mode)
+                     (lyskom-protect-environment (lyskom-prioritize-mode))
                      (set-buffer buffer)
 
                      (lyskom-traverse memb-ship membership-list
@@ -629,7 +627,10 @@ of conferences you are a member of."
                      (lyskom-wait-queue 'prioritize)
                      
                      (lyskom-save-excursion
-                      (switch-to-buffer tmp-buffer)
+                      (lyskom-display-buffer 
+                       tmp-buffer
+                       'kom-prioritize-in-window
+                       'kom-dont-restore-after-prioritize)
                       (setq lyskom-prioritize-entry-list
                             (nreverse (collector->value
                                        collector)))
@@ -640,7 +641,7 @@ of conferences you are a member of."
                         (insert "  "))
                       (lyskom-prioritize-goto-entry
                        (lyskom-prioritize-get-entry-from-no 1))))))))
-      (progn
+      (save-excursion
         (set-buffer buffer)
         (lyskom-end-of-command)))))
 
@@ -679,7 +680,7 @@ Commands:
 \\[kom-prioritize-select]\tToggle selection of the conference on the current line.
 \\[kom-prioritize-goto-priority]\tMove cursor to an entry with a certain priority.
 \\[kom-prioritize-set-priority]\tAlter the priority of the selected conferences.
-\\[kom-prioritize-repriorize]\tChange one priority to another.
+\\[kom-prioritize-reprioritize]\tChange one priority to another.
 \\[kom-prioritize-save]\tSave changes to priorities.
 \\[kom-prioritize-quit]\tSave changes and return to LysKOM.
 

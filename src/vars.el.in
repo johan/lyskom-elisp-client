@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.3 1996-09-08 21:17:32 davidk Exp $
+;;;;; $Id: vars.el.in,v 44.4 1996-09-25 17:30:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 44.3 1996-09-08 21:17:32 davidk Exp $\n"
+  "$Id: vars.el.in,v 44.4 1996-09-25 17:30:01 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -65,11 +65,15 @@ of the buffer list when one of the commands `kom-next-kom',
 This variable is stored in the LysKOM server.")
 
 (defvar kom-write-texts-in-window nil
-  "*Nil means edit texts in the same window that is used for reading texts.
-'other means edit in another window. Creating that window if necessary.
-A buffer or buffer name means use the first window displaying that buffer.
-If no window is displaying that buffer or the buffer does not exits then it
-uses the same window.
+  "*Where to edit texts. One of nil, other, new-frame, other-frame, a string
+or a buffer.
+
+nil means edit texts in the same window as the LysKOM buffer.
+other means edit in another window, creating it if necessary.
+other-frame means edit in another frame, if there is one.
+new-frame means create a new frame for editing. The frame will be removed 
+          when editing is finished.
+a string or buffer means edit in the indicated buffer.
 
 This variable is stored in the LysKOM server.")
 
@@ -89,6 +93,20 @@ This variable is stored in the LysKOM server.")
   "*Non-nil means automatically mark texts that you create as read.
 
 This variable is stored in the LysKOM server.")
+
+(defvar kom-customize-in-window nil
+  "*Where to customize LysKOM. See kom-write-texts-in-window")
+
+(defvar kom-prioritize-in-window nil
+  "*Where to prioritize conferences. See kom-write-texts-in-window")
+
+(defvar kom-dont-restore-after-customize nil
+  "*If non-nil then don't restore the window configuration after customizing
+LysKOM.")
+
+(defvar kom-dont-restore-after-prioritize nil
+  "*If non-nil then don't restore the window configuration after prioritizing
+conferences.")
 
 (defvar kom-dont-restore-window-after-editing nil
   "*If non-nil then don't restore the window configuration after sending a text.
@@ -257,7 +275,7 @@ If it isn't a list and isn't nil the screen is cleared before all commands.
 
 This variable is stored in the LysKOM server.")
 
-(defvar kom-permissive-completion nil
+(defvar kom-permissive-completion t
   "*If t, completion on logged-in persons will usually also include
 persons who are not logged in. Values other than t or nil are reserved
 for future use.
@@ -640,6 +658,39 @@ If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.
 This variable is not saved in the LysKOM server.")
 
 
+;;; =================================================================
+;;;
+;;; Inherited variables
+;;;
+
+(eval-and-compile
+  (defvar lyskom-inherited-variables
+    '(
+      lyskom-buffer
+      lyskom-proc
+      lyskom-accept-async-flag
+      lyskom-dynamic-session-info-flag
+      lyskom-idle-time-flag
+      lyskom-long-conf-types-flag
+      lyskom-set-last-read-flag
+      lyskom-uconf-stats-flag
+      lyskom-z-lookup-flag
+      lyskom-server-supports
+      lyskom-collate-table
+      )
+    "Variables that all buffers associated with a LysKOM buffer inherit."))
+
+
+(eval-and-compile
+  (defvar lyskom-protected-variables 
+    (append '(lyskom-reset-var 
+              lyskom-dedicated-frame
+              kill-buffer-hook 
+              lyskom-original-window-configuration)
+            lyskom-inherited-variables)
+    "Variables that need to be protected by lyskom-protect-environment."))
+
+
 (defconst lyskom-elisp-variables
   '(kom-permissive-completion
     kom-bury-buffers
@@ -667,6 +718,8 @@ This variable is not saved in the LysKOM server.")
     kom-who-buffer-size-when-displaying
     kom-default-message-recipient
     kom-write-texts-in-window
+    kom-prioritize-in-window
+    kom-customize-in-window
     kom-cite-string
     kom-remote-control
     kom-remote-controllers

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.0 1996-08-30 14:47:13 davidk Exp $
+;;;;; $Id: macros.el,v 44.1 1996-09-25 17:29:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.0 1996-08-30 14:47:13 davidk Exp $\n"))
+	      "$Id: macros.el,v 44.1 1996-09-25 17:29:40 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -333,6 +333,13 @@ STRING should be given if the last search was by `string-match' on STRING."
                         (funcall fn (car x) (cdr x))))
                      (cdr keymap))))))
 
+
+(lyskom-provide-function set-keymap-parent (keymap new-parent)
+   (let ((tail keymap))
+     (while (and tail (cdr tail) (not (eq (car (cdr tail)) 'keymap)))
+       (setq tail (cdr tail)))
+     (if tail
+         (setcdr tail new-parent))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

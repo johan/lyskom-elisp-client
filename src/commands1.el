@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.2 1996-09-08 20:14:48 davidk Exp $
+;;;;; $Id: commands1.el,v 44.3 1996-09-25 17:29:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.2 1996-09-08 20:14:48 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.3 1996-09-25 17:29:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -307,15 +307,14 @@ Ask for the name of the person, the conference to add him/her to."
   "Fetch info to be able to add a person to a conf.
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
 for person PERS-NO and send them into lyskom-try-add-member."
-  ;; This could be optimized with David Byers multi-hack.
-  (let* ((whereto (blocking-do 'get-conf-stat conf-no))
-	 (who (blocking-do 'get-conf-stat pers-no))
-	 (pers-stat (blocking-do 'get-pers-stat pers-no))
-	 (result (lyskom-try-add-member whereto who pers-stat)))
-    (lyskom-add-member-answer result whereto who)
-    (if thendo
-	(apply thendo data))
-    result))
+  (blocking-do-multiple ((whereto (get-conf-stat conf-no))
+                         (who (get-conf-stat pers-no))
+                         (pers-stat (get-pers-stat pers-no)))
+    (let ((result (lyskom-try-add-member whereto who pers-stat)))
+      (lyskom-add-member-answer result whereto who)
+      (if thendo
+          (apply thendo data))
+      result)))
 
 
 (defun lyskom-try-add-member (conf-conf-stat pers-conf-stat pers-stat)
@@ -337,7 +336,7 @@ Returns t if it was possible, otherwise nil."
 		      (> kom-membership-default-priority 0))
 		 kom-membership-default-priority
 	       (lyskom-read-num-range
-		0 255 (lyskom-get-string 'priority-q)))))
+		1 255 (lyskom-get-string 'priority-q)))))
 	  (where
 	   (if (/= lyskom-pers-no (conf-stat->conf-no pers-conf-stat))
 	       1			; When adding someone else
