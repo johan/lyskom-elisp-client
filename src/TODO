@@ -59,7 +59,10 @@ Att göra i elisp-klienten
     prompten "Läsa nästa brev" i stället för "Läsa nästa
     kommentar". Kommentaren ligger inte i brevlådan. (LÅG PRIORITET)
 
+
 -------- Allmänna förbättringar
+
+    Defaultplaceringen av nya mottagare i editbufferten är fånig.
 
     Filtrera asynkrona meddelanden (Pontus Lidman)
 
@@ -69,8 +72,6 @@ Att göra i elisp-klienten
 
     Färgläggning av meddelanden baserat på varifrån de kommer, och
     vart det går. John Olsson efterfrågar.
-
-    1385671
 
     Lista medlemsskap borde hållas uppdaterad. Vi behöver hookar för
     * Gå in i möte (uppdatera datum)
@@ -111,26 +112,23 @@ Att göra i elisp-klienten
     Kommandot kom-review-comments visar fotnoter sist, inte först.
 
     Det skulle vara bra om skönsvärde för att skriva fotnot vore den
-    senaste text man själv skrev, inte den senaste man läste. 
+    senaste text man själv skrev, inte den senaste man läste. Eller
+    kanske den senaste man läste om det var man själv som skrev den?
 
-    Klickbara kommandon.
-
+    Klickbara kommandon, vad nu det är.
 
     Reentrant blocking-do [FINNS, MEN ANVÄNDS INTE]
-
-    kom-customize skall nog inte ta med alla variabler, bara sådana
-    som många vill ändra på. Annars blir det svåröverskådligt. [FIXAT?]
 
     Det behövs dokumentation: fråmst användarhandledning, men det
     skulle inte skada med en kortfattad beskrivning av stabila delar
     av systemet för presumtiva kommandoskribenter.
 
-    Den engelska översättningen behöver ses över. Den är garanterat ur
-    sync, och verktyget för att kolla den fungerar inte längre.
-    Verktyget måste repareras så vi kan kolla att alla strängar finns
-    på plats, men en språkgranskning behövs också.
+    Språkgranskning av den engelska versionen.
 
 -------- Fixade saker
+
+    kom-customize skall nog inte ta med alla variabler, bara sådana
+    som många vill ändra på. Annars blir det svåröverskådligt. [FIXAT?]
 
     När man sparar texter vill man inte att det ska stå t.ex. "idag".
     [FIXAT]

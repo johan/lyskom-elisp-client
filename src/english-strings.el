@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.27 1997-09-10 13:15:02 byers Exp $
+;;;;; $Id: english-strings.el,v 44.28 1997-09-13 16:07:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.27 1997-09-10 13:15:02 byers Exp $"))
+              "$Id: english-strings.el,v 44.28 1997-09-13 16:07:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -261,6 +261,7 @@ Send a letter to  %#2P to apply for membership.\n")
     (comments-allowed . "Are comments allowed? ")
     (anonymous-allowed . "Are anonymous articles allowed? ")
     (what-comment-no . "Comment article number: ")
+    (what-footnote-no . "Footnote article number: ")
     (confusion-what-to-comment . "I can't figure out which article you want to comment.\n")
     (confusion-what-to-footnote . "I can't figure out to which article you want to write a footnote to.\n")
     (what-private-no . "Private reply to article number: ")

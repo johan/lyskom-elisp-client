@@ -14,9 +14,20 @@ Se även MIGRATION-0.44-0.45 för information som är av intresse när man
 byter från 0.44 till 0.45 (samma information finns här, men är mer
 detaljerad i den andra filen.)
 
+                                David Byers   <byers@lysator.liu.se>
+                                David Kågedal <davidk@lysator.liu.se>
+
 
           =================================================
                             PERSONAL SÖKES
+
+          David & David har fått en massa riktigt jobb på
+          halsen, och David håller dessutom på att hacka i
+          server, så vi har rätt lite tid över till att 
+          hacka elispklient. Det vore trevligt om någon 
+          eller några andra ville hjälpa till. Det är 
+          faktiskt ganska så skoj. Koden är inte alls så
+          hemsk som man kan tro.
 
           Det vore skoj med fler och bättre översättningar
           av elispklienten till andra språk. Om du kan ett
@@ -32,12 +43,6 @@ detaljerad i den andra filen.)
           behövs det inte så mycket arbete för att få detta
           att fungera.
 
-          David & David har fått en massa riktigt jobb på
-          halsen, och har rätt lite tid över till att hacka
-          elispklient. Det vore trevligt om någon eller
-          några andra ville haka på. Det är faktiskt ganska
-          så skoj.
-
           =================================================
 
 
@@ -47,6 +52,23 @@ detaljerad i den andra filen.)
 ** Ett nytt kommando, "Inställningar (för) LysKOM" har lagts till. Det 
    ger ett (förhoppningsvis) enklare och bättre sätt att ställa in
    vanliga variabler i Elispklienten.
+
+** Inlägg som innehåller långa rader kan automagiskt få nya
+   radbrytningar. Inlägg, eller delar av inlägg, som uppfyller vissa
+   kriterier bryts inte om. Just nu är kriterierna väldigt
+   konservativa, men detta borde fungera rätt bra på vanlig text. 
+   Kommandot "Återse omodifierat" är bra om man vill se hur inlägget
+   egentligen såg ut. Variabeln fill-column styr hur breda inlägg får
+   vara, under förutsättning att den inte ligger allt för nära
+   fönstrets högerkant (för då styr fönsterbredden.) Variabeln
+   kom-autowrap styr vilka inlägg som bryts om.
+
+** Om man har en WWW-proxy som vet vad CONNECT betyder så kan man köra
+   elispklienten genom en brandvägg. Sätt variabeln kom-www-proxy till
+   brandväggens namn och port (tex. "www-proxy:81") och prova. Det är
+   meningen att man skall kunna sätta kom-www-proxy till en lista för
+   att styra vilka servrar man vill använda vilka proxys mot. Gör 
+   C-h v kom-www-proxy för mer detaljer.
 
 ** Det går att köra elispklienten under XEmacs. Man behöver minst
    version 19.14 av XEmacs för att det skall fungera, men på grund av
@@ -68,6 +90,25 @@ detaljerad i den andra filen.)
    browse-url-browser-function är satt.
 
 ** Elispklienten förstår numera ett antal felaktiga URLer.
+
+** Vi har bytt en massa tangentbordskombinationer i
+   inläggsredigerinsmoden. Alla tangentbordskommandon som började md
+   C-c och följdes av bokstäver har följst nu av control + samma
+   bokstäver. Till exempel sitter addera extra-kopiemottagare inte på
+   C-c a e, utan på C-c C-a C-e. Detta har vi gjort eftersom alla
+   kombinationer av C-c <bokstav> är reserverade för användare och
+   minor modes.
+
+** C-c a k i editbufferten, som numera är C-c C-a C-k lägger inte till
+   en extra-kopiemottagare längre, utan lägger till en kommentarslänk,
+   så det blir enklare att kommentera flera inlägg samtidigt.
+
+** C-c C-a C-f i editbufferten lägger till en mottagare och gör om
+   alla gamla mottagare till extra-kopiemottagare. Praktiskt för att
+   flytta en diskussion från ett möte till ett annat.
+
+** Om man har calc installerat så kan man använda kommandot Beräkna
+   för att skicka uttryck till calc ock få dem presenterade i LysKOM.
 
 ** Om man har ispell installerat kan man använda kommandot
    kom-ispell-message. Det finns i menyn och är bundet till C-c C-s. 
@@ -121,10 +162,9 @@ detaljerad i den andra filen.)
    kom-enabled-prompt-format och kom-enabled-prompt-format-executing
    promptens utseende.
 
-** Ändra Variabler använder inte längre Emacs inbyggda edit-options,
-   utan en mode som bygger på Per Abrahamsens widget-paket (som även
-   används av Red Gnus och W3 3.0). Nu kommer det förhoppningsvis att
-   vara enklare att ställa in LysKOM precis som man vill ha den.
+** När man skall skriva en fotnot till ett inlägg blir default det
+   senaste man läste, om man även skrev det, och annars det senaste
+   man själv skrev.
 
 ** kom-edit-texts-in-window kan numera vara new-frame eller
    other-frame för att skriva texter i ett nytt fönster eller i ett
@@ -148,7 +188,10 @@ detaljerad i den andra filen.)
    vilket program som skall användas för att skicka mail.
 
 ** Textnummer, författarnamn och liknande i inläggsskrivarbufferten är
-   aktiva och har samma menyer som i LysKOM-bufferten.
+   aktiva och har samma menyer som i LysKOM-bufferten. Musens
+   mittenknapp aktiverar som vanligt knapparna, men om man klickar där
+   det inte finns någon knapp så klistrar den in text som vanligt i
+   stället.
 
 ** Kommandona Medlem, Utträd och Endast har blivit både snabbare och
    mer robusta.
@@ -168,6 +211,10 @@ detaljerad i den andra filen.)
    Funktioner i hooken anropas med två argument. Första argumentet är
    vilket möte man står i och andra är vilket möte man håller på att
    gå till. 
+
+** Historian över gamla saker man har matat in i minibufferten är mer
+   uppdelad nu. Till exempel så har aKommandon en egen historielista,
+   meddelanden har en och uttryck att beräkna en.
 
 ** Elispklienten är snabbare överlag.
 
@@ -199,18 +246,11 @@ detaljerad i den andra filen.)
 ** Koden för att hitta urinlägg bör numera klara även mycket långa
    kommentarskedjor.
 
-
-
-* Kända buggar som behöver rapporteras
-
-** Det verkar som om LysKOM-parsern har en liten bug, men vi lyckas
-   inte reproducera den. Om du kan reproducera ett parse error
-   (notera, det är inte frågan om "Error i lyskom-parse-error", som
-   man får om man trycker C-g och R flitigt) så vill vi veta hur.
+** Säkert massor av andra småfixar...
 
 
 
-* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+* Kända buggar som inte är vårt fel
 
 ** Under XEmacs verkar interaktion med klienten gå trögt när det
    kommer mycket data från servern. Såvitt vi kan avgöra kan vi inte
@@ -225,4 +265,8 @@ detaljerad i den andra filen.)
    hämtar den sig. Detta beror förmodligen på en bug i XEmacs
    event-hantering.
 
-** LysKOM kan krasche betaversioner av XEmacs.
+** XEmacs som den ser ut i skrivande stund är långsam på att hantera
+   text långt ned i mycket stora buffertar. Ryktet gör gällande att
+   det håller på att åtgärdas.
+
+** LysKOM kan krascha betaversioner av XEmacs.
