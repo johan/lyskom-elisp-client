@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.17 1991-11-02 18:05:50 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.18 1991-11-24 02:49:10 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.17 1991-11-02 18:05:50 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.18 1991-11-24 02:49:10 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -307,6 +307,7 @@ Lyskom-sessionen är avslutad.
     (text-to-remove-q . "Vilket inlägg vill du subtrahera som kommentar? ")
     (add-comment-to . "Adderar text %#1d som kommentar till text %#2d...")
     (sub-comment-to . "Subtraherar text %#1d som kommentar till text %#2d...")
+    (comment-keep-recpt-p ."Ska %#1s vara mottagare? ")
 
     ; From commands2.el:
 
