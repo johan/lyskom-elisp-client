@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.200 2002-02-25 18:27:31 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.201 2002-02-25 18:31:45 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.200 2002-02-25 18:27:31 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.201 2002-02-25 18:31:45 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -407,7 +407,7 @@ Utträd ur mötet en gång till för gå ur helt.\n")
     (You . "Du")
     (could-not-create-conf . "Mötet \"%#1s\" kunde ej skapas.\n")
     (created-conf-no-name . "Möte nummer %[%#3@%#1:m %#2:M%], skapat.\n")
-    (cant-read-textno . "Du får inte läsa text %#1:n")
+    (cant-read-textno . "Du får inte läsa text %#1:n.\n")
 
     (not-supervisor-for . "Du är inte organisatör för %#1M.\n")
     (go-to-conf . "Gå till %#1M.\n")

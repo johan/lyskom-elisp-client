@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.167 2002-02-25 18:27:31 joel Exp $
+;;;;; $Id: english-strings.el,v 44.168 2002-02-25 18:31:45 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.167 2002-02-25 18:27:31 joel Exp $"))
+              "$Id: english-strings.el,v 44.168 2002-02-25 18:31:45 joel Exp $"))
 
 
 ;;; ================================================================
@@ -441,7 +441,7 @@ Leave the conference again to unsubscribe completely.\n")
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\n")
     (created-conf-no-name . "Conference number %[%#3@%#1:m %#2:M%] has been created.\n")
-    (cant-read-textno . "You are not allowed to read text %#1:n")
+    (cant-read-textno . "You are not allowed to read text %#1:n.\n")
 
     (not-supervisor-for . "You are not the supervisor of %#1M.\n")
     (go-to-conf . "Go to conference %#1M.\n")
