@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.101 2001-04-21 16:21:42 joel Exp $
+;;;;; $Id: commands1.el,v 44.102 2001-04-22 13:36:24 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.101 2001-04-21 16:21:42 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.102 2001-04-22 13:36:24 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1936,22 +1936,57 @@ exist."
 
 
 (defun lyskom-allocate-mark-type ()
+  "Returns the first mark type available that is neither named nor used.
+If no such type existed, the least used non-named mark type is returned.
+If no such existed either, nil is returned."
   (setq kom-symbolic-marks-alist
         (sort kom-symbolic-marks-alist
               (function (lambda (x y) (< (cdr x) (cdr y))))))
   (let ((i 0)
         (list kom-symbolic-marks-alist)
+	(used (lyskom-get-least-used-mark-types-alist))
         (found nil))
-    (while (and list
-                (not found)
+    (while (and (not found)
                 (< i 256))
-      (if (not (= i (cdr (car list))))
-          (setq found t)
-        (setq list (cdr list))
-        (setq i (1+ i))))
-    (if (< i 256)
+      (when (not (assq i used)) ; mark type i not presently used?
+	(when list
+	  (if (= i (cdar list)) ; already named?
+	      (setq list (cdr list))
+	    (setq found t)))) ; neither used nor named!
+      (when (not found)
+	(++ i)))
+    (if (and found (< i 256))
         i
-      nil)))
+      ; no unused and unnamed mark type available; fall back
+      ; to the least used not-yet-named type, if available:
+      (when (and used
+		 (< (length used) 256)
+		 (< (length list) 256))
+	(cdar used)))))
+
+
+(defun lyskom-get-least-used-mark-types-alist ()
+  "Returns an alist from mark type to number of such marks, ordered by
+increasing number of marks per mark type (and, when equal, by mark type)."
+  (let ((mark-list (cache-get-marked-texts))
+	(cnt-alist nil)) ; the number of texts marked by each mark type
+    ;; Count the number of texts marked per mark type:
+    (while (not (null mark-list))
+      (let* ((mark (car mark-list))
+	     (type (mark->mark-type mark))
+	     (tcnt (assq type cnt-alist)))
+	(when tcnt (setq tcnt (cdr tcnt)))
+	(set-alist 'cnt-alist type (if (null tcnt) 1 (1+ tcnt))))
+      (setq mark-list (cdr mark-list)))
+
+    ;; Sort the list, least-used, lowest number of mark type first:
+    (sort cnt-alist
+	  (function (lambda (x y)
+		      (cond
+		       ((< (cdr x) (cdr y)) t)
+		       ((= (cdr x) (cdr y)) (< (car x) (car y)))
+		       (t nil)))))))
+
 
 ;;; ================================================================
 ;;;          ]terse alla markerade - Review marked texts
@@ -1978,7 +2013,7 @@ If MARK-NO is nil, review all marked texts."
   (let ((mark-list (cache-get-marked-texts))
 	(text-list nil))
     (while (not (null mark-list))
-      (let ((mark (car mark-list)))		
+      (let ((mark (car mark-list)))
 	(if (and mark
 		 (or (null mark-no)
 		     (eq mark-no (mark->mark-type mark))))
@@ -1994,7 +2029,7 @@ If MARK-NO is nil, review all marked texts."
       (let ((read-info (lyskom-create-read-info
 			'REVIEW-MARK nil 
 			(lyskom-get-current-priority)
-			(lyskom-create-text-list text-list) 
+			(lyskom-create-text-list text-list)
 			nil t)))
 	(read-list-enter-read-info read-info lyskom-reading-list t)
 	(read-list-enter-read-info read-info lyskom-to-do-list t)))))
