@@ -1,3 +1,8 @@
+Wed May  6 17:45:57 1998  Peter Liljenberg  <petli@lysator.liu.se>
+
+	* swedish-strings.el, english-strings.el, commands1.el:
+	Nytt kommando: Vilka är inloggade i möte.
+
 Thu Mar 12 19:51:06 1998  David Kagedal  <davidk@lysator.liu.se>
 
 	* menus.el (lyskom-do-popup-menu): Tog bort ett extra nreverse.
@@ -10,7 +15,13 @@ Mon Feb 23 22:41:38 1998  David Kågedal  <davidk@lysator.liu.se>
 Sun Feb 22 11:37:57 1998  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Sätt lyskom-server-port.
+	
+Wed Feb 18 18:51:28 1998  Peter Liljenberg  <petli@lysator.liu.se>
 
+	* edit-text.el (lyskom-edit-mode): Sätter comment-start och
+	comment-end så man kan använda comment-region för att citatmarkera
+	text.
+	
 1998-01-31  David Byers  <davby@ida.liu.se>
 
 	* startup.el (lyskom): Testa att både namn och portnummer stämmer

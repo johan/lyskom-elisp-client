@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.32 1997-12-28 19:16:16 byers Exp $
+;;;;; $Id: commands1.el,v 44.33 1998-05-06 18:05:18 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.32 1997-12-28 19:16:16 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.33 1998-05-06 18:05:18 petli Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2078,12 +2078,35 @@ If the prefix is 0, all visible sessions are shown."
     (lyskom-no-users
      (lyskom-insert (lyskom-get-string 'null-who-info)))))
 
+;;; ================================================================
+;;;                Vilka ({r inloggade i) möte - Who is on in a conference?
 
-(defun lyskom-who-is-on-8 ()
+;;; Author: petli
+
+(def-kom-command kom-who-is-on-in-conference (&optional arg)
+  "Display a list of all connected users in CONF.
+The prefix arg controls the idle limit of the sessions showed. If the
+prefix is negativ, invisible sessions are also shown.
+
+If the prefix is 0, all visible sessions are shown."
+  (interactive "P")
+  (let ((conf-stat 
+	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-on-in-what-conference)
+			      '(all) nil nil t)))
+    (condition-case nil
+	(if lyskom-dynamic-session-info-flag
+	    (lyskom-who-is-on-9 arg conf-stat)
+	  (lyskom-who-is-on-8 conf-stat))
+      (lyskom-no-users
+       (lyskom-insert (lyskom-get-string 'null-who-info))))))
+
+(defun lyskom-who-is-on-8 (&optional conf-stat)
   "Display a list of all connected users.
 Uses Protocol A version 8 calls"
   (let* ((who-info-list (blocking-do 'who-is-on))
-	 (who-list (sort (listify-vector who-info-list)
+	 (who-list (sort (if conf-stat
+			     (lyskom-who-is-on-check-membership-8 who-info-list conf-stat)
+			   (listify-vector who-info-list))
 			 (function (lambda (who1 who2)
 				     (< (who-info->connection who1)
 					(who-info->connection who2))))))
@@ -2097,6 +2120,10 @@ Uses Protocol A version 8 calls"
 			   session-width "s" "s"))
 	 (lyskom-default-conf-string 'not-present-anywhere)
          (lyskom-default-pers-string 'secret-person))
+
+    (if conf-stat
+	(lyskom-format-insert 'who-is-active-and-member conf-stat))
+    
     (lyskom-format-insert format-string-2
 			  ""
 			  (lyskom-get-string 'lyskom-name)
@@ -2136,7 +2163,7 @@ Uses Protocol A version 8 calls"
       (lyskom-insert (lyskom-format 'total-visible-users total-users))))
 
 
-(defun lyskom-who-is-on-9 (arg)
+(defun lyskom-who-is-on-9 (arg &optional conf-stat)
   "Display a list of all connected users.
 Uses Protocol A version 9 calls"
   (let* ((wants-invisibles (or (and (numberp arg) (< arg 0))
@@ -2148,7 +2175,9 @@ Uses Protocol A version 9 calls"
                             (t 0))))
 	 (who-info-list (blocking-do 'who-is-on-dynamic
 				     't wants-invisibles (* idle-hide 60)))
-	 (who-list (sort (listify-vector who-info-list)
+	 (who-list (sort (if conf-stat
+			     (lyskom-who-is-on-check-membership-9 who-info-list conf-stat)
+			   (listify-vector who-info-list))
 			 (function
 			  (lambda (who1 who2)
 			    (< (dynamic-session-info->session who1)
@@ -2172,6 +2201,9 @@ Uses Protocol A version 9 calls"
 
     (if wants-invisibles
 	(lyskom-insert (lyskom-get-string 'showing-invisibles)))
+
+    (if conf-stat
+	(lyskom-format-insert 'who-is-active-and-member conf-stat))
 			  
     (lyskom-format-insert format-string-2
 			  ""
@@ -2245,6 +2277,34 @@ Uses Protocol A version 9 calls"
 			  (t
 			   'total-visible-active-users))
 		    total-users))))
+
+(defun lyskom-who-is-on-check-membership-8 (who-info-list conf-stat)
+  "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
+  (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
+			      0 (conf-stat->no-of-members conf-stat)))
+	(len (length who-info-list))
+	(i 0)
+	(res nil))
+    (while (< i len)
+      (if (lyskom-conf-no-list-member (who-info->pers-no (aref who-info-list i))
+				      members)
+	  (setq res (cons (aref who-info-list i) res)))
+      (setq i (1+ i)))
+    res))
+
+(defun lyskom-who-is-on-check-membership-9 (who-info-list conf-stat)
+  "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
+  (let ((members (blocking-do 'get-members (conf-stat->conf-no conf-stat)
+			      0 (conf-stat->no-of-members conf-stat)))
+	(len (length who-info-list))
+	(i 0)
+	(res nil))
+    (while (< i len)
+      (if (lyskom-conf-no-list-member (dynamic-session-info->person (aref who-info-list i))
+				      members)
+	  (setq res (cons (aref who-info-list i) res)))
+      (setq i (1+ i)))
+    res))
 
 (defun lyskom-insert-deferred-session-info (session-info defer-info)
   (if session-info
