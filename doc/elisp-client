@@ -10,7 +10,7 @@ File: elisp-client  Node: Top, Up: (dir), Next: Copyright
                    --------------------------------
                   En klient skriven i GNU-emacs-lisp.
                    --------------------------------
-           Dokumentationen uppdaterad till klient version 0.33
+           Dokumentationen uppdaterad till klient version 0.34
 
 * Menu:
 
@@ -123,40 +123,23 @@ LysKOM bygger p} klient-servermodellen.
 * Menu:
 
 * Servern:: Lite grann om servern, databashanterare och var den finns.
-* Multiplexer:: Vad {r det och varf|r.
 
 
 
-File: elisp-client  Node: Servern, Up: Systemet, Next: Multiplexer
+File: elisp-client  Node: Servern, Up: Systemet
 
 Servern
 *******
 
 
 Servern, databashanteraren, {r skriven i C och k|rs p}
-`nanny.lysator.liu.se' (IP-nummer 130.236.254.13). Databasfilen {r
+`lysator.liu.se' (IP-nummer 130.236.254.1). Databasfilen {r
 l{sbar f|r flera av lysators medlemmar, vilket kan tyckas vara en
 bugg, men den {r medveten. Vi vill inte ge n}gon en falsk k{nsla av
 s{kerhet och p} ett system s}dant som Lysators {r det alltf|r m}nga
 som har privilegier f|r att man skall kunna garantera n}gon hemlighet.
 P} andra serverinstallationer i framtiden blir naturligtvis
 situationen en annan.
-
-
-
-File: elisp-client  Node: Multiplexer, Prev: Servern, Up: Systemet
-
-
-Multiplexer
-***********
-
-
-Eftersom antalet uppkopplingar till en och samma process {r v{ldigt
-begr{nsat s} finns det p} `laila.lysator.liu.se' (IP-nummer
-130.236.254.12) en multiplexer som tar emot din uppkoppling och som
-skickar vidare den till LysKOM-servern som k|r p} `nanny'. Denna skall
-anv{ndas och om vi f}r f|r oss att flytta LysKOM servern kommer denna
-att {ndras s} att den kopplar vidare till det nya st{llet.
 
 
 
@@ -188,8 +171,8 @@ File: elisp-client  Node: Lysator, Up: Uppstart, Next: IDA
 Fr}n Lysators maskiner
 
 Enklast {r att k|ra LysKOM fr}n n}gon av Lysators UNIX-maskiner (`lage',
-`lave', `laila' eller `nanny'). N{r man har startat emacs r{cker det med
-att skriva
+`lave', `laila', `lysator', `robert', `robin', `ruben' eller `nanny').
+N{r man har startat emacs r{cker det med att skriva:
              M-x lyskom
 
 f|r att s{tta ig}ng. Svara p} fr}gan om server med
@@ -199,7 +182,7 @@ att trycka RET.
 
 File: elisp-client  Node: IDA, Prev: Lysator, Up: Uppstart, Next: Andra maskiner
 
-
+annat
 Fr}n elev-sparcarna p} IDA (Inst. f|r Datavetenskap p} LiTH):
 
 L{gg in
@@ -220,13 +203,13 @@ Fr}n andra maskiner
 
 H{mta filen `lyskom.el' eller `lyskom.elc'. Senaste versionen finns alltid
 p} `lage.lysator.liu.se' i directoryt `/usr/local/lib/elisp/'. K|r, och
-hoppas att du kommer }t `laila' eller `obel18.ida.liu.se'. Om det blir
+hoppas att du kommer }t `lysator' eller `obel18.ida.liu.se'. Om det blir
 problem, s} l|s dem och tala om f|r mig hur du l|ste dem, s} kan jag
 l{gga in din l|sning h{r.
 
 Om Emacs s{ger `"Unknown host"' m}ste du be din systemadministrat|r att
-l{gga in `laila.lysator.liu.se 130.236.254.12' i host-tabellen, eller
-l{nka emacs med `-lresolv' f|r att anv{nda nameserver. Tyv{rr g}r det
+l{gga in `130.236.254.1 lysator.liu.se kom.lysator.liu.se' i host-tabellen, 
+eller l{nka emacs med `-lresolv' f|r att anv{nda nameserver. Tyv{rr g}r det
 inte att ge IP-nummer till Emacs.
 
 Om du vill h{mta LysKOMklienten fr}n n}gonstans utanf|r LiTH kan du
@@ -267,6 +250,8 @@ Efter en liten stund dyker det upp ett f|nster d{r det st}r
      
              Telefon:
              Email-adress:
+     
+             Annat:
 
 Skriv en kort presentation av dig sj{lv. Du b|r }tminstone ha med ditt
 riktiga namn, din adress och telefonnummer, och email-adress. Det {r
@@ -380,6 +365,8 @@ versionen.
 * Tangenterna:: Index |ver korta kommandon.
 
 * Annat:: |vriga kommandon, Se tiden, F} uppmuntran...
+* Administrat|rskommandon:: \verg} till administrat|rsmode,
+                            St{ng av servern.
 
 
 File: elisp-client  Node: L{sa, Prev: Bli medlem, Up: Kommandon, Next: Skriva
@@ -637,11 +624,12 @@ att uttr{da.
      redan {r medlem i.
      
      
-`u'		`Uttr{da ur'     
+`Uttr{da ur'     
      
      
      Fr}gar efter namnet p} ett m|te och g|r s} att du uttr{der ur
      m|tet. Alla markeringar om eventuella l{sta texter f|rsvinner.
+     Detta kommando har inte n}gon egen tangent.
 
 
 
@@ -658,7 +646,7 @@ File: elisp-client  Node: Sluta, Prev: Skriva, Up: Kommandon, Next: Lista
 
 
 
-File: elisp-client  Node: Annat, Prev: Tangenterna, Up: Kommandon
+File: elisp-client  Node: Annat, Prev: Tangenterna, Up: Kommandon, Next: Administrat|rskommandon
 
 |vriga kommandon i LysKOM.
 ==========================
@@ -704,7 +692,7 @@ File: elisp-client  Node: Annat, Prev: Tangenterna, Up: Kommandon
      |verskridas med ett prefixargument.
      
      
-			`Visa vilkalistan'     
+		`Visa vilkalistan'     
      
      
      LysKOM underh}ller en lista |ver alla personer som {r inne
@@ -712,6 +700,16 @@ File: elisp-client  Node: Annat, Prev: Tangenterna, Up: Kommandon
      med detta kommando. H|jden p} detta f|nster regleras med 
      variabeln `kom-who-buffer-size-when-displaying'.
      (*Note F|nsterstorlek: Variabler.)
+     
+     
+		`Kasta ut en session'     
+     
+     
+     Du kan sl{nga ut en session som har h{ngt sig eller som du
+     gl|mt p} n}gon annan maskin. Du kan bara sl{nga ut 
+     sessioner d{r personer som du {r organisat|r f|r {r
+     inloggade om du inte {r i administrat|rsmode.
+     (*Note Administrat|rs: Administrat|rskommandon.)
      
      
 
@@ -1054,8 +1052,13 @@ File: elisp-client  Node: [ndra personuppgifter, Up: [ndra
 `[ndra l|senord'     
      
      
-     Fr}gar efter det gamla l|senordet samt det nya du vill ha. Det nya
-     l|senordet m}ste matas in tv} g}nger f|r att f}nga felstavningar.
+     Fr}gar efter vem du skall {ndra l|senordet f|r, samt efter
+     ditt l|senordet. D{refter skall du mata in det nya l|senordet
+     tv} g}nger. Detta f|r att f}nga felstavningar.
+     
+     Man kan {ndra l|senordet f|r alla som man {r organisat|r
+     f|r. Om man {r administrat{r kan man {ndra l|senordet f|r
+     vem som helst.
      
      
 `S{tt lapp p} d|rren'     
@@ -1085,7 +1088,7 @@ File: elisp-client  Node: [ndra personuppgifter, Up: [ndra
      felmeddelande ut.
      
      
-`S{tt livsl{ngd'     
+`[ndra livsl{ngd'     
      
      
      Fr}gar f|rst efter det m|te som du vill {ndra inl{ggens livsl{ngd
@@ -1211,6 +1214,51 @@ File: elisp-client  Node: [ndra inst{llningarna, Prev: [ndra annat, Up: [ndra
      in v{rdena (med `C-c C-c' i denna bufferten) s} kommer
      inst{llningarna  du gjort inte att sparas i LysKOM utan det g}r
      f|rlorade.
+
+
+
+File: elisp-client  Node: Administrat|rskommandon, Prev: Annat, Up: Kommandon
+
+Administrat|rskommandon
+***********************
+
+
+     
+`\verg} till administrat|rsmod'     
+     
+     
+     F|r att kunna utnyttja kommandona p} denna sida m}ste man
+     f|rst |verg} i administrat|rsmode som sker med detta
+     kommando. Dessutom m}ste du ha administrativa r{ttigheter i 
+     databasen, f|r att kommandona skall fungera.
+     
+`\verg} till normalmod'     
+     
+     
+     N{r man inte l{ngre vill k|ra i administrat|rsmod kan
+     man sl} av det med detta kommandot. Det hindrar dig att av misstag 
+     l{sa texter som du inte f}r l{sa mm.
+     
+     
+`St{ng av servern'     
+     
+     
+     Sparar databasen och st{nger av servern. Ofta finns det program som
+     automatiskt startar om servern igen.
+     
+     
+`S{tt loginmeddelande'     
+     
+     
+     [ndrar loginmeddelandet.
+     
+     
+`Ta bort loginmeddelande'     
+     
+     ]
+     Tar bort loginmeddelandet.
+     
+
 
 
 
@@ -1868,6 +1916,7 @@ Index
 * G} till n{sta m|te: L{sa.
 * Hj{lp: F} hj{lp.
 * Hoppa |ver alla kommentarer: L{sa.
+* Kasta ut en session: Annat.
 * Kommentera f|reg}ende inl{gg: Skriva.
 * Kommentera inl{gget: Skriva.
 * Lista medlemsskap: Lista.
@@ -1892,12 +1941,14 @@ Index
 * Spring till b|rjan av texten: L{sa.
 * Status (f|r) m|te: Status.
 * Status (f|r) person: Status.
+* St{ng av servern: Administrat|rskommandon.
 * Subtrahera kommentar: Addera.
 * Subtrahera mottagare: Addera.
 * S{nda meddelande: Meddelande.
 * S{tt lapp p} d|rren: [ndra personuppgifter.
-* S{tt livsl{ngd: [ndra personuppgifter.
+* S{tt loginmeddelande: Administrat|rskommandon.
 * Ta bort lapp p} d|rren: [ndra personuppgifter.
+* Ta bort loginmeddelsde: Administrat|rskommandon.
 * Uteslut medlem: Addera.
 * Utpl}na: Skapa.
 * Uttr{da ur: Bli medlem.
@@ -1918,7 +1969,10 @@ Index
 * ]terse tr{d: ]terse.
 * ]terse urinl{gget: ]terse.
 * ]terstarta kom: Annat.
+* \verg} till administrat|rsmod: Administrat|rskommandon.
+* \verg} till normalmod: Administrat|rskommandon.
 * [ndra inst{llningarna: [ndra inst{llningarna.
+* [ndra livsl{ngd: [ndra personuppgifter.
 * [ndra l|senord: [ndra personuppgifter.
 * [ndra namn: [ndra personuppgifter.
 * [ndra organisat|r: [ndra personuppgifter.
@@ -1977,7 +2031,6 @@ Tangenterna
 * sp: Status.
 * SPC: L{sa.
 * st: Spara text.
-* u: Bli medlem.
 * V: Annat.
 * v: Lista.
 * } : ]terse.
@@ -2051,47 +2104,47 @@ Node: Copyright815
 Node: F|rord1411
 Node: Bakgrund1848
 Node: Systemet3811
-Node: Servern4051
-Node: Multiplexer4618
-Node: Uppstart5113
-Node: Lysator5592
-Node: IDA5930
-Node: Andra maskiner6587
-Node: F|rsta g}ngen7939
-Node: K|ra LysKOM9221
-Node: Prompten9832
-Node: Scrollning10463
-Node: Kommandon10710
-Node: L{sa12485
-Node: F} hj{lp14308
-Node: Skriva14766
-Node: Lista16459
-Node: Bli medlem18239
-Node: Sluta20163
-Node: Annat20393
-Node: [ndra21832
-Node: ]terse22412
-Node: Status25271
-Node: Spara text26227
-Node: Markeringar26402
-Node: Skapa27726
-Node: Addera28252
-Node: [ndra personuppgifter30321
-Node: Meddelande32147
-Node: Prioritera32631
-Node: [ndra inst{llningarna34453
-Node: Namn35874
-Node: Skriva inl{gg36838
-Node: Vilkabufferten40980
-Node: Flaggor41324
-Node: Variabler46768
-Node: Hookar52252
-Node: Environmentvariabler55701
-Node: Buggrapporter56569
-Node: Filer57065
-Node: Happy hacking57291
-Node: Index57424
-Node: Tangenterna59643
-Node: Variabelindex60620
+Node: Servern4012
+Node: Uppstart4553
+Node: Lysator5032
+Node: IDA5410
+Node: Andra maskiner6072
+Node: F|rsta g}ngen7439
+Node: K|ra LysKOM8747
+Node: Prompten9358
+Node: Scrollning9989
+Node: Kommandon10236
+Node: L{sa12117
+Node: F} hj{lp13940
+Node: Skriva14398
+Node: Lista16091
+Node: Bli medlem17871
+Node: Sluta19839
+Node: Annat20069
+Node: [ndra21874
+Node: ]terse22454
+Node: Status25313
+Node: Spara text26269
+Node: Markeringar26444
+Node: Skapa27768
+Node: Addera28294
+Node: [ndra personuppgifter30363
+Node: Meddelande32381
+Node: Prioritera32865
+Node: [ndra inst{llningarna34687
+Node: Administrat|rskommandon36108
+Node: Namn37094
+Node: Skriva inl{gg38058
+Node: Vilkabufferten42200
+Node: Flaggor42544
+Node: Variabler47988
+Node: Hookar53472
+Node: Environmentvariabler56921
+Node: Buggrapporter57789
+Node: Filer58285
+Node: Happy hacking58511
+Node: Index58644
+Node: Tangenterna61147
+Node: Variabelindex62107
 
 End tag table
