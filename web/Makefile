@@ -5,7 +5,7 @@
 
 USER=$$USER
 CVSROOT=$(USER)@cvs.lysator.liu.se:/cvsroot/lyskom-elisp-client
-TARGET=/mp/www-pages/html/lyskom/klienter/emacslisp
+TARGET=/lysator/www/www-local/lyskom/klienter/emacslisp
 LANG=sv
 
 DOCDIR = ../doc

@@ -17,7 +17,7 @@ extract_language() {
       sed "s,<lang id=\"$inverse\">$lang_inverse</lang>,,g" |\
       sed "s,<lang id=\"$lang\">,,g" |\
       sed "s,</lang>,,g" |\
-      sed "/<!-- CONTENT -->/ r elisp-client-items.sv" \
+      sed "/<!-- CONTENT -->/ r elisp-client-items.$lang" \
       > index.$lang.html
 }
 

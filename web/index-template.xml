@@ -138,21 +138,21 @@
                       <lang id="sv">Alla språk:</lang>
                       <lang id="en">All languages:</lang>
                     </td>
-                    <td><a href="lyskom-all-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-all-0.48.zip">zipfil</a></td>
+                    <td><a href="lyskom-elisp-client-all-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-all-0.48.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
                       <lang id="sv">Svenska:</lang>
                       <lang id="en">Swedish:</lang>
                     </td>
-                    <td><a href="lyskom-swedish-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-swedish-0.48.zip">zipfil</a></td>
+                    <td><a href="lyskom-elisp-client-swedish-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-swedish-0.48.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
                       <lang id="sv">Engelska:</lang>
                       <lang id="en">English:</lang>
                     </td>
-                    <td><a href="lyskom-english-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-english-0.48.zip">zipfil</a></td>
+                    <td><a href="lyskom-elisp-client-english-0.48.tar.gz">tarfil</a>, <a href="ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/lyskom-english-0.48.zip">zipfil</a></td>
                   </tr>
                   <tr valign="top">
                     <td>
@@ -160,8 +160,8 @@
                       <lang id="en">Linux packages:</lang>
                     </td>
                     <td>
-                      <!-- a href="lyskom-elisp-client_0.48-1_all.deb" -->Debian<!-- /a --><br />
-                      <!-- a href="lyskom-elisp-client_0.48.rpm" -->RedHat RPM<!-- /a -->
+                      <a href="http://magnus.gustavsson.se/lyskom/lyskom-elisp-client-0.48-1.noarch.rpm">RedHat RPM</a><br />
+                      <a href="http://magnus.gustavsson.se/lyskom/lyskom-elisp-client-0.48-1.src.rpm">RedHat RPM (source)</a>
                     </td>
                   </tr>
                 </table>
