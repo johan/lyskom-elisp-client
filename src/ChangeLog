@@ -1,3 +1,23 @@
+2004-02-27  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el (kom-write-comment): Use new def-kom-command
+	features.
+	(kom-private-answer): Ditto.
+	(kom-write-footnote): Ditto.
+	(kom-comment-previous): Ditto.
+	(kom-private-answer): Ditto.
+	(kom-private-answer-previous): Ditto.
+
+	* slow.el (kom-slow-mode): Use def-kom-command instead of defun.
+	(kom-quick-mode): Ditto.
+
+	* commands2.el (kom-show-user-area): Use def-kom-command instead
+	of defun.
+
+	* command.el (def-kom-command): Added keyword support.
+	(def-kom-emacs-command): Ditto.
+	(lyskom-start-of-command): Added PROMPT-FORMAT.
+
 2004-02-23  David Byers  <byers@lysator.liu.se>
 
 	Further reduce the likelihood of sending alarm messages

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.203 2004-02-23 19:37:39 byers Exp $
+;;;;; $Id: commands2.el,v 44.204 2004-02-27 18:55:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.203 2004-02-23 19:37:39 byers Exp $\n"))
+              "$Id: commands2.el,v 44.204 2004-02-27 18:55:43 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2072,17 +2072,16 @@ not function names."
 ;;;
 ;;;  Author: David Byers
 
-(defun kom-show-user-area ()
+(def-kom-command kom-show-user-area ()
   "Get and display the user area of the current person. The user area
 is a regular text used to store all settings. The format of this text
 is documented in the LysKOM protocol specification. This command is
 primarily intended for use by developers."
   (interactive)
-  (lyskom-start-of-command 'kom-show-user-area)
   (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
     (lyskom-view-text (pers-stat->user-area pers-stat)
                       nil nil nil nil nil)
-    (lyskom-run 'main 'lyskom-end-of-command)))
+    (lyskom-wait-queue 'main)))
 
 
 ;;;============================================================

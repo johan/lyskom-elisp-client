@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.212 2004-02-22 16:30:59 byers Exp $
+;;;;; $Id: commands1.el,v 44.213 2004-02-27 18:55:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.212 2004-02-22 16:30:59 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.213 2004-02-27 18:55:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1036,7 +1036,7 @@ This does lyskom-end-of-command"
 ;;; FIXME: Does not use def-kom-command
 
 
-(defun kom-write-comment (text-no)
+(def-kom-command kom-write-comment (text-no)
   "Write a comment to the selected text.
 
 Several settings affect writing texts in general.
@@ -1046,36 +1046,32 @@ recipients are handled.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list 
-                (let ((lyskom-current-command 'kom-write-comment))
-                  (lyskom-read-text-no-prefix-arg 'what-comment-no))))
-  (lyskom-start-of-command (concat 
-			    (lyskom-command-name 'kom-write-comment)
-			    (if text-no 
-				(lyskom-format " (%#1n)" text-no)
-			      "")))
-  (unwind-protect
-      (if text-no
-          (progn
-            (lyskom-nag-about-presentation)
-            (blocking-do-multiple ((text (get-text text-no))
-                                   (text-stat (get-text-stat text-no)))
-              (when (or (null (text-stat-find-aux text-stat 4))
-                        (lyskom-j-or-n-p 
-                         (lyskom-get-string 'no-comments-q)))
-                (if (and (text-stat-find-aux text-stat 5)
-                         (lyskom-j-or-n-p
-                          (lyskom-get-string 'private-answer-q)))
-                    (lyskom-private-answer-soon
-                     text-stat
-                     text
-                     text-no)
-                  (lyskom-write-comment-soon text-stat
-                                             text
-                                             text-no
-                                             'comment)))))
-        (lyskom-insert-string 'confusion-who-to-reply-to))
-    (lyskom-end-of-command)))
+  :prompt-format (concat "%#1C " (if text-no
+                                     (lyskom-format " (%#1n)" text-no)
+                                   ""))
+  (interactive (list (let ((lyskom-current-command 'kom-write-comment))
+                       (lyskom-read-text-no-prefix-arg 'what-comment-no))))
+  (if text-no
+      (progn
+        (lyskom-nag-about-presentation)
+        (blocking-do-multiple ((text (get-text text-no))
+                               (text-stat (get-text-stat text-no)))
+          (when (or (null (text-stat-find-aux text-stat 4))
+                    (lyskom-j-or-n-p 
+                     (lyskom-get-string 'no-comments-q)))
+            (if (and (text-stat-find-aux text-stat 5)
+                     (lyskom-j-or-n-p
+                      (lyskom-get-string 'private-answer-q)))
+                (lyskom-private-answer-soon
+                 text-stat
+                 text
+                 text-no)
+              (lyskom-write-comment-soon text-stat
+                                         text
+                                         text-no
+                                         'comment)))))
+    (lyskom-insert-string 'confusion-who-to-reply-to)))
+
 
 
 (def-kom-command kom-write-footnote (text-no)
@@ -1092,6 +1088,9 @@ This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg'). Without a prefix argument this
 command will write a footnote to the most recently read or written
 applicable text."
+  :prompt-format (concat "%#1C " (if text-no
+                                     (lyskom-format " (%#1n)" text-no)
+                                   ""))
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-footnote-no nil
                                                      'last-seen-written)))
   (if text-no
@@ -1113,6 +1112,9 @@ recipients are handled.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
+  :prompt-format (concat "%#1C " (if text-no
+                                     (lyskom-format " (%#1n)" text-no)
+                                   ""))
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-comment-no nil
                                                      lyskom-previous-text)))
   (if text-no
@@ -1292,6 +1294,9 @@ recipients are handled.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
+  :prompt-format (concat "%#1C " (if text-no
+                                     (lyskom-format " (%#1n)" text-no)
+                                   ""))
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no)))
   (if text-no
       (blocking-do-multiple ((text-stat (get-text-stat text-no))
@@ -1367,6 +1372,9 @@ recipients are handled.
 
 This command accepts text number prefix arguments (see
 `lyskom-read-text-no-prefix-arg')."
+  :prompt-format (concat "%#1C " (if text-no
+                                     (lyskom-format " (%#1n)" text-no)
+                                   ""))
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-no nil
                                                      lyskom-previous-text)))
   (if text-no
