@@ -1,3 +1,13 @@
+2001-05-30  Joel Rosdahl  <joel@rosdahl.net>
+
+	* swedish-strings.el (lyskom-message): New string:
+	adding-cross-reference.
+
+	* english-strings.el (lyskom-message): Likewise.
+
+	* commands1.el (lyskom-add-cross-reference): Insert "Adding..."
+	text before adding cross reference.
+
 2001-05-25  Joel Rosdahl  <joel@rosdahl.net>
 
 	* english-strings.el: Marked strings for new days in lyskom-times

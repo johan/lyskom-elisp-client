@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.138 2001-05-25 11:33:51 joel Exp $
+;;;;; $Id: english-strings.el,v 44.139 2001-05-30 05:46:17 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.138 2001-05-25 11:33:51 joel Exp $"))
+              "$Id: english-strings.el,v 44.139 2001-05-30 05:46:17 joel Exp $"))
 
 
 ;;; ================================================================
@@ -480,6 +480,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
     (remove-name-as-recipient .
      "Removing %#1M as recipient of text %#2n...")
+    (adding-cross-reference . "Adding cross reference...")
 
     (error-recipient-limit . "Text %#1n has too many recipients.\n")
     (error-already-recipient . "%#2M is already a recipient of text %#1n.\n")

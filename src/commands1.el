@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.113 2001-05-25 11:33:48 joel Exp $
+;;;;; $Id: commands1.el,v 44.114 2001-05-30 05:46:19 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.113 2001-05-25 11:33:48 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.114 2001-05-30 05:46:19 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3777,6 +3777,7 @@ Arguments:
         (aux-item (lyskom-read-cross-reference-and-get-aux-item)))
     (when (and text-no aux-item)
       (cache-del-text-stat text-no)
+      (lyskom-insert 'adding-cross-reference)
       (lyskom-report-command-answer
        (blocking-do 'modify-text-info
                     text-no

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.169 2001-05-25 11:33:50 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.170 2001-05-30 05:46:16 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.169 2001-05-25 11:33:50 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.170 2001-05-30 05:46:16 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -469,6 +469,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
     (remove-name-as-recipient .
 			      "Subtraherar %#1M som mottagare från text %#2n...")
+    (adding-cross-reference . "Adderar referens...")
+
     (error-recipient-limit . "Text %#1n har för många mottagare.\n")
     (error-already-recipient . "%#2M är redan mottagare till inlägg %#1n.\n")
     (error-permission-denied-add-recpt . "Bara författaren till %#1n eller organisatören för %#2M kan ändra mottagartyp.\n")
