@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.94 2000-12-29 17:27:40 qha Exp $
+;;;;; $Id: commands1.el,v 44.95 2000-12-31 21:47:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.94 2000-12-29 17:27:40 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.95 2000-12-31 21:47:29 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3313,7 +3313,7 @@ The value of RECIPIENTS should be the result of a call to
                                                  '(all)
                                                  nil
                                                  (cons (if default-to
-                                                           (conf-stat->name default-from)
+                                                           (conf-stat->name default-to)
                                                          "") 0)
                                                  t)))
               (when (and source target)

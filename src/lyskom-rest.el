@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.127 2000-12-29 17:27:37 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.128 2000-12-31 21:47:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.127 2000-12-29 17:27:37 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.128 2000-12-31 21:47:35 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -195,8 +195,10 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
       (progn
 	(goto-char (point-max))
 	(recenter 0)
+        (sit-for 0)                     ; FIXME: emacs-21.0.94 workaround
 	(lyskom-next-command))
     (recenter 0)
+    (sit-for 0)                     ; FIXME: emacs-21.0.94 workaround
     (move-to-window-line -1)
     (lyskom-set-last-viewed)))
 
@@ -310,9 +312,11 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
           (setq text-no (lyskom-read-text-no-prefix-arg 'review-text-q)))
 
         (cond (text-no
-               (if (or (not (listp kom-page-before-command))
-                       (memq 'kom-view kom-page-before-command))
-                   (recenter 1))
+               (when (or (not (listp kom-page-before-command))
+                         (memq 'kom-view kom-page-before-command))
+                 (recenter 1)
+                 (sit-for 0)                     ; FIXME: emacs-21.0.94 workaround
+                 )
                (lyskom-tell-internat 'kom-tell-review)
                (lyskom-format-insert 'review-text-no text-no)
                (lyskom-view-text text-no))
@@ -882,8 +886,8 @@ is not on screen then doesn't move point."
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window was-at-max)
 	  (if (pos-visible-in-window-p (point-max) window)
-	      (goto-char (point-max))
-	    (and kom-continuous-scrolling (lyskom-scroll)))))))
+              (goto-char (point-max))
+            (and kom-continuous-scrolling (lyskom-scroll)))))))
 
 
 
