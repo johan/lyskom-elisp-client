@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.213 2003-08-14 08:24:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.214 2003-08-14 15:59:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.213 2003-08-14 08:24:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.214 2003-08-14 15:59:24 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1378,8 +1378,9 @@ Deferred insertions are not supported."
                                             0)
 					   allow-defer))
 	  (lyskom-format-error
-	   (error "LysKOM internal error formatting %s: %s%s"
-		  format-string (nth 1 error) (nth 2 error))))))
+	   (error "LysKOM internal error formatting %s: %s%s (arg %S, got %S)"
+		  format-string (nth 1 error) (nth 2 error) 
+                  (nth 3 error) (nth 4 error))))))
     state))
 
 
@@ -1565,14 +1566,18 @@ Deferred insertions are not supported."
                                    (make-list count arg))))))
                   (t (signal 'lyskom-internal-error
                                           (list 'lyskom-format
-                                                ": argument error (expected char or string)"))))))
+                                                ": argument error (expected char or string)"
+                                                arg-no
+                                                arg))))))
 
      ((= format-letter ?s)
       (setq result (cond ((stringp arg) arg)
                          ((symbolp arg) (symbol-name arg))
                          (t (signal 'lyskom-format-error
                                     (list 'lyskom-format
-                                          ": argument error (expected string)")))))
+                                          ": argument error (expected string)"
+                                          arg-no
+                                          arg)))))
       (when downcase-flag (setq result (downcase result))))
      ;;
      ;;  Format a number by conferting it to a string and inserting
@@ -1587,7 +1592,9 @@ Deferred insertions are not supported."
                           (format "%0.0f" arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error (expected int)"))))))
+                                          ": argument error (expected int)"
+                                          arg-no
+                                          arg))))))
 
      ((or (= format-letter ?g)
           (= format-letter ?f)
@@ -1601,7 +1608,9 @@ Deferred insertions are not supported."
                                   arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error (expected number)")))))
+                                          ": argument error (expected number)"
+                                          arg-no
+                                          arg)))))
       (save-match-data
         (when (and (string-match "\\." result)
                    (string-match "\\.?0+$" result))
@@ -1624,7 +1633,9 @@ Deferred insertions are not supported."
       (setq result (cond ((numberp arg) (format "%f" arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error (expected number)"))))))
+                                          ": argument error (expected number)"
+                                          arg-no
+                                          arg))))))
 
 
      ;;
@@ -1636,7 +1647,9 @@ Deferred insertions are not supported."
                          ((characterp arg) (char-to-string arg))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error (expected char)"))))))
+                                          ": argument error (expected char)"
+                                          arg-no
+                                          arg))))))
      ;;
      ;;  Format a literal percent character by inserting a string
      ;;  containing it into the result list
@@ -1864,7 +1877,9 @@ Deferred insertions are not supported."
              ;; Something went wrong
              (t (signal 'lyskom-internal-error
                         (list 'lyskom-format
-                              ": argument error (expected conf)")))))
+                              ": argument error (expected conf)"
+                              arg-no
+                              arg)))))
       (if (and (not colon-flag)
                (or (lyskom-conf-stat-p arg)
                    (lyskom-uconf-stat-p arg)
@@ -1893,7 +1908,9 @@ Deferred insertions are not supported."
                    (int-to-string (uconf-stat->conf-no arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error (expected conf)")))))
+                                   ": argument error (expected conf)"
+                                   arg-no
+                                   arg)))))
       (if (not colon-flag)
           (setq propl 
                 (append 
@@ -1911,7 +1928,9 @@ Deferred insertions are not supported."
                                              (text-stat->text-no arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error (expected text-no)")))))
+                                   ": argument error (expected text-no)"
+                                   arg-no
+                                   arg)))))
       (if (not colon-flag)
           (setq propl
                 (append (lyskom-default-button 'text arg) propl))))
@@ -1924,7 +1943,9 @@ Deferred insertions are not supported."
                          ((consp arg) (lyskom-button-transform-text (cdr arg) (car arg)))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
-                                          ": argument error (expected subject)")))))
+                                          ": argument error (expected subject)"
+                                          arg-no
+                                          arg)))))
       (if (and (not colon-flag)
                (not (lyskom-face-default-p kom-subject-face)))
           (setq propl (append (list 'face kom-subject-face) propl))))
@@ -1949,7 +1970,9 @@ Deferred insertions are not supported."
                                             (car arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
-                                   ": argument error (expected text)"))))))
+                                   ": argument error (expected text)"
+                                   arg-no
+                                   arg))))))
 
 
      ;;

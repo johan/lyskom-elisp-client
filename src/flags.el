@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.38 2003-08-13 20:31:52 byers Exp $
+;;;;; $Id: flags.el,v 44.39 2003-08-14 15:59:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.38 2003-08-13 20:31:52 byers Exp $\n"))
+	      "$Id: flags.el,v 44.39 2003-08-14 15:59:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -167,7 +167,7 @@ settings and save them to your emacs init file."
 	   "\n")))
     (save-excursion
       (set-buffer kombuf)
-      (lyskom-message "%s" start-message)
+      (when start-message (lyskom-message "%s" start-message))
       (initiate-create-text
        'options 
        'lyskom-save-options-2
@@ -215,9 +215,9 @@ settings and save them to your emacs init file."
           (when pers-stat
             (set-pers-stat->user-area pers-stat text-no))
           (setq lyskom-current-user-area text-no)
-          (lyskom-message "%s" done-message))
+          (when done-message (lyskom-message "%s" done-message)))
       (lyskom-format-insert 'could-not-set-user-area lyskom-errno)
-      (lyskom-message "%s" error-message))))
+      (when error-message (lyskom-message "%s" error-message)))))
 
 (defun lyskom-read-options (&optional buffer)
   "Reads the user-area and sets the variables according to the choises.
