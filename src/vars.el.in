@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.90 1999-12-08 11:36:24 byers Exp $
+;;;;; $Id: vars.el.in,v 44.91 2000-02-08 14:59:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.90 1999-12-08 11:36:24 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.91 2000-02-08 14:59:48 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1067,6 +1067,15 @@ Also see the function \"lyskom-add-button-action\"."
 (def-kom-var kom-show-imported-external-recipients t
   "*If non-nil, show the external recipients to an imported text."
   server)
+
+(def-kom-var kom-complete-numbers-before-names t
+  "*If non-nil, reading conference and user names accepts the special 
+forms ``m 4711'' or ``p 42'' as numeric references to conference 4711
+and person 42 instead of trying to look for an object with a matching
+name. If nil, any name matching the input will be preferred to a
+numeric reference."
+  server)
+
 
 (def-kom-var kom-mercial nil
   "*When the user has seen all texts and has reached the view-time prompt,
