@@ -9,7 +9,7 @@
         <URL:ftp://ftp.lystor.liu.se/lyskom/elisp-client/>
 
     Filen heter lyskom-0.47.tar.gz, och en kopia av den text du läser
-    just nu finns under namned NEWS-0.47 i tar-arkivet. Det finns även
+    just nu finns under namnet NEWS-0.47 i tar-arkivet. Det finns även
     en zip-fil för folk som sitter med system som inte förstår
     tar-filer.
 
@@ -81,7 +81,7 @@
 
 *** "Lista (med) regexpar" har blivit väskokänslig per default (det
     betyder alltså att ett versalt Z och ett gement z betraktas som
-    samma bokstav). Ger man prefixargument så gör kommandor skillnad
+    samma bokstav). Ger man prefixargument så gör kommandot skillnad
     mellan versaler och gemener.
 
 *** Listan med fördefinierade LysKOM-servrar har uppdaterats.
