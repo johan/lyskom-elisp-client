@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.220 2002-06-22 17:13:02 byers Exp $
+;;;;; $Id: english-strings.el,v 44.221 2002-06-22 18:07:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.220 2002-06-22 17:13:02 byers Exp $"))
+              "$Id: english-strings.el,v 44.221 2002-06-22 18:07:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1785,6 +1785,12 @@ have been removed, you can fix the problem by giving the command
 
     (review-marking-as-read . "Review marks as read")
     (review-not-marking-as-read . "Review does not mark as read")
+
+    (using-ssh-connection . "Using ssh connection to %#1s...")
+    (opening-ssh-connection . "Opening ssh connection to %#1s...")
+    (ssh-cant-connect . "Unable to open ssh connection: %s")
+    (ssh-closnig . "Closing ssh connection to %#1s")
+    (ssh-unknown-host . "unknown host")
     ))
 
 

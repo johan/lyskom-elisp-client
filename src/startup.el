@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.74 2002-06-22 17:13:03 byers Exp $
+;;;;; $Id: startup.el,v 44.75 2002-06-22 18:07:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.74 2002-06-22 17:13:03 byers Exp $\n"))
+	      "$Id: startup.el,v 44.75 2002-06-22 18:07:46 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -361,16 +361,19 @@ clients of the event. See lyskom-mode for details on lyskom."
     (let* ((procname (format "ssh<%s:%s:%d>" kom-ssh-relay-host server port))
            (bufname (concat " *" procname "*"))
            (proc (get-process procname))
-           (msg (concat " ssh connection to " kom-ssh-relay-host "..."))
            (procsym (intern procname))
            (relay-port (and proc
                             (eq (process-status proc) 'run)
-                            (get procsym 'relay-port))))
+                            (get procsym 'relay-port)))
+           (msg nil))
       (unwind-protect
           (save-excursion
             (set-buffer (get-buffer-create bufname))
             (if relay-port
-                (message (setq msg (concat "Using" msg)))
+                (lyskom-message 
+                 "%s" 
+                 (lyskom-format (setq msg 'using-ssh-connection)
+                                kom-ssh-relay-host))
               (when proc (delete-process proc))
               (setq relay-port (+ 10000 (random 20000)))
               (put procsym 'relay-host 
@@ -379,7 +382,10 @@ clients of the event. See lyskom-mode for details on lyskom."
                      kom-ssh-relay-host))
               (put procsym 'relay-port relay-port)
               (put procsym 'num-connected 0)
-              (message (setq msg (concat "Opening" msg)))
+              (lyskom-message
+               "%s"
+               (lyskom-format (setq msg 'opening-ssh-connection)
+                              kom-ssh-relay-host))
               (goto-char (point-max))
               (insert "\n--- new connection ---\n")
               (setq proc (start-process
@@ -394,14 +400,25 @@ clients of the event. See lyskom-mode for details on lyskom."
                      (goto-char (point-max))
                      (re-search-backward "^--- .* ---$" nil t)
                      (not (re-search-forward "^ok$" nil t)))
-              (if (re-search-forward "\\<refused\\|error\\|key not found\\>" nil t)
-                  (error "Couldn't connect: %s"
-                         (buffer-substring-no-properties
-                          (progn (beginning-of-line) (point))
-                          (progn (skip-chars-forward "^\n\r") (point)))))
+              (when (re-search-forward "\\<\\(Enter passphrase.*$\\|^.*password.*$\\)\\|refused\\|disconnect\\|denied\\|error\\|key not found\\>" nil t)
+                (cond ((match-string 1)
+                       (process-send-string 
+                        proc
+                        (concat (silent-read (match-string 1)) "\n"))
+                       (delete-region (match-beginning 0) 
+                                      (match-end 0)))
+                      (t (error (lyskom-get-string 'ssh-cant-connect)
+                                (buffer-substring-no-properties
+                                 (progn (beginning-of-line) (point))
+                                 (progn (skip-chars-forward "^\n\r")
+                                        (point)))))))
               (sleep-for 0.5))
             (setq proc nil)
-            (message (concat msg "done")))
+            (lyskom-message 
+             "%s"
+             (lyskom-format (concat 
+                             (lyskom-format msg kom-ssh-relay-host)
+                             (lyskom-get-string 'done)))))
         (if proc (delete-process proc)))
 
       (save-excursion 
