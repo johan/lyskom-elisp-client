@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.215 2002-12-13 22:16:05 byers Exp $
+;;;;; $Id: vars.el.in,v 44.216 2002-12-13 22:37:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.215 2002-12-13 22:16:05 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.216 2002-12-13 22:37:32 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1273,7 +1273,13 @@ Do not use this variable for proxy authentication.")
 
 
 
-(def-kom-var kom-server-aliases
+(def-kom-var kom-server-aliases nil
+  "*An alist mapping server names to shorter identification strings.
+You can set this in init files before loading LysKOM.
+
+See `kom-builtin-server-aliases' for more information.")
+
+(def-kom-var kom-builtin-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
     ("com.lysator.liu.se" . "LysCOM (LysKOM in English)")
     ("kom.ludd.luth.se" . "LuddKOM")
@@ -1286,7 +1292,8 @@ Do not use this variable for proxy authentication.")
     ("community.roxen.com" . "Roxen Community KOM")
     ("kom.ds.hj.se" . "DSKOM")
     ("kom.sno.pp.se" . "SnoppKOM"))
-  "*An alist mapping server names to shorter identification strings")
+  "*An alist mapping server names to shorter identification strings
+If you want to add to this list, use `kom-server-aliases' instead.")
 
 (def-kom-var kom-ansaphone-on nil
   "t if automatic replies to personal messages are in effect."

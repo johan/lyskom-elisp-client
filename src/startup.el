@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.82 2002-10-20 13:20:00 byers Exp $
+;;;;; $Id: startup.el,v 44.83 2002-12-13 22:37:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.82 2002-10-20 13:20:00 byers Exp $\n"))
+	      "$Id: startup.el,v 44.83 2002-12-13 22:37:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -97,7 +97,8 @@ clients of the event. See lyskom-mode for details on lyskom."
 	(or password (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (let* ((env-kom (getenv "KOMSERVER"))
-	     (canon (lyskom-string-rassoc env-kom kom-server-aliases)))
+	     (canon (or (lyskom-string-rassoc env-kom kom-server-aliases)
+                        (lyskom-string-rassoc env-kom kom-builtin-server-aliases))))
 	(setq host (or (car canon)
 		       env-kom
 		       lyskom-default-server))))
@@ -829,10 +830,10 @@ alias name is entered, the corresponding address is returned."
   (let ((known-servers
 	 (append (mapcar (function (lambda (pair)
 				     (cons (car pair) (car pair))))
-			 kom-server-aliases)
+			 (append kom-server-aliases kom-builtin-server-aliases))
 		 (mapcar (function (lambda (pair)
 				     (cons (cdr pair) (car pair))))
-			 kom-server-aliases)))
+			 (append kom-server-aliases kom-builtin-server-aliases))))
 	(completion-ignore-case t)
 	server)
     (setq server (lyskom-completing-read prompt
