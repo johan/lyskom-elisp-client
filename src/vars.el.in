@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.246 2003-05-09 22:02:31 byers Exp $
+;;;;; $Id: vars.el.in,v 44.247 2003-05-17 15:09:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.246 2003-05-09 22:02:31 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.247 2003-05-17 15:09:20 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1956,6 +1956,19 @@ For instance, a value of `\"netscape\"' is valid, but `\"netscape -d
 host:0\"' is not. Instead, the latter should be `\(\"netscape\" \"-d\"
 \"host:0\"\)'"
   server)
+
+(def-kom-var kom-netscape-variant nil
+  "**Netscape-specific options.
+
+When set to `nil', open URLs in whatever window Netscape or Mozilla
+chooses. Usually an old window is recycled. When set to `new-window',
+open URLs in a new window. When set to `new-tab', open URLs in a new
+tab. These options may not work with all versions of Netscape or
+Mozilla, or on all operating systems.
+
+Values other than those listed above are reserved for future use."
+  server)
+
 
 (def-kom-var kom-galeon-command "galeon"
   "**Command used to run to start Galeon.

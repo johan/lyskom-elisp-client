@@ -1,3 +1,25 @@
+2003-05-17  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 986:
+	* lyskom-buttons.el (lyskom-view-url-netscape): Support
+	kom-netscape-variant.
+
+	* vars.el.in (kom-netscape-variant): New variable.
+
+	Fix bug 1038:
+	* swedish-strings.el,english-strings.el: Fixed problem with
+	accepting-recommendation (patch from Magnus Bark).
+
+	Fix bug 1039:
+	* commands1.el (lyskom-private-answer): Misc-list for personal
+	replys to our own texts were wrong.
+
+2003-05-10  David Byers  <byers@lysator.liu.se>
+
+	Illegal argument stringp nil when listing missing texts:
+	* commands2.el (lyskom-do-list-summary): Fix problem when listing
+	texts that don't exist.
+
 2003-05-09  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 868:

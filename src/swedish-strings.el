@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.321 2003-05-09 22:02:31 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.322 2003-05-17 15:09:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.321 2003-05-09 22:02:31 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.322 2003-05-17 15:09:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1818,7 +1818,7 @@ Antal sessioner:     %21#1d (totalt)
     (recommending-conf . "Rekommenderar %#1M%#2?b%[ (prioritet %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
     (has-recommended-conf . "%#1P har rekommenderat möte %#2M. Vill du bli medlem?\n")
     (accept-recommendation . "Gå med i %#1M? ")
-    (accepting-recommendataion . "Gå med i rekommenderat möte %#1M...")
+    (accepting-recommendataion . "Gå med i rekommenderat möte %#2M...")
 
     (redirect-for-whom . "Dirigera om kommentarer för: ")
     (redirect-to-which-conf . "Dirigera om kommentarer till: ")
@@ -3078,6 +3078,10 @@ i servern. Annars sparas det i din .emacs.")
     (audio-cues .         "Ljudsignaler\n")
     (audio-cues-when    . "Ge ljudsignal:\n")
     (automatic-replies .  "Automatiskt svar\n")
+
+    (new-window-netscape . "Öppna URLer i nytt fönster")
+    (new-tab-netscape . "Öppna URLer i ny tab")
+    (default-netscape . "Öppna URLer där de råkar hamna")
     
     (audio-cues-doc . "\
   Efterföljande inställningar bestämmer vilken ljudsignal LysKOM skall ge 
@@ -4082,13 +4086,16 @@ i servern. Annars sparas det i din .emacs.")
     (kom-highlight-conferences-doc . "\
   Denna inställning styr hur mötesnamn färgläggs. För varje val
   kan ett utseende anges. Utseendena är namn på faces i Emacs.")
-
-
+    (kom-netscape-variant-doc . "\
+  Denna inställning styr var elispklienten försöker öppna URLer. Hur
+  bra de olika valen fungerar beror på vilken variant av Netscape eller
+  Mozilla man använder, och till och med vilket operativsystem man
+  använder.")
 
     ;;
     ;; Tags for variables
     ;;
-    
+
     (kom-ansaphone-replies-tag . "Detaljerade automatsvar")
     (kom-bury-buffers-tag . "Begrav buffertar när man byter LysKOM:")
 
@@ -4288,6 +4295,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-lynx-xterm-command-tag . "Kommando för Lynx i xterm:")
     (kom-show-sync-messages-tag . "Visa databasen-sparar-meddelanden:")
     (kom-highlight-conferences-tag . "Färgläggning av namn:")
+    (kom-netscape-variant-tag . "Var ska Netscape/Mozilla öppna URLer:")
     )
 )
 

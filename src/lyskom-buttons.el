@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.90 2003-04-25 23:00:24 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.91 2003-05-17 15:09:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.90 2003-04-25 23:00:24 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.91 2003-05-17 15:09:20 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1114,7 +1114,13 @@ that, starts a new one."
   (let* ((url-string (if (memq window-system '(win32 mswindows w32))
                          (list url)
                        (list "-remote"
-                             (format "openUrl(%s)" url))))
+                             (format
+                              (cond ((eq kom-netscape-variant 'new-window)
+                                     "openUrl(%s, new-window)")
+                                    ((eq kom-netscape-variant 'new-tab)
+                                     "openUrl(%s, new-tab)")
+                                    (t "openUrl(%s)"))
+                              url))))
          
          (proc (apply 'start-process "netscape"
                       nil
