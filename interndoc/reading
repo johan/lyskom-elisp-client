@@ -1,0 +1,88 @@
+
+
+                          HOW READING WORKS
+                             David Byers
+
+
+
+    This file aims to explain how the client knows what to read next
+    and how you can tell the client to let the user read certain
+    texts.
+
+    Most developers do not need to know these details.
+
+
+
+    The client uses two variables to control what is scheduled to be
+    read: lyskom-to-do-list and lyskom-reading-list. lyskom-to-do-list 
+    contains everything to do in the future. lyskom-reading-list
+    contains information about what is being read now. The lists
+    contain elements of type READ-INFO.
+
+    There are several different types of read-infos:
+
+    CONF        Read texts in a conference. The read-info contains the 
+                conf-stat of the conference, a list of texts to read
+                and some other stuff (I don't remember exactly what.)
+
+    COMM-IN     Read a comment to some other text. The read-info
+                contains the conf-stat in which the text is being
+                read, the priority of that conference, a list of
+                comments to a text (that presumably has just been
+                read), the text that has comments, and some other
+                stuff.
+
+    FOOTN-IN    Read a footnote to some other text. The read-info is
+                essentially the same as a COMM-IN.
+
+    REVIEW      Review one of more texts. The read-info contains the
+                priority the reviewing has, the list of texts to
+                review and some other stuff.
+
+    REVIEW-TREE Review a comment tree. This is more or less the same
+                as a COMM-IN, but is used for reviewing.
+
+    REVIEW-MARK Review one or more marked texts. The read-info
+                contains the priority, list of texts to review and
+                other stuff that I don't know off-hand.
+
+    Two of the things that every single read-info has is a priority
+    and a list of texts. The priority is used to determine when a text
+    with higher priority arrives. The idea is that lyskom-reading-list 
+    is sorted in order of priority. 
+
+    I'm don't know why we have two lists. It certainly complicates
+    matters more than it simplifies them. One of the things you can
+    use the two lists for is temporary read-infos. If you enter a
+    read-info in lyskom-reading-list and not on lyskom-to-do-list, it
+    will be removed if the user goes to another conference. This is
+    the case with COMM-IN and FOOTN-IN entries. They are never entered 
+    on lyskom-to-do-list, and when you go to a new conference they are 
+    simply dropped. 
+
+|   Most of the time you don't want read-infos to be dropped.
+|   Therefore it is important to enter them on both lyskom-to-do-list
+|   and lyskom-reading-list. It is also important that you enter the
+|   same read-info on both lists, and not just identical copies. If
+|   you enter identical copies, users will end up reading everything
+|   at least twice.
+
+    To enter a REVIEW, REVIEW-TREE or REVIEW-MARK read-info, use the
+    function lyskom-review-enter-read-info to enter the same read-info 
+    into both lists. It's fun to use, and easy too!
+
+
+    The prompt that the client prints is derived from the read lists.
+    The client first looks at lyskom-reading-list and then at
+    lyskom-to-do-list. Depending on the kind of read-info and which
+    list it is found on the client will print different prompts.
+
+    A CONF on lyskom-reading-list will generate a read next text
+    prompt. A REVIEW, REVIEW-TREE of REVIEW-MARK will generate the
+    corresponding review text prompt. A COMM-IN will generate a read
+    next comment, and FOOTN-IN a read next footnote prompt.
+
+    A CONF on lyskom-to-do-list will generate a go to next conference
+    prompt. A REVIEW, REVIEW-TREE or REVIEW-MARK will generate a
+    resume reviewing prompt. I have no clue what a COMM-IN or FOOTN-IN 
+    will generate. Something bizarre, I suppose.
