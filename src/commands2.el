@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.157 2003-03-03 08:45:07 ceder Exp $
+;;;;; $Id: commands2.el,v 44.158 2003-03-16 14:29:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.157 2003-03-03 08:45:07 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.158 2003-03-16 14:29:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1090,12 +1090,14 @@ on one line."
         (unique-subjects nil))
 
     ;; The header.
-    (lyskom-format-insert (lyskom-construct-summary-format-string t nil)
+    (lyskom-format-insert (lyskom-construct-summary-format-string t nil t)
                           (lyskom-get-string 'Texts)
                           (lyskom-get-string 'Written)
                           (lyskom-get-string 'Lines)
                           (lyskom-get-string 'Author)
-                          (lyskom-get-string 'Subject))
+                          (lyskom-get-string 'Subject)
+                          nil
+                          (lyskom-get-string 'Comments))
 
     ;; The summary lines.
     (let ((text-no nil)
@@ -1114,7 +1116,7 @@ on one line."
                           (and (not (lyskom-string-member subject unique-subjects))
                                (setq unique-subjects (cons subject unique-subjects))))
                   (lyskom-print-summary-line 
-                   (lyskom-construct-summary-format-string nil nil)
+                   (lyskom-construct-summary-format-string nil nil t)
                    text-stat
                    (if (and (> indent 0) (string-equal subject last-subject))
                        ""
@@ -1165,7 +1167,8 @@ YYYY-MM-DD."
                              (if (>= indent 10)
                                  (format ">>>[%d]>>>" indent)
                                (make-string indent ?\>))
-                             subject)))))
+                             subject)
+                            (length (lyskom-text-comments text-stat))))))
 
 
 (defun lyskom-max-text-no-width ()
@@ -1174,7 +1177,9 @@ YYYY-MM-DD."
                                       lyskom-max-int))))
 
 
-(defun lyskom-construct-summary-format-string (header include-mark-field)
+(defun lyskom-construct-summary-format-string (header 
+                                               include-mark-field 
+                                               &optional include-comments-field)
   "Returns a format string suitable for printing text summaries.  If
 HEADER is non-nil, a header format string is contructed, otherwise a
 format string for a summary row.  If (and only if) INCLUDE-MARK-FIELD
@@ -1183,6 +1188,7 @@ included."
   (let* ((mark-field-width (when include-mark-field
                              (max (length (lyskom-get-string 'mark-type))
                                   (lyskom-max-mark-width))))
+         (comments-field-width (when include-comments-field 2))
          (text-no-width (lyskom-max-text-no-width))
          (text-no-field-width (max (length (lyskom-get-string 'Texts))
                                    text-no-width))
@@ -1197,9 +1203,8 @@ included."
                   1
                   (length (lyskom-get-string 'Subject)))
                (- (lyskom-window-width)
-                  (+ (if include-mark-field
-                         (1+ mark-field-width)
-                       0)
+                  (+ (if include-mark-field (1+ mark-field-width) 0)
+                     (if include-comments-field (1+ comments-field-width) 0)
                      text-no-field-width
                      1
                      written-field-width
@@ -1223,6 +1228,10 @@ included."
                 " "
                 "%-" (int-to-string lines-field-width) "#3s"
                 " "
+                (if include-comments-field
+                    (concat "%-" (int-to-string comments-field-width) "#7s"
+                            " ")
+                  "")
                 "%-" (int-to-string author-field-width) "#4s"
                 " "
                 "%#5s"
@@ -1237,6 +1246,14 @@ included."
               " "
               "%" (int-to-string lines-field-width) "#3d"
               " "
+              (if include-comments-field
+                  (concat "%#7?z%[%"
+                          (int-to-string comments-field-width)
+                          "#7d%]%[" 
+                          (make-string comments-field-width ?\ )
+                          "%]"
+                          " ")
+                "")
               "%=-" (int-to-string (1- author-field-width)) "#4P"
               "  "
               "%[%#5@%=-" (int-to-string subject-field-width) "#6r%]"

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.266 2003-03-16 14:03:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.267 2003-03-16 14:29:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.266 2003-03-16 14:03:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.267 2003-03-16 14:29:12 byers Exp $"))
 
 
 ;;; ================================================================
@@ -731,6 +731,7 @@ The message you were sending to %#1M was:
     (Lines . "Lines")
     (Author . "Author")
     (Subject . "Subject")
+    (Comments . "Co")
     (mark-type . "Type")
 
     (could-not-read . "You couldn't read the text (%#1n).\n")
