@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.8 1999-11-19 13:38:53 byers Exp $
+;;;;; $Id: slow.el,v 44.9 1999-11-21 17:59:38 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -104,7 +104,7 @@ If the completion was not exact it returns nil."
 	  (delete-region (point) (point-max))
 	  (insert (car completes)))
 	 ((stringp longest)
-	  (if (string= (upcase longest) (upcase text))
+	  (if (lyskom-string= (upcase longest) (upcase text))
 	      (lyskom-format-insert-before-prompt
 	       'command-completions
 	       (mapconcat 'identity completes "\n ")))

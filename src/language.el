@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.17 1999-11-19 13:38:09 byers Exp $
+;;;;; $Id: language.el,v 44.18 1999-11-21 17:59:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -227,7 +227,7 @@ if 'lyskom-menu is not found."
 	  (get category 'lyskom-language-symbols)))
 
 
-(defun lyskom-define-language (language &rest names)
+(defun lyskom-define-language (language coding &rest names)
   (let ((match (assq language lyskom-languages)))
     (if match
 	(setcdr match names)
@@ -235,7 +235,12 @@ if 'lyskom-menu is not found."
   (unless (and lyskom-language
                kom-default-language)
     (setq lyskom-language language)
-    (setq kom-default-language language)))
+    (setq kom-default-language language))
+  (put language 'lyskom-language-coding coding))
+
+(defun lyskom-language-coding (language)
+  (or (get language 'lyskom-language-coding)
+      'raw-text))
 
 (defun lyskom-language-name (language)
   "Return the name of language code LANGUAGE in the current language."

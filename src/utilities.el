@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.43 1999-11-19 22:00:15 byers Exp $
+;;;;; $Id: utilities.el,v 44.44 1999-11-21 17:59:43 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.43 1999-11-19 22:00:15 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.44 1999-11-21 17:59:43 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -367,13 +367,28 @@ the resulting string may be narrower than END-COLUMN."
 	str))))
 
 
+(eval-and-compile
+  (lyskom-xemacs-or-gnu
+   (fset 'lyskom-string= (symbol-function 'string=))
+   (if (< emacs-major-version 20)
+       (fset 'lyskom-string= (symbol-function 'string=))
+     (defun lyskom-string= (s1 s2)
+       (string= (if (multibyte-string-p s1)
+		    s1
+		  (decode-coding-string s1 (lyskom-language-coding
+					    lyskom-language)))
+		(if (multibyte-string-p s2)
+		    s2
+		  (decode-coding-string s2 (lyskom-language-coding
+					    lyskom-language))))))))
+
 (defun lyskom-string-assoc (key list)
   "Return non-nil if KEY is the same string as the car of an element of LIST.
 The value is actually the element of LIST whose car equals KEY."
   (let ((s (downcase key))
         (result nil))
     (while list
-      (when (string= s (downcase (car (car list))))
+      (when (lyskom-string= s (downcase (car (car list))))
         (setq result (car list))
         (setq list nil))
       (setq list (cdr list)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.15 1999-11-21 15:39:52 byers Exp $
+;;;;; $Id: flags.el,v 44.16 1999-11-21 17:59:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.15 1999-11-21 15:39:52 byers Exp $\n"))
+	      "$Id: flags.el,v 44.16 1999-11-21 17:59:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -364,9 +364,9 @@ If successful then set the buffer not-modified. Else print a warning."
 	  (while (> (length lyskom-options-text) 2)
 	    (setq word (lyskom-read-options-eval-get-holerith))
 	    (cond
-	     ((string= word "common")
+	     ((lyskom-string= word "common")
 	      (setq common-no r))
-	     ((string= word "elisp")
+	     ((lyskom-string= word "elisp")
 	      (setq elisp-no r))
 	     (t
 	      ;; Build up lyskom-other-clients-user-areas so that it

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.70 1999-11-19 14:01:06 byers Exp $
+;;;;; $Id: english-strings.el,v 44.71 1999-11-21 17:59:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,13 +41,16 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.70 1999-11-19 14:01:06 byers Exp $"))
+              "$Id: english-strings.el,v 44.71 1999-11-21 17:59:32 byers Exp $"))
 
 
 ;;; ================================================================
 ;;; The language definition
 
-(lyskom-define-language 'en "English" "Engelska")
+(lyskom-define-language 'en
+                        'iso-8859-1
+                        "English"
+                        "Engelska")
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.40 1999-11-19 02:15:39 byers Exp $
+# $Id: Makefile,v 44.41 1999-11-21 17:59:22 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.40 1999-11-19 02:15:39 byers Exp $
+# $Id: Makefile,v 44.41 1999-11-21 17:59:22 byers Exp $
 #
 
 
@@ -51,6 +51,9 @@ EMACS=xemacs
 EMACS-BATCH = $(EMACS) -batch
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
+
+TARGET=lyskom.elc
+TARGET-EL=$(TARGET:%.elc=%.el)
 
 LANGUAGE-EL=$(LANGUAGES:=-strings.el)
 EMACS-BATCH=$(EMACS) -batch
@@ -110,7 +113,7 @@ HEADER-ELC = $(HEADER:%.el=%.elc)
 SOURCES-ELC = $(SOURCES:%.el=%.elc)
 
 
-all: lyskom.elc
+all: $(TARGET)
 
 vars.el: vars.el.in Makefile
 	rm -f vars.el
@@ -124,13 +127,15 @@ header.el: $(HEADER)
 	cat $(HEADER) > header.el
 
 fast: $(HEADER-ELC) $(SOURCES-ELC)
-	cat $(HEADER-ELC) $(SOURCES-ELC) > lyskom.elc
+	cat $(HEADER-ELC) $(SOURCES-ELC) > $(TARGET)
 
 lyskom.el: $(HEADER) $(SOURCES)
 	cat $(HEADER) $(SOURCES) > lyskom.el
 
-lyskom.elc: lyskom.el
-	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile lyskom.el
+$(TARGET): lyskom.el
+	cp lyskom.el $(TARGET-EL)
+	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile $(TARGET-EL)
+	rm $(TARGET-EL)
 
 check: lyskom.el
 	$(EMACS-BATCH) -l ./lpath.el -l ./lyskom.el  -l ./check-strings.el \
@@ -139,7 +144,7 @@ check: lyskom.el
 .PHONY: verbose
 .PHONY: verbose-el
 
-verbose: verbose-el lyskom.elc
+verbose: verbose-el $(TARGET)
 
 verbose-el: $(HEADER) $(SOURCES)
 	@echo "Building lyskom.el"
@@ -154,8 +159,8 @@ verbose-el: $(HEADER) $(SOURCES)
 TAGS: $(HEADER) $(SOURCES)
 	etags $(HEADER) $(SOURCES)
 
-install: lyskom.elc lyskom.el
-	cp lyskom.el lyskom.elc $(LISPDIR)
+install: $(TARGET) lyskom.el
+	cp lyskom.el $(TARGET) $(LISPDIR)
 
 release: release-files release-cleanup release-move
 

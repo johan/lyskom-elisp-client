@@ -1,5 +1,26 @@
 1999-11-21  David Byers  <davby@ida.liu.se>
 
+	* edit-text.el (lyskom-edit-insert-miscs): Use lyskom-princ to
+	insert subject.
+
+	* slow.el (kom-expand-slow-command): Use lyskom-string=
+
+	* flags.el (lyskom-read-options-eval): Use lyskom-string=
+
+	* edit-text.el (kom-ispell-message): Use lyskom-string=
+	(lyskom-send-enriched): Same here.
+
+	* completing-read.el (lyskom-completing-member): Same here.
+
+	* commands1.el (kom-change-password): Use lyskom-string=
+	(lyskom-return-username): Same here.
+
+	* utilities.el (lyskom-string=): New function.
+	(lyskom-string-assoc): Use it.
+
+	* language.el (lyskom-language-coding): New function.
+	(lyskom-define-language): Added argument CODING.
+
 	* lyskom-rest.el (lyskom-update-prompt): Set rear-nonsticky on
 	prompt text properties.
 
