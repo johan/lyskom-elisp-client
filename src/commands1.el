@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.7 1996-06-12 07:55:27 byers Exp $
+;;;;; $Id: commands1.el,v 41.8 1996-07-08 09:45:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.7 1996-06-12 07:55:27 byers Exp $\n"))
+	      "$Id: commands1.el,v 41.8 1996-07-08 09:45:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -70,7 +70,7 @@
   (interactive)
   (let ((conf-stat 
 	 (lyskom-read-conf-stat (lyskom-get-string 'what-conf-to-delete)
-				'all)))
+				'(all))))
     (if conf-stat
 	(if (lyskom-ja-or-nej-p
 	     (lyskom-format 'confirm-delete-pers-or-conf
@@ -128,7 +128,7 @@
                    (blocking-do 'get-conf-stat who)
                  (lyskom-read-conf-stat 
                           (lyskom-get-string 'presentation-for-whom)
-                          'all))))
+                          '(all)))))
           (if (null conf-stat)
               (lyskom-insert-string 'somebody-deleted-that-conf)
             (lyskom-format-insert 'review-presentation-of
@@ -236,7 +236,7 @@ as TYPE. If no such misc-info, return NIL"
         (let* ((tono (or pers-no
                          (lyskom-read-conf-no
                           (lyskom-get-string 'who-letter-to)
-                          'all nil nil t)))
+                          '(all) nil nil t)))
                (conf-stat (blocking-do 'get-conf-stat tono)))
           (if (if (zerop (conf-stat->msg-of-day conf-stat))
                   t
@@ -274,9 +274,9 @@ as TYPE. If no such misc-info, return NIL"
 Ask for the name of the person, the conference to add him/her to."
   (interactive)
   (let* ((who (lyskom-read-conf-stat (lyskom-get-string 'who-to-add)
-				     'pers))
+				     '(pers)))
 	 (whereto (lyskom-read-conf-stat (lyskom-get-string 'where-to-add)
-					 'all))
+					 '(all)))
 	 (pers-stat (blocking-do 'get-pers-stat (conf-stat->conf-no who))))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
 			      whereto who)))
@@ -291,7 +291,7 @@ Ask for the name of the person, the conference to add him/her to."
   (let ((whereto (if conf (blocking-do 'get-conf-stat conf)
                    (lyskom-read-conf-stat 
                     (lyskom-get-string 'where-to-add-self)
-                    'all)))
+                    '(all) nil "" t)))
         (who (blocking-do 'get-conf-stat lyskom-pers-no))
         (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
@@ -455,9 +455,10 @@ Also adds to lyskom-to-do-list."
 of the person."
   (interactive)
   (lyskom-sub-member
-   (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude) 'pers nil "")
+   (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude)
+                          '(pers) nil "")
    (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
-			  'all nil "")))
+			  '(all) nil "")))
 
 
 (def-kom-command kom-sub-self (&optional conf)
@@ -467,7 +468,7 @@ of the person."
    (blocking-do 'get-conf-stat lyskom-pers-no)
    (if conf (blocking-do 'get-conf-stat conf)
      (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
-                            'all nil 
+                            '(all) nil 
                             (let ((ccn 
                                    (if (or (zerop lyskom-current-conf))
                                        ""
@@ -913,7 +914,7 @@ Don't ask for confirmation."
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no 
 	      (lyskom-get-string 'what-to-change-pres-you)
-	      'all t nil t)))
+	      '(all) t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -925,7 +926,7 @@ Don't ask for confirmation."
   (interactive)
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
-				  'all t nil t)))
+				  '(all) t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -990,7 +991,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
   (interactive)
   (let ((conf-stat (or (lyskom-read-conf-stat
 			(lyskom-get-string 'who-to-remove-motd-for)
-			'all 'empty)
+			'(all) t)
 		       (blocking-do 'get-conf-stat lyskom-pers-no))))
     (cond
      ((null conf-stat)
@@ -1019,7 +1020,7 @@ back on lyskom-to-do-list."
                   (blocking-do 'get-conf-stat conf-no)
                 (lyskom-read-conf-stat
                  (lyskom-get-string 'go-to-conf-p)
-                 'all ""))))
+                 '(all) nil "" t))))
     (lyskom-go-to-conf conf)))
 
 
@@ -1224,7 +1225,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'name-to-be-changed)
-		    'all)))
+		    '(all))))
     (if (null conf-stat)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (let (name)
@@ -1254,13 +1255,13 @@ If you are not member in the conference it will be flagged with an asterisk."
   (interactive)
   (let ((supervisee (lyskom-read-conf-stat
 		     (lyskom-get-string 'who-to-change-supervisor-for)
-		     'all)))
+		     '(all))))
     (if (null supervisee)
 	(lyskom-insert-string 'no-such-conf-or-pers)
       (lyskom-tell-internat 'kom-tell-change-supervisor)
       (let ((supervisor (lyskom-read-conf-stat
 			 (lyskom-get-string 'new-supervisor)
-			 'all)))
+			 '(all))))
 	(lyskom-format-insert 'change-supervisor-from-to
 			      supervisee
 			      supervisor)
@@ -1385,7 +1386,7 @@ If MARK-NO == 0, review all marked texts."
   "Change the password for a person."
   (interactive)
   (let ((pers-no (lyskom-read-conf-no (lyskom-get-string 'whos-passwd)
-				      'pers 'empty "" t))
+				      '(pers) t "" t))
 	(old-pw (silent-read (lyskom-get-string 'old-passwd)))
 	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
 	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
@@ -1789,7 +1790,7 @@ the user has used a prefix command argument."
 				((eq action 'add-copy) 'who-to-add-copy-q)
 				((eq action 'sub) 'who-to-sub-q)
 				(t (lyskom-error "internal error"))))
-			 'all
+			 '(all)
 			 nil
 			 (if conf (conf-stat->name conf) "")))
 	(result nil))

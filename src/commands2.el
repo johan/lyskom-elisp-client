@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.6 1996-06-12 07:55:35 byers Exp $
+;;;;; $Id: commands2.el,v 41.7 1996-07-08 09:46:04 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.6 1996-06-12 07:55:35 byers Exp $\n"))
+	      "$Id: commands2.el,v 41.7 1996-07-08 09:46:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -119,7 +119,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((conf-no
 	 (or conf-no
 	     (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-				  'all nil nil t)))
+				  '(all) nil nil t)))
 	conf-stat)
     (cache-del-conf-stat conf-no)
     (setq conf-stat (blocking-do 'get-conf-stat conf-no))
@@ -266,7 +266,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((pers-no
          (or pers-no
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
-                                  'pers "" nil t)))
+                                  '(pers) nil "" t)))
 	conf-stat
 	pers-stat)
     (cache-del-conf-stat pers-no)
@@ -422,7 +422,7 @@ otherwise: the conference is read with lyskom-completing-read."
 		    (lyskom-read-conf-no
 		     (format (lyskom-get-string 'who-to-send-message-to)
 			     (lyskom-get-string 'everybody))
-		     'all t
+		     '(all) t
 		     ;; Initial string:
 		     (cond
 		      ((eq kom-default-message-recipient 'everybody) nil)
@@ -961,7 +961,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat
 		    (lyskom-get-string 'conf-to-set-garb-nice-q)
-		    'all)))
+		    '(all))))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((garb-nice (lyskom-read-number
@@ -987,15 +987,15 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'conf-to-set-permitted-submitters-q)
-		    'all)))
+		    '(all))))
 
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((new-conf (lyskom-read-conf-stat
 		       (lyskom-format 'new-permitted-submitters-q
 				      (conf-stat->name conf-stat))
-		       'all 
-		       'empty)))
+		       '(all) 
+		       t)))
 	(if (eq new-conf nil)
 	    (lyskom-format-insert 'permitted-submitters-removed-for-conf 
 				  conf-stat)
@@ -1023,13 +1023,13 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
   (interactive)
   (let ((conf-stat (lyskom-read-conf-stat 
 		    (lyskom-get-string 'conf-to-set-super-conf-q)
-		    'all)))
+		    '(all))))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
       (let ((new-conf (lyskom-read-conf-stat
 		       (lyskom-format 'new-super-conf-q
 				      (conf-stat->name conf-stat))
-		       'all)))
+		       '(all))))
       
 	;; Set the super conference for conf-stat to new-conf.
 	(lyskom-format-insert 'super-conf-for-is
@@ -1378,7 +1378,7 @@ membership info."
   (interactive)
   (let* ((conf-no (lyskom-read-conf-no
 		   (lyskom-get-string 'what-conf-to-change)
-		   'confs nil "" t))
+		   '(conf) nil "" t))
 	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))

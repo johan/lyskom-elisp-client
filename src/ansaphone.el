@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: ansaphone.el,v 41.0 1996-05-02 19:25:18 davidk Exp $
+;;;;; $Id: ansaphone.el,v 41.1 1996-07-08 09:45:52 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 41.0 1996-05-02 19:25:18 davidk Exp $\n"))
+	      "$Id: ansaphone.el,v 41.1 1996-07-08 09:45:52 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -125,6 +125,11 @@ See kom-ansaphone-on"
           (lyskom-set-current-message-text (substring text
                                                       (match-beginning 1)
                                                       (match-end 1)))))
+
+    ;;
+    ;; See if we want to reply to this message
+    ;;
+
     (if (and kom-ansaphone-on
              sender
 	     recipient
@@ -144,11 +149,25 @@ See kom-ansaphone-on"
                         lyskom-ansaphone-when-set)
                        (elt reply 4)))
                 (lyskom-ansaphone-send-message sender reply)))))
-    (if (and kom-ansaphone-on sender)
+
+    ;;
+    ;; See if we want to record this message
+    ;;
+
+    (if (and kom-ansaphone-on 
+             kom-ansaphone-record-messages
+             sender)
         (lyskom-ansaphone-record-message sender
                                          recipient
                                          lyskom-message-current-text)))
-  nil)
+
+  ;;
+  ;; Perhaps we want to show the message, perhaps not
+  ;;
+  
+  (if kom-ansaphone-on
+      (not kom-ansaphone-show-messages)
+    nil))
 
 
 

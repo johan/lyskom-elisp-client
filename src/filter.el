@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 41.1 1996-05-05 22:19:58 davidk Exp $
+;;;;; $Id: filter.el,v 41.2 1996-07-08 09:46:21 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 41.1 1996-05-05 22:19:58 davidk Exp $\n"))
+	      "$Id: filter.el,v 41.2 1996-07-08 09:46:21 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -458,7 +458,7 @@ Otherwise return nil."
 	      (setq filter (cons (cons 'subject subject) filter))
 	      (setq conf (lyskom-read-conf-no
                       (lyskom-get-string 'filter-in-conf)
-                      'all
+                      '(all)
                       t
                       (or (and (conf-stat->conf-no conf-stat)
                                (conf-stat->name conf-stat))
@@ -494,7 +494,7 @@ Otherwise return nil."
                                        (text-stat->author text-stat))))
       (setq author 
             (lyskom-read-conf-no (lyskom-get-string 'filter-author)
-                                 'pers
+                                 '(pers)
                                  t
                                  (or (and auth-stat
                                           (conf-stat->name auth-stat))
@@ -504,7 +504,7 @@ Otherwise return nil."
           (setq filter (cons (cons 'author-no author) filter)))
       (setq conf (lyskom-read-conf-no
                   (lyskom-get-string 'filter-in-conf)
-                  'all
+                  '(all)
                   t
                   (or 
                    (and conf-stat
@@ -532,25 +532,45 @@ Otherwise return nil."
   "Skip all texts and comments that share the subject and recipient of 
 the current text"
   (interactive)
-  (if (zerop lyskom-current-conf)
-      (progn (lyskom-insert-string 'no-in-conf)
-             (lyskom-end-of-command))
-    (if (or (null lyskom-current-text)
-            (null lyskom-current-subject))
-        (progn (lyskom-insert-string 'have-to-read)
-               (lyskom-end-of-command))
-	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
-	    (if conf-stat
-		(progn
-		  (lyskom-add-filter
-		   (make-filter
-		    (list (cons 'subject lyskom-current-subject)
-			  (cons 'recipient-no (conf-stat->conf-no conf-stat)))
-		    (list (cons 'action 'skip-tree)
-			  (cons 'expire t))))
-		  (lyskom-format-insert 'super-jump
-					(copy-sequence lyskom-current-subject)
-					conf-stat)))))))
+  (if (or (null lyskom-current-text)
+          (zerop lyskom-current-text))
+      (lyskom-insert-string 'have-to-read)
+    (let ((text-stat (blocking-do 'get-text-stat lyskom-current-text))
+          (recipients nil)
+          (cc-recipients nil)
+          (filter-recipient nil)
+          (conf-stat (if (and lyskom-current-conf
+                              (not (zerop lyskom-current-conf)))
+                         (blocking-do 'get-conf-stat lyskom-current-conf))))
+      (lyskom-traverse misc
+          (text-stat->misc-info-list text-stat)
+        (cond ((eq (misc-info->type misc) 'RECPT) 
+               (setq recipients (cons (misc-info->recipient-no misc)
+                                      recipients)))
+              ((eq (misc-info->type misc) 'CC-RECPT)
+               (setq cc-recipients (cons (misc-info->recipient-no misc)
+                                         cc-recipients)))))
+
+      (setq filter-recipient (or 
+                              (and conf-stat
+                                   (or 
+                                    (memq lyskom-current-conf recipients)
+                                    (memq lyskom-current-conf cc-recipients))
+                                   lyskom-current-conf)
+                              (car (nreverse recipients))
+                              (car (nreverse cc-recipients))))
+
+      (if (null filter-recipient)
+          (lyskom-insert-string 'no-recipient)
+            
+        (lyskom-add-filter
+         (make-filter (list (cons 'subject lyskom-current-subject)
+                            (cons 'recipient-no filter-recipient))
+                      (list (cons 'action 'skip-tree)
+                            (cons 'expire t))))
+        (lyskom-format-insert 'super-jump
+                              (copy-sequence lyskom-current-subject)
+                              filter-recipient)))))
 
 
 
@@ -578,7 +598,7 @@ the current text"
               (setq filter (cons (cons 'text text) filter))
               (setq conf (lyskom-read-conf-no
                           (lyskom-get-string 'filter-in-conf)
-                          'all t
+                          '(all) t
                           (or (and (conf-stat->conf-no conf-stat)
                                    (conf-stat->name conf-stat))
                               "")

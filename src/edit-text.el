@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 41.1 1996-06-23 00:28:27 davidk Exp $
+;;;;; $Id: edit-text.el,v 41.2 1996-07-08 09:46:12 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 41.1 1996-06-23 00:28:27 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 41.2 1996-07-08 09:46:12 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -548,7 +548,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (let ((marker (point-min-marker))
 	(edit-buffer (current-buffer))
 	(insert-at (point-min-marker))
-	(conf-stat (lyskom-read-conf-stat prompt 'all nil "")))
+	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "")))
     (lyskom-save-excursion
      ;;(save-excursion
      (set-buffer (process-buffer lyskom-proc))
