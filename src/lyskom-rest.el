@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.5 1995-10-23 11:55:46 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.6 1995-10-25 09:36:44 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.5 1995-10-23 11:55:46 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.6 1995-10-25 09:36:44 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -596,7 +596,8 @@ CONF can be a a conf-stat or a string."
 	    (setq read-info-list 
 		  (read-list->all-entries lyskom-to-do-list))
 
-	    (if 
+	    ;; This was weird. Someone had begun to write an if, but
+	    ;; this was all there was: (if 
 	    (while read-info-list
 	      (if (read-info->conf-stat (car read-info-list))
 		  (progn
@@ -640,7 +641,7 @@ CONF can be a a conf-stat or a string."
 		(delq lyskom-proc lyskom-sessions-with-unread-letters))
 	(or (assq lyskom-proc lyskom-sessions-with-unread-letters)
 	    (setq lyskom-sessions-with-unread-letters
-		  (cons lyskom-proc lyskom-sessions-with-unread-letters)))))))
+		  (cons lyskom-proc lyskom-sessions-with-unread-letters))))))
 
 
 ;;; ================================================================
@@ -676,6 +677,17 @@ The value is actually the membership for the conference."
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
 
+
+(defun lyskom-trim-buffer ()
+  "Trim the size of a lyskom buffer to lyskom-max-buffer-size"
+  (save-excursion
+    (if (and kom-max-buffer-size
+	     (> (buffer-size) kom-max-buffer-size))
+	(let ((delchars (- (buffer-size) kom-max-buffer-size)))
+	  (goto-char (point-min))
+	  (while (< (point) delchars)
+	    (forward-line 1))
+	  (delete-region (point-min) (point))))))
 
 (defun lyskom-scroll ()
   "Scroll screen if necessary.
@@ -713,6 +725,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
     (insert (if kom-emacs-knows-iso-8859-1
 		string
 	      (iso-8859-1-to-swascii string))))
+  (lyskom-trim-buffer)
   (let ((window (get-buffer-window (current-buffer))))
     (if window
 	(if (pos-visible-in-window-p (point) window)
