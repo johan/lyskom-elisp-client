@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.121 2001-02-02 23:24:06 joel Exp $
+;;;;; $Id: english-strings.el,v 44.122 2001-02-20 20:44:18 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.121 2001-02-02 23:24:06 joel Exp $"))
+              "$Id: english-strings.el,v 44.122 2001-02-20 20:44:18 joel Exp $"))
 
 
 ;;; ================================================================
@@ -1307,9 +1307,9 @@ On since %#8s%#9s")
     
     (agreeing . "Agreeing with text %#1n...")
     (fast-replying . "Quick reply to text %#1n...")
-    (author-fast-replies . "Information added by the author:")
+    (author-fast-replies . "Remarks by the author:")
     (author-fast-reply-aux . "  \"%#1t\"")
-    (other-fast-replies . "Added information:")
+    (other-fast-replies . "Quick replies:")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
