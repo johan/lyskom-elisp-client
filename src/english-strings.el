@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.248 2002-12-31 19:15:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.249 2003-01-01 02:53:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.248 2002-12-31 19:15:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.249 2003-01-01 02:53:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1853,22 +1853,28 @@ environment to one that uses \"%#2s\" to encode text.
     (has-nameday-1 . "Today's name is %#1s.")
     (has-nameday-2 . "Today's names are %#1s and %#2s.")
 
+    (invalid-date-entry . "Invalid date")
+    (number-out-of-range . "Invalid number")
+    (or-date . "or date")
+
+    (set-unread-n . "Only read the most recent %#1d?[text%]%[%#1d texts%].\n")
+    (set-unread-date . "Only read texts sinse %#2s %#3d, %#1d.\n")
     ))
 
 
 (lyskom-language-var local lyskom-month-names en
-  '(("jan" . 1)  ("january" . 1)
-    ("feb" . 2)  ("february" . 2)
-    ("mar" . 3)  ("march" . 3)
-    ("apr" . 4)  ("april" . 4)
-    ("may" . 5)  ("may" . 5)
-    ("jun" . 6)  ("june" . 6)
-    ("jul" . 7)  ("july" . 7)
-    ("aug" . 8)  ("august" . 8)
-    ("sep" . 9)  ("september" . 9)
-    ("oct" . 10) ("october" . 10)
-    ("nov" . 11) ("november" . 11)
-    ("dec" . 12) ("december" . 12)))
+  '(("january" . 1)   ("jan" . 1)
+    ("february" . 2)  ("feb" . 2)
+    ("march" . 3)     ("mar" . 3)
+    ("april" . 4)     ("apr" . 4)
+    ("may" . 5)       ("may" . 5)
+    ("june" . 6)      ("jun" . 6)
+    ("july" . 7)      ("jul" . 7)
+    ("august" . 8)    ("aug" . 8)
+    ("september" . 9) ("sep" . 9)
+    ("october" . 10)  ("oct" . 10)
+    ("november" . 11) ("nov" . 11)
+    ("december" . 12) ("dec" . 12)))
 
 
 ;;; ================================================================
