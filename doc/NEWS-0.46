@@ -17,6 +17,10 @@ för projektet så att det fortsätter att utvecklas.
                                 David Byers   <byers@lysator.liu.se>
 
 
+Notera att detta är nyheter jämfört med 0.45.1. En del fanns även i
+version 0.45.2.
+
+
 
 * Försämringar
 
@@ -26,6 +30,10 @@ för projektet så att det fortsätter att utvecklas.
 
 
 * Fitjurs, förbättringar och andra förändringar
+
+** Det finns två nya kommandon, kom-next-prompt och kom-prev-prompt
+   som man kan använda för att gå till nästa eller föregående prompt i 
+   bufferten. De är bundna till C-M-n och C-M-p.
 
 ** Kommandot "Spara text (på fil)" har bytt namn till "Arkivera inlägg 
    (till fil)". Ett nytt kommando "Spara inläggstext (på fil)" sparar
