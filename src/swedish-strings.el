@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.68 1999-07-02 15:03:14 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.69 1999-07-12 16:49:51 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.68 1999-07-02 15:03:14 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.69 1999-07-12 16:49:51 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -410,6 +410,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
 
     (total-users . "    Sammanlagt %#1d användare (%#2s.)\n")
+    (total-users-sans-date . "    Sammanlagt %#1d användare\n")
     (total-visible-users . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] användare (%#2s.)\n")
     (total-active-users . "    Sammanlagt %#1d aktiv%#1?d%[%]%[a%] användare (%#2s.)\n")
     (total-visible-active-users

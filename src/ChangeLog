@@ -1,3 +1,11 @@
+1999-07-12  Per Cederqvist  <ceder@signum.se>
+
+	* completing-read.el (lyskom-read-session-resolve-ambiguity): Use
+	'total-users-sans-date instead of 'total-users; we don't pass a
+	date to the format.
+	* swedish-strings.el (lyskom-message): Define total-users-sans-date.
+	* english-strings.el (lyskom-message): Define total-users-sans-date.
+
 1999-07-02  David Byers  <davby@ida.liu.se>
 
 	* english-strings.el (lyskom-en-filter-edit-map): Use kbd. Added
