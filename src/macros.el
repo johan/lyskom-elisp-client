@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.17 1998-06-02 12:14:58 byers Exp $
+;;;;; $Id: macros.el,v 44.18 1999-06-10 13:36:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.17 1998-06-02 12:14:58 byers Exp $\n"))
+	      "$Id: macros.el,v 44.18 1999-06-10 13:36:15 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -46,6 +46,20 @@
 
 
 
+;;; ======================================================================
+;;; Defining keys
+;;;
+
+(or (fbound 'kbd)
+    (defmacro kbd (keys)
+      "Convert KEYS to the internal Emacs key representation.
+KEYS should be a string in the format used for saving keyboard macros
+\(see `insert-kbd-macro')."
+      (if (or (stringp keys)
+              (vectorp keys))
+          (read-kbd-macro keys)
+        `(read-kbd-macro ,keys))))
+
 
 ;;; ======================================================================
 ;;; lyskom-traverse - traverse a sequence.
@@ -54,19 +68,30 @@
 (defmacro lyskom-traverse (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
 Value returned is always nil."
-  (list 'let* (list '(__i__ 0)
-		    (list '__sequence__ sequence)
-		    '(__len__ (length __sequence__))
-		    atom)
-	(list 'if '(listp __sequence__)
-	      (append (list 'while '__sequence__
-			    (list 'setq atom '(car __sequence__)))
-		      body
-		      (list '(setq __sequence__ (cdr __sequence__))))
-	      (append (list 'while '(< __i__ __len__)
-			    (list 'setq atom '(aref __sequence__ __i__)))
-		      body
-		      (list '(setq __i__ (1+ __i__)))))))
+  `(let* ((__i__ 0)
+          (__sequence__ ,sequence)
+          (__len__ (or (listp __sequence__ )
+                       (length __sequence__)))
+          (,atom nil)
+          (__result__ nil))
+     (setq __result__ __result__)       ; Get rid of compiler warnings
+     (if (listp __sequence__)
+         (while __sequence__
+           (setq ,atom (car __sequence__))
+           ,@body
+           (setq __sequence__ (cdr __sequence__)))
+       (while (< __i__ __len__)
+         (setq ,atom (aref __sequence__ __i__))
+         ,@body
+         (setq __i__ (1+ __i__))))
+     __result__))
+  
+
+(defmacro lyskom-traverse-break (&optional result)
+  "Break a current lyskom-traverse"
+  `(progn (setq __len__ 0)
+          (setq __sequence__ nil)
+          (setq __result__ (or ,result __result__))))
 
 (defmacro lyskom-traverse-aux (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.
@@ -125,19 +150,21 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
-(defmacro when (expr &rest body)
-  "Execute BODY if EXPR evaluates to non-nil"
-  (list 'if expr (cons 'progn body)))
+(if (fboundp 'when)
+    nil
+  (defmacro when (expr &rest body)
+    "Execute BODY if EXPR evaluates to non-nil"
+    (list 'if expr (cons 'progn body)))
+  (put 'when lisp-indent-function 1)
+  (put 'when 'edebug-form-spec t))
 
-(put 'when lisp-indent-function 1)
-(put 'when 'edebug-form-spec t)
-
-(defmacro unless (expr &rest body)
-  "Execute BODY if EXPR evaluates to non-nil"
-  (append (list 'if expr nil) body))
-
-(put 'unless lisp-indent-function 1)
-(put 'unless 'edebug-form-spec t)
+(if (fboundp 'unless)
+    nil
+  (defmacro unless (expr &rest body)
+    "Execute BODY if EXPR evaluates to non-nil"
+    (append (list 'if expr nil) body))
+  (put 'unless lisp-indent-function 1)
+  (put 'unless 'edebug-form-spec t))
 
 
 ;;; ======================================================================
@@ -171,6 +198,21 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
      '(sexp body))
 
 (put 'blocking-do-multiple 'lisp-indent-function 1)
+
+
+;;; ======================================================================
+;;; Some commands generat async messages we don't really want
+;;;
+
+(defmacro lyskom-ignoring-async (async &rest body)
+  `(let ((lyskom-ignoring-async-list 
+          (cons (list ,@async) lyskom-ignoring-async-list)))
+     ,@body))
+
+(put 'lyskom-ignoring-async 'edebug-form-spec
+     '(sexp body))
+
+(put 'lyskom-ignoring-async 'lisp-indent-function 1)
 
 
 ;;; ======================================================================
@@ -283,6 +325,6 @@ the current buffer, and its value is copied from the LysKOM buffer."
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
-;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 2)
+;;; eval: (put 'lyskom-save-excursion 'lisp-indent-hook 0)
 ;;; eval: (put 'lyskom-ignore-errors 'lisp-indent-hook 2)
 ;;; end: 

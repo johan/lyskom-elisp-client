@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.14 1998-06-02 12:15:14 byers Exp $
+;;;;; $Id: review.el,v 44.15 1999-06-10 13:36:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.14 1998-06-02 12:15:14 byers Exp $\n"))
+	      "$Id: review.el,v 44.15 1999-06-10 13:36:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -777,14 +777,15 @@ Args: persno confno num &optional again pstart cstart"
 
 (defun lyskom-get-texts-by (persno num &optional again pstart)
   "Get NUM texts written by PERSNO. Args: persno num"
-  (let ((persstat (blocking-do 'get-pers-stat persno)))
+  (let* ((persstat (blocking-do 'get-pers-stat persno)))
     (lyskom-check-review-access t persstat)
     (lyskom-get-texts-by-generic persno num nil nil again pstart)))
 
 (defun lyskom-get-texts-by-generic (persno num pred args 
                                            &optional again pstart)
   "Get NUM texts written by PERSNO. Args: persno num"
-  (let ((persstat (blocking-do 'get-pers-stat persno)))
+  (let* ((persstat (blocking-do 'get-pers-stat persno))
+         (user-area (pers-stat->user-area persstat)))
 
     (cond ((and again (null num)) (setq num lyskom-last-review-num))
           ((and again (< lyskom-last-review-num 0)) (setq num (- num))))
@@ -822,13 +823,14 @@ Args: persno confno num &optional again pstart cstart"
               (setq increment (- increment start))
               (setq start 0)))
       
-        (setq data (lyskom-remove-zeroes
-                    (listify-vector
-                     (map->text-nos
-                      (blocking-do 'get-created-texts
-                                   persno
-                                   start
-                                   increment)))))
+        (setq data (delq user-area
+                         (lyskom-remove-zeroes
+                          (listify-vector
+                           (map->text-nos
+                            (blocking-do 'get-created-texts
+                                         persno
+                                         start
+                                         increment))))))
 
         (setq collector (make-collector))
         (mapcar

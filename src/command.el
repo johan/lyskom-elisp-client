@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.15 1998-06-02 12:14:17 byers Exp $
+;;;;; $Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.15 1998-06-02 12:14:17 byers Exp $\n"))
+	      "$Id: command.el,v 44.16 1999-06-10 13:36:01 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -240,7 +240,8 @@ This function checks if lyskom-doing-default-command and
 lyskom-first-time-around are bound. The text entered in the buffer is
 chosen according to this"
 
-  (if (not lyskom-proc)
+  (if (or (not lyskom-proc)
+          (memq (process-status lyskom-proc) '(closed signal exited nil)))
       (lyskom-error "%s" (lyskom-get-string 'dead-session)))
 
   (if (and lyskom-is-waiting
@@ -317,7 +318,7 @@ chosen according to this"
        (lyskom-set-last-viewed))
    (lyskom-prefetch-and-print-prompt)
    (run-hooks 'lyskom-after-command-hook)
-   (if lyskom-idle-time-flag
+   (if (lyskom-have-feature idle-time)
        (save-excursion (set-buffer lyskom-buffer)
                        (initiate-user-active 'background nil)))
    (if kom-inhibit-typeahead

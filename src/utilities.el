@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.25 1998-06-14 14:16:12 byers Exp $
+;;;;; $Id: utilities.el,v 44.26 1999-06-10 13:36:26 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.25 1998-06-14 14:16:12 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.26 1999-06-10 13:36:26 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -144,6 +144,10 @@
       (setq l (cons n l))
       (setq n (* 2 n)))
     (apply '+ l)))
+
+;; Set lyskom-maxint correctly
+
+(setq lyskom-max-int (lyskom-maxint))
 
 
 (defun lyskom-try-require (feature &optional message &rest args)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.6 1998-12-15 12:35:23 byers Exp $
+;;;;; $Id: cache.el,v 44.7 1999-06-10 13:36:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.6 1998-12-15 12:35:23 byers Exp $\n"))
+	      "$Id: cache.el,v 44.7 1999-06-10 13:36:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -46,7 +46,8 @@
 If full conf-stat is cached, construct an uconf-stat from that data and
 cache it."
   (or (cache-assoc conf-no lyskom-uconf-cache)
-      (cache-construct-uconf-stat (cache-get-conf-stat conf-no))))
+      (and (lyskom-have-feature long-conf-types)
+           (cache-construct-uconf-stat (cache-get-conf-stat conf-no)))))
 
 (defun cache-construct-uconf-stat (conf)
   "If conf is non-nil, create an uconf-stat from conf and cache it.
