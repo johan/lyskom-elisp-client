@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.268 2003-08-24 22:05:35 byers Exp $
+;;;;; $Id: vars.el.in,v 44.269 2003-08-25 09:10:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.268 2003-08-24 22:05:35 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.269 2003-08-25 09:10:58 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4034,11 +4034,11 @@ an unknown person.")
   local
   minibuffer)
 
-(def-kom-var lyskom-last-personal-message-sender ""
+(def-kom-var lyskom-last-personal-message-sender nil
   "Name of sender of last personal message received."
   local)
 
-(def-kom-var lyskom-last-group-message-recipient ""
+(def-kom-var lyskom-last-group-message-recipient nil
   "Name of target for last group message received."
   local)
 

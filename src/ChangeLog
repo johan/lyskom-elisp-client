@@ -1,3 +1,12 @@
+2003-08-25  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-last-personal-message-sender): Default to
+	nil. 
+	(lyskom-last-group-message-recipient): Default to nil.
+
+	* commands2.el (lyskom-default-conference-for-send-message):
+	Return nil when there is no suitable recipient.
+
 2003-08-25  David Byers  <byers@lysator.liu.se>
 
 	Fixed assertion failure when receiving broadcast messages:
