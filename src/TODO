@@ -67,6 +67,9 @@ nästa-prompten direkt om det finns texter som matchar villkoret.
 
 Allmänna förbättringar
 
+    Gör inte nästa kommando efter en filtrering. Kontrollera med
+    variabel.
+
     Sortera vilkaslistan efter t.ex. idletid.
     
     Fixa klart z-initiate-get-map.
