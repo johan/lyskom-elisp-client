@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.106 2001-04-25 21:11:33 joel Exp $
+;;;;; $Id: commands1.el,v 44.107 2001-04-26 11:14:10 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.106 2001-04-25 21:11:33 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.107 2001-04-26 11:14:10 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1976,7 +1976,9 @@ increasing number of marks per mark type (and, when equal, by mark type)."
 	     (type (mark->mark-type mark))
 	     (tcnt (assq type cnt-alist)))
 	(when tcnt (setq tcnt (cdr tcnt)))
-	(lyskom-set-alist cnt-alist type (if (null tcnt) 1 (1+ tcnt))))
+	(setq cnt-alist
+	      (lyskom-set-alist
+	       cnt-alist type (if (null tcnt) 1 (1+ tcnt)))))
       (setq mark-list (cdr mark-list)))
 
     ;; Sort the list, least-used, lowest number of mark type first:

@@ -1,3 +1,11 @@
+Thu Apr 26 13:10:48 2001  Johan Sundström  <jhs@idonex.se>
+
+	* commands1.el (lyskom-get-least-used-mark-types-alist): Bugfix;
+	lyskom-set-alist isn't a destructive operation!
+
+	* utilities.el (lyskom-set-alist): Clarified docstring regarding
+	the above.
+
 2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
 
 	* utilities.el (lyskom-compute-char-classes): Portability:
