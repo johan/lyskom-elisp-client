@@ -1,3 +1,9 @@
+1999-11-11  David Byers  <davby@ida.liu.se>
+
+	* swedish-strings.el (lyskom-message): Added who-to-add-bcc-q.
+
+	* commands1.el (lyskom-add-sub-recipient): Deal with add-bcc.
+
 1999-11-08  David Byers  <davby@ida.liu.se>
 
 	* reading.el (lyskom-read-info-<): Fixed stupid operator error.
