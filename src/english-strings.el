@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.2 1991-10-05 18:15:29 linus Exp $
+;;;;; $Id: english-strings.el,v 35.3 1991-10-05 19:07:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.2 1991-10-05 18:15:29 linus Exp $\n"))
+	      "$Id: english-strings.el,v 35.3 1991-10-05 19:07:51 byers Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Text follows this line, Submit: C-c C-c, Kill: C-c C-k, Help: C-h m ---"
@@ -64,7 +64,7 @@
     (you-have-motd . "\nYou have a note on the door:\n\n")
 
     (first-greeting . "%#1s
-This appears to be the firs time you use LysKOM. Welcome!
+This appears to be the first time you use LysKOM. Welcome!
 Please make sure you have spelled your name correctly. You should use your
 full name and organization, eg. \"Joe Hacker, MIT\". If you spelled your name
 incorrectly, or you wish to change it, answer 'no' to the question below.
@@ -79,9 +79,9 @@ on how to do this.")
     (is-name-correct . "Is the name %#1s correct? ")
     (personal-password . "Enter a personal password: ")
     (repeat-password . "Repeat for confirmation: ")
-    (repeat-failure . "The passwrods were not the same.\n")
+    (repeat-failure . "The passwords were not the same.\n")
 
-    (could-not-create-you .  "LysKOM could not create that user.\n")
+    (could-not-create-you .  "LysKOM couldn't create that user.\n")
     (presentation-subject . "%#1s")
     (presentation-form . "Name:\t\nAddress:\t\n\t\nTelephone:
 Email-address:\n\nOther:\t")
@@ -140,7 +140,7 @@ Email-address:\n\nOther:\t")
     (done . "done.\n")
     (nope . "didn't work.\n")
 
-    (conf-does-not-exist . "\nThat conference does not exist.\n")
+    (conf-does-not-exist . "\nThat conference doesn't exist.\n")
 
     (who-to-exclude . "Whom do you want to unsubscribe? ")
 
@@ -181,7 +181,7 @@ Email-address:\n\nOther:\t")
     (search-for-pers . "Enter search key (RETURN for all users) ")
     (search-for-conf . "Enter search key (RETURN for all conferences) ")
     (name-to-be-changed . "Name to change: ")
-    (no-such-conf-or-pers . "That conference or user does not exist.\n")
+    (no-such-conf-or-pers . "That conference or user doesn't exist.\n")
     (new-name . "New name: ")
     (who-to-change-supervisor-for . "Change organizer of who/what? ")
     (new-supervisor . "New organizer: ")
@@ -197,7 +197,7 @@ Email-address:\n\nOther:\t")
     (old-passwd . "Your old password: ")
     (new-passwd . "Your new password: ")
     (changing-passwd . "Changing password...")
-    (retype-dont-match . "You did not reenter the same passwrod. Try again.\n")
+    (retype-dont-match . "You didn't reenter the same passwrod. Try again.\n")
     (palindrome . "(a palindrome!) ")
     (lyskom-name . "User")
     (is-in-conf . "In conference")
@@ -226,7 +226,7 @@ Email-address:\n\nOther:\t")
     (not-supervisor-for . "You are not the organizer of %#1s.\n")
     (go-to-conf . "Go to conference %#1s.\n")
     (cant-go-to-his-mailbox . "You are not permitted to go to %#1ss mailbox.\n")
-    (not-member-of-conf . "You do not subscribe to %#1s.\n")
+    (not-member-of-conf . "You don't subscribe to %#1s.\n")
     (change-name-done . "\nDone. New name: %#1s.\n")
     (change-name-nope . "\nDidn't work. Perhaps somebody else is already named %#1s?\n")
     (change-supervisor-from-to . "Change organizer for %#1s to %#2s...")
@@ -255,7 +255,7 @@ Email-address:\n\nOther:\t")
     (memberships-header . "Last access	   Prio	Unread	Conference\n")
     
     (conf-for-status . "Get status of which conference? ")
-    (no-such-conf . "The conference does not exist.")
+    (no-such-conf . "The conference doesn't exist.")
     (status-record . "Status of conference %#1s (%#2s) %#3s\n\n")
     (Mailbox . "Mailbox")
     (Protected . "Protected")
@@ -283,7 +283,7 @@ Email-address:\n\nOther:\t")
     (member-list-header . "Last entered         Unread  Name\n\n")
     (secret-membership . "*** Secret line ***\n")
     (pers-for-status . "Get status of which user? ")
-    (no-such-pers . "The user does not exist.")
+    (no-such-pers . "The user doesn't exist.")
     (pers-status-record . "Status of person %#1s (%#2d)\n")
     (created-time .  "Created:%34#1s\n\n")
     (created-confs . "Conferences created:%27#1d\n")
@@ -297,8 +297,7 @@ Email-address:\n\nOther:\t")
     (user-name . "User: %30#1s\n")
 
     (read-texts . "Articles read:%28#1d\n")
-    (time-for-last-letter . "Time of last letter:%20#1s (is what your
-cache says)\n")
+    (time-for-last-letter . "Time of last letter:%20#1s (accordning to your cache)\n")
     (superconf . "Superconference:%31#1d %#2s\n")
     (supervisor . "Organizer:%29#1d %#2s\n")
     (member-of-confs . "Subscribed to (conferences):%18#1d\n")
@@ -312,8 +311,8 @@ cache says)\n")
     (message-prompt . "Message: ")
     (message-sent . "Message sent.\n")
     (message-nope .
-  "Unable to send the message. Perhaps the recipient is not logged on.\n")
-    (only-last . "Latest (0 - %#1d) by %#2s? ")
+  "Unable to send the message. Perhaps the recipient isn't logged on.\n")
+    (only-last . "Last (0 - %#1d) by %#2s? ")
     (only-error . "Something went wrong. Sorry.\n")
 
     (you-have-unreads . "You have %#1d unread articles in %#2s\n")
@@ -332,7 +331,7 @@ cache says)\n")
     (Lines . "Lines")
     (Author . "  Author")
     (Subject . "  Subject")
-    (could-not-read . "You could not read the article (%#1d).\n")
+    (could-not-read . "You couldn't read the article (%#1d).\n")
     (multiple-choice . "There are several alternatives.")
     (does-not-exist . "Unknown command.")
 
@@ -434,7 +433,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
-    (no-such-text-no . "The article does not exist. (%#1d)\n")
+    (no-such-text-no . "The article doesn't exist. (%#1d)\n")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
@@ -554,8 +553,8 @@ Error message: %#1s**************************************************")
 
     ; Useful in more place than one:
     (illegal-command . "Illegal command.\n")
-    (no-such-text . "The article does not exist.\n")
-    (no-such-text-m . "The article does not exist.")
+    (no-such-text . "The article doesn't exist.\n")
+    (no-such-text-m . "The article doesn't exist.")
     (everybody . "everyone")
     (anybody . "anyone")
     (forward . "forward")
@@ -606,7 +605,7 @@ Error message: %#1s**************************************************")
     (kom-review-clear           "Review and skip")
     (kom-review-next            "Review next")
     (kom-find-root		"Review original (article)")
-    (kom-review-by-to           "Review latest")
+    (kom-review-by-to           "Review last")
     (kom-view-commented-text    "Review (the) commented (article)")
     (kom-review-stack           "Review stack")
     (kom-review-presentation    "Review presentation")
