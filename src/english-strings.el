@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.232 2002-09-12 21:02:35 byers Exp $
+;;;;; $Id: english-strings.el,v 44.233 2002-09-14 20:56:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.232 2002-09-12 21:02:35 byers Exp $"))
+              "$Id: english-strings.el,v 44.233 2002-09-14 20:56:54 byers Exp $"))
 
 
 ;;; ================================================================
@@ -379,8 +379,10 @@ and you have finished reading. Please come back later.
     (search-for-pers . "Enter search key (RETURN for all users): ")
     (search-for-conf . "Enter search key (RETURN for all conferences): ")
     (search-re . "Enter search regexp: ")
-    (include-persons . "Search among persons? ")
-    (include-conferences . "Search among conferences? ")
+    (search-re-for-what . "What do you want to search for? ")
+    (search-re-persons . "ppersons")
+    (search-re-confs . "cconferences")
+    (search-re-all . "bboth")
 
     (no-matching-confs . "No conferences match \"%#1s\".\n")
     (no-matching-perss . "No persons match \"%#1s\".\n")
@@ -1193,6 +1195,8 @@ You should set it to a better value.\n")
     (j-or-n-nag . "Answer y or n. ")
     (j-or-n . "(y or n) ")
     (y-instring . "yY ")
+
+    (a-or-b-or-c-nag . "Pleas press a valid key. ")
 
     (person-does-not-exist . "User %#1d (does not exist).")
     (conference-does-not-exist . "Conference %#1d (does not exist).")

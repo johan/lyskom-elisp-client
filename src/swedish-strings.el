@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.268 2002-09-12 21:02:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.269 2002-09-14 20:56:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.268 2002-09-12 21:02:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.269 2002-09-14 20:56:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -349,8 +349,10 @@ du har läst klart allting. Kom tillbaks senare.
     (search-for-pers . "Ange sökvillkor (RETURN för alla personer): ")
     (search-for-conf . "Ange sökvillkor (RETURN för alla möten): ")
     (search-re . "Ange sökuttryck (reguljärt uttryck): ")
-    (include-persons . "Sök bland personer? ")
-    (include-conferences . "Sök bland möten? ")
+    (search-re-for-what . "Vad vill du söka? ")
+    (search-re-persons . "pSök personer")
+    (search-re-confs . "mSök möten")
+    (search-re-all . "bSök alla")
 
     (no-matching-confs . "Inga möten uppfyller sökvillkoret \"%#1s\".\n")
     (no-matching-perss . "Inga personer uppfyller sökvillkoret \"%#1s\".\n")
@@ -1207,6 +1209,8 @@ Du bör sätta den till ett bättre värde.\n")
     (j-or-n-nag . "Svara bara j eller n. ")
     (j-or-n . "(j eller n) ")
     (y-instring . "jJ ")
+
+    (a-or-b-or-c-nag . "Ge ett giltigt alternativ. ")
 
     (person-does-not-exist . "Person %#1d (finns inte).")
     (conference-does-not-exist . "Möte %#1d (finns inte).")

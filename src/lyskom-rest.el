@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.174 2002-08-13 19:55:44 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.175 2002-09-14 20:56:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.174 2002-08-13 19:55:44 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.175 2002-09-14 20:56:54 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3520,6 +3520,80 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
       (ja-or-nej-p prompt initial-input)
     (quit (signal 'quit nil))))
 
+(defun lyskom-a-or-b-or-c-p (prompt alternatives &optional default)
+  "Like y-or-n-p but choose among several options.
+Display PROMPT and ask user to choose among ALTERNATIVES.
+
+ALTERNATIVES are symbols. Each alternative must be found as a string
+in lyskom-messages. The first character of the string is the character
+to enter to select the alternative and is not displayed.
+
+If non-nil DEFAULT is the default alternative and is selected when the
+user types RET.
+
+Returns the selected alternative (a symbol)"
+  (when (symbolp prompt) (setq prompt (lyskom-get-string prompt)))
+  (let* ((input-char 0)
+         (cursor-in-echo-area t)
+         (lyskom-inhibit-minibuffer-messages t)
+         (alts (mapcar (lambda (alt)
+                         (let ((string (lyskom-get-string alt)))
+                           (list (elt string 0)
+                                 (substring string 1)
+                                 alt)))
+                         alternatives))
+         (alts-string (format "(%s) " (mapconcat (lambda (c)
+                                                   (format "%c: %s"
+                                                           (elt c 0)
+                                                           (elt c 1)))
+                                                 alts
+                                                 ", ")))
+         (nagging nil))
+
+    (while (and (not (assq input-char alts))
+                (not (or (eq input-char ?\C-g)
+                         (eq 'keyboard-quit
+                             (lyskom-lookup-key (current-local-map)
+                                                input-char
+                                                t))))
+                (not (and default (eq input-char ?\C-m))))
+      (lyskom-message "%s" (concat (if nagging 
+                                       (lyskom-get-string 'a-or-b-or-c-nag)
+                                     "")
+                                   prompt
+                                   alts-string))
+      (if nagging (beep))
+
+      ;;
+      ;; Workaround for Emacs whose read-char does not accept C-g
+      ;;
+
+      (setq input-char 
+            (let ((inhibit-quit t))
+              (prog1 (read-char-exclusive)
+                (setq quit-flag nil))))
+
+      ;;
+      ;; Redisplay prompt on C-l
+      ;;
+
+      (if (or (eq input-char ?\C-l)
+              (eq 'recenter (lyskom-lookup-key (current-local-map)
+                                               input-char
+                                               t)))
+          (setq nagging nil)
+        (setq nagging t)))
+
+    (when (or (eq input-char ?\C-g)
+	      (eq 'keyboard-quit (lyskom-lookup-key (current-local-map)
+						    input-char
+						    t)))
+      (signal 'quit nil))
+
+    (lyskom-message "%s" (concat prompt (elt (assq input-char alts) 1)))
+    (if (eq input-char ?\C-m)
+        default
+      (elt (assq input-char alts) 2))))
 
 
 (defun lyskom-membership-< (a b)
