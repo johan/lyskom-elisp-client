@@ -1,3 +1,11 @@
+2003-07-31  David Byers  <byers@lysator.liu.se>
+
+	Make moving memberships work again:
+	* mship-edit.el (lp--update-membership): Get priority from entry,
+	not membership (which is *all* wrong).
+	(lp--mode): Show the correct keymap in documentation.
+	(lp--mode-map): Added binding for C-k.
+
 2003-07-30  David Byers  <byers@lysator.liu.se>
 
 	Keep membership buffer updated changing membership types:
