@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.45 2000-01-10 23:26:58 byers Exp $
+;;;;; $Id: startup.el,v 44.46 2000-03-03 15:01:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.45 2000-01-10 23:26:58 byers Exp $\n"))
+	      "$Id: startup.el,v 44.46 2000-03-03 15:01:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -147,7 +147,8 @@ See lyskom-mode for details."
                      (proxy-host nil)
                      (proxy-port nil)
                      (match (string-match "\\(.*\\):\\([0-9]+\\)"
-                                          (or proxy-host-string ""))))
+                                          (or proxy-host-string "")))
+                     (headers nil))
                 (setq proxy-host (or (and match
                                           (match-string 1 proxy-host-string))
                                      proxy-host-string)
@@ -157,6 +158,17 @@ See lyskom-mode for details."
                                                          proxy-host-string)))
                                      80))
                 (cond (proxy-host
+                       (setq headers 
+                             (cond ((stringp kom-www-proxy-headers)
+                                    (list kom-www-proxy-headers))
+                                   ((and (listp kom-www-proxy-headers)
+                                         (stringp (car kom-www-proxy-headers)))
+                                    kom-www-proxy-headers)
+                                   ((and (listp kom-www-proxy-headers)
+                                         (consp (car kom-www-proxy-headers)))
+                                    (cdr (or (lyskom-string-assoc proxy-host
+                                                                  kom-www-proxy-headers)
+                                             (assq t kom-www-proxy-headers))))))
                        (setq proc (open-network-stream name buffer
                                                        proxy-host
                                                        proxy-port))
@@ -172,10 +184,15 @@ See lyskom-mode for details."
 
                        (lyskom-process-send-string 
                         proc
-                        (format "\
-CONNECT %s:%d HTTP/1.0\r\n\
-\r\n"
+                        (format "CONNECT %s:%d HTTP/1.0\r\n"
                                 host port))
+
+                       (mapcar (lambda (header)
+                                 (lyskom-process-send-string proc header)
+                                 (lyskom-process-send-string proc "\r\n"))
+                               headers)
+                       (lyskom-process-send-string proc "\r\n")
+
 
 		       ;; Now wait for the answer from the proxy
 		       ;;
@@ -285,7 +302,7 @@ CONNECT %s:%d HTTP/1.0\r\n\
       (lyskom-debug-insert proc "-----> " output))
   (cond
    ((and (= lyskom-www-proxy-connect-phase 1)
-	 (string-match "^HTTP/1.0 200.*\r\n" output))
+	 (string-match "^HTTP/1\\.. 200.*\r\n" output))
     (setq lyskom-www-proxy-connect-phase 2)
     ;; safety check: see if the empty line is already in this output
     (lyskom-www-proxy-connect-filter proc output))

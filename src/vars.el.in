@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.93 2000-02-25 23:47:42 byers Exp $
+;;;;; $Id: vars.el.in,v 44.94 2000-03-03 15:01:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.93 2000-02-25 23:47:42 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.94 2000-03-03 15:01:34 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -871,6 +871,19 @@ can be used for SERVER to indicate a default proxy.
 A proxy specification has the form \"HOST:PORT\" where HOST is the
 host name of the proxy and PORT is the port to connect to. The :PORT
 part is optional. If it is not specified, port 80 is assumed.")
+
+(def-kom-var kom-www-proxy-headers
+  "User-Agent: Mozilla/4.7C-CCK-MCD  [en] (X11; I; SunOS 5.6 sun4u)"
+  "*Headers to send to the proxy when connecting to LysKOM through a WWW
+proxy. The value of this variable should either be a single string, which
+is sent verbatim to the proxy, or a list of strings which will be sent to
+the proxy separated by CRLF, or a list of elements like (NAME H1 H2 ... Hn)
+where NAME is the name of a proxy and the remaining elements are headers
+to send when connecting through that proxy.
+
+Do not use this variable for proxy authentication.")
+
+
 
 (def-kom-var kom-server-aliases
   '(("kom.lysator.liu.se" . "LysKOM")
