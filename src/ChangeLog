@@ -1,5 +1,12 @@
 Tue Aug 20 19:15:07 1991  Per Cederqvist  (ceder at lysator)
 
+	* commands1.el (lyskom-print-who-is-on, lyskom-print-who-info)
+	  [ndrade anropen till lyskom-return-who-info s} att
+	  sessionsnumret skrivs i 4 positioner.
+
+	* commands1.el (lyskom-return-who-info-line) Sessionsnumret skrivs
+	  i 4 positioner i st{llet f|r tre.
+
 	* commands2.el (kom-postpone): Funkar nu {ven om man skjuter upp
 	  alla inl{gg.
 
