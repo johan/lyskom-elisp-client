@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.60 2000-06-02 13:13:28 byers Exp $
+;;;;; $Id: utilities.el,v 44.61 2000-06-02 13:51:19 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.60 2000-06-02 13:13:28 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.61 2000-06-02 13:51:19 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -524,19 +524,24 @@ it is nil, the most recently read text is the default. The symbol
 last-written means use the text most recently written. The symbol
 last-seen-written means use the text in lyskom-last-seen-written. 
 A number means use that text as the default."
-  (let ((default (cond ((numberp default) default)
+  (let ((default (cond ((or (null default) 
+                            (zerop default))
+                        (lyskom-default-value 'lyskom-current-text))
+                       ((numberp default) default)
                        ((eq default 'last-written)
                         (or (lyskom-default-value 'lyskom-last-seen-written)
                             (lyskom-default-value 'lyskom-current-text)))
                        ((eq default 'last-seen-written)
                         (or (lyskom-default-value 'lyskom-last-seen-written)
-                            (lyskom-default-value 'lyskom-current-text)))
-                       ((null default) 
-                        (lyskom-default-value 'lyskom-current-text)))))
+                            (lyskom-default-value 'lyskom-current-text))))))
+    ;; If the default is *still* zero, then we really can't figure
+    ;; one out, so set it to nil.
+    (when (zerop default) (setq default nil))
     (cond
      ((null current-prefix-arg)
-      (if (or always-read (memq lyskom-current-command 
-                                kom-prompt-for-text-no))
+      (if (or always-read
+              (memq lyskom-current-command kom-prompt-for-text-no)
+              (null default))
           (lyskom-read-number prompt default)
         default))
      ((or (integerp current-prefix-arg)

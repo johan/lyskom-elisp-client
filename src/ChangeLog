@@ -1,5 +1,35 @@
 2000-06-02  David Byers  <davby@ida.liu.se>
 
+	* review.el (kom-find-root): Better error message.
+	(kom-find-root-review): Better error message.
+
+	* commands2.el (kom-add-request-confirm): Better error messages.
+	(kom-review-mail-headers): Better error message.
+
+	* lyskom-rest.el (kom-save-text-body): Better error message.
+
+	* commands2.el (kom-add-private-answer): Better error message.
+
+	* commands1.el (lyskom-add-sub-comment): Handle failure to read
+	text-no. 
+	(lyskom-add-sub-footnote): Handle failure to read text-no.
+	(lyskom-add-sub-recipient): Same here.
+	(kom-mark-text): Better error message.
+	(kom-unmark-text): Same here.
+
+	* review.el (kom-review-noconversion): Better error message.
+	Handle failure to read text-no.
+
+	* lyskom-rest.el (kom-view): Better error message. Handle failure
+	to read text-no.
+
+	* commands1.el (kom-delete-text): Better error message. Handle
+	failure to read text-no.
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Zero default is
+	the same as no default. Prompt for text number if there is no
+	default.
+
  	Unify reading of text numbers:
 	* commands2.el (kom-add-no-comments): Changed default text number.
 	(kom-agree): Argument is not optional.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.25 2000-06-02 13:13:25 byers Exp $
+;;;;; $Id: review.el,v 44.26 2000-06-02 13:51:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.25 2000-06-02 13:13:25 byers Exp $\n"))
+	      "$Id: review.el,v 44.26 2000-06-02 13:51:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1011,7 +1011,7 @@ instead. In this case the text TEXT-NO is first shown."
       )
     )
    (t
-    (lyskom-insert-string 'read-text-first))))
+    (lyskom-insert-string 'confusion-what-to-find-root))))
 
 
 (def-kom-command kom-find-root-review (text-no)
@@ -1029,7 +1029,7 @@ reviews the whole tree in deep-first order."
              (lyskom-review-tree (car start)))
             (start (lyskom-review-tree (car start)))
             (t (signal 'lyskom-internal-error "Could not find root")))))
-   (t (lyskom-insert-string 'read-text-first))))
+   (t (lyskom-insert-string 'confusion-what-to-find-root-review))))
 
 
 (defun lyskom-find-root (text-stat &optional all)
@@ -1273,10 +1273,12 @@ text is shown and a REVIEW list is built to shown the other ones."
 (def-kom-command kom-review-noconversion (text-no)
   "Displays TEXT-NO or the last read text without any conversion."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-noconversion-q)))
-  (let ((lyskom-format-special nil)
-        (kom-smileys nil)
-        (kom-autowrap nil))
-    (lyskom-view-text text-no)))
+  (if text-no
+      (let ((lyskom-format-special nil)
+            (kom-smileys nil)
+            (kom-autowrap nil))
+        (lyskom-view-text text-no))
+    (lyskom-insert 'confusion-what-to-view)))
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.104 2000-06-02 13:13:22 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.105 2000-06-02 13:51:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.104 2000-06-02 13:13:22 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.105 2000-06-02 13:51:14 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -303,17 +303,16 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 	  (lyskom-start-of-command 'kom-view)
 	  (lyskom-tell-internat 'kom-tell-review))
         (let ((current-prefix-arg text-no))
-          (setq text-no (lyskom-read-text-no-prefix-arg
-                         'review-text-q
-                         nil
-                         lyskom-current-text)))
+          (setq text-no (lyskom-read-text-no-prefix-arg 'review-text-q)))
 
-	(if (or (not (listp kom-page-before-command))
-		(memq 'kom-view kom-page-before-command))
-	    (recenter 1))
-	(lyskom-tell-internat 'kom-tell-review)
-	(lyskom-format-insert 'review-text-no text-no)
-	(lyskom-view-text text-no))
+        (cond (text-no
+               (if (or (not (listp kom-page-before-command))
+                       (memq 'kom-view kom-page-before-command))
+                   (recenter 1))
+               (lyskom-tell-internat 'kom-tell-review)
+               (lyskom-format-insert 'review-text-no text-no)
+               (lyskom-view-text text-no))
+              (t (lyskom-insert 'confusion-what-to-view))))
     (lyskom-end-of-command)))
 
 
@@ -2305,7 +2304,7 @@ The name of the file is read using the minibuffer and the default is kom-text."
                                (lyskom-insert (lyskom-get-string 'done)))
                            (quit (lyskom-insert (lyskom-get-string 'cancelled)))
                            (error (lyskom-insert (lyskom-get-string 'nope))))))))))))
-        (t (lyskom-insert 'have-to-read))))
+        (t (lyskom-insert 'confusion-what-to-save))))
 
 
 

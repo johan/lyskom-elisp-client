@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.118 2000-06-02 13:13:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.119 2000-06-02 13:51:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.118 2000-06-02 13:13:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.119 2000-06-02 13:51:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -269,15 +269,7 @@ Skicka ett brev till %#2P för medlemsskap.\n")
     (secret-members-allowed . "Får man gå med som hemlig medlem? ")
     (what-comment-no . "Kommentera text nummer: ")
     (what-footnote-no . "Fotnotera text nummer: ")
-    (confusion-what-to-reply-to . "Jag förstår inte vilken text du vill skriva en kort replik till.\n")
-    (confusion-what-to-agree-to . "Jag förstår inte vilken text du vill hålla med om.\n")
-    (confusion-what-to-comment . "Jag förstår inte vilken text du vill kommentera.\n")
-    (confusion-what-to-footnote . "Jag förstår inte vilken text du vill skriva en fotnot till.\n")
-
     (what-private-no . "Personligt svar till text nummer: ")
-    (confusion-who-to-reply-to . "Jag förstår inte vems inlägg du vill skriva ett privat svar till.\n")
-    (confusion-what-to-answer-to . "Jag förstår inte vilken text du vill besvara.\n")
-    (confusion-what-to-view . "Jag förstår inte vilken text du vill återse.\n")
     (quit-in-spite-of-unsent . "Vill du avsluta sessionen trots osänt meddelande? ")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
     (session-ended . "
@@ -1417,6 +1409,38 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (find-root-q . "Återse urinlägget för vilken text?")
     (find-root-review-q . "Återse träd för vilket inlägg?")
     (review-comments-q . "Återse alla kommentarer till vilket inlägg?")
+
+    (confusion-who-to-reply-to . "Jag förstår inte vems inlägg du vill skriva ett privat svar till.\n")
+    (confusion-what-to-answer-to . "Jag förstår inte vilken text du vill besvara.\n")
+    (confusion-what-to-view . "Jag förstår inte vilken text du vill återse.\n")
+
+    (confusion-what-to-reply-to . "Jag förstår inte vilken text du vill skriva en kort replik till.\n")
+    (confusion-what-to-agree-to . "Jag förstår inte vilken text du vill hålla med om.\n")
+    (confusion-what-to-request-confirmation . "Jag förstår inte vilken text du vill ha läsbekräftelser på.\n")
+    (confusion-what-to-comment . "Jag förstår inte vilken text du vill kommentera.\n")
+    (confusion-what-to-footnote . "Jag förstår inte vilken text du vill skriva en fotnot till.\n")
+
+    (confusion-what-to-delete . "Jag förstår inte vilken text du vill radera.\n")
+    (confusion-what-to-add-sub-recipient . "Jag förstår inte vilken text du vill %#1s.\n")
+    (add-rcpt-action-name . "addera mottagare till")
+    (add-copy-action-name . "addera extra-kopiemottagare till")
+    (add-bcc-action-name . "addera mottagare för kännedom till")
+    (sub-action-name . "subtrahera mottagare från")
+    (move-action-name . "flytta")
+
+    (confusion-what-to-add-comment-to . "Jag förstår inte vilken text du vill addera en kommentar till.\n")
+    (confusion-what-to-sub-comment-from . "Jag förstår inte vilken text du vill subtrahera en kommentar från.\n")
+    (confusion-what-to-add-footnote-to . "Jag förstår inte vilken text du vill addera en fotnot till.\n")
+    (confusion-what-to-sub-footnote-from . "Jag förstår inte vilken text du vill subtrahera en fotnot från.\n")
+    
+    (confusion-what-to-mark . "Jag förstår inte vilket inlägg du vill markera.\n")
+    (confusion-what-to-unmark . "Jag förstår inte vilket inlägg du vill avmarkera.\n")
+    (confusion-what-to-save . "Jag förstår inte vilket inlägg du vill spara.\n")
+
+    (confusion-what-to-review-mail-headers . "Jag förstår inte vilket inläggs brevhuvud du vill se.\n")
+    (confusion-what-to-find-root . "Jag förstår inte vilket inläggs urinlägg du vill återse.\n")
+    (confusion-what-to-find-root-review . "Jag förstår inte vilket inläggsträd du vill återse.\n")
+
 ))
 
 

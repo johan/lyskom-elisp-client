@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.71 2000-06-02 13:13:20 byers Exp $
+;;;;; $Id: commands2.el,v 44.72 2000-06-02 13:51:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.71 2000-06-02 13:13:20 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.72 2000-06-02 13:51:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2281,7 +2281,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                                        (lyskom-create-aux-item-flags
                                         nil nil nil nil nil nil nil nil) 0 ""))))
                        (cache-del-text-stat text-no))))))
-    (lyskom-insert 'have-to-read)))
+    (lyskom-insert 'confusion-what-to-comment)))
 
 (def-kom-command kom-add-request-confirm (text-no)
   "Add confirmation request aux-item to a text."
@@ -2322,7 +2322,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                                        (lyskom-create-aux-item-flags
                                         nil nil nil nil nil nil nil nil) 0 ""))))
                        (cache-del-text-stat text-no))))))
-    (lyskom-insert 'have-to-read)))
+    (lyskom-insert 'confusion-what-to-request-confirmation)))
 
 (def-kom-command kom-review-mail-headers (text-no)
   "Review the mail headers of an imported message"
@@ -2340,7 +2340,7 @@ Return-value: 'no-session if there is no suitable session to switch to
                              (lyskom-format-insert "%#1t" (aux-item->data el))
                              (lyskom-insert "\n")))
                          headers))))
-    (lyskom-insert 'have-to-read)))
+    (lyskom-insert 'confusion-what-to-review-mail-headers)))
 
 
 ;;; ============================================================
