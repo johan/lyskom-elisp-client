@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.42 1999-06-22 13:36:56 byers Exp $
+;;;;; $Id: commands1.el,v 44.43 1999-06-22 13:51:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.42 1999-06-22 13:36:56 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.43 1999-06-22 13:51:46 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3034,7 +3034,49 @@ DO-ADD: NIL if a comment should be subtracted.
      (blocking-do (if do-add 'add-comment 'sub-comment)
 		  comment-text-no
 		  text-no))))
-    
+
+(def-kom-command kom-add-footnote (text-no-arg)
+  "Add a text as a footnote to another text."
+  (interactive "P")
+  (lyskom-add-sub-footnote text-no-arg
+			  (lyskom-get-string 'text-to-add-footnote-to)
+			  t))
+
+(def-kom-command kom-sub-footnote (text-no-arg)
+  "Remove a footnote from a text."
+  (interactive "P")
+  (lyskom-add-sub-footnote text-no-arg
+			  (lyskom-get-string 'text-to-delete-footnote-from)
+			  nil))
+
+(defun lyskom-add-sub-footnote (text-no-arg prompt do-add)
+  "Get the number of the text that is going to have a footnote added to it or
+subtracted from it
+Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
+PROMPT: A string that is used when prompting for a number.
+DO-ADD: NIL if a footnote should be subtracted.
+        Otherwise a footnote is added"
+  (let* ((text-no (lyskom-read-number prompt
+				      (or text-no-arg lyskom-current-text)))
+	 (footnote-text-no  (lyskom-read-number
+			    (lyskom-get-string
+			     (if do-add 
+                                 'text-to-add-footn-q 
+                               'text-to-remove-footn-q))
+			    (if (eq text-no lyskom-current-text)
+				nil
+			      lyskom-current-text))))
+    (lyskom-format-insert (if do-add 'add-footnote-to 'sub-footnote-to)
+			  footnote-text-no
+			  text-no)
+    (cache-del-text-stat text-no)
+    (cache-del-text-stat footnote-text-no)
+    (lyskom-report-command-answer 
+     (blocking-do (if do-add 'add-footnote 'sub-footnote)
+		  footnote-text-no
+		  text-no))))
+
+
 
 
 
