@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.15 1997-07-15 10:22:52 byers Exp $
+# $Id: Makefile,v 44.16 1997-08-18 14:22:58 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.15 1997-07-15 10:22:52 byers Exp $
+# $Id: Makefile,v 44.16 1997-08-18 14:22:58 byers Exp $
 #
 
 
@@ -51,7 +51,7 @@ EMACS-BATCH = $(EMACS) -batch
 GENERIC-CLEAN = *~ *.o core
 GENERIC-DIST-CLEAN = TAGS
 
-LANGUAGE-EL=$(LANGUAGES:%=%-strings.el)
+LANGUAGE-EL=$(LANGUAGES:=-strings.el)
 EMACS-BATCH=$(EMACS) -batch
 SOURCES	 = 	$(LANGUAGE-EL) \
 		komtypes.el \
