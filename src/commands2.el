@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 43.2 1996-08-14 11:45:45 byers Exp $
+;;;;; $Id: commands2.el,v 43.3 1996-08-14 14:10:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 43.2 1996-08-14 11:45:45 byers Exp $\n"))
+	      "$Id: commands2.el,v 43.3 1996-08-14 14:10:04 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -453,40 +453,75 @@ otherwise: the conference is read with lyskom-completing-read."
   (lyskom-send-message 0 message))
 
 
-(defun lyskom-send-message (pers-no message &optional dontshow)
+(defvar lyskom-message-recipient)
+(defvar lyskom-message-string)
+
+
+(defun lyskom-send-message (pers-no
+                            message &optional dontshow)
   "Send a message to the person with the number PERS-NO.  PERS-NO == 0
 means send the message to everybody. MESSAGE is the message to
 send. If DONTSHOW is non-nil, don't display the sent message."
   (let* ((minibuffer-setup-hook minibuffer-setup-hook)
          (minibuffer-exit-hook minibuffer-exit-hook)
-         (tmp (add-hook 'minibuffer-setup-hook
-                        (function
-                         (lambda () (run-hooks
-                                     'lyskom-send-message-setup-hook)))))
-         (tmp (add-hook 'minibuffer-exit-hook
-                        (function 
-                         (lambda () (run-hooks 
-                                     'lyskom-send-message-exit-hook)))))
-         (string (or message
-                     (lyskom-read-string (lyskom-get-string 'message-prompt))))
-         (reply (blocking-do 'send-message pers-no string))
-         (to-conf-stat (if (zerop pers-no)
-                           nil
-                         (blocking-do 'get-conf-stat pers-no))))
-    (if reply
-	(if (not dontshow)
-	    (lyskom-handle-as-personal-message
-	     (if to-conf-stat
-		 (lyskom-format 'message-sent-to-user
-				string to-conf-stat)
-	       (lyskom-format 'message-sent-to-all string))
-	     lyskom-pers-no
-	     lyskom-filter-outgoing-messages))
-      (lyskom-format-insert-before-prompt 'message-nope 
-                                          (or to-conf-stat
-                                              (lyskom-get-string 'everybody))
-                                          string)) ;+++ lyskom-errno
+         (lyskom-message-string nil)
+         (reply nil)
+         (lyskom-message-recipient nil))
+
+    (add-hook 'minibuffer-setup-hook
+              (function
+               (lambda () (run-hooks
+                           'lyskom-send-message-setup-hook))))
+    (add-hook 'minibuffer-exit-hook
+              (function 
+               (lambda () (run-hooks 
+                           'lyskom-send-message-exit-hook))))
+    (setq lyskom-message-string 
+          (or message
+              (lyskom-read-string (lyskom-get-string 'message-prompt))))
+    (setq lyskom-message-recipient (if (zerop pers-no)
+                                       nil
+                                     (blocking-do 'get-conf-stat 
+                                                  pers-no)))
+
+    (run-hooks 'lyskom-send-message-hook)
+    (if lyskom-message-string
+        (progn
+          (setq reply (blocking-do 'send-message pers-no
+                                   lyskom-message-string))
+
+          (if reply
+              (if (not dontshow)
+                  (lyskom-handle-as-personal-message
+                   (if lyskom-message-recipient
+                       (lyskom-format 'message-sent-to-user
+                                      lyskom-message-string 
+                                      lyskom-message-recipient)
+                     (lyskom-format 'message-sent-to-all
+                                    lyskom-message-string))
+                   lyskom-pers-no
+                   lyskom-filter-outgoing-messages))
+            (lyskom-format-insert-before-prompt
+             'message-nope 
+             (or lyskom-message-recipient
+                 (lyskom-get-string 'everybody))
+             lyskom-message-string)))
+      (lyskom-insert-string 'interrupted))                   ;+++ lyskom-errno
     ))
+
+(defun lyskom-send-message-trim-newlines ()
+  (let ((size (length lyskom-message-string)))
+    (while (and (> size 0)
+                (eq ?\n (aref lyskom-message-string (1- size))))
+      (setq size (1- size)))
+    (cond ((and (eq size 0)
+                (not (lyskom-j-or-n-p (lyskom-get-string 
+                                       'send-empty-message-p))))
+           (setq lyskom-message-string nil))
+          ((eq size 0)
+           (setq lyskom-message-string ""))
+          (t (setq lyskom-message-string (substring lyskom-message-string 
+                                                    0 size))))))
 
 (defun lyskom-send-message-turn-off-resize-on-exit ()
   (resize-minibuffer-mode -1)

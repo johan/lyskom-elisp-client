@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 43.4 1996-08-14 11:45:59 byers Exp $
+;;;;; $Id: vars.el.in,v 43.5 1996-08-14 14:10:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 43.4 1996-08-14 11:45:59 byers Exp $\n"
+  "$Id: vars.el.in,v 43.5 1996-08-14 14:10:44 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -193,6 +193,16 @@ comment chain.  Otherwise we dont let them in until the end of the comment
 tree.
 
 This variable is stored in the LysKOM server.")
+
+(defvar lyskom-send-message-hook '(lyskom-send-message-trim-newlines)
+  "*Hook that is called before a personal, group or common message is sent. 
+
+When called, lyskom-message-string is bound to the message that will be sent
+and lyskom-message-recipient to the conf-stat of the recipient or nil if
+the recipient does not exist or if the message is a common message.
+
+If lyskom-message-string is set to nil by a hook, the message will not
+be sent.")
 
 (defvar lyskom-send-message-setup-hook nil
   "*Hook that is called when the minibuffer is entered to read a message.")

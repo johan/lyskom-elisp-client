@@ -1,11 +1,16 @@
 Wed Aug 14 13:19:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
+	* swedish-strings.el,english-strings.el (lyskom-strings): Lade
+ 	till send-empty-message-p
+
 	* vars.el.in (lyskom-send-message-setup-hook): Ny variabel.
 	(lyskom-send-message-exit-hook): Ny variabel.
+	(lyskom-send-message-hook): Nu variabel.
 
 	* commands2.el (lyskom-send-message): Anropa
  	lyskom-send-message-setup-hook före läsning av meddelande och
- 	lyskom-send-message-exit-hook efteråt.
+ 	lyskom-send-message-exit-hook efteråt, Bytte variabelnamn,
+ 	omstrukturerade funktionen, anropa lyskom-send-message-hook.
 	(lyskom-send-message-auto-fill): Ny funktion.
 	(lyskom-send-message-resize-minibuffer): Ny funktion.
 	(lyskom-send-message-turn-off-resize-on-exit): Ny funktion.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.7 1996-08-14 04:18:44 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.8 1996-08-14 14:10:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.7 1996-08-14 04:18:44 davidk Exp $"))
+              "$Id: english-strings.el,v 43.8 1996-08-14 14:10:17 byers Exp $"))
 
 
 
@@ -446,6 +446,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#1s%#2s%#3M\n")
     (is-supervisor-mark . "O ")
     (who-to-send-message-to . "Send message to whom? (%s) ")
+    (send-empty-message-p . "The message is empty. Send it anyway? ")
     (his-total-unread . "\n%#1M has a total of %#2d unread articles.\n")
     (message-prompt . "Message: ")
     (message-sent-to-user .
