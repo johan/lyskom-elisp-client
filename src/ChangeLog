@@ -1,3 +1,7 @@
+Tue Oct 22 02:47:55 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* language.el: Tog bort lyskom-language-symbols.
+
 Mon Oct 21 00:54:00 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* swedish-strings.el (lyskom-language-sv): Rensade bort
