@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.274 2003-03-16 22:21:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.275 2003-04-05 18:14:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.274 2003-03-16 22:21:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.275 2003-04-05 18:14:25 byers Exp $"))
 
 
 ;;; ================================================================
@@ -600,6 +600,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-is-member-of-conf . "Yes, %#1P is a member of the conference %#2M.\n")
     (pers-is-passive-member-of-conf . "Well, %#1P is only a passive member of the conference %#2M.\n")
     (pers-is-not-member-of-conf . "No, %#1P is not a member of the conference %#2M.\n")
+    (pers-is-member-of-conf-2 . "Number of unread: %#2D (last access %#1s)\n")
+    (Unknown-number . "Unknown number")
 
     ; From commands2.el:
 

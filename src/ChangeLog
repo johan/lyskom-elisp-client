@@ -1,3 +1,19 @@
+2003-04-05  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 1006:
+	* commands2.el (kom-is-person-member-of-conference): Show number
+	of unread (only when deferred printing is on).
+
+	* deferred-insert.el (lyskom-defer-insertion): Handle a list as
+	the arguments for the server call.
+
+	Fix bug 1000:
+	* swedish-strings.el: Fix cut-n-paste error.
+
+	Fix bug 1008:
+	* commands1.el (lyskom-list-created-conferences-2): Show garb-nice
+	in listing.
+
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 815:

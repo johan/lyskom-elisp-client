@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.161 2003-03-16 22:21:09 byers Exp $
+;;;;; $Id: commands2.el,v 44.162 2003-04-05 18:14:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.161 2003-03-16 22:21:09 byers Exp $\n"))
+              "$Id: commands2.el,v 44.162 2003-04-05 18:14:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2637,17 +2637,44 @@ See `kom-keep-alive' for more information."
           (or pers-no
               (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-mship-for)
                                    '(all) nil nil t)))
-         (conf-no
-          (or conf-no
-              (lyskom-read-conf-no (lyskom-get-string 'conf-to-check-mship-of)
+         (conf-stat
+          (if conf-no 
+              (blocking-do 'get-conf-stat conf-no)
+            (lyskom-read-conf-stat (lyskom-get-string 'conf-to-check-mship-of)
                                    '(all) nil nil t)))
-	 (mship (lyskom-is-member conf-no pers-no)))
+	 (mship (lyskom-is-member (conf-stat->conf-no conf-stat) pers-no)))
     (if mship
 	(if (membership-type->passive (membership->type mship))
 	    (lyskom-format-insert 'pers-is-passive-member-of-conf
-				  pers-no conf-no)
-	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no))
-      (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
+				  pers-no conf-stat)
+	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-stat)
+          (when kom-deferred-printing
+            (lyskom-format-insert 
+             'pers-is-member-of-conf-2
+             (lyskom-format-time
+              'date-and-time
+              (membership->last-time-read mship))
+             (lyskom-create-defer-info
+              'query-read-texts
+              (list pers-no (conf-stat->conf-no conf-stat) t 0)
+              (lambda (membership defer-info)
+                (if (null membership)
+                    (lyskom-replace-deferred 
+                     defer-info (lyskom-get-string 'Unknown-number))
+                  (let ((conf-stat (defer-info->data defer-info)))
+                    (lyskom-replace-deferred defer-info 
+                                             (number-to-string 
+                                              (- (+ (conf-stat->first-local-no conf-stat)
+                                                    (conf-stat->no-of-texts conf-stat))
+                                                 (membership->last-text-read membership)
+                                                 (length (membership->read-texts membership))
+                                                 1))))))
+              nil nil "%#1s" conf-stat))))
+      (lyskom-format-insert 'pers-is-not-member-of-conf pers-no (conf-stat->conf-no conf-stat)))))
+
+
+;;; ================================================================
+;;; Help
 
 (def-kom-command kom-help (&optional section)
   "Run the built-in help system."
