@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.9 1991-09-26 14:02:16 linus Exp $
+# $Id: Makefile,v 35.10 1991-10-05 18:15:27 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.9 1991-09-26 14:02:16 linus Exp $
+# $Id: Makefile,v 35.10 1991-10-05 18:15:27 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.9  1991-09-26 14:02:16  linus
+# Revision 35.10  1991-10-05 18:15:27  linus
+# Now handles the english version of the client also.
+#
+# Revision 35.9  1991/09/26  14:02:16  linus
 # Install in the correct directory on the ftp-area.
 #
 # Revision 35.8  1991/09/16  20:33:44  linus
@@ -62,16 +65,20 @@ RM = /usr/gnu/bin/rm -vf
 EMACS-BATCH = emacs -batch -l /usr/local/lib/elisp/bytecomp
 
 # NOTE: lyskom-rest.el must be the last file in PARTS-EL and SRC-ELC.
-PARTS-EL = vars.el swedish-strings.el komtypes.el clienttypes.el startup.el \
+PARTS-EL = komtypes.el clienttypes.el startup.el \
 	internal.el parse.el services.el cache.el\
 	commands1.el commands2.el review.el edit-text.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el \
 	elib-string.el \
 	lyskom-rest.el
-HEADER-EL = macros.el
-HEADER-ELC = macros.elc
-SRC-ELC = vars.elc swedish-strings.elc komtypes.elc clienttypes.elc startup.elc \
+HEADER-EL = macros.el vars.el
+HEADER-ELC = macros.elc vars.elc
+SWEDISH-EL = swedish-strings.el
+SWEDISH-ELC = swedish-strings.elc
+ENGLISH-EL = english-strings.el
+ENGLISH-ELC = english-strings.elc
+SRC-ELC = komtypes.elc clienttypes.elc startup.elc \
 	internal.elc parse.elc services.elc cache.elc\
 	commands1.elc commands2.elc review.elc edit-text.elc \
 	view-text.elc async.elc completing-read.elc \
@@ -87,14 +94,18 @@ PARTS-ELC = $(SRC-ELC)
 all: lyskom.elc
 
 LEX = flex -8
-alfa: lyskom.elc makealfa
+alfa: lyskom.elc makealfa english-lyskom.elc
 	./makealfa < lyskom.elc > /usr/local/src/2kom/lyskom.elc
+	./makealfa < english-lyskom.elc > /usr/local/src/2kom/english-lyskom.elc
 
-lyskom.elc: $(HEADER-ELC) $(PARTS-ELC)
-	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
+lyskom.elc: $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC)
+	cat $(HEADER-ELC) $(SWEDISH-ELC) $(PARTS-ELC) > lyskom.elc
 
-lyskom.el: $(HEADER-EL) $(PARTS-EL)
-	cat $(HEADER-EL) $(PARTS-EL) > lyskom.el
+english-lyskom.elc: $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC)
+	cat $(HEADER-ELC) $(ENGLISH-ELC) $(PARTS-ELC) > english-lyskom.elc
+
+lyskom.el: $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL)
+	cat $(HEADER-EL) $(SWEDISH-EL) $(PARTS-EL) > lyskom.el
 
 makealfa: makealfa.c
 	$(CC) -o makealfa $(CFLAGS) makealfa.c -ll
@@ -113,11 +124,11 @@ elc-files: $(HEADER-ELC) $(PARTS-ELC)
 
 
 wc:
-	@wc $(HEADER-EL) $(PARTS-EL)
+	@wc $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 	@wc ../doc/elisp-client.latexinfo ChangeLog ../misc/todo
 
 tags:
-	etags $(HEADER-EL) $(PARTS-EL)
+	etags $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL)
 
 doc:
 	(cd ../doc ; make elisp-client elisp-client.txt ; )
@@ -157,7 +168,7 @@ distrib distribution: lyskom.el lyskom.elc doc
 	mkdir     distribution
 	cp distribution-makefile distribution/Makefile
 	cp distribution-README distribution/README
-	cp $(HEADER-EL) $(PARTS-EL) distribution
+	cp $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL) distribution
 	cat distribution-README vars.el > distribution/vars.el
 	cp README distribution
 	cat distribution-README lyskom.el  > distribution/lyskom.el
@@ -165,7 +176,7 @@ distrib distribution: lyskom.el lyskom.elc doc
 	cat distribution-README lyskom.elc > distribution/lyskom.elc
 	cp ../doc/elisp-client.txt ../doc/elisp-client distribution
 	cd distribution; \
-	  shar -v -cCmx -l 50 -o PARTS README Makefile $(HEADER-EL) $(PARTS-EL)
+	  shar -v -cCmx -l 50 -o PARTS README Makefile $(HEADER-EL) $(PARTS-EL)  $(SWEDISH-EL) $(ENGLISH-EL)
 	cd distribution; \
 	  shar -v -cCmx -l 50 -o ALL lyskom.el
 	cd distribution; \
