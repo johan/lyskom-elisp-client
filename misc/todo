@@ -46,9 +46,6 @@ bort ur den h{r filen.
 
 * Fixa loginsekvensen s} den tittar p} r{tt variabler.
 
-* Fixa s} att headerradernas f|rstabokst{ver finns i en variabel.
-  (internationaliserings}tg{rd) 
-
 * Snabbare g} till m|te.
 
 * H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
@@ -71,16 +68,23 @@ bort ur den h{r filen.
   Ge adm.r{ttigheter }t n}gon annan.
   Tvinga n}gon att logga ut.  		- klart.
 
-* Kolla lyskom-is-administrator i f|ljande fall och g|r olika saker
-  beroende om den {r satt eller inte:
-   + i S{tt presentation
-   + ...
-
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
   who-info. 
 
 * Dokumentera alla {ndringar.
+
+
+================================================================
+0.35
+================================================================
+
+* cookie-mode skall anv{ndas till:
+  - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
+    cookie-moden)
+  - prioritera m|ten
+  - editera flaggor. En helt ny och f|rb{ttrad options.el
+  - ge privilegier (nytt kommando)
 
 ================================================================
 2. Saker som borde fixas inom en inte alltf|r avl{gsen framtid:
