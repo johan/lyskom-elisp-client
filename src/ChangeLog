@@ -1,4 +1,12 @@
+Mon Jun 28 17:15:28 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release 0.46-BETA-5
+
 1999-06-28  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-set-mode-line): Don't show session
+	priority in mode line if it is the same as the default session
+	priority.
 
 	* commands2.el (kom-set-session-priority): Default priority is
 	kom-default-session-priority, not 100.
