@@ -1,5 +1,32 @@
 2002-08-06  David Byers  <david.byers@swipnet.se>
 
+	String "Olästa" in frame title was truncated in Emacs 21:
+	* lyskom-rest.el (lyskom-make-lyskom-unread-title-format): Use
+	lyskom-recode-string-for-title.
+
+	* utilities.el (lyskom-recode-string-for-title): New function.
+
+	Clear out some old junk:
+	* compatibility.el (lyskom-compatibility-definition-ct): Unused.
+	Removed.
+
+	* lyskom-rest.el (lyskom-call-hook): Unused. Removed.
+
+	* lyskom-buttons.el (lyskom-button-send-mail): Unused. Removed.
+
+	* utilities.el (skip-first-zeros): Unused. Removed.
+	(reverse-assoc): Unused. Removed.
+	(lyskom-string-to-rgb): Unused. Removed.
+
+	Fix compatibility problem with Emacs 20:
+	* utilities.el (lyskom-union): Rebuilt to preserve A and append
+	the relevant bits of B.
+	(lyskom-join-lists): Removed. This function used mapc, which is in
+	cl.el, and is functionally very similar to lyskom-union. Rewrote
+	lyskom-union to the specifications of this function.
+	(lyskom-get-ancestors-of-text): Use (new) lyskom-union instead of
+	lyskom-join-lists.
+
 	Fix bug 695:
 	* startup.el (kom-start-anew): Insert language-set-to before the
 	prompt, not immediately. This ensures that it is printed after any

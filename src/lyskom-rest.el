@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.171 2002-07-24 10:49:20 jhs Exp $
+;;;;; $Id: lyskom-rest.el,v 44.172 2002-08-06 19:43:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.171 2002-07-24 10:49:20 jhs Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.172 2002-08-06 19:43:33 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3507,19 +3507,6 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (error "Not implemented"))
 
 
-(defun lyskom-call-hook (hook-name &rest args)
-  "Calls a hook with parameters.
-If HOOK-NAME is bound, it is either a function name or a list of functions
-to apply to the ARGS."
-
-  (if (and (boundp hook-name) (eval hook-name))
-      (if (listp (eval hook-name))
-	  (mapcar '(lambda (fn)
-		     (apply fn args))
-		  (eval hook-name))
-	(apply (eval hook-name) args))))
-
-
 ;;; Priority filtering
 
 (defun lyskom-visible-membership (membership)
@@ -3937,11 +3924,11 @@ One parameter - the prompt string."
   `(kom-show-unread-in-frame-title
     (lyskom-session-has-unreads 
      (" (" ((lyskom-session-has-unreads
-             ,(lyskom-maybe-recode-string (lyskom-get-string 'frame-title-unread)
-                                          'iso-8859-1 t))
-            (lyskom-session-has-unread-letters ,(lyskom-maybe-recode-string
+             ,(lyskom-recode-string-for-title (lyskom-get-string 'frame-title-unread)
+                                              'iso-8859-1))
+            (lyskom-session-has-unread-letters ,(lyskom-recode-string-for-title
                                                  (lyskom-get-string 'frame-title-letters)
-                                                 'iso-8859-1 t)))
+                                                 'iso-8859-1)))
       ")"))))
 
 (defvar icon-title-format)

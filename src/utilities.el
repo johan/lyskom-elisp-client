@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.114 2002-07-30 10:53:34 ceder Exp $
+;;;;; $Id: utilities.el,v 44.115 2002-08-06 19:43:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.114 2002-07-30 10:53:34 ceder Exp $\n"))
+	      "$Id: utilities.el,v 44.115 2002-08-06 19:43:33 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -53,11 +53,6 @@
 (defsubst listify-vector (vector)
   "Turn VECTOR into a list"
   (append vector nil))
-
-(defun reverse-assoc (key cache)
-  "Same as assoc, but searches on last element in a list"
-  (reverse (assoc key (mapcar (function reverse) cache))))
-
 
 (defun nfirst (n list)
   "Return a list of the N first elements of LIST."
@@ -121,12 +116,6 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 	 (progn
 	   (if (> n 0) (setcdr (nthcdr (- (1- m) n) x) nil))
 	   x))))
-
-(defun skip-first-zeros (list)
-  (while (and list (zerop (car list)))
-    (setq list (cdr list)))
-  list)
-
 
 (defun filter-list (test list)
   (let ((result nil))
@@ -322,6 +311,14 @@ only encode when multibyte strings are not supported."
                                        (lyskom-language-coding lyskom-language))
                                   'raw-text))
     s))
+
+(defun lyskom-recode-string-for-title (s coding)
+  "Encode S with CODING for use in frame titles.
+Attempts to encode the string only in Emacs versions that do not require
+MULE coding for frame titles"
+  (if (> emacs-major-version 20)
+      s
+    (lyskom-maybe-recode-string s coding t)))
 
 (defun lyskom-maybe-frob-completion-table (table &optional copy)
   "Recode the cars of alist TABLE to default coding system unless multibyte
@@ -607,9 +604,10 @@ non-negative integer and 0 means the given text-no."
 	   (result '()))
 	(while ancestors
 	  (setq result
-		(lyskom-join-lists 
+		(lyskom-union
+		 (lyskom-get-ancestors-of-text (car ancestors) level)
 		 result
-		 (lyskom-get-ancestors-of-text (car ancestors) level)))
+                 ))
 	  (setq ancestors (cdr ancestors)))
 	result)))
 
@@ -821,12 +819,13 @@ The order of the list a is kept."
 
 (defun lyskom-union (a b)
   "Returns a list containing the union of list A and list B.
-The list may contain list A or list B as its tail. This means that
-destructive operations on the result may affect either operand."
+Specifically, concatenate all elements of B that are not in A
+to the end of A. This operation is destructive and modifies the
+list pointed to by A."
   (let ((result nil))
-    (lyskom-traverse x a
-      (unless (memq x b) (setq result (cons x result))))
-    (nconc (nreverse result) b)))
+    (lyskom-traverse x b
+      (unless (memq x a) (setq result (cons x result))))
+    (nconc a (nreverse result))))
 
 (defun lyskom-delete-duplicates (list &optional key)
   "Removes all but one instance of each element in LIST.
@@ -842,13 +841,6 @@ comparison. Comparison is done with eq."
       (unless (assq (car el) result)
         (setq result (cons el result))))
     (nreverse (mapcar 'cdr result))))
-
-(defun lyskom-join-lists (list1 list2)
-  "Like append, but only elements of list2 that are not present in list1 are
-added to the result. The comparison is done with eq."
-  (let ((in-both (lyskom-intersection list1 list2)))
-    (mapc (lambda (o) (setq list2 (delq o list2))) in-both)
-    (append list1 list2)))
 
 (defun lyskom-plusp (int)
   "Returns t for integers greater than 0, nil otherwise."
@@ -1717,10 +1709,6 @@ should be."
              (mapcar (lambda (c) (round (* 255 c)))
                      (lyskom-hls-to-rgb hls))))))
 
-
-(defun lyskom-string-to-rgb (color)
-  "Convert the name of a color to RGB values."
-  (mapcar (lambda (x) (/ x 65535.0)) (lyskom-color-values color)))
 
 (defun lyskom-rgb-to-hls (rgb)
   "Convert a point in RGB color space to a point in HLS color space.
