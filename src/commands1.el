@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.3 1995-10-23 11:55:22 byers Exp $
+;;;;; $Id: commands1.el,v 38.4 1995-10-25 09:22:31 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.3 1995-10-23 11:55:22 byers Exp $\n"))
+	      "$Id: commands1.el,v 38.4 1995-10-25 09:22:31 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1605,7 +1605,7 @@ the window width."
 
     
 (defun lyskom-window-width ()
-  "Returns the width of the lyskom-window of the screen-width if not displayed."
+  "Returns the width of the lyskom-window or the screen-width if not displayed."
   (let ((win (get-buffer-window (current-buffer))))
     (cond
      (win (window-width win))
