@@ -1,5 +1,10 @@
 2002-02-25  Joel Rosdahl  <joel@lysator.liu.se>
 
+	* swedish-strings.el (lyskom-message): Ditto.
+
+	* english-strings.el (lyskom-message): Added missing full stop and
+	newline in cant-read-textno.
+
 	* swedish-strings.el (lyskom-sv-mode-map): Bind
 	kom-change-conf-faq to "ä q".
 
