@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.354 2005-02-14 21:58:36 byers Exp $
+;;;;; $Id: english-strings.el,v 44.355 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.354 2005-02-14 21:58:36 byers Exp $"))
+              "$Id: english-strings.el,v 44.355 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1295,6 +1295,11 @@ You should set it to a better value.\n")
 %#2s
 LysKOM session killed abnormally
 Error message: %#1s**************************************************")
+    (closed-connection-other-buf . "
+**************************************************
+The LysKOM session %#1s was killed abnormally.
+**************************************************
+")
     (error-not-found . "Error code %#1d. No explanation available.")
 
     ; Useful in more places than one:
@@ -3055,6 +3060,9 @@ Select whether to execute command or keyboard macro.")
     (autowrap-timeout . "Timeout in seconds: ")
     (no-timeout . "No timeout")
 
+    (session-lost-all-buffers . "Show notification in all active LysKOM buffers")
+    (session-lost-beep . "Beep")
+
     (friends . "Friends and other special people")
 
     (turned-off .      "Turned off           ")
@@ -4116,6 +4124,13 @@ up menus.")
   network connection to the LysKOM server active. If your network connection
   shuts down after a period of inactivity, set this to approximately half
   that period and use the command `Keep connection alive'.")
+    (kom-lost-session-notification-doc . "\
+  This setting determines how notification of abnormally terminated
+  sessions is done. A message is always displayed in the buffer of 
+  the terminated session. In addition, if this is set to \"Beep\", 
+  the client will beep.  If it is instead set to \"Show notification 
+  in all active LysKOM buffers\", the client will beep and insert a 
+  short notice in all active LysKOM buffers.")
     (kom-text-no-prompts-doc . "\
   Specifies which commands will always prompt for text numbers and which
   will not. Commands that are not listed here will use default behavior.")
@@ -4509,6 +4524,7 @@ up menus.")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM:")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names:")
     (kom-keep-alive-interval-tag . "Keep connection alive interval:")
+    (kom-lost-session-notification-tag . "Notification of lost sessions:")
     (kom-text-no-prompts-tag . "How commands prompt for text numbers:")
     (kom-saved-file-name-tag . "File to archive texts in:")
     (kom-follow-attachments-tag . "Read imported attachments as texts:")

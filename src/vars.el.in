@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.314 2005-02-14 18:59:09 byers Exp $
+;;;;; $Id: vars.el.in,v 44.315 2005-02-24 08:47:05 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.314 2005-02-14 18:59:09 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.315 2005-02-24 08:47:05 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2017,6 +2017,18 @@ to `yes', the behavior is identical to when it is set to `t', but
 frames will not be uniconified.
 
 Values other than `t' and `nil' are reserved for future use."
+  server)
+
+(def-kom-var kom-lost-session-notification 'all-buffers
+  "**How (and if) notification of lost sessions will be handled.
+
+Lost (abnormally terminated) sessions are always notified in the
+session buffer. If this parameter is set to `beep', the client will
+also beep.  If it is set to `all-buffers', the client will beep and
+insert a notification message in any active LysKOM buffer.
+
+Values other than `all-buffers', `beep' and `nil' are reserved for
+future use."
   server)
 
 (def-kom-var kom-ding-pause-amount 0.1

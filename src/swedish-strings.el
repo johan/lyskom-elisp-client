@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.398 2005-02-14 21:58:37 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.399 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.398 2005-02-14 21:58:37 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.399 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1341,6 +1341,11 @@ Du bör sätta den till ett bättre värde.\n")
 %#2s
 LysKOM-sessionen onormalt stängd.
 Felmeddelande: %#1s**************************************************")
+    (closed-connection-other-buf . "
+**************************************************
+LysKOM-sessionen %#1s stängdes onormalt.
+**************************************************
+")
     (dead-session . "LysKOM-sessionen är inte aktiv.")
     (resurrect-session . "LysKOM-sessionen har kopplats ner, vill du ansluta igen? ")
     (not-lyskom-buffer . "Detta är inte en aktiv LysKOM-session.")
@@ -3203,7 +3208,10 @@ Nuvarande rättigheter för %#1P (%#1p):
     (max-text-length . "För inlägg kortare än: ")
     (autowrap-timeout . "Antal sekunder: ")
     (no-timeout . "Ingen tidsbegränsning")
-    
+
+    (session-lost-all-buffers . "Visa notifiering i alla aktiva LysKOM buffrar")
+    (session-lost-beep . "Pip")
+
     (friends . "Vänner och bekanta")
 
     (turned-off      . "Avslaget            ")
@@ -4269,6 +4277,12 @@ ta fram menyer.")
   hålla nätverkskopplingen till LysKOM-servern aktiv. Om din förbindelse
   kopplar ned efter en stunds inaktivitet så kan du sätta detta till ungefär 
   hälften och sedan ge kommandot \"Håll förbindelsen aktiv\".")
+    (kom-lost-session-notification-doc . "\
+  Hur notifiering av onormalt avslutade session sker. Ett meddelande skrivs
+  alltid ut i den avslutade sessionens LysKOM-buffert. Om denna inställning
+  är satt till \"Pip\" kommer klienten dessutom att pipa. Om du har valt \"Visa
+  notifiering i alla aktiva LysKOM-buffrar\" kommer klienten att pipa och
+  skriva ut ett kort meddelande i alla aktiva LysKOM-buffrar.")
     (kom-text-no-prompts-doc . "\
   Den här inställningen styr vilka kommandon som alltid frågar efter 
   textnummer (om man inte anger ett explicit som prefixargument). För 
@@ -4666,6 +4680,7 @@ ta fram menyer.")
     (kom-server-priority-breaks-tag . "Byt till LysKOM med olästa:")
     (kom-complete-numbers-before-names-tag . "Läs mötesnummer före mötesnamn:")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång:")
+    (kom-lost-session-notification-tag . "Notifiering av onormalt avslutade sessioner:")
     (kom-text-no-prompts-tag . "Hur kommandon frågar efter textnummer:")
     (kom-saved-file-name-tag . "Fil att arkivera inlägg i:")
     (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.114 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.115 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.114 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.115 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -97,6 +97,7 @@
     [kom-trim-buffer-minimum]
     [kom-bury-buffers]
     [kom-keep-alive-interval]
+    [kom-lost-session-notification]
     [kom-show-sync-messages]
     "\n"
     [kom-agree-text]
@@ -867,6 +868,9 @@ All key bindings:
     (kom-ansaphone-replies (ansaphone))
     (kom-complete-numbers-before-names (toggle (on off)))
     (kom-keep-alive-interval (number))
+    (kom-lost-session-notification (choice ((const (off nil))
+					    (const (session-lost-all-buffers all-buffers))
+					    (const (session-lost-beep beep)))))
     (kom-text-no-prompts (repeat (cons ((command nil :tag command :format "%[%t%]: %v")
                                         (toggle (yes no)  :tag prompt-for-text-no :format "%[%t%]: %v")
                                         ))))

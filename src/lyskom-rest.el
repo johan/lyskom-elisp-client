@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.253 2005-01-19 13:41:27 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.254 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.253 2005-01-19 13:41:27 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.254 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -3943,7 +3943,19 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                         (lyskom-format-time
                          'timeformat-day-yyyy-mm-dd-hh-mm-ss))
   (setq mode-line-process (lyskom-get-string 'mode-line-down))
-  (beep)
+  ; Notify?
+  (when kom-lost-session-notification    
+    (if (eq 'all-buffers kom-lost-session-notification)
+	(let ((session-nick (lyskom-session-nickname)))	
+	  (save-excursion
+	    (lyskom-traverse buf lyskom-buffer-list
+	      (when (lyskom-buffer-p buf)
+		(set-buffer buf)
+		(lyskom-insert-before-prompt
+		 (lyskom-format 'closed-connection-other-buf
+				      session-nick)))))))
+    (beep)
+    )
   (lyskom-scroll))
 
 

@@ -1,5 +1,23 @@
 2005-02-24  Pontus Freyhult  <pont@soua.net>
 
+	Fix bug 1091:
+	* vars.el.in (kom-lost-session-notification): New variable.
+
+	* option-edit.el (lyskom-custom-variables): Added 
+	kom-lost-session-notification.
+	(lyskom-customize-buffer-format): Dito.
+
+	* english-strings.el, swedish-strings.el (lyskom-custom-strings): 
+	Added kom-lost-session-notification-tag and
+	kom-lost-session-notification-doc.
+
+	* englist-strings.el, swedish-strings.el (local): Added 
+	closed-connection-other-buf, session-lost-beep and 
+	session-lost-all-buffers.
+	
+	* lyskom-rest.el (lyskom-sentinel): Do notification in other buffers
+	if desired.
+
 	Fix bug 1536:
 	* command.el (lyskom-start-of-command): Pass port if non-standard.
 	Also explicitly send current password (if available).
