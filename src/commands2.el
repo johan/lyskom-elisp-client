@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.213 2004-11-12 10:54:56 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands2.el,v 44.214 2004-11-12 16:17:17 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.213 2004-11-12 10:54:56 _cvs_pont_lyskomelisp Exp $\n"))
+              "$Id: commands2.el,v 44.214 2004-11-12 16:17:17 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -799,12 +799,15 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 				    (nth 5 s2))))))
 
     (lyskom-traverse session session-list
-      (lyskom-format-insert 'session-list-unreads-in-confs
-			    (nth 0 session)
-			    (nth 3 session)
-			    (nth 2 session)
-			    (nth 4 session)
-			    ))))
+      (if (zerop (nth 2 session))
+	(lyskom-format-insert 'session-list-no-unread-in 
+			      (nth 0 session))
+	(lyskom-format-insert 'session-list-unreads-in-confs
+			      (nth 0 session)
+			      (nth 3 session)
+			      (nth 2 session)
+			      (nth 4 session))))))
+
 
 ;;; ================================================================
 ;;;                 Lista Nyheter - List News
