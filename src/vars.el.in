@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.6 1995-10-25 09:31:36 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.7 1995-10-28 07:36:39 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.6 1995-10-25 09:31:36 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.7 1995-10-28 07:36:39 davidk Exp $\n"))
 
 
 
@@ -255,6 +255,13 @@ he gets a y-or-n-p question for all recipients.")
 
 (defvar kom-max-buffer-size nil
   "*If non-nil, ensure that buffers won't grow any larger than this")
+
+(defvar lyskom-server-aliases
+  '(("kom.lysator.liu.se" . "LysKOM")
+    ("kom.ludd.luth.se" . "LuddKOM")
+    ("rydkom.rydnet.lysator.liu.se" . "RydKOM")
+    ("kom.csd.uu.se" . "CSD-KOM"))
+  "An alist mapping server names to shorter identification strings")
 
 (defconst lyskom-elisp-variables '(
   kom-do-when-done

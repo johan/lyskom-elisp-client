@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.6 1995-10-25 09:36:44 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.7 1995-10-28 07:36:31 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.6 1995-10-25 09:36:44 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.7 1995-10-28 07:36:31 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2133,11 +2133,9 @@ One parameter - the prompt string."
 ;;
 (defun lyskom-mode-name-from-host ()
   "Calculate what to identify the buffer with."
-  (if (string-match "kom\\.ludd\\.luth\\.se.*" 
-		    (process-name (get-buffer-process (current-buffer))))
-      "LuddKOM"
-    "LysKOM"))
-	       
+  (let ((server  (process-name (get-buffer-process (current-buffer)))))
+    (or (cdr (assoc server lyskom-server-aliases))
+	(format "LysKOM(%s)" server))))
 
 
 ;;; Validation of kom-tell-phrases

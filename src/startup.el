@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.6 1995-10-27 03:00:09 davidk Exp $
+;;;;; $Id: startup.el,v 38.7 1995-10-28 07:36:35 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.6 1995-10-27 03:00:09 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.7 1995-10-28 07:36:35 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -47,9 +47,10 @@
 Optional arguments: HOST, USERNAME and PASSWORD.
 
 See lyskom-mode for details."
-  (interactive (list (lyskom-read-string (lyskom-format 'server-q
-					  (or (getenv "KOMSERVER")
-					      lyskom-default-server)))
+  (interactive (list (lyskom-read-server-name
+		      (lyskom-format 'server-q
+				     (or (getenv "KOMSERVER")
+					 lyskom-default-server)))
 		     nil
 		     nil))
 
@@ -310,6 +311,27 @@ WANT-PERSONS is t for persons, nil for confs."
 		       pers-no 100 1
 		       pers-no lyskom-pers-no))
 
+
+(defun lyskom-read-server-name (prompt)
+  "Read the name of a LysKOM server.
+Copmpletion is done on the servers i lyskom-server-aliases. If an
+alias name is entered, the corresponding address is returned."
+  ;; Create a completion table like
+  ;; (("kom.lysator.liu.se" . "kom.lysator.liu.se")
+  ;;  ("LysKOM" . "kom.lysator.liu.se"))
+  (let ((known-servers
+	 (append (mapcar (function (lambda (pair)
+				     (cons (car pair) (car pair))))
+			 lyskom-server-aliases)
+		 (mapcar (function (lambda (pair)
+				     (cons (cdr pair) (car pair))))
+			 lyskom-server-aliases)))
+	(completion-ignore-case t)
+	server)
+    (setq server (completing-read prompt known-servers nil nil))
+    (or (cdr (assoc server known-servers))
+	server)))
+      
 
 ;;; ================================================================
 ;;;                        The LysKOM mode.
