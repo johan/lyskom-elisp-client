@@ -1,3 +1,10 @@
+Sun Oct  6 10:11:25 1996  David Kågedal  <kg@infovav.se>
+
+	* utilities.el (lyskom-setup-faces): Använd device-class istället
+ 	för console-type.
+
+	* lyskom-rest.el (lyskom-format-insert): Använd en marker.
+
 Sun Oct  6 02:55:49 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-mark-as-read): Markera texten som läst även
