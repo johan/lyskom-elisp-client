@@ -19,8 +19,6 @@ bort ur den h{r filen.
 1. Saker som skall fixas innan n{sta release (0.34):
 ================================================================
 
-* lyskom-insert-before-prompt stoppar in saker i fel ordning.
-
 * lyskom-end-of-command-hook.
 
 * Status person borde ge tiden f|r skapandet.  Samma f|r status m|te
