@@ -21,7 +21,7 @@ bort ur den h{r filen.
 
 
 ================================================================
-1. Saker som skall fixas innan n{sta release (0.34):
+1. Saker som skall fixas innan n{sta release (0.35):
 ================================================================
 
 * Fixa loginsekvensen s} den tittar p} r{tt variabler.
@@ -46,10 +46,7 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
 * Dokumentera alla {ndringar.
 
-
-================================================================
-0.35
-================================================================
+* Stoppa in Tommys b|rja p} ny sida vid vissa funktioner-funktion.
 
 * N{r man skriver inl{gg och har kom-emacs-knows-iso-8859-1 nil s}
   borde den st{lla om lyskom-header-separator och [rende: till att
