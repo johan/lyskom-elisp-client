@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.14 1999-06-28 10:41:06 byers Exp $
+;;;;; $Id: prefetch.el,v 44.15 1999-06-29 10:20:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.14 1999-06-28 10:41:06 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.15 1999-06-29 10:20:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -646,11 +646,14 @@ Put the requests on QUEUE."
   (lyskom-stop-prefetch)
   (let ((size (length memberships))
 	(i 0)
-        (old-mships (mapcar (lambda (mship)
-                              (and (lyskom-try-get-membership
-                                    (membership->conf-no mship))
-                                   (membership->conf-no mship)))
-                            memberships)))
+;;; Commented out 1999-06-28 byers
+;;; Used by removed code below
+;;;        (old-mships (mapcar (lambda (mship)
+;;;                              (and (lyskom-try-get-membership
+;;;                                    (membership->conf-no mship))
+;;;                                   (membership->conf-no mship)))
+;;;                            memberships))
+        )
     (lyskom-insert-memberships-in-membership memberships)
     (while (< i size)
       (let ((membership (aref memberships i)))

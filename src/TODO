@@ -6,19 +6,11 @@ Att göra i elisp-klienten
             Om du fixar någonting som står med på den här
             listan, glöm inte att ta bort det från listan!
 
-Henrik Rindlöws patch
 
-Man skall kunna välja pip vid asynkrona meddelanden per möte, inte
-bara per meddelandetyp. Man skall kunna stänga av pipen när
-kom-ansaphone-on är sann. 
+Om man går med i ett möte man är passiv i så borde man inte få frågan
+om prioritet etc.
 
-1) kom-ding-on-X-messages kan vara en lista där car är möte och cdr är
-   det verkliga värdet. Nyckeln t ger default. Nackdelen är att man
-   inte kan skicka den här till kom-beep.
-
-2) Ny variabel kom-ansaphone-is-silent för att blockera.
-
-
+Kolla strängar där noll är passivt medlemskap.
 
 
 PRIORITERA
@@ -565,11 +557,11 @@ bilder för.
     FIX BY: 0.46
 
 
-Ett kommando som läser inläggsnumret man står på och gör det till
-prefix-argument vore smidigt rätt ofta.
 
-Synd att 'k' och andra liknande tangenter inte funderar över vilket
-inlägg man har markören på.
+
+
+
+
 
 
 Jag skrev ett inlägg.  Gjorde sedan snabbt C-c C-c M return.
@@ -595,42 +587,8 @@ att köra från en annan kontinent underlättar nog här ;-)
 
 
 
-Det vore trevligt om vilka-kommandots resultat innehöl en tidsstämpel.
-
-Kanske att slutrad
-    Sammanlagt 87 synliga aktiva användare.
-
-ändrades till att bli
-    Sammanlagt 87 synliga aktiva användare, söndag 18:24.
 
 
-
-Nej.  Ibland kan det finnas skäl att skicka allmänna meddelanden.
-Däremot borde elispklienten dresseras så att man måste använda aSänd
-meddelande inte kan skicka allmänna meddelanden, och kommandot aSända
-alarmmeddelande införas.  Någon frivillig?
-
-Jag funderar på att införa den här regeln, genom att skriva ett
-inlägg i Nyheter om LysKOM:
-
-       Allmänna meddelanden
-
-       Allmänna meddelanden är till för exceptionella händelser som
-       rör LysKOM-systemet.  De används för att förvarna när
-       LysKOM-servern tas ner för planerat underhåll.  Om det
-       föreligger fara för liv eller egendom får de användas även
-       för annat -- om t ex någon upptäcker att kylan i Lysators
-       datorhall inte fungerar, temperaturen har skenat till farliga
-       nivåer, och försök att få tag på en ansvarig person på ett
-       bättre sätt misslyckats är det tillåtet att ropa på hjälp med
-       ett alarmmeddelande.
-
-       Annat bruk är normalt inte tillåtet.  Överträdelse beivras
-       genom utkastning av sessionen.  Upprepat missbruk kan leda till
-       förlust av möjligheten att skicka allmänna meddelanden.
-
-       (Dessa regler gäller ej meddelanden som riktas till ett möte
-       eller en enskild person.)
 
 
 
@@ -654,30 +612,6 @@ På detta vis ser jag om det har dykt upp olästa i andra lyskomsystem.
 Det just nu aktiva lyskomsystemet ser jag ju ändå statusen för.
 
 Naturligtvis bör beteendet vara valbart.
-
-
-
-
-
-
-
-
-- När man sätter a automatsvar så vore det trevligt om man blev frågad
-  vad för meddelande man vill ha, med det förra meddelandet som
-  default. Typ: Meddelande ("Lunch") ? _
-
-    Klart.
-
-- Det vore kul om man kunde påverka lista nyheter så den listar möten
-  med mer än foo olästa. Då kunde man ju kunna skriva C-u 0 ln för att
-  få se alla möten. Varför? För att status person är plågsamt långsamt
-  (jag förmodar att det frågar lyskomservern i stället för att glo i
-  sin egen cache).
-
-    Klart.
-
-
-
 
 
 
@@ -723,53 +657,6 @@ någon av krokarna utan att jag behöver ha dem med i koden nedan...).
   (add-hook 'lyskom-after-command-hook 'pbn-kom-frame-no-unread))
 (add-hook 'lyskom-login-hook 'pbn-lyskom-login-hook)
 
-
-
-
-
-
-
-
-
-Nyligen skapades en ny person som heter "Hans-Erik Persson". Det
-ställer till problem för folk som vill skicka brev till mig "Hans
-Persson" eftersom namnmatchningen tycker att det finns två stycken
-personer som heter "hans persson", så man måste skriva med hela
-parentesen.
-
-Nu undrar jag varför det fungerar så, för mer än en gång när jag tänkt
-skicka texter till Macintoshmötet har jag skrivit in "Mac" och tryckt
-return och då hamnat i "Mac"s brevlåda. Är det för att det matchar
-hela namnet? 
-
-Jag skulle vilja föreslå att det görs skillnad på return och tab i
-kompletteringssammanhang. Om man skriver "hans persson" TAB så bör man
-få två svar, medan "hans persson" RET borde kunna ge bara ett, för det
-matchar mig exakt, men bara halvdant på den andra personen. Är det en
-bra eller dålig idé?
-
-    Klart.
-
-
-
-
-
-
-
-
-LysKOM elisp-klient version 0.45.1.
-Försöker koppla upp mot kom.lysator.liu.se.
-Uppkopplingen klar. Serverns versionsnummer är 1.9.
-
-på Xemacs 20.4
-
-Vid "list möten" utan parametrar (dvs return vid frågan)
-
-Internal Lyskom format error.: lyskom-format, ": argument error"
-
-Inget mera ploppar ut som resultat.
-
-        Antagligen klart. Vem vet.
 
 
 
@@ -1169,31 +1056,6 @@ RFC 2060                       IMAP4rev1                   December 1996
 
 
 
-
-
-
-
-Finns det någon motsvarighet till "Återse lista" (bundet till ål) fast
-för vanliga olästa?  Det jag skulle vilja se är motsvarande detta
-
-Återse nästa kommentar - Återse lista
-Återse en kommentar till inlägg 3547637.
-Återse en kommentar till inlägg 3547606.
-Återse nästa kommentar -
-
-dvs information om det kommentarsträd jag just håller på att läsa.
-
-KLART.
-
-
-
-
-
-
-
-
-
-
 Jag har ett flertal gånger upplevt att elispklienten gått
 bärsärkagång, och kom just på vad som orsakade problemet; i
 aInställningar (för) LysKOM hade jag angivit en ljudspelare
@@ -1216,185 +1078,6 @@ gnu/linux
 Om någon ger sig på att rota efter felet och inte lyckas
 återskapa situationen/tycker sig behöva en
 kom-compile-bug-report, är det bara att säga till.
-
-
-
-
-
-
-
-
-
-
-
-
-Jag fumlade på tangentbordet och kom åt "p" istället för "å" precis
-efter att jag loggat in. Då blev det fult.
-
-> Återse nästa markerade - Personligt svar
-> 
-> Jag förstår inte vems inlägg du vill
->  skriva ett privat svar till.
-Klart
-
-
-
-
-
-
-
-
-
-
-
-
-
-Här får du lite diverse småkorrigeringar (ja, några av dem är petiga):
-
---- swedish-strings.el.orig	Tue Nov 17 21:32:28 1998
-+++ swedish-strings.el	Tue Nov 17 22:15:19 1998
-@@ -395,7 +395,7 @@
- ;    (northward . "norrut")
- ;    (southward . "s\366derut")
- ;    (permanent-sundown . "Solen kommer inte att g\345 upp. Flytta %#1s!")
--;    (permanent-sunup . "Solen kommer inte att g\345 ned. Fytta %#1s!")
-+;    (permanent-sunup . "Solen kommer inte att g\345 ned. Flytta %#1s!")
- ;    (sunup-soon . "Solen g\345r snart upp")
- ;    (sundown-recently . "Solen gick nyligen ned")
- ;    (after-sunset . "Solen har g\345tt ned")
-@@ -551,7 +551,7 @@
- Meddelandet du f\366rs\366kte s\344nda till %#1M var:
- %#2t\n")
-     (only-last . "Endast l\344sa senaste (0 - %#1d) i %#2s: ")
--    (only-error . "N\345got gick galet. Sorry.\n")
-+    (only-error . "N\345got gick galet. Ledsen.\n")
- 
-     (you-have-unreads . "Du har %#1d ol\344sta inl\344gg i %#2M\n")
-     (you-have-an-unread . "Du har 1 ol\344st inl\344gg i %#1M\n")
-@@ -856,7 +856,7 @@
-     (too-high-goto-2 . "Du st\345r f\366r h\366gt upp. G\345 ner till rad 2.")
-     (too-low-go-up . "Du kan inte pusha sista raden. G\345 upp en rad.")
-     (all-confs-popped .  "Alla m\366ten \344r poppade.")
--    (prio-died . "Flyttningen misslyckades. Sorry. D\366da bufferten.")
-+    (prio-died . "Flyttningen misslyckades. Ledsen. D\366da bufferten.")
-     (new-priority . "Ny prioritet? (0 (l\345g) - 255 (h\366g)) ")
-     (new-prio . "%6#1d")
- 
-@@ -1882,7 +1882,7 @@
- \\[widget-forward] flyttar till nästa inställning
- \\[widget-button-press] ändrar värdet
- 
--Hälptexter:  [?] Visa hjälptext    [!] Göm hjälptext
-+Hjälptexter: [?] Visa hjälptext    [!] Göm hjälptext
- Listor mm.:  [INS] Lägg till rad   [DEL] Ta bort rad    [*] Ändra värde")
- 
-     (section . "------------------------------------------------------------------------------\n")
-@@ -1947,14 +1947,14 @@
- 
-     Något annat fönster 
-         I ett annat fönster i samma frame som LysKOM. Om det bara
-         finns ett
--        fönster så kommer ett nytt att skapas (och tas bort när man är klar.)
-+        fönster så kommer ett nytt att skapas (och tas bort när man är klar).
- 
-     I en annan frame
-         I en annan frame än LysKOM. Om det bara finns en frame så
-         kommer en
--        ny frame att skapas, och tas bort när man är klar. 
-+        ny frame att skapas (och tas bort när man är klar). 
- 
-     I en ny frame
--        En ny frame skapas för ändamålet, och tas bort när man är klar.
-+        En ny frame skapas för ändamålet (och tas bort när man är klar).
- 
-     LysKOM-buffertens fönster 
-         LysKOM-buffertens fönster kommer att användas, och LysKOM kommer
-@@ -2015,7 +2015,7 @@
-     %  - Sätter in mellanslag om det ser ut att behövas.
-     %% - Sätter in ett procenttecken.
- 
--  Nägra exempel:
-+  Några exempel:
- 
-     \"%[%c% %m%] - \"             Standardprompt
-     \"%[%s: %c% %m%] - \"         Till exempel \"LysKOM: Se tiden - \"")
-@@ -2036,7 +2036,7 @@
-     %  - Sätter in mellanslag om det ser ut att behövas.
-     %% - Sätter in ett procenttecken.
- 
--  Nägra exempel:
-+  Några exempel:
- 
-     \"%[%c% %m%].\"             Standardprompt
-     \"%[%s: Kör %c% %m%]...\"   Till exempel \"LysKOM: Kör Se tiden...\"")
-@@ -2195,9 +2195,9 @@
- 
- 
-     (kom-idle-hide-doc . "\
-- I vilkalistan visas per default enbart de sessioner som har varit
-   aktiva
-+ I vilkalistan visas normalt enbart de sessioner som har varit
-   aktiva
-   under den senaste tiden. Denna inställning bestämmer hur många
-   minuter
--  en session får ha varit stilla och ändå visas i vilkalistan.")
-+  en session får ha varit inaktiv och ändå visas i vilkalistan.")
- 
- 
-     (kom-show-footnotes-immediately-doc . "\
-@@ -2229,7 +2229,7 @@
- 
-   Om man läser inläggen i tidsordning kommer de att visas i ordningen
-   1002, 1003, 1004, 1005, 1006 och 1007. I kommentarsordning blir det
--  i stället 1003, 1003, 1006, 1004, 1005 och 1007.")
-+  i stället 1002, 1003, 1006, 1004, 1005 och 1007.")
- 
- 
-     (kom-continuous-scrolling-doc . "\
-@@ -2306,16 +2306,16 @@
- 
-     (kom-default-message-recipient-doc . "\
-   Denna inställning bestämmer vem som kommer att vara
-   defaultmottagare för
-- personliga meddelande man skickar. Alternativen som finns är att
-   meddelanden
-+  personliga meddelanden man skickar. Alternativen som finns är att meddelanden
-   per default är allmänna, att avsändaren för det senast mottagna meddelandet
-   skall vara default eller att mottagaren för det senaste
-   gruppmeddelandet
-- (eller avsändaren av det senaste personliga eller almänna
-   meddelandet) skall
-+  (eller avsändaren av det senaste personliga eller allmänna meddelandet) skall
-   vara mottagare.")
- 
- 
-     (lyskom-filter-outgoing-messages-doc . "\
-   Om denna inställning är påslagen så kommer meddelanden som skickas 
-- automatiskt, till exempel automatiska svar och svar på
-   fjärkontrollförsök
-+ automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
-   även att visas som om man hade skickat det manuellt.")
- 
-     (kom-friends-doc . "\
-@@ -2582,8 +2582,8 @@
- 
- ;;;; ================================================================
- ;;;; Tell phrases should really be configured with the default
--;;;; language used at the server and not for person reading if they
--;;;; happens to differ. This is of coarse because they are sent to
-the
-+;;;; language used at the server and not for the person reading if
-they
-+;;;; happen to differ. This is of course because they are sent to the
- ;;;; server for everybody else to see.
- 
- ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
-
-
-
-
-
-
 
 
 
@@ -1509,24 +1192,6 @@ läget "baklänges", vid "återse alla markerade" om jag är i läget
 "framlänges".
 
 Jag kör LysKOM elisp-klient version 0.45.
-
-
-
-
-
-
-
-
-Om man kommenterar mer än ett inlägg samtidigt, där flera av inläggen
-skrivits av en författare som inte är med i mötet, fick jag nyss två
-frågor om jag ville addera hans brevlåda som mottagare till inlägget.
-Det resulterade i:
-
-> Texten kunde ej skapas. Felet: Otillåtet misc-fält. (Internt fel).
-
-Jag löste det genom att manuellt addera mottagaren innan jag skickade
-in. Jag har inte provat att återskapa felet. Klient: 0.45.1, kanske
-det är något som åtgärdats i senare versioner?
 
 
 
@@ -1670,122 +1335,10 @@ nya mötet ska ha samma prioritet som det jag anger.
 
 
 
-
-
-
-
-Ärende-rad är bra, men i dagens läge beskriver ärende-raden vad som
-skrevs i ursprungsinlägget. Jag föreslår att klienten frågar
-användaren om hon vill byta ärende när hon flyttar en text. Om det
-inte går att enkelt jämföra vilka möten man är på väg att skriva sitt
-svar i med vilka möten föregående inlägg existerar i skulle man kunna
-knyta funktionen till:
-
-C-c C-a C-f runs the command kom-edit-move-text:
-
-
-
-
-
-
-
-
-
-
-
-
-
-Min patch på lyskom-buttons.el: (handgenererad eftersom jag inte har
-diff heller :-)
-
-
-
-  This function attempts to load the URL in a running Netscape, but
-  failing
-  that, starts a new one."
--   (let* ((proc (apply 'start-process "netscape"
-+   (let* ((url-string (if (eq window-system 'win32)
-+ 			 (list url)
-+ 		       (list "-remote"
-+ 			   (format "openUrl(%s)" url))))
-+ 	 (proc (apply 'start-process "netscape"
-                        nil
-                        (if (listp kom-netscape-command)
-                            (car kom-netscape-command)
-                          kom-netscape-command)
-                        (if (listp kom-netscape-command)
-                            (append (cdr kom-netscape-command)
--                                   (list "-remote"
--                                         (format "openUrl(%s)" url)))
--                         (list "-remote"
--                               (format "openUrl(%s)" url)))))
-+ 				  url-string)
-+ 			url-string)))
-           (status 'run)
-           (exit nil))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Jag har tidigare efterlyst möjligheten att kunna skriva en egen text
 att få visad istället för originalärdenderaden på texter jag
 markerat. Allt för ofta har mina markerade texter ärenderader som inte
 har ett skvatt med innehållet att göra.
-
-
-
-
-
-
-
-
-
-
-
-
-Jo, lyskom är ju riktigt trevligt när man börjar lära sig det. Fast
-det är en grej som jag tycker var bättre i NTPro, Nikom. (KOM-system
-för BBS:er på Amiga).
-
-Det är att vem som har skrivit texten står längst ner istället för i
-headern till texten, för oftast läser man ju inte headern. Man läser
-ju texten och sedan är ögonen i slutet av texten. Då kanske man
-undrar vem i hela friden det är som skrivit den här texten, då är det
-smidigare om det står i slutet vem som skrivit den istället för att
-det står uppe i headern, mycket jobbigare att åka upp med ögonen och
-titta där varje gång man vill se vem som skrivit texten.
-
-ex:
-
-(Slut på text 8743175 av Peter Magnusson)
-Kommentar i text 8743257 av gurgelbrännare
-Kommentar i text 8745455 av foo
-Kommentar i text 8745754 av bar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.19 1998-06-02 12:14:59 byers Exp $
+;;;;; $Id: menus.el,v 44.20 1999-06-29 10:20:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.19 1998-06-02 12:14:59 byers Exp $\n"))
+	      "$Id: menus.el,v 44.20 1999-06-29 10:20:21 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -165,7 +165,7 @@
 (defun lyskom-define-menu-xemacs (menus)
   (let ((type nil)
         (parameters nil))
-    (ignore type parameters)            ; Are they ever used?
+    (lyskom-ignore type parameters)            ; Are they ever used?
     (cond ((null (car menus)))
           ((listp (car menus))          ; Menu bar
            (mapcar 'lyskom-define-menu-xemacs

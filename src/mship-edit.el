@@ -30,7 +30,7 @@
     (let ((total (- (window-width) 1 3 3 2 12 2 5 2 3 1)))
       (setq lp--last-window-width (window-width))
       (setq lp--last-format-string
-            (concat "%#1c %=3#2d %#9c %=-" (number-to-string total) 
+            (concat "%#1c %=3#2s %#9c %=-" (number-to-string total) 
                     "#3M  %=-12#4s %=5#5s  %[%#10@%#6c%]%[%#11@%#7c%]%[%#12@%#8c%]")))))
           
 
@@ -55,7 +55,11 @@
     (concat 
      (lyskom-format (lp--compute-format-string)
                     (if (lp--entry->selected entry) ?* ?\ )
-                    (membership->priority (lp--entry->membership entry))
+                    (if (zerop (membership->priority
+                                (lp--entry->membership entry)))
+                        "-"
+                      (int-to-string (membership->priority
+                                (lp--entry->membership entry))))
                     conf-stat
                     (lyskom-return-date-and-time 
                      (membership->last-time-read (lp--entry->membership entry))
