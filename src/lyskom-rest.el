@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.6 1993-06-23 19:24:40 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.7 1993-08-16 17:03:18 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.6 1993-06-23 19:24:40 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.7 1993-08-16 17:03:18 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1735,11 +1735,15 @@ One parameter - the prompt string."
 from the value of kom-tell-phrases-internal."
   (interactive)
   (let (invalid)
-    (cond ((setq invalid (lyskom-missing-fields kom-tell-phrases-internal
-						kom-tell-phrases))
+    (cond ((setq invalid
+		 (lyskom-missing-fields
+		  lyskom-tell-phrases-validation-keyword-list
+		  kom-tell-phrases))
 	   (error "%s must be in kom-tell-phrases" invalid))
-	  ((setq invalid (lyskom-missing-fields kom-tell-phrases
-						kom-tell-phrases-internal))
+	  ((setq invalid
+		 (lyskom-missing-fields 
+		  kom-tell-phrases
+		  lyskom-tell-phrases-validation-keyword-list))
 	   (error "%s should not be in kom-tell-phrases" invalid)))))
 
 
