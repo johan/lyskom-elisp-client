@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.216 2005-02-14 18:14:33 byers Exp $
+;;;;; $Id: commands2.el,v 44.217 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.216 2005-02-14 18:14:33 byers Exp $\n"))
+              "$Id: commands2.el,v 44.217 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3373,7 +3373,8 @@ all conferences from that date forward."
          (lyskom-cancel-calls calls)
          (signal 'quit nil)))
       (when (marker-position (cdr count))
-        (goto-char (cdr count)))
+        (goto-char (cdr count))
+	(set-marker (cdr count) nil))
 
       (cond ((eq 0 (car count))
              (lyskom-format-insert 'no-new-conferences 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.119 2005-01-09 01:16:01 byers Exp $
+;;;;; $Id: edit-text.el,v 44.120 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.119 2005-01-09 01:16:01 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.120 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -258,7 +258,7 @@ nil             -> Ingenting."
 		  where-put-misc)
     (set-buffer edit-buffer)
     (goto-char where-put-misc)
-    ))
+    (set-marker where-put-misc nil)))
 
 
 (defun lyskom-edit-insert-misc-conf (conf-stat string stream number)
@@ -1221,7 +1221,8 @@ in the edit buffer."
           (blocking-do 'get-text-stat text-no)
           (lyskom-get-string 'comment)
           insert-at text-no)
-       (lyskom-error "%s" (lyskom-get-string 'no-such-text-m))))))
+       (lyskom-error "%s" (lyskom-get-string 'no-such-text-m)))
+     (set-marker insert-at nil))))
 
 
 (defun kom-edit-add-recipient ()
@@ -1359,7 +1360,8 @@ RECPT-TYPE is the type of recipient to add."
            (lyskom-edit-do-add-recipient/copy recpt-type
                                               (conf-stat->conf-no conf-stat)
                                               edit-buffer)))
-       (when win-config (set-window-configuration win-config)))))))
+       (when win-config (set-window-configuration win-config))))
+     (set-marker insert-at nil))))
 
 (defun lyskom-edit-sub-recipient/copy (recpt-no edit-buffer)
   "Remove the recipient having RECPT-NO from EDIT-BUFFER"
@@ -1491,6 +1493,7 @@ link as a string."
     (insert
      (concat (lyskom-format
               (format "%%#1@%%[%s%%] %%#2s" (lyskom-get-string 'aux-item-prefix))
+	      ; FIXME: What happens with marker?
               (lyskom-default-button 'aux-edit-menu (cons (current-buffer)
                                                           (point-marker)))
               (lyskom-aux-item-call item 
@@ -1616,7 +1619,9 @@ to lyskom-edit-replace-headers"
       (lyskom-edit-insert-miscs misc-list subject "" aux-list)
       (delete-region start end)
       (goto-char end)
-      (delete-char 1))))
+      (delete-char 1)
+      (set-marker start nil)
+      (set-marker end nil))))
 
 (defun lyskom-looking-at-header (header match-number)
   "Check if point is at the beginning of a header of type HEADER.

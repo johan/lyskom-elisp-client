@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.7 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: help.el,v 44.8 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.7 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: help.el,v 44.8 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 
@@ -216,4 +216,5 @@
           (while (re-search-forward "^\\s-+" nil t)
             (replace-match "" nil nil))
           (lyskom-fill-region (point-min) (point-max))))
-      (lyskom-insert "\n\n")))
+      (lyskom-insert "\n\n")
+      (set-marker start nil)))

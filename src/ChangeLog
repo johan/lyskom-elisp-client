@@ -1,3 +1,22 @@
+2005-03-15  Pontus Freyhult  <pont@soua.net>
+
+	* perf.el (fields-new): Dispose of marker when done.
+
+	* help.el (lyskom-help-format-p): Dito.
+	
+	* lyskom-rest.el (lyskom-do-special-inserts): Dito.
+	(lyskom-insert-before-prompt): Dito.
+	(lyskom-render-html-region): Dito.
+	
+	* commands2.el (lyskom-list-new-conferences): Dispose of marker when
+	we're done with it.
+
+	* edit-text.el (lyskom-edit-insert-miscs): Dito.
+	(kom-edit-add-comment): Dito.
+	(lyskom-edit-add-recipient/copy): Dito.
+	(lyskom-edit-insert-aux-item): Added FIXME about marker.
+	(lyskom-edit-replace-headers): Dispose of markers when done.
+	
 2005-03-08  David Byers  <byers@lysator.liu.se>
 
 	* compatibility.el (lyskom-encode-coding-string): Renamed

@@ -50,7 +50,8 @@
 				fields))
 	     (setq string (substring string (match-end 0))))))
     (insert string)
-    (cons (current-buffer) fields)))
+    (cons (current-buffer) fields)
+    (set-marker fields nil)))
 
 
 (defun fields-replace (fields item string)

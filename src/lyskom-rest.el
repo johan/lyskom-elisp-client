@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.255 2005-03-07 19:03:12 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.256 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.255 2005-03-07 19:03:12 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.256 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1048,7 +1048,8 @@ back, and works even if from has the property."
             (error (apply 'message "%S" val)))
           (setq start next)
           (setq bounds (lyskom-next-property-bounds
-                        (1- start) (point-max) sym))))
+                        (1- start) (point-max) sym)))
+	(set-marker next nil))
     (error (lyskom-ignore var))))
 
 (defun lyskom-do-insert (string)
@@ -1128,7 +1129,8 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
         (remove-text-properties (point) (+ (point) 1) (text-properties-at (point)))
         (lyskom-do-insert string)
         (delete-char 1))
-      (goto-char oldpoint))
+      (goto-char oldpoint)
+      (set-marker oldpoint nil))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window
                (not (pos-visible-in-window-p (point) window)))
@@ -2207,7 +2209,9 @@ in lyskom-messages."
                     (while (re-search-forward "<body[^>]*>" end t)
                       (replace-match "<body>")))))
               (funcall fun start end)
-              (add-text-properties (point-min) (point-max) '(end-closed nil))))
+              (add-text-properties (point-min) (point-max) '(end-closed nil))
+	      (set-marker start nil)
+	      (set-marker end nil)))
         (error (lyskom-ignore var)))))
 
 
