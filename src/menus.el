@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.18 1998-03-12 18:54:54 davidk Exp $
+;;;;; $Id: menus.el,v 44.19 1998-06-02 12:14:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.18 1998-03-12 18:54:54 davidk Exp $\n"))
+	      "$Id: menus.el,v 44.19 1998-06-02 12:14:59 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)

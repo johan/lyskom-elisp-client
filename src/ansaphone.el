@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.3 1997-10-12 10:31:40 byers Exp $
+;;;;; $Id: ansaphone.el,v 44.4 1998-06-02 12:14:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -43,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.3 1997-10-12 10:31:40 byers Exp $\n"))
+	      "$Id: ansaphone.el,v 44.4 1998-06-02 12:14:10 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 

@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.5 1997-07-10 08:58:46 byers Exp $
+;;;;; $Id: slow.el,v 44.6 1998-06-02 12:15:18 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.

@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.57 1998-02-24 22:51:52 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.58 1998-06-02 12:14:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.57 1998-02-24 22:51:52 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.58 1998-06-02 12:14:54 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2948,8 +2949,7 @@ One parameter - the prompt string."
   (lyskom-message "%s" prompt-str)
   (let ((input-string "")
 	(input-char)
-	(cursor-in-echo-area t)
-        (enable-multibyte-characters nil))
+	(cursor-in-echo-area t))
     (while (not (or (eq (setq input-char 
 			      (condition-case err
 				  (read-char)

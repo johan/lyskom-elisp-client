@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.42 1998-05-08 13:58:57 petli Exp $
+;;;;; $Id: swedish-strings.el,v 44.43 1998-06-02 12:15:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.42 1998-05-08 13:58:57 petli Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.43 1998-06-02 12:15:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -311,7 +312,7 @@ du har läst klart allting. Kom tillbaks senare.
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
     (what-mark-to-view . "Vilken markering vill du återse? ")
     (whos-passwd . "Vem vill du ändra lösenord för? (dig själv) ")
-    (old-passwd . "Mata in ditt lösenord: ")
+    (old-passwd . "Mata in ditt nuvarande lösenord: ")
     (new-passwd . "Mata in det nya lösenordet: ")
     (changing-passwd . "Ändrar lösenordet...")
     (retype-dont-match . "Lösenorden är inte samma. Gör om.\n")

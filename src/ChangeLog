@@ -1,3 +1,48 @@
+Tue Jun  2 11:49:27 1998  David Byers  <davby@ida.liu.se>
+
+	* Lade in -*-coding: raw-text;-*- i alla filer.
+
+	* lyskom-rest.el (silent-read): Tog bort sättning av
+	enable-multibyte-characters.
+
+	* buffers.el: Använd set-buffer-multibyte.
+
+	* defvar.el (kom-dont-read-saved-variables): Tog bort defvar av
+	enable-multibyte-characters 
+
+	* defvar.el (lyskom-setup-minibuffer-variables): Använd
+	set-buffer-multibyte.
+
+	* compatibility.el (set-buffer-multibyte): Ny
+	kompatibilitetsdefinition. 
+
+	* swedish-strings.el, english-strings.el (lyskom-message): Ändrade 
+	på strängen old-passwd.
+
+Mon Jun  1 13:34:31 1998  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Använd lyskom-buffer-p för att testa om man 
+	skall fråga om bufferten skall återanvändas. Det gör att man
+	enbart får frågan om bufferten finns och det finns en levande
+	uppkoppling i den.
+
+	* startup.el (lyskom): Skicka t i may-be-dead till lyskom-buffer-p 
+	så att en stängd lyskom-buffert återanvänds korrekt.
+	
+	* commands2.el (lyskom-buffer-p): Lade till optional argument
+	may-be-dead.
+
+Wed May 27 16:30:47 1998  David Byers  <davby@ida.liu.se>
+
+	* completing-read.el (lyskom-complete-string): Lade till nreverse
+	igen.
+	* vars.el.in (lyskom-ok-to-send-new-calls): Lade till
+	lyskom-ok-to-send-new-calls
+	* services.el (blocking-return): Tog bort
+ 	lyskom-ok-to-send-new-calls.
+	* vars.el.in (kom-mail-address): user-full-name är en funktion,
+	inte en variabel.
+
 Wed May  6 17:45:57 1998  Peter Liljenberg  <petli@lysator.liu.se>
 
 	* swedish-strings.el, english-strings.el, commands1.el:

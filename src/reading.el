@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.3 1997-02-07 18:08:04 byers Exp $
+;;;;; $Id: reading.el,v 44.4 1998-06-02 12:15:11 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.3 1997-02-07 18:08:04 byers Exp $\n"))
+	      "$Id: reading.el,v 44.4 1998-06-02 12:15:11 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
