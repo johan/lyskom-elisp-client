@@ -1,3 +1,25 @@
+2000-08-17  David Byers  <davby@ida.liu.se>
+
+	Reimplement kom-bug-report:
+	* talkback.el: New file.
+	(kom-bug-report): I'm baaaack!
+
+	Misc fixes:
+	* swedish-strings.el (lyskom-command): Lista organisatörsskap
+	changed to Lista ägda möten.
+	(lyskom-custom-strings): Fixed typo.
+
+	* commands1.el (kom-list-created-conferences): Ugly hack to fix
+	cursor positioning problem. Something is badly broken here.
+
+	* lyskom-rest.el (lyskom-is-loaded): Encode frame title string to
+	latin1.
+
+	* vars.el.in (lyskom-mule-compiled): New variable.
+
+	* commands2.el (kom-who-am-i): Print MULE indicator for Emacs and
+	client.
+
 2000-08-16  Kent Engström  <kent@ceres.unit.liu.se>
 
 	* Makefile, lyskom-elisp-client.spec: Support for building RPMS.

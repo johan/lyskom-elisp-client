@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.76 2000-08-15 10:32:26 byers Exp $
+;;;;; $Id: commands2.el,v 44.77 2000-08-17 17:26:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.76 2000-08-15 10:32:26 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.77 2000-08-17 17:26:05 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1133,10 +1133,12 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
    (version-info->software-version lyskom-server-version-info))
 
   (lyskom-format-insert 'who-i-am-client
-                        lyskom-clientversion)
+                        lyskom-clientversion
+                        lyskom-mule-compiled)
 
   (lyskom-format-insert 'who-i-am-emacs
-                        (emacs-version)))
+                        (emacs-version)
+                        enable-multibyte-characters))
                         
 
 

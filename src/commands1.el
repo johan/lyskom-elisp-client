@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.83 2000-08-16 15:39:31 byers Exp $
+;;;;; $Id: commands1.el,v 44.84 2000-08-17 17:26:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.83 2000-08-16 15:39:31 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.84 2000-08-17 17:26:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1444,7 +1444,7 @@ Those that you are not a member in will be marked with an asterisk."
   (blocking-do 'get-uconf-stat lyskom-pers-no)
   (let ((pers (lyskom-read-conf-stat
                   (if arg 'list-pers-confs-created-by 'list-confs-created-by)
-                  '(pers) 
+                  '(all) 
                   nil
                   (if (cache-get-uconf-stat lyskom-pers-no)
                       (cons (conf-stat->name (cache-get-uconf-stat lyskom-pers-no)) 0)1
@@ -1460,22 +1460,28 @@ Those that you are not a member in will be marked with an asterisk."
                                      1
                                      (length (conf-z-info-list->conf-z-infos result))
                                      0))
-                    (calls nil))
+                    (calls nil)
+                    (was-at-max (= (save-excursion (end-of-line) (point)) (point-max))))
                 (condition-case arg
-                    (progn (lyskom-traverse conf-z (conf-z-info-list->conf-z-infos result)
-                             (setq calls (cons
-                                          (initiate-get-conf-stat 'main
-                                                                  'lyskom-list-created-conferences-2
-                                                                  (conf-z-info->conf-no conf-z)
-                                                                  counter
-                                                                  (conf-stat->conf-no pers)
-                                                                  arg
-                                                                  )
-                                          calls)))
-                           (lyskom-wait-queue 'main)
-                           (when (eq 0 (elt counter 3))
-                             (lyskom-format-insert 'no-created-confs pers))
-                           )
+                    (progn
+                      (lyskom-traverse conf-z (conf-z-info-list->conf-z-infos result)
+                        (setq calls (cons
+                                     (initiate-get-conf-stat 'main
+                                                             'lyskom-list-created-conferences-2
+                                                             (conf-z-info->conf-no conf-z)
+                                                             counter
+                                                             (conf-stat->conf-no pers)
+                                                             arg
+                                                             )
+                                     calls)))
+                      (lyskom-wait-queue 'main)
+                      (if (eq 0 (elt counter 3))
+                          (lyskom-format-insert 'no-created-confs pers)
+                        (let ((window (get-buffer-window (current-buffer))))
+                          (if (and window was-at-max)
+                              (if (pos-visible-in-window-p (point-max) window)
+                                  (goto-char (point-max))
+                                (and kom-continuous-scrolling (lyskom-scroll)))))))
                   (quit (aset counter 0 t)
                         (lyskom-cancel-call 'main calls))))
             (lyskom-insert (lyskom-get-string (if arg 'no-pers-confs-exist 'no-confs-exist))))
