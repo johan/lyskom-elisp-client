@@ -1,5 +1,9 @@
 Mon Sep 16 18:10:59 1991  Linus Tolke Y  (linus at lysator)
 
+	* lyskom-rest.el (kom-view-next-text): Lagt till ett anrop som
+	  t|mmer lyskom-to-do-list ocks} n}r man l{ser. ]terse markerade
+	  buggen berodde av detta.
+
 	* clienttypes.el (read-list-delete-text): Justerat doc-str{ngen.
 
 	* prioritize.el (lyskom-prioritize-1,lyskom-prioritize-2): Fixat
