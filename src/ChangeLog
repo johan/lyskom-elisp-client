@@ -1,3 +1,41 @@
+2004-01-01  David Byers  <byers@lysator.liu.se>
+
+	* menus.el (lyskom-define-menu-xemacs): Try to use swedish
+	characters rather than brackets and braces for bindings that have
+	both.
+	(lyskom-define-menu-gnu): Same here.
+
+	* utilities.el (lyskom-traverse-keymap): New function.
+
+	* compatibility.el (map-keymap): More fixes.
+
+	* menus.el (lyskom-menu-guess-shortcuts): New function.
+
+	* vars.el.in (lyskom-swedish-bindings): New variable.
+	(lyskom-swedish-bindings-reverse): Ditto.
+
+2003-12-18  David Byers  <byers@lysator.liu.se>
+
+	* compatibility.el (map-keymap): I think this function will work
+	in Gnu Emacs now.
+
+	Make language selection more available:
+	* swedish-strings.el (lyskom-menus): Language-related texts in
+	swedish and english.
+	(lyskom-message): Ditto.
+
+	* menus.el (lyskom-menu-template): Added change local and global
+	language.
+
+	* commands2.el (kom-change-global-language): New command.
+	(kom-change-local-language): New command.
+
+	Commands at when-done in current language:
+	* language.el (lyskom-try-get-string): Added language parameter.
+	(lyskom-get-string): Added language parameter.
+
+	* command.el (lyskom-command-name): Added language parameter.
+
 2003-12-17  David Byers  <byers@lysator.liu.se>
 
 	Update menus:

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.31 2003-08-25 17:36:39 byers Exp $
+;;;;; $Id: language.el,v 44.32 2004-01-01 22:01:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -207,19 +207,19 @@ assoc list."
     (lyskom-internal-error (message "Bad kom-tell-phrases: missing %s" key)
                            "")))
 
-(defsubst lyskom-try-get-string (symbol category)
+(defsubst lyskom-try-get-string (symbol category &optional language)
     (cdr (assq (if (eq (cdr (assq category lyskom-language-categories)) 'local)
-                   lyskom-language
-                 lyskom-global-language)
+                   (or language lyskom-language)
+                 (or language lyskom-global-language))
                (get symbol category))))
 
 (defsubst lyskom-get-string-error (function symbol category)
   (signal 'lyskom-internal-error
 	  (list function (list symbol category ": string not found"))))
 
-(defun lyskom-get-string (symbol &optional category)
+(defun lyskom-get-string (symbol &optional category language)
   "Returns string associated with SYMBOL"
-    (or (lyskom-try-get-string symbol (or category 'lyskom-message))
+    (or (lyskom-try-get-string symbol (or category 'lyskom-message) language)
         (lyskom-get-string-error 'lyskom-get-string
                                  symbol
                                  (or category 'lyskom-message))))

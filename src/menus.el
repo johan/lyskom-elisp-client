@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.27 2003-12-17 22:34:15 byers Exp $
+;;;;; $Id: menus.el,v 44.28 2004-01-01 22:01:39 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.27 2003-12-17 22:34:15 byers Exp $\n"))
+	      "$Id: menus.el,v 44.28 2004-01-01 22:01:39 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -236,7 +236,8 @@
                   (item kom-change-message-flag)
                   (item kom-prioritize)))
            (menu pers-admin
-                 ((item kom-change-name)
+                 ((item kom-change-presentation)
+                  (item kom-change-name)
                   (item kom-change-parenthesis)
                   (item kom-change-password)
                   (item kom-redirect-comments)
@@ -269,11 +270,13 @@
 
     (menu other
           ((item kom-help)
+           (menu language
+                 ((item kom-change-global-language)
+                  (item kom-change-local-language)))
            (item kom-where-is)
            (item kom-display-time)
            (item kom-calculate)
            (hline)
-           (item kom-change-language)
            (item kom-customize)
            (item kom-copy-options)
            (item kom-save-options)
@@ -339,6 +342,31 @@
 (defvar lyskom-popup-menu nil
   "A keymap the LysKOM menu in the edit buffer.")
 
+(defun lyskom-menu-guess-shortcuts (keymap &optional prefix result force)
+  (lyskom-traverse-keymap
+   (lambda (key binding)
+     (when binding
+       (let ((force (or force (assq key lyskom-swedish-bindings-reverse))))
+         (if (keymapp binding)
+             (setq result
+                   (lyskom-menu-guess-shortcuts
+                    (cond ((symbolp binding) (symbol-value binding))
+                          (t binding))
+                    (append prefix (list key))
+                    result
+                    force))
+           (when force
+             (setq key `(,@prefix ,key))
+             (if (assq binding result)
+                 (setcdr (assq binding result)
+                         (cons (apply 'vector key)
+                               (cdr (assq binding result))))
+               (setq result (cons (cons binding 
+                                        (list (apply 'vector key)))
+                                  result))))))))
+   keymap)
+  result)
+
 (defun lyskom-build-menus ()
   "Create menus according to LYSKOM-MENUS"
   (lyskom-xemacs-or-gnu (lyskom-build-menus-xemacs)
@@ -363,58 +391,95 @@
                           (list lyskom-popup-menu-template))
   (setq lyskom-popup-menu (lookup-key lyskom-popup-menu [lyskom])))
 
-(defun lyskom-define-menu-xemacs (menus)
-  (let ((type nil)
-        (parameters nil))
-    (lyskom-ignore type parameters)            ; Are they ever used?
+(defun lyskom-define-menu-xemacs (menus &optional specials)
+  (let ((specials (or specials
+                      (lyskom-menu-guess-shortcuts (current-local-map)))))
     (cond ((null (car menus)))
           ((listp (car menus))          ; Menu bar
-           (mapcar 'lyskom-define-menu-xemacs
-                   menus))
-
+           (mapcar (lambda (x) (lyskom-define-menu-xemacs x specials)) menus))
           ((eq (car menus) 'menu)       ; A menu
            (let ((menu-title (car (cdr menus)))
                  (menu-items (car (cdr (cdr menus)))))
              (cons (lyskom-get-menu-string menu-title)
                    (mapcar
-                    (function
-                     (lambda (item)
-                       (cond ((eq (car item) 'item)
-                              (vector (lyskom-get-menu-string 
-                                       (car (cdr item)))
-                                       (car (cdr item))
-                                       ':active
-                                       t))
-                             ((eq (car item) 'hline)
-                              "--:shadowEtchedIn")
-                             ((eq (car item) 'menu)
-                              (lyskom-define-menu-xemacs item))
-                             (t
-                              (error "Bad menu item: %S"
-                                     item)))))
-                    menu-items))))
+		    (lambda (item)
+		      (let ((type (car item))
+			    (symbol (car (cdr item))))
+			(cond ((eq type 'item)
+			       (let ((shortcut nil))
+				 (when (assq symbol specials)
+				   (unless (lyskom-traverse key (cdr (assq symbol specials))
+							    (unless (condition-case nil
+									(eq (lookup-key (current-local-map) 
+											key) symbol)
+								      (error nil))
+							      (lyskom-traverse-break t)))
+				     (setq shortcut
+					   (mapconcat 
+					    (lambda (key)
+					      (if (assq key lyskom-swedish-bindings-reverse)
+						  (symbol-name 
+						   (cdr (assq key lyskom-swedish-bindings-reverse)))
+						(single-key-description key)))
+					    (car (cdr (assq symbol specials)))
+					    " "))))
+				 (if shortcut
+				     (vector (lyskom-get-menu-string symbol)
+					     symbol
+					     ':active t
+					     ':keys shortcut)
+				   (vector (lyskom-get-menu-string symbol) symbol ':active t))))
+			      ((eq type 'hline)
+			       "--:shadowEtchedIn")
+			      ((eq type 'menu)
+			       (lyskom-define-menu-xemacs item specials))
+			      (t (error "Bad menu item: %S" item)))))
+		    menu-items))))
 
           (t nil))))
 
-
-(defun lyskom-define-menu-gnu (map menus)
-  (when menus
-    (lyskom-define-menu-gnu map (cdr menus))
-    (let ((type (car (car menus)))
-	  (symbol (car (cdr (car menus)))))
-      (cond ((eq 'hline type)
-	     (define-key map (vector (lyskom-gensym)) '("--")))
-	    ((eq 'menu type)
-	     (let* ((name (lyskom-get-menu-string symbol))
-		    (submap (make-sparse-keymap name)))
-	       (define-key map (vector symbol)
-		 (cons name submap))
-	       (lyskom-define-menu-gnu submap
-				   (car (cdr (cdr (car menus)))))))
-	    ((eq 'item type)
-	     (define-key map (vector symbol)
-	       (cons (lyskom-get-menu-string symbol) symbol)))
-	    (t (error "Menu description invalid in lyskom-define-menu"))))))
+(defun lyskom-define-menu-gnu (map menus &optional specials)
+  (let ((specials (or specials
+                      (lyskom-menu-guess-shortcuts (current-local-map)))))
+    (when menus
+      (lyskom-define-menu-gnu map (cdr menus) specials)
+      (let ((type (car (car menus)))
+            (symbol (car (cdr (car menus)))))
+        (cond ((eq 'hline type)
+               (define-key map (vector (lyskom-gensym)) '("--")))
+              ((eq 'menu type)
+               (let* ((name (lyskom-get-menu-string symbol))
+                      (submap (make-sparse-keymap name)))
+                 (define-key map (vector symbol)
+                   (cons name submap))
+                 (lyskom-define-menu-gnu submap
+                                         (car (cdr (cdr (car menus))))
+                                         specials)))
+              ((eq 'item type)
+               (let ((shortcut nil))
+                 (when (assq symbol specials)
+                   (unless (lyskom-traverse key (cdr (assq symbol specials))
+                             (unless (condition-case nil
+                                         (eq (lookup-key (current-local-map) 
+                                                         key) symbol)
+                                       (error nil))
+                               (lyskom-traverse-break t)))
+                       (setq shortcut
+                             (mapconcat 
+                              (lambda (key)
+                                (if (assq key lyskom-swedish-bindings-reverse)
+                                    (symbol-name 
+                                     (cdr (assq key lyskom-swedish-bindings-reverse)))
+                                  (single-key-description key)))
+                              (car (cdr (assq symbol specials)))
+                              " "))))
+                 (if shortcut
+                     (define-key map (vector symbol)
+                       `(menu-item ,(lyskom-get-menu-string symbol) symbol
+                                   :keys ,shortcut))
+                   (define-key map (vector symbol)
+                     (cons (lyskom-get-menu-string symbol) symbol)))))
+              (t (error "Menu description invalid in lyskom-define-menu")))))))
 
 
 (defun lyskom-get-menu-category (menu-category)
@@ -424,9 +489,8 @@
   (lyskom-build-menus)
   (when (and (boundp 'lyskom-current-menu-category)
              lyskom-current-menu-category)
-    (mapcar (function
-             (lambda (mc)
-               (lyskom-set-menus mc (current-local-map))))
+    (mapcar (lambda (mc)
+	      (lyskom-set-menus mc (current-local-map)))
             lyskom-current-menu-category)))
 
 (defun lyskom-set-menus (menu-category  keymap)
