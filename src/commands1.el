@@ -9,7 +9,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.3 1991-09-08 20:02:09 ceder Exp $\n"))
+	      "$Id: commands1.el,v 35.4 1991-09-08 21:17:26 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1643,8 +1643,8 @@ footnotes) to it as read in the server."
     ;; Should check that we are a member of at least one of
     ;; the recipients, and stop otherwise.
     (if mark-as-read
-	  (lyskom-mark-as-read text-stat))
-    (lyskom-is-read (text-stat->text-no text-stat))))
+	(lyskom-mark-as-read text-stat))
+    (lyskom-is-read (text-stat->text-no text-stat))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
 		     (cond
 		      ((or (eq (misc-info->type misc) 'COMM-IN)
