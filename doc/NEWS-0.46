@@ -31,6 +31,18 @@ version 0.45.2.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Om ett inlägg inte kan skapas så får man en prompt om att redigera
+   inlägget som inte kunde skapas.
+
+** Kommandot Bli anonym är användbart om man vill skriva anonyma
+   inlägg. Medan man är anonym så ser det ut som om sessionen inte
+   alls är aktiv. Räknaren över antal lästa texter uppdateras inte
+   heller (men listan av lästa texter i varje möte uppdateras.)
+   Använd kommandot Bli icke-anonym för att återgå.
+
+** Man kan ställa in klienten så att den inte bryr sig om färger som
+   sätts av <body> i HTML. Variabeln heter kom-w3-simplify-body.
+
 ** Det finns två nya kommandon, kom-next-prompt och kom-prev-prompt
    som man kan använda för att gå till nästa eller föregående prompt i 
    bufferten. De är bundna till C-M-n och C-M-p.
@@ -261,10 +273,11 @@ Bugfixar
 
 ** Om man skriver in ett namn som matchar mer än ett i databasen, och
    matchar det ena exakt utan parentes så kommer det att accepteras
-   som unikt. Förr var man tvungen att skriva in parentesen också.
+   som unikt. Förr var man tvungen att skriva in parentesen också
+   (även i 0.45.2).
 
 ** Det går att ladda elispklienten mer än en gång i samma Emacs utan
-   att allting går sönder.
+   att allting går sönder (även i 0.45.2).
 
 ** Man kan välja språk genom att sätta kom-default-language till det
    språk man vill ha.
@@ -274,6 +287,6 @@ Bugfixar
    borta. 
 
 ** Om man inte har w3 installerat så försöker klienten inte längre
-   anropa w3 för att formattera HTML.
+   anropa w3 för att formattera HTML (även i 0.45.2).
 
 ** Vi använder lite färre gamla anrop som vi inte borde använda. 
