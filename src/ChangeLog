@@ -1,3 +1,13 @@
+2000-12-09  Joel Rosdahl  <joel@rosdahl.net>
+
+	* commands2.el (kom-status-conf): More space allocated for the
+	"Unread" column.
+	(kom-status-person): Ditto.
+
+	* english-strings.el (lyskom-message): Ditto.
+
+	* swedish-strings.el (lyskom-message): Ditto.
+
 2000-12-06  Joel Rosdahl  <joel@rosdahl.net>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Ask if normal
