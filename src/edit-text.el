@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.88 2001-12-14 00:27:03 qha Exp $
+;;;;; $Id: edit-text.el,v 44.89 2001-12-15 13:57:40 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.88 2001-12-14 00:27:03 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.89 2001-12-15 13:57:40 qha Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1563,7 +1563,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
                 (lyskom-looking-at-header 'carbon-copy-prefix 'empty)
                 (lyskom-looking-at-header 'recipient-prefix 'empty))
             nil)
-           ((lyskom-looking-at-header 'add-recipient nil) nil)
+           ((lyskom-looking-at-header 'add-recpt-button-text-regex nil) nil)
 
 	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))
