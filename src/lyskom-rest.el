@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.5 1996-03-25 17:03:51 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 40.0 1996-03-26 08:31:37 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.5 1996-03-25 17:03:51 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.0 1996-03-26 08:31:37 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1148,7 +1148,7 @@ Args: FORMAT-STRING &rest ARGS"
                                     (list 'lyskom-format
                                           ": argument error")))))
       (if (and (not colon-flag)
-               (not (face-equal 'default 'kom-subject-face)))
+               (not (lyskom-face-default-p 'kom-subject-face)))
           (setq propl (append (list 'face 'kom-subject-face) propl))))
      ;;
      ;;  Format a LysKOM text body. Currently this does nothing. It
@@ -1266,6 +1266,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 ;;; ============================================================
 ;;;                     Beeping and feeping
+;;;                     Faces and colors
 ;;;
 
 (defun lyskom-beep (arg)
@@ -1288,8 +1289,16 @@ A symbol other than t means call it as a function."
                         arg))
         ((and (symbolp arg)
               (fboundp arg))
-         (funcall arg))
+         (condition-case err
+             (funcall arg)
+           (error (message "Error in beep function")
+                  (beep))))
         (t (beep))))
+
+(defun lyskom-face-default-p (f1)
+  "Return t if f1 is undefined or the default face."
+  (or (not (facep f1))
+      (face-equal f1 'default)))
 		  
 
 ;;; ================================================================
