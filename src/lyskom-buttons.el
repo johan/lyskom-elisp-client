@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.19 1997-12-28 19:16:33 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.20 1998-06-02 12:14:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.19 1997-12-28 19:16:33 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.20 1998-06-02 12:14:52 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)

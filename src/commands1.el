@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.33 1998-05-06 18:05:18 petli Exp $
+;;;;; $Id: commands1.el,v 44.34 1998-06-02 12:14:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.33 1998-05-06 18:05:18 petli Exp $\n"))
+	      "$Id: commands1.el,v 44.34 1998-06-02 12:14:20 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))

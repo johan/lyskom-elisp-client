@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.13 1997-11-30 17:28:18 byers Exp $
+;;;;; $Id: completing-read.el,v 44.14 1998-06-02 12:14:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.13 1997-11-30 17:28:18 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.14 1998-06-02 12:14:30 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -512,21 +513,21 @@ function work as a name-to-conf-stat translator."
                 (null x-list)))))
 
 
-;(defun lyskom-complete-show-data-list (state data)
-;  (save-excursion
-;    (pop-to-buffer (get-buffer-create "*kom*-complete"))
-;    (erase-buffer)
-;    (setq enable-multibyte-characters nil)
+; (defun lyskom-complete-show-data-list (state data)
+;   (save-excursion
+;     (pop-to-buffer (get-buffer-create "*kom*-complete"))
+;     (erase-buffer)
+;     (set-buffer-multibyte nil)
 ;    (while data
-;      (insert
-;       (format "%s\n" (substring (aref (car data) 2)
-;                                 (aref (car data) 0)
-;                                 (aref (car data) 1))))
-;      (setq data (cdr data)))
-;    (insert (format "%S %S: %S" (symbol-value current-state)
-;                    (elt state 0)
-;                    (elt state 1)))
-;    (sit-for 1)))
+;       (insert
+;        (format "%s\n" (substring (aref (car data) 2)
+;                                  (aref (car data) 0)
+;                                  (aref (car data) 1))))
+;       (setq data (cdr data)))
+;     (insert (format "%S %S: %S" (symbol-value current-state)
+;                     (elt state 0)
+;                     (elt state 1)))
+;     (sit-for 5)))
       
 
 (defun lyskom-complete-string (string-list)

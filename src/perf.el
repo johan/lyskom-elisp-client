@@ -1,3 +1,4 @@
+;;;;; -*-coding: raw-text;-*-
 ;; Included from fields.el
 
 ;; (provide 'fields)

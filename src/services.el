@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.15 1998-01-06 05:20:52 davidk Exp $
+;;;;; $Id: services.el,v 44.16 1998-06-02 12:15:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.15 1998-01-06 05:20:52 davidk Exp $\n"))
+	      "$Id: services.el,v 44.16 1998-06-02 12:15:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1118,17 +1119,6 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
 
 (defvar lyskom-blocking-return nil
   "Return from blocking-do.")
-
-;; This variable is used to prevent "starvation" of the blocking-do call.
-;; When there are heavy prefetch going on in the background and a
-;; blocking-do call is made there is a good chance that the
-;; accept-process-output call will not return within a reasonable
-;; time, because there will always be data to read from the server,
-;; which means that Emacs will call lyskom-filter instead of returning
-;; from accept-process-output.
-(defvar lyskom-ok-to-send-new-calls t
-  "This variable controls whether calls are passed to the server.
-If it is nil, all outgoing calls are inhibited.")
 
 (defun blocking-return (retval)
   "Sets blocking variable."

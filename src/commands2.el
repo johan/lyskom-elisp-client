@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.25 1998-05-06 18:05:20 petli Exp $
+;;;;; $Id: commands2.el,v 44.26 1998-06-02 12:14:24 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.25 1998-05-06 18:05:20 petli Exp $\n"))
+	      "$Id: commands2.el,v 44.26 1998-06-02 12:14:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1519,16 +1520,18 @@ membership info."
       (bury-buffer))))
 
 
-(defun lyskom-buffer-p (buf)
+(defun lyskom-buffer-p (buf &optional may-be-dead)
   ;; Returns non-nil if BUF is an active LysKOM buffer
-  (if (and buf (bufferp buf) (buffer-name buf))
-      (save-excursion
-	(set-buffer buf)
-	(and (eq major-mode 'lyskom-mode)
-	     (boundp 'lyskom-proc)
-	     lyskom-proc
-	     (processp lyskom-proc)
-	     (memq (process-status lyskom-proc) '(run open))))))
+  (when (buffer-live-p buf)
+    (save-excursion
+      (set-buffer buf)
+      (and (eq major-mode 'lyskom-mode)
+           (boundp 'lyskom-proc)
+           lyskom-proc
+           (processp lyskom-proc)
+           (or (and may-be-dead
+                    (memq (process-status lyskom-proc) '(run open closed)))
+               (memq (process-status lyskom-proc) '(run open)))))))
 
 ;;;(defun lyskom-update-lyskom-buffer-list ()
 ;;;  (mapcar (function

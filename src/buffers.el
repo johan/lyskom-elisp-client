@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.7 1997-09-21 11:42:47 byers Exp $
+;;;;; $Id: buffers.el,v 44.8 1998-06-02 12:14:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.7 1997-09-21 11:42:47 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.8 1998-06-02 12:14:12 byers Exp $\n"))
 
 
 ;;;;
@@ -261,8 +262,7 @@ categories")
   (let ((buf (generate-new-buffer name)))
     (save-excursion
       (set-buffer buf)
-      (make-local-variable 'enable-multibyte-characters)
-      (setq enable-multibyte-characters nil))
+      (set-buffer-multibyte nil))
     buf))
 
 (defun lyskom-get-buffer-create (category name &optional unique)
@@ -293,8 +293,7 @@ The created buffer is made a child of the current buffer."
     (lyskom-update-inherited-variables buffer)
     (save-excursion (set-buffer buffer)
                     (setq lyskom-buffer-category category)
-                    (make-local-variable 'enable-multibyte-characters)
-                    (setq enable-multibyte-characters nil))
+                    (set-buffer-multibyte nil))
     buffer))
 
 

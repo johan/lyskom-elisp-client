@@ -1,5 +1,6 @@
+;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.11 1997-10-12 10:31:45 byers Exp $
+;;;;; $Id: language.el,v 44.12 1998-06-02 12:14:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
