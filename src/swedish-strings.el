@@ -167,7 +167,7 @@ Lyskom-sessionen är avslutad.
     (new-passwd-again . "Mata in det nya lösenordet igen för kontroll: ")
     (what-mark-to-view . "Vilken markering vill du återse? ")
     (whos-passwd . "Vem vill du {ndra lösenord f|r (dig själv)? ")
-    (old-passwd . "Mata in det gamla lösenordet: ")
+    (old-passwd . "Mata in ditt lösenord: ")
     (new-passwd . "Mata in det nya lösenordet: ")
     (changing-passwd . "Ändrar lösenordet...")
     (retype-dont-match . "Lösenorden är inte samma. Gör om.\n")
