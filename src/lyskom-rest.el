@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.228 2004-02-22 15:48:27 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.229 2004-02-22 20:32:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.228 2004-02-22 15:48:27 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.229 2004-02-22 20:32:56 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -780,8 +780,7 @@ by PERS-NO"
     ;; that we have not rejected and that we are not already members
     ;; of.
 
-    (blocking-do-multiple ((pers-conf-stat (get-conf-stat lyskom-pers-no))
-                           (pers-stat (get-pers-stat lyskom-pers-no)))
+    (let ((pers-conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
       (lyskom-traverse rec recommendations
         (let ((conf-stat (blocking-do 'get-conf-stat (elt rec 0))))
           (when conf-stat
@@ -2127,7 +2126,6 @@ Deferred insertions are not supported."
                                             (symbol-name (car el)))
                                           content-type))
                                (lyskom-traverse-break el)))))))
-           (plaintext (eq fn t))
            (formatted (and fn (funcall fn text text-stat))))
       (or formatted text)))
 
@@ -2425,6 +2423,8 @@ in lyskom-messages."
                     (t fill-column)))
              (fill-prefix nil)
              (single-line-regexp "\\(\\S-\\)"))
+
+        (lyskom-ignore timer)
 
         ;;
         ;; Scan each line

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.17 2003-07-20 22:12:26 byers Exp $
+;;;;; $Id: defvar.el,v 44.18 2004-02-22 20:32:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.17 2003-07-20 22:12:26 byers Exp $\n"
+  "$Id: defvar.el,v 44.18 2004-02-22 20:32:56 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -252,6 +252,8 @@ language-force  A language-variable whose value is to be forced."
                         (car arglist))))
         (setq arglist (cdr arglist)))
 
+      (if (null doc-string) (setq doc-string "This variable is not documented."))
+
       (if doc-string
         (if
           (if (or local-var-doc local-hook-doc)
@@ -270,7 +272,6 @@ since that will affect all LysKOM sessions."))))
 This variable is normally stored on a per-session basis in the
 LysKOM server, but can be set in your .emacs simply by setting
 it using setq or defvar.")))
-
 
       (` (progn (dont-compile (if (and (boundp (quote (, name)))
                                        (or (not (boundp lyskom-is-loaded))
