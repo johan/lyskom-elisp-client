@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.44 2003-08-14 20:50:47 byers Exp $
+;;;;; $Id: completing-read.el,v 44.45 2003-08-15 18:24:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.44 2003-08-14 20:50:47 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.45 2003-08-15 18:24:18 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -115,35 +115,6 @@ but first checks a cache."
     map)
   "Keymap used for reading LysKOM names.")
 
-(defvar lyskom-minibuffer-point)
-
-(defun lyskom-read-from-minibuffer-clear-initial (&rest args)
-  (condition-case nil
-      (let ((ranges nil)
-            (tmp nil)
-            (start (point-min)))
-        (while (setq tmp (lyskom-next-property-bounds
-                          start (point-max) 'lyskom-initial-mbc))
-          (setq ranges (cons tmp ranges)
-                start (cdr tmp)))
-        (lyskom-traverse range ranges
-          (delete-region (car range) (cdr range)))
-        (when ranges
-          (lyskom-read-from-minibuffer-cancel-magic)))
-    (error nil)))
-
-(defun lyskom-read-from-minibuffer-cancel-magic ()
-  (setq pre-command-hook (delq 'lyskom-read-from-minibuffer-pre-command pre-command-hook)
-        post-command-hook (delq 'lyskom-read-from-minibuffer-post-command post-command-hook)
-        before-change-functions (delq 'lyskom-read-from-minibuffer-clear-initial before-change-functions)))
-
-(defun lyskom-read-from-minibuffer-pre-command (&rest args)
-  (setq lyskom-minibuffer-point (point)))
-
-(defun lyskom-read-from-minibuffer-post-command (&rest args)
-  (unless (or (null lyskom-minibuffer-point)
-              (eq lyskom-minibuffer-point (point)))
-    (lyskom-read-from-minibuffer-cancel-magic)))
 
 
 (defsubst lyskom-completing-match-string-regexp (string)
@@ -212,21 +183,54 @@ See lyskom-read-conf for a description of the parameters."
 	  (t (conf-z-info->name conf-z-info)))))
 
 
+;;; ================================================================
+;;; Code to guess defaults for initial input
+;;;
+
+(defun lyskom-default-conference-at-point ()
+  (let* ((pos (or lyskom-command-point (point)))
+         (type (and pos (get-text-property pos 'lyskom-button-type))))
+    (and (memq type '(conf pers))
+         (list (get-text-property pos 'lyskom-button-arg)))))
+
+(defun lyskom-default-conference-current ()
+  (list lyskom-current-conf))
+
+(defun lyskom-default-conference-self ()
+  (list lyskom-pers-no))
+
+(defun lyskom-default-conference-not-self (uc)
+  (not (eq (uconf-stat->conf-no uc) lyskom-pers-no)))
+
+(defun lyskom-default-conference-not-current (uc)
+  (not (eq (uconf-stat->conf-no uc) lyskom-current-conf)))
+
+(defun lyskom-get-initial-conf-strategy ()
+  (or (cdr (assq lyskom-current-command lyskom-default-conference-strategy))
+      (cdr (assq t lyskom-default-conference-strategy))))
+
 (defun lyskom-read-conf-guess-initial (predicate)
   "Return a guess for the initial value for lyskom-read-conf."
-  (let* ((pos (or lyskom-command-point (point)))
-         (type (and pos (get-text-property pos 'lyskom-button-type)))
-         (conf-nos (delq nil
-                         (list (and (memq type '(conf pers))
-                                    (get-text-property pos 'lyskom-button-arg))
-                               lyskom-current-conf
-                               lyskom-pers-no))))
-    (lyskom-traverse conf-no conf-nos
-      (let ((uc (blocking-do 'get-uconf-stat conf-no)))
-        (when (lyskom-read-conf-internal-verify-type 
-               conf-no (uconf-stat->conf-type uc)
-               predicate nil nil)
-          (lyskom-traverse-break (uconf-stat->name uc)))))))
+  (let* ((strategy (lyskom-get-initial-conf-strategy))
+         (default (cdr (assq 'default strategy)))
+         (filter (cdr (assq 'filter strategy))))
+
+    (uconf-stat->name
+     (car (filter-list (lambda (uconf-stat)
+                         (and uconf-stat
+                              (not (memq nil (mapcar (lambda (fn)
+                                                       (funcall fn uconf-stat)) 
+                                                     filter)))
+                              (lyskom-read-conf-internal-verify-type
+                               (uconf-stat->conf-no uconf-stat)
+                               (uconf-stat->conf-type uconf-stat)
+                               predicate nil nil)))
+                       (mapcar (lambda (conf-no)
+                                 (blocking-do 'get-uconf-stat conf-no)) 
+                               (apply 'append (mapcar 'funcall default))))))))
+
+
+
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
@@ -268,21 +272,7 @@ A string:    A name that matched nothing in the database."
                (conf-z-info->name initial))
               ((consp initial) initial)
               ((lyskom-read-conf-guess-initial type))
-              ((and lyskom-current-conf
-                    (not (eq lyskom-current-conf 0)))
-               (uconf-stat->name
-                (blocking-do 'get-uconf-stat lyskom-current-conf)))
               (t nil)))
-
-  (cond ((stringp initial)
-         (setq initial (copy-sequence initial))
-         (add-text-properties 0 (length initial) 
-                              '(lyskom-initial-mbc t) initial))
-        (initial
-	 (setq initial (cons (copy-sequence (car initial)) (cdr initial)))
-	 (add-text-properties 0 (length (car initial)) 
-			      '(lyskom-initial-mbc t) (car initial))))
-
 
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
@@ -294,33 +284,16 @@ A string:    A name that matched nothing in the database."
          (keep-going t))
 
     (while keep-going
-      (lyskom-with-lyskom-minibuffer
-       (let ((before-change-functions before-change-functions)
-             (pre-command-hook pre-command-hook)
-             (post-command-hook post-command-hook)
-             (lyskom-minibuffer-point nil)
-             (minibuffer-setup-hook 
-              (cons (lambda ()
-                      (setq before-change-functions
-                            (cons 'lyskom-read-from-minibuffer-clear-initial
-                                  before-change-functions)
-                            pre-command-hook (cons 'lyskom-read-from-minibuffer-pre-command pre-command-hook)
-                            post-command-hook (cons 'lyskom-read-from-minibuffer-post-command post-command-hook)))
-                    minibuffer-setup-hook))
-             (minibuffer-exit-hook
-              (cons 'lyskom-read-from-minibuffer-cancel-magic
-                    minibuffer-exit-hook)))
-
-         (setq read-string (completing-read (cond ((stringp prompt) prompt)
-                                                  ((symbolp prompt) (lyskom-get-string prompt))
-                                                  (t (lyskom-get-string 'conf-prompt)))
-                                            'lyskom-read-conf-internal
-                                            type
-                                            mustmatch
-                                            (if (listp initial)
-                                                initial
-                                              (cons initial 0))
-                                            'lyskom-name-hist))))
+      (setq read-string (lyskom-completing-read (cond ((stringp prompt) prompt)
+                                                      ((symbolp prompt) (lyskom-get-string prompt))
+                                                      (t (lyskom-get-string 'conf-prompt)))
+                                                'lyskom-read-conf-internal
+                                                type
+                                                mustmatch
+                                                (if (listp initial)
+                                                    initial
+                                                  (cons initial 0))
+                                                'lyskom-name-hist))
       (setq result
             (cond ((null read-string) nil)
                   ((string= "" read-string) nil)
@@ -1114,15 +1087,14 @@ the LysKOM rules of string matching."
       (lyskom-insert (lyskom-format 'total-users-sans-date (length who-info)))
       (lyskom-scroll)
       (while (string= ""
-                      (lyskom-with-lyskom-minibuffer
-                       (setq result (lyskom-completing-read
+                      (setq result (lyskom-completing-read
 				    (lyskom-get-string 'resolve-session)
 				    (lyskom-maybe-frob-completion-table 
 				     who-info)
 				    nil
 				    t
 				    (car (car who-info))
-				    nil)))))
+				    nil))))
       (list (session-info->connection (cdr (assoc result who-info)))))))
 
 

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.259 2003-08-14 15:59:25 byers Exp $
+;;;;; $Id: vars.el.in,v 44.260 2003-08-15 18:24:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.259 2003-08-14 15:59:25 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.260 2003-08-15 18:24:19 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -196,6 +196,21 @@ When a text has more than one recipient, links will be generated for
 all recipients. The order in which the recipients are examined and
 the priority among links that match the same text is undefined."
   server)
+
+
+(def-kom-var lyskom-default-conference-strategy
+  '((kom-sub-self . ((default . (lyskom-default-conference-at-point
+                                 lyskom-default-conference-current))
+                     (filter . (lyskom-default-conference-not-self))))
+    (kom-go-to-conf . ((default . (lyskom-default-conference-at-point
+                                   lyskom-default-conference-self))
+                       (filter . (lyskom-default-conference-not-current))))
+    (t . ((default . (lyskom-default-conference-at-point
+                      lyskom-default-conference-current
+                      lyskom-default-conference-self)))))
+  "Strategy for the initial value for conference defaults.
+
+The meaning and format of this variable will probably change in the future.")
 
 
 (defconst kom-old-farts-text-prompt-strategy

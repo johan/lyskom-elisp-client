@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.14 2003-01-05 21:37:06 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.15 2003-08-15 18:24:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.14 2003-01-05 21:37:06 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.15 2003-08-15 18:24:19 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -439,7 +439,7 @@ If NEWLINE is non-nil, insert a newline after the header."
                                              (1- (length filter-edit-currently-edited-filter-entry-list)))))
           (insert "\n"))
       (goto-char filter-edit-list-end))
-      
+
       (setq action (lyskom-completing-read (lyskom-get-string 'filter-edit-filter-how)
                                            (lyskom-maybe-frob-completion-table
                                             rev-actions)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.179 2003-08-14 15:59:24 byers Exp $
+;;;;; $Id: commands2.el,v 44.180 2003-08-15 18:24:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.179 2003-08-14 15:59:24 byers Exp $\n"))
+              "$Id: commands2.el,v 44.180 2003-08-15 18:24:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2248,10 +2248,9 @@ really only a simple interface to the basic functionality of calc."
   (when (lyskom-try-require 'calc 
                             (lyskom-get-string 'need-library))
     (let* ((expr (or exprx
-                     (lyskom-with-lyskom-minibuffer
-                      (lyskom-read-from-minibuffer 
-                       (lyskom-get-string 'calc-expression)
-                       nil nil nil 'lyskom-expression-history))))
+                     (lyskom-read-from-minibuffer 
+                      (lyskom-get-string 'calc-expression)
+                      nil nil nil 'lyskom-expression-history)))
            (result (calc-eval expr)))
       (cond ((stringp result)
              (lyskom-format-insert-before-prompt
@@ -2293,9 +2292,8 @@ Sets a personal label on an object of some kind."
            (setq secret (not (lyskom-j-or-n-p 
                               (lyskom-get-string 'label-secret))))
            (setq label
-                 (lyskom-with-lyskom-minibuffer
                   (lyskom-read-from-minibuffer 
-                   (lyskom-get-string 'label-what-label))))
+                   (lyskom-get-string 'label-what-label)))
            (blocking-do 
             'modify-text-info
             objno
@@ -2322,9 +2320,8 @@ Sets a personal label on an object of some kind."
            (setq secret (not (lyskom-j-or-n-p
                               (lyskom-get-string 'label-secret))))
            (setq label
-                 (lyskom-with-lyskom-minibuffer
-                  (lyskom-read-from-minibuffer 
-                   (lyskom-get-string 'label-what-label))))
+                 (lyskom-read-from-minibuffer 
+                  (lyskom-get-string 'label-what-label)))
            (blocking-do 
             'modify-conf-info
             objno

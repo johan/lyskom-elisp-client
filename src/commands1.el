@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.191 2003-08-14 14:16:54 byers Exp $
+;;;;; $Id: commands1.el,v 44.192 2003-08-15 18:24:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.191 2003-08-14 14:16:54 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.192 2003-08-15 18:24:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -899,13 +899,8 @@ See `kom-unsubscribe-makes-passive'."
   (interactive)
   (let* ((me (blocking-do 'get-conf-stat lyskom-pers-no))
 	 (conf (if conf-no (blocking-do 'get-conf-stat conf-no)
-		 (let ((default (lyskom-read-conf-guess-initial '(membership)))
-		       (mailbox (conf-stat->name me)))
-		   (if (equal default mailbox)
-		       (setq default ""))
-		   (lyskom-read-conf-stat
-		    (lyskom-get-string 'leave-what-conf)
-		    '(membership) nil default t)))))
+                 (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
+                                        '(membership) nil nil t))))
     (lyskom-sub-member me conf)))
 
 (defun lyskom-sub-member (pers conf &optional have-message)
@@ -1710,16 +1705,8 @@ Changing conferences runs `kom-change-conf-hook' and
   (interactive)
   (let ((conf (if conf-no
                   (blocking-do 'get-conf-stat conf-no)
-                (let ((default (lyskom-read-conf-guess-initial '(all)))
-                      (current (uconf-stat->name
-                                 (blocking-do 'get-uconf-stat
-                                              lyskom-current-conf))))
-                  (if (or (null current)
-                          (equal default current))
-                      (setq default ""))
-                  (lyskom-read-conf-stat
-                   (lyskom-get-string 'go-to-conf-p)
-		   '(all) nil default t)))))
+                (lyskom-read-conf-stat (lyskom-get-string 'go-to-conf-p)
+                                       '(all) nil nil t))))
     (when (lyskom-check-go-to-conf conf)
       (lyskom-go-to-conf conf))))
 

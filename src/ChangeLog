@@ -1,3 +1,51 @@
+2003-08-15  David Byers  <byers@lysator.liu.se>
+
+	* completing-read.el (lyskom-read-conf): Don't call
+	lyskom-with-lyskom-minibuffer since it's integrated in
+	lyskom-completing-read now.
+	(lyskom-read-session-resolve-ambiguity): Same here.
+
+	* lyskom-rest.el (lyskom-verified-read-from-minibuffer): Don't
+	call lyskom-with-lyskom-minibuffer since it's integrated in
+	lyskom-read-from-minibuffer now.
+
+	* commands2.el (kom-calculate): Don't call
+	lyskom-with-lyskom-minibuffer since it's integrated in
+	lyskom-read-from-minibuffer now.
+	(kom-set-personal-label): Same here.
+
+	* command.el (lyskom-read-extended-command): Don't use
+	lyskom-with-lyskom-minibuffer since it's integrated in
+	lyskom-completing-read now.
+
+	* utilities.el (lyskom-completing-read): Moved here from
+	compatibility.el and turned into a regular function. Integrate
+	lyskom-with-lyskom-minibuffer and lyskom-with-magic-minibuffer.
+	(lyskom-read-from-minibuffer): Ditto.
+
+	* commands1.el (kom-sub-self): Undo previous change. The new
+	configuration mechanism takes care of things.
+	(kom-go-to-conf): Same here.
+
+	Even better defaults for initial conference:
+	* compatibility.el (lyskom-completing-read): Use defsubst in Gnu
+	Emacs so we can advise it.
+
+	* vars.el.in (lyskom-default-conference-strategy): New variable.
+
+	Rewrote magic minibuffer handling:
+	* utilities.el (lyskom-magic-minibuffer-pre-command): New
+	function.
+	(lyskom-magic-minibuffer-before-change): New function.
+	(lyskom-magic-minibuffer-post-command): New function.
+	(lyskom-magic-minibuffer-cancel): New function.
+	(lyskom-magic-minibuffer-mangle-initial): New function.
+	(read-from-minibuffer): New advice.
+	(completing-read): New advice.
+	(lyskom-magic-minibuffer-add-advice): New function.
+	(lyskom-magic-minibuffer-cancel-advice): New function.
+	(lyskom-with-magic-minibuffer): New macro.
+
 2003-08-15  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* english-strings.el (local): Changed "what conference" -> "which
