@@ -1,5 +1,9 @@
 2000-05-29  David Byers  <davby@ida.liu.se>
 
+	* lyskom-rest.el (lyskom-is-loaded): Don't bind
+	frame-icon-title-format or frame-title-format unless they already
+	exist. 
+
 	* commands2.el (lyskom-iter-list-news): Added at-least and at-most
 	arguments. Renamed all variables referenced in the calleing
 	environment to lyskom-iter-list-news-*.

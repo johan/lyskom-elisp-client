@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.102 2000-05-26 14:35:19 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.103 2000-05-29 15:12:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.102 2000-05-26 14:35:19 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.103 2000-05-29 15:12:21 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3512,13 +3512,15 @@ One parameter - the prompt string."
      (setq global-mode-string
            (append '("" lyskom-unread-mode-line) global-mode-string))))
 
-  (setq frame-title-format (list ""
-                                 frame-title-format
-                                 'lyskom-unread-title-format))
+  (if (boundp 'frame-title-format)
+      (setq frame-title-format (list ""
+                                     frame-title-format
+                                     'lyskom-unread-title-format)))
 
-  (setq frame-icon-title-format (list ""
-                                      frame-icon-title-format
-                                      'lyskom-unread-title-format))
+  (if (boundp 'frame-icon-title-format)
+      (setq frame-icon-title-format (list ""
+                                          frame-icon-title-format
+                                          'lyskom-unread-title-format)))
 
   (setq lyskom-unread-mode-line
         (list (list 'lyskom-sessions-with-unread 
