@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.1 1996-09-03 16:05:34 byers Exp $
+# $Id: Makefile,v 44.2 1997-08-11 19:54:02 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,11 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 44.1  1996-09-03 16:05:34  byers
+# Revision 44.2  1997-08-11 19:54:02  davidk
+# Ändrade versionsnumret till 0.45
+# Ladda ../src/widget.el manuellt när man bygger lyskom-variables.data
+#
+# Revision 44.1  1996/09/03 16:05:34  byers
 # Remainders for 0.44.1
 #
 # Revision 44.0  1996/08/30 14:41:32  davidk
@@ -76,7 +80,7 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-CLIENTVERSION = 0.44.1
+CLIENTVERSION = 0.45
 
 SHELL = /bin/sh
 RM = rm -vf
@@ -121,7 +125,7 @@ elisp-client.dvi: $(INDEXES)
 lyskom-variables.data: lyskom-commands.data
 
 lyskom-commands.data: ../src/lyskom.el
-	emacs -batch -l makedoc.el -f lyskom-update-documentation
+	emacs -batch -l makedoc.el -l ../src/widget.el -f lyskom-update-documentation
 
 
 .PHONY: install
