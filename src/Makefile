@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 38.5 1995-03-01 17:55:38 byers Exp $
+# $Id: Makefile,v 38.6 1995-03-01 23:20:16 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,123 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 38.5 1995-03-01 17:55:38 byers Exp $
-# $Log: Makefile,v $
-# Revision 38.5  1995-03-01 17:55:38  byers
-# Added support for lyskom filters (first version).
-#
-# Revision 38.4  1995/02/23  20:40:59  linus
-# En arbetsversion av 0.39 incheckad. Det {r ganska mycket gjort men det
-# finns mer att g|ra.
-#
-# Revision 38.3  1994/01/14  02:40:01  linus
-# Fixed local installation path.
-#
-# Revision 38.2  1994/01/14  00:28:00  linus
-# Fixed some bytecomp warnings.
-#
-# Revision 38.1  1994/01/10  18:07:53  linus
-# The installation method changed (again).
-# The version is now contained in the Makefile.
-#
-# Revision 38.0  1994/01/06  01:56:09  linus
-# New version
-#
-# Revision 36.9  1994/01/06  00:55:12  linus
-# Removed installation of doc.
-#
-# Revision 36.8  1993/12/14  02:21:29  linus
-# Small fixes for emacs 18.55, jump.
-#
-# Revision 36.7  1993/11/21  04:37:06  linus
-# Better tags entry.
-#
-# Revision 36.6  1993/09/10  16:36:51  linus
-# Removed distribution script.
-#
-# Revision 36.5  1993/08/31  11:22:12  linus
-# Corrected ftp-site. compress => gzip
-#
-# Revision 36.4  1993/07/26  19:07:12  linus
-# Buggfixes, bug-report, quit-ding
-#
-# Revision 36.3  1993/05/27  15:22:43  linus
-# install in local/var/elisp
-#
-# Revision 36.2  1993/05/27  13:21:12  linus
-# obel18 => diag19
-#
-# Revision 36.1  1993/04/26  19:35:11  linus
-# New version
-#
-# Revision 35.22  1993/04/26  19:30:54  linus
-# Rewound to before prefetch.
-#
-# Revision 35.21  1993/02/04  04:00:48  linus
-# Removed the import.make dependencie of the Makefile.
-#
-# Revision 35.20  1992/07/30  19:49:22  linus
-# Moved around functions to the new reading.el file.
-#
-# Revision 35.19  1992/07/26  23:14:02  linus
-# Added prefetch.el
-#
-# Revision 35.18  1992/06/16  11:33:32  linus
-# Alfa-version is replaced upon installation also.
-#
-# Revision 35.17  1992/05/11  01:55:38  linus
-# support for distribution to nanny removed
-#
-# Revision 35.16  1992/03/28  19:54:10  linus
-# Removed mv to old-versions
-#
-# Revision 35.15  1992/03/22  21:10:12  linus
-# Moved info-dir.
-#
-# Revision 35.14  1992/02/10  02:53:33  linus
-# mkdir replaced by $(MKDIR).
-#
-# Revision 35.13  1991/12/19  12:03:51  linus
-# .elc-files require macros.elc.
-#
-# Revision 35.12  1991/12/18  04:13:37  linus
-# $(MAKE)
-#
-# Revision 35.11  1991/10/08  17:11:18  linus
-# Splitting the makefile install entries to make it easier to install without doc.
-#
-# Revision 35.10  1991/10/05  18:15:27  linus
-# Now handles the english version of the client also.
-#
-# Revision 35.9  1991/09/26  14:02:16  linus
-# Install in the correct directory on the ftp-area.
-#
-# Revision 35.8  1991/09/16  20:33:44  linus
-# r{tt namn p} todo filen i wc.
-#
-# Revision 35.7  1991/09/16  19:59:28  linus
-# Makefile now works with clientversion-long.
-#
-# Revision 35.6  1991/09/16  19:31:37  linus
-# Makefile now works with new doc-file names.
-#
-# Revision 35.5  1991/09/16  18:02:02  linus
-# * M ci     Makefile
-# * A ci     makealfa.l
-# =====================================================
-# makealfa.l created to make the alfa version of lyskom.elc
-#
-# Revision 35.4  1991/09/16  16:40:27  linus
-# alfa talar om att det {r alfa i versionsnumret.
-#
-# Revision 35.3  1991/09/15  10:07:04  linus
-# Added copyright note
-#
-# Revision 35.2  1991/09/13  21:42:53  linus
-# Lagt till distclean.
-#
-# Revision 35.1  1991/08/21  15:44:47  linus
-# Lagt till lyskom-clientversion-long
+# $Id: Makefile,v 38.6 1995-03-01 23:20:16 linus Exp $
 #
 
 CLIENTVERSION = 0.39
