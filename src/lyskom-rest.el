@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.33 1997-07-07 15:25:17 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.34 1997-07-09 14:41:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.33 1997-07-07 15:25:17 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.34 1997-07-09 14:41:21 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -474,6 +474,9 @@ reading list then the conf is inserted last in the to do list."
 Prints the name and amount of unread in the conference we just went to 
 according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
+  (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                             lyskom-current-conf
+                             (conf-stat->conf-no conf-stat))
   (initiate-pepsi 'main nil (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
   (let ((num-unread (text-list->length (read-info->text-list read-info))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 44.6 1997-06-29 14:20:02 byers Exp $
+;;;;; $Id: prioritize.el,v 44.7 1997-07-09 14:41:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 44.6 1997-06-29 14:20:02 byers Exp $\n"))
+	      "$Id: prioritize.el,v 44.7 1997-07-09 14:41:25 byers Exp $\n"))
 
 
 
@@ -540,7 +540,7 @@ the same as the entry above it, but to not move it."
                             'priority-prompt))
                           (prioritize-entry->conf-stat entry))
                          t))))
-    (setq selected (or selected entry))
+    (setq selected (or selected (list entry)))
     (while selected
       (lyskom-prioritize-set-priority (car selected) priority)
       (setq selected (cdr selected)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.22 1997-07-03 09:32:54 byers Exp $
+;;;;; $Id: commands1.el,v 44.23 1997-07-09 14:41:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.22 1997-07-03 09:32:54 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.23 1997-07-09 14:41:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -498,6 +498,8 @@ of the person."
 			 lyskom-current-conf))
 		 (progn 
 		   (set-read-list-empty lyskom-reading-list)
+                   (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                                              lyskom-current-conf 0)
 		   (setq lyskom-current-conf 0)))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
 					 lyskom-to-do-list))))))
@@ -1055,7 +1057,7 @@ member of."
     (lyskom-format-insert 'go-to-conf
 			  conf)
 
-    ;; DEBUG+++
+    ;; FIXME: DEBUG+++
     (let ((lyskom-inhibit-prefetch t))
 
       (cond
@@ -1127,11 +1129,38 @@ Args: CONF-STAT MEMBERSHIP"
 (defun lyskom-go-to-empty-conf (conf-stat)
   "Go to a conference with no unseen messages. Args: CONF-STAT."
   (blocking-do 'pepsi (conf-stat->conf-no conf-stat))
+  (lyskom-run-hook-with-args 'lyskom-change-conf-hook 
+                      lyskom-current-conf
+                      (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
   (lyskom-format-insert 'conf-all-read 
 			conf-stat))
 
 
+
+;;(def-kom-var kom-iåm-conf-no 6
+;;  "*Conf-no of IÅM."
+;;local)
+
+;;(defun kom-change-to-iåm-hook (old new)
+;;  (cond ((eq new kom-iåm-conf-no)
+;;         (make-local-variable kom-iåm-saved-variables)
+;;         (setq kom-iåm-saved-variables
+;;               (list kom-check-commented-author-membership
+;;                     kom-check-for-new-comments
+;;                     kom-confirm-multiple-recipients))
+;;         (setq kom-check-commented-author-membership nil
+;;               kom-check-for-new-comments nil
+;;               kom-confirm-multiple-recipients nil))
+;;        (t (when kom-iåm-saved-variables
+;;             (setq kom-check-commented-author-membership 
+;;                   (elt kom-iåm-saved-variables 0)
+;;                   kom-check-for-new-comments
+;;                   (elt kom-iåm-saved-variables 1)
+;;                   kom-confirm-multiple-recipients
+;;                   (elt kom-iåm-saved-variables 2))))))
+
+         
 
 (defun lyskom-get-current-priority ()
   "Return the current priority level."
