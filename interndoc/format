@@ -106,7 +106,7 @@ r - The argument is a string and will be formatted as a subject line.
     Currently implemented letter-options are "d" for one-or-more and
     "b" for booleans.
 
-
+D - Deferred text. [Describe further ...]
 
 2.2 Format Arguments
 
