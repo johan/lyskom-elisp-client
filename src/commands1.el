@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.102 2001-04-22 13:36:24 jhs Exp $
+;;;;; $Id: commands1.el,v 44.103 2001-04-23 21:39:41 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.102 2001-04-22 13:36:24 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.103 2001-04-23 21:39:41 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2078,25 +2078,13 @@ If MARK-NO is nil, review all marked texts."
 ))
 
 
-(defun lyskom-format-time (time)
-  "Return TIME as a formatted string."
-  (lyskom-format 'time-format-exact
-		 (+ (time->year time) 1900)
-		 (1+ (time->mon  time))
-		 (time->mday time)
-		 (time->hour time)
-		 (time->min  time)
-		 (time->sec  time)
-		 (elt (lyskom-get-string 'weekdays)
-		      (time->wday time))))
-
 (lyskom-external-function calendar-iso-from-absolute)
 (lyskom-external-function calendar-absolute-from-gregorian)
 
 (def-kom-command kom-display-time ()
   "Ask server about time and date."
   (interactive)
-  (let ((time (blocking-do 'get-time))
+  (let ((time (lyskom-current-server-time))
         (lyskom-last-text-format-flags nil)
         (weekno nil))
     (lyskom-format-insert
@@ -2107,13 +2095,13 @@ If MARK-NO is nil, review all marked texts."
                     (setq weekno
                           (car (calendar-iso-from-absolute
                                 (calendar-absolute-from-gregorian 
-                                 (list (1+ (time->mon time))
+                                 (list (time->mon time)
                                        (time->mday time)
-                                       (+ 1900 (time->year time)))))))
+                                       (time->year time))))))
                     'time-is-week)
            (error 'time-is))
        'time-is)
-     (lyskom-format-time time)
+     (lyskom-format-time 'timeformat-day-yyyy-mm-dd-hh-mm-ss time)
      ;; Kult:
      (if (and (= (time->hour time)
                  (+ (/ (time->sec time) 10)
@@ -2129,9 +2117,9 @@ If MARK-NO is nil, review all marked texts."
                (let ((when (car el))
                      (event (cdr el)))
                  (if (and (or (null (elt when 0))
-                              (= (+ (time->year time) 1900) (elt when 0)))
+                              (= (time->year time) (elt when 0)))
                           (or (null (elt when 1))
-                              (= (1+ (time->mon time)) (elt when 1)))
+                              (= (time->mon time) (elt when 1)))
                           (or (null (elt when 2))
                               (= (time->mday time) (elt when 2)))
                           (or (null (elt when 3))
@@ -2146,8 +2134,8 @@ If MARK-NO is nil, review all marked texts."
                            (lyskom-format-insert 
                             "%#1t"
                             (lyskom-format event
-                                           (+ (time->year time) 1900)
-                                           (1+ (time->mon  time))
+                                           (time->year time)
+                                           (time->mon  time)
                                            (time->mday time)
                                            (time->hour time)
                                            (time->min  time)
@@ -2168,7 +2156,7 @@ If MARK-NO is nil, review all marked texts."
 ;(def-kom-command kom-display-calendar ()
 ;  "Nothing yet"
 ;  (interactive)
-;  (let* ((time (blocking-do 'get-time))
+;  (let* ((time (lyskom-current-server-time))
 ;         (nameday (lyskom-nameday time))
 ;         (special (lyskom-special-date time)))
 ;    ))
@@ -2549,8 +2537,8 @@ If MARK-NO is nil, review all marked texts."
            (31 . ("Sylvester"))))))
 
 (defun lyskom-nameday (&optional now)
-  (let* ((time (or now (blocking-do 'get-time)))
-         (mlist (cdr (assq (1+ (time->mon time)) lyskom-nameday-alist)))
+  (let* ((time (or now (lyskom-current-server-time)))
+         (mlist (cdr (assq (time->mon time) lyskom-nameday-alist)))
          (dlist (cdr (assq (time->mday time) mlist))))
     (cond ((null dlist) nil)
           ((eq 1 (length dlist))
@@ -2670,8 +2658,8 @@ Uses Protocol A version 8 calls"
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 1) ?-)
 			     "\n"))
       (lyskom-insert (lyskom-format 'total-visible-users total-users
-                                    (lyskom-client-date-string 
-                                     'time-format-exact)))))
+                                    (lyskom-format-time
+                                     'timeformat-day-yyyy-mm-dd-hh-mm-ss)))))
 
 
 (defun lyskom-who-is-on-9 (arg &optional conf-stat)
@@ -2796,6 +2784,7 @@ Uses Protocol A version 9 calls"
 			 (setq since
 			       (upcase-initials
 				(lyskom-format-time
+                                 'timeformat-day-yyyy-mm-dd-hh-mm-ss
 				 (static-session-info->connection-time static))))
 		       (setq defer-info
 			     (lyskom-create-defer-info
@@ -2811,6 +2800,7 @@ Uses Protocol A version 9 calls"
 			   (blocking-do 'get-static-session-info session-no))
 		     (setq since (upcase-initials
 				  (lyskom-format-time
+                                 'timeformat-day-yyyy-mm-dd-hh-mm-ss
 				   (static-session-info->connection-time static))))))
 	      (lyskom-format-insert
 	       format-string-3
@@ -2832,7 +2822,8 @@ Uses Protocol A version 9 calls"
 			  (t
 			   'total-visible-active-users))
 		    total-users
-                    (lyskom-client-date-string 'time-format-exact)))))
+                    (lyskom-format-time
+                     'timeformat-day-yyyy-mm-dd-hh-mm-ss)))))
 
 (defun lyskom-who-is-on-check-membership-8 (who-info-list conf-stat)
   "Returns a list of those in WHO-INFO-LIST which is member in CONF-STAT."
@@ -2879,6 +2870,7 @@ Uses Protocol A version 9 calls"
       (lyskom-replace-deferred defer-info
 			       (upcase-initials
 				(lyskom-format-time
+                                 'timeformat-day-yyyy-mm-dd-hh-mm-ss
 				 (static-session-info->connection-time session-info))))
     (lyskom-replace-deferred defer-info "")))
 
@@ -2946,8 +2938,8 @@ Uses Protocol A version 9 calls"
     (lyskom-insert (lyskom-format (if want-invisible
                                       'total-users
                                     'total-visible-users) total-users
-                                    (lyskom-client-date-string 
-                                     'time-format-exact)))
+                                    (lyskom-format-time
+                                     'timeformat-day-yyyy-mm-dd-hh-mm-ss)))
     (lyskom-format-insert "%#1D\n"
                           (lyskom-create-defer-info
                            'get-time nil
@@ -3195,6 +3187,7 @@ WHO-INFOS that are potential sessions."
 		 (lyskom-get-string 'doing-where-conn)
 	       (lyskom-get-string 'doing-nowhere-conn))
 	     (lyskom-format-time
+              'timeformat-day-yyyy-mm-dd-hh-mm-ss
 	      (static-session-info->connection-time static))
              (cond ((eq (/ (dynamic-session-info->idle-time info) 60) 0)
                     (lyskom-get-string 'session-is-active))

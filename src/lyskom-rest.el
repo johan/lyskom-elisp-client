@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.131 2001-02-02 23:24:08 joel Exp $
+;;;;; $Id: lyskom-rest.el,v 44.132 2001-04-23 21:39:46 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.131 2001-02-02 23:24:08 joel Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.132 2001-04-23 21:39:46 joel Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2337,7 +2337,7 @@ calls use the most recently specified file name."
 (defun lyskom-save-text (text-stat text filename)
   "Save text in TEXT-STAT and TEXT to FILENAME."
   (let ((buf (lyskom-get-buffer-create 'temp "*kom*-text" t))
-        (lyskom-print-complex-dates nil)
+        (kom-print-relative-dates nil)
         (kom-deferred-printing nil))
     (save-excursion
       (set-buffer buf)
@@ -3261,8 +3261,10 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
   (lyskom-remove-unread-buffer proc)
   (set-buffer (process-buffer proc))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t t)
-  (lyskom-format-insert 'closed-connection sentinel 
-                        (lyskom-client-date-string 'time-format-exact))
+  (lyskom-format-insert 'closed-connection
+                        sentinel 
+                        (lyskom-format-time
+                         'timeformat-day-yyyy-mm-dd-hh-mm-ss))
   (setq mode-line-process (lyskom-get-string 'mode-line-down))
   (beep)
   (lyskom-scroll))

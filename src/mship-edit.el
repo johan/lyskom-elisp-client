@@ -297,9 +297,9 @@ only recomputed if the window width changes."
                                        (membership->conf-no 
                                         (lp--entry->membership entry)))
                       conf-stat)
-                    (lyskom-return-date-and-time
-                     (membership->last-time-read (lp--entry->membership entry))
-                     'time-yyyy-mm-dd)
+                    (lyskom-format-time
+                     'date
+                     (membership->last-time-read (lp--entry->membership entry)))
                     (if un (int-to-string un) "")
                     
                     (if (membership-type->invitation (membership->type (lp--entry->membership entry))) ?I ?.)
@@ -347,14 +347,15 @@ only recomputed if the window width changes."
           (if (and (null conf-stat)
                    (eq 0 (time->sec (membership->created-at membership)))
                    (eq 0 (time->min (membership->created-at membership)))
-                   (eq 0 (time->mon (membership->created-at membership)))
+                   (eq 1 (time->mon (membership->created-at membership)))
                    (eq 1 (time->mday (membership->created-at membership)))
-                   (eq 70 (time->year (membership->created-at membership))))
+                   (eq 1970 (time->year (membership->created-at membership))))
               (lyskom-format "Ingen information om när medlemskapet skapades")
             (lyskom-format "%#1s %#2s av %#3P"
                            (if (membership-type->invitation (membership->type (lp--entry->membership entry)))
                                "Inbjuden" "Adderad")
-                           (lyskom-return-date-and-time
+                           (lyskom-format-time
+                            'date-and-time
                             (membership->created-at (lp--entry->membership entry)))
                            (if (null conf-stat)
                                (lyskom-format 'person-does-not-exist

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.79 2001-01-03 22:03:03 qha Exp $
+;;;;; $Id: utilities.el,v 44.80 2001-04-23 21:39:51 joel Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.79 2001-01-03 22:03:03 qha Exp $\n"))
+	      "$Id: utilities.el,v 44.80 2001-04-23 21:39:51 joel Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -252,19 +252,6 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
   "Call accept-process-output with the correct timeout values."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
-
-(defun lyskom-current-time (&optional secs)
-  "Return the time in a format that LysKOM understands.
-If optional argument SECS is set, it is used in place of the value
-of \(current-time\)."
-  (let ((time (decode-time (or secs (current-time)))))
-    (setcar (cdr (cdr (cdr (cdr time))))
-            (1- (car (cdr (cdr (cdr (cdr time)))))))
-    (setcar (cdr (cdr (cdr (cdr (cdr time)))))
-            (- (car (cdr (cdr (cdr (cdr (cdr time))))))
-               1900))
-    time))
-
 
 
 ;;;
@@ -934,39 +921,88 @@ also reads the proper X resources."
 ;;; ============================================================
 ;;; Date and time utilities
 
-(defun lyskom-client-date-string (&optional fmt)
-  "Format the current client time as a string.
-The optional format string FMT specifies the format. If no format string
-is supplied time-yyyy-mm-dd-hh-mm is used. The arguments to the format
-string are the following: the year, the month, the day, the hour, the 
-minutes, the seconds, the full name of the day of week, the abbreviated
-name of the day of week."
-  (let ((now (decode-time)))
-    (lyskom-format (or fmt 'time-yyyy-mm-dd-hh-mm)
-                   (elt now 5)
-                   (elt now 4)
-                   (elt now 3)
-                   (elt now 2)
-                   (elt now 1)
-                   (elt now 0)
-                   (elt (lyskom-get-string 'weekdays)
-                        (elt now 6))
-                   (elt (lyskom-get-string 'weekdays-short)
-                        (elt now 6)))))
-
-(defun lyskom-client-date ()
-  "Return the current time at the client as a LysKOM time structure."
+(defun lyskom-current-client-time ()
+  "Return time representing current client time."
   (let ((now (decode-time)))
     (lyskom-create-time (elt now 0)     ;sec
                         (elt now 1)     ;min
                         (elt now 2)     ;hour
-                        (elt now 3)	;mday
+                        (elt now 3)     ;mday
                         (elt now 4)     ;mon
-                        (- (elt now 5) 1900) ;year
+                        (elt now 5)     ;year
                         (elt now 6)     ;wday
                         0               ;yday
-                        (elt now 7)
+                        (if (elt now 7) ;isdst
+                            1
+                          0)
                         )))
+
+(defun lyskom-current-server-time ()
+  "Return time representing current server time."
+  (blocking-do 'get-time))
+
+(defun lyskom-format-time (format &optional time)
+  "Return TIME as a string formatted as FORMAT.
+
+FORMAT may be a string or a symbol.  If it is a symbol, it is
+interpreted as follows:
+
+    'date-and-time  Include date and time. [1][2]
+    'date           Include just date. [1]
+    'time           Include just time. [2]
+
+    [1] If kom-print-seconds-in-time-strings is nil, only hours and
+    minutes will be included in the time; if it is non-nil, seconds
+    will also be included.
+    [2] If kom-print-relative-dates is non-nil and the date is today's
+    or yesterday's, the string \"today\" or \"yesterday\" (respectively)
+    is used instead of the standard date format.
+
+If FORMAT is a symbol but not one of the symbols listed above, the
+format string will be lookup up with lyskom-get-string.  The
+timeformat-* strings are tailored to be used as formats for this
+function.
+
+The arguments to the format string is (in order): year, month number
+(starting with one for January), day-of-month number, hour, minute,
+second, full name of the day of the week, abbreviated name of the day
+of the week.
+
+TIME defaults to the current client time."
+  (let* ((time (or time (lyskom-current-client-time)))
+         (fmt (cond
+               ((stringp format)
+                format)
+               ((memq format '(date-and-time date time))
+                (lyskom-format (cond ((eq format 'date-and-time)
+                                      'format-time-date-and-time)
+                                     ((eq format 'date)
+                                      'format-time-just-date)
+                                     ((eq format 'time)
+                                      'format-time-just-time))
+                               (lyskom-get-string
+                                (or (and kom-print-relative-dates
+                                         (lyskom-calculate-day-diff time))
+                                    'timeformat-yyyy-mm-dd))
+                               (lyskom-get-string
+                                (if kom-print-seconds-in-time-strings
+                                    'timeformat-hh-mm-ss
+                                  'timeformat-hh-mm))))
+               ((symbolp format)
+                (lyskom-get-string format))
+               (t (error "Invalid argument")))))
+    (lyskom-format fmt
+                   (time->year time)
+                   (time->mon  time)
+                   (time->mday time)
+                   (time->hour time)
+                   (time->min  time)
+                   (time->sec  time)
+                   (elt (lyskom-get-string 'weekdays)
+                        (time->wday time))
+                   (elt (lyskom-get-string 'weekdays-short)
+                        (time->wday time)))))
+
 
 ;;; ============================================================
 ;;; Keymap utilities

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.21 2001-01-28 21:16:07 joel Exp $
+;;;;; $Id: aux-items.el,v 44.22 2001-04-23 21:39:40 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.21 2001-01-28 21:16:07 joel Exp $\n"))
+	      "$Id: aux-items.el,v 44.22 2001-04-23 21:39:40 joel Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -317,7 +317,7 @@ return non-nil if the item is to be included in the list."
           (lyskom-aux-item-definition->name def)
         "unknown")
       (aux-item->creator item)
-      (lyskom-return-date-and-time (aux-item->sent-at item))
+      (lyskom-format-time 'date-and-time (aux-item->sent-at item))
       (if (aux-item-flags->deleted (aux-item->flags item))
           (format "(%s)" (lyskom-get-string 'deleted))
         "")
@@ -484,7 +484,7 @@ return non-nil if the item is to be included in the list."
   (concat 
    (lyskom-format 'read-confirm-aux
                   (aux-item->creator item)
-                  (lyskom-return-date-and-time (aux-item->sent-at item)))
+                  (lyskom-format-time 'date-and-time (aux-item->sent-at item)))
    (lyskom-aux-item-terminating-button item obj)))
 
 

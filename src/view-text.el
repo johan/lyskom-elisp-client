@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.50 2001-04-01 13:18:40 joel Exp $
+;;;;; $Id: view-text.el,v 44.51 2001-04-23 21:39:52 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.50 2001-04-01 13:18:40 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.51 2001-04-23 21:39:52 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -116,15 +116,16 @@ Note that this function must not be called asynchronously."
                          (let ((date (lyskom-mx-date-to-time mx-date)))
                            (if date
                              (progn
-                               (lyskom-print-date-and-time date)
+                               (lyskom-insert (lyskom-format-time 'date-and-time date))
                                (when (time->tzhr date)
                                  (lyskom-format-insert " %#1s%#2s " 
                                                        (time->tzhr date)
                                                        (time->tzmin date))))
                              (lyskom-format-insert (aux-item->data mx-date))))
-                       (lyskom-print-date-and-time (text-stat->creation-time
-                                                    text-stat)
-                                                   'time-y-m-d-h-m))
+                       (lyskom-insert
+                        (lyskom-format-time
+                         'date-and-time
+                         (text-stat->creation-time text-stat))))
 
                    ;; Insert number of lines
 
@@ -175,19 +176,19 @@ Note that this function must not be called asynchronously."
                                (text-stat->author text-stat)
                                kom-show-imported-importer)
                           (lyskom-format-insert 'text-imported-at-by
-                                                (lyskom-return-date-and-time (text-stat->creation-time
-                                                                              text-stat)
-                                                                             'time-y-m-d-h-m)
+                                                (lyskom-format-time
+                                                 'date-and-time
+                                                 (text-stat->creation-time text-stat))
                                                 (text-stat->author text-stat)))
                          (mx-from
                           (lyskom-format-insert 'text-imported-at
-                                                (lyskom-return-date-and-time (text-stat->creation-time
-                                                                              text-stat)
-                                                                             'time-y-m-d-h-m)))
+                                                (lyskom-format-time
+                                                 'date-and-time
+                                                 (text-stat->creation-time text-stat))))
                          (mx-date (lyskom-format-insert 'text-created-at
-                                                        (lyskom-return-date-and-time (text-stat->creation-time
-                                                                                      text-stat)
-                                                                                     'time-y-m-d-h-m))))
+                                                        (lyskom-format-time
+                                                         'date-and-time
+                                                         (text-stat->creation-time text-stat)))))
                    (when kom-show-imported-external-recipients
                      (mapcar (lambda (el)
                                (lyskom-format-insert "%#1s: %#2s\n"
@@ -654,33 +655,15 @@ blocking-do."
          (decnow (decode-time now))
          (decthen (decode-time yesterday)))
     (cond ((and (= (time->mday time) (elt decnow 3))
-                (= (1+ (time->mon time)) (elt decnow 4))
-                (= (+ (time->year time) 1900) (elt decnow 5)))
+                (= (time->mon time)  (elt decnow 4))
+                (= (time->year time) (elt decnow 5)))
            'today)
           ((and (= (time->mday time) (elt decthen 3))
-                (= (1+ (time->mon time)) (elt decthen 4))
-                (= (+ (time->year time) 1900) (elt decthen 5)))
+                (= (time->mon time)  (elt decthen 4))
+                (= (time->year time) (elt decthen 5)))
            'yesterday)
           (t nil))))
 
-(defun lyskom-return-date-and-time (time &optional fmt)
-  "Return date and time as a string. Arg: TIME."
-  (let* ((diff (and lyskom-print-complex-dates
-		    (lyskom-calculate-day-diff time))))
-    (lyskom-format
-     (if diff
-         (intern (concat (symbol-name diff) "-time-format-string"))
-       (or fmt 'time-yyyy-mm-dd-hh-mm))
-     (+ (time->year time) 1900)
-     (1+ (time->mon  time))
-     (time->mday time)
-     (time->hour time)
-     (time->min  time)
-     (and diff (lyskom-get-string diff)))))
-                  
-(defun lyskom-print-date-and-time (time &optional fmt)
-  "Print date and time. Arg: TIME"
-  (lyskom-insert (lyskom-return-date-and-time time fmt)))
 
 (defun lyskom-format-text-footer (text author author-name format format-flags)
   "Format the footer of a text."
@@ -985,14 +968,15 @@ the client. That is done by lyskom-is-read."
 			(misc-info->local-no misc))
   (if (misc-info->sent-at misc)
       (lyskom-format-insert 'send-at
-			    (lyskom-return-date-and-time 
+			    (lyskom-format-time
+                             'date-and-time
 			     (misc-info->sent-at misc))))
   (if (misc-info->sender misc)
       (lyskom-format-insert 'sent-by (misc-info->sender misc)))
   (if (misc-info->rec-time misc)
       (lyskom-format-insert
        'recieved-at
-       (lyskom-return-date-and-time (misc-info->rec-time misc)))))
+       (lyskom-format-time 'date-and-time (misc-info->rec-time misc)))))
 
 
 
@@ -1037,7 +1021,8 @@ Args: TEXT-STAT of the text being read."
 
     ;; Print information about who added the link
     (if (misc-info->sent-at misc)
-	(lyskom-format-insert 'send-at (lyskom-return-date-and-time 
+	(lyskom-format-insert 'send-at (lyskom-format-time
+                                        'date-and-time
 					(misc-info->sent-at misc))))
     (if (misc-info->sender misc)
 	(lyskom-format-insert 'sent-by (misc-info->sender misc)))))
@@ -1212,7 +1197,7 @@ Returns the time structure if successful, otherwise nil."
                      (calendar-absolute-from-gregorian
                       (list mon mday year)))
                     1)))
-        (lyskom-create-time secs mins hour mday (1- mon) (- year 1900) wday 0 nil tzhr tzmin))))
+        (lyskom-create-time secs mins hour mday mon year wday 0 nil tzhr tzmin))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

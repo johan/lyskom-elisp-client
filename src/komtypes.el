@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.16 2001-04-01 13:18:35 joel Exp $
+;;;;; $Id: komtypes.el,v 44.17 2001-04-23 21:39:45 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.16 2001-04-01 13:18:35 joel Exp $\n"))
+	      "$Id: komtypes.el,v 44.17 2001-04-23 21:39:45 joel Exp $\n"))
 
 
 ;;; ============================================================
@@ -881,7 +881,10 @@ FOOTN-TO or FOOTN-IN."
 			   yday
 			   isdst
                            &optional tzhr tzmin)
-  "Create a time from all parameters."
+  "Create a time from all parameters.
+
+Note: YEAR is the actual year, *not* years since 1900.  MON is month
+starting with *one* for January."
   (cons
    'TIME
    (vector sec min hour mday mon year wday yday isdst tzhr tzmin)))

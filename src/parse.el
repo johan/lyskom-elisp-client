@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.36 2001-01-03 22:03:01 qha Exp $
+;;;;; $Id: parse.el,v 44.37 2001-04-23 21:39:48 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.36 2001-01-03 22:03:01 qha Exp $\n"))
+	      "$Id: parse.el,v 44.37 2001-04-23 21:39:48 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -300,8 +300,8 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
    (lyskom-parse-num)			;min
    (lyskom-parse-num)			;hour
    (lyskom-parse-num)			;mday
-   (lyskom-parse-num)			;mon
-   (lyskom-parse-num)			;year
+   (1+ (lyskom-parse-num))		;mon
+   (+ 1900 (lyskom-parse-num))		;year
    (lyskom-parse-num)			;wday
    (lyskom-parse-num)			;yday
    (lyskom-parse-num)))			;isdst
@@ -601,7 +601,7 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   "Parse an old-style member record."
   (lyskom-create-member (lyskom-parse-num) 
                         0
-                        (lyskom-current-time)
+                        (lyskom-current-client-time)
                         (lyskom-create-membership-type
                          nil nil nil nil nil nil nil nil)))
 
@@ -645,7 +645,7 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-vector			;read-texts
     (lyskom-parse-num) 'lyskom-parse-num)
    0
-   (lyskom-current-time)
+   (lyskom-current-client-time)
    (lyskom-create-membership-type nil nil nil nil nil nil nil nil)))
 
 
