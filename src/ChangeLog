@@ -1,3 +1,8 @@
+Wed Aug 12 06:35:09 1992  Linus Tolke Y  (linus@robin)
+
+	* startup.el (lyskom-fetch-until-we-have-unread): Bugfix, it is
+	  now possible to login without unread and get the default prompt.
+
 Tue Aug  4 08:07:14 1992  Linus Tolke Y  (linus@robin)
 
 	* reading.el (lyskom-enter-map-in-to-do-list): 0 is removed, not
