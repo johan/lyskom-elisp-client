@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 35.5 1992-06-13 19:11:30 linus Exp $
+;;;;; $Id: review.el,v 35.6 1992-07-05 03:05:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 35.5 1992-06-13 19:11:30 linus Exp $\n"))
+	      "$Id: review.el,v 35.6 1992-07-05 03:05:20 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -300,7 +300,9 @@ The INFO is a preformatted type to help telling."
      (t					;Read new maps
       (lyskom-collect 'main)
       (let ((from-end (and count (> count 0))))
-	(if (eq start-conf 'all)
+	(if (or (eq start-conf 'all)
+		(and (numberp start-conf)
+		     (< start-conf (map->first-local conf-map))))
 	    (setq start-conf 'done))
 	(if (and conf-stat
 		 (not (eq start-conf 'done)))
@@ -308,8 +310,8 @@ The INFO is a preformatted type to help telling."
 			    start-conf
 			  (+ start-conf (length (map->text-nos conf-map))
 			     lyskom-fetch-map-nos)))
-		   (start (max 0 (1+ (- end lyskom-fetch-map-nos))))
-		   (nom (1+ (- end start))))
+		   (start (max 0 (- end lyskom-fetch-map-nos)))
+		   (nom (- end start)))
 	      (if (or (= start 0)
 		      (>= end (1- (+ (conf-stat->no-of-texts conf-stat)
 				     (conf-stat->first-local-no conf-stat)))))
@@ -317,7 +319,9 @@ The INFO is a preformatted type to help telling."
 		(setq start-conf start))
 	      (initiate-get-map 'main nil (conf-stat->conf-no conf-stat)
 				start nom)))
-	(if (eq start-pers 'all)
+	(if (or (eq start-pers 'all)
+		(and (numberp start-pers)
+		     (< start-pers (map->first-local pers-map))))
 	    (setq start-pers 'done))
 	(if (and pers-stat
 		 (not (eq start-pers 'done)))
@@ -325,8 +329,8 @@ The INFO is a preformatted type to help telling."
 			    start-pers
 			  (+ start-pers (length (map->text-nos pers-map))
 			     lyskom-fetch-map-nos)))
-		   (start (max 0 (1+ (- end lyskom-fetch-map-nos))))
-		   (nom (1+ (- end start))))
+		   (start (max 0 (- end lyskom-fetch-map-nos)))
+		   (nom (- end start)))
 	      (if (or (= start 0)
 		      (>= end (1-
 			       (+ (pers-stat->no-of-created-texts pers-stat)
