@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.122 2002-04-24 21:20:37 byers Exp $
+;;;;; $Id: commands2.el,v 44.123 2002-04-27 19:55:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.122 2002-04-24 21:20:37 byers Exp $\n"))
+              "$Id: commands2.el,v 44.123 2002-04-27 19:55:47 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2891,13 +2891,15 @@ will honor this redirection."
 (defun kom-obsolete-extended-command-binding ()
   "Temporary function for when we moved kom-extended-command from a"
   (interactive)
-  (lyskom-insert-before-prompt "\
-----------------------------------------------------------------
+  (lyskom-format-insert-before-prompt "\
+%#1@----------------------------------------------------------------
 Tangenten för inmatning av kommandon har flyttat från a till x.
 
 Använd x istället för a om du vill ange LysKOM-kommandon vid
 namn. För att undvika att du kör oönskade LysKOM-kommandon så
 måste du trycka på enter för att fortsätta.
 ----------------------------------------------------------------
-")
-  (read-from-minibuffer "Tryck return eller enter för att gå vidare: "))
+"
+                                      '(face kom-warning-face))
+  (read-from-minibuffer 
+   (lyskom-format "%#1@Tryck return eller enter för att gå vidare: " '(face kom-warning-face))))

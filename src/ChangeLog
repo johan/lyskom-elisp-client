@@ -1,5 +1,12 @@
 2002-04-27  David Byers  <david.byers@swipnet.se>
 
+	* Release of 0.47-BETA-1
+
+	* commands2.el (kom-obsolete-extended-command-binding): Print the
+	warning (and if Emacs supports it, the prompt in the minibuffer)
+	using kom-warning-face. I find that I miss the warning too easily
+	otherwise.
+
 	Fix bug 485:
 	* english-strings.el, swedish-strings.el: Number of lines in
 	view-text-first-line was formatted as a text number, not a simple
