@@ -1,5 +1,9 @@
 2003-08-17  David Byers  <byers@lysator.liu.se>
 
+	* macros.el (lyskom-with-external-functions): Work even if
+	byte-compile-unresolved-functions is not bound (e.g. in
+	check-strings.el and when not compiled).
+
 	Make initial value for reading confs more configurable:
 	* filter.el (kom-filter-author): Simplified. Initial values are
 	now computed in completing-read.el, not here.
