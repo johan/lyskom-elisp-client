@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.5 1996-05-27 20:35:40 davidk Exp $
+;;;;; $Id: commands2.el,v 41.6 1996-06-12 07:55:35 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.5 1996-05-27 20:35:40 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.6 1996-06-12 07:55:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1382,14 +1382,19 @@ membership info."
 	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))
-	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed))))
+	 (orig (j-or-n-p (lyskom-get-string 'comments-allowed)))
+         (anarchy (j-or-n-p (lyskom-get-string 'anonymous-allowed))))
     (cache-del-conf-stat conf-no)
     (if (not (blocking-do 'set-conf-type
 	       conf-no
 	       (lyskom-create-conf-type (not open)
 					(not orig)
 					secret
-					nil)))
+					nil
+                                        anarchy
+                                        nil
+                                        nil
+                                        nil)))
 	(progn (lyskom-insert-string 'nope)
 	       (lyskom-format-insert 'error-code
 				     (lyskom-get-error-text lyskom-errno)

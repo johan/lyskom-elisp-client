@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 41.1 1996-05-04 01:03:58 davidk Exp $
+;;;;; $Id: komtypes.el,v 41.2 1996-06-12 07:55:41 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 41.1 1996-05-04 01:03:58 davidk Exp $\n"))
+	      "$Id: komtypes.el,v 41.2 1996-06-12 07:55:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1469,13 +1469,19 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 
 ;;; Constructor:
 
-(defsubst lyskom-create-conf-type (rd_prot original secret letterbox)
+(defsubst lyskom-create-conf-type (rd_prot original secret letterbox 
+                                           &optional anarchy
+                                           rsv1 rsv2 rsv3)
   "Create a conf-type object. Args: RD_PROT ORIGINAL SECRET LETTERBOX."
   (list 'CONF-TYPE 
 	rd_prot 
 	original 
 	secret 
 	letterbox
+        anarchy
+        rsv1
+        rsv2
+        rsv3
 	))
 
 
@@ -1496,6 +1502,22 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 (defsubst conf-type->letterbox (conf-type)
   "Get letterbox from conf-type."
   (elt (cdr conf-type) 3))
+
+(defsubst conf-type->anarchy (conf-type)
+  "Get anarchy from conf-type."
+  (elt (cdr conf-type) 4))
+
+(defsubst conf-type->rsv1 (conf-type)
+  "Get reserved bit from conf-type."
+  (elt (cdr conf-type) 5))
+
+(defsubst conf-type->rsv2 (conf-type)
+  "Get reserved bit from conf-type."
+  (elt (cdr conf-type) 5))
+
+(defsubst conf-type->rsv3 (conf-type)
+  "Get reserved bit from conf-type."
+  (elt (cdr conf-type) 5))
 
 
 ;;; ================================================================

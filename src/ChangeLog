@@ -1,3 +1,26 @@
+Tue Jun 11 09:25:24 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * parse.el (lyskom-parse-conf-type): Hanterar Any-Conf-Type.
+    (lyskom-maybe-parse-1-or-0): Ny funktion.
+
+    * english-strings.el,swedish-strings.el (lyskom-strings): Lade till
+    anonymous-allowed.
+
+    * commands1.el (kom-create-conf): Fråga om man får skriva anonyma
+    texter.
+
+    * komtypes.el (conf-type->anarchy): Ny funktion.
+    (lyskom-create-conf-type): Hantera anarkibiten.
+    (conf-type->rsv1): Ny funktion.
+    (conf-type->rsv2): Ny funktion.
+    (conf-type->rsv3): Ny funktion.
+
+    * lyskom-rest.el (lyskom-format-conf-type): Skicka alltid
+    extended-conf-type till servern.
+
+    * commands2.el (kom-change-conf-type): Fråga om man får skriva anonyma
+    texter.
+
 Thu Jun  6 02:59:01 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* startup.el (kom-start-anew): Anropa clear-all-caches.
