@@ -1,5 +1,9 @@
 2000-08-15  David Byers  <davby@ida.liu.se>
 
+	* async.el (lyskom-is-in-minibuffer): Check cursor-in-echo-area.
+
+	* lyskom-rest.el (j-or-n-p): Inhibit minibuffer messages.
+
 	* commands2.el (kom-set-unread): Immediately go to
 	lyskom-current-conf if that is the conf being changed.
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.33 2000-07-03 10:49:58 byers Exp $
+;;;;; $Id: async.el,v 44.34 2000-08-15 11:06:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.33 2000-07-03 10:49:58 byers Exp $\n"))
+	      "$Id: async.el,v 44.34 2000-08-15 11:06:00 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -436,6 +436,7 @@ according to the value of FLAG."
 (defun lyskom-is-in-minibuffer ()
   "Returns non-nil if I am using the minibuffer for some reading."
   (or lyskom-inhibit-minibuffer-messages
+      cursor-in-echo-area
       (not (zerop (minibuffer-depth)))))
 
 

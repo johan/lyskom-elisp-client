@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.111 2000-08-15 10:09:49 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.112 2000-08-15 11:06:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.111 2000-08-15 10:09:49 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.112 2000-08-15 11:06:02 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3055,6 +3055,7 @@ lyskom-get-string to retrieve regexps for answer and string for repeated query."
   (when (symbolp prompt) (setq prompt (lyskom-get-string prompt)))
   (let ((input-char 0)
 	(cursor-in-echo-area t)
+        (lyskom-inhibit-minibuffer-messages t)
 	(nagging nil))
 
     (while (and (not (char-in-string input-char
