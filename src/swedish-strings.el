@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.273 2002-09-18 20:06:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.274 2002-09-18 20:48:33 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.273 2002-09-18 20:06:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.274 2002-09-18 20:48:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -875,9 +875,9 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (recipient . "Mottagare")
     (carbon-copy . "Extra kopia")
     (blank-carbon-copy . "Dold kopia")
-    (recipient-prefix . "[Mm]")
-    (carbon-copy-prefix . "[Ee]")
-    (blank-carbon-copy-prefix . "[Dd]")
+    (recipient-prefix . "\\([Mm]\\)")
+    (carbon-copy-prefix . "\\([Ee]\\)")
+    (blank-carbon-copy-prefix . "\\([Dd]\\)")
     (add-recipient . "Addera mottagare")
     (add-recipient-or-xref . "Addera...")
 

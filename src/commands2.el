@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.143 2002-09-14 22:31:27 byers Exp $
+;;;;; $Id: commands2.el,v 44.144 2002-09-18 20:48:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.143 2002-09-14 22:31:27 byers Exp $\n"))
+              "$Id: commands2.el,v 44.144 2002-09-18 20:48:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1552,26 +1552,25 @@ YYYY-MM-DD."
 (def-kom-command kom-set-motd ()
   "Set the message of the day for LysKOM."
   (interactive)
-  (if (server-info->motd-of-lyskom lyskom-server-info)
-      (progn (lyskom-collect 'main)
-             (initiate-get-text-stat 'main nil
-                         (server-info->motd-of-lyskom lyskom-server-info)) 
-             (initiate-get-text 'main nil
-                         (server-info->motd-of-lyskom lyskom-server-info))
-             (lyskom-use 'main 'lyskom-set-motd))
-    (lyskom-set-motd nil nil)))
+  (let* ((old-motd-text-stat (and (server-info->motd-of-lyskom lyskom-server-info)
+                                 (blocking-do 'get-text-stat (server-info->motd-of-lyskom lyskom-server-info))))
+         (old-motd-text (and (server-info->motd-of-lyskom lyskom-server-info)
+                             (blocking-do 'get-text (server-info->motd-of-lyskom lyskom-server-info))))
+         (str (and old-motd-text 
+                   old-motd-text-stat
+                   (text->decoded-text-mass old-motd-text old-motd-text-stat)))
+         (recpt (if old-motd-text-stat
+                    (lyskom-get-recipients-from-misc-list
+                     (text-stat->misc-info-list old-motd-text-stat))
+                  (apply 'nconc (mapcar (lambda (x) (list 'RECPT x)) 
+                                        (and lyskom-server-info
+                                             (server-info->kom-news-conf lyskom-server-info)
+                                             (not (eq 0 (server-info->kom-news-conf lyskom-server-info)))
+                                             (list (server-info->kom-news-conf lyskom-server-info))))))))
 
-
-(defun lyskom-set-motd (old-motd-text-stat old-motd-text)
-  "Set the message of the day for LysKOM. 
-Use OLD-MOTD-TEXT as the default text if non-nil."
-
-  (let ((str (and old-motd-text 
-                  old-motd-text-stat
-                  (text->decoded-text-mass old-motd-text old-motd-text-stat))))
     (lyskom-edit-text
      lyskom-proc
-     (lyskom-create-misc-list)
+     (apply 'lyskom-create-misc-list recpt)
      (if (and str (string-match "\n" str))
          (substring str 0 (1- (match-end 0)))
        "")
