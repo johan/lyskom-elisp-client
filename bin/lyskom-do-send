@@ -15,7 +15,7 @@
 # I -- IDOC.xx {r klientdocumentationen sharad.
 # idir -- elisp-client {r klientdocumentationen info-format.
 #
-# $Id: lyskom-do-send,v 35.3 1992-01-25 01:19:35 linus Exp $
+# $Id: lyskom-do-send,v 38.0 1994-01-06 01:46:52 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
