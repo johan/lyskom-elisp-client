@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.8 1991-09-17 19:37:15 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.9 1991-10-08 16:10:39 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.8 1991-09-17 19:37:15 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.9 1991-10-08 16:10:39 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1494,7 +1494,9 @@ then a newline is printed after the name instead."
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
 	(old-match-data (match-data))
-	(old-buffer (current-buffer)))
+	;; lyskom-filter-old-buffer is also changed when starting to edit
+	;; in function lyskom-edit-text.
+	(lyskom-filter-old-buffer (current-buffer)))
     (unwind-protect
 	(progn
 
@@ -1525,7 +1527,7 @@ then a newline is printed after the name instead."
       ; Restore selected buffer and match data.
 
       (store-match-data old-match-data)
-      (set-buffer old-buffer))))
+      (set-buffer lyskom-filter-old-buffer))))
       
 
 
