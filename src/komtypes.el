@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.25 2003-02-13 19:09:09 ceder Exp $
+;;;;; $Id: komtypes.el,v 44.26 2003-04-21 16:15:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.25 2003-02-13 19:09:09 ceder Exp $\n"))
+	      "$Id: komtypes.el,v 44.26 2003-04-21 16:15:17 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -114,12 +114,16 @@ Automatically created with def-komtype" type)
            (let ((field (or (car-safe arg) arg)))
              (setq accessors
                    (cons `(defsubst ,(intern (format "%S->%S" type field)) (obj)
+                            (lyskom-assert (or (null obj) (,(intern (format "lyskom-%S-p" type)) obj))
+                                           "Assertion failed in %s: got %S" ,(format "%S->%S" type field) obj)
                             ,(format "Return field `%s' from OBJ." field)
                             (,access-method (cdr obj) ,field-index))
                          accessors))
              (unless (plist-get (cdr-safe arg) ':read-only)
                (setq mutators
                      (cons `(defsubst ,(intern (format "set-%S->%S" type field)) (obj val)
+                              (lyskom-assert (or (null obj) (,(intern (format "lyskom-%S-p" type)) obj))
+                                             "Assertion failed in %s: got %S" ,(format "%S->%S" type field) obj)
                               ,(format "Set field `%s' of OBJ to VAL." field)
                               (aset (cdr obj) ,field-index val))
                            mutators))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.36 2003-01-05 21:37:05 byers Exp $
+;;;;; $Id: aux-items.el,v 44.37 2003-04-21 16:15:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.36 2003-01-05 21:37:05 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.37 2003-04-21 16:15:16 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -325,6 +325,11 @@ return non-nil if the item is to be included in the list."
   (edit-insert . lyskom-edit-insert-world-readable)
   (text-print-when . header))
 
+(def-aux-item mx-refuse-import 35
+  (text-name aux-mx-refuse-import)
+  (info . lyskom-aux-item-info)
+  (status-print . lyskom-print-mx-refuse-import))
+
 (def-aux-item elisp-client-read-faq 10000
   (text-name aux-elisp-client-read-faq-name)
   (info . lyskom-aux-item-info)
@@ -607,7 +612,7 @@ return non-nil if the item is to be included in the list."
 		     (substring (text->decoded-text-mass text text-stat) 0 (match-beginning 0)))
 		    (t ""))
 	      "\"")
-    (lyskom-format 'no-such-text-no text-no)))
+    (lyskom-format 'no-such-text-m text-no)))
 
 (defun lyskom-deferred-print-faq (text-stat defer-info)
   (if text-stat
@@ -683,6 +688,13 @@ return non-nil if the item is to be included in the list."
   (lyskom-format-insert 'conf-mx-list-name 
                         (aux-item->data item)
                         (lyskom-aux-item-terminating-button item obj)))
+
+(defun lyskom-print-mx-refuse-import (item &optional obj)
+  (let* ((sym (intern (format "mx-refuse-import-%s" (aux-item->data item))))
+         (s (or (lyskom-try-get-string sym 'lyskom-message)
+                (format "'%s'" (aux-item->data item)))))
+    (lyskom-format-insert 'conf-mx-refuse-import s
+                          (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-recommended-conf (item &optional obj)
   (let ((conf-no (string-to-int (if (string-match " " (aux-item->data item))

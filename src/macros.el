@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.30 2002-12-13 22:16:04 byers Exp $
+;;;;; $Id: macros.el,v 44.31 2003-04-21 16:15:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.30 2002-12-13 22:16:04 byers Exp $\n"))
+	      "$Id: macros.el,v 44.31 2003-04-21 16:15:18 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -295,6 +295,26 @@ the current buffer, and its value is copied from the LysKOM buffer."
 (put 'ignore-errors 'edebug-form-spec
      '(sexp form body))
 
+(defun lyskom-assert-error (&rest args)
+  (save-excursion
+    (save-match-data
+      (if (not (and (boundp 'lyskom-buffer)
+                    (bufferp lyskom-buffer)))
+          (let ((debug-on-error t))
+            (apply 'error args))
+        (set-buffer lyskom-buffer)
+        (lyskom-save-backtrace)
+        (apply 'message args)
+        (lyskom-insert-before-prompt (concat (apply 'format args) "\n"))
+        (lyskom-insert-before-prompt (format "%s\n" (car (car lyskom-backtrace-list))))
+        (lyskom-insert-before-prompt (format "%s\n" (elt (car lyskom-backtrace-list) 1)))))))
+
+(eval-and-compile
+  (if lyskom-debug-compile
+      (defsubst lyskom-assert (check &rest args)
+        (or check (if args (apply 'lyskom-assert-error args)
+                    (lyskom-assert-error "Assertion failed"))))
+    (defsubst lyskom-assert (check &rest args) nil)))
 
 ;;; ============================================================
 ;;; Local variables

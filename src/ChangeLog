@@ -1,4 +1,40 @@
+2003-04-21  David Byers  <byers@lysator.liu.se>
+
+	More work on debugging stuff:
+	* macros.el (lyskom-assert-error): Handle non-LysKOM-buffer
+	situations smarter.
+
+	Work on bug 868:
+	* aux-items.el (mx-refuse-import): Added this aux-item.
+	(lyskom-print-mx-refuse-import): New function.
+
+	Microfix bugfix:
+	* lyskom-buttons.el (lyskom-highlight-function-get-conf-stat):
+	Return nil when getting conf-stat in background. Fix text for
+	conf-z-info.
+
+	Bugfix:
+	* commands1.el (kom-list-created-conferences): Fixed bug where we
+	called conf-stat->name on an uconf-stat.
+
 2003-04-20  David Byers  <byers@lysator.liu.se>
+
+	Microfix:
+	* lyskom-buttons.el (lyskom-highlight-function-get-conf-stat): Get
+	conf-stat in background if it was not cached so it will be next
+	time around. Also support conf-z-info.
+
+	Better debugging support (would have caught bug 1013):
+	* komtypes.el (def-komtype): Added assertions on data type to
+	accessors and mutators.
+
+	* macros.el (lyskom-assert): New macro.
+
+	* header.el (lyskom-debug-compile): Added definition of
+	lyskom-debug-compile.
+
+	* komtypes.el (def-komtype): Added assertions to accessor and
+	mutators to check type.
 
 	Fix bug 1013:
 	* lyskom-buttons.el (lyskom-default-button): Fixed cut-and-paste
