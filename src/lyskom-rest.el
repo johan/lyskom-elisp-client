@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.7 1996-04-23 16:53:15 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.8 1996-04-25 15:03:14 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.7 1996-04-23 16:53:15 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.8 1996-04-25 15:03:14 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -756,6 +756,16 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
           (and kom-continuous-scrolling (lyskom-scroll))))))
 
 
+(defun lyskom-insert-at-point (string)
+  "Insert STRING in the current buffer at point.
+The text is converted according to the value of
+kom-emacs-knows-iso-8859-1."
+  (let ((buffer-read-only nil))
+    (insert (if kom-emacs-knows-iso-8859-1
+                string
+              (iso-8859-1-to-swascii string))))
+  (lyskom-trim-buffer))  
+
 
 (defun lyskom-insert-before-prompt (string)
   "Insert STRING just before the prompt of if no prompt then just buffers.
@@ -852,11 +862,28 @@ Args: FORMAT-STRING &rest ARGS"
   (format-state->result (lyskom-do-format format-string argl)))
 
 (defun lyskom-format-insert (format-string &rest argl)
-  "Format and insert a string according to FORMAT-STRING"
+  "Format and insert a string according to FORMAT-STRING.
+The string is inserted at the end of the buffer with `lyskom-insert'."
   (let* ((state (lyskom-do-format format-string argl t))
-	 (start (point-max-marker))
+	 (start (point-max))
 	 (delayed (format-state->delayed-content state)))
     (lyskom-insert (format-state->result state))
+    (while delayed
+      (let ((m1 (make-marker))
+	    (m2 (make-marker)))
+	(set-marker m1 (+ start (car (car delayed))))
+	(set-marker m2 (+ start (cdr (car delayed))))
+	(setcar (car delayed) m1)
+	(setcdr (car delayed) m2)
+	(setq delayed (cdr delayed))))))
+
+(defun lyskom-format-insert-at-point (format-string &rest argl)
+  "Format and insert a string according to FORMAT-STRING.
+The string is inserted at point."
+  (let* ((state (lyskom-do-format format-string argl t))
+	 (start (point))
+	 (delayed (format-state->delayed-content state)))
+    (lyskom-insert-at-point (format-state->result state))
     (while delayed
       (let ((m1 (make-marker))
 	    (m2 (make-marker)))
@@ -1098,8 +1125,9 @@ Args: FORMAT-STRING &rest ARGS"
       (setq result
             (cond ((stringp arg) arg)
 		  
-                  ((and (integerp arg)
-			accept-delay)
+                  ((and accept-delay
+			kom-delayed-printing
+			(integerp arg))
 		   (let ((tmp (cache-get-conf-stat arg)))
                      (if (null tmp)
 			 (let ((place (cons oldpos (+ oldpos 5))))
@@ -1146,11 +1174,7 @@ Args: FORMAT-STRING &rest ARGS"
           (= format-letter ?p))
       (setq result
             (cond ((integerp arg) 
-                   (let ((tmp (blocking-do 'get-conf-stat arg)))
-                     (if (null tmp)
-                         (int-to-string arg)
-                       (setq arg tmp)
-                       (int-to-string arg))))
+		   (int-to-string arg))
                   ((lyskom-conf-stat-p arg) 
                    (int-to-string (conf-stat->conf-no arg)))
                   (t (signal 'lyskom-internal-error
@@ -1284,10 +1308,15 @@ Args: FORMAT-STRING &rest ARGS"
 	     (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)
 				    conf-stat)
 	     s))
-	(insert-and-inherit s)))
+	(let ((prevface (get-text-property (point) 'face)))
+	  (lyskom-insert-at-point s)
+	  (if prevface
+	      (put-text-property (cdr place) (point) 'face prevface)))))
     (delete-region (car place) (cdr place))
     (set-marker (car place) nil)
-    (set-marker (cdr place) nil)))
+    (set-marker (cdr place) nil)
+    (while (not (pos-visible-in-window-p))
+	(forward-line -1))))
 
 
 ;;; ================================================================
@@ -2175,20 +2204,8 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	    (progn
 	      (setq lyskom-quit-flag nil)
 
-	      ;; Test
 	      (if lyskom-debug-communications-to-buffer
 		  (lyskom-debug-insert proc "-----> " output))
-	      
-;;;	      (cond
-;;;	       (lyskom-debug-communications-to-buffer
-;;;		(set-buffer (get-buffer-create
-;;;			     lyskom-debug-communications-to-buffer-buffer))
-;;;		  (save-excursion
-;;;		    (goto-char (point-max))
-;;;		    (insert "\n"
-;;;			    (format "%s" proc)
-;;;			    "-----> "  output))
-;;;		  ))
 	      
 	      (set-buffer (process-buffer proc))
 	      (princ output lyskom-unparsed-marker) ;+++lyskom-string-skip-whitespace
@@ -2197,10 +2214,13 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	      ;; Keep inhibit-quit set to t
 	      (cond
 
-	       ;; This test make startup a lot faster, but
-	       ;; mysteriously causes emacs to go into a tight poll()
-	       ;; loop sometimes
-	       ;; ((not (string-match "\n" output)))
+	       ;; This test make startup a lot faster. The first
+	       ;; method we used was to do
+	       ;;       (not (string-match "\n" output))
+	       ;; but that made it behave extremely badly when viewing
+	       ;; a text likt 50122. This might work better.
+	       ((not (save-excursion
+		       (search-backward "\n" (- (point) (length output)) t))))
 	       
 	       ((null lyskom-is-parsing) ;Parse one reply at a time.
 		(setq lyskom-is-parsing t)
@@ -2221,7 +2241,6 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
       (store-match-data old-match-data)
       (set-buffer lyskom-filter-old-buffer))))
       
-
 
 ;;; The sentinel
 

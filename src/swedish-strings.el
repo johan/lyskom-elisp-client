@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.2 1996-04-04 11:55:03 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.3 1996-04-25 15:03:24 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.2 1996-04-04 11:55:03 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.3 1996-04-25 15:03:24 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -918,6 +918,8 @@ Text:
     (kom-review-by-to           "\305terse senaste")
     (kom-review-first           "\305terse f\366rsta")
     (kom-view-commented-text    "\305terse det kommenterade")
+    (kom-view-previous-commented-text
+     				"\305terse det f\366reg\345ende kommenterade")
     (kom-review-stack           "\305terse lista")
     (kom-review-presentation    "\305terse presentation")
     (kom-review-backward        "(\305terse) Bakl\344nges")

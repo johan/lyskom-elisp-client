@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.2 1996-04-04 11:54:45 byers Exp $
+;;;;; $Id: english-strings.el,v 40.3 1996-04-25 15:03:07 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 40.2 1996-04-04 11:54:45 byers Exp $"))
+	      "$Id: english-strings.el,v 40.3 1996-04-25 15:03:07 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -899,6 +899,8 @@ Text:
     (kom-review-by-to           "Review last")
     (kom-review-first           "Review first")
     (kom-view-commented-text    "Review (the) commented (article)")
+    (kom-view-previous-commented-text
+     				"Review (the) previouls commented (article)")
     (kom-review-stack           "Review stack")
     (kom-review-presentation    "Review presentation")
     (kom-review-backward        "(Review) Backwards")
