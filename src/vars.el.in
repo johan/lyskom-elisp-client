@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.174 2002-04-12 22:54:37 qha Exp $
+;;;;; $Id: vars.el.in,v 44.175 2002-04-13 15:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.174 2002-04-12 22:54:37 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.175 2002-04-13 15:01:28 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1803,6 +1803,10 @@ is a list of vectors, where each vector specifies an item.
     kom-remove-presentation
     kom-create-aux-item
     kom-status-server
+    kom-add-server-faq
+    kom-del-server-faq
+    kom-change-server-faq
+    kom-review-server-faq
     ))
 
 ;;; ================================================================
@@ -2321,7 +2325,9 @@ set to that text."
     kom-add-faq
     kom-add-no-comments
     kom-add-private-answer
-    kom-add-request-confirm)
+    kom-add-request-confirm
+    kom-add-server-faq
+    )
   "Commands that prompt for a text number rather than assume a default."
   inherited)
 
@@ -2641,8 +2647,14 @@ the value of  kom-tell-phrases for fun.")
 (defconst lyskom-admin-removed-commands
   '(kom-enable-adm-caps))
 (defconst lyskom-noadmin-removed-commands
-  '(kom-disable-adm-caps kom-remove-motd kom-set-motd kom-shutdown-server
-                         kom-sync-database))
+  '(kom-disable-adm-caps
+    kom-remove-motd
+    kom-set-motd
+    kom-shutdown-server
+    kom-sync-database
+    kom-add-server-faq 
+    kom-del-server-faq
+    kom-change-server-faq))
 
 
 ;;; ================================================================

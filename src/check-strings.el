@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.13 2002-01-07 16:47:29 byers Exp $
+;;;;; $Id: check-strings.el,v 44.14 2002-04-13 15:01:27 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -193,6 +193,12 @@ STRING is the string."
              (cond ((memq nil result) nil)
                    (t t))))))
     
+(defun lcs-delete-format-arg (el flist)
+  (let ((result nil))
+    (while (and flist (not (equal el (car flist))))
+      (setq result (cons (car flist) result)
+            flist (cdr flist)))
+    (setq result (nconc (nreverse result) (cdr flist)))))
 
 (defun lcs-check-format-string (template flist)
   "Match the formatters in TEMPLATE to those in FLIST."
@@ -201,8 +207,8 @@ STRING is the string."
     (while flist
       (if (not (member (car flist) template))
 	  (setq result nil flist nil)
-	(setq template (delete (car flist) template))
-	(setq flist (delete (car flist) flist))))
+	(setq template (lcs-delete-format-arg (car flist) template))
+	(setq flist (lcs-delete-format-arg (car flist) flist))))
     (and result (null template))))
 
 (defun lcs-check-customize-variables ()

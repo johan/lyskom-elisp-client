@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.220 2002-04-13 09:30:58 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.221 2002-04-13 15:01:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.220 2002-04-13 09:30:58 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.221 2002-04-13 15:01:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -416,6 +416,7 @@ Utträd ur mötet en gång till för gå ur helt.\n")
     (cant-read-textno . "Du får inte läsa text %#1:n.\n")
 
     (not-supervisor-for . "Du är inte organisatör för %#1M.\n")
+    (not-supervisor-for-server . "Du är inte administratör för LysKOM-servern.\n")
     (go-to-conf . "Gå till %#1M.\n")
     (cant-go-to-his-mailbox . "Du får inte gå till %#1Ms brevlåda.\n")
     (not-member-of-conf . "Du är inte medlem i %#1M.\n")
@@ -1386,15 +1387,15 @@ Uppkopplad sedan %#8s%#9s")
     (conf-to-add-faq . "Vilket möte vill du lägga till en FAQ för? ")
     (text-to-add-as-faq . "Vilken text vill du lägga till som FAQ? ")
     (text-to-change-as-faq . "Vilken FAQ vill du ändra? ")
-    (adding-faq . "Lägger till inlägg %#1n som FAQ för %#2M...")
+    (adding-faq . "Lägger till inlägg %#1n som FAQ för %#2?b%[%#2M%]%[servern%]...")
     (conf-to-del-faq . "Vilket möte vill du ta bort en FAQ från? ")
     (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
-    (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2M...")
-    (conf-has-no-faq . "%#1M har ingen FAQ\n")
+    (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2?b%[%#2M%]%[servern%]...")
+    (conf-has-no-faq . "%#1?b%[%%#1M%]%[Servern%] har ingen FAQ\n")
     (view-which-faq . "Återse FAQ för vilket möte? ")
-    (review-faq-for-r . "Återse FAQ för %#1M.\n")
-    (changed-faq-for-conf-done . "FAQ för %#1M ändrad till text %#3n.\n")
-    (changed-faq-for-conf-failed . "Kunde inte ändra FAQ för %#1M till text %#3n.
+    (review-faq-for-r . "Återse FAQ för %#1?b%[%#1M%]%[servern%].\n")
+    (changed-faq-for-conf-done . "FAQ i text %#2n för %#1?b%[%#1M%]%[servern%] ändrad till text %#3n.\n")
+    (changed-faq-for-conf-failed . "Kunde inte ändra FAQ för %#1?b%[%#1M%]%[servern%] till text %#3n.
 %#2?b%[Text %#2n är fortfarande FAQ.
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
@@ -1860,6 +1861,10 @@ Antal sessioner:     %21#1d (totalt)
     (kom-set-motd-text        . "Addera lapp på dörren")
     (kom-create-aux-item      . "Skapa tilläggsinformation")
     (kom-status-server        . "Status (för) servern")
+    (kom-add-server-faq       . "Addera server-FAQ")
+    (kom-del-server-faq       . "Ta bort server-FAQ")
+    (kom-review-server-faq    . "Återse server-FAQ")
+    (kom-change-server-faq    . "Ändra server-FAQ")
     ))
 
 (lyskom-language-strings lyskom-help-strings sv
@@ -2633,6 +2638,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "} t") 'kom-find-root-review)
   (define-key lyskom-sv-mode-map (kbd "} m") 'kom-review-marked-texts)
   (define-key lyskom-sv-mode-map (kbd "} q") 'kom-review-faq)
+  (define-key lyskom-sv-mode-map (kbd "} Q") 'kom-review-server-faq)
   (define-key lyskom-sv-mode-map (kbd "} a m") 'kom-review-all-marked-texts)
   (define-key lyskom-sv-mode-map (kbd "} a SPC") 'kom-review-all)
   (define-key lyskom-sv-mode-map (kbd "} b") 'kom-review-mail-headers)
