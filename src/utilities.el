@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.80 2001-04-23 21:39:51 joel Exp $
+;;;;; $Id: utilities.el,v 44.81 2001-04-24 20:55:30 jhs Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.80 2001-04-23 21:39:51 joel Exp $\n"))
+	      "$Id: utilities.el,v 44.81 2001-04-24 20:55:30 jhs Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -253,6 +253,24 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
   (lyskom-next-apo-timeout)
   (accept-process-output nil 0 lyskom-apo-timeout))
 
+(defun lyskom-current-time (&optional secs)
+  "Return the time in a format that LysKOM understands.
+If optional argument SECS is set, it is used in place of the value
+of \(current-time\)."
+  (let ((time (decode-time (or secs (current-time)))))
+    (setcar (cdr (cdr (cdr (cdr time))))
+            (1- (car (cdr (cdr (cdr (cdr time)))))))
+    (setcar (cdr (cdr (cdr (cdr (cdr time)))))
+            (- (car (cdr (cdr (cdr (cdr (cdr time))))))
+               1900))
+    time))
+
+(defun lyskom-set-alist (alist item value)
+  "Modify an alist ALIST to set item ITEM to the value VALUE."
+  (let ((pair (assq item alist)))
+     (if pair
+         (progn (setcdr pair value) alist)
+       (cons (cons item value) alist))))
 
 ;;;
 ;;; LysKOM utility functions
