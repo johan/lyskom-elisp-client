@@ -1,6 +1,7 @@
 2001-10-16  Kent Engström  <kent@lysator.liu.se>
 
  	* vars.el.in (kom-server-aliases): add dskom.studkar.hj.se as DSKOM.
+	Remove MedioKOM, dead for some time now.
 
 2001-10-14  Ulrik Haugen  <qha@lysator.liu.se>
 
