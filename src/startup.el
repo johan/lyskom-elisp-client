@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.104 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: startup.el,v 44.105 2004-07-15 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.104 2004-07-12 18:11:16 byers Exp $\n"))
+	      "$Id: startup.el,v 44.105 2004-07-15 17:13:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -643,6 +643,7 @@ shown to other users."
 
           (when login-successful
             (clear-all-caches)
+            (lyskom-init-membership)
             (when (lyskom-set-language (lyskom-default-language) 'local)
               (unless lyskom-have-one-login
                 (lyskom-set-language (lyskom-default-language) 'global)
@@ -716,10 +717,10 @@ This is called at login and after prioritize and set-unread."
 
   (lyskom-reset-prefetch)
   (let ((lyskom-inhibit-prefetch t))
-    (lyskom-prefetch-membership lyskom-pers-no)
     (let ((unreads (blocking-do 'get-unread-confs lyskom-pers-no)))
       (lyskom-traverse conf-no (nreverse (conf-no-list->conf-nos unreads))
-        (lyskom-prefetch-one-membership conf-no lyskom-pers-no))))
+        (lyskom-prefetch-one-membership conf-no lyskom-pers-no)))
+    (lyskom-prefetch-membership lyskom-pers-no))
   (lyskom-start-prefetch)
 
   (condition-case nil

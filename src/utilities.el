@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.156 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: utilities.el,v 44.157 2004-07-15 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.156 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.157 2004-07-15 17:13:03 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -2664,7 +2664,7 @@ function returns non-nil."
         (cond 
          ((eq text-no 'in) (setq indent (1+ indent)))
          ((eq text-no 'out) (setq indent (1- indent)))
-         (t (let (text text-stat mark)
+         (t (let (mark)
               (cond ((lyskom-mark-p text-no) 
                      (setq mark text-no text-no (mark->text-no text-no)))
                     ((numberp text-no)))

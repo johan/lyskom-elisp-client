@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.208 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: commands2.el,v 44.209 2004-07-15 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.208 2004-07-11 23:01:04 byers Exp $\n"))
+              "$Id: commands2.el,v 44.209 2004-07-15 17:13:03 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2450,6 +2450,8 @@ See `kom-keep-alive' for more information."
         (lyskom-format-insert 'pers-will-receive-async
                               (membership-type->message-flag
                                (membership->type mship)))
+        (lyskom-format-insert 'pers-mship-priority
+                              (membership->priority mship))
         (when kom-deferred-printing
           (lyskom-format-insert 
            'pers-is-member-of-conf-2

@@ -623,7 +623,7 @@ entry priority"
 
 
 (defun lp--remove-from-list (elem l)
-  "Destructively emove the element at index ELEM from the list L."
+  "Destructively remove ELEM from the list L."
   (let* ((n (- (length l) (length (memq elem l)))))
     (cond ((= 0 n) (cdr l))
           ((= n (length l)) l)
@@ -655,11 +655,9 @@ If optional NEW-MSHIP is non-nil, then get the membership again."
                  (let ((entry (lp--conf-no-entry conf-no))
                        (mship (lyskom-get-membership conf-no t)))
 
-                   ;; A new membership
-
                    (cond 
-                    ((null entry)
-                     (let* ((pos (lyskom-membership-position mship))
+                    ((and (null entry) mship)       ; New membership
+                     (let* ((pos (membership->position mship))
                             (elem (and pos (lp--get-entry pos)))
                             (entry (lyskom-create-lp--entry 
                                     nil
@@ -687,7 +685,7 @@ If optional NEW-MSHIP is non-nil, then get the membership again."
                     ((null mship)
                      (when entry
                        (lp--set-entry-list
-                        (lp--remove-from-list (lp--entry-position entry)
+                        (lp--remove-from-list entry
                                               (lp--all-entries)))
                        (lp--erase-entry entry)))
 
