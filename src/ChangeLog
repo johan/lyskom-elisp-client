@@ -1,3 +1,7 @@
+Mon Jan  8 23:17:01 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-looking-at-header): Fungerade inte riktigt.
+
 Mon Jan  8 08:56:24 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* edit-text.el (lyskom-looking-at-header): Ny funktion.
