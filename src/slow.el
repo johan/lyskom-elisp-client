@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: slow.el,v 44.10 2000-08-31 12:29:50 byers Exp $
+;;;;; $Id: slow.el,v 44.11 2000-09-01 13:15:52 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -42,10 +42,20 @@
   "Mode map for the `slow' lyskom command mode.")
 
 (define-key lyskom-slow-mode-map (kbd "RET") 'kom-parse-command-and-execute)
-(define-key lyskom-slow-mode-map (kbd "TAB") 'kom-expand-slow-command)
 (define-key lyskom-slow-mode-map (kbd "SPC") 'kom-expand-slow-or-next-command)
 (define-key lyskom-slow-mode-map (kbd "C-a") 'kom-slow-start-of-line)
 (define-key lyskom-slow-mode-map (kbd "?")   'kom-slow-list-completions)
+(define-key lyskom-slow-mode-map (kbd "*")  'kom-slow-button-press)
+(define-key lyskom-slow-mode-map (kbd "=")  'kom-slow-menu-button-press)
+(define-key lyskom-slow-mode-map (kbd "TAB") 'kom-expand-slow-command-or-next-link)
+(define-key lyskom-slow-mode-map (kbd "M-TAB") 'kom-previous-link)
+(define-key lyskom-slow-mode-map (kbd "C-i")   'kom-expand-slow-command-or-next-link)
+(define-key lyskom-slow-mode-map (kbd "M-C-i") 'kom-previous-link)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button2)) 'kom-slow-click-or-yank)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
+(define-key lyskom-slow-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+
 
 (defun lyskom-slow-start-of-line ()
   "Move point to start of command, after LysKOM prompt."
@@ -72,9 +82,42 @@ If no text is entered, nil is returned."
       nil
     (buffer-substring (point) (point-max))))
 
-(defun kom-slow-start-of-line ()
+(defun lyskom-slow-on-prompt-line (&optional where)
+  "Return non-nil if point is on the line containing the prompt.
+Currently the prompt is assumed to be on the last line of the buffer."
+  (eq (save-excursion (when where (goto-char where)) (beginning-of-line) (point))
+      (save-excursion (goto-char (point-max)) (beginning-of-line) (point))))
+
+(defun kom-slow-click-or-yank (event)
+  "Click on a LysKOM button or do the default action if after the prompt."
+  (interactive "@e")
+  (let ((pos (event-closest-point event)))
+    (if (and (lyskom-slow-on-prompt-line pos)
+             (<= (save-excursion (lyskom-slow-start-of-line) pos)))
+        (let ((fn (lookup-key global-map (this-command-keys))))
+          (when (commandp fn) (call-interactively fn)))
+      (kom-button-click event))))
+
+(defun kom-slow-button-press ()
+  "Run kom-button-press unless on the prompt line."
   (interactive)
-  (lyskom-slow-start-of-line))
+  (if (lyskom-slow-on-prompt-line)
+      (call-interactively 'self-insert-command)
+    (kom-button-press)))
+
+(defun kom-slow-menu-button-press ()
+  "Run kom-menu-button-press unless on the prompt line."
+  (interactive)
+  (if (lyskom-slow-on-prompt-line)
+      (call-interactively 'self-insert-command)
+    (kom-menu-button-press)))
+
+(defun kom-slow-start-of-line ()
+  "Move to the beginning of line or start of command if on the prompt line."
+  (interactive)
+  (if (lyskom-slow-on-prompt-line)
+      (lyskom-slow-start-of-line)
+    (beginning-of-line)))
 
 (defun lyskom-expand-slow-command (try-exact eager-completion)
   (let* ((saved-point (point-marker))
@@ -124,6 +167,14 @@ If no text is entered, nil is returned."
           ))
 	 (t (signal 'lyskom-internal-error '()))))))
     command))
+
+(defun kom-expand-slow-command-or-next-link ()
+  "If on the prompt line, run kom-expand-slow-command.
+Otherwise run kom-next-link."
+  (interactive)
+  (if (lyskom-slow-on-prompt-line)
+      (call-interactively 'kom-expand-slow-command)
+    (call-interactively 'kom-next-link)))
 
 (defun kom-expand-slow-command (&optional try-exact)
   "Tries to complete the command at point.

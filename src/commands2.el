@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.80 2000-08-28 13:54:42 byers Exp $
+;;;;; $Id: commands2.el,v 44.81 2000-09-01 13:15:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.80 2000-08-28 13:54:42 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.81 2000-09-01 13:15:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2432,7 +2432,7 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 	  (or conf-no
 	      (lyskom-read-conf-no (lyskom-get-string 'conf-to-check-mship-of)
 				   '(all) nil nil t))))
-    (if (lyskom-is-member pers-no conf-no)
+    (if (lyskom-is-member conf-no pers-no)
 	(lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no)
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
