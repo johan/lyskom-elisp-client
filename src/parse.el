@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.18 1999-06-10 13:36:17 byers Exp $
+;;;;; $Id: parse.el,v 44.19 1999-06-11 12:56:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.18 1999-06-10 13:36:17 byers Exp $\n"))
+	      "$Id: parse.el,v 44.19 1999-06-11 12:56:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -706,6 +706,7 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
   (apply 'lyskom-create-conf-no-list
          (lyskom-parse-vector (lyskom-parse-num)
                               'lyskom-parse-num)))
+
 
 (defun lyskom-parse-conf-list ()
   "Parse result from functions that return a conf-list."
