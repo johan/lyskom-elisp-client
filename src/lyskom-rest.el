@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.11 1993-09-21 23:17:30 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.12 1993-12-14 02:22:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.11 1993-09-21 23:17:30 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.12 1993-12-14 02:22:24 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -165,7 +165,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 		   (if kom-emacs-knows-iso-8859-1
 		       lyskom-commands
 		     lyskom-swascii-commands)))))
-
+o
 
 (defun lyskom-ok-command (alternative)
   "Returns non-nil if it is ok to do such a command right now."
@@ -405,15 +405,15 @@ lyskom-mark-as-read."
 (defun lyskom-is-read-handler (text-stat)
   "Update lyskom-membership for all recipients to TEXT-STAT."
   (lyskom-traverse
-   misc (text-stat->misc-info-list text-stat)
-   (if (or (eq 'RECPT (misc-info->type misc))
-	   (eq 'CC-RECPT (misc-info->type misc)))
-       (let ((membership (lyskom-member-p (misc-info->recipient-no misc))))
-	 (if membership
-	     (set-membership->read-texts
-	      membership
-	      (vconcat (vector (misc-info->local-no misc))
-		       (membership->read-texts membership))))))))
+      misc (text-stat->misc-info-list text-stat)
+    (if (or (eq 'RECPT (misc-info->type misc))
+	    (eq 'CC-RECPT (misc-info->type misc)))
+	(let ((membership (lyskom-member-p (misc-info->recipient-no misc))))
+	  (if membership
+	      (set-membership->read-texts
+	       membership
+	       (vconcat (vector (misc-info->local-no misc))
+			(membership->read-texts membership))))))))
 
 
 ;;; ================================================================
@@ -515,20 +515,20 @@ Args: CONF-STAT READ-INFO"
   "Add the conferences on READ-LIST on lyskom-to-do-list.
 Alter the priority to kom-low-priority if LOW-PRIORITY is non-nil."
   (lyskom-traverse
-   to-read (read-list->all-entries read-list)
-   (if (or (eq 'CONF (read-info->type to-read))
-	   (eq 'REVIEW-MARK (read-info->type to-read)))
-    ;; Only unread conferences and viewings of marked texts
-    ;; are put back on the to-do-list.
-    ;; E. g. unread comments to a text are not put back since they
-    ;; are anyhow present on a 'CONF-item's text-list.
-       (progn
-	 (if (and kom-low-priority
-		  low-priority)
-	     (set-read-info->priority to-read kom-low-priority))
-	 (read-list-enter-read-info to-read
-				    lyskom-to-do-list
-				    (not low-priority))))))
+      to-read (read-list->all-entries read-list)
+    (if (or (eq 'CONF (read-info->type to-read))
+	    (eq 'REVIEW-MARK (read-info->type to-read)))
+	;; Only unread conferences and viewings of marked texts
+	;; are put back on the to-do-list.
+	;; E. g. unread comments to a text are not put back since they
+	;; are anyhow present on a 'CONF-item's text-list.
+	(progn
+	  (if (and kom-low-priority
+		   low-priority)
+	      (set-read-info->priority to-read kom-low-priority))
+	  (read-list-enter-read-info to-read
+				     lyskom-to-do-list
+				     (not low-priority))))))
 
 
 ;;;================================================================
@@ -536,10 +536,13 @@ Alter the priority to kom-low-priority if LOW-PRIORITY is non-nil."
 ;;; Whereto?
 (defvar lyskom-sessions-with-unread nil
   "Global variable. List of lyskom-sessions with unread articles.")
-(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
-    (setq minor-mode-alist (cons '(lyskom-sessions-with-unread 
-				   (lyskom-get-string 'mode-line-unread))
-				 minor-mode-alist)))
+;;;Must be called after lyskom-get-string is defined. Also after running 
+;;;load hooks.
+;;;(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
+;;;    (setq minor-mode-alist (cons (list 'lyskom-sessions-with-unread 
+;;;			       		  (lyskom-get-string 'mode-line-unread))
+;;;				 minor-mode-alist)))
+
 
 (defun lyskom-set-mode-line (&optional conf)
   "Sets mode-line-conf-name to the name of the optional argument conf CONF.
@@ -967,6 +970,14 @@ Special: if lyskom-is-waiting then we are allowed to break if we set
 lyskom-is-waiting nil.
 	 This function checks if doing-default-command and first-time-around 
 	 are bound. The text entered in the buffer is chosen according to this"
+  (if (listp lyskom-time-last-command) ;We are visible
+      nil
+    (initiate-login-new 'idle nil lyskom-pers-no "" 0)
+    (lyskom-tell-internat 'kom-tell-is-back))
+  (condition-case emacs-18.55
+      (setq lyskom-time-last-command (current-time))
+    (error ; No function current-time
+     ))
   (if (and lyskom-is-waiting
 	   (listp lyskom-is-waiting))
       (progn
@@ -1603,7 +1614,14 @@ then a newline is printed after the name instead."
 		  (lyskom-parse-incomplete)) ;Incomplete answers are normal.
 	      (set-buffer (process-buffer proc)) ;In case it was changed by
 					;        ;the handler.
-	      (setq lyskom-is-parsing nil)))))
+	      (setq lyskom-is-parsing nil))))
+	  (if (listp lyskom-time-last-command)	;We are visible
+	      (if (lyskom-idle-time-is-reached)	;Time to dissapear
+		  (progn
+		    (initiate-login-new 'idle nil lyskom-pers-no "" 1)
+		    (lyskom-tell-internat 'kom-tell-is-idle)
+		    (setq lyskom-time-last-command 0))))
+	  )
 
       ; Restore selected buffer and match data.
 
@@ -1625,6 +1643,18 @@ then a newline is printed after the name instead."
   (beep)
   (lyskom-scroll))
 
+
+(defun lyskom-subtract-times (t1 t2)
+  "Subtracts times and returns the result in seconds."
+  (+ (* (- (car t1) (car t2)) 65526) (- (car (cdr t1)) (car (cdr t2)))))
+
+(defun lyskom-idle-time-is-reached ()
+  "Returns non-nil if we are idle."
+  (condition-case emacs-18.55
+      (> (lyskom-subtract-times (current-time) lyskom-time-last-command)
+	 600)				;10 minuter
+    (error ; No function current-time
+     nil)))
 
 ;;; ================================================================
 ;;;         Formatting functions for different data types
@@ -1795,6 +1825,11 @@ from the value of kom-tell-phrases-internal."
 
 (run-hooks 'lyskom-init-hook)
 
+(or (assq 'lyskom-sessions-with-unread minor-mode-alist)
+    (setq minor-mode-alist (cons (list 'lyskom-sessions-with-unread 
+				       (lyskom-get-string 'mode-line-unread))
+				 minor-mode-alist)))
+
 (lyskom-tell-phrases-validate)
 
 (setq lyskom-swascii-commands
@@ -1806,3 +1841,8 @@ from the value of kom-tell-phrases-internal."
       (iso-8859-1-to-swascii lyskom-header-separator))
 (setq lyskom-swascii-header-subject
       (iso-8859-1-to-swascii lyskom-header-subject))
+
+
+;;; Local Variables: 
+;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
+;;; end: 

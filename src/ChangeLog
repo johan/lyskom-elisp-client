@@ -1,3 +1,35 @@
+Tue Dec 14 00:13:13 1993  Linus Tolke Y  (linus@rudolf)
+
+	* completing-read.el (lyskom-try-complete-partials): strange
+	  completion behaviour when beginning with whitespace fixed.
+
+Mon Dec 13 23:03:40 1993  Linus Tolke Y  (linus@rudolf)
+
+	* commands1.el (lyskom-jump): cutting circular structures short.
+	* commands1.el, macros.el, async.el, lyskom-rest.el:
+	  lyskom-traverse now has a lisp-indent-hook.
+	* async.el (lyskom-parse-async): We don't get any messages when we
+	  logout anymore.
+
+Wed Dec  8 15:01:16 1993  Linus Tolke Y  (linus@konrad)
+
+	* edit-text.el (lyskom-edit-text): process-kill-without-query
+	  backward-compatibility (18.55) added.
+
+Mon Nov 15 03:10:28 1993  Linus Tolke Y  (linus@bodil)
+
+	* commands1.el (lyskom-create-conf-handler): end-of-command when
+	  error.
+
+	* lyskom-rest.el (lyskom-sessions-with-unread): Oups, fixed a
+	  simple bug. The evaluations is done when loading. Not when
+	  displaying as was possible in earlier versions of emacs 19.
+
+	* edit-text.el: lyskom-proc should be buffer-local.
+
+	* services.el, lyskom-rest.el, startup.el, swedish-strings.el,
+	  vars.el: Logging in invisibly when inactive.
+
 Thu Sep 16 15:46:36 1993  Linus Tolke Y  (linus@dell)
 
 	* swedish-strings.el (lyskom-mode-map): Klar bugg, glömda ? för

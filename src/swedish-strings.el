@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.13 1993-09-21 23:17:40 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.14 1993-12-14 02:23:04 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.13 1993-09-21 23:17:40 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.14 1993-12-14 02:23:04 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -628,7 +628,7 @@ Personligt meddelande fr\345n %#1s (%#3s):
 
     ; From lyskom-rest.el:
 
-    (mode-line-unread " Ol\344sta")
+    (mode-line-unread . " Ol\344sta")
 
     (error-code . "Felkod %#2d: %#1s.\n")
     (extended-command . "LysKOM: ")
@@ -993,6 +993,8 @@ Cf. paragraph-start.")
     (kom-tell-change-name       "\304ndrar sitt namn till n\345got annat.")
     (kom-tell-change-supervisor "\304ndrar organisat\366r f\366r n\345got.")
     (kom-tell-next-lyskom       "Hoppar till ett annat LysKOM.")
+    (kom-tell-is-back		"\304r tillbaka.")
+    (kom-tell-is-idle		"Har inte r\366rt lyskom p\345 en bra stund.")
     )
   "These texts are used as arguments to lyskom-tell-server.
 The variable kom-mercial defaults to kom-tell-wait.

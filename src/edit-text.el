@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.13 1993-08-20 21:56:45 linus Exp $
+;;;;; $Id: edit-text.el,v 36.14 1993-12-14 02:22:14 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.13 1993-08-20 21:56:45 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.14 1993-12-14 02:22:14 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -65,7 +65,12 @@ Does lyskom-end-of-command."
 	(config (current-window-configuration)))
     (setq lyskom-list-of-edit-buffers (cons buffer 
 					    lyskom-list-of-edit-buffers))
-    (process-kill-without-query (get-buffer-process (current-buffer)) t)
+    (condition-case emacs-18.55
+	(process-kill-without-query (get-buffer-process (current-buffer)) t)
+      (error
+       ;; You loose some...
+       (message "Old emacs! Upgrade!")
+       (process-kill-without-query (get-buffer-process (current-buffer)))))
     (cond
      ((and (or (bufferp kom-write-texts-in-window)
 	       (stringp kom-write-texts-in-window))
@@ -277,6 +282,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (auto-fill-mode 1)
   (make-local-variable 'paragraph-start)
   (make-local-variable 'paragraph-separate)
+  (make-local-variable 'lyskom-proc)
   (setq paragraph-start (concat "^" 
 				(regexp-quote 
 				 lyskom-header-separator)
@@ -775,9 +781,14 @@ buffer and edit buffers."
       (while (and lyskom-list-of-edit-buffers
 		  (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
 	(setq lyskom-list-of-edit-buffers (cdr lyskom-list-of-edit-buffers)))
-      (if lyskom-list-of-edit-buffers
-	  (process-kill-without-query proc t)
-	(process-kill-without-query proc nil)))
+      (condition-case emacs-18.55
+	  (if lyskom-list-of-edit-buffers
+	      (process-kill-without-query proc t)
+	    (process-kill-without-query proc nil))
+	(error
+	 ;; You loose some if you only have emacs-18.55...
+	 (message "Running emacs 18.55 or earlier? Please upgrade!")
+	 (process-kill-without-query proc))))
     lyskom-list-of-edit-buffers))
       
 

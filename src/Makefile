@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.7 1993-11-21 04:37:06 linus Exp $
+# $Id: Makefile,v 36.8 1993-12-14 02:21:29 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.7 1993-11-21 04:37:06 linus Exp $
+# $Id: Makefile,v 36.8 1993-12-14 02:21:29 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.7  1993-11-21 04:37:06  linus
+# Revision 36.8  1993-12-14 02:21:29  linus
+# Small fixes for emacs 18.55, jump.
+#
+# Revision 36.7  1993/11/21  04:37:06  linus
 # Better tags entry.
 #
 # Revision 36.6  1993/09/10  16:36:51  linus
@@ -151,7 +154,7 @@ PARTS-ELC = $(SRC-ELC)
 
 .SUFFIXES : .el .elc
 .el.elc:
-	$(EMACS-BATCH) -l ./macros.elc -f batch-byte-compile $*.el
+	$(EMACS-BATCH) -l `pwd`/macros -l `pwd`/vars -f batch-byte-compile $*.el
 
 all: lyskom.elc
 
