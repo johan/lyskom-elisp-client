@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.314 2003-12-07 16:38:51 byers Exp $
+;;;;; $Id: english-strings.el,v 44.315 2003-12-10 22:26:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.314 2003-12-07 16:38:51 byers Exp $"))
+              "$Id: english-strings.el,v 44.315 2003-12-10 22:26:58 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1441,7 +1441,7 @@ On since %#8s%#9s")
     (which-language . "Change language to: ")
     (send-formatted . "Send as formatted text? ")
     (changing-language-to . "Changing to %#1s.\n")
-    (language-set-to . "Language set to %#1s.\n")
+    (language-set-to . "Language set to %#1s%#2?b%[ %#3@[%#2s]%]%[%].\n")
     (language-not-loaded . "%#1s is unavailable.\n")
 
     (reformat-html . "HTML")

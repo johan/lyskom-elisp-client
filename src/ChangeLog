@@ -1,4 +1,16 @@
+2003-12-10  David Byers  <byers@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Show a help link when setting the
+	language.
+
+	* lyskom-rest.el (lyskom-format-aux-help): The argument for a
+	conditional format is not optional, so we can handle extending
+	format strings with additional boolean conditionals without
+	altering the argument lists where they are used.
+
 2003-12-07  David Byers  <byers@lysator.liu.se>
+
+	* NEWS-0.48: Updated to here.
 
 	Handle user privileges:
 	* commands2.el (kom-change-privileges): New command.

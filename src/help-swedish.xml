@@ -1,5 +1,91 @@
 <!-- -*-mode: xml-*- -->
 <help language="sv">
+  <section id="language-help" prompt="">
+    <h2>Language Settings</h2>
+
+    <p>
+      You can switch the language in this session by using the command
+      <cref id="kom-change-language" /> or the Emacs command <i>M-x
+      kom-change-language</i>. To also change the key bindings (this
+      will affect all sessions), type C-u before the command (e.g. C-u
+      x<cref id="kom-change-language" />).
+    </p>
+
+    <p>
+      For full information, including how to change the default
+      language, see <refer id="language" /> (this information will be
+      presented using the current language selection).
+    </p>
+  </section>
+
+  <section id="language" prompt="Språk i elispklienten">
+    <h1>Stöd för flera språk</h1>
+
+    <p>
+      Elispklienten kan byggas med stöd för flera språk. Standard är
+      att bygga med svenska och engelska, med engelska förvalt. 
+    </p> 
+
+    <h2>Tillfälligt språkbyte</h2>
+
+    <p>
+      Använd <cref id="kom-change-language" /> för att byta språk
+      tillfälligt. Notera att det krävs ett prefixargument till <cref
+      id="kom-change-language" /> för att byta tangentbindningar. Dessa
+      byts då i <i>alla</i> sessioner, inte bara i den där man ger
+      kommandot.
+    </p>
+
+    <h2>Permanent språkbyte</h2>
+
+    <p>
+      Använd <cref id="kom-customize" /> för att byta språk permanent.
+      Genom att spara språkinställningen i .emacs kommer det att bli
+      standardspråk i klienten.
+    </p>
+
+    <h2>Ändra standardspråk</h2>
+
+    <p>
+      Det finns många sätt att ändra standardspråk i klienten.
+      Klienten tittar i tur och ordning på följande:
+    </p>
+
+    <list>
+      <item>Variabeln kom-default-language (ändra med <cref
+      id="kom-customize" />)</item>
+
+      <item>Omgivningsvariabeln KOMLANGUAGE</item>
+
+      <item>Omgivningsvariabeln LC_ALL</item>
+
+      <item>Omgivningsvariabeln LC_MESSAGES</item>
+
+      <item>Omgivningsvariabeln LANG</item>
+    </list>
+
+    <p>
+      Variabeln kom-default-language kan sättas till en lista av
+      symboler, där varje symbol motsvarar ett språk. Se nedan för en
+      lista av språk som elispklienten kan ha stöd för. Det första
+      språk på listan som elispklienten klarar kommer att användas.
+    </p>
+
+    <p>
+      Omgivningvariablerna skall vara satta till en språk-kod. Till
+      exempel innebär värdet "sv" att elispklientn skall använda
+      svenska som standardspråk.
+    </p>
+
+    <h2>Kända språk</h2>
+
+    <list>
+      <item>sv - Svenska</item>
+      <item>en - Engelska</item>
+    </list>
+
+  </section>
+
   <section id="conferences" prompt="Veta mer om möten">
 
     <h1>Möten</h1>

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.222 2003-12-05 00:04:21 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.223 2003-12-10 22:26:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.222 2003-12-05 00:04:21 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.223 2003-12-10 22:26:58 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1546,6 +1546,7 @@ Deferred insertions are not supported."
                           ((< pad-length 0) (- 0 pad-length))
                           (t pad-length))))
     (if (and arg-no 
+             (not (eq format-letter ?\?))
              (< (format-state->length format-state) arg-no))
         (signal 'lyskom-format-error (list 'lyskom-format
                                              ": too few arguments")))
