@@ -18,7 +18,7 @@ tar-arkivet.
 
 ** En hel del bakåtkompatibilitet är borta. Det går antagligen inte
    att köra Elispklienten mot lyskomd 1.7.0 eller äldre. Det borde
-   inte vara någta allvarliga problem med lyskomd 1.8.0.
+   inte vara några allvarliga problem med lyskomd 1.8.0.
 
 
 * Fitjurs, förbättringar och andra förändringar
