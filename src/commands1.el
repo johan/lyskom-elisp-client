@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.180 2003-04-21 16:15:17 byers Exp $
+;;;;; $Id: commands1.el,v 44.181 2003-05-17 15:09:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.180 2003-04-21 16:15:17 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.181 2003-05-17 15:09:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1351,8 +1351,8 @@ This command accepts text number prefix arguments (see
                (lyskom-edit-text lyskom-proc
                                  (if (= (text-stat->author text-stat) lyskom-pers-no)
                                      (lyskom-create-misc-list
-                                      'RECPT
-                                      (text-stat->author text-stat))
+                                      'COMM-TO (text-stat->text-no text-stat)
+                                      'RECPT (text-stat->author text-stat))
                                    (lyskom-create-misc-list
                                     'COMM-TO (text-stat->text-no text-stat)
                                     'RECPT (text-stat->author text-stat)

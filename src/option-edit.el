@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.93 2003-04-05 20:41:25 byers Exp $
+;;;;; $Id: option-edit.el,v 44.94 2003-05-17 15:09:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.93 2003-04-05 20:41:25 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.94 2003-05-17 15:09:20 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -263,6 +263,7 @@
     [kom-windows-browser-command]
     [kom-mosaic-command]
     [kom-netscape-command]
+    [kom-netscape-variant]
     [kom-galeon-command]
     [kom-lynx-terminal]
     [kom-lynx-xterm-command]
@@ -846,6 +847,9 @@ customize buffer but do not save them to the server."
     (kom-async-text-body-face (face t))
     (kom-async-dashed-lines-face (face t))
     (kom-show-sync-messages (toggle (yes no)))
+    (kom-netscape-variant (choice ((const (default-netscape nil))
+                                   (const (new-window-netscape new-window))
+                                   (const (new-tab-netscape new-tab)))))
 ))
 
 (defvar lyskom-widget-functions 

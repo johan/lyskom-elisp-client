@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.283 2003-05-09 22:02:30 byers Exp $
+;;;;; $Id: english-strings.el,v 44.284 2003-05-17 15:09:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.283 2003-05-09 22:02:30 byers Exp $"))
+              "$Id: english-strings.el,v 44.284 2003-05-17 15:09:19 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1782,7 +1782,7 @@ Number of sessions:  %21#1d (total)
     (recommending-conf . "Recommending %#1M%#2?b%[ (priority %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
     (has-recommended-conf . "%#1P has recommended conference %#2M. Do you want to become a member?\n")
     (accept-recommendation . "Join conference %#1M? ")
-    (accepting-recommendataion . "Joining recommended conference %#1M...")
+    (accepting-recommendataion . "Joining recommended conference %#2M...")
 
     (redirect-for-whom . "Redirect comments for whom: ")
     (redirect-to-which-conf . "Redirect comments to: ")
@@ -2967,6 +2967,9 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (audio-cues-when    . "Issue audio cues when:\n")
     (automatic-replies .  "Automatic replies\n")
 
+    (new-window-netscape . "Open URLs in a new window")
+    (new-tab-netscape . "Open URLs in a new tab")
+    (default-netscape . "Open URLs wherever")
 
     (audio-cues-doc . "\
   The following group of settings controls how LysKOM issues audio cues in
@@ -3961,11 +3964,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This setting controls display of conference names. For each choice
   it is possible to select a face. The value must be either a face or
   the name of a variable that contains a face.")
+    (kom-netscape-variant-doc . "\
+  This setting controls where the client opens URLs. How well the
+  settings work depends on which variant of Netscape or Mozilla you
+  are using, and even on which operating system you are on.")
 
     ;;
     ;; Tags for variables
     ;;
-    
+
     (kom-ansaphone-replies-tag . "Automatic replies")
     (kom-bury-buffers-tag . "Bury buffers when changing LysKOM:")
 
@@ -4166,6 +4173,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-lynx-xterm-command-tag . "Command to run lynx in xterm:")
     (kom-show-sync-messages-tag . "Show database-saving message:")
     (kom-highlight-conferences-tag . "Display of names::")
+    (kom-netscape-variant-tag . "Where Netscape/Mozilla opens URLs:")
     )
 )
 
