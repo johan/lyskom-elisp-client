@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.23 1997-07-09 14:41:08 byers Exp $
+;;;;; $Id: commands1.el,v 44.24 1997-07-12 13:10:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.23 1997-07-09 14:41:08 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.24 1997-07-12 13:10:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1493,7 +1493,8 @@ If MARK-NO == 0, review all marked texts."
 (def-kom-command kom-display-time ()
   "Ask server about time and date."
   (interactive)
-  (let ((time (blocking-do 'get-time)))
+  (let ((time (blocking-do 'get-time))
+        (lyskom-last-text-format-flags nil))
     (lyskom-format-insert 'time-is
 			  (lyskom-format-time time)
 			  ;; Kult:

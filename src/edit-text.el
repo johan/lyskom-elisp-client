@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.17 1997-07-11 14:17:09 byers Exp $
+;;;;; $Id: edit-text.el,v 44.18 1997-07-12 13:11:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.17 1997-07-11 14:17:09 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.18 1997-07-12 13:11:05 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -385,28 +385,10 @@ Commands:
      (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
 
 (eval-when-compile (defvar ispell-dictionary nil))
+(eval-when-compile (defvar ispell-message-text-end nil))
+(eval-when-compile (defvar ispell-message-start-skip nil))
+(eval-when-compile (defvar ispell-message-end-skip nil))
 
-(defun lyskom-ispell-text ()
-  "Check spelling of the text body. 
-kom-ispell-dictionary is the dictionary to use to check spelling."
-  (let ((start 
-         (save-excursion
-           (goto-char (point-min))
-           (search-forward (substitute-command-keys
-                            (lyskom-get-string 'header-separator)))
-           (forward-line 1) 
-           (beginning-of-line)
-           (point))))
-    (let ((ispell-dictionary kom-ispell-dictionary)
-          (new-ispell (or (not (boundp 'ispell-dictionary))
-                          (not (string= kom-ispell-dictionary 
-                                        ispell-dictionary)))))
-      (if new-ispell
-          (ispell-kill-ispell t))
-      (prog1
-          (ispell-region start (point-max))
-        (if new-ispell
-            (ispell-kill-ispell t))))))
 
 (defun lyskom-ispell-text ()
   "Check spelling of the text body.

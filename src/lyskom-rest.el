@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.36 1997-07-11 14:17:16 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.37 1997-07-12 13:11:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.36 1997-07-11 14:17:16 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.37 1997-07-12 13:11:17 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1370,8 +1370,16 @@ Note that it is not allowed to use deferred insertions in the text."
          (formatted (and fn (funcall fn text))))
 
     (cond (formatted formatted)
-          (kom-text-properties (lyskom-button-transform-text text))
-          (t text))))
+          (kom-text-properties 
+           (lyskom-button-transform-text
+            (lyskom-fill-message text)))
+          (t (lyskom-fill-message text)))))
+
+(defun lyskom-signal-reformatted-text (how)
+  "Signal that the last text was reformatted HOW, which should be a string
+in lyskom-messages."
+  (setq lyskom-last-text-format-flags how))
+
 
 (defun lyskom-w3-region (start end)
   (w3-region start end)
@@ -1380,6 +1388,7 @@ Note that it is not allowed to use deferred insertions in the text."
 (defun lyskom-format-html (text)
   (condition-case e (require 'w3) (error nil))
   (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+  (lyskom-signal-reformatted-text 'reformat-html)
   (substring text 5))
 
 ;;;(defun lyskom-format-html (text)
@@ -1417,10 +1426,161 @@ Note that it is not allowed to use deferred insertions in the text."
             (set-buffer tmpbuf)
             (insert (substring text 10))
             (format-decode-buffer)
+            (lyskom-signal-reformatted-text 'reformat-enriched)
             (lyskom-button-transform-text (buffer-string))
             ;; (substring (buffer-string) 0 -1) ; Remove the \n
             )
         (kill-buffer tmpbuf)))))
+
+
+
+;;; ============================================================
+;;; lyskom-fill-message
+;;; Author: David Byers
+;;;
+;;; Wrap the lines of a message with long lines so they're a little easier
+;;; to read. Try to ignore what looks like preformatted text. 
+;;;
+;;; A paragraph consisting only of short lines is not wrapped
+;;; A paragraph with at least one line that starts with some odd
+;;;     character is not wrapped. Whitespace is considered odd if
+;;;     if occurs on any line but the first. 
+;;; A paragraph is not wrapped if it is more than one line long and the
+;;;     difference between line lengths is constant.
+;;;
+
+(defun lyskom-fill-message (text)
+  "Try to reformat a message."
+  (if (null kom-autowrap)
+      text
+    (save-excursion
+      (set-buffer (lyskom-get-buffer-create 'lyskom-text " lyskom-text" t))
+      (erase-buffer)
+      (insert text)
+      (goto-char (point-min))
+
+      (let ((start (point))
+            (in-paragraph nil)
+            (wrap-paragraph 'maybe)
+            (length-difference nil)
+            (constant-length nil)
+            (current-line-length nil)
+            (last-line-length nil)
+            (paragraph-length 0)
+            (fill-column (1- (window-width))))
+
+        ;;
+        ;; Scan each line
+        ;;
+
+        (while (not (eobp))
+          (setq current-line-length (lyskom-fill-message-line-length))
+
+          ;;
+          ;; Do some work on checking for constant differences
+          ;;
+
+          (cond ((null length-difference)
+                 (when (and current-line-length last-line-length)
+                   (setq length-difference (- current-line-length
+                                              last-line-length))))
+                ((eq constant-length 'maybe-not)
+                 (setq constant-length nil))
+                (constant-length
+                 (unless (= (- current-line-length last-line-length)
+                            length-difference)
+                   (setq constant-length 'maybe-not))))
+
+
+          (cond 
+
+           ;;
+           ;; An empty line signifies a new paragraph. If we were scanning
+           ;; a paragraph and it was to be filled, fill it. 
+           ;;
+
+           ((looking-at "^\\s-*$")
+            (when (and in-paragraph 
+                       (eq wrap-paragraph t)
+                       (or (eq paragraph-length 1)
+                           (null constant-length)))
+              (fill-region start (match-beginning 0)
+                           nil t)
+              (lyskom-signal-reformatted-text 'reformat-filled))
+            (setq start (match-end 0)
+                  in-paragraph nil
+                  wrap-paragraph 'maybe))
+
+           ;;
+           ;; Not in a paragraph, but here comes some text. Let's start
+           ;; a paragraph, shall we?
+           ;;
+
+           ((and (not in-paragraph)
+                 (looking-at "\\s-*\\(\\S-\\)"))
+            (setq in-paragraph t
+                  paragraph-length 0
+                  constant-length t
+                  length-difference nil
+                  last-line-length nil
+                  start (match-beginning 0))
+            (cond ((not (aref lyskom-line-start-chars 
+                              (char-to-int 
+                               (char-after (match-beginning 1)))))
+                   (setq wrap-paragraph nil))
+                  ((> current-line-length fill-column)
+                   (setq wrap-paragraph t))
+                  (t (setq wrap-paragraph 'maybe))))
+
+           ;;
+           ;; Scanning a paragraph, we see a line that starts with something
+           ;; not usually part of plain text. Don't wrap the paragraph.
+           ;;
+
+           ((and in-paragraph
+                 (not (aref lyskom-line-start-chars (char-to-int
+                                                     (char-after (point))))))
+            (setq wrap-paragraph nil))
+
+           ;;
+           ;; We're in a paragraph, the line looks OK, but is long. That 
+           ;; means we should probably be filling the paragraph later
+           ;;
+
+           ((and in-paragraph
+                 wrap-paragraph
+                 (> current-line-length fill-column))
+            (setq wrap-paragraph t)))
+
+          (setq last-line-length current-line-length)
+          (end-of-line)
+          (setq paragraph-length (1+ paragraph-length))
+          (unless (eobp)
+            (forward-line 1)
+            (beginning-of-line)))
+
+        ;;
+        ;; We've seen the end of buffer. Fill any unfilled junk.
+        ;;
+
+        (when (and in-paragraph 
+                   (eq wrap-paragraph t)
+                   (or (eq paragraph-length 1)
+                       (null constant-length)))
+          (fill-region start (point) nil t)
+          (lyskom-signal-reformatted-text 'reformat-filled)))
+      
+      ;;
+      ;; Kill off unwanted whitespace at the end of the message
+      ;;
+
+      (let ((tmp (buffer-string)))
+        (if (string-match "[ \t\n]+\\'" tmp)
+            (substring tmp 0 (match-beginning 0))
+          tmp)))))
+
+(defun lyskom-fill-message-line-length ()
+  (- (save-excursion (end-of-line) (point)) (point)))
 
 
 ;;; ============================================================

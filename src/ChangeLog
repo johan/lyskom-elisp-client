@@ -1,3 +1,49 @@
+Sat Jul 12 12:46:46 1997  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el,swedish-strings.el (lyskom-custom-strings):
+ 	Lade till dokumentation och tag för kom-autowrap.
+
+	* edit-text.el: Zappa lite varningar.
+
+	* option-edit.el: Dito.
+
+	* menus.el: Dito.
+
+	* lyskom-buttons.el: Dito.
+
+	* commands1.el (kom-display-time): Bind
+ 	lyskom-last-text-format-flags.
+
+	* remote-control.el (lyskom-remote-set-message): Dito.
+
+	* ansaphone.el (kom-change-auto-reply): Dito.
+
+	* async.el (lyskom-format-as-personal-message): Dito.
+
+	* commands2.el (lyskom-send-message): Dito.
+
+	* view-text.el (lyskom-print-text): Skriv ut om texten är
+ 	omformatterad.
+	(lyskom-deferred-insert-footer): Dito.
+	(lyskom-view-text): Bind lyskom-last-text-format-flags.
+
+	* english-strings.el, swedish-strings.el (lyskom-message): Lade
+ 	till reformat-*
+
+	* lyskom-rest.el (lyskom-fill-message): Ny funktion.
+	(lyskom-format-text-body): Anropa lyskom-fill-message.
+	(lyskom-signal-reformatted-text): Ny funktion.
+
+	* vars.el.in (kom-autowrap): Ny variabel.
+	(lyskom-line-start-chars): Ny variabel.
+
+	* review.el (kom-review-noconversion): Slå av massor av
+ 	formattering.
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Bind [å] mfl även
+ 	i XEmacs, men bind *dessutom* aring och liknande.
+	(lyskom-sv-mode-map): Dito.
+
 Fri Jul 11 09:17:28 1997  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el: Tog bort popup-menu eftersom vissa Gnu Emacs
