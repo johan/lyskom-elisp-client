@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 41.0 1996-05-02 19:25:31 davidk Exp $
+;;;;; $Id: cache.el,v 41.1 1996-05-03 22:41:04 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 41.0 1996-05-02 19:25:31 davidk Exp $\n"))
+	      "$Id: cache.el,v 41.1 1996-05-03 22:41:04 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -287,52 +287,54 @@ ARG: session-info"
 
 (defun lyskom-set-who-info-buffer-2 (pers-conf-stat conf-conf-stat who-info)
   "Inserts a who-buffer-info into lyskom-who-info-cache"
-  ;We can use lyskom-insert (not beautiful)
-  ;we insert everything at the end of the buffer.
+;;  ;We can use lyskom-insert (not beautiful)
+;;  ;we insert everything at the end of the buffer.
 
-  ;defensive programming and it will work:
-  (if (and lyskom-who-info-buffer-is-on
-	   lyskom-who-info-buffer)
-      (let ((sesno lyskom-session-no)
-	    min max
-	    (where (cache-assoc (who-info->connection who-info) 
-				lyskom-who-info-cache)))
-	(lyskom-save-excursion
-	 (set-buffer lyskom-who-info-buffer)
-	 (save-restriction
-	   (if where
-	       (progn
-		 (narrow-to-region (marker-position 
-				    (who-buffer-info->start-marker where))
-				   (1- (marker-position 
-					(who-buffer-info->end-marker where))))
-		 (delete-region (point-min) (point-max)))
-	     (goto-char (point-max))
-	     (insert " ")
-	     (narrow-to-region (point-min) (1- (point-max))))
-	   (setq min (point-max-marker))
-	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
-				  (function
-				   (lambda (string)
-				     (insert string))))
-	   (setq max (point-max-marker))
-	   (goto-char (point-max)))
-	 (delete-char 1))
-	(cache-add (who-info->connection who-info) 
-		   (lyskom-create-who-buffer-info who-info min max)
-		   'lyskom-who-info-cache)
-	(run-hooks 'lyskom-who-info-has-changed-hook))))
+;;  ;defensive programming and it will work:
+;;  (if (and lyskom-who-info-buffer-is-on
+;;	   lyskom-who-info-buffer)
+;;      (let ((sesno lyskom-session-no)
+;;	    min max
+;;	    (where (cache-assoc (who-info->connection who-info) 
+;;				lyskom-who-info-cache)))
+;;	(lyskom-save-excursion
+;;	 (set-buffer lyskom-who-info-buffer)
+;;	 (save-restriction
+;;	   (if where
+;;	       (progn
+;;		 (narrow-to-region (marker-position 
+;;				    (who-buffer-info->start-marker where))
+;;				   (1- (marker-position 
+;;					(who-buffer-info->end-marker where))))
+;;		 (delete-region (point-min) (point-max)))
+;;	     (goto-char (point-max))
+;;	     (insert " ")
+;;	     (narrow-to-region (point-min) (1- (point-max))))
+;;	   (setq min (point-max-marker))
+;;	   (lyskom-print-who-info pers-conf-stat conf-conf-stat who-info sesno
+;;				  (function
+;;				   (lambda (string)
+;;				     (insert string))))
+;;	   (setq max (point-max-marker))
+;;	   (goto-char (point-max)))
+;;	 (delete-char 1))
+;;	(cache-add (who-info->connection who-info) 
+;;		   (lyskom-create-who-buffer-info who-info min max)
+;;		   'lyskom-who-info-cache)
+;;	(run-hooks 'lyskom-who-info-has-changed-hook)))
+  )
 
 
 (defun lyskom-set-session-info (pers-conf-stat conf-conf-stat session-info)
   "Inserts a session-info into lyskom-who-info-cache"
-  (lyskom-set-who-info-buffer-2 pers-conf-stat conf-conf-stat
-				(lyskom-create-who-info
-				 (session-info->pers-no session-info)
-				 (session-info->working-conf session-info)
-				 (session-info->connection session-info)
-				 (session-info->doing session-info)
-				 (session-info->username session-info))))
+;;;  (lyskom-set-who-info-buffer-2 pers-conf-stat conf-conf-stat
+;;;				(lyskom-create-who-info
+;;;				 (session-info->pers-no session-info)
+;;;				 (session-info->working-conf session-info)
+;;;				 (session-info->connection session-info)
+;;;				 (session-info->doing session-info)
+;;;				 (session-info->username session-info)))
+  )
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.0 1996-05-02 19:25:45 davidk Exp $
+;;;;; $Id: commands1.el,v 41.1 1996-05-03 22:41:09 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.0 1996-05-02 19:25:45 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.1 1996-05-03 22:41:09 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1455,37 +1455,93 @@ If MARK-NO == 0, review all marked texts."
 ;;;                Vilka ({r inloggade) - Who is on?
 
 ;;; Author: ???
+;;; Rewritten by: David K}gedal
 
 
 (def-kom-command kom-who-is-on ()
   "Display a list of all connected users."
   (interactive)
-  (let ((who-info-list (blocking-do 'who-is-on)))
-    (lyskom-insert
-     (lyskom-return-who-info-line "      "
-				  (lyskom-get-string 'lyskom-name)
-				  (lyskom-get-string 'is-in-conf)))
+  (let ((who-info-list (blocking-do 'who-is-on))
+	(format-string-1 (lyskom-info-line-format-string 7 "P" "M"))
+	(format-string-2 (lyskom-info-line-format-string 7 "s" "s"))
+	(lyskom-default-conf-string 'not-present-anywhere))
+    (lyskom-format-insert format-string-2
+			  "      "
+			  (lyskom-get-string 'lyskom-name)
+			  (lyskom-get-string 'is-in-conf))
     (if kom-show-where-and-what
-	(lyskom-insert
-	 (lyskom-return-who-info-line "      "
-				      (lyskom-get-string 'from-machine)
-				      (lyskom-get-string 'is-doing))))
-
+	(lyskom-format-insert format-string-2
+			      "      "
+			      (lyskom-get-string 'from-machine)
+			      (lyskom-get-string 'is-doing)))
+    
     (lyskom-insert
      (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
 
-    (let* ((who-list (sort (append who-info-list nil)
+    (let* ((who-list (sort (listify-vector who-info-list)
 			   (function (lambda (who1 who2)
 				       (< (who-info->connection who1)
 					  (who-info->connection who2))))))
 	   (total-users (length who-list)))
       (while who-list
-	(let ((who-info (car who-list)))
-	  (lyskom-print-who-info
+	(let* ((who-info (car who-list))
+	       (session-no (format "%5d" (who-info->connection who-info)))
+	       (my-session (if (= lyskom-session-no
+				  (who-info->connection who-info))
+			       "*"
+			     " ")))
+	  (lyskom-format-insert
+	   format-string-1
+	   (concat session-no my-session)
+	   (who-info->pers-no who-info)
+	   (or (who-info->working-conf who-info)
+	       (lyskom-get-string 'not-present-anywhere)))
+	  (if kom-show-where-and-what
+	      (lyskom-format-insert
+	       format-string-2
+	       "       "
+	       (lyskom-return-username who-info)
+	       (concat "(" (who-info->doing-what who-info) ")"))))
+	(setq who-list (cdr who-list)))
+      
+      (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
+			     "\n"))
+      (lyskom-insert (lyskom-format 'total-users total-users)))))
+
+
+		 
+(def-kom-command kom-list-clients ()
+  "Display a list of all connected users."
+  (interactive)
+  (let ((who-info-list (blocking-do 'who-is-on))
+	(format-string (lyskom-info-line-format-string 7 "P" "s")))
+    (lyskom-format-insert format-string
+			  "      "
+			  (lyskom-get-string 'lyskom-name)
+			  (lyskom-get-string 'lyskom-client))
+    (lyskom-insert
+     (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
+
+    (let* ((who-list (sort (listify-vector who-info-list)
+			   (function (lambda (who1 who2)
+				       (< (who-info->connection who1)
+					  (who-info->connection who2))))))
+	   (total-users (length who-list)))
+      (while who-list
+	(let* ((who-info (car who-list))
+	       (session-no (format "%5d" (who-info->connection who-info)))
+	       (my-session (if (= lyskom-session-no
+				  (who-info->connection who-info))
+			       "*"
+			     " ")))
+	  (lyskom-format-insert
+	   format-string
+	   (concat session-no my-session)
 	   (blocking-do 'get-conf-stat (who-info->pers-no who-info))
-	   (blocking-do 'get-conf-stat (who-info->working-conf who-info))
-	   who-info
-	   lyskom-session-no))
+	   (blocking-do-multiple
+	       ((name (get-client-name (who-info->connection who-info)))
+		(version (get-client-version (who-info->connection who-info))))
+	     (concat name " " version))))
 	(setq who-list (cdr who-list)))
 
       (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-)
@@ -1493,89 +1549,20 @@ If MARK-NO == 0, review all marked texts."
       (lyskom-insert (lyskom-format 'total-users total-users)))))
 
 
-(defun lyskom-print-who-info (conf-stat working who-info my-session-no 
-					&optional insert-function)
-  "Print a line about a user. 
-Args: CONF-STAT WORKING WHO-INFO MY-SESSION-NO &optional INSERT-FUNCTION.
-CONF-STAT refer to the user.
-WORKING is the conf-stat of his current working conference.
-WHO-INFO is the who-info.
-MY-SESSION-NO is the session number of the running session.
-&optional INSERT-FUNCTION is the function for inserting the text into
-                          the buffer. If nil, use lyskom-insert."
-  (let ((insertfun (if insert-function
-		       insert-function
-		     'lyskom-insert)))
-    (funcall insertfun
-	     (lyskom-return-who-info-line-as-state 
-	      (format "%5d%s" 
-		      (who-info->connection who-info)
-		      (if (= my-session-no (who-info->connection who-info))
-			  "*"
-			" "))
-	      conf-stat
-	      (cond
-	       ((conf-stat->name working) working)
-	       (t (lyskom-get-string 'not-present-anywhere)))))
-    (if kom-show-where-and-what
-	(funcall insertfun
-		 (lyskom-return-who-info-line-as-state
-		  "      "
-		  (lyskom-return-username who-info)
-		  (concat "(" 
-			  (who-info->doing-what who-info)
-			  ")"))))))
 
-		 
-(defun lyskom-fix-str (len str)
-  "Pad STR with space to LEN. Args: LEN STR."
-  (while (< (length str) len)
-    (setq str
-	  (concat str
-		  "                                                        ")))
-  (substring str 0 len))
-
-
-(defun lyskom-return-who-info-line-as-state (prefix arg1 arg2)
-  "Return the format state appropriate for the arguments and
-the window width."
-  (let* ((adj1 (+ (length prefix) 2))
-         (adj2 (+ adj1 1))
-         (formatstring
-          (concat prefix
-                  "%=-"
-                  (int-to-string (/ (* 37 (- (lyskom-window-width) adj1)) 73))
-                  (if (lyskom-conf-stat-p arg1) 
-                      (if (conf-type->letterbox
-                           (conf-stat->conf-type arg1))
-                          "#1P"
-                        "#1M")
-                    "#1s")
-                  " %=-"
-                  (int-to-string (/ (* 37 (- (lyskom-window-width) adj2)) 73))
-                  (if (lyskom-conf-stat-p arg2) 
-                      (if (conf-type->letterbox
-                           (conf-stat->conf-type arg2))
-                          "#2P"
-                        "#2M")
-                    "#2s")
-                  "\n")))
-    (lyskom-format formatstring arg1 arg2)))
-    
-
-(defun lyskom-return-who-info-line (prefix string1 string2)
-  "Return a formatted line (with reference to the current window width."
-  (let ((line (concat
-	       prefix
-	       (lyskom-fix-str (/ (* 37 (- (lyskom-window-width) 7)) 73)
-			       string1)
-	       " "
-	       (lyskom-fix-str (/ (* 36 (- (lyskom-window-width) 7)) 73)
-			       string2))))
-    (while (string= (substring line -1) " ")
-      (setq line (substring line 0 -1)))
-    (concat line "\n")))
-
+(defun lyskom-info-line-format-string (prefixlen type1 type2)
+  "Return a format string suitable for inserting who-info lines etc."
+  (let* ((plen (or prefixlen 7))
+	 (adj1 (+ plen 2))
+         (adj2 (+ adj1 1)))
+    (concat "%" (int-to-string plen) "#1s"
+	    "%=-"
+	    (int-to-string (/ (* 37 (- (lyskom-window-width) adj1)) 73))
+	    "#2" type1
+	    " %=-"
+	    (int-to-string (/ (* 37 (- (lyskom-window-width) adj2)) 73))
+	    "#3" type2
+	    "\n")))
     
 (defun lyskom-window-width ()
   "Returns the width of the lyskom-window or the screen-width if not displayed."

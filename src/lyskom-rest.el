@@ -1,12 +1,12 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.0 1996-05-02 19:27:22 davidk Exp $
-;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;; $Id: lyskom-rest.el,v 41.1 1996-05-03 22:41:34 davidk Exp $
+;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.0 1996-05-02 19:27:22 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.1 1996-05-03 22:41:34 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -865,32 +865,30 @@ Args: FORMAT-STRING &rest ARGS"
 The string is inserted at the end of the buffer with `lyskom-insert'."
   (let* ((state (lyskom-do-format format-string argl t))
 	 (start (point-max))
-	 (delayed (format-state->delayed-content state)))
+	 (deferred (format-state->delayed-content state)))
     (lyskom-insert (format-state->result state))
-    (while delayed
-      (let ((m1 (make-marker))
-	    (m2 (make-marker)))
-	(set-marker m1 (+ start (car (car delayed))))
-	(set-marker m2 (+ start (cdr (car delayed))))
-	(setcar (car delayed) m1)
-	(setcdr (car delayed) m2)
-	(setq delayed (cdr delayed))))))
+    (while deferred
+      (let ((defer-info (car deferred))
+	    (m (make-marker)))
+	(set-marker m (+ start (defer-info->pos defer-info)))
+	(set-defer-info->pos defer-info m)			     
+	(lyskom-defer-insertion defer-info)
+	(setq deferred (cdr deferred))))))
 
 (defun lyskom-format-insert-at-point (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at point."
   (let* ((state (lyskom-do-format format-string argl t))
 	 (start (point))
-	 (delayed (format-state->delayed-content state)))
+	 (deferred (format-state->delayed-content state)))
     (lyskom-insert-at-point (format-state->result state))
-    (while delayed
-      (let ((m1 (make-marker))
-	    (m2 (make-marker)))
-	(set-marker m1 (+ start (car (car delayed))))
-	(set-marker m2 (+ start (cdr (car delayed))))
-	(setcar (car delayed) m1)
-	(setcdr (car delayed) m2)
-	(setq delayed (cdr delayed))))))
+    (while deferred
+      (let ((defer-info (car deferred))
+	    (m (make-marker)))
+	(set-marker m (+ start (defer-info->pos defer-info)))
+	(set-defer-info->pos defer-info m)			     
+	(lyskom-defer-insertion defer-info)
+	(setq deferred (cdr deferred))))))
 
 (defun lyskom-format-insert-before-prompt (format-string &rest argl)
   (lyskom-insert-before-prompt (format-state->result (lyskom-do-format format-string argl))))
@@ -1129,27 +1127,47 @@ The string is inserted at point."
              ;; Conference 0 does not exist, and person 0 means anonymous
              ((and (integerp arg)
                    (zerop arg))
-              (lyskom-format (if (= format-letter ?P)
-                                 'person-is-anonymous
-                               'conference-does-not-exist)
-                             arg))
+	      (setq colon-flag t)
+              (lyskom-format (cond (lyskom-default-conf-string
+				    lyskom-default-conf-string)
+				   ((= format-letter ?P) 'person-is-anonymous)
+				   (t 'conference-does-not-exist))
+			     arg)
+	      )
 
              ;; Delay the printing
              ((and accept-delay
-                   kom-delayed-printing
+                   kom-deferred-printing
                    (integerp arg))
               (let ((tmp (cache-get-conf-stat arg)))
                 (if (null tmp)
-                    (let ((place (cons oldpos (+ oldpos 5))))
-                      (set-format-state->delayed-content
+                    (let* ((format-element
+			    (concat "%"
+				    (if equals-flag "=" "")
+				    (if pad-length (int-to-string pad-length))
+				    "#1"
+				    (if colon-flag ":" "")
+				    (char-to-string format-letter)))
+			   (defer-info (lyskom-create-defer-info
+					'initiate-get-conf-stat
+					arg
+					'lyskom-deferred-insert-conf
+					oldpos
+					(if pad-length
+					    (if equals-flag
+						(abs pad-length)
+					      (max (length
+						    lyskom-defer-indicator)
+						   (abs pad-length)))
+					  (length lyskom-defer-indicator))
+					format-element
+					lyskom-default-conf-string)))
+		      (set-format-state->delayed-content
                        format-state
-                       (cons place
+                       (cons defer-info
                              (format-state->delayed-content
                               format-state)))
-                      (initiate-get-conf-stat
-                       'background 'lyskom-delayed-print-conf arg
-                       arg format-letter colon-flag place)
-                      "[...]")
+                      lyskom-defer-indicator)
                   (setq arg tmp)
                   (conf-stat->name arg))))
 	     
@@ -1297,39 +1315,6 @@ The string is inserted at point."
       (setq dp (cdr dp)))
     (set-format-state->delayed-propl format-state nil))
   format-state)
-
-
-(defun lyskom-delayed-print-conf (conf-stat arg format-letter colon-flag place)
-  (if (integerp (car place)) nil
-    (save-excursion
-      (goto-char (cdr place))
-
-      (let ((s (if (null conf-stat)
-		   (progn
-		     (lyskom-format (if (= format-letter ?P)
-					(if (eq arg 0)
-					    'person-is-anonymous
-					  'person-does-not-exist)
-				      'conference-does-not-exist)
-				    arg))
-		 (conf-stat->name conf-stat))))
-	(if (and (not colon-flag)
-		 conf-stat)
-	    (add-text-properties
-	     0 (length s) 
-	     (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)
-				    conf-stat)
-	     s))
-	(let ((prevface (get-text-property (point) 'face)))
-	  (lyskom-insert-at-point s)
-	  (if prevface
-	      (put-text-property (cdr place) (point) 'face prevface)))))
-    (let ((inhibit-read-only t))
-      (delete-region (car place) (cdr place)))
-    (set-marker (car place) nil)
-    (set-marker (cdr place) nil)
-    (while (not (pos-visible-in-window-p))
-	(forward-line -1))))
 
 
 ;;; ================================================================
@@ -2144,50 +2129,6 @@ to apply to the ARGS."
 		     (apply fn args))
 		  (eval hook-name))
 	(apply (eval hook-name) args))))
-
-
-;;;; ================================================================
-;;;; Subroutines - or as near as you can get with this com-packet.
-;;;; (I know that this isn't beautiful.)
-
-
-;;; Print a name.
-
-(defun lyskom-queue-print-name (kom-queue conf-no is-person &optional format)
-  "Print the name of CONF-NO. Args: KOM-QUEUE CONF-NO IS-PERSON FORMAT.
-IS-PERSON should be non-nil if it is a person.
-If FORMAT is non-nil this is the length the printed string should have. If nil
-then a newline is printed after the name instead."
-  (initiate-get-conf-stat kom-queue 'lyskom-queue-print-name-2
-			  conf-no conf-no is-person format))
-
-
-(defun lyskom-queue-print-name-2 (conf-stat conf-no is-person format)
-  (if format
-      (cond
-       ((null conf-stat)
-	(lyskom-insert
-	 (lyskom-fix-str format
-			 (if (not is-person)
-			     (lyskom-format 'conference-does-not-exist
-					    conf-no)
-			   (if (eq conf-no 0)
-			       (lyskom-format 'person-is-anonymous)
-			     (lyskom-format 'person-does-not-exist
-					    conf-no))))))
-       (t (lyskom-insert (lyskom-fix-str format
-					 (conf-stat->name conf-stat)))))
-    (cond
-     ((null conf-stat)
-      (lyskom-insert (if (not is-person)
-			 (lyskom-format 'conference-does-not-exist
-					conf-no)
-		       (if (eq conf-no 0)
-			   (lyskom-format 'person-is-anonymous)
-			 (lyskom-format 'person-does-not-exist
-					conf-no))))
-      (lyskom-insert "\n"))
-     (t (lyskom-print-name conf-stat)))))
 
 
 ;;; Priority filtering
