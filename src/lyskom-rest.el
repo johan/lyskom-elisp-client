@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.22 1992-06-15 22:38:24 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.23 1992-07-26 23:44:14 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.22 1992-06-15 22:38:24 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.23 1992-07-26 23:44:14 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -982,7 +982,7 @@ lyskom-is-waiting nil.
 
 
 (defun lyskom-end-of-command ()
-  "Print prompt, maybe scroll, prefetch info."
+  "Print prompt, maybe scroll."
   (message "")
   (while (and lyskom-to-be-printed-before-prompt
 	      (lyskom-queue->first lyskom-to-be-printed-before-prompt))
@@ -993,7 +993,9 @@ lyskom-is-waiting nil.
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
       (lyskom-set-last-viewed))
-  (lyskom-prefetch-and-print-prompt))
+  (lyskom-print-prompt)
+  (lyskom-continue-prefetch)		; Verify that prefetch i running
+  )
 
 
 (defun lyskom-print-prompt ()
@@ -1056,10 +1058,7 @@ list."
 			      (lyskom-command-name (key-binding command))))
 			(t (lyskom-format 'the-command command))))))
 
-     ((eq to-do 'unknown)		;Pending replies from server.
-      (setq lyskom-no-prompt t))
-
-     (t (signal 'lyskom-internal-error '(lyskom-print-prompt)))))
+     (t (signal 'lyskom-internal-error '(lyskom-print-prompt) to-do))))
 
   (if lyskom-no-prompt
       nil
@@ -1149,92 +1148,10 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
     command))
 
 
-(defun lyskom-prefetch-and-print-prompt ()
-  "Prefetch info if needed. Print prompt if not already printed."
-  (if (< (lyskom-known-texts)
-	 lyskom-prefetch-conf-tresh)
-      (lyskom-prefetch-conf))
-  (lyskom-prefetch-text)
-  (if (and (listp lyskom-is-waiting)
-	   (eval lyskom-is-waiting))
-      (progn
-	(setq lyskom-is-waiting nil)
-	(beep)
-	(lyskom-end-of-command)
-	(if (read-list-isempty lyskom-reading-list)
-	    (kom-go-to-next-conf))
-	(kom-next-command)))
-  (if lyskom-no-prompt
-      (lyskom-print-prompt)))
-
-
 (defun lyskom-known-texts ()
   "Count how many unread texts the user have, that the client knows about."
   (apply '+ (mapcar '(lambda (x) (1- (length (read-info->text-list x))))
 		    (read-list->all-entries lyskom-to-do-list))))
-
-
-;;
-;; Called from among others kom-list-news.
-;;
-(defun lyskom-prefetch-all-confs (continuation)
-  "Gets all conferences using prefetch. Calls itself recursively.
-When all confs are fetched then the function in the argument
-CONTINUATION is called."
-  ;; If all conf-stats are fetched, run the continuation function
-  (if (>= lyskom-last-conf-fetched
-	  (1- (length lyskom-membership)))
-      (lyskom-run 'main 'lyskom-run 'prefetch continuation)
-
-    ;; ...otherwise fetch next conf-stat.
-    (let ((lyskom-prefetch-conf-tresh lyskom-max-int)
-	  (lyskom-prefetch-confs lyskom-max-int))
-      (lyskom-prefetch-conf))
-    (lyskom-run 'main 'lyskom-prefetch-all-confs continuation)))
-
-
-;; ---------------------------------------------------------
-;; prefetch conf-stats
-
-
-(defun lyskom-prefetch-conf ()
-  "Fetch conf-stats for next few conferences from lyskom-membership."
-  (let ((lyskom-prefetch-confs lyskom-prefetch-confs))
-    (while (and (< lyskom-last-conf-fetched
-		   (1- (length lyskom-membership)))
-		(< (- lyskom-last-conf-fetched lyskom-last-conf-received)
-		   lyskom-prefetch-confs))
-      (++ lyskom-last-conf-fetched)
-      (let ((membership (elt lyskom-membership lyskom-last-conf-fetched)))
-	(if (lyskom-conf-no-list-member (membership->conf-no membership)
-					lyskom-unread-confs)
-	    (initiate-get-conf-stat 'main 'lyskom-prefetch-handle-conf
-				    (membership->conf-no membership)
-				    membership)
-	  (++ lyskom-prefetch-confs)
-	  (++ lyskom-last-conf-received))))))
-
-
-(defun lyskom-prefetch-handle-conf (conf-stat membership)
-  "Check if there is any unread texts in a conference.
-Args: CONF-STAT MEMBERSHIP"
-  (++ lyskom-last-conf-received)
-  (cond
-   ((> (+ (conf-stat->first-local-no conf-stat)
-	  (conf-stat->no-of-texts conf-stat)
-	  -1)
-       (membership->last-text-read membership))
-    ;; There are (probably) some unread texts in this conf.
-    (initiate-get-map 'prefetch 'lyskom-prefetch-handle-map
-		      (conf-stat->conf-no conf-stat)
-		      (1+ (membership->last-text-read membership))
-		      (+ (conf-stat->no-of-texts conf-stat)
-			 (conf-stat->first-local-no conf-stat)
-			 (- (membership->last-text-read membership)))
-		      membership
-		      conf-stat))
-   (t 
-    (lyskom-prefetch-and-print-prompt))))
 
 
 (defun lyskom-prefetch-handle-map (map membership conf-stat)
@@ -1289,52 +1206,6 @@ The list consists of text-nos."
 	  (setq result t))
       (-- n))
     result))
-
-
-;;-------------------------------------------------------
-;; prefetch text-stats
-
-(defun lyskom-prefetch-text ()
-  "Make sure that at least lyskom-prefetch-texts texts are fetched."
-  (lyskom-prefetch-from-rlist
-   (lyskom-prefetch-from-rlist lyskom-prefetch-texts
-			       (read-list->all-entries lyskom-reading-list))
-   (read-list->all-entries lyskom-to-do-list)))
-
-
-(defun lyskom-prefetch-from-rlist (n-texts rlist)
-  "Prefetch first N-TEXTS texts from RLIST.
-Returns number of texts that could not be fetched.
-RLIST is a list of reading-info."
-  (cond
-   ((< n-texts 1)
-    0)
-   ((null rlist)
-    n-texts)
-   (t
-    (lyskom-prefetch-from-rlist
-     (lyskom-prefetch-from-list
-      n-texts
-      (cdr (read-info->text-list (car rlist))))
-     (cdr rlist)))))
-
-
-(defun lyskom-prefetch-from-list (n-texts list)
-  "Prefetch first N-TEXTS texts from LIST.
-Returns number of texts that could not be fetched.
-RLIST is a list of text-nos. Texts whose text-no is present on
-lyskom-fetched-texts are not fetched."
-  (while (and (not (null list)) (> n-texts 0))
-    ;; Fetch this text - but only if we are not already fetching it.
-    (if (memq (car list) lyskom-fetched-texts)
-	nil				;already fetched (but maybe not yet
-					;received).
-      (initiate-get-text-stat 'background nil (car list))
-      (initiate-get-text 'background nil (car list))
-      (setq lyskom-fetched-texts (cons (car list) lyskom-fetched-texts)))
-    (setq list (cdr list))
-    (-- n-texts))
-  n-texts)
 
 
 ;;;; ================================================================
