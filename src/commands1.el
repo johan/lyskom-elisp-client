@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.17 1997-02-07 18:07:15 byers Exp $
+;;;;; $Id: commands1.el,v 44.18 1997-03-08 02:53:17 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.17 1997-02-07 18:07:15 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.18 1997-03-08 02:53:17 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -928,6 +928,22 @@ Don't ask for confirmation."
    'motd))
 
 
+(defun lyskom-get-recipients-from-misc-list (misc-list)
+  "Return a misc-info-list containing only the recipients."
+  (let* ((info (car misc-list))
+	 (type (misc-info->type info)))
+    (cond ((null misc-list) '())
+	  ((or (eq type 'RECPT)
+	       (eq type 'CC-RECPT))
+	   (append (list (intern (downcase (symbol-name type)))
+			 (misc-info->recipient-no info))
+		   (lyskom-get-recipients-from-misc-list
+		    (cdr misc-list))))
+	  (t
+	   (lyskom-get-recipients-from-misc-list
+	    (cdr misc-list))))))
+
+
 (defun lyskom-change-pres-or-motd-2 (conf-stat type)
   "Change the presentation or motd of CONF-STAT.
 TYPE is either 'pres or 'motd, depending on what should be changed."
@@ -939,22 +955,28 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
     (lyskom-dispatch-edit-text
      lyskom-proc
-     (apply 'lyskom-create-misc-list
-	    (append (list 'recpt
-			  (cond
-			   ((eq type 'motd)
-			    (server-info->motd-conf lyskom-server-info))
-			   ((eq type 'pres)
-			    (if (conf-type->letterbox
-				 (conf-stat->conf-type conf-stat))
-				(server-info->pers-pres-conf 
-				 lyskom-server-info)
-			      (server-info->conf-pres-conf
-			       lyskom-server-info)))))
-		    (if (and (eq type 'pres)
-			     (not (zerop (conf-stat->presentation conf-stat))))
-			(list 'comm-to
-			      (conf-stat->presentation conf-stat)))))
+     (apply
+      'lyskom-create-misc-list
+      (if (and (eq type 'pres)
+	       (not (zerop (conf-stat->presentation conf-stat))))
+	  (append
+	   (lyskom-get-recipients-from-misc-list
+	    (text-stat->misc-info-list
+	     (blocking-do 'get-text-stat
+			  (conf-stat->presentation conf-stat))))
+	   (list 'comm-to
+		 (conf-stat->presentation conf-stat)))
+	(list 'recpt
+	      (cond
+	       ((eq type 'motd)
+		(server-info->motd-conf lyskom-server-info))
+	       ((eq type 'pres)
+		(if (conf-type->letterbox
+		     (conf-stat->conf-type conf-stat))
+		    (server-info->pers-pres-conf 
+		     lyskom-server-info)
+		  (server-info->conf-pres-conf
+		   lyskom-server-info)))))))
      (conf-stat->name conf-stat)
      (let ((text-mass (blocking-do 'get-text 
 				   (cond
