@@ -357,6 +357,9 @@ WANT-PERSONS is t for persons, nil for confs."
 ;;; ================================================================
 ;;;                        The LysKOM mode.
 
+;; The LysKOM mode should not be inherited if we create a new buffer
+;; and default-major-mode is nil.
+(put 'lyskom-mode 'mode-class 'special)
 
 (defun lyskom-mode ()
   "\\<lyskom-mode-map>Mode for LysKOM client.
