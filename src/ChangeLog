@@ -1,3 +1,14 @@
+2000-10-01  Per Cederqvist  <ceder@moria>
+
+	* commands1.el (lyskom-make-re-case-insensitive): New function.
+	(kom-list-re): Be case insensitive if a prefix arg is given.
+	* vars.el.in (lyskom-char-classes): New variable.
+	* utilities.el (lyskom-default-collate-table): Doc-string
+	improved.  Value fixed.
+	(lyskom-compute-char-classes): New function.
+	* startup.el (lyskom): Set lyskom-char-classes.
+	* lyskom-rest.el: Set a default value for lyskom-char-classes.
+
 2000-09-15  David Byers  <davby@ida.liu.se>
 
 	* command.el (lyskom-command-complete-word): Prevent multiple

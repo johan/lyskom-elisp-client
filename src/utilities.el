@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.74 2000-09-02 13:23:03 byers Exp $
+;;;;; $Id: utilities.el,v 44.75 2000-10-01 19:52:31 ceder Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.74 2000-09-02 13:23:03 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.75 2000-10-01 19:52:31 ceder Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -310,7 +310,11 @@ TYPE should be `list' or `vector'."
 
 (defvar lyskom-default-collate-table
   "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~\200\201\202\203\204\205\206\207\210\211\212\213\214\215\216\217\220\221\222\223\224\225\226\227\230\231\232\233\234\235\236\237 !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
-  "String mapping lowercase to uppercase and equivalents to each others.")
+  "String mapping characters to their collate class.
+
+Lowercase, uppercase and other equivalents are mapped to the same class.
+The class number defines a proper sorting order.")
+
 
 (defsubst lyskom-maybe-recode-string (s &optional coding force)
   "Change the encoding of S for when multibyte characters are not supported.
@@ -377,6 +381,53 @@ is non-nil."
    (error nil)))
 
 
+(defun lyskom-compute-char-classes (map)
+  "Find out which characters that are equivalent according to MAP.
+
+MAP should be a collate table.
+
+The return value is an assoc list, which characters as keys, and a
+list of single-character strings as values.  Only characters that are
+equivalent to at least one more character is returned in the assoc
+list.
+
+Example: if this function returns
+
+	((97 \"A\" \"a\")
+         (65 \"A\" \"a\")
+	 (48 \"O\" \"o\" \"0\")
+	 (111 \"O\" \"o\" \"0\")
+	 (79 \"O\" \"o\" \"0\"))
+
+it means that a and A are equivalent, and o, O and 0 are equivalent.
+All other characters are unique."
+
+  (lyskom-save-excursion
+    (and lyskom-buffer (set-buffer lyskom-buffer))
+    (let ((ix (length map))
+	  (cls-to-strings nil)) ;assoc-list from equivalence class to
+				;list of chars
+      (while (> ix 0)
+	(setq ix (1- ix))
+	(let* ((cls (aref map ix))
+	       (str (decode-coding-string (concat (vector ix))
+					  lyskom-server-coding-system))
+	       (elem (assoc cls cls-to-strings)))
+	  (if elem
+	      (rplacd elem (cons str (cdr elem)))
+	    (setq cls-to-strings (cons (list cls str) cls-to-strings)))))
+      (let ((res nil))
+	(while cls-to-strings
+	  (let ((lst (cdar cls-to-strings)))
+	    (if (> (length lst) 1)
+		(while lst
+		  (setq res (cons (cons (string-to-char (car lst))
+					(cdar cls-to-strings))
+				  res))
+		  (setq lst (cdr lst)))))
+	  (setq cls-to-strings (cdr cls-to-strings)))
+	res))))
+    
 ;; Stolen from thingatpt.el
 ;; FIXME: We may not really need this function. Check the callers.
 
