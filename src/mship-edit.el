@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.47 2004-10-26 17:53:34 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: mship-edit.el,v 44.48 2004-10-27 14:38:12 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.47 2004-10-26 17:53:34 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: mship-edit.el,v 44.48 2004-10-27 14:38:12 _cvs_pont_lyskomelisp Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -405,8 +405,12 @@ The start and end markers of the entry are adjusted"
       (let ((buffer-read-only nil))
         (insert-before-markers "\n")
         (forward-char -1)
+	(if (lp--entry->start-marker entry)
+	    (set-marker (lp--entry->start-marker entry) nil))
         (set-lp--entry->start-marker entry (point-marker))
         (lp--format-insert-entry entry)
+	(if (lp--entry->end-marker entry)
+	    (set-marker (lp--entry->end-marker entry) nil))
         (set-lp--entry->end-marker entry (point-marker))
         (lp--entry-update-extents entry)
         (forward-char 1))
@@ -419,7 +423,11 @@ The start and end markers of the entry are adjusted"
                (lp--entry->end-marker entry))
       (delete-region (lp--entry->start-marker entry)
                      (1+ (lp--entry->end-marker entry))))
+    (if (lp--entry->start-marker entry)
+	(set-marker (lp--entry->start-marker entry) nil))
     (set-lp--entry->start-marker entry nil)
+    (if (lp--entry->end-marker entry)
+	(set-marker (lp--entry->end-marker entry) nil))
     (set-lp--entry->end-marker entry nil)
     (lp--entry-update-extents entry)))
 

@@ -1,3 +1,9 @@
+2004-10-27  Pontus Freyhult  <pont@soua.net>
+
+	* mship-edit.el (lp--erase-entry): Point old markers to nil before
+	forgetting them.
+	(lp--print-entry): Dito.
+
 2004-10-26  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--redraw-entry-mark): Use lyskom-face-background,
