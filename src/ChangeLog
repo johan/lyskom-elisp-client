@@ -1,3 +1,11 @@
+2003-01-05  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 677:
+	* filter.el (kom-super-jump): Fixed recipient selection. The order
+	is now current conf, recipient user is a member of, cc user is a
+	member of, bcc user is a member of, other recipient, other cc,
+	other bcc.
+
 2003-01-04  David Byers  <david.byers@swipnet.se>
 
 	Fix bug 961:

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.21 2002-04-10 19:23:23 byers Exp $
+;;;;; $Id: filter.el,v 44.22 2003-01-04 23:19:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.21 2002-04-10 19:23:23 byers Exp $\n"))
+	      "$Id: filter.el,v 44.22 2003-01-04 23:19:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -558,38 +558,53 @@ the current text"
           (zerop lyskom-current-text))
       (lyskom-insert-string 'have-to-read)
     (let ((text-stat (blocking-do 'get-text-stat lyskom-current-text))
-          (recipients nil)
-          (cc-recipients nil)
-          (bcc-recipients nil)
+          (all-recipients nil)
+          (recipients-member nil)
+          (cc-recipients-member nil)
+          (bcc-recipients-member nil)
+          (recipients-nonmember nil)
+          (cc-recipients-nonmember nil)
+          (bcc-recipients-nonmember nil)
           (filter-recipient nil)
           (conf-stat (if (and lyskom-current-conf
                               (not (zerop lyskom-current-conf)))
                          (blocking-do 'get-conf-stat lyskom-current-conf))))
+
+      ;; Extract recipients into different lists
       (lyskom-traverse misc
                        (text-stat->misc-info-list text-stat)
-                       (cond ((eq (misc-info->type misc) 'RECPT) 
-                              (setq recipients (cons (misc-info->recipient-no misc)
-                                                     recipients)))
-                             ((eq (misc-info->type misc) 'CC-RECPT)
-                              (setq cc-recipients (cons (misc-info->recipient-no misc)
-                                                        cc-recipients)))
-                             ((eq (misc-info->type misc) 'BCC-RECPT)
-                              (setq bcc-recipients (cons (misc-info->recipient-no misc)
-                                                         bcc-recipients)))))
+        (when (memq (misc-info->type misc) lyskom-recpt-types-list)
+          (let* ((conf-no (misc-info->recipient-no misc))
+                 (symbol
+                  (if (lyskom-get-membership conf-no)
+                      (cond ((eq (misc-info->type misc) 'RECPT)
+                             'recipients-member)
+                            ((eq (misc-info->type misc) 'CC-RECPT)
+                             'cc-recipients-member)
+                            ((eq (misc-info->type misc) 'BCC-RECPT)
+                             'bcc-recipients-member))
+                    (cond ((eq (misc-info->type misc) 'RECPT)
+                           'recipients-nonmember)
+                          ((eq (misc-info->type misc) 'CC-RECPT)
+                           'cc-recipients-nonmember)
+                          ((eq (misc-info->type misc) 'BCC-RECPT)
+                           'bcc-recipients-nonmember)))))
+            (set symbol (cons conf-no (symbol-value symbol)))
+            (setq all-recipients (cons conf-no all-recipients)))))
 
-      (setq filter-recipient (or 
-                              (and conf-stat
-                                   (or 
-                                    (memq lyskom-current-conf recipients)
-                                    (memq lyskom-current-conf cc-recipients))
-                                   lyskom-current-conf)
-                              (car (nreverse recipients))
-                              (car (nreverse cc-recipients))
-                              (car (nreverse bcc-recipients))))
+      ;; Get the recipient to filter in
+      (setq filter-recipient 
+            (or (and (memq lyskom-current-conf all-recipients) lyskom-current-conf)
+                (car (nreverse recipients-member))
+                (car (nreverse cc-recipients-member))
+                (car (nreverse bcc-recipients-member))
+                (car (nreverse recipients-nonmember))
+                (car (nreverse cc-recipients-nonmember))
+                (car (nreverse bcc-recipients-nonmember))))
 
       (if (null filter-recipient)
           (lyskom-insert-string 'no-recipient)
-            
+
         (let ((text lyskom-current-subject))
           (when (string-match "^\\s-*$" lyskom-current-subject) (setq text ""))
 
