@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.128 2002-05-03 20:29:01 ceder Exp $
+;;;;; $Id: commands2.el,v 44.129 2002-05-05 19:19:35 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.128 2002-05-03 20:29:01 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.129 2002-05-05 19:19:35 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2912,6 +2912,6 @@ Tryck på enter för att fortsätta.
   (let ((visible-bell t))
     (ding))
   (let ((visible-bell nil))
-    (ding)))
+    (ding))
   (read-from-minibuffer 
    (lyskom-format "%#1@Tryck return eller enter för att gå vidare: " '(face kom-warning-face))))
