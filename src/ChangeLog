@@ -1,5 +1,10 @@
 2002-04-11  David Byers  <david.byers@swipnet.se>
 
+	Beter kom-who-is-on-and-friend:
+	* commands1.el (lyskom-select-friends-from-who-list): Show
+	lyskom-pers-no when filtering friends. Perhaps this should be a
+	configurable option. Someone else can deal with that :-)
+
 	* vars.el.in (lyskom-commands): Added kom-create-aux-item.
 
 	* swedish-strings.el (lyskom-command): Added kom-cereate-aux-item.
