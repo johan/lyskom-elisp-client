@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 41.3 1996-07-17 08:59:59 byers Exp $
+;;;;; $Id: parse.el,v 41.4 1996-07-27 11:39:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 41.3 1996-07-17 08:59:59 byers Exp $\n"))
+	      "$Id: parse.el,v 41.4 1996-07-27 11:39:49 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -514,6 +514,13 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-vector			;read-texts
     (lyskom-parse-num) 'lyskom-parse-num)))		
 
+
+(defun lyskom-parse-version-info ()
+  "Parse info about the server and protocol."
+  (lyskom-create-version-info
+   (lyskom-parse-num)
+   (lyskom-parse-string)
+   (lyskom-parse-string)))
 
 (defun lyskom-parse-server-info ()
   "Parse info about the server."

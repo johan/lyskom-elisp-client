@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 41.12 1996-07-25 06:53:09 davidk Exp $
+;;;;; $Id: commands1.el,v 41.13 1996-07-27 11:39:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 41.12 1996-07-25 06:53:09 davidk Exp $\n"))
+	      "$Id: commands1.el,v 41.13 1996-07-27 11:39:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1715,10 +1715,14 @@ WHO-INFOS that are potential sessions."
                         (if (not (eq (who-info->working-conf info) 0))
                             (who-info->working-conf info)
                           (lyskom-get-string 'not-present-anywhere))
-                        (if (string-match "^\\(.*[^.]\\)\\.*$"
-                                          (who-info->doing-what info))
-                            (match-string 1 (who-info->doing-what info))
-                          (who-info->doing-what info))
+                        (let ((string 
+                               (if (string-match "^\\(.*[^.]\\)\\.*$"
+                                                 (who-info->doing-what info))
+                                   (match-string 1 (who-info->doing-what info))
+                                 (who-info->doing-what info))))
+                          (if (string= string "")
+                              (lyskom-get-string 'unknown-doing-what)
+                            string))
                         client
                         (if (not (eq (who-info->working-conf info) 0))
                             (lyskom-get-string 'doing-where-conn)

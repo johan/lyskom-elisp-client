@@ -1,3 +1,49 @@
+Fri Jul 26 12:27:37 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* startup.el (kom-start-anew): Hantera att
+ 	lyskom-lookup-conf-by-name returnerar conf-z-info.
+
+	* english-strings.el,swedish-strings.el (lyskom-strings): Lade
+ 	till unknown-doing-what.
+
+	* commands1.el (lyskom-status-session-2): Snyggare utskrift om
+ 	doing-what är tom sträng.
+
+	* completing-read.el (lyskom-read-conf-internal-verify-type): Ny
+ 	semantik för x-list parametern. Den skall vara en lista, inte en
+ 	conf-info-list.
+	(lyskom-completing-cache-completion): Ny funktion.
+	(lyskom-read-conf-no): Hantera conf-z-info istf conf-stat internt.
+	(lyskom-read-conf-stat): Dito.
+	(lyskom-read-conf-name): Dito.
+	(lyskom-read-conf-name): Dito, samt returnera conf-z-info.
+	(lyskom-lookup-conf-by-name): Returnera conf-z-info.
+	(lyskom-read-conf-internal): Använd conf-z-info istf conf-stat
+ 	internt. Cacha expansionen av strängar för att undvika extra
+ 	uppslagningar.
+	(lyskom-completing-lookup-z-name): Ersätter
+ 	lyskom-completing-lookup-name.
+	(lyskom-read-session-internal): Hantera conf-z-info från
+ 	lyskom-read-conf-internal.
+
+	* lyskom-rest.el (lyskom-format-object): Lade in stöd för
+ 	formattering av t och nil som boolean.
+
+	* komtypes.el (lyskom-create-version-info): Ny funktion
+	(version-info->protocol-version): Ny funktion.
+	(version-info->server-software): Ny funktion.
+	(version-info->software-version): Ny funktion.
+
+	* parse.el (lyskom-parse-version-info): Ny funktion.
+
+	* services.el (initiate-lookup-z-name): Ny funktion.
+	(initiate-get-version-info): Ny funktion.
+
+	* vars.el.in (lyskom-dont-debug-what-i-am-doing): Ny variabel.
+
+	* lyskom-rest.el (lyskom-filter): Option att inte logga
+ 	what-i-am-doing-meddelanden.
+
 Thu Jul 25 11:35:36 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* completing-read.el (lyskom-read-conf-internal): Säkrare
