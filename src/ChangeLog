@@ -1,3 +1,8 @@
+2004-10-29  Pontus Freyhult  <pont@soua.net>
+
+	* lyskom-rest.el (lyskom-format-image): Bugix: Used let instead
+	of let*.
+
 2004-10-28  David Byers  <byers@lysator.liu.se>
 
 	* vars.el.in: Updated some documentation strings.
