@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.76 2003-08-16 16:58:47 byers Exp $
+;;;;; $Id: view-text.el,v 44.77 2004-02-21 22:34:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.76 2003-08-16 16:58:47 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.77 2004-02-21 22:34:14 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -582,13 +582,12 @@ recipients to it that the user is a member in."
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
-			     (misc-info->recipient-no misc-info) t))
+			     (misc-info->recipient-no misc-info) nil))
 		(loc-no (misc-info->local-no misc-info)))
 
 	    ;; Make a note that this text really is in a group we are
 	    ;; a member of.
 	    (if (and res membership) (setq res t))
-	    
 	    (if (and membership
 		     (> loc-no (membership->last-text-read membership))
 		     (not (lyskom-vmemq loc-no
@@ -621,7 +620,8 @@ blocking-do."
                                       (lyskom-try-get-membership
                                        (misc-info->recipient-no misc-item) t)
                                     (lyskom-get-membership
-                                     (misc-info->recipient-no misc-item) t)))
+                                     (misc-info->recipient-no misc-item) nil)))
+
                  (when membership
                    (setq is-member t)
                    (when (or (<= (misc-info->local-no misc-item)

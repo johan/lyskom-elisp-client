@@ -1,3 +1,17 @@
+2004-02-21  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1250:
+	* view-text.el (lyskom-text-read-at-least-once-p): Don't consider
+	passive memberships.
+	(lyskom-text-read-p): Same here.
+
+	* services.el (initiate-get-part-of-membership): Don't get read texts.
+
+	* lyskom-rest.el (lyskom-get-read-texts-for-membership): New
+	function.
+
+	* commands2.el (kom-is-person-member-of-conference): Use it here.
+
 2004-02-12  David Byers  <byers@lysator.liu.se>
 
 	Make kom-list-new-conferences quittable:

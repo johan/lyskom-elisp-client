@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.200 2004-02-12 21:07:51 byers Exp $
+;;;;; $Id: commands2.el,v 44.201 2004-02-21 22:34:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.200 2004-02-12 21:07:51 byers Exp $\n"))
+              "$Id: commands2.el,v 44.201 2004-02-21 22:34:13 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -336,6 +336,7 @@ otherwise: the conference is read with lyskom-completing-read."
                             (lyskom-format-time
                              'date-and-time
                              (membership->last-time-read membership)))
+
                            (let ((unread (- (+ (conf-stat->first-local-no
                                                 conf-stat)
                                                (conf-stat->no-of-texts conf-stat))
@@ -558,6 +559,7 @@ This command accepts text number prefix arguments \(see
                            member-conf-stat)
                           (conf-stat->no-of-texts
                            member-conf-stat))
+
                        (membership->last-text-read membership)
                        (length (membership->read-texts
                                 membership))
@@ -2687,6 +2689,7 @@ See `kom-keep-alive' for more information."
                   (lyskom-replace-deferred 
                    defer-info (lyskom-get-string 'Unknown-number))
                 (let ((conf-stat (defer-info->data defer-info)))
+                  (lyskom-get-read-texts-for-membership (or pers-no lyskom-pers-no) membership)
                   (lyskom-replace-deferred defer-info 
                                            (number-to-string 
                                             (- (+ (conf-stat->first-local-no conf-stat)
