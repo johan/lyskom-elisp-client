@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.89 1999-11-19 22:00:12 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.90 1999-11-19 22:10:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.89 1999-11-19 22:00:12 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.90 1999-11-19 22:10:22 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3007,7 +3007,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                   (save-excursion
                     (set-buffer (get-buffer-create "*kom*-replies"))
                     (goto-char (point-max))
-                    (princ output (current-buffer))))
+                    (princ (string-as-unibyte output) (current-buffer))))
 
 	      (if lyskom-debug-communications-to-buffer
                   (if (not lyskom-debug-what-i-am-doing)
@@ -3017,7 +3017,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
                     (lyskom-debug-insert proc "From " output)))
 	      
 	      (set-buffer (process-buffer proc))
-	      (princ output lyskom-unparsed-marker)
+	      (princ (string-as-unibyte output) lyskom-unparsed-marker)
 	      ;;+++lyskom-string-skip-whitespace
 	      (if quit-flag		; We are allowed to break here.
 		  (setq inhibit-quit nil)) ; This will break
