@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.13 1996-07-27 14:15:52 davidk Exp $
+;;;;; $Id: commands2.el,v 41.14 1996-07-31 09:27:16 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.13 1996-07-27 14:15:52 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.14 1996-07-31 09:27:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1087,9 +1087,14 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 (def-kom-command kom-sync-database ()
   "Save the LysKOM database."
   (interactive)
-  (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync))
-      (progn (lyskom-insert-string 'syncing-server)
-             (lyskom-report-command-answer (blocking-do 'sync)))))
+  (if (or (> (elt lyskom-server-version 0) 1)
+          (and (= (elt lyskom-server-version 0) 1)
+               (> (elt lyskom-server-version 1) 8)))
+      (if (lyskom-ja-or-nej-p (lyskom-get-string 'really-sync))
+          (progn (lyskom-insert-string 'syncing-server)
+                 (lyskom-report-command-answer (blocking-do 'sync))))
+    (setq lyskom-errno 12)
+    (lyskom-report-command-answer nil)))
 
 
 ;;; ================================================================
