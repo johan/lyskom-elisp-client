@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 44.10 1997-07-11 08:53:59 byers Exp $
+;;;;; $Id: macros.el,v 44.11 1997-07-11 14:17:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.10 1997-07-11 08:53:59 byers Exp $\n"))
+	      "$Id: macros.el,v 44.11 1997-07-11 14:17:21 byers Exp $\n"))
 
 
 
@@ -224,6 +224,7 @@ the current buffer, and its value is copied from the LysKOM buffer."
            (require 'cus-face)          ; lww
            (apply (quote (, fn)) args)))))
 
+(lyskom-widget-wrapper define-widget)
 (lyskom-widget-wrapper widget-at)
 (lyskom-widget-wrapper widget-value)
 (lyskom-widget-wrapper widget-button-click)

@@ -1,5 +1,32 @@
 Fri Jul 11 09:17:28 1997  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el: Tog bort popup-menu eftersom vissa Gnu Emacs
+ 	definierar en okompatibel variant av den här funktionen. Vi
+ 	använder lyskom-do-popup-menu istället.
+
+	* lyskom-buttons.el (lyskom-button-menu): Använd
+ 	lyskom-do-popup-menu.
+
+	* menus.el (lyskom-background-menu): Tog bort event-argumentet
+ 	från anropet.
+	(lyskom-do-popup-menu): Ny funktion. 
+	(lyskom-background-menu): Använd den.
+
+	* lyskom-rest.el (lyskom-w3-region): Ny funktion.
+
+	* lyskom-buttons.el (lyskom-button-menu): Tog bort
+ 	event-argumentet från popup-menu.
+
+	* compatibility.el (next-text-property-bounds): Lade till igen
+ 	tack vare den eländiga danske faan.
+
+	* option-edit.el (lyskom-customize-send): Skriv ut listor mm med
+ 	quote.
+
+	* edit-text.el (kom-ispell-message): Requirea ispell.
+
+	* macros.el (define-widget): Wrappa med lyskom-widget-wrapper.
+
 	* compatibility.el (char-to-int): Function, not subst, and things
  	work better.
 

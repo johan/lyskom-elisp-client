@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.35 1997-07-10 08:58:42 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.36 1997-07-11 14:17:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.35 1997-07-10 08:58:42 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.36 1997-07-11 14:17:16 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -666,22 +666,34 @@ The position lyskom-last-viewed will always remain visible."
                                         2)))
                     )))))))
 	
+;;;
+;;; Thanks to the stupid danish fool who wrote the widget package, we
+;;; have to do it this way, because w3 uses widgets, and because
+;;; widgets use overlays, and because overlays aren't copied between
+;;; buffers. If the idiot danish flaming asshole had used text
+;;; properties or something equally sensible instead, we could have
+;;; managed without this shit.
+;;;
+;;; (Me, upset? Why would you think *that*?)
+;;;
+
 
 (defsubst lyskom-do-insert (string)
-  ;;  (let ((start (point)))
+  (let ((start (point)))
   (insert string)
-  ;;    (let ((bounds (next-text-property-bounds 1 (1- start) 'special-insert))
-  ;;          (next (make-marker))
-  ;;          (fn nil))
-  ;;      (while bounds
-  ;;        (set-marker next (cdr bounds))
-  ;;        (setq fn (get-text-property (car bounds) 'special-insert))
-  ;;        (remove-text-properties (car bounds) (cdr bounds)
-  ;;                                '(special-insert))
-  ;;        (funcall fn (car bounds) (cdr bounds))
-  ;;        (setq start next)
-  ;;        (setq bounds (next-text-property-bounds 1 start
-  ;;                                                'special-insert)))))
+      (let ((bounds (next-text-property-bounds 1 (max 1 (1- start))
+                                               'special-insert))
+            (next (make-marker))
+            (fn nil))
+        (while bounds
+          (set-marker next (cdr bounds))
+          (setq fn (get-text-property (car bounds) 'special-insert))
+          (remove-text-properties (car bounds) (cdr bounds)
+                                  '(special-insert))
+          (funcall fn (car bounds) (cdr bounds))
+          (setq start next)
+          (setq bounds (next-text-property-bounds 1 start
+                                                  'special-insert)))))
 )
 
 
@@ -1361,29 +1373,39 @@ Note that it is not allowed to use deferred insertions in the text."
           (kom-text-properties (lyskom-button-transform-text text))
           (t text))))
 
+(defun lyskom-w3-region (start end)
+  (w3-region start end)
+  (add-text-properties start (min (point-max) end) '(end-closed nil)))
+
 (defun lyskom-format-html (text)
   (condition-case e (require 'w3) (error nil))
-  (let ((tmpbuf (lyskom-get-buffer-create 'lyskom-html " lyskom-html" t)))
-    (unwind-protect
-        (save-excursion
-          (set-buffer tmpbuf)
-          (insert (substring text 5))
-          (insert " ")                  ; So we can adjust the extents
-          (w3-region (point-max) (point-min))
-          (let ((tmp nil))
-            (map-extents
-             (lambda (e x)
-               (if (zerop (- (extent-start-position e)
-                             (extent-end-position e)))
-                   (set-extent-endpoints e (extent-start-position e)
-                                         (1+ (extent-end-position e))))
-               (progn
-                 (set-extent-property e 'duplicable t)
-                 (set-extent-property e 'replicable t))
-               nil))
-            (setq tmp (buffer-string))
-            (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
-            tmp)))))
+  (add-text-properties 0 (length text) '(special-insert lyskom-w3-region) text)
+  (substring text 5))
+
+;;;(defun lyskom-format-html (text)
+;;;  (condition-case e (require 'w3) (error nil))
+;;;  (let ((tmpbuf (lyskom-get-buffer-create 'lyskom-html " lyskom-html" t)))
+;;;    (unwind-protect
+;;;        (save-excursion
+;;;          (set-buffer tmpbuf)
+;;;          (insert (substring text 5))
+;;;          (insert " ")                  ; So we can adjust the extents
+;;;          (w3-region (point-max) (point-min))
+;;;          (let ((tmp nil))
+;;;            (map-extents
+;;;             (lambda (e x)
+;;;               (if (zerop (- (extent-start-position e)
+;;;                             (extent-end-position e)))
+;;;                   (set-extent-endpoints e (extent-start-position e)
+;;;                                         (1+ (extent-end-position e))))
+;;;               (progn
+;;;                 (set-extent-property e 'duplicable t)
+;;;                 (set-extent-property e 'replicable t))
+;;;               nil))
+;;;            (setq tmp (buffer-string))
+;;;            (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
+;;;            tmp)))))
+
 
 
 (defun lyskom-format-enriched (text)

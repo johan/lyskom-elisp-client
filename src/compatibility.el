@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.9 1997-07-11 09:54:56 byers Exp $
+;;;;; $Id: compatibility.el,v 44.10 1997-07-11 14:17:06 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.9 1997-07-11 09:54:56 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.10 1997-07-11 14:17:06 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -208,6 +208,43 @@ of the lyskom-provide-* functions instead."
 
 (lyskom-provide-function map-extents (&rest args))
 
+(lyskom-provide-function next-text-property-bounds 
+    (count pos prop &optional object)
+  "Return the COUNTth bounded property region of property PROP after POS.
+If COUNT is less than zero, search backwards.  This returns a cons
+\(START . END) of the COUNTth maximal region of text that begins after POS
+\(starts before POS) and has a non-nil value for PROP.  If there aren't
+that many regions, nil is returned.  OBJECT specifies the buffer or
+string to search in."
+  (or object (setq object (current-buffer)))
+  (let ((begin (if (stringp object) 0 (point-min)))
+	(end (if (stringp object) (length object) (point-max))))
+    (catch 'hit-end
+      (if (> count 0)
+	  (progn
+	    (while (> count 0)
+	      (if (>= pos end)
+		  (throw 'hit-end nil)
+		(and (get-char-property pos prop object)
+		     (setq pos (next-single-property-change pos prop
+							    object end)))
+		(setq pos (next-single-property-change pos prop object end)))
+	      (setq count (1- count)))
+	    (and (< pos end)
+		 (cons pos (next-single-property-change pos prop object end))))
+	(while (< count 0)
+	  (if (<= pos begin)
+	      (throw 'hit-end nil)
+	    (and (get-char-property (1- pos) prop object)
+		 (setq pos (previous-single-property-change pos prop
+							    object begin)))
+	    (setq pos (previous-single-property-change pos prop object
+						       begin)))
+	  (setq count (1+ count)))
+	(and (> pos begin)
+	     (cons (previous-single-property-change pos prop object begin)
+		   pos))))))
+
 
 ;;; ============================================================
 ;;; Character stuff
@@ -226,13 +263,6 @@ visible in the event's window."
 
 (lyskom-provide-function event-glyph (e))
 
-(lyskom-provide-function popup-menu (menu-desc &optional event)
-  (let* ((result (x-popup-menu (or event t)
-                               (list menu-desc)))
-         (command (car result)))
-    (if command
-        (apply (car command)
-               (cdr command)))))
 
 (defun lyskom-get-buffer-window-list (buffer &optional minibuf frame)
   "Return windows currently displaying BUFFER, or nil if none.
