@@ -1,3 +1,21 @@
+Mon Aug 16 18:36:59 1993  Linus Tolke Y  (linus@rune)
+
+	* lyskom-rest.el, swedish-strings.el (kom-extended-command):
+	  Previous change undone.
+
+	* vars.el, swedish-string.el, lyskom-rest.el (kom-tell-phrases):
+	  substituted kom-tell-phrases-internal for
+	  lyskom-tell-phrases-validation-keyword-list and moved back all
+	  language dependent information from vars.el to swedish-strings.el
+
+Fri Aug 13 20:28:11 1993  Linus Tolke Y  (linus@rune)
+
+	* commands1.el (kom-write-letter): Use blocking-do.
+
+	* lyskom-rest.el, swedish-strings.el (kom-extended-command):
+	  Maps swedish letters from different isostandards to the same
+	  chars.
+
 Wed Aug 11 11:39:44 1993  Linus Tolke Y  (linus@rudolf)
 
 	* commands2.el (kom-send-message): Allowed quitting.
