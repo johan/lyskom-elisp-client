@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.3 1996-03-20 13:15:10 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 39.4 1996-03-20 13:43:56 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.3 1996-03-20 13:15:10 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 39.4 1996-03-20 13:43:56 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1428,9 +1428,10 @@ lyskom-is-waiting nil.
   (lyskom-insert "\n")
   (if (and (eq (window-buffer (selected-window))
                (current-buffer))
-           (= (point) (point-max)))     ;Tell user something is
+           ;; (= (point) (point-max))
+	   )				;Tell user something is
       (progn
-        (beginning-of-line 0)           ;about to happen.
+        ;; (beginning-of-line 0)           ;about to happen.
         (sit-for 0)))
                                         ;  (lyskom-scroll)
   (if kom-page-before-command           ;Nice with dumb terminals.
@@ -2163,6 +2164,14 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	(insert "\n"
 		(format "%s" proc)
 		prefix  string)))))
+
+
+;;; For serious bugs
+(defun lyskom-really-serious-bug ()
+  (let ((debug-on-error t))
+    (error "Congratulations! You found a serious bug in lyskom.el.
+Press q to leave this buffer, and please run M-x kom-bug-report afterwards.")))
+  
 
 
 ;;; ================================================================
