@@ -509,9 +509,11 @@ user so instead."
 	(progn
 	  (set-read-list-empty lyskom-reading-list)
 	  (setq lyskom-current-conf 0)))
+    (if (= (conf-stat->conf-no pers-conf-stat)
+	   lyskom-pers-no)
+	(setq lyskom-last-conf-received (1- lyskom-last-conf-received)))
     (read-list-delete-read-info (conf-stat->conf-no conf-conf-stat)
-				lyskom-to-do-list)
-    (setq lyskom-last-conf-received (1- lyskom-last-conf-received)))
+				lyskom-to-do-list))
   (lyskom-run 'main 'lyskom-end-of-command))
 
 

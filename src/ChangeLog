@@ -1,3 +1,11 @@
+Tue Aug 13 03:05:27 1991  Linus Tolke Y  (linus at lysator)
+
+	* commands1.el, lyskom-sub-member-answer, nu r{knar den bara ner
+	  lyskom-last-conf-received om man subtraherar sig sj{lv.
+
+	* edit-text.el: lyskom-edit-get-commented s|ker nu f|rst efter
+	  kommenterade och sedan fotnoterade inl{gg.
+
 Wed Jul 31 06:59:14 1991  Linus Tolke Y  (linus at lysator)
 
 	* commands2.el: lyskom-list-summary. R{knar nu r{tt p} vilken
@@ -26,7 +34,7 @@ Tue Jul  9 01:04:59 1991  Inge Wallin  (inge at lysator)
 
 Sun Jul  7 17:47:14 1991  Linus Tolke Y  (linus at lysator)
 
-	* swedish-strings.el, lyskom-rest.el: Nu get str{ngen som
+	* swedish-strings.el, lyskom-rest.el: Nu ger str{ngen som
 	  talar om vilken felkod vi har f}tt {ven numret p} felkoden.
 
 	* startup.el: Nu skickar bara klienten meddelandet kom-tell-login

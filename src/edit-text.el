@@ -344,7 +344,10 @@ Entry to this mode runs lyskom-edit-mode-hook."
 			(point)))
 	     (found (progn
 		      (goto-char (point-min))
-		      (re-search-forward "^K[^0-9]*\\([0-9]+\\)" endhead t)))
+		      (or (re-search-forward "^K[^0-9]*\\([0-9]+\\)" endhead
+					     t)
+			  (re-search-forward "^Fot[^0-9]*\\([0-9]+\\)" endhead
+					     t))))
 	     (no (and found
 		      (string-to-int (buffer-substring
 				      (match-beginning 1)
