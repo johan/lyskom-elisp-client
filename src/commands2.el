@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.8 1997-02-07 18:07:21 byers Exp $
+;;;;; $Id: commands2.el,v 44.9 1997-03-08 02:55:40 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.8 1997-02-07 18:07:21 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.9 1997-03-08 02:55:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -821,7 +821,8 @@ on one line."
 	    ;; We really don't need the whole text.
 	    )
 	(lyskom-print-summary-line text-stat text text-no 
-				   (time->year time) (time->yday time))))))
+				   (time->year time) (time->yday time))
+	(sit-for 0)))))
 
 
 (defun lyskom-print-summary-line (text-stat text text-no year day)
