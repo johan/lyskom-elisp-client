@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.73 2000-06-02 13:51:10 byers Exp $
+;;;;; $Id: commands1.el,v 44.74 2000-06-06 19:52:38 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.73 2000-06-02 13:51:10 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.74 2000-06-06 19:52:38 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -920,22 +920,24 @@ BCCREP is a list of all recipient that are going to be bcc-recipients."
 			(text-stat->text-no text-stat)))
 	       (recpts nil))
 	  (while data
-	    (let ((conf-stat (car data)))
-	      (if (memq (conf-stat->comm-conf conf-stat) recpts)
+	    (let* ((conf-stat (car data))
+                   (confno (conf-stat->conf-no conf-stat))
+                   (commno (if (eq type 'footnote)
+                               confno
+                             (conf-stat->comm-conf conf-stat))))
+	      (if (memq commno recpts)
 		  nil
 		(setq recver
 		      (append recver
 			      (list
 			       (cons (cond
-                                      ((memq (conf-stat->conf-no conf-stat) 
-                                             ccrep) 'cc-recpt)
-                                      ((memq (conf-stat->conf-no conf-stat)
-                                             bccrep) 'bcc-recpt)
+                                      ((memq confno ccrep) 'cc-recpt)
+                                      ((memq confno bccrep) 'bcc-recpt)
                                       (t 'recpt))
-				     (conf-stat->comm-conf conf-stat)))))
-		(if (lyskom-get-membership (conf-stat->conf-no conf-stat))
+                                     commno))))
+		(if (lyskom-get-membership commno)
 		    (setq member t))
-		(setq recpts (cons (conf-stat->comm-conf conf-stat) recpts))))
+		(setq recpts (cons commno recpts))))
 	    (setq data (cdr data)))
 	  ;; Add the user to the list of recipients if he isn't a member in
 	  ;; any of the recipients.

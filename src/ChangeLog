@@ -1,3 +1,12 @@
+2000-06-06  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* commands1.el (lyskom-comment-recipients): Don't send footnotes
+	to the super conference of a original-type conference.
+
+	* commands1.el (lyskom-comment-recipients): Fixed a bug that
+ 	sometimes prevented the author's mailbox from being added as
+ 	recipient when it should.
+	
 2000-06-05  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use zerop
