@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 41.0 1996-05-02 19:27:13 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 41.1 1996-05-08 12:31:06 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -331,38 +331,39 @@ FACE is the default text face for the button."
   "Generate a button of type TYPE from data in ARG. ARG can be almost any
 type of data and is converted to the proper argument type for buttons of
 type TYPE before being send to lyskom-generate-button."
-  (let (xarg text)
-    (cond ((eq type 'conf)
-           (cond ((lyskom-conf-stat-p arg)
-                  (if (conf-type->letterbox (conf-stat->conf-type arg))
-                      (setq type 'pers))
-                  (setq xarg (conf-stat->conf-no arg)
-                        text (conf-stat->name arg)))
-                 ((numberp arg) (setq text "" xarg arg))
-                 (t (setq text "" xarg 0))))
-          ((eq type 'pers)
-           (cond ((lyskom-conf-stat-p arg)
-                  (setq xarg (conf-stat->conf-no arg)
-                        text (conf-stat->name arg)))
-                  ((lyskom-pers-stat-p arg)
-                   (setq xarg (pers-stat->pers-no arg)
-                         text ""))
-                  ((numberp arg) (setq text "" xarg arg))
-                  (t (setq text "" xarg 0))))
-          ((eq type 'text)
-           (cond ((stringp arg) (setq xarg (string-to-number arg)
-                                      text arg))
-                 ((numberp arg) (setq xarg arg
-                                     text (number-to-string arg)))
-                 ((lyskom-text-stat-p arg)
-                  (setq xarg (text-stat->text-no arg)
-                        text (number-to-string (text-stat->text-no arg))))
-                 (t (setq xarg 0 text ""))))
-          ((eq type 'url)
-           (cond ((stringp arg) (setq xarg nil text arg))
-                 (t (setq xarg nil text ""))))
-          (t (setq xarg arg text "")))
-    (lyskom-generate-button type xarg text nil)))
+  (and kom-text-properties
+       (let (xarg text)
+	 (cond ((eq type 'conf)
+		(cond ((lyskom-conf-stat-p arg)
+		       (if (conf-type->letterbox (conf-stat->conf-type arg))
+			   (setq type 'pers))
+		       (setq xarg (conf-stat->conf-no arg)
+			     text (conf-stat->name arg)))
+		      ((numberp arg) (setq text "" xarg arg))
+		      (t (setq text "" xarg 0))))
+	       ((eq type 'pers)
+		(cond ((lyskom-conf-stat-p arg)
+		       (setq xarg (conf-stat->conf-no arg)
+			     text (conf-stat->name arg)))
+		      ((lyskom-pers-stat-p arg)
+		       (setq xarg (pers-stat->pers-no arg)
+			     text ""))
+		      ((numberp arg) (setq text "" xarg arg))
+		      (t (setq text "" xarg 0))))
+	       ((eq type 'text)
+		(cond ((stringp arg) (setq xarg (string-to-number arg)
+					   text arg))
+		      ((numberp arg) (setq xarg arg
+					   text (number-to-string arg)))
+		      ((lyskom-text-stat-p arg)
+		       (setq xarg (text-stat->text-no arg)
+			     text (number-to-string (text-stat->text-no arg))))
+		      (t (setq xarg 0 text ""))))
+	       ((eq type 'url)
+		(cond ((stringp arg) (setq xarg nil text arg))
+		      (t (setq xarg nil text ""))))
+	       (t (setq xarg arg text "")))
+	 (lyskom-generate-button type xarg text nil))))
                   
 
            

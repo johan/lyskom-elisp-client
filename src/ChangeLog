@@ -1,4 +1,29 @@
+Wed May  8 01:10:11 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* deferred-insert.el (lyskom-deferred-insert-conf): Gissa om det
+ 	är en person på ett bättre sätt.
+
+	* lyskom-buttons.el (lyskom-default-button): Returnera nil om
+	kom-text-properties är nil.
+
+	* async.el (lyskom-show-logged-in-person): Respektera
+ 	kom-text-properties.
+	(lyskom-show-logged-out-person): Dito.
+
+	* lyskom-rest.el (lyskom-format-text-body): Dito.
+
+	* view-text.el (lyskom-view-text): Använd inte kom-first-line-face
+	om kom-text-properties är nil.
+
+	* vars.el.in (kom-deferred-printing): Ändra default till t.
+
+	* deferred-insert.el (lyskom-replace-deferred): Var lite mer
+	defensiv i scrollningen. Dvs. scrolla aldrig.
+
 Tue May  7 03:18:48 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-start-of-command): Hoppa till slutet på
+ 	bufferten om det syns i fönstret.
 
 	* commands1.el (kom-list-re): Sätt knapp på raderna.
 	

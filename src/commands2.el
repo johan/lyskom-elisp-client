@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.2 1996-05-05 22:19:49 davidk Exp $
+;;;;; $Id: commands2.el,v 41.3 1996-05-08 12:31:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.2 1996-05-05 22:19:49 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.3 1996-05-08 12:31:00 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -595,6 +595,7 @@ When a text is received the new text is displayed."
 	  ;; This is a bit trial-and-error stuff at the momemt.
 	  ;; o How to make personal messages appear *fast*
 	  ;; o How to enable C-g with a quick response
+	  (sit-for 0)
 	  (accept-process-output nil 1)
 	  (sit-for 0)
 	  (if lyskom-quit-flag
