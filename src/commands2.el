@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.4 1995-10-25 09:24:45 davidk Exp $
+;;;;; $Id: commands2.el,v 38.5 1995-10-28 11:07:28 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.4 1995-10-25 09:24:45 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.5 1995-10-28 11:07:28 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -52,9 +52,9 @@
 					   "-membership"))))
     (save-window-excursion
       (set-buffer buffer)
-      (make-local-variable 'kom-buffer)
+      (make-local-variable 'lyskom-buffer)
       (local-set-key [mouse-2] 'kom-mouse-2)
-      (setq kom-buffer buf)
+      (setq lyskom-buffer buf)
       (erase-buffer)
       (insert (lyskom-get-string 'your-memberships))
       (insert (lyskom-get-string 'memberships-header)))
@@ -1288,4 +1288,48 @@ current conference to another session."
 	(progn
 	  (kom-bury)
 	  (switch-to-buffer (car buffers))))))
+
+;;;============================================================
+;;;  Visa user-arean                    (kom-show-user-area)
+;;;
+;;;  Author: David Byers
+
+(defun kom-show-user-area ()
+  "Get and display the user area of the current person"
+  (interactive)
+  (lyskom-start-of-command 'kom-show-user-area)
+  (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
+    (lyskom-view-text 'main (pers-stat->user-area pers-stat)
+		      nil nil nil nil nil nil)
+    (lyskom-run 'main 'lyskom-end-of-command)))
+
+
+;;;============================================================
+;;;   Ändra mötestyp                    (kom-change-conf-type)
+;;;
+;;;   Author: Tomas Abrahamsson & David Byers
+
+(defun kom-change-conf-type ()
+  "Change type of a conference"
+  (interactive)
+  (lyskom-start-of-command 'kom-change-conf-type)
+  (let* ((conf-no (lyskom-read-conf-no
+		   (lyskom-get-string 'what-conf-to-change)
+		   'conf nil ""))
+	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
+         (secret (if (not open) (j-or-n-p (lyskom-get-string 'secret-conf))))
+         (orig (j-or-n-p (lyskom-get-string 'comments-allowed))))
+    (cache-del-conf-stat conf-no)
+    (if (not (blocking-do 'set-conf-type
+			  conf-no
+			  (lyskom-create-conf-type (not open)
+						   (not orig)
+						   secret
+						   nil)))
+	(progn (lyskom-insert-string 'nope)
+	       (lyskom-format-insert 'error-code
+				     (lyskom-get-error-text lyskom-errno)
+				     lyskom-errno))))
+  (lyskom-end-of-command))
+
 

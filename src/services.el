@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.5 1995-09-21 17:40:23 linus Exp $
+;;;;; $Id: services.el,v 38.6 1995-10-28 11:08:02 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.5 1995-09-21 17:40:23 linus Exp $\n"))
+	      "$Id: services.el,v 38.6 1995-10-28 11:08:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -316,6 +316,15 @@ MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
   (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
   (lyskom-send-packet kom-queue
 		      (lyskom-format-objects 28 message misc-list)))
+
+(defun initiate-create-anonymous-text (kom-queue handler message 
+						 misc-list &rest data)
+  "Create a new anonymous text.
+Args: KOM-QUEUE HANDLER MESSAGE MISC-LIST &rest DATA.
+MESSAGE is a string. MISC-LIST should be created by lyskom-create-misc-list."
+  (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-num)
+  (lyskom-send-packet kom-queue
+		      (lyskom-format-objects 59 message misc-list)))
 				     
 (defun initiate-delete-text (kom-queue handler text-no &rest data)
   "Delete a text.

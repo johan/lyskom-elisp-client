@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.7 1995-10-28 07:36:35 davidk Exp $
+;;;;; $Id: startup.el,v 38.8 1995-10-28 11:08:07 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.7 1995-10-28 07:36:35 davidk Exp $\n"))
+	      "$Id: startup.el,v 38.8 1995-10-28 11:08:07 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -81,7 +81,7 @@ See lyskom-mode for details."
 	    (setq proc (open-network-stream name buffer host port))
 	    (switch-to-buffer buffer)
 	    (lyskom-mode)		;Clearing lyskom-default...
-	    (setq kom-buffer buffer)
+	    (setq lyskom-buffer buffer)
 	    (setq lyskom-default-user-name username)
 	    (setq lyskom-default-password password)
 	    (setq lyskom-server-name host)
@@ -460,7 +460,6 @@ to see, set of call."
 	(server-name lyskom-server-name)
 	)
     (kill-all-local-variables)
-    (make-local-variable 'kom-buffer)
     (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-unparsed-buffer)
     (make-local-variable 'lyskom-unparsed-marker)
