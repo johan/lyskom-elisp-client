@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.2 1996-08-09 20:56:37 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.3 1996-08-10 03:35:52 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.2 1996-08-09 20:56:37 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.3 1996-08-10 03:35:52 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1739,24 +1739,32 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 (defun lyskom-what-to-do-when-done (&optional nochange)
   "Returns a command, the next command to do from the kom-do-when-done.
 If optional argument NOCHANGE is non-nil then the list wont be altered."
-  (let* ((now (cdr lyskom-do-when-done))
-	 (all (car lyskom-do-when-done))
-	 (next (cond
-		((and now (eq now all) (cdr all))
-		 (cdr all))
-		(t all)))
-	 (command
-	  (cond
-	   ((commandp (car now)) (car now))
-	   ((and (listp (car next))
-		 (not (eq (car (car next))
-			  'lambda)))
-	    (car (setq now (car next))))
-	   (t (car (setq now next))))))
-    (if nochange
-	nil
-      (setq lyskom-do-when-done (cons next (cdr now))))
-    command))
+  (condition-case err
+      (let* ((now (cdr lyskom-do-when-done))
+	     (all (car lyskom-do-when-done))
+	     (next (cond
+		    ((and now (eq now all) (cdr all))
+		     (cdr all))
+		    (t all)))
+	     (command
+	      (cond
+	       ((commandp (car now)) (car now))
+	       ((and (listp (car next))
+		     (not (eq (car (car next))
+			      'lambda)))
+		(car (setq now (car next))))
+	       (t (car (setq now next))))))
+	(if nochange
+	    nil
+	  (setq lyskom-do-when-done (cons next (cdr now))))
+	command)
+    (error
+     (lyskom-insert-before-prompt (lyskom-get-string
+				   'error-in-kom-do-when-done))
+     (lyskom-beep t)
+     (setq lyskom-do-when-done '((kom-edit-options kom-display-time)
+				 . (kom-edit-options kom-display-time)))
+     'kom-display-time)))
 
 
 (defun lyskom-prefetch-and-print-prompt ()

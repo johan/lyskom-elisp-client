@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 43.1 1996-08-09 20:56:27 davidk Exp $
+;;;;; $Id: commands1.el,v 43.2 1996-08-10 03:35:45 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 43.1 1996-08-09 20:56:27 davidk Exp $\n"))
+	      "$Id: commands1.el,v 43.2 1996-08-10 03:35:45 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1487,12 +1487,18 @@ If MARK-NO == 0, review all marked texts."
 ;;; Rewritten by: David K}gedal
 
 
+(put 'lyskom-no-users 'error-conditions
+     '(error lyskom-error lyskom-no-users))
+
 (def-kom-command kom-who-is-on (&optional arg)
   "Display a list of all connected users."
   (interactive "P")
-  (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
-      (lyskom-who-is-on-9 arg)
-    (lyskom-who-is-on-8)))
+  (condition-case err
+      (if (>= (car (cdr (assq 'protocol-version lyskom-server-supports))) 9)
+	  (lyskom-who-is-on-9 arg)
+	(lyskom-who-is-on-8))
+    (lyskom-no-users
+     (lyskom-insert (lyskom-get-string 'null-who-info)))))
 
 
 (defun lyskom-who-is-on-8 ()
@@ -1564,9 +1570,11 @@ Uses Protocol A version 9 calls"
 			    (< (dynamic-session-info->session who1)
 			       (dynamic-session-info->session who2))))))
 	 (total-users (length who-list))
-	 (session-width (1+ (length (int-to-string
-				     (dynamic-session-info->session
-				      (nth (1- total-users) who-list))))))
+	 (session-width (if (null who-list)
+			    (signal 'lyskom-no-users nil)
+			  (1+ (length (int-to-string
+				       (dynamic-session-info->session
+					(nth (1- total-users) who-list)))))))
 	 (format-string-1 (lyskom-info-line-format-string
 			   session-width "P" "M"))
 	 (format-string-2 (lyskom-info-line-format-string
@@ -1979,7 +1987,7 @@ footnotes) to it as read in the server."
 ;;;                 Addera mottagare - Add recipient
 ;;;             Subtrahera mottagare - Subtract recipient
 
-;;; Author: David Byers
+;;; Author: David Byers & David K}gedal
 ;;; Based on code by Inge Wallin
 
 
@@ -2003,69 +2011,110 @@ the user has used a prefix command argument."
                               'add-copy
                               conf)))
 
-(defun kom-sub-recipient (text-no-arg)
+(def-kom-command kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
 the user has used a prefix command argument."
   (interactive "P")
-  (lyskom-start-of-command 'kom-sub-recipient)
-  (unwind-protect
-      (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
-	(lyskom-add-sub-recipient text-no-arg
-				  (lyskom-get-string 'text-to-delete-recipient)
-				  'sub
-				  conf))
-    (lyskom-end-of-command)))
+  (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
+    (lyskom-add-sub-recipient text-no-arg
+			      (lyskom-get-string 'text-to-delete-recipient)
+			      'sub
+			      conf)))
+
+(def-kom-command kom-move-text (text-no-arg)
+  "Subtract a recipient from a text and add another.
+If the argument TEXT-NO-ARG is non-nil, the user has used a prefix
+command argument."
+  (interactive "P")
+  (blocking-do-multiple ((default-from (get-conf-stat lyskom-current-conf))
+			 (default-to (get-conf-stat lyskom-last-added-rcpt)))
+    (lyskom-add-sub-recipient text-no-arg
+			      (lyskom-get-string 'text-to-move)
+			      'move
+			      default-to
+			      default-from)))
 
 (defun lyskom-add-sub-recipient (text-no-arg
 				 prompt
 				 action
-				 conf)
-  (let ((text-no (lyskom-read-number prompt 
-				     (or text-no-arg lyskom-current-text)))
-	(conf-to-add-to (lyskom-read-conf-stat
-			 (lyskom-get-string
-			  (cond ((eq action 'add-rcpt) 'who-to-add-q)
-				((eq action 'add-copy) 'who-to-add-copy-q)
-				((eq action 'sub) 'who-to-sub-q)
-				(t (lyskom-error "internal error"))))
-			 '(all)
-			 nil
-			 (if conf (conf-stat->name conf) "")))
-	(result nil))
+				 conf
+				 &optional conf2)
+  (let* ((text-no (lyskom-read-number prompt 
+				      (or text-no-arg lyskom-current-text)))
+	 (text-stat (blocking-do 'get-text-stat text-no))
+	 (was-read (lyskom-text-read-p text-stat))
+
+	 ;; Only for moving
+	 (conf-to-move-from (if (eq action 'move)
+				(lyskom-read-conf-stat
+				 (lyskom-get-string 'who-to-move-from-q)
+				 '(all)
+				 nil
+				 (if conf2 (conf-stat->name conf2) ""))))
+
+	 (conf-to-add-to (lyskom-read-conf-stat
+			  (lyskom-get-string
+			   (cond ((eq action 'add-rcpt) 'who-to-add-q)
+				 ((eq action 'add-copy) 'who-to-add-copy-q)
+				 ((eq action 'sub) 'who-to-sub-q)
+				 ((eq action 'move) 'who-to-move-to-q)
+				 (t (lyskom-error "internal error"))))
+			  '(all)
+			  nil
+			  (if conf (conf-stat->name conf) "")))
+	 (result nil))
     (setq result
 	  (cond ((eq action 'add-rcpt)
 		 (lyskom-format-insert 'adding-name-as-recipient 
 				       conf-to-add-to
-				       text-no)
+				       text-stat)
+		 (setq lyskom-last-added-rcpt
+		       (conf-stat->conf-no conf-to-add-to))
 		 (blocking-do 'add-recipient
 			      text-no 
 			      (conf-stat->conf-no conf-to-add-to)
-			      'recpt)
-		 (setq lyskom-last-added-rcpt
-		       (conf-stat->conf-no conf-to-add-to)))
+			      'recpt))
 
 		((eq action 'add-copy)
 		 (lyskom-format-insert 'adding-name-as-copy
 				       conf-to-add-to
-				       text-no)
+				       text-stat)
+		 (setq lyskom-last-added-ccrcpt
+		       (conf-stat->conf-no conf-to-add-to))
 		 (blocking-do 'add-recipient
 			      text-no
 			      (conf-stat->conf-no conf-to-add-to)
-			      'cc-recpt)
-		 (setq lyskom-last-added-ccrcpt
-		       (conf-stat->conf-no conf-to-add-to)))
+			      'cc-recpt))
 
 		((eq action 'sub)
 		 (lyskom-format-insert 'remove-name-as-recipient
-				       (conf-stat->conf-no conf-to-add-to)
-				       text-no)
+				       conf-to-add-to
+				       text-stat)
 		 (blocking-do 'sub-recipient
 			      text-no
 			      (conf-stat->conf-no conf-to-add-to)))
+
+		((eq action 'move)
+		 (lyskom-format-insert 'moving-name
+				       conf-to-move-from
+				       conf-to-add-to
+				       text-stat)
+		 (setq lyskom-last-added-rcpt
+		       (conf-stat->conf-no conf-to-add-to))
+		 (blocking-do-multiple
+		     ((add (add-recipient
+			    text-no 
+			    (conf-stat->conf-no conf-to-add-to)
+			    'recpt))
+		      (sub (sub-recipient
+			    text-no
+			    (conf-stat->conf-no conf-to-move-from))))
+		   (and add sub)))
 			      
 		
 		(t (lyskom-error "internal error"))))
     (cache-del-text-stat text-no)
+    (if was-read (lyskom-mark-as-read (blocking-do 'get-text-stat text-no)))
     (lyskom-report-command-answer result)))
 
 

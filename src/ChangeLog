@@ -1,4 +1,23 @@
+Sat Aug 10 04:30:43 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-commands): La till "Flytta text".
+
+	* lyskom-rest.el (lyskom-what-to-do-when-done): Hantera en trasig
+ 	kom-when-do-when-done en aning snyggare.
+
+	* commands1.el (kom-sub-recipient): Använd def-kom-command.
+	(lyskom-add-sub-recipient): Skrev om för att sköta flyttning
+ 	också.
+	(kom-move-text): Nytt kommando.
+
 Fri Aug  9 01:18:34 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (kom-who-is-on): Skriv ut felmeddelande om det inte
+ 	fanns några inloggade.
+	(lyskom-who-is-on-9): Signalera om det inte fanns några inloggade.
+
+	* swedish-strings.el,english-strings (lyskom-strings): La till
+ 	null-who-info.
 
 	* vars.el.in (kom-idle-hide): Ny variabel.
 
