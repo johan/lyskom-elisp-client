@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.38 1999-06-29 10:20:13 byers Exp $
+;;;;; $Id: edit-text.el,v 44.39 1999-07-14 07:34:49 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.38 1999-06-29 10:20:13 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.39 1999-07-14 07:34:49 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -562,7 +562,15 @@ so it's not as clean as it ought to be."
                          'lyskom-create-text-handler
                          full-message
                          misc-list
-                         aux-list
+			 ;; Wait a minute, this should not be done on
+			 ;; anonymous articles.
+                         (cons (lyskom-create-aux-item
+				0 15 0 0
+				(lyskom-create-aux-item-flags
+				 nil nil nil nil nil nil nil nil)
+				0 (concat "lyskom.el "
+					  lyskom-clientversion))
+			       aux-list)
                          buffer
                          never-mark-as-read))))
             (lyskom-undisplay-buffer)
