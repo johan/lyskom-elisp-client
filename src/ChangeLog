@@ -1,3 +1,36 @@
+2002-12-31  David Byers  <david.byers@swipnet.se>
+
+	* commands2.el (lyskom-list-summary): Copy the list of texts we're
+	reviewing so we can delete stuff from it.
+
+	Initial support for text link specifications in aux-items:
+	* regexp.el: New file for code to convert other regexp syntaxes to
+	Emacs syntax. Currently supports POSIX EREs and Emacs syntax only.
+	(lyskom-re-converters): New variable.
+	(lyskom-re-cache): New variable.
+	(lyskom-re-cache-get): New function.
+	(lyskom-re-cache-put): New function.
+	(lyskom-re-have-chclass): New variable.
+	(lyskom-re-have-backrefs): New variable.
+	(regex-parse): New type.
+	(lyskom-re-parse-posix-limit): New function.
+	(lyskom-re-parse-posix-charclass): New function.
+	(lyskom-re-parse-start-subexpression): New function.
+	(lyskom-re-parse-end-subexpression): New function.
+	(lyskom-re-parse-accumulate): New function.
+	(lyskom-re-parse-modify-last): New function.
+	(lyskom-re-parse-posix-ere): New function.
+	(lyskom-re-convert-finalize-result): New function.
+	(lyskom-re-convert-posix-ere): New function.
+	(lyskom-re-convert-regexp): New function, and this is the only one
+	you should be calling.
+
+	Improve kom-list-summary:
+	* commands2.el (lyskom-do-list-summary): Damn. Already midnight.
+	Don't print the subject on comments more than once in a row.
+	(lyskom-print-summary-line): Don't compute subject here. Get it in
+	a param instead.
+
 2002-12-31  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	Improve doc of kom-text-links, and set it so that the
@@ -6,14 +39,6 @@
 	as the car to apply the specification in all conferences." to the
 	documentation.  Let "bug X" link to the Bugzilla of Lysator by
 	default, so that we have a good sample value.
-
-2002-12-31  David Byers  <david.byers@swipnet.se>
-
-	Improve kom-list-summary:
-	* commands2.el (lyskom-do-list-summary): Damn. Already midnight.
-	Don't print the subject on comments more than once in a row.
-	(lyskom-print-summary-line): Don't compute subject here. Get it in
-	a param instead.
 
 2002-12-30  David Byers  <david.byers@swipnet.se>
 
