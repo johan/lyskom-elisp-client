@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.8 1996-07-17 09:00:10 byers Exp $
+;;;;; $Id: startup.el,v 41.9 1996-07-25 03:12:49 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.8 1996-07-17 09:00:10 byers Exp $\n"))
+	      "$Id: startup.el,v 41.9 1996-07-25 03:12:49 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -140,6 +140,7 @@ See lyskom-mode for details."
 	    (setq lyskom-executing-command nil) 
 	    ;; Log in
 	    (kom-start-anew t)
+	    (setq lyskom-buffer-list (cons lyskom-buffer lyskom-buffer-list))
 	    (setq init-done t))
 	;; Something went wrong. Lets cleanup everything. :->
 	(if init-done
@@ -599,6 +600,7 @@ to see, set of call."
     (make-local-variable 'lyskom-membership)
     (make-local-variable 'lyskom-membership-is-read)
     (make-local-variable 'lyskom-no-prompt)
+    (make-local-variable 'lyskom-normally-read-texts)
     (make-local-variable 'lyskom-number-of-pending-calls)
     (make-local-variable 'lyskom-options-done)
     (make-local-variable 'lyskom-other-clients-user-areas)
