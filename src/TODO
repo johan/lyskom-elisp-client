@@ -19,7 +19,7 @@ Buggar
     ut en session i ett ikonifierat fönster. Eller kanske till och med
     bara i en gömd buffert.
 
-    kom-url-viewer-prefences saknas i lyskom-elisp-variables.
+    kom-url-viewer-prefences saknas i lyskom-elisp-variables. (IGNORERAT)
 
     Det verkar inte hjälpa att göra aBörja för att få se texter man
     missat. (FIXAT)
@@ -27,6 +27,7 @@ Buggar
     Funktionen lyskom-format-filter-pattern med underfunktioner
     använder insert i stället för lyskom-insert.  Det gör att man inte
     kan lista sina filter om man har en skrivskyddad kom-buffer.
+    (FIXAT)
 
     När du skapar ett hemligt möte bör Elispklienten inte erbjuda dig
     att skriva en presentation i "Presentation (av nya) möten".
@@ -44,15 +45,13 @@ Allmänna förbättringar
 
     Det verkar behövas dynamisk anpassning av sessionsfältsbredden i
     vilkalistan, vid sessionsnummer över 9999 ser det inte så snyggt
-    ut.
+    ut. (BORDE VARA FIXAT)
 
     Felmeddelande för trasiga headerrader vid inskick av inlägg. (FIXAT)
 
-    Bättre dokumentation på URL-variablerna.
+    Bättre dokumentation på URL-variablerna. (FIXAT)
 
-    Visa fotnoter på ett bättre sätt.
-
-    Gör knapparna i vilkalistan smalare. Inte så randigt, liksom.
+    Gör knapparna i vilkalistan smalare. Inte så randigt, liksom. (FIXAT)
 
     Presentationer ska ha samma mottagare som tidigare
     presentationer. Kommandot kom-review-comments visar fotnoter sist,
@@ -65,7 +64,7 @@ Allmänna förbättringar
 
     Återinför Olästa
 
-    text 1306827
+    text 1306827 (FIXAT)
     
     Varför står det "anonym person" på ett ställe, men "Person 0" på
     ett annat? Och vad menar Rickard?
@@ -85,3 +84,5 @@ Allmänna förbättringar
 >------------------------------------------------------------
 >Jaså, du säger det, Anders.
 >(1234929) -----------------------------------
+
+   (IGNORERAT)

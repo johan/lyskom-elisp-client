@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 40.0 1996-03-26 08:31:06 byers Exp $
+;;;;; $Id: edit-text.el,v 40.1 1996-03-27 11:45:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 40.0 1996-03-26 08:31:06 byers Exp $\n"))
+	      "$Id: edit-text.el,v 40.1 1996-03-27 11:45:49 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -420,7 +420,9 @@ Entry to this mode runs lyskom-edit-mode-hook."
                       (eq lyskom-pers-no 698))
                  (setq text "Ärende, IDI!")))
            (save-excursion (insert text)))
-       (error nil)))))
+       (error nil)))
+    (lyskom-unknown-header
+     (lyskom-message (lyskom-get-string (car (cdr err)))))))
 
 
 (defun lyskom-send-transform-text (message)
@@ -639,7 +641,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 				      nil)
 	    (setcar result (lyskom-edit-extract-subject)))
 	   (t
-	    (signal 'lyskom-unknown-header (list unknown-header (point))))))
+	    (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))
     result))
 
