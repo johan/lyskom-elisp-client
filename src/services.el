@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.48 2004-05-03 15:12:01 byers Exp $
+;;;;; $Id: services.el,v 44.49 2004-10-28 18:51:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.48 2004-05-03 15:12:01 byers Exp $\n"))
+	      "$Id: services.el,v 44.49 2004-10-28 18:51:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -125,6 +125,9 @@ Args: KOM-QUEUE HANDLER &rest DATA."
   "Change working conference.
 Args: KOM-QUEUE HANDLER CONF-NO &rest DATA."
   (lyskom-server-call
+    (let ((mship (lyskom-try-get-membership conf-no t)))
+      (when mship
+        (set-membership->last-time-read mship (lyskom-current-client-time))))
     (lyskom-call kom-queue lyskom-ref-no handler data 'lyskom-parse-void)
     (lyskom-send-packet kom-queue (lyskom-format-objects 2 conf-no))))
 
