@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.88 2001-01-03 22:02:50 qha Exp $
+;;;;; $Id: commands2.el,v 44.89 2001-02-25 16:26:40 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.88 2001-01-03 22:02:50 qha Exp $\n"))
+	      "$Id: commands2.el,v 44.89 2001-02-25 16:26:40 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2051,7 +2051,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 
 (def-kom-command kom-fast-reply (text-no)
-  "Add a fast reply to a text."
+  "Add a remark (fast reply) to a text."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no)))
   (if text-no
       (progn (lyskom-format-insert 'fast-replying text-no)
