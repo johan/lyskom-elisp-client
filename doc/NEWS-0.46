@@ -54,6 +54,12 @@ tar-arkivet.
 
 ** Man kan markera med markering 0 nu.
 
+** Nytt kommando: Vilka (är inloggade) i möte (bundet till lv)
+   Som vilka, men visar endast medlemmar i ett visst möte.
+
+** Man kan citatmarkera text vid editering av ett inlägg med
+   comment-region.
+
 
 * Tilläggsinformation
 

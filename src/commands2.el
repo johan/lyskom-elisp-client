@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.24 1997-12-28 19:16:21 byers Exp $
+;;;;; $Id: commands2.el,v 44.25 1998-05-06 18:05:20 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.24 1997-12-28 19:16:21 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.25 1998-05-06 18:05:20 petli Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -654,7 +654,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 ;;; Rehacked: Inge Wallin
 
 
-(defvar lyskom-special-conf-name "\\`Inl.gg .t mig\\'"
+(defvar lyskom-special-conf-name "\\`\\(Inl.gg .t mig\\|NL:\\)\\'"
   "Regexp to match conf names that are special.")
 
 (def-kom-command kom-list-news (&optional num)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.31 1997-12-28 19:16:25 byers Exp $
+;;;;; $Id: edit-text.el,v 44.32 1998-05-06 18:05:23 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.31 1997-12-28 19:16:25 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.32 1998-05-06 18:05:23 petli Exp $\n"))
 
 
 ;;;; ================================================================
@@ -428,6 +428,10 @@ so it's not as clean as it ought to be."
                                       (substitute-command-keys
                                        (lyskom-get-string 'header-separator)))
                                      "$\\|" paragraph-separate))
+    (make-local-variable 'comment-start)
+    (make-local-variable 'comment-end)
+    (setq comment-start kom-cite-string
+	  comment-end "")
     (run-hooks 'lyskom-edit-mode-hook)))
 
 (defun lyskom-edit-sending-mode (arg)
