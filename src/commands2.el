@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.180 2003-08-15 18:24:18 byers Exp $
+;;;;; $Id: commands2.el,v 44.181 2003-08-15 19:44:55 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.180 2003-08-15 18:24:18 byers Exp $\n"))
+              "$Id: commands2.el,v 44.181 2003-08-15 19:44:55 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -789,13 +789,14 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   "Set number of unread articles in current conference."
   (interactive "P")
   (setq conf-no (or conf-no lyskom-current-conf))
+  (when conf-no (cache-del-conf-stat conf-no))
   (if (or (null conf-no) (zerop conf-no))
       (progn
         (lyskom-insert-string 'not-present-anywhere)
         (lyskom-insert-string "\n"))
     (let ((conf-stat (blocking-do 'get-conf-stat conf-no)))
-      (if (null conf-stat)              ;+++ annan errorhantering
-          (lyskom-insert "Error!\n")	;+++ Hrrrmmmmffff????
+      (if (null conf-stat)
+          (lyskom-insert 'somebody-deleted-that-conf)
         (let* ((narg (prefix-numeric-value arg))
                (n (if (and arg
                            (<= 0 narg)
