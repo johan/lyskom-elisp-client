@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.9 1991-10-07 17:18:37 linus Exp $
+;;;;; $Id: commands1.el,v 35.10 1991-11-02 18:05:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.9 1991-10-07 17:18:37 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.10 1991-11-02 18:05:42 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1693,6 +1693,15 @@ the user has used a prefix command argument."
 			    (lyskom-get-string 'text-to-add-recipient)
 			    t))
 
+(defun kom-add-copy (text-no-arg)
+  "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil, 
+the user has used a prefix command argument."
+  (interactive "P")
+  (lyskom-start-of-command 'kom-add-copy)
+  (lyskom-add-sub-recipient text-no-arg 
+			    (lyskom-get-string 'text-to-add-copy)
+			    'copy))
+
 
 (defun kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
@@ -1716,9 +1725,11 @@ DO-ADD: NIL if a recipient should be subtracted.
     (setq text-no (lyskom-read-number prompt text-no))
     (lyskom-completing-read-conf-stat
      'main 'lyskom-add-sub-recipient-2
-     (if do-add 
-	 (lyskom-get-string 'who-to-add-q)
-       (lyskom-get-string 'who-to-sub-q))
+     (cond
+      ((eq do-add 'copy)
+       (lyskom-get-string 'who-to-add-copy-q))
+      (do-add (lyskom-get-string 'who-to-add-q))
+      (t (lyskom-get-string 'who-to-sub-q)))
      nil nil "" text-no do-add)))
 
 
@@ -1726,12 +1737,16 @@ DO-ADD: NIL if a recipient should be subtracted.
   "Tell what we do and do the call to the server."
   (if do-add
       (progn
-	(lyskom-format-insert 'adding-name-as-recipient
+	(lyskom-format-insert (if (eq do-add 'copy)
+				  'adding-name-as-copy
+				'adding-name-as-recipient)
 			      (conf-stat->name conf-stat)
 			      text-no)
 	(initiate-add-recipient 
 	 'main 'lyskom-handle-command-answer
-	 text-no (conf-stat->conf-no conf-stat) 'recpt))
+	 text-no (conf-stat->conf-no conf-stat) (if (eq do-add 'copy)
+						    'cc-recpt
+						  'recpt)))
     (lyskom-format-insert 'remove-name-as-recipient
 			  (conf-stat->name conf-stat)
 			  text-no)
