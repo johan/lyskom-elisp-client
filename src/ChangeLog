@@ -1,3 +1,8 @@
+Wed Dec  2 11:32:35 1992  Linus Tolke Y  (linus@robin)
+
+	* lyskom-rest.el (lyskom-message): The arguments to message are
+	  format-string, arguments. Not string.
+
 Mon Nov  9 00:15:04 1992  Linus Tolke Y  (linus@ruben)
 
 	* startup.el (lyskom-clear-vars): lyskom-default-password shall
