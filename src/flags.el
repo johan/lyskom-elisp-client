@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 41.1 1996-07-17 08:59:48 byers Exp $
+;;;;; $Id: flags.el,v 41.2 1996-07-23 13:17:09 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 41.1 1996-07-17 08:59:48 byers Exp $\n"))
+	      "$Id: flags.el,v 41.2 1996-07-23 13:17:09 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -53,6 +53,26 @@
 	   (string-match "^lyskom-"
 			 (symbol-name symbol)))))
 
+(defun lyskom-Edit-options-modify (modfun)
+  (save-excursion
+   (let ((buffer-read-only nil) var pos)
+     (re-search-backward "^;; \\|\\`")
+     (forward-char 3)
+     (setq pos (point))
+     (save-restriction
+       (narrow-to-region pos (progn (end-of-line) (1- (point))))
+       (goto-char pos)
+       (setq var (read (current-buffer))))
+     (goto-char pos)
+     (forward-line 1)
+     (forward-char 1)
+     (save-excursion
+       (set var (funcall modfun var))
+       (if (boundp 'lyskom-buffer)
+           (set-buffer lyskom-buffer))
+       (set var (funcall modfun var)))
+     (kill-sexp 1)
+     (prin1 (symbol-value var) (current-buffer)))))
 
 (defvar lyskom-options-text nil
   "Text mass when reading options.")
@@ -71,10 +91,12 @@
   "Edit options for the lyskom client."
   (interactive)
   (fset 'user-variable-p
-	(symbol-function 'lyskom-user-variable-p))
+	(symbol-function 'lyskom-user-variable-p))  
   (let ((buf (current-buffer))
 	(curwin (current-window-configuration)))
     (edit-options)
+    (fset 'Edit-options-modify
+          (symbol-function 'lyskom-Edit-options-modify))
     (make-local-variable 'lyskom-buffer)
     (make-local-variable 'lyskom-edit-return-to-configuration)
     (setq lyskom-buffer buf)

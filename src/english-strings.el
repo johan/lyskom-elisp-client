@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.12 1996-07-17 08:59:44 byers Exp $
+;;;;; $Id: english-strings.el,v 41.13 1996-07-23 13:16:59 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.12 1996-07-17 08:59:44 byers Exp $"))
+              "$Id: english-strings.el,v 41.13 1996-07-23 13:16:59 byers Exp $"))
 
 
 
@@ -536,6 +536,8 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
     (closing-server . "Shutting down the server...")
+    (really-sync . "Are you sure you want to save the database? ")
+    (syncing-server . "Saving the database...")
     (administrator . "administrator")
     (no-longer-administrator . "a regular user again")
     (you-are-now . "Ok, you are now running as %#1s.\n")
@@ -613,14 +615,14 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 ;; The format of this function should coincide with the format of the 
 ;; lyskom-text-start variable. DONT change one without changing the other.
 
+    (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
+
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d %02#3d/%02#1d  %02#4d:%02#5d ")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "today")
     (yesterday . "yesterday")
-; used by lyskom-return-time
-    (time-yyyy-mm-dd-hh-mm . "%4#1d %02#3d/%02#2d %02#4d:%02#5d")
     (no-such-text-no . "The article doesn't exist. (%#1n)\n")
 
     (head-Subject . "Subject: ")
@@ -1013,6 +1015,7 @@ Using %#6D from %#3s\n")
     (kom-edit-options           "Change options")
     (kom-save-options           "Save options")
     (kom-shutdown-server        "Shut down (server)")
+    (kom-sync-database          "Save (the) database")
     (kom-enable-adm-caps        "Become administrator")
     (kom-disable-adm-caps       "Become (normal) user")
     (kom-set-motd               "Change login message")

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.12 1996-07-17 09:00:25 byers Exp $
+;;;;; $Id: vars.el.in,v 41.13 1996-07-23 13:17:32 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.12 1996-07-17 09:00:25 byers Exp $\n"
+  "$Id: vars.el.in,v 41.13 1996-07-23 13:17:32 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -1191,7 +1191,8 @@ the value of  kom-tell-phrases  for fun.")
 (defconst lyskom-admin-removed-commands
   '(kom-enable-adm-caps))
 (defconst lyskom-noadmin-removed-commands
-  '(kom-disable-adm-caps kom-remove-motd kom-set-motd kom-shutdown-server))
+  '(kom-disable-adm-caps kom-remove-motd kom-set-motd kom-shutdown-server
+                         kom-sync-database))
 
 
 ;;; ================================================================

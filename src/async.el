@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 41.3 1996-06-23 20:05:42 davidk Exp $
+;;;;; $Id: async.el,v 41.4 1996-07-23 13:16:34 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 41.3 1996-06-23 20:05:42 davidk Exp $\n"))
+	      "$Id: async.el,v 41.4 1996-07-23 13:16:34 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -407,11 +407,12 @@ converted, before insertion."
 	   (not lyskom-executing-command)) ;We have time to do it.
       ;; Alter the prompt.
       (let ((buffer-read-only nil))
-	(lyskom-save-excursion
+	(save-excursion
 	 (goto-char (point-max))
 	 (beginning-of-line)
 	 (delete-region (point) (point-max)))
 	(lyskom-run 'async 'lyskom-print-prompt)))
+
 
   (let ((no-message nil))
     (run-hooks 'lyskom-new-text-hook)
