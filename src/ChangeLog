@@ -1,5 +1,71 @@
 2003-01-01  David Byers  <david.byers@swipnet.se>
 
+	Work on new face code:
+	* view-text.el (lyskom-view-text): Send evaluated face properties
+	to lyskom-format.
+	(lyskom-print-text): Ditto.
+
+	* utilities.el (lyskom-check-configuration): Send evaluated face
+	properties to lyskom-format.
+
+	* startup.el (lyskom): Send evaluated face properties to
+	lyskom-format.
+
+	* commands2.el (kom-status-conf): Send evaluated face properties
+	to lyskom-format.
+	(kom-status-person): Ditto.
+	(lyskom-send-message): Ditto.
+	(kom-obsolete-extended-command-binding): Ditto.
+
+	* commands1.el (kom-delete-text): Send evaluated face properties
+	to lyskom-format.
+
+	* async.el (lyskom-show-logged-in-person): Send evaluated face
+	properties to lyskom-format.
+	(lyskom-show-logged-out-person): Ditto.
+	(lyskom-format-as-personal-message): Ditto.
+
+	* check-strings.el (lyskom-check-strings): Removed all
+	face-related goop.
+
+	* vars.el.in: Removed all face-related goop.
+
+	* faces.el: New file.
+
+	* startup.el (lyskom): Call lyskom-setup-faces-for-buffer, not
+	lyskom-setup-faces.
+
+	* option-edit.el (kom-customize): Evaluate face variables instead
+	of quoting face names.
+
+	* mship-edit.el (lp--format-entry): Evaluate face variables
+	instead of quoting face names.
+	(lp--redraw-entry-mark): Ditto.
+
+	* lyskom-rest.el (kom-next-command): Evaluate face variables
+	instead of quoting face names
+	(lyskom-format-aux-help): Ditto.
+
+	* lyskom-buttons.el (lyskom-button-add-links): Evaluate face
+	variable kom-url-face instead of quoting face name.
+	(lyskom-button-get-face): Evaluate the face found for the button
+	type.
+	(lyskom-generate-button): Evaluate face variables instead of
+	quoting face names
+	(lyskom-default-button): Ditto.
+
+	* keyboard-menu.el (lyskom-keyboard-menu-highlight-selected):
+	Evaluate face variable, instead of quoting face name
+	kom-mark-face.
+
+	More flexible date parser:
+	* utilities.el (lyskom-all-prefixes): New function.
+	(lyskom-parse-date): Permit prefixes for "days", "years",
+	"months". Allow whitespace before and after input. Do not require
+	minus sign when specifying number of days. Do not require
+	whitespace separators in several places. Permit spaces around
+	separators. Accept space as a separator.
+
 	Fix bug 921:
 	* commands1.el (kom-jump): Use lyskom-read-text-no-prefix-arg.
 	Print which text we're skipping comments from. Print special

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.184 2003-01-01 02:53:16 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.185 2003-01-01 23:32:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.184 2003-01-01 02:53:16 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.185 2003-01-01 23:32:44 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -251,7 +251,7 @@ by design."
                                          (forward-char 1)
                                          (point)))))
            (set-extent-priority overlay 1000)
-           (set-extent-face overlay 'kom-mark-face)
+           (set-extent-face overlay kom-mark-face)
            (add-timeout 2 
                         'delete-extent
                         overlay))
@@ -261,7 +261,7 @@ by design."
                                          (end-of-line)
                                          (forward-char 1)
                                          (point)))))
-           (overlay-put overlay 'face 'kom-mark-face)
+           (overlay-put overlay 'face kom-mark-face)
            (overlay-put overlay 'priority 1000)
            (run-at-time 2 nil
                         'delete-overlay
@@ -1791,8 +1791,8 @@ Deferred insertions are not supported."
                                     (list 'lyskom-format
                                           ": argument error (expected subject)")))))
       (if (and (not colon-flag)
-               (not (lyskom-face-default-p 'kom-subject-face)))
-          (setq propl (append (list 'face 'kom-subject-face) propl))))
+               (not (lyskom-face-default-p kom-subject-face)))
+          (setq propl (append (list 'face kom-subject-face) propl))))
      ;;
      ;;  Format a LysKOM text body. Currently this does nothing. It
      ;;  should parse the text for buttons
@@ -1804,7 +1804,7 @@ Deferred insertions are not supported."
       ;; disappear.
 
       ;; (if (not colon-flag)
-      ;;     (setq propl (append (list 'face 'kom-text-face) propl)))
+      ;;     (setq propl (append (list 'face kom-text-face) propl)))
 
       (setq result
             (cond ((stringp arg) (lyskom-format-text-body arg))

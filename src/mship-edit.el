@@ -366,11 +366,11 @@ only recomputed if the window width changes."
 
       (if (membership-type->passive
            (membership->type (lp--entry->membership entry)))
-          (lp--entry-set-foreground entry (lyskom-face-foreground-name 'kom-dim-face))
+          (lp--entry-set-foreground entry (lyskom-face-foreground-name kom-dim-face))
         (lp--entry-set-foreground entry nil))
 
       (if (lp--entry->selected entry)
-          (lp--entry-set-background entry (lyskom-face-background-name 'kom-mark-face))
+          (lp--entry-set-background entry (lyskom-face-background-name kom-mark-face))
         (lp--entry-set-background entry nil)))
 ))
       
@@ -434,7 +434,7 @@ The start and end markers of the entry are adjusted"
      (goto-char (lp--entry->start-marker entry))
      (insert (if (lp--entry->selected entry) ?* ?\ ))
      (if (lp--entry->selected entry)
-         (lp--entry-set-background entry (lyskom-face-background-name 'kom-mark-face))
+         (lp--entry-set-background entry (lyskom-face-background-name kom-mark-face))
        (lp--entry-set-background entry nil))
      (delete-char 1)
      (lp--entry-update-extents entry))))

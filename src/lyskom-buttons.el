@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.78 2002-12-31 00:22:09 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.79 2003-01-01 23:32:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.78 2002-12-31 00:22:09 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.79 2003-01-01 23:32:44 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -336,7 +336,7 @@ LINKS is a list of lyskom-text-link objects."
                                   (match-string 0 text)
                                   (lyskom-text-link->pattern spec)
                                   (lyskom-text-link->replacement spec))
-                                 'kom-url-face)
+                                 kom-url-face)
          text)))))
 
 
@@ -428,7 +428,9 @@ the current match-data."
 (defun lyskom-button-get-face (el)
   "Get the button face for button type EL from TEXT according to
 the current match-data."
-  (elt el 4))
+  (let ((face (elt el 4)))
+    (or (and (boundp face) (symbol-value face))
+        (and (facep face) face))))
 
 
 (defun lyskom-get-button-hint (hints)
@@ -486,35 +488,36 @@ kom-next- and -previous-link won't notice the button"
                       numarg)
                  (list 'face 
                        (or face
-                           (cond ((eq persno numarg) 'kom-me-face)
-                                 ((memq numarg kom-friends) 'kom-friends-face)
-                                 ((memq numarg kom-morons) 'kom-morons-face)
-                                 (t 'kom-active-face)))
-                       'mouse-face 'kom-highlight-face
+                           (cond ((eq persno numarg) kom-me-face)
+                                 ((memq numarg kom-friends) kom-friends-face)
+                                 ((memq numarg kom-morons) kom-morons-face)
+                                 (t kom-active-face)))
+
+                       'mouse-face kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
                        'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((and (eq type 'text) numarg)
-                 (list 'face (or face 'kom-text-no-face)
-                       'mouse-face 'kom-highlight-face
+                 (list 'face (or face kom-text-no-face)
+                       'mouse-face kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
                        'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((eq type 'url)
-                 (list 'face (or face 'kom-active-face)
-                       'mouse-face 'kom-highlight-face
+                 (list 'face (or face kom-active-face)
+                       'mouse-face kom-highlight-face
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg arg
                        'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 (t
-		 (list 'face (or face 'kom-active-face)
-		       'mouse-face 'kom-highlight-face
+		 (list 'face (or face kom-active-face)
+		       'mouse-face kom-highlight-face
 		       'lyskom-button-text text
 		       'lyskom-button-type type
 		       'lyskom-button-arg arg
@@ -593,17 +596,17 @@ up."
 			     text (number-to-string (text-stat->text-no arg))))
 		      (t (setq xarg 0 text ""))))
 	       ((eq type 'url)
-                (setq face 'kom-url-face)
+                (setq face kom-url-face)
 		(cond ((stringp arg) (setq xarg nil text arg))
 		      (t (setq xarg nil text ""))))
 
                ((eq type 'email)
-                (setq face 'kom-url-face)
+                (setq face kom-url-face)
                 (cond ((stringp arg) (setq xarg nil text arg))
                       (t (setq xarg nil text ""))))
 
 	       ((eq type 'timestamp)
-		(setq face 'kom-text-face
+		(setq face kom-text-face
 		      subtle t)
 		(cond ((null arg) (setq xarg (current-time)
 					;text (format-time-string "%Y-%m-%d %H:%M")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: keyboard-menu.el,v 44.4 2002-11-22 17:38:39 byers Exp $
+;;;;; $Id: keyboard-menu.el,v 44.5 2003-01-01 23:32:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: keyboard-menu.el,v 44.4 2002-11-22 17:38:39 byers Exp $\n"))
+	      "$Id: keyboard-menu.el,v 44.5 2003-01-01 23:32:44 byers Exp $\n"))
 
 (defvar lyskom-keyboard-menu-menu)
 (defvar lyskom-keyboard-menu-buffer)
@@ -152,9 +152,9 @@ same element's cdr."
                               start end)))
              (goto-char pos)
              (lyskom-xemacs-or-gnu
-              (set-extent-face lyskom-keyboard-menu-overlay 'kom-mark-face)
+              (set-extent-face lyskom-keyboard-menu-overlay kom-mark-face)
               (overlay-put lyskom-keyboard-menu-overlay
-                           'face 'kom-mark-face))))
+                           'face kom-mark-face))))
     (save-excursion
       (unless (pos-visible-in-window-p pos)
         (recenter)))))

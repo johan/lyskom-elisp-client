@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.250 2003-01-01 03:27:10 byers Exp $
+;;;;; $Id: english-strings.el,v 44.251 2003-01-01 23:32:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.250 2003-01-01 03:27:10 byers Exp $"))
+              "$Id: english-strings.el,v 44.251 2003-01-01 23:32:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1817,13 +1817,6 @@ giving the command \"Save options\".\n\n")
     (keyboard-cancel . "Cancel")
     (keyboard-menu-help . "(choose: C-n, C-p; confirm: RET)")
     (customize-help . "See the beginning of the buffer for more information")
-    (missing-faces . "\
-Your text face scheme \"%#1s\" is missing the following faces:
-
-    %#2s
-
-Using the default face in place of these faces.
-")
 
     (no-mule-warning . "\
 

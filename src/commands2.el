@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.149 2003-01-01 02:53:15 byers Exp $
+;;;;; $Id: commands2.el,v 44.150 2003-01-01 23:32:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.149 2003-01-01 02:53:15 byers Exp $\n"))
+              "$Id: commands2.el,v 44.150 2003-01-01 23:32:43 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -310,7 +310,7 @@ otherwise: the conference is read with lyskom-completing-read."
                             "%#1@%-17#2s"
                             (if (membership-type->passive
                                  (member->membership-type member))
-                                '(face kom-dim-face)
+                                `(face ,kom-dim-face)
                               nil)
                             (lyskom-format-time
                              'date-and-time
@@ -330,7 +330,7 @@ otherwise: the conference is read with lyskom-completing-read."
                                                    (lyskom-return-membership-type (member->membership-type member))
                                                    (if (membership-type->passive
                                                         (member->membership-type member))
-                                                       '(face kom-dim-face)
+                                                       `(face ,kom-dim-face)
                                                      nil)
                                                    )
                              (when (and (member->created-by member)
@@ -496,7 +496,7 @@ author of that text will be shown."
                   "%#1@%-17#2s"
                   (if (membership-type->passive
                        (membership->type membership))
-                      '(face kom-dim-face)
+                      `(face ,kom-dim-face)
                     nil)
                   (lyskom-format-time
                    'date-and-time
@@ -521,7 +521,7 @@ author of that text will be shown."
                      (membership->type membership))
                     (if (membership-type->passive
                          (membership->type membership))
-                        '(face kom-dim-face)
+                        `(face ,kom-dim-face)
                       nil)
                     )
                    (when (and (membership->created-by membership)
@@ -667,9 +667,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                     lyskom-message-string 
                     lyskom-message-recipient
                     (when kom-async-highlight-dashed-lines
-                      '(face kom-async-dashed-lines-face))
+                      `(face ,kom-async-dashed-lines-face))
                     (when kom-async-highlight-text-body
-                      '(face kom-async-text-body-face)))
+                      `(face ,kom-async-text-body-face)))
                    lyskom-pers-no
                    kom-filter-outgoing-messages))
             (lyskom-format-insert-before-prompt
@@ -2977,14 +2977,15 @@ ignoreras all inmatning tills du trycker enter nästa gång.
 Tryck på enter för att fortsätta.
 ----------------------------------------------------------------
 "
-                                      '(face kom-warning-face))
+                                      `(face ,kom-warning-face))
   ;; Beep both visibly and audibly, if possible.  We *want* to be annoying.
   (let ((visible-bell t))
     (ding))
   (let ((visible-bell nil))
     (ding))
   (read-from-minibuffer 
-   (lyskom-format "%#1@Tryck return eller enter för att gå vidare: " '(face kom-warning-face))))
+   (lyskom-format "%#1@Tryck return eller enter för att gå vidare: "
+                  `(face ,kom-warning-face))))
 
 
 (defun kom-obsolete-who-is-on-in-conference ()
