@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.163 2002-06-12 21:21:51 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.164 2002-06-12 22:27:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.163 2002-06-12 21:21:51 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.164 2002-06-12 22:27:38 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1434,9 +1434,9 @@ Deferred insertions are not supported."
                           (format (format "%%%c" format-letter) arg))
                          ((and (floatp arg) (= format-letter ?d))
                           (format "%0.0f" arg))
-                     (signal 'lyskom-internal-error
-                             (list 'lyskom-format
-                                   ": argument error (expected int)")))))
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error (expected int)"))))))
      ;;
      ;;  Format a character by converting it to a string and inserting
      ;;  it into the result list

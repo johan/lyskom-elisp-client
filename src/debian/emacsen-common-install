@@ -7,7 +7,7 @@ echo install/lyskom-elisp-client: Handling install of emacsen flavor ${FLAVOR}
 
 el_dir=/usr/share/emacs/site-lisp/lyskom-elisp-client
 elc_dir=/usr/share/${FLAVOR}/site-lisp
-byte_compile_options="-batch -q -no-site-file -l $el_dir/lpath.el -l $el_dir/help-compile.el -f batch-byte-compile"
+byte_compile_options="-batch -q -no-site-file -l $el_dir/lpath.el -f batch-byte-compile"
 
 if [ ${FLAVOR} != emacs ]; then
     echo install/lyskom-elisp-client: byte-compiling for ${FLAVOR}
@@ -34,8 +34,7 @@ EOF
 
     cd ${elc_dir}
     gunzip -c ${el_dir}/lyskom.el.gz > ${elc_dir}/lyskom-elisp-client.el
-    cp ${el_dir}/help-*.xml ${elc_dir}
     ${FLAVOR} ${byte_compile_options} lyskom-elisp-client.el
-    rm -f ${elc_dir}/*.el ${elc_dir}/help-*.xml
+    rm -f ${elc_dir}/*.el
 fi
 exit 0

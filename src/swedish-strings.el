@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.251 2002-06-12 21:21:52 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.252 2002-06-12 22:27:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.251 2002-06-12 21:21:52 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.252 2002-06-12 22:27:38 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3959,7 +3959,6 @@ i servern. Annars sparas det i din .emacs.")
 (lyskom-language-var global lyskom-unread-title-format sv
   (lyskom-make-lyskom-unread-title-format))
 
-(defvar lyskom-sv-help-data (lyskom-help-compile sv))
 (lyskom-language-var local lyskom-help-data sv lyskom-sv-help-data)
 
 (provide 'lyskom-language-sv)

@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.93 2002-06-12 21:49:28 qha Exp $
+# $Id: Makefile,v 44.94 2002-06-12 22:27:38 byers Exp $
 
 # Useful targets:
 #
@@ -65,7 +65,7 @@ HEADER = 	header.el \
 
 
 # Next come the language definitions.
-LANGUAGE-EL := $(LANGUAGES:=-strings.el)
+LANGUAGE-EL := $(LANGUAGES:=-strings.el) $(LANGUAGES:=-help.el)
 
 # Finally, other source files.
 SOURCES	 = 	komtypes.el \
@@ -115,7 +115,6 @@ EXTRA-SRCDIST = \
 	distribution-Makefile.in
 EXTRA-SRCVERBATIM = \
 	envcheck.el lpath.el autoconf.el \
-	help-compile.el help-en.xml help-sv.xml \
 	$(DOCFILES)
 
 # Included in the non-source distribution archives.
@@ -155,6 +154,9 @@ $(TARGET-EL) lyskom-all-$(CLIENTVERSION).el: \
 	$(MAKE) $(VARS-EL)
 	cat $^ >$@
 
+%-help.el: help-%.xml
+	emacs -batch -l help-compile.el $^ -f lyskom-help-compile-to-el
+
 lyskom-%-$(CLIENTVERSION).el: $(HEADER) %-strings.el $(SOURCES)
 	cat $^ >$@
 
@@ -172,7 +174,7 @@ verbose-el: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
 	$(EMACS-BATCH) -l lpath.el -l _header.el -f batch-byte-compile $<
 
 $(TARGET): $(TARGET-EL)
-	$(EMACS-BATCH) -l lpath.el -l help-compile.el -f batch-byte-compile $<
+	$(EMACS-BATCH) -l lpath.el -f batch-byte-compile $<
 
 HEADER-ELC = $(HEADER:%.el=%.elc)
 LANGUAGE-ELC = $(LANGUAGE-EL:.el%.elc)
@@ -186,7 +188,7 @@ fast: $(HEADER-ELC) $(LANGUAGE-ELC) $(SOURCES-ELC)
 
 
 check: $(TARGET-EL)
-	$(EMACS-BATCH) -l lpath.el  -l help-compile.el -l $< -l check-strings.el \
+	$(EMACS-BATCH) -l lpath.el -l $< -l check-strings.el \
 			-f lyskom-check-strings
 
 TAGS: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
