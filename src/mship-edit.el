@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.51 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: mship-edit.el,v 44.52 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.51 2004-10-31 15:37:25 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: mship-edit.el,v 44.52 2005-01-09 01:16:02 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -146,8 +146,7 @@ This function does not tell the server about the change."
 (defun lyskom-change-membership-position (conf-no new-position)
   "Change the position of memberhip for CONF-NO to NEW-POSITION.
 This function does not tell the server about the change."
-  (let* ((mship (lyskom-get-membership conf-no t))
-         (old-position (membership->position mship)))
+  (let* ((mship (lyskom-get-membership conf-no t)))
     (when mship
       (set-membership->position mship new-position)
        (lyskom-replace-membership mship))))
@@ -1687,7 +1686,7 @@ With prefix arg, contract only those that were created by self."
   "Display a list of all memberships with the option to change order,
 priority, flags, and a number of other things.
 
-See `kom-priotitize-in-window'."
+See `kom-prioritize-in-window'."
   (interactive)
   (lyskom-prioritize))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.15 2003-08-15 18:24:19 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.16 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.15 2003-08-15 18:24:19 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.16 2005-01-09 01:16:02 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -868,6 +868,9 @@ All key bindings:
 ;;;
 
 (defun kom-filter-edit ()
+  "Interactively edit text filters. This command starts a special mode
+in which it is possble to create and alter filters. Use this to remove
+undesired filters and to create complex filters."
   (interactive)
   (let ((buf (current-buffer))
         (filters lyskom-filter-list)

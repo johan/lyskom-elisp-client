@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.250 2004-11-16 07:07:01 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.251 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.250 2004-11-16 07:07:01 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.251 2005-01-09 01:16:02 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -187,10 +187,8 @@ be used to get a description of the corresponding error."
 
 (defun kom-recover (&optional refetch)
   "Try to recover from an error.
-If the optional argument REFETCH is non-nil, all caches are cleared and
-`lyskom-refetch' is called. Note that when called interactively, 
-REFETCH is always non-nil, regardless of the prefix argument. This is
-by design."
+If the optional argument REFETCH is non-nil or the funcion is called
+interactively, all caches are cleared and the membership is re-read."
   (interactive (list t))
   (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
@@ -3904,6 +3902,10 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	  ;; (lyskom-protocol-error
 	  ;;   (lyskom-message "%s" (lyskom-get-string 'protocol-error) err))
 	  )
+
+;;      (unwind-protect
+;;          (save-excursion (set-buffer (process-buffer proc))
+;;                          (lyskom-check-mship-lists)))
 
       (setq lyskom-quit-flag (or lyskom-quit-flag quit-flag))
       (setq quit-flag nil)

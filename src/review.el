@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.60 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: review.el,v 44.61 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.60 2004-10-25 11:01:20 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: review.el,v 44.61 2005-01-09 01:16:02 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -112,7 +112,7 @@ kom-review-marks-texts-as-read toggled."
 
 
 (def-kom-command kom-review-all ()
-  "Review all articles written by a particular author to a particular
+  "Review all texts written by a particular author to a particular
 conference. This can also be accomplished by using `kom-review-by-to'
 and specifying zero texts.
 
@@ -124,7 +124,7 @@ all review-related functions."
   (lyskom-review-by-to 0))
 
 (def-kom-command kom-unread-all ()
-  "Mark all articles written by a particular author to a particular
+  "Mark all texts written by a particular author to a particular
 conference as unread. This can also be accomplished by using
 `kom-unread-by-to' and specifying zero texts."
   (interactive)
@@ -132,7 +132,7 @@ conference as unread. This can also be accomplished by using
 
 
 (def-kom-command kom-review-more (count)
-  "Review more articles using the same critera as the last review
+  "Review more texts using the same critera as the last review
 performed with `kom-review-by-to'. The review will be resumed where
 the previous review finished.
 
@@ -188,7 +188,7 @@ all review-related functions."
                                (lyskom-insert-string 'no-such-text)))))))
 
 (def-kom-command kom-unread-more (count)
-  "Mark more articles unread using the same critera as the last 
+  "Mark more texts unread using the same critera as the last 
 mark unread performed with `kom-unread-by-to'."
   (interactive "P")
   (if (not lyskom-have-unread)
@@ -239,7 +239,7 @@ mark unread performed with `kom-unread-by-to'."
 
 
 (def-kom-command kom-review-first (&optional count)
-  "Review the first N articles written by a particular author to some
+  "Review the first N texts written by a particular author to some
 conference. With no author specified, review texts by all authors.
 With zero texts specified, review all text. With no conference
 specified, review texts to all conferences. With a negative number of
@@ -256,7 +256,7 @@ all review-related functions."
                             (lyskom-get-string 'review-how-many) 1)))))
 
 (def-kom-command kom-unread-first (&optional count)
-  "Mark the first N articles written by a particular author to some
+  "Mark the first N texts written by a particular author to some
 conference as unread. With no author specified, review texts by all 
 authors. With zero texts specified, review all text. With no conference
 specified, review texts to all conferences. With a negative number of
@@ -269,7 +269,7 @@ texts, review the last N texts instead of the first (you can use
 
 
 (def-kom-command kom-review-by-to (&optional count)
-  "Review the last N articles written by a particular author to some
+  "Review the last N texts written by a particular author to some
 conference. With no author specified, review texts by all authors.
 With zero texts specified, review all text. With no conference
 specified, review texts to all conferences. With a negative number of
@@ -349,7 +349,7 @@ all review-related functions."
 
 
 (def-kom-command kom-unread-by-to (&optional count)
-  "Mark the last N articles written by a particular author to some
+  "Mark the last N texts written by a particular author to some
 conference as unread. With no author specified, review texts by all 
 authors. With zero texts specified, review all text. With no conference
 specified, review texts to all conferences. With a negative number of
@@ -1512,7 +1512,7 @@ all review-related functions."
 
 
 (def-kom-command kom-review-comments (text-no)
-  "Review all comments to the selected text text. This command only
+  "Review all comments to the selected text. This command only
 reviews one level of comments. To see the entire comment tree, use
 `kom-review-tree' instead.
 
@@ -1577,7 +1577,7 @@ all review-related functions."
 
 
 (def-kom-command kom-review-cross-references (text-no)
-  "Review all cross-referenced texts from the selected text `text-no'.
+  "Review all texts cross-referenced from the selected text.
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg').
@@ -1636,7 +1636,7 @@ displays and builds list."
 (def-kom-command kom-unread-comments (text-no)
   "Mark all comments to the selected text text as unread. This
 command only marks one level of comments as unread. To mark the 
-entire comment tree unread, use `kom-unrad-tree' instead.
+entire comment tree unread, use `kom-unread-tree' instead.
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.344 2005-01-04 20:46:15 qha Exp $
+;;;;; $Id: english-strings.el,v 44.345 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.344 2005-01-04 20:46:15 qha Exp $"))
+              "$Id: english-strings.el,v 44.345 2005-01-09 01:16:02 byers Exp $"))
 
 
 ;;; ================================================================
@@ -60,7 +60,11 @@
 
 ;;; Set the keymap for lyskom-edit-mode
 
-(defvar lyskom-en-edit-prefix nil)
+(defvar lyskom-en-edit-prefix)
+(defvar lyskom-en-edit-review-prefix)
+(defvar lyskom-en-edit-insert-prefix)
+(defvar lyskom-en-edit-aux-prefix)
+(defvar lyskom-en-edit-add-prefix)
 
 (if lyskom-en-edit-mode-map
     nil
@@ -70,6 +74,7 @@
   (define-prefix-command 'lyskom-en-edit-insert-prefix)
   (define-prefix-command 'lyskom-en-edit-aux-prefix)
   (define-prefix-command 'lyskom-en-edit-add-prefix)
+
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2 'button2up))) 'kom-button-click-or-yank)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys (lyskom-xemacs-or-gnu 'button2up 'button2))) 'kom-mouse-null)
   (define-key lyskom-en-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
@@ -79,45 +84,50 @@
   (define-key lyskom-en-edit-mode-map (kbd "TAB")   'kom-edit-next-button-or-self-insert)
   (define-key lyskom-en-edit-mode-map (kbd "M-TAB") 'kom-edit-prev-button)
   (define-key lyskom-en-edit-mode-map (kbd "<S-tab>") 'kom-edit-prev-button)
-  (define-key lyskom-en-edit-mode-map (kbd "C-c")	'lyskom-en-edit-prefix)
+
+  (define-key lyskom-en-edit-mode-map (kbd "C-c") 'lyskom-en-edit-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-x") 'lyskom-en-edit-aux-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
   (define-key lyskom-en-edit-prefix (kbd "C-r") 'lyskom-en-edit-review-prefix)
   (define-key lyskom-en-edit-prefix (kbd "C-i") 'lyskom-en-edit-insert-prefix)
   (define-key lyskom-en-edit-prefix (kbd "TAB") 'lyskom-en-edit-insert-prefix)
+  (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
+
+  (define-key lyskom-en-edit-prefix (kbd "?")	'lyskom-help)
   (define-key lyskom-en-edit-prefix (kbd "*") 'kom-button-press)
   (define-key lyskom-en-edit-prefix (kbd "=") 'kom-menu-button-press)
-  (define-key lyskom-en-edit-prefix (kbd "C-c")	'kom-edit-send)
-  (define-key lyskom-en-edit-prefix (kbd "C-s") 'kom-ispell-message)
-  (define-key lyskom-en-edit-prefix (kbd "C-k")	'kom-edit-quit)
-  (define-key lyskom-en-edit-prefix (kbd "r ?")	'lyskom-help)
-  (define-key lyskom-en-edit-prefix (kbd "C-r C-c") 'kom-edit-show-commented)
-  (define-key lyskom-en-edit-prefix (kbd "C-i ?") 'lyskom-help)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-c") 'kom-edit-insert-commented)
   (define-key lyskom-en-edit-prefix (kbd "C-y") 'kom-edit-insert-commented)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-y") 'kom-edit-insert-commented)
   (define-key lyskom-en-edit-prefix (kbd "C-b")     'kom-edit-insert-buglist)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 1") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 2") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 3") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 4") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 5") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 6") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 7") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 8") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i 9") 'kom-edit-insert-digit-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-l") 'kom-edit-insert-link)
-  (define-key lyskom-en-edit-prefix (kbd "C-i C-i") 'kom-insert-last-info-nodename)
-  (define-key lyskom-en-edit-prefix (kbd "C-a") 'lyskom-en-edit-add-prefix)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-r") 'kom-edit-add-recipient)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-c") 'kom-edit-add-copy)
-  (define-key lyskom-en-edit-prefix (kbd "C-a <RET>") 'kom-edit-move-text)
-  (define-key lyskom-en-edit-prefix (kbd "C-a C-x") 'kom-edit-add-cross-reference)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-p") 'kom-edit-add-personal-comments)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-n") 'kom-edit-add-no-comments)
-  (define-key lyskom-en-edit-prefix (kbd "C-x C-r") 'kom-edit-add-read-confirm-request)
-  (define-key lyskom-en-edit-prefix (kbd "C-a ?") 'lyskom-help))
+  (define-key lyskom-en-edit-prefix (kbd "C-c")	'kom-edit-send)
+  (define-key lyskom-en-edit-prefix (kbd "C-s") 'kom-edit-ispell-message)
+  (define-key lyskom-en-edit-prefix (kbd "C-k")	'kom-edit-quit)
+
+  (define-key lyskom-en-edit-review-prefix (kbd "?") 'lyskom-help)
+  (define-key lyskom-en-edit-review-prefix (kbd "C-c") 'kom-edit-show-commented)
+
+  (define-key lyskom-en-edit-insert-prefix (kbd "?") 'lyskom-help)
+  (define-key lyskom-en-edit-insert-prefix (kbd "C-c") 'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-insert-prefix (kbd "C-y") 'kom-edit-insert-commented)
+  (define-key lyskom-en-edit-insert-prefix (kbd "1") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "2") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "3") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "4") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "5") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "6") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "7") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "8") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "9") 'kom-edit-insert-digit-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "SPC") 'kom-edit-insert-text)
+  (define-key lyskom-en-edit-insert-prefix (kbd "C-l") 'kom-edit-insert-link)
+  (define-key lyskom-en-edit-insert-prefix (kbd "C-i") 'kom-edit-insert-last-info-nodename)
+
+  (define-key lyskom-en-edit-add-prefix (kbd "C-r") 'kom-edit-add-recipient)
+  (define-key lyskom-en-edit-add-prefix (kbd "C-c") 'kom-edit-add-copy)
+  (define-key lyskom-en-edit-add-prefix (kbd "<RET>") 'kom-edit-move-text)
+  (define-key lyskom-en-edit-add-prefix (kbd "C-x") 'kom-edit-add-cross-reference)
+  (define-key lyskom-en-edit-add-prefix (kbd "C-p") 'kom-edit-add-personal-comments)
+  (define-key lyskom-en-edit-add-prefix (kbd "C-n") 'kom-edit-add-no-comments)
+  (define-key lyskom-en-edit-add-prefix (kbd "C-r") 'kom-edit-add-read-confirm-request)
+  (define-key lyskom-en-edit-add-prefix (kbd "?") 'lyskom-help))
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.110 2004-12-04 13:28:31 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.111 2005-01-09 01:16:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.110 2004-12-04 13:28:31 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.111 2005-01-09 01:16:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -738,7 +738,7 @@ This is called at login and after prioritize and set-unread."
   (lyskom-reset-prefetch)
   (let ((lyskom-inhibit-prefetch t))
     (let ((unreads (blocking-do 'get-unread-confs lyskom-pers-no)))
-      (lyskom-traverse conf-no (nreverse (conf-no-list->conf-nos unreads))
+      (lyskom-traverse conf-no (conf-no-list->conf-nos unreads)
         (lyskom-prefetch-one-membership conf-no lyskom-pers-no)))
     (lyskom-prefetch-membership lyskom-pers-no))
   (lyskom-start-prefetch)
