@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.153 2001-03-15 20:24:04 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.154 2001-03-15 22:21:57 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.153 2001-03-15 20:24:04 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.154 2001-03-15 22:21:57 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -370,6 +370,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
     (text-to-delete-footnote-from . "Vilket inlägg vill du subtrahera en fotnot från:")
+    (text-to-add-cross-reference-to . "Vilket inlägg vill du addera en referens till:")
     (text-has-no-recipients-r . "Inlägg %#1n har inga mottagare\n")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
@@ -1398,7 +1399,7 @@ Innehåll:    \"%#9s\"
     (default-agree-string . "Håller med")
     (what-agree-no . "Håll med vilket inlägg? ")
 
-    ;; Aux-item stuff from edit-text
+    ;; Cross-reference stuff
 
     (person . "Person")
     (conference . "Möte")
@@ -1409,6 +1410,8 @@ Innehåll:    \"%#9s\"
     (which-text-to-xref-err . "Hittar inte texten. Lägg till referens till text nummer: ")
     (which-pers-to-xref . "Lägg till referens till person: ")
     (which-conf-to-xref . "Lägg till referens till möte: ")
+
+    ;; Aux-item stuff from edit-text
 
     (no-comments-q . "Författaren vill inte ha kommentarer. Kommentera ändå? ")
     (private-answer-q . "Författaren har bett om personliga svar. Skriv personligt svar? ")
@@ -1630,6 +1633,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-move-text            . "Flytta inlägg")
     (kom-add-comment	      . "Addera kommentar")
     (kom-sub-comment	      . "Subtrahera kommentar")
+    (kom-add-cross-reference  . "Addera referens")
     (kom-add-member	      . "Addera medlem")
     (kom-sub-member           . "Uteslut medlem")
     (kom-change-conf-motd     . "Sätt lapp på dörren")
