@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.168 2001-05-22 10:01:48 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.169 2001-05-25 11:33:50 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.168 2001-05-22 10:01:48 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.169 2001-05-25 11:33:50 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -429,16 +429,25 @@ Utträd ur mötet en gång till för gå ur helt.\n")
 
     (xmaseve . "\nJulafton! Har du öppnat dina julklappar än?")
     (xmasday . "Juldagen.\nDu har väl varit i julottan?")
-    (newyearday . "Gott nytt %#1d!")
-    (newyearevelate . "Mindre än en timme kvar...")
-    (newyeareve . "Gott nytt år!")
-    (cgdag . "Konungens födelsedag.")
-    (sixjune . "Sveriges nationaldag och svenska flaggans dag")
+    (newyearday . "Nyårsdagen. Gott nytt %#1d!")
+    (newyearevelate . "Mindre än en timme kvar av %#1d...")
+    (newyeareve . "Nyårsafton.")
+    (cgdag . "Valborgsmässoafton.\nKonungens födelsedag.")
+    (sixjune . "Sveriges nationaldag och svenska flaggans dag.")
     (holdnose . "Håll för näsan...")
     (lysbday . "
 På denna dag, år 1973, grundades Lysator, och det var en stor dag
 i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
-
+    (13dayxmas . "Trettondedag jul (\"Trettondagen\").")
+    (20dayxmas . "Tjugondedag jul (\"Tjugondag Knut\").")
+    (kyndeldag . "Kyndelsmässodagen.")
+    (skottdag . "Skottdagen.")
+    (intwomday . "Internationella kvinnodagen.")
+    (mariebdag . "Marie bebådelsedag.\nFram med våffeljärnet!")
+    (johannesddag . "Johannes Döparens dag.")
+    (fnday . "FN-dagen.")
+    (allhelgonadag . "Allhelgonadagen.")
+    (varnlosdag . "Värnlösa barns dag.")
 
     (total-users . "    Sammanlagt %#1d användare (%#2s).\n")
     (total-users-sans-date . "    Sammanlagt %#1d användare\n")
