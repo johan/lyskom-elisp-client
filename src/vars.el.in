@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.7 1995-10-28 07:36:39 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.8 1995-10-28 11:08:17 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.7 1995-10-28 07:36:39 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.8 1995-10-28 11:08:17 byers Exp $\n"))
 
 
 
@@ -566,6 +566,9 @@ This is used by the command kom-busy-wait.")
 
 (defvar kom-quit-hook nil
   "Hook to run when the LysKOM session is correctly ended.")
+
+(defvar kom-quit-when-idle t
+  "*Non-niil to automatically quit when LysKOM is full and the session is idle")
 
 (defvar kom-permanent-filter-list nil
   "*List of patterns to filter permanently")

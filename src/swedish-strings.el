@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.5 1995-10-24 14:38:08 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.6 1995-10-28 11:08:11 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.5 1995-10-24 14:38:08 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.6 1995-10-28 11:08:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -183,6 +183,7 @@ ditt liv \344ven om det inte \344r mycket att starta med.
 Guran vill helst s\344tta en giftpil i dig.\n\n")
 
     (what-conf-to-delete . "Vilket m\366te/person vill du utpl\345na: ")
+    (what-conf-to-change . "Vilket m\366te vill du \344ndra: ")
     (confirm-delete-pers-or-conf . "Ta bort %#1s %#2s? ")
     (the-pers . "personen")
     (the-conf . "m\366tet")
@@ -247,6 +248,11 @@ Skicka ett brev till %#2P f\366r medlemsskap.\n")
 *****************************
 Lyskom-sessionen \344r avslutad.
 *****************************\n")
+    (session-auto-ended . "
+===========================================================
+Kopplar ned fr\345n LysKOM eftersom LysKOM \344r fullt och
+du har l\344st klart allting. Kom tillbaks senare.
+===========================================================\n\n")
     (what-to-change-pres-you . "Vilket m\366te/person vill du \344ndra presentationen f\366r (dig sj\344lv): ")
     (who-to-put-motd-for . "Vilket m\366te/person vill du s\344tta lapp p\345 d\366rr f\366r (dig sj\344lv): ")
 
@@ -447,7 +453,7 @@ Meddelandet du f\366rs\366kte s\344nda till %#1M var:
     (buggreport-compilestart . "Skapar buggrapporten...")
     (buggreport-compileend . "Skapar buggrapporten...klart")
     (buggreport-description . "Detta gjorde jag:
-(Fyll i dina kommentarer nedan)\n================\n\n
+\(Fyll i dina kommentarer nedan\)\n================\n\n
 ================
 Bland informationen nedan finns ocks\345 en lista p\345 de 100 sist tryckta
 tangenterna i din emacs. Om du nyligen loggat in kan den inneh\345lla ditt
@@ -465,6 +471,7 @@ elispklientutvecklare. Det sker antingen:
 \tSWEDEN.
 
 M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
+    
     (buggreport-internals . "LysKOMs interna information:\n\n")
     (buggreport-version . "lyskom-version:")
     (buggreport-emacs-version . "emacs-version:")
@@ -595,6 +602,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (name-has-changed-to-name-r . "%[%#3@%#1:P%] har nu bytt namn till %[%#3@%#2:P%]\n")
     (you-changed-name-to . "Nu har du bytt namn till %[%#2@%#1:P%].\n")
     (database-sync . "Databasen synkas.")
+
     (lyskom-is-full . "\
 ===========================================================
 Meddelande fr\345n LysKOM-systemet: N\345gon f\366rs\366kte koppla upp,
@@ -710,6 +718,7 @@ Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
 
     (person-does-not-exist . "Person %#1d (finns inte).")
     (conference-does-not-exist . "M\366te %#1d (finns inte).")
+    (person-is-anonymous . "Anonym person")
 
     (process-signal . "Signal fr\345n processen.")
     (closed-connection . "
@@ -877,6 +886,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-filter-edit    "\304ndra filter")
     (kom-list-filters   "Lista filter")
     (kom-show-user-area "Visa user-arean")
+    (kom-change-conf-type "\304ndra m\366testyp")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
@@ -960,6 +970,9 @@ Cf. paragraph-start.")
 	(define-key lyskom-mode-map [?l ?\344] 'kom-list-summary)
 	(define-key lyskom-mode-map [?l ?\304] 'kom-list-summary)
 	(define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
+    (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
+    (define-key lyskom-mode-map "\M-f" 'kom-next-link)
+    (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
 	))
 	;(define-key lyskom-mode-map "vi" 'vilka)
 
@@ -1361,7 +1374,8 @@ Users are encouraged to use their best sense of humor.")
 			(copy-face 'default 'kom-text-face))
       (lyskom-make-face 'kom-subject-face
 			(copy-face 'kom-text-face 'kom-subject-face)
-			(set-face-foreground 'kom-subject-face "dark green"))
+			(set-face-foreground 'kom-subject-face
+					     "dark green"))
       (lyskom-make-face 'kom-text-no-face
 			(copy-face 'kom-text-face 'kom-text-no-face)))
   (progn
