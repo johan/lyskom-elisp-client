@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.166 2001-05-07 15:20:33 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.167 2001-05-21 12:39:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.166 2001-05-07 15:20:33 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.167 2001-05-21 12:39:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3670,6 +3670,11 @@ i servern. Annars sparas det i din .emacs.")
   Om denna inställning är påslagen kommer en del tidsangivelser (till
   exempel för visade inlägg och sända meddelanden) att inkludera
   sekunder.")
+    (kom-review-uses-cache-doc . "\
+  Om detta är påslaget så kommer kommandon som återser inlägg att 
+  använda sparade kopior av inläggen om de finns. Det gör att kommandona
+  går lite snabbare, men det finns en viss risk för att ett inlägg kan
+  ha ändrats sedan kopian sparades.")
 
 
     ;;
@@ -3832,6 +3837,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-dont-check-commented-authors-tag . "Författare som inte kontrolleras:")
     (kom-print-relative-dates-tag . "Visa relativa datumangivelser:")
     (kom-print-seconds-in-time-strings-tag . "Inkludera sekunder i tidsangivelser:")
+    (kom-review-uses-cache-tag . "Återsekommandon använder sparade inlägg:")
     )
 )
 
