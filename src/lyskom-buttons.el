@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.44 2000-07-05 10:14:34 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.45 2000-07-24 09:36:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.44 2000-07-05 10:14:34 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.45 2000-07-24 09:36:01 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -710,7 +710,6 @@ This is a LysKOM button action."
     (setq url-manager (lyskom-get-url-manager protocol))
     (if (null url-manager)
         (lyskom-error "Can't find URL viewer"))
-    (goto-char (point-max))
     (funcall (elt url-manager 3) url url-manager)))
 
  

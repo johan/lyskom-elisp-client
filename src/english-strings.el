@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.94 2000-07-05 10:14:33 byers Exp $
+;;;;; $Id: english-strings.el,v 44.95 2000-07-24 09:36:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.94 2000-07-05 10:14:33 byers Exp $"))
+              "$Id: english-strings.el,v 44.95 2000-07-24 09:36:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3235,91 +3235,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 (lyskom-language-var kom-ispell-dictionary sv
   "english")
 
-;;;; ============================================================
-;;;; Text buttom menuse go here. This will probably be moved back
-;;;; to vars.el.in when the strings have been replaced by
-;;;; symbols, but for now they'll stay here.
-
-
-(lyskom-language-var lyskom-button-actions en
-  '((text
-     text-text
-     lyskom-button-view-text
-     (("View text" . lyskom-button-view-text)
-      ("Review unconverted" . lyskom-button-review-noconversion)
-      ("Review tree" . lyskom-button-review-tree)
-      ("Review root text" . lyskom-button-find-root)
-      ("Write commend" . lyskom-button-comment-text)
-      ("Write personal reply" . lyskom-button-private-comment-text)
-      ("Mark text" . lyskom-button-mark-text)
-      ("Unmark text" . lyskom-button-unmark-text)
-      ("Save archive copy" . lyskom-button-save-text)
-      )
-     nil
-;     ((nil lyskom-print-text footer lyskom-button-comment-text))
-     )
-    (conf 
-     conf-text
-     lyskom-button-view-conf-presentation
-     (("View presentation" . lyskom-button-view-conf-presentation)
-      ("View conference status" . lyskom-button-view-conf-status)
-      ("Go to conference" . lyskom-button-goto-conf)
-      ("Send group message" . lyskom-button-send-message)
-      ("Join conference" . lyskom-button-add-self)
-      ("Leave conference" . lyskom-button-sub-self))
-     ((kom-list-news . lyskom-button-goto-conf)))
-    (pers 
-     pers-text
-     lyskom-button-view-pers-presentation
-     (("View presentation" . lyskom-button-view-pers-presentation)
-      ("View user status" . lyskom-button-view-pers-status)
-      ("Send letter" . lyskom-button-mail)
-      ("Send personal message" . lyskom-button-send-message))
-     nil)
-    (url 
-     url-text
-     lyskom-button-open-url
-     (("Open" . lyskom-button-open-url)
-      ("Copy" . lyskom-button-copy-url))
-     nil)
-    (info-node 
-     info-node-text
-     lyskom-button-goto-info-node
-     (("Open" . lyskom-button-goto-info-node))
-     nil)
-    (email
-     email-text
-     lyskom-button-open-email
-     (("Send mail" . lyskom-button-open-email)
-      ("Copy" . lyskom-button-copy-email))
-     nil)
-    (aux
-     aux-text
-     lyskom-button-info-aux
-     (("Information" . lyskom-button-info-aux)
-      ("Delete" . lyskom-button-delete-aux))
-     nil)
-    (aux-edit-menu
-     nil
-     nil
-     (("Toggle \"secret\"" . lyskom-edit-toggle-secret-aux)
-      ("Toggle \"anonymous\"" . lyskom-edit-toggle-anonymous-aux)
-      ("Toggle \"inherited\""   . lyskom-edit-toggle-inherit-aux)
-      ("Delete"          . lyskom-edit-delete-aux))
-     nil)
-    (prioritize-flag-menu
-     nil
-     lyskom-prioritize-flag-toggle
-     (("Toggle" . lyskom-prioritize-flag-toggle)
-      ("Set"    . lyskom-prioritize-flag-set)
-      ("Clear"  . lyskom-prioritize-flag-clear))
-     nil)
-    (func
-     nil
-     lyskom-button-apply
-     nil
-     nil)
-))
 
 
 ;;;; ================================================================
