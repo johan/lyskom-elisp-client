@@ -1,3 +1,9 @@
+2004-05-26  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1326:
+	* lyskom-rest.el (lyskom-format-html-plaintext): Corrected
+	arguments to lyskom-button-transform-text.
+
 2004-05-25  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-format-aux-help): Handle non-integer
