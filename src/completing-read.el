@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.47 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: completing-read.el,v 44.48 2003-08-20 20:20:04 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,10 +36,10 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.47 2003-08-17 12:48:06 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.48 2003-08-20 20:20:04 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
-(defvar lyskom-saved-answers nil)
+(defvar lyskom-read-conf-saved-inputs nil)
 
 
 
@@ -211,6 +211,9 @@ See lyskom-read-conf for a description of the parameters."
        (list (text-stat->author
               (blocking-do 'get-text-stat (lyskom-get-last-read-text))))))
 
+(defun lyskom-default-conference-saved (sym)
+  (list (conf-z-info->conf-no (cdr (assq sym lyskom-read-conf-saved-inputs)))))
+
 
 (defun lyskom-get-initial-conf-strategy (prompt)
   (when (listp prompt) (setq prompt (car prompt)))
@@ -225,7 +228,10 @@ See lyskom-read-conf for a description of the parameters."
               (assq 'default default-spec))
           (or (assq 'filter prompt-spec)
               (assq 'filter cmd-spec)
-              (assq 'filter default-spec)))))
+              (assq 'filter default-spec))
+          (or (assq 'save prompt-spec)
+              (assq 'save cmd-spec)
+              (assq 'save default-spec)))))
 
 (defun lyskom-read-conf-guess-initial (prompt predicate)
   "Return a guess for the initial value for lyskom-read-conf."
@@ -234,21 +240,38 @@ See lyskom-read-conf for a description of the parameters."
          (filter (cdr (assq 'filter strategy))))
 
     (uconf-stat->name
-     (car (filter-list (lambda (uconf-stat)
-                         (and uconf-stat
-                              (not (memq nil (mapcar (lambda (fn)
-                                                       (funcall fn uconf-stat)) 
-                                                     filter)))
-                              (lyskom-read-conf-internal-verify-type
-                               (uconf-stat->conf-no uconf-stat)
-                               (uconf-stat->conf-type uconf-stat)
-                               predicate nil nil)))
-                       (mapcar (lambda (conf-no)
-                                 (blocking-do 'get-uconf-stat conf-no)) 
-                               (apply 'append (delq nil (mapcar 'funcall default)))))))))
+     (car
+      (filter-list 
+       (lambda (uconf-stat)
+         (and uconf-stat
+              (not (memq nil
+                         (mapcar (lambda (fn)
+                                   (funcall fn uconf-stat))
+                                 filter)))
+              (lyskom-read-conf-internal-verify-type
+               (uconf-stat->conf-no uconf-stat)
+               (uconf-stat->conf-type uconf-stat)
+               predicate nil nil)))
+       (mapcar (lambda (conf-no)
+                 (blocking-do 'get-uconf-stat conf-no)) 
+               (apply 'append 
+                      (delq nil (mapcar (lambda (fn)
+                                          (if (listp fn)
+                                              (apply (car fn) (cdr fn))
+                                            (funcall fn)))
+                                        default)))))))))
 
 
 
+(defun lyskom-read-conf-save-input (prompt input)
+  "Save INPUT as input for the current completing read command."
+  (lyskom-traverse sym (cdr (assq 'save 
+                                  (lyskom-get-initial-conf-strategy prompt)))
+    (if (assq sym lyskom-read-conf-saved-inputs)
+        (setcdr (assq sym lyskom-read-conf-saved-inputs) input)
+      (setq lyskom-read-conf-saved-inputs 
+            (cons (cons sym input) lyskom-read-conf-saved-inputs))
+    )))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
@@ -300,19 +323,20 @@ A string:    A name that matched nothing in the database."
               ((lyskom-read-conf-guess-initial prompt type))
               (t nil)))
 
-  (setq prompt (cond ((stringp prompt) prompt)
-                     ((symbolp prompt) (lyskom-get-string prompt))
-                     ((listp prompt) (apply 'lyskom-format prompt))
-                     (t (lyskom-get-string 'conf-prompt))))
-
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
           lyskom-minibuffer-local-completion-map)
          (minibuffer-local-must-match-map 
           lyskom-minibuffer-local-must-match-map)
          (read-string nil)
+         (old-prompt prompt)
          (result nil)
          (keep-going t))
+
+    (setq prompt (cond ((stringp prompt) prompt)
+                       ((symbolp prompt) (lyskom-get-string prompt))
+                       ((listp prompt) (apply 'lyskom-format prompt))
+                       (t (lyskom-get-string 'conf-prompt))))
 
     (while keep-going
       (setq read-string (lyskom-completing-read prompt
@@ -329,6 +353,7 @@ A string:    A name that matched nothing in the database."
                   (t (lyskom-lookup-conf-by-name read-string type))))
       (setq keep-going (and (not empty)
                             (null result))))
+    (lyskom-read-conf-save-input old-prompt result)
     result))
 
 

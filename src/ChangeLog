@@ -1,3 +1,14 @@
+2003-08-20  David Byers  <byers@lysator.liu.se>
+
+	Support saving most recent input:
+	* completing-read.el (lyskom-read-conf-saved-inputs): New
+	variable.
+	(lyskom-read-conf-save-input): New function.
+	(lyskom-read-conf): Call it to save user input.
+	(lyskom-read-conf-guess-initial): Support arguments to strategy
+	functions.
+	(lyskom-default-conference-saved): New function.
+
 2003-08-17  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1044:
