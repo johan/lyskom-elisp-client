@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.154 2002-09-12 21:02:35 byers Exp $
+;;;;; $Id: commands1.el,v 44.155 2002-09-14 20:56:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.154 2002-09-12 21:02:35 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.155 2002-09-14 20:56:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1863,13 +1863,16 @@ If it is 'conf, only conferences will be listed."
   (interactive (list (lyskom-read-string
 		      (lyskom-get-string 'search-re))
 		     current-prefix-arg
-		     (let ((pers (lyskom-j-or-n-p 'include-persons))
-			   (conf (lyskom-j-or-n-p 'include-conferences)))
-		       (cond
-			((and pers conf) nil)
-			(pers 'pers)
-			(conf 'conf)
-			(t (error "This user interface is stupid."))))))
+		     (let ((sel (lyskom-a-or-b-or-c-p 'search-re-for-what
+                                                      '(search-re-confs
+                                                        search-re-persons
+                                                        search-re-all)
+                                                      'search-re-all)))
+                       (cond
+			((eq sel 'search-re-all) nil)
+			((eq sel 'search-re-persons) 'pers)
+			((eq sel 'search-re-confs) 'conf)
+			(t nil)))))
   (unless case-sensitive
     (setq regexp (lyskom-make-re-case-insensitive regexp)))
   (lyskom-format-insert  (cond
