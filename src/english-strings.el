@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 39.4 1996-03-20 13:15:04 davidk Exp $
+;;;;; $Id: english-strings.el,v 39.5 1996-03-25 17:03:44 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 39.4 1996-03-20 13:15:04 davidk Exp $"))
+	      "$Id: english-strings.el,v 39.5 1996-03-25 17:03:44 byers Exp $"))
 
 
 ;;; ================================================================
@@ -181,10 +181,10 @@ Email-address:\n\nOther:\t")
     (deletion-not-confirmed . "Deletion aborted\n")
     (somebody-else-deleted-that-conf . "Somebody else just deleted the conference.\n")
     (conf-is-deleted . "OK, %#1s is now deleted.\n")
-    (you-could-not-delete . "%#1s can't be deleted by you.\n")
+    (you-could-not-delete . "%#1M can't be deleted by you.\n")
 
     (what-text-to-delete . "Article to remove: ")
-    (deleting-text . "Removing article %#1d...")
+    (deleting-text . "Removing article %#1:n...")
 
     (presentation-for-whom . "Which conference/user: ")
     (somebody-deleted-that-conf . "Somebody just deleted that conference.\n")
@@ -208,8 +208,8 @@ Email-address:\n\nOther:\t")
     (nope . "didn't work.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
-    (is-read-protected-contact-supervisor . "%#1s \344r closed.
-Send a letter to  %#2s to apply for membership.")
+    (is-read-protected-contact-supervisor . "%#1M \344r closed.
+Send a letter to  %#2P to apply for membership.")
 
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
 
@@ -267,8 +267,8 @@ and you have finished reading. Please come back later.
     (text-to-mark . "Mark which article: ")
     (text-to-unmark . "Unmark which article: ")
     (what-mark . "Set which mark: ")
-    (unmarking-textno . "Unmarking article %#1d...")
-    (marking-textno . "Marking article %#1d...")
+    (unmarking-textno . "Unmarking article %#1n...")
+    (marking-textno . "Marking article %#1n...")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
     (what-mark-to-view . "Review which mark: ")
@@ -290,29 +290,28 @@ and you have finished reading. Please come back later.
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M...")
-    (add-member-in . "Adding %#1s as a member of %#2s...")
-    (unsubscribe-to . "Leaving from %#1s...")
+    (add-member-in . "Adding %#1P as a member of %#2M...")
+    (unsubscribe-to . "Leaving %#1M...")
 
-    (exclude-from . "Removing %#1s from %#2s...")
+    (exclude-from . "Removing %#1P from %#2M...")
 
-    (unsubscribe-failed . "\nDidn't work. Perhaps %#1s isn't a member of %#2s?\n")
+    (unsubscribe-failed . "\nDidn't work. Perhaps %#1P isn't a member of %#2M?\n")
 
     (You . "You")
     (could-not-create-conf . "Couldn't create the conference \"%#1s\".\nError: %#2d.\n")
-    (created-conf-no-name . "Conference number %#1d %#2s has been created.\n")
-    (cant-read-textno . "You are not allowed to read article %#1d")
+    (created-conf-no-name . "Conference number %[%#3@%#1:m %#2:M%] has been created.\n")
+    (cant-read-textno . "You are not allowed to read article %#1:n")
 
-    (not-supervisor-for . "You are not the supervisor of %#1s.\n")
-    (not-supervisor-for . "You are not the supervisor of %#1s.\n")
+    (not-supervisor-for . "You are not the supervisor of %#1M.\n")
     (go-to-conf . "Go to conference %#1M.\n")
-    (cant-go-to-his-mailbox . "You are not allowed to go to %#1s's mailbox.\n")
-    (not-member-of-conf . "You are not a member of %#1s.\n")
+    (cant-go-to-his-mailbox . "You are not allowed to go to %#1M's mailbox.\n")
+    (not-member-of-conf . "You are not a member of %#1M.\n")
     (about-to-change-name-from . "%#1P\n")
-    (change-name-done . "Done. New name: %#1s.\n")
+    (change-name-done . "Done. New name: %[%#2@%#1:M%].\n")
     (change-name-nope . "Didn't work. Error code %#3d. %#2s.\n")
-    (change-supervisor-from-to . "Change supervisor of %#1s to %#2s...")
+    (change-supervisor-from-to . "Change supervisor of %#1M to %#2P...")
     (change-supervisor-nope . 
-     "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1s?\n")
+     "\nDidn't work. Perhaps you are not allowed to change the supervisor of %#1M?\n")
     
     (no-marked-texts . "You have not marked any articles.\n")
     (no-marked-texts-mark . 
@@ -330,8 +329,8 @@ and you have finished reading. Please come back later.
      "Removing %#1M as recipient of article %#2n...")
     (text-to-add-q . "Add which article as a comment: ")
     (text-to-remove-q . "Remove which article as a comment: ")
-    (add-comment-to . "Adding article %#1d as a comment to text %#2d...")
-    (sub-comment-to . "Removing article %#1d as a comment to article %#2d...")
+    (add-comment-to . "Adding article %#1n as a comment to text %#2n...")
+    (sub-comment-to . "Removing article %#1n as a comment to article %#2n...")
     (comment-keep-recpt-p ."Should %#1s remain a recipient? ")
 
     ; From commands2.el:
@@ -348,7 +347,7 @@ and you have finished reading. Please come back later.
     (no-comments . "No comments")
     (closed . "Closed")
                    
-    (created-by . "%[%#3@Created by person %24#1:p%] %#4s(%#2P)\n")
+    (created-by . "Created by person %24#1p %#3s(%#2P)\n")
     (created-at . "Created:%34#1s\n")
     (members .    "Number of members: %19#1d\n")
     (garb-nice . "Expiration time (in days):%16#1d\n")
@@ -357,9 +356,9 @@ and you have finished reading. Please come back later.
     (last-text-time . 
      "Time of last article: %20#1s (accordning to your cache)\n")
     (no-of-motd . "Note on the door in article: %13#1n\n")
-    (superconf-is-no-name . "%[%#3@Superconference: %25#1:m%] %#4s(%#2M)\n")
-    (permitted-submitters-no-name . "%[%#3@Allowed authors: %25#1:m%] %#4s(%#2M)\n")
-    (supervisor-is-no-name . "%[%#3@Supervisor: %30#1:p%] %#4s(%#2P)\n")
+    (superconf-is-no-name . "Superconference: %25#1m %#3s(%#2M)\n")
+    (permitted-submitters-no-name . "Allowed authors: %25#1m %#3s(%#2M)\n")
+    (supervisor-is-no-name . "Supervisor: %30#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
     (conf-has-motd . "\n%#1M has a note on the door:\n")
 
@@ -386,12 +385,12 @@ and you have finished reading. Please come back later.
     (read-texts . "Articles read:%28#1d\n")
     (marked-texts . "Articles marked:%26#1d")
     (time-for-last-letter . "Time of last letter:%22#1s (accordning to your cache)\n")
-    (superconf . "%[%#3@Superconference:%31#1:m%] %#4s(%#2M)\n")
-    (supervisor . "%[%#3@Supervisor:%29#1:p%] %#4s(%#2P)\n")
+    (superconf . "Superconference: %25#1m %#3s(%#2M)\n")
+    (supervisor . "Supervisor: %30#1p %#3s(%#2P)\n")
     (member-of-confs . "Member of (conferences):%18#1d\n")
-    (presentation . "Presentation:    %25#1d\n")
+    (presentation . "Presentation:    %25#1n\n")
     (show-membership-list-also-q . "List memberships? ")
-    (not-allowed-see-confs . "You are not premitted to see which conferences %#1s is a member of.\n")
+    (not-allowed-see-confs . "You are not premitted to see which conferences %#1P is a member of.\n")
     (is-member-of . "\n%#1P is a member of the following conferences:\n")
     (membership-list-header . "Last access       Unread Conference\n\n")
     (pers-membership-line . "%#1s%#2s%#3M\n")
@@ -415,7 +414,7 @@ Your public message:
 ")
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.
-The message you were sending to %#1s was:
+The message you were sending to %#1M was:
 %#2s\n")
     (only-last . "Last (0 - %#1d) articles in %#2s: ")
     (only-error . "Something went wrong. Sorry.\n")
@@ -438,7 +437,7 @@ The message you were sending to %#1s was:
     (Lines . "Lines")
     (Author . "  Author")
     (Subject . "  Subject")
-    (could-not-read . "You couldn't read the article (%#1d).\n")
+    (could-not-read . "You couldn't read the article (%#1n).\n")
     (multiple-choice . "There are several alternatives.")
 
     (what-mark-to-list . "List which mark: ")
@@ -446,7 +445,7 @@ The message you were sending to %#1s was:
     (you-have-marks-all . "You have %#1s marked texts.\n")
 
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
-    (summary-line . "%=-7#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
+    (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
     (buggrepport-compilestart . "Creating bug report...")
@@ -479,7 +478,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
 
 
     (not-logged-in . "You are not logged on. ")
-    (name-is-not-in-conf . "%#1s is in any conference.\n")
+    (name-is-not-in-conf . "%#1s is not in any conference.\n")
     (name-is-in-conf . "%#1s is in\n%#2s\n")
     (connected-during . "Connect time: %#1d seconds.\n")
 
@@ -487,20 +486,20 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (conf-to-set-super-conf-q . "Set superconference of which conference: ")
     (new-super-conf-q . "Which conferece do you want as superconference: ")
     (new-permitted-submitters-q . "Allow members of which conference as authors in %#1s (all): ")
-    (super-conf-for-is . "Changing superconference of %#1s to %#2s...")
-    (permitted-submitters-removed-for-conf . "Allowing all authors to conference %#1s...")
-    (submitters-conf-for-is . "Changing authors admitted to conference %#1s to the members of %#2s...") 
+    (super-conf-for-is . "Changing superconference of %#1M to %#2M...")
+    (permitted-submitters-removed-for-conf . "Allowing all authors to conference %#1M...")
+    (submitters-conf-for-is . "Changing authors admitted to conference %#1M to the members of %#2M...") 
    
     (conf-to-set-garb-nice-q . "Set expiration time for which conference: ")
     (new-garb-nice-q . "What do you want to set the expiration time to: ")
-    (garb-nice-for-is . "Changing expiration for %#1s to %#2d...")
+    (garb-nice-for-is . "Changing expiration for %#1M to %#2d...")
 
     (really-shutdown . "Are you sure you want to shut down the server? ")
     (closing-server . "Shutting down the server...")
     (administrator . "administrator")
     (no-longer-administrator . "a regular user again")
     (you-are-now . "Ok, you are now running as %#1s.\n")
-    (setting-motd . "Changing login message to article %#1d.\n")
+    (setting-motd . "Changing login message to article %#1n.\n")
     (set-motd-success . "You have set a new login message.\n")
     (set-motd-failed . "Didn't work. Perhaps you were not an administrator.\n")
     (removing-motd . "Removing the login message.\n")
@@ -526,9 +525,9 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (cannot-read-last-text . "You cannot review the last read article.\n")
     (review-n-texts . "Review %#1d articles.\n")
     (review-marked . "Review %#1d marked articles.\n")
-    (review-text-no . "Review article %#1d")
-    (review-one-comment . "Review one comment to article %#1d.\n")
-    (review-many-comments . "Review %#2d comments to article %#1d.\n")
+    (review-text-no . "Review article %#1n")
+    (review-one-comment . "Review one comment to article %#1n.\n")
+    (review-many-comments . "Review %#2d comments to article %#1n.\n")
     (read-normally-read . "How many articles to you want to review: ")
 
     ; From edit-text.el:
@@ -571,7 +570,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (yesterday . "yesterday")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d %02#3d/%02#2d %02#4d:%02#5d")
-    (no-such-text-no . "The article doesn't exist. (%#1d)\n")
+    (no-such-text-no . "The article doesn't exist. (%#1n)\n")
 
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
@@ -579,17 +578,17 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (send-at . "   Posted:     %#1s\n")
     (sent-by . "   Posted by %#1P\n")
     (recieved-at . "    Received: %#1s\n")
-    (written-by . "by %#1s")
+    (written-by . "by %#1P")
     (comment-to-text-by . "Comment to article %#1n by %#2P\n")
-    (footnote-to-text-by . "Footnote to article %#1d %#2P\n")
+    (footnote-to-text-by . "Footnote to article %#1n %#2P\n")
     (comment-in-text-by . "Comment in article %#1n by %#2P\n")
-    (footnote-in-text-by . "Footnote in article %#1d %#2P\n")
+    (footnote-in-text-by . "Footnote in article %#1n %#2P\n")
 
     ; From async.el:
 
-    (name-has-changed-to-name . "%#1s has changed name to %#2s")
-    (name-has-changed-to-name-r . "%#1s has changed name to %#2s\n")
-    (you-changed-name-to . "You have now changed your name to %#1s.\n")
+    (name-has-changed-to-name . "%#1:P has changed name to %#2:P")
+    (name-has-changed-to-name-r . "%[%#3@%#1:P%] has changed name to %[%#3@%#2:P%]\n")
+    (you-changed-name-to . "You have now changed your name to %[%#2@%#1:P%].\n")
     (database-sync . "Synching database.")
 
     (lyskom-is-full . "\
@@ -625,7 +624,7 @@ Group message to %#3M from %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------
-")    (text-is-created . "Article %#1d has been created!")
+")    (text-is-created . "Article %#1n has been created!")
 
     ; Used in mode-line-process
     (mode-line-waiting . ": waiting")
@@ -642,7 +641,7 @@ Group message to %#3M from %#2P (%#4s):
     (cannot-get-pers-stat . "Cannot retrieve your personal status.")
     (your-membship . "Your memberships:
   Prio Conf# Conference\n")
-    (prio-row . " %5#1d%5#2d  %#3s\n")
+    (prio-row . " %5#1d%5#2d  %#3M\n")
     (too-high-goto-2 . "You are too high up, move down to line two.")
     (too-low-go-up . "You can't push the last line. Move up one line.")
     (all-confs-popped .  "All conferences have been popped.")
@@ -673,7 +672,7 @@ Send a bug report.\n")
     (extended-command . "LysKOM: ")
     (wait-for-server . "LysKOM is waiting for a response from the server. Wait for the prompt.\n")
     (review-text-q . "Review article: ")
-    (review-text-no . "Review article %#1d.\n")
+    (review-text-no . "Review article %#1n.\n")
 
     (completely-read-conf . "You have seen all the articles in this conference.\n")
     (not-in-any-conf . "You are not in a conference now.\n")
@@ -736,19 +735,19 @@ Error message: %#1s**************************************************")
     (comment . "Comment")
     (footnote . "Footnote")
     (by . " by %#1s")
-    (text-created .  "Article %#1d has been created.\n")
+    (text-created .  "Article %#1n has been created.\n")
 
     (resolve-session . "Which session: ")
 
     (starting-program . "Starting %#1s...")
-    (super-jump . "Filtering subject \"%#1s\" in conference \"%#2s\"\n")
+    (super-jump . "Filtering subject \"%#1r\" in conference \"%#2M\"\n")
     (filtered . "[Filtered]")
     (filter-error-specification . "Error in the filter specification")
     (filter-error-bad-not . "Error in the filter specification after 'not'")
     (filter-error-unknown-key . "The filter key '%S' is unknown.")
     (filter-error-key-arg . "Bad filter data (%S %S)")
-    (filter-tree . "Skipping article %d \"%s\" by %s and all its comments.\n")
-    (filter-text . "Skipping article %d \"%s\" by %s.\n")
+    (filter-tree . "Skipping article %n \"%s\" by %P and all its comments.\n")
+    (filter-text . "Skipping article %n \"%s\" by %P.\n")
     (filter-permanent . "Permanent? ")
     (filter-action . "Filter how: ")
     (filter-in-conf . "In which conference (all): ")
@@ -784,11 +783,11 @@ Error message: %#1s**************************************************")
     (ansaphone-new-message . "New Ansaphone message: ")
     (ansaphone-message . "Ansaphone message:
 ----------------------------------------------------------------------
-%#1s
+%#1t
 ----------------------------------------------------------------------
 ")
     (ansaphone-state . "The Ansaphone is %#1s.")
-    (ansaphone-state-r . "The Ansaphone is no %#1s.\n")
+    (ansaphone-state-r . "The Ansaphone is now %#1s.\n")
     (ansaphone-messages-gone . "Recorded messages have been erased.")
     (ansaphone-no-messages . "No recorded messages.\n")
     (ansaphone-message-list-start . "Recorded messages:\n\n")
@@ -798,7 +797,7 @@ Error message: %#1s**************************************************")
     (remote-erase-messages . "Remote control (%#1P %#2s): Erased recorded messages\n")
     (remote-set-message . "Remote control (%#1P %#2s): Ansaphone message:
 ----------------------------------------------------------------------
-%#3s
+%#3t
 ----------------------------------------------------------------------
 ")
     (remote-set-ansaphone . "Remote control (%#1P %#2s): The ansaphone is %#3s\n")
@@ -975,8 +974,8 @@ Text:
       "A list of legal filter conditions and their textual representation.")
 
 (defvar lyskom-filter-actions
-      '((dontshow . "Don't show")
-        (skip-text . "Skip")
+      '((skip-text . "Skip")
+        (dontshow . "Don't show")
         (skip-tree . "Skip comments"))
       "A list of legal filter actions an their textual representation.")
                                
@@ -1012,8 +1011,8 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
   (define-key lyskom-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
-  (define-key lyskom-mode-map "\M-f" 'kom-next-link)
-  (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
+  (define-key lyskom-mode-map "\C-i" 'kom-next-link)
+  (define-key lyskom-mode-map "\M-\C-i" 'kom-previous-link)
 
   ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-mode-map "A?" 'lyskom-help)
@@ -1183,6 +1182,77 @@ Cf. paragraph-start.")
 
 This variable is stored in the LysKOM server.")
         
+
+;;;; ============================================================
+;;;; Text buttom menuse go here. This will probably be moved back
+;;;; to vars.el.in when the strings have been replaced by
+;;;; symbols, but for now they'll stay here.
+
+
+(defvar lyskom-button-actions
+  '((text
+     text-text
+     lyskom-button-view-text
+     (("View article" . lyskom-button-view-text)
+      ("Review tree" . lyskom-button-review-tree)
+      ("Review root article" . lyskom-button-find-root)
+      ("Write commend" . lyskom-button-comment-text)
+      ("Write personal reply" . lyskom-button-private-comment-text)
+      ("Mark article" . lyskom-button-mark-text)
+      ("Unmark article" . lyskom-button-unmark-text))
+     nil)
+    (conf 
+     conf-text
+     lyskom-button-view-conf-presentation
+     (("View presentation" . lyskom-button-view-conf-presentation)
+      ("View conference status" . lyskom-button-view-conf-status)
+      ("Go to conference" . lyskom-button-goto-conf)
+      ("Send group message" . lyskom-button-send-message)
+      ("Join conference" . lyskom-button-add-self)
+      ("Leave conference" . lyskom-button-sub-self))
+     ((kom-list-news . lyskom-button-goto-conf)))
+    (pers 
+     pers-text
+     lyskom-button-view-pers-presentation
+     (("View presentation" . 
+                             lyskom-button-view-pers-presentation)
+      ("View user status" . lyskom-button-view-pers-status)
+      ("Send letter" . lyskom-button-mail)
+      ("Send personal message" . lyskom-button-send-message))
+     nil)
+    (url 
+     url-text
+     lyskom-button-open-url
+     (("Open" . lyskom-button-open-url)
+      ("Copy" . lyskom-button-copy-url))
+     nil))
+
+"This variable defines valid button types in LysKOM. Each element is a
+list consisting of (TYPE LABEL DEFAULT ACTIONS HINTS).
+TYPE is the button type the entry defines
+LABEL is a textual representation for the button type, used in menu titles. If
+      it is a symbol, that symbol will be looked up using lyskom-get-string.
+DEFAULT is the default action to take on a click. It must be a function.
+ACTIONS are other possible actions. The format of this entry is described 
+        below.
+HINTS is a list of hints to override the default action. This is described 
+      below.
+
+The ACTIONS entry is used to construct a pop-up menu. It is a list consisting 
+of lists with the format (STRING . FUNCTION). STRING is the menu label and
+FUNCTION is the function to call when the menu item is selected.
+
+The HINTS entry is used to generate hints that the default action should be 
+overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
+as interactive LysKOM command and HINT is a function to call. When a button
+is generated while the command COMMAND is being executed, HINT is used as a 
+hint for a new default action. The user has the option to ignore or used the 
+hint.
+
+Also see the function \"kom-add-button-action\".
+
+This variable is not saved in the LysKOM server.")
+
 
 ;;;; ================================================================
 ;;;; Tell phrases should be configured with the default language used

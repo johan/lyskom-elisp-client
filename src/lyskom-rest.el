@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 39.4 1996-03-20 13:43:56 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 39.5 1996-03-25 17:03:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 39.4 1996-03-20 13:43:56 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 39.5 1996-03-25 17:03:51 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1147,7 +1147,8 @@ Args: FORMAT-STRING &rest ARGS"
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error")))))
-      (if (not colon-flag)
+      (if (and (not colon-flag)
+               (not (face-equal 'default 'kom-subject-face)))
           (setq propl (append (list 'face 'kom-subject-face) propl))))
      ;;
      ;;  Format a LysKOM text body. Currently this does nothing. It
@@ -1165,7 +1166,7 @@ Args: FORMAT-STRING &rest ARGS"
       (setq result
             (cond ((stringp arg) (lyskom-format-text-body arg))
                   ((lyskom-text-p arg) 
-		   (lyskom-format-text-body (text->text-mass arg)))
+                   (lyskom-format-text-body (text->text-mass arg)))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
                                    ": argument error"))))))
@@ -1183,11 +1184,13 @@ Args: FORMAT-STRING &rest ARGS"
           ((> abs-length (length result))
            (let ((padstring (make-string (- abs-length (length result))
                                          pad-letter)))
-             (if (< pad-length 0)	; LEFT justify
-                 (setq result (concat result padstring)
-                       prop-adjust-end (- (- abs-length (length result))))
-               (setq result (concat padstring result)
-                     prop-adjust-start (- abs-length (length result))))))
+             (if (< pad-length 0)       ; LEFT justify
+                 (progn
+                   (setq prop-adjust-end (- (- abs-length (length result))))
+                   (setq result (concat result padstring)))
+               (progn
+                 (setq prop-adjust-start (- abs-length (length result)))
+                 (setq result (concat padstring result))))))
           ((and equals-flag
                 (< abs-length (length result)))
            (setq result (substring result 0 abs-length))))
@@ -1226,6 +1229,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 ;;; Author: David K}gedal
 ;;; This should be considered an experiment
+
 (defvar lyskom-format-experimental nil)
 
 (defun lyskom-format-text-body (text)
@@ -1248,13 +1252,13 @@ Args: FORMAT-STRING &rest ARGS"
           (unwind-protect
               (save-excursion
                 (set-buffer tmpbuf)
-                (insert (substring text 9))
-                (format-decode-buffer 'text/enriched)
-                (substring (buffer-string) 0 -1)) ; Remove the \n
+                (insert (substring text 10))
+                (format-decode-buffer)
+                (lyskom-button-transform-text (buffer-string))
+                ;; (substring (buffer-string) 0 -1) ; Remove the \n
+                )
             (kill-buffer tmpbuf))))
-       (t
-	text
-        ;;(lyskom-button-transform-text text)
+       (t (lyskom-button-transform-text text)
 	))
     (lyskom-button-transform-text text)))
     
