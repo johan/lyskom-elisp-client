@@ -1,3 +1,10 @@
+Sun Oct  6 10:37:07 1991  Linus Tolke Y  (linus at robert)
+
+	* vars.el (kom-do-when-done): Changed the default to a language
+	  independent one.
+
+	* english-strings.el: New file, written by David Byers.
+
 Thu Oct  3 16:52:43 1991  Linus Tolke Y  (linus at lysator)
 
 	* edit-text.el, swedish-strings.el (lyskom-edit-mode): Better
