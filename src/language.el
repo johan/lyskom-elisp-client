@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.13 1998-12-15 12:35:29 byers Exp $
+;;;;; $Id: language.el,v 44.14 1999-06-22 14:54:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -177,11 +177,24 @@ assoc list."
 	  (list function (list symbol category ": string not found"))))
 
 (defun lyskom-get-string (symbol &optional category)
-  "Returns string assiciated with SYMBOL"
+  "Returns string associated with SYMBOL"
     (or (lyskom-get-string-internal symbol (or category 'lyskom-message))
         (lyskom-get-string-error 'lyskom-get-string
                                  symbol
                                  (or category 'lyskom-message))))
+
+(defun lyskom-get-string-sol (symbol &optional category)
+  "Returns string associated with SYMBOL
+If kom-long-lines is set, return the long form of the string, if it exists."
+  (or  (and kom-long-lines
+            (lyskom-get-string-internal (intern (concat (symbol-name symbol)
+                                                        "-long"))
+                                        (or category 'lyskom-message)))
+       (lyskom-get-string-internal symbol
+                                   (or category 'lyskom-message))
+       (lyskom-get-string-error 'lyskom-get-string
+                                symbol
+                                (or category 'lyskom-message))))
 
 
 (defun lyskom-get-strings (symbols &optional category)

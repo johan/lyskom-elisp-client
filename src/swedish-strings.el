@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.59 1999-06-22 13:51:48 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.60 1999-06-22 14:54:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.59 1999-06-22 13:51:48 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.60 1999-06-22 14:54:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -283,6 +283,17 @@ Lyskom-sessionen är avslutad.
 Kopplar ned från LysKOM eftersom LysKOM är fullt och
 du har läst klart allting. Kom tillbaks senare.
 ===========================================================\n\n")
+    (session-ended-long . "
+*******************************************************************************
+Lyskom-sessionen är avslutad.
+*******************************************************************************
+")
+    (session-auto-ended-long . "
+===============================================================================
+Kopplar ned från LysKOM eftersom LysKOM är fullt och
+du har läst klart allting. Kom tillbaks senare.
+===============================================================================
+\n")
     (what-to-change-pres-you . "Vilket möte/person vill du ändra presentationen för (dig själv): ")
     (who-to-put-motd-for . "Vilket möte/person vill du sätta lapp på dörr för (dig själv): ")
 
@@ -527,21 +538,34 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
     (his-total-unread . "\n%#1M har totalt %#2d olästa.\n")
     (message-prompt . "Meddelande: ")
-    (message-sent-to-user
-     . "================================================================
+    (message-sent-to-user . "\
+================================================================
 Ditt meddelande till %#2M:
 
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-sent-to-all
-     . "================================================================
+    (message-sent-to-all . "\
+================================================================
 Ditt alarmmeddelande löd:
 
 %#1t
 ----------------------------------------------------------------
 ")
-    (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
+    (message-sent-to-user-long . "\
+===============================================================================
+Ditt meddelande till %#2M:
+
+%#1t
+-------------------------------------------------------------------------------
+")
+    (message-sent-to-all-long . "\
+===============================================================================
+Ditt alarmmeddelande löd:
+
+%#1t
+-------------------------------------------------------------------------------
+")    (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
     (message-all-info . "Sänd alarmmeddelande\n")
     (message-recipient-info . "Sänd meddelande till %#1M\n")
     (message-nope
@@ -794,6 +818,13 @@ Meddelande från LysKOM-systemet: Någon försökte koppla upp,
 men misslyckades eftersom alla tillgängliga förbindelser är
 upptagna. Logga ut och kom tillbaks senare om du väntar nu.
 ===========================================================\n")
+    (lyskom-is-full-long . "\
+===============================================================================
+Meddelande från LysKOM-systemet: Någon försökte koppla upp,
+men misslyckades eftersom alla tillgängliga förbindelser är
+upptagna. Logga ut och kom tillbaks senare om du väntar nu.
+===============================================================================
+")
     (has-entered . "Nu har %#1:P gått in i %#2s.")
     (has-entered-r . "%#2@Nu har %#1P gått in i %#3s.\n")
     (has-left . "Nu har %#1:P gått ur %#2s.")
@@ -806,26 +837,47 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
 
     (have-become-member . "Du har blivit medlem i %#1M\n")
 
-    (message-broadcast . 
-		       "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-broadcast . "\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Alarmmeddelande från %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-from . 
-		  "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-from . "\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Personligt meddelande från %#1P (%#3s):
 
 %#2t
 ----------------------------------------------------------------
 ")
-    (message-from-to .
-		     "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    (message-from-to . "\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------
+")
+    (message-broadcast-long . "\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Alarmmeddelande från %#1P (%#3s):
+
+%#2t
+-------------------------------------------------------------------------------
+")
+    (message-from-long . "\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Personligt meddelande från %#1P (%#3s):
+
+%#2t
+-------------------------------------------------------------------------------
+")
+    (message-from-to-long . "\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
+
+%#1t
+-------------------------------------------------------------------------------
 ")
     (text-is-created . "Text %#1n är skapad!")
 
@@ -859,7 +911,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (prioritize-help .
 		     "u,n Flytta möte, SPC markera, p prioritera markerade, q avsluta, C-h m hjälp")
     (your-priorities . " Prioritet  Mötesnamn
-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 ")
     (your-membship . "Ditt medlemsskap i olika KOM-möten:
   Prio Mötesnr Mötesnamn\n")
@@ -1027,6 +1079,11 @@ Felmeddelande: %#1s**************************************************")
 %#1t
 ----------------------------------------------------------------------
 ")
+    (ansaphone-message-long . "Svarsmeddelande:
+-------------------------------------------------------------------------------
+%#1t
+-------------------------------------------------------------------------------
+")
     (ansaphone-state . "Automatsvar är nu %#1s.")
     (ansaphone-state-r . "Automatsvar är nu %#1s.\n")
     (ansaphone-messages-gone . "Sparade meddelanden raderade.")
@@ -1041,7 +1098,11 @@ Felmeddelande: %#1s**************************************************")
 %#3t
 ----------------------------------------------------------------------
 ")
-    (remote-set-ansaphone . "Fjärrstyrning (%#1P %#2s): Automatsvar är nu %#3s\n")
+    (remote-set-message-long . "Fjärrstyrning (%#1P %#2s): Svarsmeddelande:
+-------------------------------------------------------------------------------
+%#3t
+-------------------------------------------------------------------------------
+")    (remote-set-ansaphone . "Fjärrstyrning (%#1P %#2s): Automatsvar är nu %#3s\n")
     (remote-list-messages . "Fjärrstyrning (%#1P %#2s): Meddelanden listade\n")
     (remote-quit . "Fjärrstyrning(%#1P %#2s): Avsluta\n")
 
@@ -1882,7 +1943,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
 (lyskom-language-var lyskom-prioritize-header sv
 " Prio   Möte
------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 ")
 
 

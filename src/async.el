@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.16 1999-06-20 11:26:26 byers Exp $
+;;;;; $Id: async.el,v 44.17 1999-06-22 14:54:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.16 1999-06-20 11:26:26 byers Exp $\n"))
+	      "$Id: async.el,v 44.17 1999-06-22 14:54:30 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (message &rest args)
@@ -167,13 +167,13 @@ this function shall be with current-buffer the BUFFER."
      ((eq msg-no 11)
       (lyskom-save-excursion
        (set-buffer buffer)
-       (lyskom-insert-before-prompt (lyskom-get-string 'lyskom-is-full))
+       (lyskom-insert-before-prompt (lyskom-get-string-sol 'lyskom-is-full))
 ;;;       (if (and (eq major-mode 'lyskom-mode)
 ;;;		(not (listp lyskom-time-last-command))
 ;;;		kom-auto-quit-when-idle)
 ;;;	   (progn
 ;;;	     (lyskom-insert-before-prompt
-;;;	      (lyskom-get-string 'session-auto-ended))
+;;;	      (lyskom-get-string-sol 'session-auto-ended))
 ;;;	      (kom-quit 1)
        ))
      
@@ -460,7 +460,7 @@ Non-nil NOBEEP means don't beep."
                                         ; /davidk
 	       (eq recipient 0))	; Public message
            (if (not nobeep) (lyskom-beep kom-ding-on-common-messages))
-           (lyskom-format 'message-broadcast
+           (lyskom-format (lyskom-get-string-sol 'message-broadcast)
                           (cond
                            ((stringp sender) sender)
                            (sender sender)
@@ -469,7 +469,7 @@ Non-nil NOBEEP means don't beep."
                           when))
           ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
            (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages))
-           (lyskom-format 'message-from
+           (lyskom-format (lyskom-get-string-sol 'message-from)
                           (cond
                            ((stringp sender) sender)
                            (sender sender)
@@ -478,7 +478,7 @@ Non-nil NOBEEP means don't beep."
                           when))
           (t                            ; Group message
            (if (not nobeep) (lyskom-beep kom-ding-on-group-messages))
-           (lyskom-format 'message-from-to
+           (lyskom-format (lyskom-get-string-sol 'message-from-to)
                           message
                           (cond
                            ((stringp sender) sender)
