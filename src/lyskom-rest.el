@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.17 1996-07-27 11:39:45 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.18 1996-07-27 14:06:55 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.17 1996-07-27 11:39:45 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.18 1996-07-27 14:06:55 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -606,16 +606,16 @@ CONF can be a a conf-stat or a string."
       
       (if (zerop total-unread)
 	  (setq lyskom-sessions-with-unread
-		(delq lyskom-proc lyskom-sessions-with-unread))
-	(or (memq lyskom-proc lyskom-sessions-with-unread)
+		(delq lyskom-buffer lyskom-sessions-with-unread))
+	(or (memq lyskom-buffer lyskom-sessions-with-unread)
 	    (setq lyskom-sessions-with-unread
-		  (cons lyskom-proc lyskom-sessions-with-unread))))
+		  (cons lyskom-buffer lyskom-sessions-with-unread))))
       (if (zerop letters)
 	  (setq lyskom-sessions-with-unread-letters
-		(delq lyskom-proc lyskom-sessions-with-unread-letters))
-	(or (memq lyskom-proc lyskom-sessions-with-unread-letters)
+		(delq lyskom-buffer lyskom-sessions-with-unread-letters))
+	(or (memq lyskom-buffer lyskom-sessions-with-unread-letters)
 	    (setq lyskom-sessions-with-unread-letters
-		  (cons lyskom-proc lyskom-sessions-with-unread-letters)))))
+		  (cons lyskom-buffer lyskom-sessions-with-unread-letters)))))
     (force-mode-line-update)))
 
 
