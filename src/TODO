@@ -6,6 +6,20 @@ Att göra i elisp-klienten
             Om du fixar någonting som står med på den här
             listan, glöm inte att ta bort det från listan!
 
+Henrik Rindlöws patch
+
+Man skall kunna välja pip vid asynkrona meddelanden per möte, inte
+bara per meddelandetyp. Man skall kunna stänga av pipen när
+kom-ansaphone-on är sann. 
+
+1) kom-ding-on-X-messages kan vara en lista där car är möte och cdr är
+   det verkliga värdet. Nyckeln t ger default. Nackdelen är att man
+   inte kan skicka den här till kom-beep.
+
+2) Ny variabel kom-ansaphone-is-silent för att blockera.
+
+
+
 
 PRIORITERA
 
