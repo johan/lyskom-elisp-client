@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.220 2003-08-29 07:33:32 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.221 2003-10-26 22:38:52 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.220 2003-08-29 07:33:32 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.221 2003-10-26 22:38:52 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -361,8 +361,8 @@ by design."
   (call-interactively 'kom-mark-unread nil))
 
 (def-kom-command kom-mark-unread (text-no)
-  "MAke a single text unread. This command is functional only on servers
-that support making text unread."
+  "Make a single text unread. This command is functional only on servers
+that support making texts unread."
   (interactive (list (lyskom-read-text-no-prefix-arg 'unread-text-q)))
   (lyskom-format-insert 'marking-text-unread text-no)
   (lyskom-report-command-answer (lyskom-mark-unread text-no)))
