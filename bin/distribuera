@@ -23,12 +23,13 @@ version=`grep "lyskom-clientversion " ../src/vars.el | \
 # har gl|mt vad bryggan heter!!!)
 # 
 # 				/ceder
+# Fast den skall vara byte-kompilerad med compatibility (suck).
 
 echo Skickar brev till ceder.
-( cd ../src ; make lyskom.elc )
+( cd ../src ; make lyskom.elc-compatibility )
 gawk '{ sub("\"kom.lysator.liu.se\"", "\"diag22.ida.liu.se\""); 
 	print;
-      }' < ../src/lyskom.elc |
+      }' < ../src/lyskom.elc-compatibility |
 gzip |
 uuencode pub/lyskom.elc.gz | 
 	Mail -s "lyskom.elc version $version" d88perce@und.ida.liu.se
