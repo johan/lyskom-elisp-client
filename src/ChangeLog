@@ -1,3 +1,8 @@
+2001-08-31  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* review.el (kom-review-more): ignore prefix arg unless it's
+	really there.
+
 2001-08-25  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* commands1.el (lyskom-select-friends-from-who-list): change endp
