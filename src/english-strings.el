@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.204 2002-05-01 21:42:39 byers Exp $
+;;;;; $Id: english-strings.el,v 44.205 2002-05-07 20:12:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.204 2002-05-01 21:42:39 byers Exp $"))
+              "$Id: english-strings.el,v 44.205 2002-05-07 20:12:11 byers Exp $"))
 
 
 ;;; ================================================================
@@ -664,33 +664,37 @@ Read all about it at http://www.lysator.liu.se/history/")
     (his-total-unread . "\n%#1M has a total of %#2d unread texts.\n")
     (message-prompt . "Message: ")
     (message-sent-to-user . "\
-================================================================
-Your message for %#2M:
+%[%#3$================================================================
+%]%[%#4$Your message for %#2M:
 
 %#1t
-----------------------------------------------------------------
-")
+%]%[%#3$----------------------------------------------------------------
+%]")
     (message-sent-to-all . "\
-================================================================
-Your public message:
+%[%#3$================================================================
+%]%[%#4$Your public message
 
 %#1t
-----------------------------------------------------------------
-")
+%]%[%#3$----------------------------------------------------------------
+%]")
     (message-sent-to-user-long . "\
+%[%#3$\
 ===============================================================================
-Your message for %#2M:
+%]%[%#4$Your message for %#2M:
 
 %#1t
+%]%[%#3$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-sent-to-all-long . "\
+%[%#3$\
 ===============================================================================
-Your public message:
+%]%[%#4$Your public message
 
 %#1t
+%]%[%#3$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-use-alarm-instead . "Use %#1s to send alarm messages.\n")
     (message-all-info . "Send alarm\n")
     (message-recipient-info . "Send message to %#1M\n")
@@ -986,47 +990,62 @@ the command 'Join conference' to accept the invitation.\n")
 
 
     (message-broadcast . "\
+%[%#4$\
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#5$\
 Alarm from %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 ----------------------------------------------------------------
-")
+%]")
     (message-broadcast-long . "\
+%[%#4$\
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Alarm from %#1P (%#3s):
+%]%[%#5$Alarm from %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-from . "\
+%[%#4$\
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personal message from %#1P (%#3s):
+%]%[%#5$Personal message from %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 ----------------------------------------------------------------
-")
+%]")
     (message-from-long . "\
+%[%#4$\
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personal message from %#1P (%#3s):
+%]%[%#5$Personal message from %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-from-to ."\
+%[%#5$\
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Group message to %#3M\nfrom %#2P (%#4s):
+%]%[%#6$Group message to %#3M\nfrom %#2P (%#4s):
 
 %#1t
+%]%[%#5$\
 ----------------------------------------------------------------
-")
+%]")
     (message-from-to-long ."\
+%[%#5$\
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Group message to %#3M\nfrom %#2P (%#4s):
+%]%[%#6$Group message to %#3M\nfrom %#2P (%#4s):
 
 %#1t
+%]%[%#5$\
 -------------------------------------------------------------------------------
-")
+%]")
+
+
     (text-is-created . "Text %#1n has been created!")
 
     ; Used in mode-line-process
@@ -1707,6 +1726,8 @@ Number of sessions:  %21#1d (total)
 
     (kom-redirect-comments-e49 . "You do not have permission to perform this redirection")
     (kom-redirect-comments-e48 . "Comment redirection is not supported by the server")
+
+    (external-program-missing . "Can't find the external program \"%#1s\", that was required for this command.")
     ))
 
 
@@ -3158,7 +3179,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   recently received group message; or the sender of the most recently
   received personal message.")
 
-    (lyskom-filter-outgoing-messages-doc . "\
+    (kom-filter-outgoing-messages-doc . "\
   If this is on, messages that are sent automatically, such as automatic
   replies and replies to remote control commands, will be shown as if you
   had sent them manually.")
@@ -3573,7 +3594,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-ding-on-personal-messages-tag . "When a personal message arrives:  ")
     (kom-ding-on-no-subject-tag     .    "When you forget the subject line: ")
 
-    (lyskom-filter-outgoing-messages-tag . "Show automatic messages:")
+    (kom-filter-outgoing-messages-tag . "Show automatic messages:")
     (kom-friends-tag . "Friends and other special people:")
     (kom-morons-tag . "Morons and other \"special\" people:")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.191 2002-05-01 21:42:40 byers Exp $
+;;;;; $Id: vars.el.in,v 44.192 2002-05-07 20:12:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.191 2002-05-01 21:42:40 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.192 2002-05-07 20:12:13 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -68,18 +68,23 @@ Don't change these. They are defined by the protocol.")
 
 
 (defun lyskom-protect-variable (sym) 
+  "Protect SYM from being killed when deleting local variables."
   (put sym 'permanent-local t)
   (lyskom-local-variable sym)
   (add-to-list 'lyskom-protected-variables sym))
 
 (defun lyskom-local-variable (sym)
+  "Define SYM as a buffer-local variable"
   (add-to-list 'lyskom-local-variables sym))
 
 (defun lyskom-inherited-variable (sym)
+  "Define SYM as a variable that is inherited when creating new buffers.
+Inheritance only works with the LysKOM buffer handling functions."
   (add-to-list 'lyskom-inherited-variable sym)
   (lyskom-protect-variable sym))
 
 (defun lyskom-setup-local-variables ()
+  "Set up all globally defined local variables in the current buffer."
   (mapcar 'make-local-variable lyskom-local-variables)
   (mapcar 'make-local-hook lyskom-local-hooks))
 
@@ -111,19 +116,26 @@ a text."
 )
 
 (def-kom-var kom-highlight-text-body t
-  "*If t, use an alternate background color for texts in LysKOM.
-If nil, do not use an alternate background. Other values are reserved
-for future use."
+  "*If t, overlay kom-text-body-face on printed text bodies in LysKOM.
+When this is enabled, an overlay or extent will be created that may
+override certain aspects of the underlying text's formatting. Values
+other than t or nil are reserved for future use."
   server
 )
 
 (def-kom-var kom-highlight-first-line t
-  "*If t, use kom-first-line-face to highlight the first line of each text."
+  "*If t, overlay kom-first-line-face on the first header line of texts.
+When this is enabled, an overlay or extent will be created that may
+override certain aspects of the underlying text's formatting. Values
+other than t or nil are reserved for future use."
   server
 )
 
 (def-kom-var kom-highlight-dashed-lines t
-  "*If t, use kom-dashed-lines-face to highlight dashed lines around texts."
+  "*If t, overlay kom-dashed-lines-face on the lines surrounding texts.
+When this is enabled, an overlay or extent will be created that may
+override certain aspects of the underlying text's formatting. Values
+other than t or nil are reserved for future use."
   server
 )
 
@@ -499,15 +511,23 @@ long as there are sessions with unread texts.
 "
   server)
 
-(def-kom-var lyskom-view-text-hook nil
+(def-kom-var kom-view-text-hook nil
   "*Hook that is called before a text is shown. When the hooks are
-called, lyskom-view-text-text is bound to the text mass of the 
-text and lyskom-view-text-text-stat to the text-stat of the text
+called, kom-view-text-text is bound to the text mass of the 
+text and kom-view-text-text-stat to the text-stat of the text
 to be shown."
   local-hook)
 
+(def-kom-var lyskom-view-text-hook nil
+  "Obsolete synonym for kom-view-text-hook."
+  local-hook)
 
-(def-kom-var lyskom-send-message-hook '(lyskom-send-message-trim-newlines)
+
+(def-kom-var lyskom-send-message-hook nil
+  "*Obsolete synonym for lyskom-send-message-hook."
+  local-hook)
+
+(def-kom-var kom-send-message-hook '(lyskom-send-message-trim-newlines)
   "*Hook that is called before a personal, group or common message is sent. 
 
 When called, lyskom-message-string is bound to the message that will be sent
@@ -518,23 +538,38 @@ If lyskom-message-string is set to nil by a hook, the message will not
 be sent."
   local-hook)
 
-(def-kom-var lyskom-send-message-setup-hook nil
+(def-kom-var kom-send-message-setup-hook nil
   "*Hook that is called when the minibuffer is entered to read a message."
   local-hook)
 
-(def-kom-var lyskom-send-message-exit-hook nil
+(def-kom-var lyskom-send-message-setup-hook nil
+  "*Obsolete synonym for kom-send-message-setup-hook."
+  local-hook)
+
+(def-kom-var kom-send-message-exit-hook nil
   "*Hook that is called when the minibuffer is exited after reading a message."
   local-hook)
 
-(def-kom-var lyskom-send-text-hook nil
+(def-kom-var lyskom-send-message-exit-hook nil
+  "*Obsolete synonym for kom-send-message-exit-hook."
+  local-hook)
+
+(def-kom-var kom-send-text-hook nil
   "*Hook that is called before sending a text. Hook functions return t to
 signal success and nil to prevent the text from being sent."
   local-hook)
 
-(def-kom-var lyskom-after-load-hook nil
+(def-kom-var lyskom-send-text-hook nil
+  "*Obsolete synonym for kom-send-text-hook."
+  local-hook)
+
+(def-kom-var kom-after-load-hook nil
   "*Hook to run once after LysKOM is loaded.")
 
-(def-kom-var lyskom-change-conf-hook nil
+(def-kom-var lyskom-after-load-hook nil
+  "*Obsolete synonym for kom-after-load-hook.")
+
+(def-kom-var kom-change-conf-hook nil
   "*Hook to run when changing conferences.
 The functions in this list are run with two arguments. The first is the 
 current conf-no and the second is the conf-no being changed to.
@@ -543,13 +578,21 @@ This hook is run before lyskom-current-conf is changed, and before any
 standard messages have been printed."
   local-hook)
 
-(def-kom-var lyskom-after-change-conf-hook nil
+(def-kom-var lyskom-change-conf-hook nil
+  "*Obsolete synonym for kom-change-conf-hook"
+  local-hook)
+
+(def-kom-var kom-after-change-conf-hook nil
   "*Hook to run when changing conferences.
 The functions in this list are run with two arguments. The first is the 
 current conf-no and the second is the conf-no being changed to.
 
 This hook is run after lyskom-current-conf is changed, and after any
 standard messages have been printed."
+  local-hook)
+
+(def-kom-var lyskom-after-change-conf-hook nil
+  "*Obsolete synonym for kom-after-change-conf-hook."
   local-hook)
 
 (def-kom-var lyskom-login-hook nil
@@ -747,7 +790,7 @@ to call."
   server)
 
 
-(def-kom-var lyskom-filter-outgoing-messages t
+(def-kom-var kom-filter-outgoing-messages t
   "*t if outgoing remote-control messages and automatic replies are not
 to be displayed in the buffer."
   server)
@@ -2413,8 +2456,8 @@ default value."
   "List of patterns that are filtered."
   local)
 
-(def-kom-var lyskom-create-text-hook nil
-  "Hook to run before creating a new text.
+(def-kom-var kom-create-text-hook nil
+  "*Hook to run before creating a new text.
 This hook is run just before the server call to create the text is made.
 
 The hook is currently called with the following arguments:
@@ -2430,26 +2473,41 @@ full-message, the misc-info list by modifying misc-list and the
 aux-item list by modifying aux-list. This is not encouraged."
   local-hook)
 
+(def-kom-var lyskom-create-text-hook nil
+  "*Obsolete synonym for kom-create-text-hook"
+  local-hook)
 
 
-(def-kom-var lyskom-new-text-hook nil
-  "Hook to run when a new text is created.
+(def-kom-var kom-new-text-hook nil
+  "*Hook to run when a new text is created.
 This hook is run after the prompt is removed if it shall be changed but before
 the text \"Text 4711 är skapad!\" is printed in the message area. And before the
 new prompt is printed."
   local-hook)
 
-(def-kom-var lyskom-deleted-text-hook nil
-  "Hook to run when a text is deleted.
+(def-kom-var lyskom-new-text-hook nil
+  "*Obsolete synonym for kom-new-text-hook"
+  local-hook)
+
+(def-kom-var kom-deleted-text-hook nil
+  "*Hook to run when a text is deleted.
 This hook is run after the prompt is removed if it shall be changed but 
 before the new prompt is printed."
   local-hook)
 
-(def-kom-var lyskom-new-recipient-hook nil
-  "Hook to run when a text receives a new recipient.
+(def-kom-var lyskom-deleted-text-hook nil
+  "*Obsolete synonym for kom-deleted-text-hook."
+  local-hook)
+
+(def-kom-var kom-new-recipient-hook nil
+  "*Hook to run when a text receives a new recipient.
 This hook is run after the prompt is removed if it shall be changed but before
 the new prompt is printed. It is not run if the text has been marked as read
 in any conference other than the person's letterbox."
+  local-hook)
+
+(def-kom-var lyskom-new-recipient-hook nil
+  "*Obsolete synonym for kom-new-recipient-hook."
   local-hook)
 
 ;;(def-kom-var lyskom-who-info-has-changed-hook nil
@@ -2458,12 +2516,16 @@ in any conference other than the person's letterbox."
 ;;who-info-buffer."
 ;;  server)
 
-(def-kom-var lyskom-personal-message-hook nil
+(def-kom-var kom-personal-message-hook nil
   "*Hook to run when a personal message is received.
 When the hook is run, 'sender' is bound to the conf-stat of the sender
 of the message (or possibly nil), 'recipient' is 0 if the message is a
 public message and otherwise the conf-stat of the recipient, and
 'message' is a string that holds the message."
+  local-hook)
+
+(def-kom-var lyskom-personal-message-hook nil
+  "*Obsolete synonym for kom-personal-message-hook."
   local-hook)
 
 
@@ -2599,7 +2661,7 @@ See lyskom-compute-char-classes."
   local)
 
 (def-kom-var lyskom-allow-missing-subject nil
-             "If non-nil allow texts without subjects.")
+  "If non-nil allow texts without subjects.")
 
 (def-kom-var kom-w3-simplify-body t
   "*Strip color information from body tag."
@@ -2806,12 +2868,21 @@ the value of  kom-tell-phrases for fun.")
 ;;;          Externally defined variables (environment)
 
 
+(defvar kom-default-server nil
+  "*Setting this variable does nothing. See lyskom-default-server instead.")
+
 (def-kom-var lyskom-default-server "kom.lysator.liu.se"
   "*Default LysKOM server.")
+
+(defvar kom-default-user-name nil
+  "*Setting this variable does nothing. See lyskom-default-user-name instead.")
 
 (def-kom-var lyskom-default-user-name nil
   "*Default LysKOM user name."
   local)
+
+(defvar kom-default-password nil
+  "*Setting this variable does nothing. See lyskom-default-password instead.")
 
 (def-kom-var lyskom-default-password nil
   "Default LysKOM password."
@@ -2832,6 +2903,9 @@ the value of  kom-tell-phrases for fun.")
 		    kom-first-line-face kom-warning-face kom-mark-face
                     kom-text-body-face kom-dashed-lines-face kom-dim-face)
   "This is a list of the faces that LysKOM uses.")
+
+(defvar kom-face-schemes nil
+  "*Setting this variable does nothing. See lyskom-face-schemes instead.")
 
 (def-kom-var lyskom-face-schemes
   '((default
@@ -2868,7 +2942,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-dim-face nil "DarkSlateGray")
      (kom-friends-face nil "Gold" "Black")
      (kom-morons-face nil "Gold" "Black")
-     (kom-warning-face 'bold "Red" nil)
+     (kom-warning-face bold "Red" nil)
      )
     (black-and-tan
       (kom-text-body-face nil nil "#f8f8f0")
@@ -2960,7 +3034,7 @@ the value of  kom-tell-phrases for fun.")
      (kom-dashed-lines-face nil  nil          "lavender")
      (kom-dim-face       default   "gray"       nil)
      ))
-  "Face schemes for LysKOM.
+  "*Face schemes for LysKOM.
 
 This variable is an association list that defines the face and color
 schemes in LysKOM. The car of each element is the scheme key, a

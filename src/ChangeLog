@@ -1,3 +1,92 @@
+2002-05-06  David Byers  <david.byers@swipnet.se>
+
+	* utilities.el (lyskom-unicase): Get the length from the converted
+	string and not the string, because for some reason they don't come
+	out the same every time (and this is *probably* an Emacs bug).
+
+2002-05-05  David Byers  <david.byers@swipnet.se>
+
+	* commands2.el (kom-compare-texts): Catch the file-error that
+	occurs when the external diff command is missing.
+
+	* vars.el.in: Changed all hooks that are for users to play with
+	from lyskom-<foo> to kom-<foo>. The lyskom-<foo> versions still
+	work but are discouraged. Created dummy variables for some
+	configuration variables that I did not dare change right now. It
+	should now be possible to get all the user-accessible
+	configuration parameters and hooks when doing apropos on ^kom.
+
+	* async.el (lyskom-default-new-text-hook): Run kom-new-text-hook
+	when running lyskom-new-text-hook.
+	(lyskom-default-deleted-text-hook): Run kom-deleted-text-hook when
+	running lyskom-deleted-text-hook.
+	(lyskom-default-new-recipient-hook): Run kom-new-recipient-hook
+	when running lyskom-new-recipient-hook.
+	(lyskom-show-personal-message): Run kom-personal-message-hook when
+	running lyskom-personal-message-hook.
+
+	* edit-text.el (lyskom-edit-send): Run kom-create-text-hook when
+	running lyskom-create-text-hook.
+
+	* vars.el.in (kom-filter-outgoing-messages): Renamed from
+	lyskom-filter-outgoing-messages.
+
+	* commands1.el (lyskom-go-to-empty-conf): Run
+	kom-after-change-conf-hook when running
+	lyskom-after-change-conf-hook.
+
+	* user-hooks.el: Changed docstring references to
+	lyskom-change-conf-hook to kom-change-conf-hook. Changed docstring
+	references to lyskom-after-change-conf-hook to
+	kom-after-change-conf-hook.
+
+	* startup.el (kom-start-anew): Run kom-change-conf-hook when
+	running lyskom-change-conf-hook.
+
+	* commands1.el (lyskom-go-to-empty-conf): Run kom-change-conf-hook
+	when running lyskom-change-conf-hook.
+
+	* lyskom-rest.el: Run kom-after-load-hook when running
+	lyskom-after-load-hook.
+
+	* commands2.el (lyskom-send-message): Call kom-send-message-hook
+	when calling lyskom-send-message-hook.
+	(lyskom-send-message-minibuffer-setup-hook): Call
+	kom-send-message-setup-hook when calling
+	lyskom-send-message-setup-hook.
+	(lyskom-send-message-minibuffer-exit-hook): run
+	kom-send-message-exit-hook when calling
+	lyskom-send-message-exit-hook.
+	(lyskom-send-message-turn-off-resize-on-exit): Use
+	kom-send-message-exit-hook instead of
+	lyskom-send-message-exit-hook.
+	(lyskom-send-message-resize-minibuffer): Same here.
+
+	* view-text.el: Changed all docstring references to
+	lyskom-view-text-hook to kom-view-text-hook. Call
+	kom-view-text-hook when lyskom-view-text-hook is called.
+
+	* lyskom-rest.el (lyskom-do-insert): Allow special-insert to be a
+	list, where the car is the function to call and cdr are the
+	arguments to the function.
+	(lyskom-format-transform-result): New function.
+	(lyskom-special-insert-overlay): New function.
+	(lyskom-do-insert): We were unable to handle special-insert
+	properties that were adjacent to each others.
+
+	* async.el (lyskom-format-as-personal-message): Updated to handle
+	new format strings that have overlays for text and dashed lines.
+
+	* commands2.el (lyskom-send-message): Same here.
+
+	* startup.el (lyskom): Optionally highlight motd-of-lyskom
+
+	Added my hook functions:
+	* user-hooks.el (kom-read-last-text-hook): New function.
+	(kom-list-summary-hook): New function.
+	(kom-read-last-text-hook-conf-list): New variable.
+	(kom-list-summary-hook-conf-list): New variable.
+
 2002-05-05  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* commands2.el (kom-obsolete-extended-command-binding): Balanced

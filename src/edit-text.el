@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.98 2002-04-28 11:50:35 byers Exp $
+;;;;; $Id: edit-text.el,v 44.99 2002-05-07 20:12:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.98 2002-04-28 11:50:35 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.99 2002-05-07 20:12:11 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -505,10 +505,10 @@ anonymously and take actions to avoid revealing the sender."
               ;; Run user hooks
               ;; ####: ++++: FIXME: We should quit more graciously.
 
-              (if (not (run-hook-with-args-until-failure 
-                        'lyskom-send-text-hook))
+              (if (and (not (run-hook-with-args-until-failure 'kom-send-text-hook))
+                       (not (run-hook-with-args-until-failure 'lyskom-send-text-hook)))
                   (signal 'lyskom-edit-text-abort nil))
-                                                
+
               ;;
               ;; Transform the message text
               ;;
@@ -582,6 +582,20 @@ anonymously and take actions to avoid revealing the sender."
                                 aux-list)
                               buffer
                               is-anonymous)
+                  (run-hook-with-args 'kom-create-text-hook
+                              full-message
+                              misc-list
+                              (if (not is-anonymous)
+                                  (cons (lyskom-create-aux-item
+                                         0 15 0 0
+                                         (lyskom-create-aux-item-flags
+                                          nil nil nil nil nil nil nil nil)
+                                         0 (concat "lyskom.el "
+                                                   lyskom-clientversion))
+                                        aux-list)
+                                aux-list)
+                              buffer
+                              is-anonymous)
 
                   (funcall send-function
                            'sending
@@ -632,7 +646,7 @@ anonymously and take actions to avoid revealing the sender."
 
 (defun lyskom-ispell-text ()
   "Check spelling of the text body.
-Put this in lyskom-send-text-hook"
+Put this in kom-send-text-hook"
   (kom-ispell-message)
   t)
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.238 2002-05-01 21:42:40 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.239 2002-05-07 20:12:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.238 2002-05-01 21:42:40 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.239 2002-05-07 20:12:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -646,33 +646,45 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (his-total-unread . "\n%#1M har totalt %#2d olästa.\n")
     (message-prompt . "Meddelande: ")
     (message-sent-to-user . "\
+%[%#3$\
 ================================================================
+%]%[%#4$\
 Ditt meddelande till %#2M:
 
 %#1t
+%]%[%#3$\
 ----------------------------------------------------------------
-")
+%]")
     (message-sent-to-all . "\
+%[%#3$\
 ================================================================
+%]%[%#4$\
 Ditt alarmmeddelande löd:
 
 %#1t
+%]%[%#3$\
 ----------------------------------------------------------------
-")
+%]")
     (message-sent-to-user-long . "\
+%[%#3$\
 ===============================================================================
+%]%[%#4$\
 Ditt meddelande till %#2M:
 
 %#1t
+%]%[%#3$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-sent-to-all-long . "\
+%[%#3$\
 ===============================================================================
+%]%[%#4$\
 Ditt alarmmeddelande löd:
 
 %#1t
+%]%[%#3$\
 -------------------------------------------------------------------------------
-")
+%]")
     (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
     (message-all-info . "Sänd alarmmeddelande\n")
     (message-recipient-info . "Sänd meddelande till %#1M\n")
@@ -986,47 +998,65 @@ använda kommandot 'Bli medlem i möte' för att acceptera inbjudan.\n")
     (have-become-passive-member . "Du har blivit passiv medlem i %#1M.\n")
 
     (message-broadcast . "\
+%[%#4$\
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#5$\
 Alarmmeddelande från %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 ----------------------------------------------------------------
-")
-    (message-from . "\
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Personligt meddelande från %#1P (%#3s):
-
-%#2t
-----------------------------------------------------------------
-")
-    (message-from-to . "\
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
-
-%#1t
-----------------------------------------------------------------
-")
+%]")
     (message-broadcast-long . "\
+%[%#4$\
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#5$\
 Alarmmeddelande från %#1P (%#3s):
 
 %#2t
+%]%[%#4$\
 -------------------------------------------------------------------------------
-")
-    (message-from-long . "\
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]")
+    (message-from . "\
+%[%#4$\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#5$\
 Personligt meddelande från %#1P (%#3s):
 
 %#2t
--------------------------------------------------------------------------------
-")
-    (message-from-to-long . "\
+%]%[%#4$\
+----------------------------------------------------------------
+%]")
+    (message-from-long . "\
+%[%#4$\
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#5$\
+Personligt meddelande från %#1P (%#3s):
+
+%#2t
+%]%[%#4$\
+-------------------------------------------------------------------------------
+%]")
+    (message-from-to . "\
+%[%#5$\
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#6$\
 Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
 
 %#1t
+%]%[%#5$\
+----------------------------------------------------------------
+%]")
+    (message-from-to-long . "\
+%[%#5$\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%]%[%#6$\
+Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
+
+%#1t
+%]%[%#5$\
 -------------------------------------------------------------------------------
-")
+%]")
     (text-is-created . "Text %#1n är skapad!")
 
     ;; Used in mode-line-process
@@ -1709,6 +1739,8 @@ Antal sessioner:     %21#1d (totalt)
 
     (kom-redirect-comments-e49 . "Du har inte rätt att ändra denna omdirigering")
     (kom-redirect-comments-e48 . "Omdirigering av kommentarer stöds inte av servern")
+
+    (external-program-missing . "Hittar inte det externa programmet \"%#1s\" som krävs för att genomföra kommandot.")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -3613,7 +3645,7 @@ i servern. Annars sparas det i din .emacs.")
   eller allmänna meddelandet) skall vara mottagare.")
 
 
-    (lyskom-filter-outgoing-messages-doc . "\
+    (kom-filter-outgoing-messages-doc . "\
   Om denna inställning är påslagen så kommer meddelanden som skickas 
   automatiskt, till exempel automatiska svar och svar på fjärrkontrollförsök
   även att visas som om man hade skickat det manuellt.")
@@ -4028,7 +4060,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-ding-on-personal-messages-tag . "Vid personliga meddelanden:         ")
     (kom-ding-on-no-subject-tag        . "När ärenderad saknas:               ")
 
-    (lyskom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
+    (kom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
     (kom-friends-tag . "Vänner och bekanta:")
     (kom-morons-tag . "Idioter och knäppskallar:")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")

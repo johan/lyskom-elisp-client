@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.129 2002-05-05 19:19:35 qha Exp $
+;;;;; $Id: commands2.el,v 44.130 2002-05-07 20:12:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.129 2002-05-05 19:19:35 qha Exp $\n"))
+              "$Id: commands2.el,v 44.130 2002-05-07 20:12:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -587,13 +587,17 @@ author of that text will be shown."
 
 (defun lyskom-send-message-minibuffer-setup-hook ()
   (unwind-protect
-      (run-hooks 'lyskom-send-message-setup-hook)
+      (progn
+        (run-hooks 'lyskom-send-message-setup-hook)
+        (run-hooks 'kom-send-message-setup-hook))
     (remove-hook 'minibuffer-setup-hook 
                  'lyskom-send-message-minibuffer-setup-hook)))
 
 (defun lyskom-send-message-minibuffer-exit-hook ()
   (unwind-protect
-      (run-hooks 'lyskom-send-message-exit-hook)
+      (progn
+        (run-hooks 'lyskom-send-message-exit-hook)
+        (run-hooks 'kom-send-message-exit-hook))
     (remove-hook 'minibuffer-exit-hook
                  'lyskom-send-message-minibuffer-exit-hook)))
 
@@ -622,6 +626,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                                                   pers-no)))
 
     (run-hooks 'lyskom-send-message-hook)
+    (run-hooks 'kom-send-message-hook)
     (if lyskom-message-string
         (progn
           (setq reply (blocking-do 'send-message pers-no
@@ -630,16 +635,16 @@ send. If DONTSHOW is non-nil, don't display the sent message."
           (if reply
               (if (not dontshow)
                   (lyskom-handle-as-personal-message
-                   (if lyskom-message-recipient
-                       (lyskom-format (lyskom-get-string-sol 
-                                       'message-sent-to-user)
-                                      lyskom-message-string 
-                                      lyskom-message-recipient)
-                     (lyskom-format (lyskom-get-string-sol 
-                                     'message-sent-to-all)
-                                    lyskom-message-string))
+                   (lyskom-format
+                    (if lyskom-message-recipient
+                        (lyskom-get-string-sol 'message-sent-to-user)
+                      (lyskom-get-string-sol 'message-sent-to-all))
+                    lyskom-message-string 
+                    lyskom-message-recipient
+                    '(face kom-dashed-lines-face)
+                    '(face kom-text-body-face))
                    lyskom-pers-no
-                   lyskom-filter-outgoing-messages))
+                   kom-filter-outgoing-messages))
             (lyskom-format-insert-before-prompt
              'message-nope 
              (or lyskom-message-recipient
@@ -667,7 +672,7 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 
 (defun lyskom-send-message-turn-off-resize-on-exit ()
   (resize-minibuffer-mode -1)
-  (remove-hook 'lyskom-send-message-exit-hook
+  (remove-hook 'kom-send-message-exit-hook
                'lyskom-send-message-turn-off-resize-on-exit))
 
 (defvar resize-minibuffer-mode)
@@ -676,8 +681,8 @@ send. If DONTSHOW is non-nil, don't display the sent message."
   (unless resize-minibuffer-mode
     (resize-minibuffer-mode 1)
     (resize-minibuffer-setup)
-    (add-hook 'lyskom-send-message-exit-hook
-              'lyskom-send-message-turn-off-resize-on-exit)))
+    (add-hook 'kom-send-message-exit-hook
+              'kom-send-message-turn-off-resize-on-exit)))
 
 
 (defun lyskom-send-message-auto-fill ()
@@ -2515,6 +2520,7 @@ configurable variable `kom-review-marks-texts-as-read' in the current buffer."
     (set-buffer-modified-p nil)
     buf))
 
+(defvar diff-command)
 (def-kom-command kom-compare-texts (old new)
   "Show differences between text OLD and NEW.
 When called interactively, it will prompt for the NEW text first,
@@ -2533,9 +2539,14 @@ to the first text that NEW is a comment or footnote to."
 			 (new-text (get-text new))
 			 (old-text-stat (get-text-stat old))
 			 (new-text-stat (get-text-stat new)))
-    (ediff-buffers
-     (lyskom-create-text-buffer old old-text old-text-stat)
-     (lyskom-create-text-buffer new new-text new-text-stat))))
+    (condition-case nil
+        (ediff-buffers
+         (lyskom-create-text-buffer old old-text old-text-stat)
+         (lyskom-create-text-buffer new new-text new-text-stat))
+      (file-error (lyskom-error (lyskom-get-string 'external-program-missing)
+                                (if (boundp 'diff-command)
+                                    diff-command
+                                  "diff"))))))
 
 ;;; ================================================================
 ;;;             Se diff - View diff

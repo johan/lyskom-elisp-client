@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.42 2002-04-10 19:50:24 byers Exp $
+;;;;; $Id: async.el,v 44.43 2002-05-07 20:12:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.42 2002-04-10 19:50:24 byers Exp $\n"))
+	      "$Id: async.el,v 44.43 2002-05-07 20:12:11 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -466,7 +466,8 @@ Args: SENDER: conf-stat for the person sending the message.
                           lyskom-pers-no)))
             (conf-stat->name recipient)
           nil))
-  (run-hooks 'lyskom-personal-message-hook))
+  (run-hooks 'lyskom-personal-message-hook)
+  (run-hooks 'kom-personal-message-hook))
 
 
 (defun lyskom-insert-personal-message (sender recipient message
@@ -524,7 +525,9 @@ Non-nil NOBEEP means don't beep."
                            (sender sender)
                            (t (lyskom-get-string 'unknown)))
                           message
-                          when))
+                          when
+                          '(face kom-dashed-lines-face)
+                          '(face kom-text-body-face)))
           ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
            (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages sender))
            (lyskom-format (lyskom-get-string-sol 'message-from)
@@ -533,7 +536,9 @@ Non-nil NOBEEP means don't beep."
                            (sender sender)
                            (t (lyskom-get-string 'unknown)))
                           message
-                          when))
+                          when
+                          '(face kom-dashed-lines-face)
+                          '(face kom-text-body-face)))
           (t                            ; Group message
            (if (not nobeep) (lyskom-beep kom-ding-on-group-messages recipient))
            (lyskom-format (lyskom-get-string-sol 'message-from-to)
@@ -546,7 +551,9 @@ Non-nil NOBEEP means don't beep."
                            ((stringp recipient) recipient)
                            (recipient recipient)
                            (t (lyskom-get-string 'unknown)))
-                          when)))))
+                          when
+                          '(face kom-dashed-lines-face)
+                          '(face kom-text-body-face))))))
 
 
   
@@ -631,7 +638,8 @@ converted, before insertion."
   (when (and (not lyskom-dont-change-prompt) ;We shall change it
              (not lyskom-executing-command)) ;We have time to do it.
     (lyskom-update-prompt))
-  (run-hooks 'lyskom-new-recipient-hook))
+  (run-hooks 'lyskom-new-recipient-hook)
+  (run-hooks 'kom-new-recipient-hook))
 
 
 
@@ -647,6 +655,7 @@ converted, before insertion."
 
   (let ((no-message nil))
     (run-hooks 'lyskom-new-text-hook)
+    (run-hooks 'kom-new-text-hook)
   
     (if (and (not no-message)
 	     lyskom-is-waiting
@@ -659,7 +668,8 @@ converted, before insertion."
   (if (and (not lyskom-dont-change-prompt) ;We shall change it
 	   (not lyskom-executing-command)) ;We have time to do it.
       (lyskom-update-prompt))
-  (run-hooks 'lyskom-deleted-text-hook))
+  (run-hooks 'lyskom-deleted-text-hook)
+  (run-hooks 'kom-deleted-text-hook))
 
 (defun lyskom-async-new-text (text-stat)
   "Take care of a message that a new text has been created."
