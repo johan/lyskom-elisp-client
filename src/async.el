@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.46 2002-08-05 18:14:39 byers Exp $
+;;;;; $Id: async.el,v 44.47 2002-08-05 18:18:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.46 2002-08-05 18:14:39 byers Exp $\n"))
+	      "$Id: async.el,v 44.47 2002-08-05 18:18:43 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -709,7 +709,7 @@ converted, before insertion."
 		      "Unexpected misc-info in new text "
 		      type))))))
 
-;  (lyskom-prefetch-text-stat-all text-stat)
+  (lyskom-prefetch-text-stat-all text-stat)
 
   ;; Give a message if the user is waiting. Update the prompt.
   (lyskom-run 'async 'lyskom-default-new-text-hook text-stat)
