@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.95 2001-05-09 09:07:05 byers Exp $
+ ;;;;; $Id: commands2.el,v 44.96 2001-05-24 12:02:34 byers Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.95 2001-05-09 09:07:05 byers Exp $\n"))
+               "$Id: commands2.el,v 44.96 2001-05-24 12:02:34 byers Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -939,23 +939,36 @@
    (interactive)
    (if (read-list-isempty lyskom-reading-list)
        (lyskom-insert-string 'have-to-be-in-conf-with-unread)
+     (lyskom-list-summary nil)))
 
-     (lyskom-list-summary
-       (text-list->texts 
-        (read-info->text-list 
-         (let ((len (read-list-length lyskom-reading-list))
-               (r 0))
-           (while (< r len)
-             (let ((type (read-info->type 
-                          (read-list->nth lyskom-reading-list
-                                          r))))
-               (if (memq type '(CONF REVIEW-MARK REVIEW))
-                   (setq len 0)
-                 (++ r))))
-           (read-list->nth lyskom-reading-list r)))))))
+(defun lyskom-list-summary (conf-no)
+  "List a summary of unread texts in conference CONF-NO.
+If CONF-NO is nil, list the first text-list element in lyskom-reading-list.
 
+The summary contains the date, number of lines, author and subject of 
+the text on one line."
+  (let* ((read-info nil)
+         (read-list (if conf-no lyskom-to-do-list lyskom-reading-list))
+         (len (read-list-length read-list))
+         (r 0))
+    (while (< r len)
+      (if (or (and conf-no 
+                   (eq (read-info->type (read-list->nth read-list r)) 'CONF)
+                   (eq conf-no (conf-stat->conf-no 
+                                (read-info->conf-stat
+                                 (read-list->nth read-list r)))))
+              (and (null conf-no)
+                   (memq (read-info->type (read-list->nth read-list r))
+                         '(CONF REVIEW-MARK REVIEW))))
+          (setq len 0)
+        (setq r (1+ r))))
+    (setq read-info (read-list->nth read-list r))
+    (when read-info
+      (lyskom-do-list-summary
+       (text-list->texts (read-info->text-list read-info))))
+    ))
 
- (defun lyskom-list-summary (texts)
+(defun lyskom-do-list-summary (texts)
    "List a summary of the texts in TEXTS.
  The summary contains the date, number of lines, author and subject of the text
  on one line."

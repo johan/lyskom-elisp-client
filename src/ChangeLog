@@ -1,4 +1,30 @@
+2001-05-24  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-after-change-conf-hook): New hook.
+
+	* commands1.el (lyskom-go-to-empty-conf): Call
+	lyskom-after-change-conf-hook.
+
+	* commands2.el: Use new lyskom-list-summary.
+	(lyskom-list-summary): New function generalizes kom-list-summary.
+	(lyskom-do-list-summary): New name for old lyskom-list-summary.
+
+	* utilities.el (lyskom-run-hook-with-args): Use
+	lyskom-save-excursion, not save-excursion, so printing moves point
+	properly in hooks.
+
+	* lyskom-rest.el (lyskom-enter-conf): Add
+	lyskom-after-change-conf-hook. Use to-conf and from-conf.
+
+2001-05-23  David Byers  <davby@ida.liu.se>
+
+	* commands1.el: Change presentation works even if the old
+	presentation has been deleted.
+
 2001-05-22  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-mx-date-to-time): Deal with really strange
+	dates that result in negative day numbers.
 
 	* commands1.el (kom-review-presentation): Print FAQs as if they
 	were comments.

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.137 2001-05-21 12:39:28 byers Exp $
+;;;;; $Id: vars.el.in,v 44.138 2001-05-24 12:02:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.137 2001-05-21 12:39:28 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.138 2001-05-24 12:02:37 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -487,7 +487,19 @@ signal success and nil to prevent the text from being sent."
 (def-kom-var lyskom-change-conf-hook nil
   "*Hook to run when changing conferences.
 The functions in this list are run with two arguments. The first is the 
-current conf-no and the second is the conf-no being changed to."
+current conf-no and the second is the conf-no being changed to.
+
+This hook is run before lyskom-current-conf is changed, and before any
+standard messages have been printed."
+  local-hook)
+
+(def-kom-var lyskom-after-change-conf-hook nil
+  "*Hook to run when changing conferences.
+The functions in this list are run with two arguments. The first is the 
+current conf-no and the second is the conf-no being changed to.
+
+This hook is run after lyskom-current-conf is changed, and after any
+standard messages have been printed."
   local-hook)
 
 (def-kom-var lyskom-login-hook nil
