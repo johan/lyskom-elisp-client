@@ -1,3 +1,9 @@
+Fri Nov 17 00:30:20 1995  Linus Tolke Y  <linus@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-filter): Enkel fix som gör att den bara
+	  startar parsningen om den mottagit minst ett newline.
+	  (det går mellan två och tre gånger så snabbt att logga in.)
+	
 Mon Nov 13 13:38:06 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* commands1.el (kom-unset-conf-motd): Klarade inte tomt svar för
