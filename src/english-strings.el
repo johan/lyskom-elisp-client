@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.6 1996-05-20 16:28:21 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.7 1996-05-27 20:35:45 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.6 1996-05-20 16:28:21 davidk Exp $"))
+              "$Id: english-strings.el,v 41.7 1996-05-27 20:35:45 davidk Exp $"))
 
 
 
@@ -394,6 +394,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
+    (show-membership-info-q . "Show number of unreads? ")
     (conf-has-these-members . "\n%#1M has the following members:\n")
     (member-list-header . "Last entered       Unread  Name\n\n")
     (secret-membership . "--- Secret line ---\n")
@@ -442,6 +443,8 @@ Your public message:
 %#1t
 ----------------------------------------------------------------
 ")
+    (message-all-info . "Send public message\n")
+    (message-recipient-info . "Send message to %#1M\n")
     (message-nope .
      "Unable to send the message. Perhaps the recipient isn't logged on.
 The message you were sending to %#1M was:
@@ -668,7 +671,7 @@ Personal message from %#1P (%#3s):
 ")
     (message-from-to .
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Group message to %#3M from %#2P (%#4s):
+Group message to %#3M\nfrom %#2P (%#4s):
 
 %#1t
 ----------------------------------------------------------------

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 41.4 1996-05-20 16:28:15 davidk Exp $
+;;;;; $Id: commands2.el,v 41.5 1996-05-27 20:35:40 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 41.4 1996-05-20 16:28:15 davidk Exp $\n"))
+	      "$Id: commands2.el,v 41.5 1996-05-27 20:35:40 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -135,17 +135,18 @@ otherwise: the conference is read with lyskom-completing-read."
 			      conf-stat
 			      (cond
 			       ((or box ori pro sec)
-				(concat "("
-					(if box (lyskom-get-string 'Mailbox) "")
-					(if (and box (or sec ori pro)) ", " "")
-					(if sec (lyskom-get-string
-						 'Protected) "")
-					(if (and sec (or ori pro)) ", " "")
-					(if ori (lyskom-get-string
-						 'no-comments) "")
-					(if (and ori pro) ", " "")
-					(if pro (lyskom-get-string 'closed) "")
-					")"))
+				(concat
+				 "("
+				 (if box (lyskom-get-string 'Mailbox) "")
+				 (if (and box (or sec ori pro)) ", " "")
+				 (if sec (lyskom-get-string
+					  'Protected) "")
+				 (if (and sec (or ori pro)) ", " "")
+				 (if ori (lyskom-get-string
+					  'no-comments) "")
+				 (if (and ori pro) ", " "")
+				 (if pro (lyskom-get-string 'closed) "")
+				 ")"))
 			       (t ""))))
       (let ((creator (conf-stat->creator conf-stat)))
 	(lyskom-format-insert 'created-by
@@ -206,40 +207,50 @@ otherwise: the conference is read with lyskom-completing-read."
 
       ;; Show all members of CONF-STAT if the user so wishes."
       (lyskom-scroll)
-      (if (null (lyskom-j-or-n-p
-		 (lyskom-get-string 'show-members-list-also-q)))
-	  nil
-	(let ((member-list (blocking-do 'get-members
-					(conf-stat->conf-no conf-stat)
-					0 lyskom-max-int)))
-
-	  (lyskom-format-insert 'conf-has-these-members
-				conf-stat)
-	  (lyskom-insert-string 'member-list-header)
-	  (lyskom-traverse 
-	      member (conf-no-list->conf-nos member-list)
-	    (let ((membership (blocking-do 'query-read-texts 
-					   member
-					   (conf-stat->conf-no conf-stat))))
-	      ;; Print a row describing the membership of MEMBER
-	      ;; (described by MEMBERSHIP) in CONF-STAT.
-	      (if (or (null membership))
-		  (lyskom-insert-string 'secret-membership)
-		(lyskom-insert 
-		 (format "%17s"
-			 (lyskom-return-date-and-time
-			  (membership->last-time-read membership))))
-		(let ((unread (- (+ (conf-stat->first-local-no conf-stat)
-				    (conf-stat->no-of-texts conf-stat))
-				 (membership->last-text-read membership)
-				 (length (membership->read-texts
-					  membership))
-				 1)))
-		  (lyskom-format-insert 'conf-membership-line
-					(if (zerop unread)
-					    "         "
-					  (format "%7d  " unread))
-					member))))))))))
+      (if (lyskom-j-or-n-p
+	   (lyskom-get-string 'show-members-list-also-q))
+	  (let ((member-list (blocking-do 'get-members
+					  (conf-stat->conf-no conf-stat)
+					  0 lyskom-max-int)))
+	    
+	    (lyskom-format-insert 'conf-has-these-members
+				  conf-stat)
+	    (if (lyskom-j-or-n-p (lyskom-get-string 'show-membership-info-q))
+		
+		(progn
+		  (lyskom-insert-string 'member-list-header)
+		  (lyskom-traverse 
+		   member (conf-no-list->conf-nos member-list)
+		   (let ((membership (blocking-do
+				      'query-read-texts 
+				      member
+				      (conf-stat->conf-no conf-stat))))
+		     ;; Print a row describing the membership of MEMBER
+		     ;; (described by MEMBERSHIP) in CONF-STAT.
+		     (if (or (null membership))
+			 (lyskom-insert-string 'secret-membership)
+		       (lyskom-insert 
+			(format "%17s"
+				(lyskom-return-date-and-time
+				 (membership->last-time-read membership))))
+		       (let ((unread (- (+ (conf-stat->first-local-no
+					    conf-stat)
+					   (conf-stat->no-of-texts conf-stat))
+					(membership->last-text-read membership)
+					(length (membership->read-texts
+						 membership))
+					1)))
+			 (lyskom-format-insert 'conf-membership-line
+					       (if (zerop unread)
+						   "         "
+						 (format "%7d  " unread))
+					       member))))))
+	      
+	      ;; Don't show membership info
+	      (lyskom-insert "\n")
+	      (lyskom-traverse
+	       member (conf-no-list->conf-nos member-list)
+	       (lyskom-format-insert "  %#1P\n" member))))))))
 
 
 ;;; ================================================================
@@ -308,7 +319,7 @@ otherwise: the conference is read with lyskom-completing-read."
 			    (pers-stat->read-texts pers-stat))
       (if (= (pers-stat->pers-no pers-stat) lyskom-pers-no)
           (lyskom-format-insert 'marked-texts
-                            (pers-stat->no-of-marks pers-stat)))
+				(pers-stat->no-of-marks pers-stat)))
       (lyskom-format-insert 'time-for-last-letter
 			    (lyskom-return-date-and-time
 			     (conf-stat->last-written conf-stat)))
@@ -344,52 +355,50 @@ otherwise: the conference is read with lyskom-completing-read."
 			    (conf-stat->conf-no conf-stat)))
 	      (lyskom-count-var 0))
 
-	  ;; "Receive an array of memberships and print them using
-	  ;; lyskom-status-pers-5.
 	  (if (null membership-list)
 	      (lyskom-format-insert 'not-allowed-see-confs conf-stat)
 	    (lyskom-format-insert 'is-member-of conf-stat)
 	    (lyskom-insert-string 'membership-list-header)
 	    (setq lyskom-count-var 0)
 	    (lyskom-traverse
-		membership membership-list
-	      (let ((cs (cache-get-conf-stat
-			 (membership->conf-no membership))))
-		(and cs
-		     (lyskom-time-greater
-		      (membership->last-time-read membership)
-		      (conf-stat->last-written conf-stat))
-		     (cache-del-conf-stat (membership->conf-no membership))))
+	     membership membership-list
+	     (let ((cs (cache-get-conf-stat
+			(membership->conf-no membership))))
+	       (and cs
+		    (lyskom-time-greater
+		     (membership->last-time-read membership)
+		     (conf-stat->last-written conf-stat))
+		    (cache-del-conf-stat (membership->conf-no membership))))
 		  
-	      ;; "Print a row describing the membership of
-	      ;; MEMBER-CONF-STAT
-	      (let ((member-conf-stat
-		     (blocking-do 'get-conf-stat 
-				  (membership->conf-no membership))))
-		(if (or (null member-conf-stat)
-			(null membership))
-		    (lyskom-insert-string 'secret-membership)
-          (lyskom-insert 
-           (format "%17s"
-                   (lyskom-return-date-and-time
-                    (membership->last-time-read membership))))
-		  (let ((unread (- (+ (conf-stat->first-local-no
-				       member-conf-stat)
-				      (conf-stat->no-of-texts
-				       member-conf-stat))
-				   (membership->last-text-read membership)
-				   (length (membership->read-texts
-					    membership))
-				   1)))
-		    (lyskom-format-insert
-		     'pers-membership-line
-		     (if (zerop unread) "       " (format "%6d " unread))
-		     (if (= (conf-stat->conf-no conf-stat)
-			    (conf-stat->supervisor member-conf-stat))
-			 (lyskom-get-string 'is-supervisor-mark)
-		       "  ")
-		     member-conf-stat)
-		    (setq lyskom-count-var (+ lyskom-count-var unread)))))))
+	     ;; "Print a row describing the membership of
+	     ;; MEMBER-CONF-STAT
+	     (let ((member-conf-stat
+		    (blocking-do 'get-conf-stat 
+				 (membership->conf-no membership))))
+	       (if (or (null member-conf-stat)
+		       (null membership))
+		   (lyskom-insert-string 'secret-membership)
+		 (lyskom-insert 
+		  (format "%17s"
+			  (lyskom-return-date-and-time
+			   (membership->last-time-read membership))))
+		 (let ((unread (- (+ (conf-stat->first-local-no
+				      member-conf-stat)
+				     (conf-stat->no-of-texts
+				      member-conf-stat))
+				  (membership->last-text-read membership)
+				  (length (membership->read-texts
+					   membership))
+				  1)))
+		   (lyskom-format-insert
+		    'pers-membership-line
+		    (if (zerop unread) "       " (format "%6d " unread))
+		    (if (= (conf-stat->conf-no conf-stat)
+			   (conf-stat->supervisor member-conf-stat))
+			(lyskom-get-string 'is-supervisor-mark)
+		      "  ")
+		    member-conf-stat)
+		   (setq lyskom-count-var (+ lyskom-count-var unread)))))))
 
 	  ;; "Print the total number of unread texts for the person CONF-STAT."
 	  (lyskom-format-insert 'his-total-unread 
@@ -409,31 +418,33 @@ otherwise: the conference is read with lyskom-completing-read."
 (def-kom-command kom-send-message (&optional who message)
   "Send a message to one of the users in KOM right now."
   (interactive)
-  (lyskom-send-message 
-   (or who
-       (lyskom-read-conf-no
-        (format (lyskom-get-string 'who-to-send-message-to)
-                (lyskom-get-string 'everybody))
-        'all t
-        ;; Initial string:
-        (cond
-         ((eq kom-default-message-recipient 'everybody) nil)
+  (let ((target (or who
+		    (lyskom-read-conf-no
+		     (format (lyskom-get-string 'who-to-send-message-to)
+			     (lyskom-get-string 'everybody))
+		     'all t
+		     ;; Initial string:
+		     (cond
+		      ((eq kom-default-message-recipient 'everybody) nil)
 
-         ((and (eq kom-default-message-recipient 'group)
-               lyskom-last-group-message-recipient)
-          (cons lyskom-last-group-message-recipient 0))
+		      ((and (eq kom-default-message-recipient 'group)
+			    lyskom-last-group-message-recipient)
+		       (cons lyskom-last-group-message-recipient 0))
 
-         ((or (and (eq kom-default-message-recipient 'group)
-                   (null lyskom-last-group-message-recipient))
-              (and (eq kom-default-message-recipient 'sender)
-                   lyskom-last-personal-message-sender))
-          (cons lyskom-last-personal-message-sender 0))
+		      ((or (and (eq kom-default-message-recipient 'group)
+				(null lyskom-last-group-message-recipient))
+			   (and (eq kom-default-message-recipient 'sender)
+				lyskom-last-personal-message-sender))
+		       (cons lyskom-last-personal-message-sender 0))
 
-         (t 
-          (if lyskom-last-personal-message-sender
-              (cons lyskom-last-personal-message-sender 0)
-            ""))) t))
-   message))
+		      (t 
+		       (if lyskom-last-personal-message-sender
+			   (cons lyskom-last-personal-message-sender 0)
+			 ""))) t))))
+    (if (zerop target)
+	(lyskom-insert 'message-all-info)
+      (lyskom-format-insert 'message-recipient-info target))
+    (lyskom-send-message target message)))
   
 
 (def-kom-command kom-send-alarm (&optional message)
@@ -1278,9 +1289,13 @@ membership info."
 	     (if (and (lyskom-buffer-p buf)
 		      (not (memq buf lyskom-buffer-list)))
 		 ;; This is a LysKOM buffer that we haven't seen yet --
-		 ;; add it to the end of lyskom-buffer-list.
-		 (setq lyskom-buffer-list
-		       (nconc lyskom-buffer-list (list buf))))))
+		 ;; If it is the current buffer, add it at the start
+		 ;; of lyskom-buffer-list, otherwise add it to the end
+		 (if (eq buf (current-buffer))
+		     (setq lyskom-buffer-list (cons buf
+						    lyskom-buffer-list))
+		   (setq lyskom-buffer-list
+			 (nconc lyskom-buffer-list (list buf)))))))
 	  (buffer-list))
   (mapcar (function
 	   (lambda (buf)
