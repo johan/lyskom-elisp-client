@@ -1,5 +1,9 @@
 2004-11-12  Pontus Freyhult  <pont@soua.net>
 
+	* vars.el.in (lyskom-commands): Added kom-list-sessions.
+
+	* menus.el (lyskom-menu-template): Added kom-list-sessions.
+
 	* commands2.el (kom-list-sessions): Sort first on priority, 
 	then on session name. Corrected bad usage of sort.
 	Handle nil entries in lyskom-list-news result.
