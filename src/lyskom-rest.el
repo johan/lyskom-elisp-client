@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.13 1996-07-17 08:59:52 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 41.14 1996-07-18 08:23:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.13 1996-07-17 08:59:52 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.14 1996-07-18 08:23:03 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2372,7 +2372,7 @@ Other objects are converted correctly."
    (lyskom-format-bool (conf-type->secret conf-type))
    (lyskom-format-bool (conf-type->letterbox conf-type))
    (if lyskom-long-conf-types-flag
-       (progn
+       (concat
          (lyskom-format-bool (conf-type->anarchy conf-type))
          (lyskom-format-bool (conf-type->rsv1 conf-type))
          (lyskom-format-bool (conf-type->rsv2 conf-type))
