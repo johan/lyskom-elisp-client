@@ -3,6 +3,10 @@
 Att göra i elisp-klienten
 =========================
 
+MULEifiera hanteringen av user-arean.
+
+Kolla att spara text sparar med en vettig kodning.
+
 Bli av med lyskom-is-parsing, gör parsern reentrant, installera
 reentrant blocking-do. Se över alla användningar av lyskom-wait-queue
 eftersom den just nu inte kan användas i svar på asynkront anrop.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.9 1998-06-02 12:14:45 byers Exp $
+;;;;; $Id: filter.el,v 44.10 1999-11-19 02:16:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.9 1998-06-02 12:14:45 byers Exp $\n"))
+	      "$Id: filter.el,v 44.10 1999-11-19 02:16:06 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -178,15 +178,6 @@ invalid-value until a filter action has been selected.")
     (let (subject text-stat)
       
       ;;
-      ;; Extract the subject
-      ;;
-      
-      (cond ((string-match "\n" (text->text-mass text))
-	     (setq subject 
-		   (substring (text->text-mass text) 0 (match-beginning 0))))
-	    (t (setq subject "")))
-      
-      ;;
       ;; Extract the text-stat which is the last element of data
       ;; Next shorten the list in data to exclude the text-stat.
       ;;
@@ -197,6 +188,15 @@ invalid-value until a filter action has been selected.")
 	(rplacd (nthcdr (- (length data) 2) data) nil))
       
       ;;
+      ;; Extract the subject
+      ;;
+      
+      (let ((str (text->decoded-text-mass text text-stat)))
+        (cond ((string-match "\n" str)
+               (setq subject (substring str 0 (match-beginning 0))))
+              (t (setq subject ""))))
+      
+      ;;
       ;; Do the checking
       ;;
       
@@ -205,7 +205,7 @@ invalid-value until a filter action has been selected.")
 				      author
 				      data
 				      subject
-				      (text->text-mass text)
+                                      (text->decoded-text-mass text text-stat)
 				      lyskom-filter-list)))))
 
 (defun lyskom-check-filter-list (text-stat
@@ -377,23 +377,21 @@ invalid-value until a filter action has been selected.")
 	(subject nil))
     (if text-stat
 	(blocking-do-multiple 
-	 ((text (get-text text-no))
-	  (conf-stat (get-conf-stat 
-		      (text-stat->author text-stat))))
-	 (if text
-	     (progn
-	       (setq subject
-		     (if (string-match "\n" (text->text-mass text))
-			 (substring (text->text-mass text) 
-				    0
-				    (match-beginning 0))
-		       (text->text-mass text)))
-	       (lyskom-format-insert prompt
-				     text-stat
-				     subject
-				     (or conf-stat
-					 (text-stat->author text-stat)))
-	       (lyskom-scroll))))))
+            ((text (get-text text-no))
+             (conf-stat (get-conf-stat 
+                         (text-stat->author text-stat))))
+          (if text
+              (let ((str (text->decoded-text-mass text text-stat)))
+                (setq subject
+                      (if (string-match "\n" str)
+                          (substring str 0 (match-beginning 0))
+                        str))
+                (lyskom-format-insert prompt
+                                      text-stat
+                                      subject
+                                      (or conf-stat
+                                          (text-stat->author text-stat)))
+                (lyskom-scroll))))))
   (setq lyskom-filter-hack nil))
 
 

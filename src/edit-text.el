@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.49 1999-11-17 23:11:36 byers Exp $
+;;;;; $Id: edit-text.el,v 44.50 1999-11-19 02:16:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.49 1999-11-17 23:11:36 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.50 1999-11-19 02:16:03 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -548,38 +548,71 @@ anonymously and take actions to avoid revealing the sender."
                                  (lyskom-edit-extract-text))
                       (lyskom-edit-extract-text)))
 
-              (lyskom-edit-sending-mode 1)
 	      (save-excursion
-                (let ((full-message
-                       (cond ((and lyskom-allow-missing-subject
-                                   (or (null subject)
-                                       (string= subject ""))
-                                   (not (string-match ".*\n" message)))
-                              message)
-                             (t (concat (or subject "") "\n" message)))))
+                (let* ((full-message
+                        (cond ((and lyskom-allow-missing-subject
+                                    (or (null subject)
+                                        (string= subject ""))
+                                    (not (string-match ".*\n" message)))
+                               message)
+                              (t (concat (or subject "") "\n" message))))
+                       (content-type (lyskom-get-aux-item aux-list 1))
+                       (charset (and content-type
+                                     (cdr (lyskom-mime-decode-content-type
+                                           (aux-item->data (car content-type))))))
+                       (mime-charset (lyskom-mime-string-charset full-message)))
 
-		(set-buffer lyskom-buffer)
-		;; Don't change the prompt if we won't see our own text
-		(if (and kom-created-texts-are-read
-                         (not is-anonymous))
-		    (setq lyskom-dont-change-prompt t))
-		(setq lyskom-is-writing nil)
-		(lyskom-tell-internat 'kom-tell-send)
-		(funcall send-function
-                         'sending
-                         'lyskom-create-text-handler
-                         full-message
-                         misc-list
-                         (unless is-anonymous
-                           (cons (lyskom-create-aux-item
-                                  0 15 0 0
-                                  (lyskom-create-aux-item-flags
-                                   nil nil nil nil nil nil nil nil)
-                                  0 (concat "lyskom.el "
-                                            lyskom-clientversion))
-                                 aux-list))
-                         buffer
-                         is-anonymous))))
+                  ;; If the charset isn't already set, encode the string
+
+                  (if (and mime-charset (null charset))
+                      (setq full-message
+                            (lyskom-mime-encode-string full-message))
+                    (when (lyskom-j-or-n-p 'too-many-languages)
+                      (keyboard-quit)))
+
+                  ;; Add the charset data to the content type
+
+                  (cond ((> (length content-type) 1)
+                         (lyskom-error (lyskom-get-string 'too-many-content-types)))
+                        ((null content-type)
+                         (setq aux-list
+                               (cons (lyskom-create-aux-item 0 1 nil nil
+                                                             (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
+                                                             0
+                                                             (format "x-kom/text;charset=%S" mime-charset))
+                                     aux-list)))
+                        ((null charset)
+                         (set-aux-item->data (car content-type)
+                                             (format "%s;charset=%S"
+                                                     (aux-item->data (car content-type))
+                                                     mime-charset))))
+
+                  ;; Send the text
+
+                  (lyskom-edit-sending-mode 1)
+                  (set-buffer lyskom-buffer)
+                  ;; Don't change the prompt if we won't see our own text
+                  (if (and kom-created-texts-are-read
+                           (not is-anonymous))
+                      (setq lyskom-dont-change-prompt t))
+                  (setq lyskom-is-writing nil)
+                  (lyskom-tell-internat 'kom-tell-send)
+                  (funcall send-function
+                           'sending
+                           'lyskom-create-text-handler
+                           full-message
+                           misc-list
+                           (if (not is-anonymous)
+                               (cons (lyskom-create-aux-item
+                                      0 15 0 0
+                                      (lyskom-create-aux-item-flags
+                                       nil nil nil nil nil nil nil nil)
+                                      0 (concat "lyskom.el "
+                                                lyskom-clientversion))
+                                     aux-list)
+                             aux-list)
+                           buffer
+                           is-anonymous))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -994,17 +1027,20 @@ Cannot be called from a callback."
   (let ((buffer (current-buffer))
         (window (selected-window)))
     (set-buffer lyskom-buffer)
+    (lyskom-collect 'edit)
     (initiate-get-text 'edit
-                       'lyskom-edit-insert-commented 
-                       no
-                       buffer
-                       window)
+                       nil
+                       no)
+    (initiate-get-text-stat 'edit
+                            nil
+                            no)
+    (lyskom-use 'edit 'lyskom-edit-insert-commented buffer window)
     (set-buffer buffer)
     (sit-for 0)))
     
 
 (defun lyskom-edit-get-commented (thendo)
-  "Get the commented text and then do THENDO with it."
+  "Get the commented text and text stat and then do THENDO with it."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
@@ -1023,7 +1059,10 @@ Cannot be called from a callback."
          (no
           (goto-char p)
           (set-buffer lyskom-buffer)
-          (initiate-get-text 'edit thendo no buffer window)
+          (lyskom-collect 'edit)
+          (initiate-get-text 'edit thendo no)
+          (initiate-get-text-stat 'edit nil no)
+          (lyskom-use 'edit thendo buffer window)
           (set-buffer buffer))
          (t
           (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
@@ -1189,14 +1228,16 @@ RECPT-TYPE is the type of recipient to add."
 
          ;; Otherwise, show the notive and keep on going
 
-	 (let ((text (blocking-do 'get-text text-no)))
+	 (blocking-do-multiple ((text (get-text text-no))
+                                (text-stat (get-text-stat text-no)))
 	   (if (and text (get-buffer-window edit-buffer))
 	       (let ((win-config (current-window-configuration)))
 		 ;;(set-buffer buffer)
 		 (with-output-to-temp-buffer "*Motd*"
 		   (princ (lyskom-format 'conf-has-motd-no
 					 (text->text-no text)
-					 (text->text-mass text))))
+					 (text->decoded-text-mass text 
+                                                                  text-stat))))
 		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
                       (if what-to-do
                           (funcall what-to-do conf-stat insert-at edit-buffer)
@@ -1647,8 +1688,8 @@ Point must be located on the line where the subject is."
 )))
 
 
-(defun lyskom-edit-show-commented (text editing-buffer window)
-  "Handles the TEXT from the return of the call of the text.
+(defun lyskom-edit-show-commented (text text-stat editing-buffer window)
+  "Handles the TEXT and TEXT-STAT from the return of the call of the text.
 The EDITING-BUFFER is the buffer the editing is done in. If this buffer is 
 not displayed nothing is done. If displayed then this buffer is chosen then 
 the with-output-to-temp-buffer command is issued to make them both apear."
@@ -1668,19 +1709,19 @@ the with-output-to-temp-buffer command is issued to make them both apear."
                              (lyskom-view-mode)))))))
 
 
-(defun lyskom-edit-insert-commented (text editing-buffer window)
-  "Handles the TEXT from the return of the call of the text.
+(defun lyskom-edit-insert-commented (text text-stat editing-buffer window)
+  "Handles the TEXT and TEXT-STAT from the return of the call of the text.
 The text is inserted in the buffer with '>' first on each line."
-  (if text
-      (progn
+  (if (and text text-stat)
+      (let ((str (text->decoded-text-mass text text-stat)))
         (set-buffer editing-buffer)
         (and (not (bolp))
              (insert "\n"))
         (and (not (eolp))
              (open-line 1))
         (let* ((pb (point))
-               (as (string-match "\n" (text->text-mass text)))
-               (te (substring (text->text-mass text) (1+ as))))
+               (as (string-match "\n" str))
+               (te (substring str (1+ as))))
           (insert te)
           (while (<= pb (point))
             (beginning-of-line)

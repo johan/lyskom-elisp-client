@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.40 1999-11-17 23:11:45 byers Exp $
+;;;;; $Id: utilities.el,v 44.41 1999-11-19 02:16:41 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.40 1999-11-17 23:11:45 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.41 1999-11-19 02:16:41 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -352,6 +352,29 @@ an explicit prefix argument was not given."
     (lyskom-read-number prompt (lyskom-text-at-point)))
    (t (lyskom-error (lyskom-get-string 'bad-text-no-prefix)
                     current-prefix-arg))))
+
+;;; ============================================================
+;;; Set functions
+
+(defun lyskom-subset-p (a b)
+  "Return non-nil if A is a subset of B"
+  (let ((result t))
+    (while a
+      (if (memq (car a) b)
+          (setq a (cdr a))
+        (setq result nil a nil)))
+    result))
+
+(defun lyskom-intersection (a b)
+  "Returns as a list the intersection of list A and list B.
+The order of the list a is kept."
+  (if (or a b)
+      (let ((list nil))
+        (while a
+          (if (memq (car a) b)
+              (setq list (cons (car a) list)))
+          (setq a (cdr a)))
+        (nreverse list))))
 
 
 

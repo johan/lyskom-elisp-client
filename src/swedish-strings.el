@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.87 1999-11-17 23:11:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.88 1999-11-19 02:16:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.87 1999-11-17 23:11:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.88 1999-11-19 02:16:37 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1254,6 +1254,8 @@ Uppkopplad sedan %#8s%#9s")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1M.\n")
 
+    (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
+    (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
 
     (cross-reference-text-status-aux . "Se även inlägg:                 %10#1n /%#2P/")
     (cross-reference-conf-status-aux . "Se även möte:                           <%#1m> %#1M /%#2P/")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.55 1999-11-17 23:11:32 byers Exp $
+;;;;; $Id: commands1.el,v 44.56 1999-11-19 02:15:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.55 1999-11-17 23:11:32 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.56 1999-11-19 02:15:48 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -819,19 +819,19 @@ If optional arg TEXT-NO is present write a footnote to that text instead."
 (defun lyskom-write-comment-soon (text-stat text text-no type)
   "Write a comment to the text with TEXT-STAT, TEXT and, TEXT-NO.
 TYPE is either 'comment or 'footnote."
-  (cond
-   ;; Text not found?
-   ((or (null text-stat)
-	(null text))
-    (lyskom-format-insert 'cant-read-textno text-no))
-   ;; Give header.
-   ((string-match "\n" (text->text-mass text))
-    (lyskom-write-comment text-stat
-			  (substring (text->text-mass text)
-				     0 (match-beginning 0))
-			  type))
-   ;; The commented text had no header.
-   (t (lyskom-write-comment text-stat "" type))))
+  (let ((str (and text-stat text (text->decoded-text-mass text text-stat))))
+    (cond
+     ;; Text not found?
+     ((or (null text-stat)
+          (null text))
+      (lyskom-format-insert 'cant-read-textno text-no))
+     ;; Give header.
+     ((string-match "\n" str)
+      (lyskom-write-comment text-stat
+                            (substring str 0 (match-beginning 0))
+                            type))
+     ;; The commented text had no header.
+     (t (lyskom-write-comment text-stat "" type)))))
 
 
 (defun lyskom-write-comment (text-stat subject type)
@@ -969,11 +969,12 @@ that text instead."
 (defun lyskom-private-answer-soon (text-stat text text-no)
   "Write a private answer to TEXT-STAT, TEXT."
   (if (and text-stat text)
-      (if (string-match "\n" (text->text-mass text))
-	  (lyskom-private-answer text-stat
-				 (substring (text->text-mass text)
-					    0 (match-beginning 0)))
-	(lyskom-private-answer text-stat ""))
+      (let ((str (text->decoded-text-mass text text-stat)))
+        (if (string-match "\n" str)
+            (lyskom-private-answer text-stat
+                                   (substring str
+                                              0 (match-beginning 0))))
+        (lyskom-private-answer text-stat ""))
     (lyskom-format-insert 'no-such-text-no text-no)))
 
 
@@ -1013,11 +1014,11 @@ that text instead."
 
 (defun lyskom-private-answer-soon-prev (text-stat text)
   "Write a private answer to TEXT-STAT, TEXT."
-  (if (string-match "\n" (text->text-mass text))
+  (let ((str (text->decoded-text-mass text text-stat)))
+  (if (string-match "\n" str)
       (lyskom-private-answer text-stat
-			     (substring (text->text-mass text)
-					0 (match-beginning 0)))
-    (lyskom-private-answer text-stat "")))
+			     (substring str 0 (match-beginning 0)))
+    (lyskom-private-answer text-stat ""))))
 
 
 ;;; ================================================================
@@ -1122,48 +1123,49 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    ((or lyskom-is-administrator
 	(lyskom-get-membership (conf-stat->supervisor conf-stat) t)
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
-    (lyskom-dispatch-edit-text
-     lyskom-proc
-     (apply
-      'lyskom-create-misc-list
-      (if (and (eq type 'pres)
-	       (not (zerop (conf-stat->presentation conf-stat))))
-	  (append
-	   (lyskom-get-recipients-from-misc-list
-	    (text-stat->misc-info-list
-	     (blocking-do 'get-text-stat
-			  (conf-stat->presentation conf-stat))))
-	   (list 'comm-to
-		 (conf-stat->presentation conf-stat)))
-	(list 'recpt
-	      (cond
-	       ((eq type 'motd)
-		(server-info->motd-conf lyskom-server-info))
-	       ((eq type 'pres)
-		(if (conf-type->letterbox
-		     (conf-stat->conf-type conf-stat))
-		    (server-info->pers-pres-conf 
-		     lyskom-server-info)
-		  (server-info->conf-pres-conf
-		   lyskom-server-info)))))))
-     (conf-stat->name conf-stat)
-     (let ((text-mass (blocking-do 'get-text 
-				   (cond
-				    ((eq type 'pres)
-				     (conf-stat->presentation conf-stat))
-				    ((eq type 'motd)
-				     (conf-stat->msg-of-day conf-stat))))))
-       (if (and text-mass
-		(string-match "\n" (text->text-mass text-mass)))
-	   (substring (text->text-mass text-mass) (match-end 0))
-	 (if (and (eq type 'pres)
-		  (conf-type->letterbox (conf-stat->conf-type conf-stat)))
-	     (lyskom-get-string 'presentation-form)
-	   "")))
-     (cond
-      ((eq type 'pres) 'lyskom-set-presentation)
-      ((eq type 'motd) 'lyskom-set-conf-motd))
-     (conf-stat->conf-no conf-stat)))
+    (blocking-do-multiple ((text-stat (get-text-stat
+                                       (conf-stat->presentation conf-stat)))
+                           (text-mass (get-text 
+                                       (cond
+                                        ((eq type 'pres)
+                                         (conf-stat->presentation conf-stat))
+                                        ((eq type 'motd)
+                                         (conf-stat->msg-of-day conf-stat))))))
+      (let ((str (and text-mass (text->decoded-text-mass
+                                 text-mass text-stat))))
+        (lyskom-dispatch-edit-text
+         lyskom-proc
+         (apply
+          'lyskom-create-misc-list
+          (if (and (eq type 'pres)
+                   (not (zerop (conf-stat->presentation conf-stat))))
+              (append
+               (lyskom-get-recipients-from-misc-list
+                (text-stat->misc-info-list text-stat))
+               (list 'comm-to
+                     (conf-stat->presentation conf-stat)))
+            (list 'recpt
+                  (cond
+                   ((eq type 'motd)
+                    (server-info->motd-conf lyskom-server-info))
+                   ((eq type 'pres)
+                    (if (conf-type->letterbox
+                         (conf-stat->conf-type conf-stat))
+                        (server-info->pers-pres-conf 
+                         lyskom-server-info)
+                      (server-info->conf-pres-conf
+                       lyskom-server-info)))))))
+         (conf-stat->name conf-stat)
+         (if (and text-mass (string-match "\n" str))
+             (substring str (match-end 0))
+           (if (and (eq type 'pres)
+                    (conf-type->letterbox (conf-stat->conf-type conf-stat)))
+               (lyskom-get-string 'presentation-form)
+             ""))))
+      (cond
+       ((eq type 'pres) 'lyskom-set-presentation)
+       ((eq type 'motd) 'lyskom-set-conf-motd))
+      (conf-stat->conf-no conf-stat)))
    (t
     (lyskom-format-insert 'not-supervisor-for
 			  conf-stat))))
@@ -1760,12 +1762,12 @@ If MARK-NO is nil, review all marked texts."
                            (lyskom-format-insert 
                             "%#1t"
                             (lyskom-format event
-						 (+ (time->year time) 1900)
-						 (1+ (time->mon  time))
-						 (time->mday time)
-						 (time->hour time)
-						 (time->min  time)
-						 (time->sec  time))))
+                                           (+ (time->year time) 1900)
+                                           (1+ (time->mon  time))
+                                           (time->mday time)
+                                           (time->hour time)
+                                           (time->min  time)
+                                           (time->sec  time))))
 		       (error nil))))))
             lyskom-times)
 ;;;

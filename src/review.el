@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.21 1999-11-17 23:11:40 byers Exp $
+;;;;; $Id: review.el,v 44.22 1999-11-19 02:16:27 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.21 1999-11-17 23:11:40 byers Exp $\n"))
+	      "$Id: review.el,v 44.22 1999-11-19 02:16:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -67,17 +67,6 @@
 (defvar lyskom-last-review-saved-largest nil)
 (defvar lyskom-have-review nil)
 
-
-(defun lyskom-intersection (a b)
-  "Returns as a list the intersection of list A and list B.
-The order of the list a is kept."
-  (if (or a b)
-      (let ((list nil))
-        (while a
-          (if (memq (car a) b)
-              (setq list (cons (car a) list)))
-          (setq a (cdr a)))
-        (nreverse list))))
 
 (defun lyskom-remove-zeroes (a)
   "Returns a copy of list where all zeroes are removed."

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $
+;;;;; $Id: komtypes.el,v 44.12 1999-11-19 02:16:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.11 1999-10-13 09:23:35 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.12 1999-11-19 02:16:10 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -670,6 +670,22 @@ Both vectors should be of the same length."
   (eq (car-safe object) 'TEXT-STAT))
 
 ;;; ================================================================
+;;;                              aux-item
+
+(def-komtype aux-item-flags deleted inherit secret anonymous
+  reserved1 reserved2 reserved3 reserved4)
+
+(def-komtype aux-item aux-no 
+                       tag
+                       creator
+                       sent-at
+                       flags
+                       inherit-limit
+                       data)
+
+
+
+;;; ================================================================
 ;;;                            text
 
 
@@ -710,6 +726,21 @@ Both vectors should be of the same length."
 (defsubst lyskom-text-p (object)
   "Return t if OBJECT is a text."
   (eq (car-safe object) 'TEXT))
+
+;;; Utilities
+
+(defun text->decoded-text-mass (text text-stat)
+  "Get the text mass of a text after decoding according to its content type"
+  (let* ((str (text->text-mass text))
+         (item (lyskom-get-aux-item
+                (text-stat->aux-items text-stat) 1))
+         (content-type (and (car item)
+                            (lyskom-mime-decode-content-type
+                             (aux-item->data (car item))))))
+    (if (cdr content-type)
+        (lyskom-mime-decode-string str (cdr content-type))
+      str)))
+
 				   
 
 ;;; ================================================================
@@ -1937,21 +1968,6 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
 (defun lyskom-conf-z-info-p (object)
   "Return t if OBJECT is a conf-z-info."
   (eq (car-safe object) 'CONF-Z-INFO))
-
-
-;;; ================================================================
-;;;                              aux-item
-
-(def-komtype aux-item-flags deleted inherit secret anonymous
-  reserved1 reserved2 reserved3 reserved4)
-
-(def-komtype aux-item aux-no 
-                       tag
-                       creator
-                       sent-at
-                       flags
-                       inherit-limit
-                       data)
 
 
 ;;;; ================================================================

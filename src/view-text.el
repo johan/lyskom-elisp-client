@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.31 1999-10-15 12:13:08 byers Exp $
+;;;;; $Id: view-text.el,v 44.32 1999-11-19 02:16:48 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.31 1999-10-15 12:13:08 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.32 1999-11-19 02:16:48 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -710,10 +710,11 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
       (setq lyskom-previous-text lyskom-current-text)
       (setq lyskom-current-text text-no))
      (t
-      (let* ((str (text->text-mass text))
+      (let* ((str (text->decoded-text-mass text text-stat))
 	     (truncated nil)
              ;; s1 s2 t1 t2
 	     body)
+
         (cond
          ((string-match "\n" str)
           (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
