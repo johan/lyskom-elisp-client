@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.4 1997-09-27 11:43:02 byers Exp $
+# $Id: Makefile,v 44.5 1997-10-11 18:19:43 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,11 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 44.4  1997-09-27 11:43:02  byers
+# Revision 44.5  1997-10-11 18:19:43  byers
+# OK, det blev ytterligare några ändringar.
+# Snart dags för 0.45.1
+#
+# Revision 44.4  1997/09/27 11:43:02  byers
 # Nästan alla variabler är dokumenterade.
 # Uppdaterade NEWS-filen för 0.45.1
 #
@@ -87,7 +91,7 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-CLIENTVERSION = 0.45.1-beta
+CLIENTVERSION = 0.45.1
 
 SHELL = /bin/sh
 RM = rm -vf
