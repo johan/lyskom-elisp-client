@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.27 1998-01-04 17:47:16 davidk Exp $
+;;;;; $Id: startup.el,v 44.28 1998-02-11 14:41:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.27 1998-01-04 17:47:16 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.28 1998-02-11 14:41:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -88,15 +88,30 @@ See lyskom-mode for details."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (let* ((buffer (get-buffer host))
+    (let* ((duplicate-buffers
+            (delq nil
+                  (mapcar (lambda (buffer)
+                            (and (lyskom-buffer-p buffer)
+                                 (buffer-name buffer)
+                                 (string-match (regexp-quote host)
+                                               (buffer-name buffer))
+                                 (save-excursion (set-buffer buffer)
+                                                 (and 
+                                                  (boundp 'lyskom-server-port)
+                                                  (eq port lyskom-server-port)))
+                                 buffer))
+                          (buffer-list))))
 	   (name nil)
 	   (proc nil)
+           (buffer (car duplicate-buffers))
            (reused-buffer nil))
-      (if (and buffer
-	       (lyskom-buffer-p buffer)
+      
+
+      (if (and duplicate-buffers
 	       (not (prog1
 			(j-or-n-p (lyskom-get-string
-				   'start-new-session-same-server))
+				   'start-new-session-same-server)
+                                  t)
 		      (message ""))))
 	  (progn 
             (switch-to-buffer buffer)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.55 1998-01-04 03:10:57 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.56 1998-02-11 14:41:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.55 1998-01-04 03:10:57 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.56 1998-02-11 14:41:25 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -209,16 +209,27 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
     (lyskom-set-last-viewed)
     (lyskom-scroll)
     (if (< (window-start) lyskom-last-viewed)
-        (let ((overlay (make-overlay 
-                        lyskom-last-viewed
-                        (save-excursion (goto-char lyskom-last-viewed)
-                                        (end-of-line)
-                                        (forward-char 1)
-                                        (point)))))
-          (overlay-put overlay 'face 'kom-mark-face)
-          (run-at-time 2 nil
-                       'delete-overlay
-                       overlay)))))
+        (lyskom-xemacs-or-gnu
+         (let ((overlay (make-extent 
+                         lyskom-last-viewed
+                         (save-excursion (goto-char lyskom-last-viewed)
+                                         (end-of-line)
+                                         (forward-char 1)
+                                         (point)))))
+           (set-extent-face overlay 'kom-mark-face)
+           (add-timeout 2 
+                        'delete-extent
+                        overlay))
+         (let ((overlay (make-overlay 
+                         lyskom-last-viewed
+                         (save-excursion (goto-char lyskom-last-viewed)
+                                         (end-of-line)
+                                         (forward-char 1)
+                                         (point)))))
+           (overlay-put overlay 'face 'kom-mark-face)
+           (run-at-time 2 nil
+                        'delete-overlay
+                        overlay))))))
 
   
 (defun kom-line-next-command ()
@@ -1417,7 +1428,7 @@ Note that it is not allowed to use deferred insertions in the text."
                          (result nil)
                          (case-fold-search t))
                      (while tmp
-                       (when (string-match (car (car tmp)) content-type)
+                       (when (eq 0 (string-match (car (car tmp)) content-type))
                          (setq result (car tmp))
                          (setq tmp nil))
                        (setq tmp (cdr tmp)))
@@ -1594,7 +1605,7 @@ in lyskom-messages."
               (backward-char 1)
               (delete-horizontal-space))
           (error nil)))
-      (fill-region start end justify nosqueeze to-eop))))
+      (fill-region start (min end (point-max)) justify nosqueeze to-eop))))
 
 (defun lyskom-fill-message (text)
   "Try to reformat a message."

@@ -7,6 +7,7 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
+
 * SAKER ATT KOLLA
 
     Hur och var skall man egentligen spara inställningar? .emacs är
@@ -19,40 +20,39 @@ Att göra i elisp-klienten
 
     LysKOM fungerar inte i XEmacs i tty-mode. No such face:
     kom-active-face. Antingen är det fixat eller så är det inte fel i
-    20.2.
+    20.2. Jag har noterat liknande problem i 19.30 i Sun-consolen.
+    FIX BY: 0.46        
 
     Om förbindelsen bryts så får man args out of range ibland.
+    FIX BY: 0.46
 
     Om förbindelsen bryts i en buffert så ofungerar scrollningen en
     gång i en annan buffert. Man trycker SPC och får inte nästa
     kommando, utan hamnar överst i bufferten.
+    FIX BY: ---
 
     Om man byter buffert med C-x b till den sista aktiva KOM-bufferten
     så tycker Nästa LysKOM att det inte finns fler aktiva
     KOM-sessioner. Funktionen verkar vara lite för känslig för hur
     lyskom-buffer-list ser ut. Den borde nog göra något lite
     intelligentare när listan ser ut att ha tagit slut.
+    FIX BY: 0.46
 
     Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
     och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
     blev det rätt. Det verkar som om window-width ljuger.
+    FIX BY: N/A
 
     Race condition när man skickar in inlägg. Fönsterkonfigurationen
     återställs asynkront, och det går att trycka C-c C-c k
     tillräckligt fort att man skapar den nya inläggsbufferten innan
     den gamla fönsterkonfigurationen (för den förra inläggsbufferten)
     återställs. Resultatet är att man aldrig ser den nya bufferten.
+    FIX BY: 0.46-0.47
 
     Endast gör fortfarande fel. Den klarar inte hål och använder inte
     set-last-read, utan set-unread.
-
-
-** CACHE
-
-    Det kan hända att inläggstexter kastas ur cachen så fort man har
-    läst dem. Om det är så, så är det *inte* bra, för att om man
-    kommenterar så måste inlägget hämtas igen. [DET VERKAR INTE VARA
-    SÅ]
+    FIX BY: ---
 
 
 ** VIKTIGA BUGGAR
@@ -60,11 +60,14 @@ Att göra i elisp-klienten
     Buggar i special-insert gör att eoc inte körs, och man har inte
     läst inlägget. Man borde få inlägget läsmarkerat och få end of
     command.
+    FIX BY: 0.46
 
     lyskom-w3-region får inte krascha. Stoppa condition-case runt.
+    FIX BY: 0.46
 
     lyskom-format-html får inte försöka formattera som HTML om det
     inte går att ladda w3.
+    FIX BY: 0.46
 
 
 ** OMBRYTNING
@@ -75,6 +78,7 @@ Att göra i elisp-klienten
     inte gör nytt stycke om alla rader har börjat med ord: och man
     hamnar på en indragen rad. Indragna rader skulle inte sabotera
     ord:-prefixet. 
+    FIX BY: 0.46-0.47
 
 
 ** DEFERRED INSERT
@@ -82,11 +86,13 @@ Att göra i elisp-klienten
     lyskom-replace-deferred verkar inte använda lyskom-last-viewed i
     alla fall. Och den beter sig fel när man står vid prompten och
     vill bläddra bakåt.
+    FIX BY: ---
 
     Om ett namn som fylls i i efterhand gör att sista raden blir för
     lång, så scrollar klienten trots att den inte borde. David Kågedal
     trodde att han hade fixat det. (Detta är en gammal rapport. Den
     kanske inte stämmer.)
+    FIX BY: --- (check before release of 0.46)
 
 
 ** PREFETCH 
@@ -94,11 +100,14 @@ Att göra i elisp-klienten
     Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
     endast i ett möte (säg IÅM) innan det prefetchas får man två
     parallella prefetcher på samma möte.
+    FIX BY: 
 
     Gå ur mötet man prefetchar genererar en bug.
+    FIX BY: 0.46
 
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
+    FIX BY: 0.46
 
 
 ** COMPLETING READ
@@ -108,6 +117,7 @@ Att göra i elisp-klienten
     skriver in parenteserna också. Problem uppstår till exempel om det
     finns två möten "(På) TV" och "(Gamla) TV-spel erfarenhetsutbyte".
     Om man skriver in "TV" så betraktas det inte som en exakt match.
+    FIX BY: 0.46-0.47
 
     Man kan få oländiga loopar i completion. Just nu är det inte så
     lätt, men det går fortfarande. Problemet uppstår då två teckern
@@ -116,27 +126,30 @@ Att göra i elisp-klienten
     collate-tabellen alltid mappar alla space till space (2) se till
     att lyskom-complete-string kan detektera en oländig loop och
     stoppa den. 
-
         Minitestfall: (lyskom-complete-string '("L\t" "L s")).
         Problem uppstår om man får space-mismatch pga att två olika
         tecken med spacesemantik mismatchar (fin svenska, eller hur.)
         Man borde få match när det inträffar.
+    FIX BY: 0.46
 
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
     Problemet är att s xxxx hanteras i lyskom-read-conf-internal som
     bara kan returnera conf-z-info. Man borde låta den returnera info
     om specifikt sessionsnummer också.
+    FIX BY: Whenever
 
     Fixa så LysKOM och complete.el fungerar ihop genom att sätta om
     samma mappar som complete.el gör, till wrappers runt complete.el
     som kollar om completion är LysKOM-completion eller något annat.
+    FIX BY: Whenever
 
 
 ** HANTERING AV FOTNOTER
 
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
+    FIX BY: --- (Check before release of 0.46)
 
     Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
     spara det på fil, så blir det bara fotnoten som sparas.  Man vill
@@ -145,18 +158,22 @@ Att göra i elisp-klienten
     här. Spara text sparar sisa inlägget man tittade på.
     Prefixargument ger fler. Frågan om det är *bra* eller inte är en
     helt annan...]
+    FIX BY: ---
 
     Fotnoter som visas på en gång filtreras inte. [verkar fixat]
+    FIX BY: --- (Check by 0.46)
 
     kom-review-tree på en text med fotnoter visar fotnoterna på en
     gång. Är det en bug?
+    FIX BY: 
 
 
 ** PROMPTEN
 
     När jag ska läsa en kommentar till ett brev i min brevlåda så blir
     prompten "Läsa nästa brev" i stället för "Läsa nästa
-    kommentar". Kommentaren ligger inte i brevlådan. (LÅG PRIORITET)
+    kommentar". Kommentaren ligger inte i brevlådan.
+    FIX BY: --- 
 
 
 ** HEISENBUGS
@@ -164,11 +181,13 @@ Att göra i elisp-klienten
     Sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
     ut en session i ett ikonifierat fönster. Eller kanske till och med
     bara i en gömd buffert.
+    FIX BY: --- (Check by 0.46)
 
     Tommy Persson får LysKOM protocol error. Det kan bero på strulande
     modem. Tyvärr var det någon annan som också fick det, som kanske
     inte sitter bakom modem. Nu fick Kågedal också problemet, men
     fortfarande kan ingen reproducera det. Nu har jag också fått det. 
+    FIX BY: YESTERDAY
 
 
 
@@ -189,6 +208,8 @@ Att göra i elisp-klienten
         * Krävs mer flexibel formatmarkering.
         * Krävs att man hämtar fotnoter innan man visar inlägget.
         * Troligtvis är det bättre att använda aux-items för detta.
+
+    FIX BY: 0.46-0.47
 
 
 
@@ -243,27 +264,34 @@ Att göra i elisp-klienten
 ** EDIT-BUFFERTEN
 
     Defaultplaceringen av nya mottagare i editbufferten är fånig.
-
-    Borde kolla efter dublettmottagare innan man skickar in inlägget.
-    Annars så får man ett tråkigt felmeddelande från servern.
-
-    Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
-    ploppa upp edit-bufferten, alternativt ha ett kommando för att
-    göra det (och göra det till defaultkommandot.)
+    FIX BY: 0.46
 
     Det borde gå att ändra mottagare till cc-mottagare genom att bara
     lägga till mottagaren igen som cc-mottagare. Motsvarande för bcc
     och så vidare.
+    FIX BY: 0.46
+
+    Borde kolla efter dublettmottagare innan man skickar in inlägget.
+    Annars så får man ett tråkigt felmeddelande från servern.
+    FIX BY: 0.46
+
+    Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
+    ploppa upp edit-bufferten, alternativt ha ett kommando för att
+    göra det (och göra det till defaultkommandot.)
+    FIX BY: 0.46
 
     Man borde kunna manipulera mottagare i editbufferten med musen (ta
     bort, ändra typ.)
+    FIX BY: 0.46
 
 
 ** FILTER
 
     Ny filter-edit-mode
+    FIX BY: 0.48
 
     Använd den nya filterkompilatorn.
+    FIX BY: 0.48
 
     Gör inte nästa kommando efter en filtrering. Kontrollera med
     variabel.
@@ -273,8 +301,10 @@ Att göra i elisp-klienten
 
     Färgläggning av meddelanden baserat på varifrån de kommer, och
     vart det går. John Olsson efterfrågar.
+    FIX BY: 0.47
 
     Filtrera asynkrona meddelanden (Pontus Lidman)
+    FIX BY: 0.47
 
 
 ** MEDLEMSSKAPSINFORMATION
@@ -287,6 +317,7 @@ Att göra i elisp-klienten
     Plus att vi måste fixa en datastruktur till bufferten. Vilket slit.
     Kanske kan man mergea prioritera och lista medlemsskap? Det skulle
     ju förenkla...
+    FIX BY: 0.48
 
 
 ** ÅTERSE
@@ -294,17 +325,23 @@ Att göra i elisp-klienten
     Återse senaste borde vara superinkrementell. Man kunde hämta så
     mycket man hinner under säg tre sekunder och stoppa någonting på
     read-listan som hämtar nästa tre sekunder eller så.
+    FIX BY: 0.47 or later
 
     "Återse n inlägg av person x till möte y från datum z framåt"
+    FIX BY: 0.47 or later
 
     "Återse n inlägg av person x till möte y under de senaste k dagarna"
+    FIX BY: 0.47 or later
 
     Strunta i hemliga texter vid åar.
+    FIX BY: 0.46-0.47
 
     Återse alla markerade borde gå att avbryta med nästa möte.
+    FIX BY: 0.46-0.47           NOTE: Verkar fungera
 
     Det vore trevligt om inlägg man återsåg inte bidde varnade för när
     man skriver kommentarer.
+    FIX BY: Who knows?
 
 
 ** INTERNA SAKER
@@ -316,6 +353,7 @@ Att göra i elisp-klienten
     [Det gör man väl? /davidk]
 
     Använd blocking.el som innehåller en reentrant blocking-do.
+    FIX BY: 0.47
 
 
 ** FOTNOTER
@@ -331,6 +369,7 @@ Att göra i elisp-klienten
     kanske den senaste man läste om det var man själv som skrev den?
     Snarare den sista man läste av sig själv alt. den sista man skrev
     om man inte har läst något av sig själv sedan dess.
+    FIX BY: 0.46-0.47
 
 
 ** ANVäNDARVäNLIGHET
@@ -338,17 +377,23 @@ Att göra i elisp-klienten
     Man skulle kunna låta fönstrets titelrad indikera om man har
     olästa i någon session. Det skulle vara praktiskt för oss som har
     KOM igång ikonifierad i en separat Emacs större delen av tiden.
+    FIX BY: 0.48
+
     Klickbara kommandon, vad nu det är.
+    FIX BY: 0.48
 
     Det behövs dokumentation: fråmst användarhandledning, men det
     skulle inte skada med en kortfattad beskrivning av stabila delar
     av systemet för presumtiva kommandoskribenter.
+    FIX BY:
 
     Språkgranskning av den engelska versionen.
+    FIX BY:
 
     Det skulle vara bra om man kunde ange för varje inställning om den
     skulle sparas i servern eller inte. I princip är det enkelt, men
     det behövs ett gränssnitt för det.
+    FIX BY: 0.46
 
 
 ** AUX-ITEMS
@@ -357,20 +402,24 @@ Att göra i elisp-klienten
     till i servern som talar om för servern att inte garba ett inlägg.
     Det i sin tur kräver att man fixar dbck att forcera garb av inlägg
     med den här flaggan som inte borde ha den eller nåt sånt.
+    FIX BY: 0.46
 
     Implementera aux-items på medlemskap. En iten skulle vara att
     medlemskapet egentligen är en inbjudan.
+    FIX BY: 0.46/2.0
 
 
 ** MARKERINGAR
 
     JySKomska markeringstyper.
+    FIX BY: 0.47-0.48
 
 
 ** DIVERSE OSORTERAT
 
     Lista sessioner, ungefär som lista klienter, men som ger mer
     sessionsinformation, till exempel idletid. Önskad av David Hedbor.
+    FIX BY: 0.47-0.48
 
     Sortera vilkaslistan efter t.ex. idletid.
 
@@ -382,9 +431,13 @@ Att göra i elisp-klienten
     ingenting är beroende av att medlemsskapslistan hämtas i
     prioritetsordning. Prefetchen måste kunna sortera in medlemsskap i
     prioritetsordning när den får dem från servern.
+    FIX BY: 0.47
+
+    kom-show-presence-messages borde kunna ha ett alternativ som gör
+    att kom-friends används, så man får närvaromeddelanden enbart om
+    sina vänner. Uppdatera även inställningsbufferten.
 
     Det finns rester av den gamla vilkabufferten kvar i koden i cache.el.
-
 
 
 Local variables:

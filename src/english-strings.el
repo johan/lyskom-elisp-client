@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.35 1997-12-28 19:16:29 byers Exp $
+;;;;; $Id: english-strings.el,v 44.36 1998-02-11 14:41:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.35 1997-12-28 19:16:29 byers Exp $"))
+              "$Id: english-strings.el,v 44.36 1998-02-11 14:41:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1802,6 +1802,8 @@ Select whether to execute command or keyboard macro.")
     (yes . "Yes")
     (no . "No ")
     (max-text-length . "For articles shorter than: ")
+
+    (friends . "Friends and other special people")
 
     (turned-off .      "Turned off           ")
     (number-of-times . "A few times")
