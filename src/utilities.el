@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.75 2000-10-01 19:52:31 ceder Exp $
+;;;;; $Id: utilities.el,v 44.76 2000-12-02 16:27:36 ceder Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.75 2000-10-01 19:52:31 ceder Exp $\n"))
+	      "$Id: utilities.el,v 44.76 2000-12-02 16:27:36 ceder Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -673,14 +673,33 @@ The order of the list a is kept."
 (lyskom-provide-function console-type (&optional console)
   (or window-system 'tty))
 
-(lyskom-provide-function device-class (&optional device)
-  (condition-case nil
-      (if (x-display-grayscale-p)
-	  (if (x-display-color-p)
-	      'color
-	    'grayscale)
-	'mono)
-    (error 'mono)))
+(lyskom-external-function display-color-p)
+(lyskom-external-function display-grayscale-p)
+
+(eval-and-compile
+  (if (fboundp 'device-class)
+      nil
+    (setq lyskom-compatibility-definitions
+	  (cons 'device-class lyskom-compatibility-definitions))
+    (if (and (fboundp 'display-color-p) (fboundp 'display-grayscale-p))
+	;; Emacs 21 can use color even when not running under
+	;; X-windows.  Note that display-grayscale-p can be false when
+	;; using a color display!  This happens when running on a
+	;; classic Linux tty console.
+
+	(defun device-class (&optional device)
+	  (cond ((display-color-p device) 'color)
+		((display-grayscale-p device) 'grayscale)
+		(t 'mono)))
+      ;; This works in Emacs 20 and earlier.
+      (defun device-class (&optional device)
+	(condition-case nil
+	    (if (x-display-grayscale-p device)
+		(if (x-display-color-p device)
+		    'color
+		  'grayscale)
+	      'mono)
+	  (error 'mono))))))
 
 
 (lyskom-provide-function frame-property (frame property &optional default)
