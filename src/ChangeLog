@@ -1,3 +1,13 @@
+Sat Jan  7 13:33:16 1995  Linus Tolke Y  <linus@lysator.liu.se>
+
+	* edit-text.el, vars.el.in (lyskom-edit-text, kom-edit-quit,
+	  kom-edit-send, kom-write-texts-in-window): The values new-frame
+	  and other frame are now working. The extra window is no longer
+	  strangely dissapearing.
+	* commands1.el (kom-change-presentation): can now handle Ctrl-G.
+	* commands2.el, komtypes.el, parse.el, services.el,
+	  swedish-strings.el: new function for listing by regexps.
+
 Fri Jan 14 01:07:39 1994  Linus Tolke Y  (linus@bodil)
 
 	* Distribuerat version 0.38.1		??:??
