@@ -1,3 +1,9 @@
+Tue Mar 24 03:03:41 1992  Lars Willf|r  (willfor@lysator)
+
+	* lyskom-rest.el: Har lagt in s} att den s{tter lyskom-last-viewed
+	  i lyskom-start-of-command. Borde g|ra s} att scrollningen funkar
+	  b{ttre.
+
 Thu Mar 12 04:23:51 1992  Linus Tolke Y  (linus@ruben)
 
 	* async.el, cache.el (logga ut, logga in): Nu klarar who-bufferten
