@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.21 1999-10-09 16:13:21 byers Exp $
+;;;;; $Id: completing-read.el,v 44.22 1999-10-13 14:17:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.21 1999-10-09 16:13:21 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.22 1999-10-13 14:17:15 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -305,7 +305,7 @@ function work as a name-to-conf-stat translator."
 
   (cond 
    ((and (null all)
-         (string= string "")) "")
+         (string-match "^\\s-*$" string)) "")
    ((and (eq all 'lyskom-lookup)
          (string-match "^\\s-*$" string)) nil)
    ((and (eq all 'lambda)
