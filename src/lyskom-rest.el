@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.212 2003-08-13 21:14:00 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.213 2003-08-14 08:24:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.212 2003-08-13 21:14:00 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.213 2003-08-14 08:24:35 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1447,7 +1447,7 @@ Deferred insertions are not supported."
         (set-format-state->start format-state
                                  (match-end 0))
 
-        (when (match-beginning 2)
+        (if (match-beginning 2)
           (save-match-data
             (let* ((s (match-string 2 (format-state->format-string format-state))))
               (cond ((or (string-match "\\(-?[0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" s)
@@ -1455,7 +1455,8 @@ Deferred insertions are not supported."
                      (setq pad-length (string-to-int (match-string 1 s)))
                      (setq frac-min (string-to-int (match-string 2 s)))
                      (setq frac-max (string-to-int (or (match-string 3 s) (match-string 2 s)))))
-                    (t (setq pad-length (string-to-int s)))))))
+                    (t (setq pad-length (string-to-int s))))))
+          (setq pad-length nil))
 
 	(setq equals-flag (match-beginning 1)
 	      arg-no (if (match-beginning 5)
