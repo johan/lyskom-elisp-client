@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.8 1996-07-08 09:46:42 byers Exp $
+;;;;; $Id: vars.el.in,v 41.9 1996-07-08 10:05:21 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.8 1996-07-08 09:46:42 byers Exp $\n"
+  "$Id: vars.el.in,v 41.9 1996-07-08 10:05:21 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -170,10 +170,18 @@ This variable is stored in the LysKOM server.")
 
 This variable is not saved in the LysKOM server.")
 
+(defvar lyskom-login-hook nil
+  "What to do when logged in.
+This hook is called after we have logged in but before and command is
+accepted from the keyboard. It is called immediately before
+kom-login-hook.
+
+This variable is not stored in the LysKOM server.")
+
 (defvar kom-login-hook nil
   "*What to do when logged in.
 This is a list of commands that are executed after we have logged in but before
-any command is accepted from the keyboard.
+any command is accepted from the keyboard. See also lyskom-login-hook.
 
 This variable is stored in the LysKOM server.")
 
