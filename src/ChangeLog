@@ -1,5 +1,8 @@
 2001-04-21  Joel Rosdahl  <joel@rosdahl.net>
 
+	* option-edit.el (lyskom-widget-mark-association-action): Set
+	default values.
+
 	* vars.el.in (kom-default-mark): New default value: ask for mark
 	type.
 
