@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.13 1999-07-14 07:34:49 davidk Exp $
+;;;;; $Id: aux-items.el,v 44.14 1999-08-09 15:15:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.13 1999-07-14 07:34:49 davidk Exp $\n"))
+	      "$Id: aux-items.el,v 44.14 1999-08-09 15:15:21 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -498,9 +498,10 @@
    (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-print-creating-software (item &optional obj)
-  (concat
-   (lyskom-format 'creating-software-aux (aux-item->data item))
-   (lyskom-aux-item-terminating-button item obj)))
+  (when kom-show-creating-software
+    (concat
+     (lyskom-format 'creating-software-aux (aux-item->data item))
+     (lyskom-aux-item-terminating-button item obj))))
 
 
 (provide 'lyskom-aux-items)
