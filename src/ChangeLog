@@ -1,3 +1,22 @@
+1999-11-20  David Byers  <davby@ida.liu.se>
+
+	* compatibility.el (lyskom-string-width): New function. Gnu Emacs
+	MULE lossage workaround.
+	(string-make-unibyte): New compatibility function.
+	(string-make-multibyte): New compatibility function.
+	(multibyte-string-p): New compatibility function.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Use
+	lyskom-string-width, not string-width.
+
+	* mime.el (lyskom-mime-string-charset): Use the server default
+	coding system if no charsets were found (non-MULE Emacs.)
+
+	* lyskom-rest.el (lyskom-prot-a-format-aux-item): Aux item data is 
+	a raw string.
+
+	* parse.el (lyskom-parse-aux-item): Aux item data is a raw string.
+
 1999-11-19  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* README.debian: New build instructions.

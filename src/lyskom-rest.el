@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.90 1999-11-19 22:10:22 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.91 1999-11-20 21:55:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.90 1999-11-19 22:10:22 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.91 1999-11-20 21:55:21 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1495,19 +1495,19 @@ Note that it is not allowed to use deferred insertions in the text."
     
     (cond ((or (null pad-length)
                (null result)) nil)
-          ((> abs-length (string-width result))
-           (let ((padstring (make-string (- abs-length (string-width result))
+          ((> abs-length (lyskom-string-width result))
+           (let ((padstring (make-string (- abs-length (lyskom-string-width result))
                                          pad-letter)))
              (if (< pad-length 0)       ; LEFT justify
                  (progn
-                   (setq prop-adjust-end (- (- abs-length (string-width 
+                   (setq prop-adjust-end (- (- abs-length (lyskom-string-width 
 							   result))))
                    (setq result (concat result padstring)))
                (progn
-                 (setq prop-adjust-start (- abs-length (string-width result)))
+                 (setq prop-adjust-start (- abs-length (lyskom-string-width result)))
                  (setq result (concat padstring result))))))
           ((and equals-flag
-                (< abs-length (string-width result)))
+                (< abs-length (lyskom-string-width result)))
            (setq result (lyskom-truncate-string-to-width result abs-length))))
     
     (if result
@@ -3215,7 +3215,7 @@ Other objects are converted correctly."
    (int-to-string (aux-item->tag item))                     " "
    (lyskom-prot-a-format-aux-item-flags (aux-item->flags item))    " "
    (int-to-string (aux-item->inherit-limit item))           " "
-   (lyskom-prot-a-format-string (aux-item->data item))))
+   (lyskom-prot-a-format-raw-string (cons 'STRING (aux-item->data item)))))
 
 (defun lyskom-prot-a-format-aux-item-flags (flags)
   "Format AUX-ITEM-FLAGS for output to the server."
