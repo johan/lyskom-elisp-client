@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.32 1997-07-07 09:14:33 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.33 1997-07-07 15:25:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.32 1997-07-07 09:14:33 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.33 1997-07-07 15:25:17 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1374,7 +1374,9 @@ Note that it is not allowed to use deferred insertions in the text."
                              (extent-end-position e)))
                    (set-extent-endpoints e (extent-start-position e)
                                          (1+ (extent-end-position e))))
-               (set-extent-property e 'duplicable t)
+               (progn
+                 (set-extent-property e 'duplicable t)
+                 (set-extent-property e 'replicable t))
                nil))
             (setq tmp (buffer-string))
             (add-text-properties 0 (length tmp) '(end-closed nil) tmp)
