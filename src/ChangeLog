@@ -1,3 +1,13 @@
+2004-10-29  Pontus Freyhult  <pont@pontus.its.uu.se>
+
+	* lyskom-rest.el (lyskom-format-image): Disabled run time 
+	test for image functions, use aliases instead.
+
+	* compatibility.el (display-images-p): New alias.
+	(put-image): New alias.
+	(create-image): New alias.
+
+
 2004-10-29  Pontus Freyhult  <pont@soua.net>
 
 	* lyskom-rest.el (lyskom-format-image): Bugix: Used let instead

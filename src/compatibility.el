@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.72 2004-10-26 11:56:55 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: compatibility.el,v 44.73 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.72 2004-10-26 11:56:55 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: compatibility.el,v 44.73 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ============================================================
@@ -344,6 +344,13 @@ See `walk-windows' for the meaning of MINIBUF and FRAME."
 		  minibuf frame)
     windows))
 
+
+; ==================================================================
+; Image display
+
+(lyskom-function-alias display-images-p () nil)
+(lyskom-function-alias put-image (what where) nil)
+(lyskom-function-alias create-image (file-or-data) nil)
 
 ;;; ================================================================
 ;;; Color stuff
