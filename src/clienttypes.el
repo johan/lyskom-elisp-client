@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.14 2002-04-13 21:07:58 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.15 2002-04-22 22:18:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.14 2002-04-13 21:07:58 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.15 2002-04-22 22:18:03 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -551,7 +551,7 @@ The element last pushed is first in the list."
 			  argl
 			  result)
   (cons 'format-state
-	(vector format-string start argl (length argl) result nil nil)))
+	(vector format-string start argl (length argl) result nil nil nil)))
 
 (defsubst format-state-p (arg)
   (eq 'format-state (car-safe arg)))
@@ -589,6 +589,12 @@ The element last pushed is first in the list."
 
 (defsubst set-format-state->delayed-propl (arg propl)
   (aset (cdr arg) 5 propl))
+
+(defsubst format-state->delayed-overlays (arg)
+  (elt (cdr arg) 7))
+
+(defsubst set-format-state->delayed-overlays (arg overlays)
+  (aset (cdr arg) 7 overlays))
 
 (defsubst format-state->delayed-content (arg)
   (elt (cdr arg) 6))

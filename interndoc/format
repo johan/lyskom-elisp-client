@@ -72,6 +72,13 @@ c - Interpret and insert an integer as a single character.
     string or the entire format string if processing is at the top
     level. 
 
+$ - Start an overlay. The argument is a property list containing the
+    properties to set on the overlay. Overlays are only available when
+    calling lyskom-format-insert and lyskom-format-insert-at-point.
+    The extent of the overlay in the buffer is to the end of the
+    current subformat string or the entire format string if processing
+    is at the top level.
+
 [ - Begin subformat. This directive does not use an argument.
 
 ] - Exit subformat. This directive does not use an argument.
@@ -103,8 +110,8 @@ n - The argument must be an integer or a text-stat. The integer or
 r - The argument is a string and will be formatted as a subject line.
 
 ? - A conditional. The type of argument depends on letter-options.
-    Currently implemented letter-options are "d" for one-or-more and
-    "b" for booleans.
+    Currently implemented letter-options are "d" for one-or-more, "b"
+    for booleans and "z" for zero/nonzero.
 
 D - Deferred text. [Describe further ...]
 
@@ -280,3 +287,8 @@ strings correctly.
 Internal housekeeping routine. This function is used to apply text
 properties to a format state primarily when the @ format letter has
 been used.
+
+(lyskom-format-insert-overlays [start] [format-state])
+
+Internal function that creates the overlays specified in the format
+string.

@@ -1,3 +1,27 @@
+2002-04-23  David Byers  <david.byers@swipnet.se>
+
+	Alternate text background color:
+	* utilities.el (lyskom-set-face-scheme): Don't always copy default
+	face. Only copy a face when we explicitly ask for it.
+
+	* view-text.el (lyskom-print-text): Optionally use
+	kom-text-background-face on texts.
+
+2002-04-22  David Byers  <david.byers@swipnet.se>
+
+	Alternate text background color:
+	* vars.el.in (kom-color-text-background): New variable.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Added support for $
+	(overlay) format specifier.
+	(lyskom-format-insert-overlays): New function.
+	(lyskom-format-insert): Call lyskom-format-insert-overlays.
+	(lyskom-format-insert-at-point): Call
+	lyskom-format-insert-overlays.
+
+	* clienttypes.el (make-format-state): Added delayed-overlays to
+	format state.
+
 2002-04-22  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	* lyskom-rest.el: Fix language selection code.  The default case,

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.60 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: view-text.el,v 44.61 2002-04-22 22:18:06 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.60 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.61 2002-04-22 22:18:06 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -903,8 +903,14 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
 			    pos nil
 			    truncated t)))))
 		    
-          (let ((lyskom-current-function-phase 'body))
-            (lyskom-format-insert "%#1t\n" (cons text-stat body)))
+          (let ((lyskom-current-function-phase 'body)
+                (start (point)))
+            (lyskom-format-insert "%#2$%#1t\n" 
+                                  (cons text-stat body)
+                                  (and kom-color-text-background
+                                       '(face kom-text-background-face)))
+           ; (overlay-put (make-overlay start (point)) 'face 'foo-face)
+            )
 
 	  ;; Indicate that the text was truncated
 	  (if truncated
@@ -919,7 +925,10 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
             (lyskom-insert 
              (make-string kom-text-header-dash-length ?-)))
           (lyskom-insert "\n")
-          (lyskom-format-insert "%#1t\n" (cons text-stat str))
+          (lyskom-format-insert "%#2$%#1t\n"
+                                (cons text-stat str)
+                                (and kom-color-text-background
+                                       '(face kom-text-background-face)))
           (setq lyskom-current-subject "")))
         (sit-for 0)
         (let* ((lyskom-current-function-phase 'footer)

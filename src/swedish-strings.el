@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.230 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.231 2002-04-22 22:18:05 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.230 2002-04-21 21:32:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.231 2002-04-22 22:18:05 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3905,6 +3905,9 @@ i servern. Annars sparas det i din .emacs.")
   Om detta är påslaget so visas extra statusinformation i kommandona
   Status (för) person, Status (för) möte och Status (för) servern 
   (om sådan information finns tillgänglig).")
+    (kom-color-text-background-doc . "\
+  Om detta är påslaget så visas inläggstexter med en annorlunda 
+  bakgrundsfärg än resten av LysKOM.")
 
 
     ;;
@@ -4074,6 +4077,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-auto-review-faqs-tag . "Visa nya FAQer automatiskt:")
     (kom-auto-list-faqs-tag . "Lista nya FAQer automatiskt:")
     (kom-extended-status-information-tag . "Utökad statusinformation:")
+    (kom-color-text-background-tag . "Annorlunda bakgrundsfärg på inlägg:")
     )
 )
 

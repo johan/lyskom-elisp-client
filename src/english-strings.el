@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.196 2002-04-21 21:32:16 byers Exp $
+;;;;; $Id: english-strings.el,v 44.197 2002-04-22 22:18:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.196 2002-04-21 21:32:16 byers Exp $"))
+              "$Id: english-strings.el,v 44.197 2002-04-22 22:18:03 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3450,6 +3450,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-extended-status-information-doc . "\
   When this is on, additional information may be shown by commands that
   display person, conference and server status.")
+    (kom-color-text-background-doc . "\
+  When this is on, texts are shown with an alternate background color.")
 
 
     ;;
@@ -3619,6 +3621,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-auto-review-faqs-tag . "Review new FAQs automatically:")
     (kom-auto-list-faqs-tag . "List new FAQs automatically:")
     (kom-extended-status-information-tag . "Extended status information:")
+    (kom-color-text-background-tag . "Color text backgrounds:")
     )
 )
 
