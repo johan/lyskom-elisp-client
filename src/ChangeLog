@@ -1,3 +1,8 @@
+Wed Jun 17 21:33:24 1992  Linus Tolke Y  (linus at lysator)
+
+	* vars.el (lyskom-global-boolean-variables): added 
+	  kom-confirm-multiple-recipients.
+
 Tue Jun 16 00:34:42 1992  Linus Tolke Y  (linus@robin)
 
 	* commands2.el, completing-read.el, edit-text.el, lyskom-rest.el
