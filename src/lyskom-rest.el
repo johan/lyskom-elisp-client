@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.245 2004-10-29 06:19:08 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.246 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.245 2004-10-29 06:19:08 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.246 2004-10-29 07:25:06 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2249,14 +2249,13 @@ in lyskom-messages."
 	      (make-extent (point) (point-max))
 	      (make-glyph
 	       (make-image-instance (vector imagetype :data imagedata))))
-	     (if (not (and (fboundp 'display-images-p) ; GNU Emacs
-			   (fboundp 'put-image) 
-			   (fboundp 'create-image)
-			   (display-images-p)
-			   (put-image (create-image imagedata imagetype t) 
-				      (point-max))))
-		 (setq msg (lyskom-get-string 'image-no-show))))
-		; Errors just marks it as a no show
+	     ; GNU Emacs
+	     (unless (and (lyskom-display-images-p)
+			  (lyskom-put-image 
+			   (lyskom-create-image imagedata imagetype t) 
+			   (point-max)))
+	       (setq msg (lyskom-get-string 'image-no-show))))
+	       ; Errors just marks it as a no show
 	  (error (setq msg (lyskom-get-string 'image-no-show)))) 
 	(lyskom-signal-reformatted-text 'reformat-image)
 	msg)))
