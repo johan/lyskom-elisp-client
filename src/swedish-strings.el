@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.28 1992-05-11 02:05:28 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.29 1992-06-13 21:17:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.28 1992-05-11 02:05:28 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.29 1992-06-13 21:17:48 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -50,9 +50,9 @@
 (if lyskom-edit-mode-map
     nil
   (setq lyskom-edit-mode-map (make-sparse-keymap))
-  (fset 'lyskom-edit-prefix (make-keymap))
-  (fset 'lyskom-edit-review-prefix (make-keymap))
-  (fset 'lyskom-edit-insert-prefix (make-keymap))
+  (define-prefix-command 'lyskom-edit-prefix)
+  (define-prefix-command 'lyskom-edit-review-prefix)
+  (define-prefix-command 'lyskom-edit-insert-prefix)
   (define-key lyskom-edit-mode-map "\C-c"	'lyskom-edit-prefix)
   (define-key lyskom-edit-mode-map "\C-c?"	'lyskom-help)
   (define-key lyskom-edit-mode-map "\C-c}"	'lyskom-edit-review-prefix)
@@ -75,7 +75,7 @@
   (define-key lyskom-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
   (define-key lyskom-edit-mode-map "\C-ci "	'kom-edit-insert-text)
-  (fset 'lyskom-edit-add-prefix (make-keymap))
+  (define-prefix-command 'lyskom-edit-add-prefix)
   (define-key lyskom-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
   (define-key lyskom-edit-mode-map "\C-cam" 'kom-edit-add-recipient)
   (define-key lyskom-edit-mode-map "\C-cak" 'kom-edit-add-copy)
@@ -112,6 +112,9 @@ Annat se \\[describe-mode] ---")
     (wrong-password . "Fel lösen.\n")
     (are-logged-in . "Du är nu inloggad. Vänta ett tag.\n")
     (you-have-motd . "\nDu har en lapp på dörren:\n\n")
+    (presentation-encouragement . 
+     "Du har ingen presentation. Det skulle vara trevligt om du skrev en.
+Använd kommandot Äp. Om du inte vill skriva någon presentation tryck fs.\n")
 
     (first-greeting . "%#1s
 Det tycks vara första gången du använder LysKOM. Välkommen!
@@ -702,6 +705,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-review-clear           "Återse hoppa")
     (kom-review-last-normally-read
      				"Återse igen")
+    (kom-review-noconversion    "Återse omodifierat")
     (kom-review-next            "Återse nästa")
     (kom-find-root		"Återse urinlägget")
     (kom-review-by-to           "Återse senaste")
@@ -765,12 +769,12 @@ Cf. paragraph-start.")
     nil
   (setq lyskom-mode-map (make-keymap))
   (suppress-keymap lyskom-mode-map)
-  (fset 'lyskom-review-prefix (make-keymap))
-  (fset 'lyskom-change-prefix (make-keymap))
-  (fset 'lyskom-next-prefix (make-keymap))
-  (fset 'lyskom-list-prefix (make-keymap))
-  (fset 'lyskom-get-prefix (make-keymap))
-  (fset 'lyskom-S-prefix (make-keymap))
+  (define-prefix-command 'lyskom-review-prefix)
+  (define-prefix-command 'lyskom-change-prefix)
+  (define-prefix-command 'lyskom-next-prefix)
+  (define-prefix-command 'lyskom-list-prefix)
+  (define-prefix-command 'lyskom-get-prefix)
+  (define-prefix-command 'lyskom-S-prefix)
   (define-key lyskom-mode-map "{" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "[" 'lyskom-change-prefix)
   (define-key lyskom-mode-map "\344" 'lyskom-change-prefix) ; 8-bit emacs.
@@ -1053,3 +1057,29 @@ Users are encouraged to use their best sense of humor.")
   (lyskom-start-of-command 'kom-quick-mode)
   (use-local-map lyskom-mode-map)
   (lyskom-end-of-command))
+
+
+;; Review a non-converted text
+;; Author: Linus Tolke
+ 
+
+(defun kom-review-noconversion (&optional text-no)
+  "Displays the last read text without any conversion."
+  (interactive (list 
+		(cond
+		 ((null current-prefix-arg)
+		  lyskom-current-text)
+		 ((integerp current-prefix-arg)
+		  current-prefix-arg)
+		 ((and (listp current-prefix-arg) 
+		       (integerp (car current-prefix-arg)) 
+		       (null (cdr current-prefix-arg)))
+		  (car current-prefix-arg))
+		 (t
+		  (signal 'lyskom-internal-error '(kom-review-noconversion))))))
+  (lyskom-start-of-command 'kom-review-noconversion)
+  (let ((knows-iso-8859-1 kom-emacs-knows-iso-8859-1))
+    (setq kom-emacs-knows-iso-8859-1 t)
+    (lyskom-view-text 'main text-no)
+    (lyskom-run 'main 'set 'kom-emacs-knows-iso-8859-1 knows-iso-8859-1)
+    (lyskom-run 'main 'lyskom-end-of-command)))
