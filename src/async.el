@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.38 2001-04-23 21:39:40 joel Exp $
+;;;;; $Id: async.el,v 44.39 2001-05-02 07:31:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.38 2001-04-23 21:39:40 joel Exp $\n"))
+	      "$Id: async.el,v 44.39 2001-05-02 07:31:41 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -113,7 +113,11 @@ this function shall be with current-buffer the BUFFER."
 	    'name-has-changed-to-name-r 
 	    old-name 
 	    new-name
-	    (lyskom-default-button 'conf conf-no)))))))
+	    (lyskom-default-button 'conf conf-no))))
+
+         ;; Update in the mship-edit buffer
+
+         (lp--maybe-update-entry-for-conf conf-no))))
      
      ((eq msg-no 6)			;i_am_on - something is moving
       (let ((info (lyskom-parse-who-info)))

@@ -371,7 +371,8 @@ only recomputed if the window width changes."
 
       (if (lp--entry->selected entry)
           (lp--entry-set-background entry (lyskom-face-background-name 'kom-mark-face))
-        (lp--entry-set-background entry nil)))))
+        (lp--entry-set-background entry nil)))
+))
       
 
 (defun lp--format-entry-expansion (conf-stat defer-info)
@@ -1449,8 +1450,8 @@ With prefix arg, contract only those that were created by self."
 (def-kom-command kom-handle-membership ()
   "Pop up a buffer to manage memberships in"
   (interactive)
-  (set-buffer (lp--create-buffer))
-  (lyskom-wait-queue 'deferred)
+  (let ((kom-deferred-printing nil))
+    (set-buffer (lp--create-buffer)))
   (lp--mode)
   (lp--first-entry))
 
