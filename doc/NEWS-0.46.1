@@ -94,15 +94,32 @@
    Den här funktionen fungerar bara om man kör mot lyskomd version
    2.0.0 eller nyare.
 
+** Ändra parentes klarar av mer komplicerade namn.
+
+** RydKOM har flyttats till kom.hem.liu.se.
 
 * Bugfixar
+
+** Klienten fungerar i Gnu Emacs 21.
+
+** Den oändliga loopen som kunde inträffa när man blir utkastad ur KOM
+   är borta.
+
+** Klienten läcker inte information när man går till ett möte som inte
+   har några inlägg medan man är anonym.
+
+** Superhoppa känner igen det tomma ärendet på ett korrekt sätt.
+
+** Kontrollen av det kommenterades författares medlemskap fungerar
+   korrekt.
 
 ** Ändra prioritet ändrar inte automatiskt till ens defaultprioritet,
    så man får en fråga om ny prioritet oavsett om man har ställt in en
    defaultprioritet eller inte.
 
 ** Utfyllnaden och igenkänningen av kommandon i minibufferten är
-   bättre. Det finns förmodligen ytterligare några oväntade problem.
+   återställd till hur det fungerade i 0.45.2 (dvs man måste skriva in
+   parenteser).
 
 ** Långsamma kommandon fungerar bättre.
 
