@@ -2271,3 +2271,99 @@ Obs obs. Om du har satt denna variabel till nil n{r du sparade med
 nummer f|r d} {r den 0 och markering med nummer 0 tar bort
 alla markeringar.
 (91456) -----------------------------------
+
+93554 1991-08-25  17:05  /4 rader/ |rjan
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <42>
+Mottagare: |rjan <222>
+    Mottaget: 1991-08-25 17:05
+[rende: 
+
+Vilket kommando anv{nder man n{r man vill rapportera en bugg
+tillsammans med omst{ndigheterna? Jag vet hur man kopierar fr}n en
+buffert (*kom*) till en annan (*kom*-edit), men programmerarna kanske
+vill ha mer info...
+(93554)
+Kommentar i text 93556 av Klaus Zeuge UPDATE
+L{sa n{sta kommentar - Status (f|r) person
+
+93556 1991-08-25  17:07  /6 rader/ Klaus Zeuge UPDATE
+Kommentar till text 93554 av |rjan
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <43>
+Mottagare: |rjan <223>
+    Mottaget: 1991-08-25 17:18
+[rende: kom-compile-bug-report
+
+M-x kom-compile-bug-report RET
+
+(Eller var det lyskom-compile-bug-report ? Jag har aldrig riktigt
+insett n{r ett kommando eller en variabel b|rjar med namnet kom eller
+lyskom. B}da refereras ju av anv{ndaren, s} det kan inte vara
+intern/extern som g{ller).
+(93556)
+Kommentar i text 93558 av ceder (Per Cederqvist  Lysator)
+
+96364 1991-08-28  22:28  /3 rader/ Per Danielsson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <48>
+[rende: CONTINUE KOM
+
+Finns det n}got s{tt att }terstarta Lyskom efter att man gjort Q?
+S{ger jag M-X Lyskom s} skapas ju en ny kom-buffert och det tycker jag
+{r on|digt.
+(96364)
+Kommentar i text 96372 av ceder (Per Cederqvist  Lysator)
+
+96372 1991-08-28  22:35  /2 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 96364 av Per Danielsson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <50>
+[rende: CONTINUE KOM
+
+Nej, det g}r inte att }terstarta den. Men du kan ju alltid d|da
+bufferten ocks}...
+(96372)
+
+96367 1991-08-28  22:30  /4 rader/ Per Danielsson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <49>
+[rende: Teckenrepresentation
+
+En lustighet noterar jag vid inl{ggsskrivning. I bufferten *kom*-edit
+s} {r en del tecken skrivna med 8-bitskod verkar det som. N{r man
+l{ser inl{gget sedan s} syns det med vanlig 7-bitskod (ordet "[rende"
+t.ex.).
+(96367)
+
+96566 1991-08-28  23:47  /18 rader/ Linus Tolke Y
+Kommentar till text 96367 av Per Danielsson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <51>
+[rende: Teckenrepresentation
+
+Lyskoms protokoll {r ett 8-bitars protokoll och vi anv{nder
+normalt de svenska iso-8859-1 tecknena }{| och ][\.
+emacs klarar dock inte detta (dvs att visa dessa p} ett snyggt
+s}tt) utan man beh|ver en specialpatchad variant av emacs.
+
+Eftersom trots allt det flesta personer som k|r Lyskom inte har
+denna specialpatchade emacs s} finns det funktioner som omvandlar
+iso-8859-1 text till motsvarande swascii (n}got som blir ganska bra
+om man anv{nder svenska tecken f|r }{| och ][\.
+
+Denna omvandling har vi dock i just detta (och n}gra f}
+st{llet till) misslyckats med.
+
+[ (\304) {r allts} stora {.
+
+Har du en emacs som klarar 8-bitars tecken skall du i din .emacs
+s{tta variabeln kom-emacs-knows-iso-8859-1 till sant s} f}r
+du 8-bitars tecken |ver allt.
+(96566)
+
+97469 1991-08-29  21:14  /5 rader/ Linus Tolke Y
+Kommentar till text 96694 av Per Danielsson
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <53>
+[rende: Teckenrepresentation
+------------------------------------------------------------
+Om du bara vill ha kom-emacs-knows-iso-8859-1 i vissa fall kan du
+givetvis g|ra saker i stil med:
+(setq kom-emacs-knows-iso-8859-1 (string-match "^sun$\\|^sun-e$\\|alla
+andra terminaltyper d{r du vill ha 8-bitars emacs" 
+					       (getenv "TERM")))
+(97469) -----------------------------------

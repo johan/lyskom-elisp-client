@@ -1,3 +1,8 @@
+* VIKTIGT
+  Min fix f|r att f} quit att fungera g|r att man inte l{ngre kan
+  avbryta funktioner som l{ser saker i minibufferten fr}n en handler.
+  M}ste }tg{rdas.
+
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
 
@@ -101,6 +106,14 @@ Linus: R{cker inte ceders uppdelning av anropen?
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
   who-info. 
+
+* Problem med overlay map & bellmans specialfix till edit-moden tror
+  jag.
+
+* ]terse (n{sta) markerade - Inte riktigt bra. N{r man l{ser markerade
+  plockas inte den tomma READ-INFOn bort efter sig. Kolla noga ceders
+  {ndringar som rationaliserade bort ett (initiate-get-text-stat 0)
+  Jag tror det {r det som strular.
 
 
 
