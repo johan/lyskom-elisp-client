@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.194 2002-01-07 16:47:30 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.195 2002-01-30 08:10:24 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.194 2002-01-07 16:47:30 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.195 2002-01-30 08:10:24 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -1329,6 +1329,8 @@ Uppkopplad sedan %#8s%#9s")
     (reformat-truncated . "nedkortad")
 
     (reformat-signature . "avsignerad")
+
+    (reformat-deswascii . "var swascii")
 
     (need-library . "Paketet \"%#1s\" behövs för att utföra detta kommando.\n")
     (calc-expression . "Uttryck: ")

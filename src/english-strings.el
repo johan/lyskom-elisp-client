@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.162 2002-01-07 16:47:30 byers Exp $
+;;;;; $Id: english-strings.el,v 44.163 2002-01-30 08:10:24 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.162 2002-01-07 16:47:30 byers Exp $"))
+              "$Id: english-strings.el,v 44.163 2002-01-30 08:10:24 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1331,6 +1331,8 @@ On since %#8s%#9s")
     (reformat-truncated . "truncated")
 
     (reformat-signature . "designed")
+
+    (reformat-deswascii . "was swascii")
 
     (need-library . "The \"%#1s\" package is required for this command.\n")
     (calc-expression . "Expression: ")
