@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: docgen.el,v 44.2 2003-01-09 01:37:48 byers Exp $
+;;;;; $Id: docgen.el,v 44.3 2003-01-09 01:45:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -64,7 +64,7 @@
     (let ((s str))
       (setq s (replace-in-string s "&" "&amp;"))
       (setq s (replace-in-string s "<" "&lt;"))
-      (setq s (replace-in-string s ">" "&lt;"))
+      (setq s (replace-in-string s ">" "&gt;"))
       s)))
 
 (defun lyskom-docgen-get-name (fn lang)
@@ -95,7 +95,7 @@
                 (lyskom-docgen-error "%s: reference to non-command %s" fn sym))
               (setq result
                     (concat result
-                            (format "<link linkend=\"fn:%s\"><command>%s</command></link> (<link linkend=\"fn:%s\"><function>%s</function></link>)"
+                            (format "<link linkend=\"fn:%s\"><command>%s</command></link> [<link linkend=\"fn:%s\"><function>%s</function></link>]"
                                     sym
                                     (lyskom-docgen-get-name fn 'en)
                                     sym
@@ -140,9 +140,9 @@
            (doc-en (lyskom-docgen-get-doc command)))
       (lyskom-docgen-princ
        (format "\
-    <section id=\"fn:%s\"><title>%s (%s)</title>
+    <section id=\"fn:%s\"><title>%s [%s]</title>
 
-    <informaltable frame=\"top\">
+    <informaltable frame=\"topbot\">
       <tgroup cols=\"2\">
         <tbody valign=\"top\">
           <row>
