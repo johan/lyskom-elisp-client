@@ -38,7 +38,7 @@ Buggar
 
 Allmänna förbättringar
 
-    Återinför "Lista (med) regexpar", eller vad den nu hette.
+    Återinför "Lista (med) regexpar", eller vad den nu hette. (FIXAT)
 
     Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
     ett inläggs eget nummer, alltså det som står precis innan datumet
