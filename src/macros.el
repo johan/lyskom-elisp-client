@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 39.3 1996-03-20 13:15:17 davidk Exp $
+;;;;; $Id: macros.el,v 39.4 1996-03-20 13:44:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 39.3 1996-03-20 13:15:17 davidk Exp $\n"))
+	      "$Id: macros.el,v 39.4 1996-03-20 13:44:00 davidk Exp $\n"))
 
 
 
@@ -155,24 +155,31 @@ Value returned is always nil."
   "Return from blocking-do-multiple")
 
 (defun lyskom-blocking-do-multiple (call-list)
-  (let ((lyskom-multiple-blocking-return 'not-yet-gotten))
-    (lyskom-collect 'blocking)
-    (while call-list
-      (apply (intern-soft (concat "initiate-"
-				  (symbol-name (car (car call-list)))))
-	     'blocking nil
-	     (cdr (car call-list)))
-      (setq call-list (cdr call-list)))
-    (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
-    (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
-		(not lyskom-quit-flag))
-      (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
-    (if lyskom-quit-flag
-	(progn
-	  (setq lyskom-quit-flag nil)
-	  (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
-	  (signal 'quit nil)))
-    lyskom-multiple-blocking-return))
+  (save-excursion
+    (set-buffer (process-buffer (or lyskom-proc
+				    lyskom-blocking-process)))
+    ;; If this happens, we're in trouble
+    (if lyskom-is-parsing
+	(lyskom-really-serious-bug))
+    
+    (let ((lyskom-multiple-blocking-return 'not-yet-gotten))
+      (lyskom-collect 'blocking)
+      (while call-list
+	(apply (intern-soft (concat "initiate-"
+				    (symbol-name (car (car call-list)))))
+	       'blocking nil
+	       (cdr (car call-list)))
+	(setq call-list (cdr call-list)))
+      (lyskom-use 'blocking 'lyskom-blocking-do-multiple-1)
+      (while (and (eq lyskom-multiple-blocking-return 'not-yet-gotten)
+		  (not lyskom-quit-flag))
+	(accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
+      (if lyskom-quit-flag
+	  (progn
+	    (setq lyskom-quit-flag nil)
+	    (lyskom-insert-before-prompt (lyskom-get-string 'interrupted))
+	    (signal 'quit nil)))
+      lyskom-multiple-blocking-return)))
 
 (defun lyskom-blocking-do-multiple-1 (&rest data)
   (setq lyskom-multiple-blocking-return data))

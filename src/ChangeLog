@@ -1,5 +1,20 @@
 Tue Mar 19 00:03:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* lyskom-rest.el (lyskom-start-of-command): Gör (sit-for 0)
+	oftare.
+
+	* macros.el (lyskom-blocking-do-multiple): Byt till kom-bufferten
+	först.
+
+	* services.el (blocking-do): Testa efter parserrekursion.
+
+	* macros.el (lyskom-blocking-do-multiple): Dito.
+
+	* lyskom-rest.el (lyskom-really-serious-bug): Ny funktion för
+	debugändamål.
+	
+	* commands2.el (kom-bug-report): Fixade en liten bug.
+
 	* vars.el.in (when): Flyttade från macros.el.
 
 	* Makefile (HEADER-ELC): Bytte ordningen mellan vars.el och
