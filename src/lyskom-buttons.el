@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.3 1996-10-08 02:07:24 davidk Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.4 1996-10-08 02:57:55 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -111,9 +111,11 @@ on such functions see the documentation for lyskom-add-button-action."
 (defun kom-mouse-3 (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."
   (interactive "@e")
-  (let ((start (event-start event)))
-    (lyskom-mouse-3 (car (cdr start)) event)))
-
+  (let ((pos (posn-point (event-start event))))
+    (if (get-text-property pos 'lyskom-button-type)
+	(lyskom-button-menu pos event)
+      (lyskom-background-menu pos event))))
+  
 (defun kom-mouse-null (event)
   "Do nothing."
   ;; This is here to pervent unwanted events when clicking mouse-3
@@ -123,12 +125,11 @@ on such functions see the documentation for lyskom-add-button-action."
   "Create a menu keymap from a list of button actions."
   ;; Use the command as the event for simplicity.
   (append (list 'keymap title)
-	  (mapcar '(lambda (entry) (cons (cdr (cdr entry)) entry))
+	  (mapcar '(lambda (entry) (cons (cdr entry) entry))
 		  entries)))
 
-(defun lyskom-mouse-3 (pos event)
+(defun lyskom-button-menu (pos event)
   "Internal function used by kom-mouse-3"
-  (setq last-command-event nil)
   (let* ((type  (get-text-property pos 'lyskom-button-type))
          (arg   (get-text-property pos 'lyskom-button-arg))
          (text  (get-text-property pos 'lyskom-button-text))
