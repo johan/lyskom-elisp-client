@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.123 2002-12-31 19:15:28 byers Exp $
+;;;;; $Id: utilities.el,v 44.124 2003-01-01 02:53:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.123 2002-12-31 19:15:28 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.124 2003-01-01 02:53:17 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1535,12 +1535,13 @@ car of each element is the recipient number and the cdr is the type."
 Returns a cons of (LOCAL . GLOBAL)"
   (let* ((lowest (conf-stat->first-local-no conf-stat))
          (highest (+ lowest (conf-stat->no-of-texts conf-stat)))
+         (conf-no (conf-stat->conf-no conf-stat))
          (result nil)
          (index (+ lowest (/ (- highest lowest) 2)))
          (last-index (1- index)))
     (while (/= last-index index)
       (let* ((map (blocking-do 'local-to-global 
-                               (conf-stat->conf-no conf-stat)
+                               conf-no
                                index
                                1)))
         (cond ((null map) (setq lowest highest))
@@ -1554,7 +1555,7 @@ Returns a cons of (LOCAL . GLOBAL)"
                                  (lyskom-traverse misc
                                      (text-stat->misc-info-list text-stat)
                                    (when (and (memq (misc-info->type misc) lyskom-recpt-types-list)
-					      (eq (misc-info->recipient-no misc) text-no))
+					      (eq (misc-info->recipient-no misc) conf-no))
                                      (lyskom-traverse-break 
                                       (if (misc-info->sent-at misc)
                                           (misc-info->sent-at misc)
@@ -1569,7 +1570,31 @@ Returns a cons of (LOCAL . GLOBAL)"
                    (setq result text-stat))))))
       (setq last-index index)
       (setq index (+ lowest (/ (- highest lowest) 2))))
-    (cons last-index result)))
+    (cons last-index (text-stat->text-no result))))
+
+(defun lyskom-read-date (prompt)
+  "Read a date from the minibuffer. 
+Returns a list (YEAR MONTH DATE) corresponding to the user's input."
+  (let ((result nil)
+        (date nil))
+    (while (null result)
+      (setq date (lyskom-verified-read-from-minibuffer 
+                  prompt 
+                  date
+                  (lambda (data)
+                    (condition-case nil
+                        (progn (lyskom-parse-date data)
+                               nil)
+                      (lyskom-error (lyskom-get-string 'invalid-date-entry))))))
+      (condition-case nil
+          (setq result (lyskom-parse-date date))
+        (lyskom-error nil)))
+    result))
+
+(put 'lyskom-parse-date-invalid 'error-conditions
+     '(error lyskom-error))
+(put 'lyskom-parse-date-invalid 'error-message
+     "Error parsing date")
 
 (defvar lyskom-year-window-start 80
   "Windowing threshold for YY year specifications.
@@ -1577,24 +1602,41 @@ Years below this are considered in the 21st century. Years above this
 in the 20th century")
 
 (defun lyskom-parse-date (arg)
-  "Parse ARG as a date."
-  (let ((month-regexp (concat "\\("
-                              (mapconcat (lambda (el)
-                                           (regexp-quote (car el)))
-                                         lyskom-month-names
-                                         "\\|")
-                              "\\)"))
-        (dmy-regexp (concat "\\("
-                            (mapconcat (lambda (el)
-                                         (regexp-quote (lyskom-get-string el)))
-                                       '(years year months month days day)
-                                       "\\|")
-                            "\\)"))
-        (test-date (format-time-string "%x" '(20 0)))
-        year month day di mi yi)
+  "Parse ARG (a string) as a date.
+Returns a list (YEAR MONTH DAY) corresponding to the date in ARG."
+  (let* ((month-regexp (concat "\\("
+                               (mapconcat (lambda (el)
+                                            (regexp-quote (car el)))
+                                          lyskom-month-names
+                                          "\\|")
+                               "\\)"))
+         (y-regexp (concat "\\("
+                             (mapconcat (lambda (el)
+                                          (regexp-quote (lyskom-get-string el)))
+                                        '(years year)
+                                        "\\|")
+                             "\\)"))
+         (m-regexp (concat "\\("
+                             (mapconcat (lambda (el)
+                                          (regexp-quote (lyskom-get-string el)))
+                                        '(months month)
+                                        "\\|")
+                             "\\)"))
+         (d-regexp (concat "\\("
+                             (mapconcat (lambda (el)
+                                          (regexp-quote (lyskom-get-string el)))
+                                        '(days day)
+                                        "\\|")
+                             "\\)"))
+         (test-date (format-time-string "%x" '(20 0)))
+         (now (decode-time))
+         (current-day (elt now 3))
+         (current-month (elt now 4))
+         (current-year (elt now 5))
+         (case-fold-search t)
+         year month day di mi yi)
 
-  ;; Look at test-date to see where dates in ambiguous cases should go
-
+    ;; Look at test-date to see where dates in ambiguous cases should go
     (cond ((string-match "01.*16.*70" test-date) (setq di 2 mi 1 yi 3))
           ((string-match "01.*70.*16" test-date) (setq di 3 mi 1 yi 2))
           ((string-match "16.*01.*70" test-date) (setq di 1 mi 2 yi 3))
@@ -1602,27 +1644,33 @@ in the 20th century")
           ((string-match "70.*01.*16" test-date) (setq di 3 mi 2 yi 1))
           ((string-match "70.*16.*01" test-date) (setq di 2 mi 3 yi 1)))
 
-     (cond ((string-match "\\([0-9][0-9][0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)" arg)
+    ;; Match various variants
+    (cond ((string-match "^\\([0-9][0-9][0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)$" arg)
            ;; YYYY-MM-DD
            (setq year (string-to-int (match-string 1 arg))
                  month (string-to-int (match-string (if (> mi di) 3 2) arg))
-                 day (string-to-int (match-string (if (> di mi) 2 3) arg)))
+                 day (string-to-int (match-string (if (> mi di) 2 3) arg)))
            (when (> month 12) (setq month day day month))
            )
-          ((string-match "\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9][0-9][0-9]?\\)" arg)
-           ;; YYYY-MM-DD
+
+          ((string-match "^\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9][0-9][0-9]?\\)$" arg)
+           ;; MM-DD-YYYY
            (setq year (string-to-int (match-string 3 arg))
                  month (string-to-int (match-string (if (> mi di) 2 1) arg))
-                 day (string-to-int (match-string (if (> di mi) 1 2) arg)))
+                 day (string-to-int (match-string (if (> mi di) 1 2) arg)))
            (when (> month 12) (setq month day day month))
            )
-          ((string-match "\\([0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)" arg)
+
+          ((string-match "^\\([0-9][0-9]\\)[-./]\\([0-9][0-9]?\\)[-./]\\([0-9][0-9]?\\)$" arg)
+           ;; Ambiguous:
+           ;; YY/MM/DD, YY/DD/MM, MM/DD/YY, DD/MM/YY
            (setq year (string-to-int (match-string yi arg))
                  month (string-to-int (match-string mi arg))
                  day (string-to-int (match-string di arg)))
            (when (> month 12) (setq month day day month))
            )
-          ((string-match "\\([0-9][0-9]\\)/\\([0-9][0-9]\\)" arg)
+
+          ((string-match "^\\([0-9][0-9]\\)/\\([0-9][0-9]\\)$" arg)
            ;; Ambiguous:
            ;; MM/DD       Euro
            ;; DD/MM       US
@@ -1633,37 +1681,140 @@ in the 20th century")
                    ((> di mi) (setq month b day a))
                    (t (setq month a day b))))
            )
-          ((string-match (format "%s \\([0-9][0-9]?\\)" month-regexp) arg)
-           ;; Ambiguous:
-           ;; Month DD
+
+          ((string-match (format "^\\([0-9][0-9]?\\) %s \\([0-9][0-9][0-9][0-9]\\)$" month-regexp) arg)
+           ;; DD Month YYYY
+           (setq day (string-to-int (match-string 1 arg))
+                 month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
+                 year (string-to-int (match-string 3 arg)))
            )
-          ((string-match (format "%s,? \\([0-9][0-9][0-9][0-9]\\)" month-regexp) arg)
+
+          ((string-match (format "^%s \\([0-9][0-9]?\\), \\([0-9][0-9][0-9]?[0-9]?\\)$" month-regexp) arg)
+           ;; Month DD, YYYY
+           (setq day (string-to-int (match-string 2 arg))
+                 month (cdr (lyskom-string-assoc (match-string 1 arg) lyskom-month-names))
+                 year (string-to-int (match-string 3 arg)))
+           )
+
+          ((string-match (format "^\\([0-9][0-9]?\\) %s, \\([0-9][0-9][0-9]?[0-9]?\\)$" month-regexp) arg)
+           ;; DD Month, YYYY
+           (setq day (string-to-int (match-string 1 arg))
+                 month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
+                 year (string-to-int (match-string 3 arg)))
+           )
+
+          ((string-match (format "^%s,? \\([0-9][0-9][0-9][0-9]\\)$" month-regexp) arg)
            ;; Ambiguous:
            ;; Month YYYY
+           (setq day 1
+                 month (cdr (lyskom-string-assoc (match-string 1 arg) lyskom-month-names))
+                 year (string-to-int (match-string 2 arg)))
            )
-          ((string-match (format "\\([0-9][0-9]?\\) %s" month-regexp) arg)
+
+          ((string-match (format "^%s \\([0-9][0-9]?\\)$" month-regexp) arg)
+           ;; Ambiguous:
+           ;; Month DD, Month YY
+           (setq month (cdr (lyskom-string-assoc (match-string 1 arg) lyskom-month-names))
+                 day (string-to-int (match-string 2 arg))
+                 year current-year)
+           (when (> day 31) (setq day 1 year day))
+           )
+
+          ((string-match (format "^\\([0-9][0-9]?\\) %s$" month-regexp) arg)
            ;; DD Month
+           (setq day (string-to-int (match-string 1 arg))
+                 month (cdr (lyskom-string-assoc (match-string 2 arg) lyskom-month-names))
+                 year current-year)
            )
-          ((string-match (format "\\([0-9][0-9]?\\) %s \\([0-9][0-9][0-9][0-9]\\)" month-regexp) arg)
-           ;; DD Month YYYY
+
+          ((string-match (format "^-\\([0-9]+\\) %s$" y-regexp) arg)
+           ;; -NN years
+           (setq year (- current-year (string-to-int (match-string 1 arg)))
+                 day current-day
+                 month current-month)
            )
-          ((string-match (format "%s \\([0-9][0-9]?\\), \\([0-9][0-9][0-9]?[0-9]?\\)" month-regexp) arg)
-           ;; Month DD, YYYY
+
+          ((string-match (format "^-\\([0-9]+\\) %s$" m-regexp) arg)
+           ;; -NN months
+           (setq year current-year month current-month day current-day)
+           (let ((count (string-to-int (match-string 1 arg))))
+             (while (> count 0)
+               (if (>= count month)
+                   (setq count (- count month)
+                         year (1- year)
+                         month 12)
+                 (setq month (- month count) count 0))))
+           (setq day (lyskom-adjust-day-for-date year month day))
            )
-          ((string-match (format "\\([0-9][0-9]?\\) %s, \\([0-9][0-9][0-9]?[0-9]?\\)" month-regexp) arg)
-           ;; DD Month, YYYY
+
+          ((string-match (format "^-\\([0-9]+\\) %s$" d-regexp) arg)
+           ;; -NN days
+           ;; Theres probably an off-by-one error in this code on year transitions
+           ;; but I really don't care.
+           (setq year current-year month current-month day current-day)
+           (let ((count (string-to-int (match-string 1 arg))))
+             (while (> count 0)
+               (if (>= count day)
+                   (progn (setq count (- count day) month (1- month))
+                          (when (< month 1) (setq month 12 year (1- year)))
+                          (setq day (lyskom-adjust-day-for-date year month 31)))
+                 (setq day (- day count) count 0))))
+           (setq day (lyskom-adjust-day-for-date year month day))
            )
-          ((string-match (format "-\\([0-9]+\\) %s" dmy-regexp) arg)
-           ;; -NN days, months, years
+          ((string-match "^\\([0-9][0-9][0-9][0-9]?\\)$" arg)
+           ;; YYYY goes last because the pattern is the most general
+           (setq year (string-to-int (match-string 0 arg)) month 1 day 1)
            )
+          (t (signal 'lyskom-parse-date-invalid (list (format "Unrecognized date: %s" arg))))
           )
 
-    (if (< year lyskom-year-window-start)
-        (setq year (+ 2000 year))
-      (setq year (+ 1900 year)))
+     ;; Do the window thing for two-digit dates
+     (cond ((< year lyskom-year-window-start) (setq year (+ 2000 year)))
+           ((< year 100) (setq year (+ 1900 year))))
 
-    (list year month day)
-    ))
+     ;; Check date validity. Check month before checking days-in-month or stuff breaks
+     (when (or (< month 1) (< day 1) (> month 12)
+               (> day (lyskom-days-in-month year month)))
+       (signal 'lyskom-parse-date-invalid (list (format "Invalid date: %s" arg))))
+
+
+     (list year month day)
+     ))
+
+(defvar lyskom-month-limits '[31        ; Jan
+                              28        ; Feb (non-leap)
+                              31        ; Mar
+                              30        ; Apr
+                              31        ; May
+                              30        ; Jun
+                              30        ; Jul
+                              31        ; Aug
+                              30        ; Sep
+                              31        ; Oct
+                              30        ; Nov
+                              31        ; Dec
+                              ]
+  "Number of days in various months. The value for february is not used.")
+
+(defun lyskom-is-leap-year (year)
+  "Return non-nil if YEAR is a leap year."
+  (or (and (zerop (% year 4))
+           (not (zerop (% year 100))))
+      (zerop (% year 400))))
+
+(defun lyskom-days-in-month (year month)
+  "Return the number of days mONTH of YEAR.
+Args: YEAR MONTH"
+  (cond ((eq month 2) (if (lyskom-is-leap-year year) 29 28))
+        (t (elt lyskom-month-limits (1- month)))))
+
+
+(defun lyskom-adjust-day-for-date (year month day)
+  "Return an appropriate day of month for a combination of YEAR, MONTH and DAY.
+If DAY is too high for YEAR and MONTH, return the maximum permissible DAY for
+that combination. Otherwise return DAY."
+  (let ((mdays (lyskom-days-in-month year month)))
+    (if (> day mdays) mdays day)))
 
 
 ;;; ================================================================

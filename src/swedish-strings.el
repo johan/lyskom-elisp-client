@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.284 2002-12-31 19:15:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.285 2003-01-01 02:53:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.284 2002-12-31 19:15:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.285 2003-01-01 02:53:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1871,22 +1871,27 @@ teckenkodning.
     (has-nameday-1 . "%#1s har namnsdag i dag.")
     (has-nameday-2 . "%#1s och %#2s har namnsdag i dag.")
 
+    (invalid-date-entry . "Ogiltigt datum")
+    (number-out-of-range . "Otillåtet tal")
+    (or-date . "eller datum")
 
+    (set-unread-n . "Endast läsa %#1d?[det senaste inlägget%]%[de senase %#1d inläggen%].\n")
+    (set-unread-date . "Endast läsa inlägg sedan %#3d %#2s %#1d.\n")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
-  '(("jan" . 1)  ("januari" . 1)
-    ("feb" . 2)  ("februari" . 2)
-    ("mar" . 3)  ("mars" . 3)
-    ("apr" . 4)  ("april" . 4)
-    ("maj" . 5)  ("maj" . 5)
-    ("jun" . 6)  ("juni" . 6)
-    ("jul" . 7)  ("juli" . 7)
-    ("aug" . 8)  ("augusti" . 8)
-    ("sep" . 9)  ("september" . 9)
-    ("okt" . 10) ("oktober" . 10)
-    ("nov" . 11) ("november" . 11)
-    ("dec" . 12) ("december" . 12)))
+  '(("januari" . 1)   ("jan" . 1)
+    ("februari" . 2)  ("feb" . 2)
+    ("mars" . 3)      ("mar" . 3)
+    ("april" . 4)     ("apr" . 4)
+    ("maj" . 5)       ("maj" . 5)
+    ("juni" . 6)      ("jun" . 6)
+    ("juli" . 7)      ("jul" . 7)
+    ("augusti" . 8)   ("aug" . 8)
+    ("september" . 9) ("sep" . 9)
+    ("oktober" . 10)  ("okt" . 10)
+    ("november" . 11) ("nov" . 11)
+    ("december" . 12) ("dec" . 12)))
 
 
 ;;; ================================================================

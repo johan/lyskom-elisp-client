@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.148 2002-12-31 10:30:41 byers Exp $
+;;;;; $Id: commands2.el,v 44.149 2003-01-01 02:53:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.148 2002-12-31 10:30:41 byers Exp $\n"))
+              "$Id: commands2.el,v 44.149 2003-01-01 02:53:15 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -743,16 +743,26 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                            (<= 0 narg)
                            (<= narg (conf-stat->no-of-texts conf-stat)))
                       narg
-                    (lyskom-read-num-range 
-                     0 (conf-stat->no-of-texts conf-stat)
-                     (lyskom-format 'only-last
-                                    (conf-stat->no-of-texts conf-stat)
-                                    (conf-stat->name conf-stat)))))
-               (result (blocking-do 'set-unread conf-no n))
-               (membership (blocking-do 'query-read-texts
-                                        lyskom-pers-no
-                                        conf-no)))
-          (lyskom-ignore result)
+                    (lyskom-read-num-range-or-date 0 (conf-stat->no-of-texts conf-stat)
+                                                   (lyskom-format 'only-last
+                                                                  (conf-stat->no-of-texts conf-stat)
+                                                                  (conf-stat->name conf-stat)))))
+               (membership nil))
+          (cond ((listp n)
+                 (lyskom-format-insert 'set-unread-date 
+                                       (elt n 0)
+                                       (car (rassq (elt n 1) lyskom-month-names))
+                                       (elt n 2))
+                 (let* ((target-date (lyskom-create-time 0 0 0 (elt n 2) (elt n 1) (elt n 0) 0 0 nil))
+                        (text (lyskom-find-text-by-date conf-stat target-date)))
+                   (when text
+                     (blocking-do 'set-last-read 
+                                  (conf-stat->conf-no conf-stat)
+                                  (car text)))))
+                ((numberp n) 
+                 (lyskom-format-insert 'set-unread-n n)
+                 (blocking-do 'set-unread conf-no n)))
+          (setq membership (blocking-do 'query-read-texts lyskom-pers-no conf-no))
           (lyskom-replace-membership membership)
           (if (= conf-no lyskom-current-conf)
               (set-read-list-empty lyskom-reading-list))

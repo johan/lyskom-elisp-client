@@ -1,4 +1,34 @@
+2003-01-01  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 291:
+	* vars.el.in (lyskom-language): Added to minibuffer variables or
+	lyskom-get-string will fail in predicate functions used in
+	lyskom-verified-read-from-minibuffer.
+
+	* commands2.el (kom-set-unread): Allow date entry in addition to
+	number entry.
+
+	Implement date input (for bug 291):
+	* lyskom-rest.el (lyskom-verified-read-from-minibuffer): New function.
+	(lyskom-verified-read-map): New variable.
+	(lyskom-verified-read-enter): New function.
+	(lyskom-verified-read-predicate): New variable.
+	(lyskom-read-num-range-or-date): Nre function.
+
+	* utilities.el (lyskom-read-date): New function.
+
+
 2002-12-31  David Byers  <david.byers@swipnet.se>
+
+	Implement date parsing (for bug 291):
+	* utilities.el (lyskom-parse-date): Implemented the remaining
+	branches in the parser. Fixed various bugs. Validate results
+	before returning. This function should work now.
+	(lyskom-is-leap-year): New function (date-leap-year-p doesn't
+	exist in Emacs 19, so this is needed).
+	(lyskom-days-in-month): New function.
+	(lyskom-adjust-day-for-date): New function.
+	(lyskom-month-limits): New variable.
 
 	Fix bug 879:
 	* utilities.el (lyskom-read-text-no-prefix-arg): When new-default

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.220 2002-12-31 19:15:28 byers Exp $
+;;;;; $Id: vars.el.in,v 44.221 2003-01-01 02:53:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.220 2002-12-31 19:15:28 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.221 2003-01-01 02:53:17 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1400,6 +1400,7 @@ All choices are listed in `lyskom-languages'"
 (def-kom-var lyskom-language kom-default-language
   local
   inherited
+  minibuffer
   protected
   "The language currently in use for messages.")
 
@@ -1437,7 +1438,8 @@ each time ."
   "A list of month names.
 Each element is a cons cell consisting of the name of the month
 \(a symbol) and the number of the month (1-12). Each month may
-appear more than once"
+appear more than once, but the first occurence should be the
+preferred name of the month."
   local
   inherited
   language-force)

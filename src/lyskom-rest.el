@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.183 2002-12-31 00:22:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.184 2003-01-01 02:53:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.183 2002-12-31 00:22:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.184 2003-01-01 02:53:16 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -106,6 +106,11 @@
     '(error lyskom-error lyskom-format-error))
 (put 'lyskom-internal-error 'error-message
      "Internal LysKOM format error")
+
+(put 'lyskom-error 'error-conditions
+     '(error))
+(put 'lyskom-error 'error-message
+     "LysKOM error")
 
 
 ;;; ================================================================
@@ -3332,7 +3337,66 @@ VECTOR has to be sorted with regard to <."
      ;; Search the left subtree
      (t (lyskom-binsearch-internal num vector split last+1)))))
 
-      
+(defvar lyskom-verified-read-predicate nil)
+(defun lyskom-verified-read-enter ()
+  (interactive)
+  (let* ((val (minibuffer-contents))
+         (err (funcall lyskom-verified-read-predicate val)))
+    (if err
+        (minibuffer-message (format " [%s]" err))
+      (exit-minibuffer))))
+
+(defvar lyskom-verified-read-map nil)
+(if lyskom-verified-read-map
+    nil
+  (setq lyskom-verified-read-map (copy-keymap minibuffer-local-map))
+  (define-key lyskom-verified-read-map (kbd "RET") 'lyskom-verified-read-enter)
+  (define-key lyskom-verified-read-map (kbd "C-j") 'lyskom-verified-read-enter)
+  (define-key lyskom-verified-read-map (kbd "C-m") 'lyskom-verified-read-enter)
+  )
+
+(defun lyskom-verified-read-from-minibuffer (prompt initial pred)
+  "Read something from minibuffer, verifying that it is valid.
+PROMPT is the prompt and INITIAL the initial contents of the minibuffer.
+PRED is a predicate to check entered data. It should return nil or a string. If
+it returns a string, the data is not valid and the string is used as an error 
+message."
+  (let ((lyskom-verified-read-predicate pred))
+    (lyskom-with-lyskom-minibuffer
+     (lyskom-read-from-minibuffer prompt initial lyskom-verified-read-map))))
+
+
+(defun lyskom-read-num-range-or-date (low high prompt)
+  "Read a number or a date from the minibuffer.
+Args: LOW HIGH PROMPT.
+The result will be a number or a list of (YEAR MONTH DATE)."
+  (let ((result nil)
+        (val nil)
+        (prompt (concat (if (symbolp prompt) (lyskom-get-string prompt) prompt)
+                        (format "(%d-%d %s) " low high (lyskom-get-string 'or-date)))))
+    (while (null result)
+      (setq val (lyskom-verified-read-from-minibuffer 
+                   prompt 
+                   val
+                   (lambda (val)
+                     (if (string-match "^\\s-*[0-9]+\\s-*$" val)
+                         (let ((num (string-to-int val)))
+                           (unless (and (>= num low) (<= num high))
+                             (lyskom-get-string 'number-out-of-range)))
+                       (condition-case nil
+                           (progn (lyskom-parse-date val) nil)
+                         (lyskom-error (lyskom-get-string 'invalid-date-entry)))))))
+      (if (string-match "^\\s-*[0-9]+\\s-*$" val)
+          (let ((num (string-to-int val)))
+            (when (and (>= num low) (<= num high))
+              (setq result num)))
+        (condition-case nil
+            (setq result (lyskom-parse-date val) )
+          (lyskom-error nil))))
+    result))
+
+
+
 (defun lyskom-read-num-range (low high &optional prompt show-range default history nildefault)
   "Read a number from the minibuffer.
 Args: LOW HIGH &optional PROMPT SHOW-RANGE with default value DEFAULT.
