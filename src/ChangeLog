@@ -1,5 +1,8 @@
 Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
 
+	* commands2.el: (lyskom-status-conf-4): If 0 unread leave that
+	  field white.
+
 	* lyskom-rest.el (kom-view): Tommys patch once more.
 
 	* swedish-string.el, prioritize.el (lyskom-prioritize-mode-map):
