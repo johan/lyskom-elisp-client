@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 40.1 1996-03-26 14:14:00 byers Exp $
+;;;;; $Id: macros.el,v 40.2 1996-04-02 16:20:19 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 40.1 1996-03-26 14:14:00 byers Exp $\n"))
+	      "$Id: macros.el,v 40.2 1996-04-02 16:20:19 byers Exp $\n"))
 
 
 
@@ -59,18 +59,6 @@ Value returned is always nil."
 
 (put 'lyskom-traverse 'edebug-form-spec
      '(sexp form body))
-
-
-;;; Compatibility definition of save-selected-window (19.28) +++
-
-(if (not (fboundp 'save-selected-window))
-    (defmacro save-selected-window (&rest body)
-      "Execute BODY, then select the window that was selected before BODY."
-      (list 'let
-            '((save-selected-window-window (selected-window)))
-            (list 'unwind-protect
-                  (cons 'progn body)
-                  (list 'select-window 'save-selected-window-window)))))
 
 
 ;;;; lyskom-save-excursion Does not save point and mark.
@@ -129,6 +117,8 @@ Value returned is always nil."
 	       def-body))
 
 
+
+
 ;;;; Some useful macros to make the code more readable.
 
 (defmacro char-in-string (char string)
@@ -147,19 +137,6 @@ Value returned is always nil."
 (defmacro -- (var)
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
-
-(defsubst listify-vector (vector)
-  "Turn VECTOR into a list"
-  (append vector nil))
-
-(defun reverse-assoc (key cache)
-  "Same as assoc, but searches on last element in a list"
-  (reverse (assoc key (mapcar (function reverse) cache))))
-
-(defun skip-first-zeros (list)
-  (while (and list (zerop (car list)))
-    (setq list (cdr list)))
-  list)
 
 ;; Multiple blocking read from server
 
@@ -224,6 +201,68 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 
 (put 'blocking-do-multiple 'lisp-indent-function 1)
 
+
+;;; ============================================================
+;;; General compatibility macros and functions
+;;;
+;;; These are functions that may not be available in every version of
+;;; GNU Emacs 19. Replacement functions are defined here.
+;;;
+;;; Compatibility for other Emascs version should be placed in
+;;; external compatibility files so as not to sully compilation with
+;;; too many compiler warnings.
+;;;
+
+(if (not (fboundp 'byte-code-function-p))
+    (defmacro byte-code-function-p (obj) (` (compiled-function-p (, obj)))))
+
+(if (not (fboundp 'facep))
+    (progn
+      (defsubst internal-facep (x)
+        (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
+      
+      (defun facep (x)
+        "Return t if X is a face name or an internal face vector."
+        (and (or (internal-facep x)
+                 (and (symbolp x) (assq x global-face-data)))
+             t))))
+
+(if (not (fboundp 'save-selected-window))
+    (defmacro save-selected-window (&rest body)
+      "Execute BODY, then select the window that was selected before BODY."
+      (list 'let
+            '((save-selected-window-window (selected-window)))
+            (list 'unwind-protect
+                  (cons 'progn body)
+                  (list 'select-window 'save-selected-window-window)))))
+
+(if (not (fboundp 'frame-width))
+    (fset 'frame-width 'screen-width))
+
+
+;;;
+;;; Definition of map-keymap that hopefully works like the one in XEmacs
+;;; except that the sort-first argument is ignored.
+;;;
+
+(if (not (fboundp 'map-keymap))
+    (defun map-keymap (fn keymap &optional sort-first)
+      (let ((lis nil)
+            (r 0))
+        (cond ((vectorp keymap)
+               (while (< r (length keymap))
+                 (if (aref keymap r)
+                     (funcall fn r (aref keymap r)))
+                 (setq r (1+ r))))
+              (t (mapcar (function 
+                          (lambda (x)
+                            (funcall fn (car x) (cdr x))))
+                         (cdr keymap)))))))
+
+
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)
 ;;; end: 
+
+
+

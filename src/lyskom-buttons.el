@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 40.0 1996-03-26 08:31:33 byers Exp $
+;;;;; $Id: lyskom-buttons.el,v 40.1 1996-04-02 16:20:08 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -137,7 +137,7 @@ on such functions see the documentation for lyskom-add-button-action."
           ((null actl) (goto-char pos))
           ((null buf) (goto-char pos))
           ((and buf (null (get-buffer buf)))
-           (lyskom-message (lyskom-get-string 'no-such-buffer)))
+           (lyskom-message "%s" (lyskom-get-string 'no-such-buffer)))
           (t         
            (if (symbolp title) (setq title (lyskom-get-string title)))
            (set-buffer buf)
@@ -172,7 +172,7 @@ on such functions see the documentation for lyskom-add-button-action."
     (cond ((null act) (goto-char pos))
           ((null buf) (goto-char pos))
           ((and buf (null (get-buffer buf))) 
-           (lyskom-message (lyskom-get-string 'no-such-buffer)))
+           (lyskom-message "%s" (lyskom-get-string 'no-such-buffer)))
           (t (and buf (set-buffer buf))
              (funcall act
                       buf
@@ -517,7 +517,7 @@ This is a LysKOM button action."
 
 (defun lyskom-url-manager-starting (manager)
   "Tell the user that the URL manager MANAGER is starting."
-  (lyskom-message (lyskom-format (lyskom-get-string 'starting-program)
+  (lyskom-message "%s" (lyskom-format (lyskom-get-string 'starting-program)
 				 (elt manager 2))))
 
 

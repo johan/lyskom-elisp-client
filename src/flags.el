@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 40.0 1996-03-26 08:31:24 byers Exp $
+;;;;; $Id: flags.el,v 40.1 1996-04-02 16:20:01 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,11 +33,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 40.0 1996-03-26 08:31:24 byers Exp $\n"))
+	      "$Id: flags.el,v 40.1 1996-04-02 16:20:01 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
 
+;;; Dummy defun of original-user-variable-p to eliminate compiler warning.
+
+(defun original-user-variable-p (x) nil)
 
 (fset 'original-user-variable-p
       (symbol-function 'user-variable-p))
@@ -49,6 +52,10 @@
 			 (symbol-name symbol))
 	   (string-match "^lyskom-"
 			 (symbol-name symbol)))))
+
+
+(defvar lyskom-options-text nil
+  "Text mass when reading options.")
 
 
 (defun kom-edit-options ()
@@ -201,7 +208,7 @@ If successful then set the buffer not-modified. Else print a warning."
                     "\n")))
     (save-excursion
       (set-buffer kombuf)
-      (lyskom-message start-message)
+      (lyskom-message "%s" start-message)
       (initiate-create-text 'options 'lyskom-save-options-2
                             (apply 'lyskom-format-objects
                                    (apply 'lyskom-format-objects
@@ -227,7 +234,7 @@ If successful then set the buffer not-modified. Else print a warning."
     (save-excursion
      (set-buffer kombuf)
      (lyskom-insert-string 'could-not-save-options)
-     (lyskom-message (lyskom-get-string 'could-not-save-options)))))
+     (lyskom-message "%s" (lyskom-get-string 'could-not-save-options)))))
 
 (defun lyskom-save-options-3 (success kombuf done-message error-message)
   (save-excursion
@@ -235,9 +242,9 @@ If successful then set the buffer not-modified. Else print a warning."
     (if success
         (progn
           (cache-del-pers-stat lyskom-pers-no)
-          (lyskom-message done-message))
+          (lyskom-message "%s" done-message))
       (lyskom-format-insert 'could-not-set-user-area lyskom-errno)
-      (lyskom-message error-message))))
+      (lyskom-message "%s" error-message))))
 
 
 (defun lyskom-read-options ()
@@ -260,16 +267,16 @@ If successful then set the buffer not-modified. Else print a warning."
 (defun lyskom-read-options-eval (text)
   "Handles the call from where we have the text."
   (if text				;+++ Other error handler
-      (let* ((txt (text->text-mass text))
+      (let* ((lyskom-options-text (text->text-mass text))
 	     (pointers (lyskom-read-options-eval-get-holerith))
 	     common-no elisp-no
-	     (rest txt)
+	     (rest lyskom-options-text)
 	     working
 	     (r 1))
-	(let* ((txt pointers)
+	(let* ((lyskom-options-text pointers)
 	       word no
 	       (r 1))
-	  (while (> (length txt) 2)
+	  (while (> (length lyskom-options-text) 2)
 	    (setq word (lyskom-read-options-eval-get-holerith))
 	    (cond
 	     ((string= word "common")
@@ -282,14 +289,14 @@ If successful then set the buffer not-modified. Else print a warning."
 	    (++ r)))
 	(setq lyskom-other-clients-user-areas 
 	      (nreverse lyskom-other-clients-user-areas))
-	(setq txt rest)
-	(while (> (length txt) 2)
+	(setq lyskom-options-text rest)
+	(while (> (length lyskom-options-text) 2)
 	  (setq working (lyskom-read-options-eval-get-holerith))
 	  (cond
 	   ((= r common-no)
-	    (let ((txt working)
+	    (let ((lyskom-options-text working)
 		  name gname value)
-	      (while (> (length txt) 2)
+	      (while (> (length lyskom-options-text) 2)
 		(setq gname (lyskom-read-options-eval-get-holerith))
 		(setq value (lyskom-read-options-eval-get-holerith))
 		(setq name (concat "kom-" gname))
@@ -305,9 +312,9 @@ If successful then set the buffer not-modified. Else print a warning."
 			  (cons name lyskom-global-non-boolean-variables))))
 		(lyskom-set-var-from-string name value))))
 	   ((= r elisp-no)
-	    (let ((txt working)
+	    (let ((lyskom-options-text working)
 		  name value)
-	      (while (> (length txt) 2)
+	      (while (> (length lyskom-options-text) 2)
 		(setq name (lyskom-read-options-eval-get-holerith))
 		(setq value (lyskom-read-options-eval-get-holerith))
 		(lyskom-set-var-from-string name value))))
@@ -334,14 +341,15 @@ If successful then set the buffer not-modified. Else print a warning."
 
 
 (defun lyskom-read-options-eval-get-holerith ()
-  (while (string-match "\\s-" (substring txt 0 1))
-    (setq txt (substring txt 1)))
-  (let ((len (string-to-int txt))
-	(start (progn (string-match "[0-9]+H" txt)
+  (while (string-match "\\s-" (substring lyskom-options-text 0 1))
+    (setq lyskom-options-text (substring lyskom-options-text 1)))
+  (let ((len (string-to-int lyskom-options-text))
+	(start (progn (string-match "[0-9]+H" lyskom-options-text)
 		      (match-end 0))))
     (prog1
-	(substring txt start (+ start len))
-      (setq txt (substring txt (+ start len))))))
+	(substring lyskom-options-text start (+ start len))
+      (setq lyskom-options-text (substring lyskom-options-text
+                                           (+ start len))))))
 
 (defun lyskom-set-var-from-string (var string)
   "This is a wrapper aroud read-from-string.

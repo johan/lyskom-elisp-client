@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 40.0 1996-03-26 08:31:14 byers Exp $
+;;;;; $Id: english-strings.el,v 40.1 1996-04-02 16:19:50 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 40.0 1996-03-26 08:31:14 byers Exp $"))
+	      "$Id: english-strings.el,v 40.1 1996-04-02 16:19:50 byers Exp $"))
 
 
 ;;; ================================================================
@@ -169,8 +169,20 @@ Email-address:\n\nOther:\t")
     ; No entries.
 
     ; From commands1.el:
-    (appreciation . "Tap, tap.\n\n")
-    (abuse . "Thomp! Ouch!\n\n")
+    (appreciation . 
+"You are a very special person, beautiful and wise, respected by
+everybody around you. You are doing a splendid job. Many people love
+you, body and soul. You make life easier for others. You are a very
+warm and sensitive person.
+
+Be proud of being You! You have a very good reason.\n\n")
+    (abuse . 
+"You are a nuisance, ugly and stupid, disrespected by everybody around
+you. You are doing a worthless job. Many people hate you, body and
+soul. You make life harder for others. You are a very cold and
+unfeeling person.
+
+Be ashamed of being You! You have a very good reason.\n\n")
 
 
     (what-conf-to-delete . "Conference/user to delete: ")
@@ -533,11 +545,14 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     ; From edit-text.el:
     (press-C-c-C-c . "Enter C-c C-c to post the article.")
     (recipient . "Recipient:")
+    (recipient-prefix . "[Rr]")
     (carbon-copy . "Carbon copy:")
+    (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (text-mass . "%#4s%#1s\n%#2s\n%#3s")
     (comment-to-by . "%#1s to article %#2d%#3s.\n")
     (already-sent . "You have already posted this article. Post it anyway? ")
     (subject . "Subject: ")
+    (subject-prefix . "[Ss]")
     (enter-subject-idi . "Enter a subject.")
     (which-text-include . "Include which article: ")
     (added-recipient . "Recipient: ")
@@ -685,6 +700,7 @@ Send a bug report.\n")
     (save-on-file-q . "Save which article in file: (%#1s) ")
     (wait-for-prompt . "Wait for the prompt.")
     (prompt-modifier-ansaphone . "[%s]")
+    (prompt-modifier-messages . "%s (%d messages)")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
     (read-pri-text-conf . "Read next prioritized article")
     (review-next-text-prompt . "Review next article")
@@ -733,7 +749,9 @@ Error message: %#1s**************************************************")
     (backward . "backward")
     (wait . "Wait a moment...\n")
     (comment . "Comment")
+    (comment-prefix . "[Cc][Oo]")
     (footnote . "Footnote")
+    (footnote-prefix . "[Ff]")
     (by . " by %#1s")
     (text-created .  "Article %#1n has been created.\n")
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.2 1996-03-29 03:07:26 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.3 1996-04-02 16:20:13 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.2 1996-03-29 03:07:26 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.3 1996-04-02 16:20:13 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -96,6 +96,12 @@
 (put 'lyskom-internal-error 'error-message
      "Internal LysKOM format error.")
 
+
+;;; ================================================================
+;;;             Global variables
+;;;
+
+(defvar lyskom-unread-mode-line nil)
 
 ;;; ================================================================
 ;;;             Error reporting from a number of commands.
@@ -272,7 +278,7 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 
 (defun lyskom-next-command ()
   "Run next command."
-  (let ((doing-default-command t))
+  (let ((lyskom-doing-default-command t))
     (cond
      ((eq lyskom-command-to-do 'next-pri-text)
       (lyskom-view-priority-text))
@@ -300,10 +306,8 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
 
 (defun kom-initial-digit-view ()
   (interactive)
-  (if (boundp 'unread-command-events)
-      (setq unread-command-events (cons last-command-event
-                                        unread-command-events))
-    (setq unread-command-char last-command-char))
+  (setq unread-command-events (cons last-command-event
+                                    unread-command-events))
   (call-interactively 'kom-view nil))
 
 
@@ -760,35 +764,35 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
 (defun lyskom-do-insert-before-prompt (string)
   (cond
    ((and lyskom-executing-command
-	 (not lyskom-is-waiting)	; Looks weird /davidk
-	 ;;(not (eq lyskom-is-waiting t))
-	 )
+         (not (eq lyskom-is-waiting t)))
     ;; Don't insert the string until the current command is finished.
     (if (null lyskom-to-be-printed-before-prompt)
-	(setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
+        (setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
     (lyskom-queue-enter lyskom-to-be-printed-before-prompt 
-			(list string)))
-   (t
-    (goto-char (point-max))
-    (let* ((window (get-buffer-window (current-buffer)))
-	   (pv (and window
-		    (pos-visible-in-window-p (point) window))))
-      (beginning-of-line)
-      (let ((buffer-read-only nil)
-	    (start (point)))
-	(insert (if kom-emacs-knows-iso-8859-1
-		    string
-		  (iso-8859-1-to-swascii string))))
+                        (list string)))
+   (t (save-excursion
+    (let ((oldpoint (if (/= (point) (point-max)) (point) nil)))
       (goto-char (point-max))
-      (if (and pv
-	       (eq window (selected-window))
-	       (not (pos-visible-in-window-p (point) window)))
-	  (recenter -1))
-      (if window
-	  (if (pos-visible-in-window-p (point) window)
-	      nil
-	    (goto-char (window-start window))
-	    (end-of-line (1- (window-height window)))))))))
+      (let* ((window (get-buffer-window (current-buffer)))
+             (pv (and window
+                      (pos-visible-in-window-p (point) window))))
+        (beginning-of-line)
+        (let ((buffer-read-only nil)
+              (start (point)))
+          (insert (if kom-emacs-knows-iso-8859-1
+                      string
+                    (iso-8859-1-to-swascii string))))
+        (goto-char (point-max))
+        (if (and pv
+                 (eq window (selected-window))
+                 (not (pos-visible-in-window-p (point) window)))
+              (recenter -1))
+
+        (if window
+            (if (pos-visible-in-window-p (point) window)
+                nil
+              (goto-char (window-start window))
+              (end-of-line (1- (window-height window)))))))))))
 
 
 (defun lyskom-message (format-string &rest args)
@@ -1296,18 +1300,6 @@ A symbol other than t means call it as a function."
                   (beep))))
         (t (beep))))
 
-
-(if (not (fboundp 'facep))
-    (progn
-      (defsubst internal-facep (x)
-        (and (vectorp x) (= (length x) 8) (eq (aref x 0) 'face)))
-
-      (defun facep (x)
-        "Return t if X is a face name or an internal face vector."
-        (and (or (internal-facep x)
-                 (and (symbolp x) (assq x global-face-data)))
-             t))))
-
 (defun lyskom-face-default-p (f1)
   "Return t if f1 is undefined or the default face."
   (or (not (facep f1))
@@ -1420,8 +1412,9 @@ don't signal an error if this call is interrupting another command.
 
 Special: if lyskom-is-waiting then we are allowed to break if we set 
 lyskom-is-waiting nil.
-	 This function checks if doing-default-command and first-time-around 
-	 are bound. The text entered in the buffer is chosen according to this"
+	 This function checks if lyskom-doing-default-command and
+     lyskom-first-time-around are bound. The text entered in the
+     buffer is chosen according to this"
   (if (and lyskom-is-waiting
            (listp lyskom-is-waiting))
       (progn
@@ -1429,11 +1422,11 @@ lyskom-is-waiting nil.
         (lyskom-end-of-command)))
   (if (and lyskom-executing-command (not may-interrupt))
       (lyskom-error "%s" (lyskom-get-string 'wait-for-prompt)))
-  (if (not (and (boundp 'doing-default-command)
-                doing-default-command))
+  (if (not (and (boundp 'lyskom-doing-default-command)
+                lyskom-doing-default-command))
       (cond
-       ((and (boundp 'first-time-around)
-             first-time-around))
+       ((and (boundp 'lyskom-first-time-around)
+             lyskom-first-time-around))
        ((stringp function) (lyskom-insert function))
        ((and function (symbolp function))
         (let ((name (lyskom-command-name function)))
@@ -1497,11 +1490,13 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
      
      ((eq to-do 'next-pri-conf)
       (lyskom-insert-string (lyskom-modify-prompt 'go-to-pri-conf-prompt))
-      (lyskom-beep kom-ding-on-priority-break))
+      (lyskom-beep kom-ding-on-priority-break)
+      (setq lyskom-is-waiting nil))
 
      ((eq to-do 'next-pri-text)
       (lyskom-insert-string (lyskom-modify-prompt 'read-pri-text-conf))
-      (lyskom-beep kom-ding-on-priority-break))
+      (lyskom-beep kom-ding-on-priority-break)
+      (setq lyskom-is-waiting nil))
 
      ((eq to-do 'next-text)
       (lyskom-insert
@@ -1520,7 +1515,8 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
             (lyskom-get-string 'read-next-footnote-prompt))
            ((eq 'COMM-IN (read-info->type read-info))
             (lyskom-get-string 'read-next-comment-prompt))
-           (t (lyskom-get-string 'read-next-text-prompt)))))))
+           (t (lyskom-get-string 'read-next-text-prompt))))))
+      (setq lyskom-is-waiting nil))
 
      ((eq to-do 'next-conf)
       (lyskom-insert
@@ -1534,12 +1530,14 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
                (read-info->conf-stat (read-list->first
                                       lyskom-to-do-list))))
           (lyskom-get-string 'go-to-next-conf-prompt))
-         (t (lyskom-get-string 'go-to-your-mailbox-prompt))))))
+         (t (lyskom-get-string 'go-to-your-mailbox-prompt)))))
+      (setq lyskom-is-waiting nil))
 
      ((eq to-do 'when-done)
       (if (not lyskom-is-writing)
 	  (lyskom-tell-server kom-mercial))
-      (setq lyskom-is-waiting t)
+      (setq lyskom-is-waiting t) ; +++ I don't quite get it. Why is
+                                        ; this variable set here?
       (lyskom-insert
        (lyskom-modify-prompt
         (let ((command (lyskom-what-to-do-when-done t)))
@@ -1563,10 +1561,20 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
 
 (defun lyskom-modify-prompt (s)
   "Modify the LysKOM prompt to reflect the current state of LysKOM."
+  (let ((format-string "%s"))
   (if (symbolp s) (setq s (lyskom-get-string s)))
+  (if lyskom-ansaphone-messages
+      (if (> (length lyskom-ansaphone-messages) 0)
+          (setq format-string 
+                (format (lyskom-get-string 'prompt-modifier-messages)
+                        format-string
+                        (length lyskom-ansaphone-messages)))))
   (if kom-ansaphone-on
-      (setq s (format (lyskom-get-string 'prompt-modifier-ansaphone) s)))
-  s)
+      (setq format-string
+            (format (lyskom-get-string 'prompt-modifier-ansaphone)
+                    format-string)))
+
+  (format format-string s)))
 
 (defun lyskom-what-to-do ()
   "Check what is to be done. Return an atom as follows:
@@ -2142,7 +2150,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	  ;; condition-case handler
 	  (quit (setq lyskom-quit-flag t))
 	  ;; (lyskom-protocol-error
-	  ;;   (lyskom-message (lyskom-get-string 'protocol-error) err))
+	  ;;   (lyskom-message "%s" (lyskom-get-string 'protocol-error) err))
 	  )
       
       ;; Restore selected buffer and match data.

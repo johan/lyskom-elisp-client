@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 40.0 1996-03-26 08:31:26 byers Exp $
+;;;;; $Id: internal.el,v 40.1 1996-04-02 16:20:05 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 40.0 1996-03-26 08:31:26 byers Exp $\n"))
+	      "$Id: internal.el,v 40.1 1996-04-02 16:20:05 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -454,67 +454,71 @@ USE ->      call handler. Delete previous parts.
 LIST-USE -> call handler. Delete previous parts.
 RUN ->      call function. Delete. Not allowed inside COLLECT/USE."
   (let* ((queue (cdr-safe (assoc queue-name lyskom-call-data)))
-	 (type nil)
-	 (first-pending (lyskom-queue->first (kom-queue->pending queue))))
+         (type nil)
+         (first-pending (lyskom-queue->first (kom-queue->pending queue))))
     (while (and queue
-		(not (or (kom-queue-is-halted queue)
-			 (lyskom-queue-isempty (kom-queue->pending queue))
-			 (eq (car first-pending) 'CALL))))
+                (not (or (kom-queue-is-halted queue)
+                         (lyskom-queue-isempty (kom-queue->pending queue))
+                         (eq (car first-pending) 'CALL))))
       (setq type (car first-pending))
 
       (cond
        ((eq type 'PARSED)
-	(kom-queue-halt queue)
-	(lyskom-apply-handler first-pending)
-	(kom-queue-resume queue)
-	(if (or (eq (kom-queue->collect-flag queue) 'COLLECT)
-		(and (eq (kom-queue->collect-flag queue) 'COLLECT-IGNORE)
-		     (car (cdr first-pending))))
-	    (lyskom-queue-enter (kom-queue->collect-queue queue)
-				(car (cdr first-pending)))))
+              (kom-queue-halt queue)
+              (unwind-protect
+                  (lyskom-apply-handler first-pending)
+              (kom-queue-resume queue))
+        (if (or (eq (kom-queue->collect-flag queue) 'COLLECT)
+                (and (eq (kom-queue->collect-flag queue) 'COLLECT-IGNORE)
+                     (car (cdr first-pending))))
+            (lyskom-queue-enter (kom-queue->collect-queue queue)
+                                (car (cdr first-pending)))))
        ((eq type 'COLLECT)
-	(if (kom-queue->collect-flag queue)
-	    (signal 'lyskom-internal-error
-		    '("lyskom-check-call COLLECT."))
-	  (set-kom-queue-collect-flag queue 'COLLECT)
-	  (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
+        (if (kom-queue->collect-flag queue)
+            (signal 'lyskom-internal-error
+                    '("lyskom-check-call COLLECT."))
+          (set-kom-queue-collect-flag queue 'COLLECT)
+          (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
        ((eq type 'COLLECT-IGNORE)
-	(if (kom-queue->collect-flag queue)
-	    (signal 'lyskom-internal-error
-		    '("lyskom-check-call COLLECT-IGNORE."))
-	  (set-kom-queue-collect-flag queue 'COLLECT-IGNORE)
-	  (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
+        (if (kom-queue->collect-flag queue)
+            (signal 'lyskom-internal-error
+                    '("lyskom-check-call COLLECT-IGNORE."))
+          (set-kom-queue-collect-flag queue 'COLLECT-IGNORE)
+          (lyskom-queue-make-empty (kom-queue->collect-queue queue))))
        ((eq type 'USE)
-	(if (not (kom-queue->collect-flag queue))
-	    (signal 'lyskom-internal-error
-		    '("lyskom-check-call USE.")))
-	(kom-queue-halt queue)
-	(lyskom-apply-multi-handler
-	 first-pending (lyskom-queue->all-entries
-			(kom-queue->collect-queue queue)))
-	(kom-queue-resume queue)
-	(set-kom-queue-collect-flag queue nil))
+        (if (not (kom-queue->collect-flag queue))
+            (signal 'lyskom-internal-error
+                    '("lyskom-check-call USE.")))
+        (kom-queue-halt queue)
+        (unwind-protect
+            (lyskom-apply-multi-handler
+             first-pending (lyskom-queue->all-entries
+                            (kom-queue->collect-queue queue)))
+          (kom-queue-resume queue))
+        (set-kom-queue-collect-flag queue nil))
        ((eq type 'LIST-USE)
-	(if (not (kom-queue->collect-flag queue))
-	    (signal 'lyskom-internal-error
-		    '("lyskom-check-call LIST-USE.")))
-	(kom-queue-halt queue)
-	(lyskom-apply-multi-list-handler
-	 first-pending (lyskom-queue->all-entries
-			(kom-queue->collect-queue queue)))
-	(kom-queue-resume queue)
-	(set-kom-queue-collect-flag queue nil))
+        (if (not (kom-queue->collect-flag queue))
+            (signal 'lyskom-internal-error
+                    '("lyskom-check-call LIST-USE.")))
+        (kom-queue-halt queue)
+        (unwind-protect
+            (lyskom-apply-multi-list-handler
+             first-pending (lyskom-queue->all-entries
+                            (kom-queue->collect-queue queue)))
+          (kom-queue-resume queue))
+        (set-kom-queue-collect-flag queue nil))
        ((eq type 'RUN)
-	(if (kom-queue->collect-flag queue)
-	    (signal 'lyskom-internal-error
-		    '("lyskom-check-call RUN.")))
-	(kom-queue-halt queue)
-	(lyskom-apply-function first-pending)
-	(kom-queue-resume queue))
+        (if (kom-queue->collect-flag queue)
+            (signal 'lyskom-internal-error
+                    '("lyskom-check-call RUN.")))
+        (kom-queue-halt queue)
+        (unwind-protect
+            (lyskom-apply-function first-pending)
+          (kom-queue-resume queue)))
        (t (signal 'lyskom-internal-error
-		  (list 'lyskom-check-call
-			"unknown key:"
-			(car first-pending)))))
+                  (list 'lyskom-check-call
+                        "unknown key:"
+                        (car first-pending)))))
 
       (lyskom-queue-delete-first (kom-queue->pending queue))
       (setq first-pending (lyskom-queue->first (kom-queue->pending queue))))))

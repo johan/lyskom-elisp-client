@@ -1,4 +1,4 @@
-;;;; $Id: elib-string.el,v 40.0 1996-03-26 08:31:11 byers Exp $
+;;;; $Id: elib-string.el,v 40.1 1996-04-02 16:19:46 byers Exp $
 ;;;; This file contains some miscellaneous string functions
 
 ;; Copyright (C) 1991-1995 Free Software Foundation
@@ -40,6 +40,14 @@
 ;;; elisp code: replace regexps in strings, split strings on regexps.
 ;;; 
 
+
+;;; NOTE NOTE NOTE NOTE NOTE
+;;;
+;;; This package has been slightly modified in the following section:
+
+
+(defvar newtext)
+(defvar string)
 
 ;;; Code:
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 40.0 1996-03-26 08:31:21 byers Exp $
+;;;;; $Id: filter.el,v 40.1 1996-04-02 16:19:58 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -30,27 +30,10 @@
 ;;;; Contains the support functions for text filtering.
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: filter.el,v 40.1 1996-04-02 16:19:58 byers Exp $\n"))
 
-;;;============================================================
-;;;
-;;; Utility functions.
-;;;
-;;; These should be shared in LysKOM
-;;;
-
-(defun copy-tree (l)
-  "Recursively copy the list L"
-  (cond ((atom l) l)
-        (t (cons (copy-tree (car l))
-                 (copy-tree (cdr l))))))
-
-(defun functionp (fn)
-  "Return t if fn is callable"
-  (or (compiled-function-p fn)
-      (and (listp fn)
-           (eq 'lambda (car fn)))
-      (and (symbolp fn)
-           (symbol-function fn))))
 
 ;;;============================================================
 ;;;
@@ -130,7 +113,9 @@ Returns nil if no such attribute is present."
 ;;;
 
 
-(defvar lyskom-filter-hack nil)
+(defvar lyskom-filter-hack nil
+  "Variable to busy-wait on to get the filter action. Set to
+invalid-value until a filter action has been selected.")
 
 (defun lyskom-filter-text-p (text-no)
   (if (null lyskom-filter-list)
@@ -142,7 +127,7 @@ Returns nil if no such attribute is present."
       ;; Block until done
       ;;
       (while (eq lyskom-filter-hack 'invalid-value)
-        (accept-process-output))
+        (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms))
       lyskom-filter-hack)))
     
 (defun lyskom-filter-text-p-2 (text-stat)
@@ -197,8 +182,8 @@ Returns nil if no such attribute is present."
 	    (t (setq subject "")))
       
       ;;
-      ;; Extract the text-stat
-      ;; Shorten the list (quick'n'dirty)
+      ;; Extract the text-stat which is the last element of data
+      ;; Next shorten the list in data to exclude the text-stat.
       ;;
       
       (setq text-stat (elt data (- (length data) 1)))
@@ -226,17 +211,19 @@ Returns nil if no such attribute is present."
                                  filter-list)
   (let (tmp)
     (while filter-list
-      (if (functionp (filter->function (car filter-list)))
-          (setq tmp (funcall (filter->function (car filter-list))
-                             (car filter-list)
-                             author
-                             recipient-list
-                             subject
-                             text-stat
-                             text)))
-        (if tmp
-            (setq filter-list nil)
-          (setq filter-list (cdr filter-list))))
+      (condition-case err
+          (if (functionp (filter->function (car filter-list)))
+              (setq tmp (funcall (filter->function (car filter-list))
+                                 (car filter-list)
+                                 author
+                                 recipient-list
+                                 subject
+                                 text-stat
+                                 text)))
+        (error nil))
+      (if tmp
+          (setq filter-list nil)
+        (setq filter-list (cdr filter-list))))
     tmp))
 
 
@@ -259,7 +246,8 @@ Returns nil if no such attribute is present."
 
 (defun lyskom-create-compile-filter-function (pattern)
   (if (null pattern)
-      (byte-compile '(lambda (x y) nil))
+      (byte-compile 
+       '(lambda (filter author recipient-list subject text-stat text) nil))
     (byte-compile (lyskom-create-filter-function pattern))))
 
 
@@ -369,19 +357,13 @@ Returns nil if no such attribute is present."
       (lyskom-error (lyskom-get-string 'filter-error-key-arg)
                     fn arg)))
 
-(defun regexpp (re)
-  (let ((result t))
-    (save-match-data
-      (condition-case nil
-          (string-match re "")
-        (error (setq result nil))))
-    result))
 
 
 
-
-;;;========================================
-;;;  I don't actually remember what these are for
+;;; ============================================================
+;;; lyskom-filter-prompt
+;;;
+;;; Print a notice that a text has been filtered. 
 ;;;
 
 (defun lyskom-filter-prompt (text-no prompt)
@@ -462,38 +444,35 @@ Otherwise return nil."
 ;;; Filtrera ärende --- Filter subject
 ;;; 
 
-(defun kom-filter-subject (&optional subject)
+(def-kom-command kom-filter-subject (&optional subject)
   "Interactively filter a subject. Optional SUBJECT is subject to filter."
   (interactive)
-  (lyskom-start-of-command 'kom-filter-subject)
-  (unwind-protect
-      (if (/= 0 lyskom-current-conf)
+  (if (/= 0 lyskom-current-conf)
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
 	    (let (conf perm filter action)
 	      (if (null subject)
-		  (setq subject lyskom-current-subject))
+              (setq subject lyskom-current-subject))
 	      (setq subject 
-		    (read-from-minibuffer (lyskom-get-string 'filter-subject)
-					  subject))
+                (read-from-minibuffer (lyskom-get-string 'filter-subject)
+                                      subject))
 	      (setq filter (cons (cons 'subject subject) filter))
 	      (setq conf (lyskom-read-conf-no
-			  (lyskom-get-string 'filter-in-conf)
-			  'all
-			  t
-			  (or (and (conf-stat->conf-no conf-stat)
-				   (conf-stat->name conf-stat))
-			      "")
-			  t))
+                      (lyskom-get-string 'filter-in-conf)
+                      'all
+                      t
+                      (or (and (conf-stat->conf-no conf-stat)
+                               (conf-stat->name conf-stat))
+                          "")
+                      t))
 	      (if (/= conf 0)
-		  (setq filter (cons (cons 'recipient-no conf) filter)))
+              (setq filter (cons (cons 'recipient-no conf) filter)))
 	      (setq action (lyskom-filter-read-action))
 	      (setq perm (lyskom-filter-read-permanent))
 	      
 	      (lyskom-add-filter
 	       (make-filter filter
-			    (list (cons 'action action)
-				  (cons 'expire (not perm))))))))
-    (lyskom-end-of-command)))
+                        (list (cons 'action action)
+                              (cons 'expire (not perm)))))))))
   
 
      
@@ -501,47 +480,45 @@ Otherwise return nil."
 ;;; Filtrera författare --- Filter author
 ;;;
 
-(defun kom-filter-author ()
+
+(def-kom-command kom-filter-author ()
   "Interactively filter an author."
   (interactive)
-  (lyskom-start-of-command 'kom-filter-author)
-  (unwind-protect
-      (let (auth-stat author conf filter action permanent)
+  (let (auth-stat author conf filter action permanent)
 	(blocking-do-multiple ((text-stat (get-text-stat 
-					   (or lyskom-current-text 0)))
-			       (conf-stat (get-conf-stat
-					   lyskom-current-conf)))
-           (if text-stat
-	       (setq auth-stat (blocking-do 'get-conf-stat
-					    (text-stat->author text-stat))))
-	   (setq author 
-		 (lyskom-read-conf-no (lyskom-get-string 'filter-author)
-				      'pers
-				      t
-				      (or (and auth-stat
-					       (conf-stat->name auth-stat))
-					  "")
-				      t))
-	   (if (/= author 0)
-	       (setq filter (cons (cons 'author-no author) filter)))
-	   (setq conf (lyskom-read-conf-no
-		       (lyskom-get-string 'filter-in-conf)
-		       'all
-		       t
-		       (or 
-			(and conf-stat
-			     (conf-stat->name conf-stat))
-			"")
-		       t))
-	   (if (/= conf 0)
-	       (setq filter (cons (cons 'recipient-no conf) filter)))
-	   (setq action (lyskom-filter-read-action))
-	   (setq permanent (lyskom-filter-read-permanent))
-	   (lyskom-add-filter
-	    (make-filter filter
-			 (list (cons 'action action)
-			       (cons 'expire (not permanent)))))))
-    (lyskom-end-of-command)))
+                                       (or lyskom-current-text 0)))
+                           (conf-stat (get-conf-stat
+                                       lyskom-current-conf)))
+      (if text-stat
+          (setq auth-stat (blocking-do 'get-conf-stat
+                                       (text-stat->author text-stat))))
+      (setq author 
+            (lyskom-read-conf-no (lyskom-get-string 'filter-author)
+                                 'pers
+                                 t
+                                 (or (and auth-stat
+                                          (conf-stat->name auth-stat))
+                                     "")
+                                 t))
+      (if (/= author 0)
+          (setq filter (cons (cons 'author-no author) filter)))
+      (setq conf (lyskom-read-conf-no
+                  (lyskom-get-string 'filter-in-conf)
+                  'all
+                  t
+                  (or 
+                   (and conf-stat
+                        (conf-stat->name conf-stat))
+                   "")
+                  t))
+      (if (/= conf 0)
+          (setq filter (cons (cons 'recipient-no conf) filter)))
+      (setq action (lyskom-filter-read-action))
+      (setq permanent (lyskom-filter-read-permanent))
+      (lyskom-add-filter
+       (make-filter filter
+                    (list (cons 'action action)
+                          (cons 'expire (not permanent))))))))
 
 
 
@@ -551,32 +528,29 @@ Otherwise return nil."
 ;;; Superhoppa
 ;;;
 
-(defun kom-super-jump ()
+(def-kom-command kom-super-jump ()
   "Skip all texts and comments that share the subject and recipient of 
 the current text"
   (interactive)
-  (lyskom-start-of-command 'kom-super-jump)
-  (unwind-protect
-      (if (zerop lyskom-current-conf)
-          (progn (lyskom-insert-string 'no-in-conf)
-                 (lyskom-end-of-command))
-        (if (or (null lyskom-current-text)
-                (null lyskom-current-subject))
-            (progn (lyskom-insert-string 'have-to-read)
-                   (lyskom-end-of-command))
+  (if (zerop lyskom-current-conf)
+      (progn (lyskom-insert-string 'no-in-conf)
+             (lyskom-end-of-command))
+    (if (or (null lyskom-current-text)
+            (null lyskom-current-subject))
+        (progn (lyskom-insert-string 'have-to-read)
+               (lyskom-end-of-command))
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
 	    (if conf-stat
-		(progn
-		  (lyskom-add-filter
-		   (make-filter
-		    (list (cons 'subject lyskom-current-subject)
-			  (cons 'recipient-no (conf-stat->conf-no conf-stat)))
-		    (list (cons 'action 'skip-tree)
-			  (cons 'expire t))))
-		  (lyskom-format-insert 'super-jump
-					(copy-sequence lyskom-current-subject)
-					conf-stat))))))
-    (lyskom-end-of-command)))
+            (progn
+              (lyskom-add-filter
+               (make-filter
+                (list (cons 'subject lyskom-current-subject)
+                      (cons 'recipient-no (conf-stat->conf-no conf-stat)))
+                (list (cons 'action 'skip-tree)
+                      (cons 'expire t))))
+              (lyskom-format-insert 'super-jump
+                                    (copy-sequence lyskom-current-subject)
+                                    conf-stat)))))))
 
 
 
@@ -586,46 +560,37 @@ the current text"
 ;;; Filtrera text
 ;;;
 
-(defun kom-filter-text (&optional text)
+(def-kom-command kom-filter-text (&optional text)
   "Interactively filter on text contents. Optional TEXT is subject to filter."
   (interactive)
-  (lyskom-start-of-command 'kom-filter-text)
-  (unwind-protect
-      (if (/= 0 lyskom-current-conf)
+  (if (/= 0 lyskom-current-conf)
 	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
-		(conf nil)
-		(action nil)
-		(perm nil)
-		(filter nil))
+            (conf nil)
+            (action nil)
+            (perm nil)
+            (filter nil))
 	    (if conf-stat
-		(progn
-		  (setq text 
-			(read-from-minibuffer (lyskom-get-string 
-					       'filter-which-text)
-					      (or text "")))
-		  (setq filter (cons (cons 'text text) filter))
-		  (setq conf (lyskom-read-conf-no
-			      (lyskom-get-string 'filter-in-conf)
-			      'all t
-			      (or (and (conf-stat->conf-no conf-stat)
-				       (conf-stat->name conf-stat))
-				  "")
-			      t))
-		  (if (/= conf 0)
-		      (setq filter (cons (cons 'recipient-no conf) filter)))
-		  (setq action (lyskom-filter-read-action))
-		  (setq perm (lyskom-filter-read-permanent))
-		  (lyskom-add-filter
-		   (make-filter filter
-				(list (cons 'action action)
-				      (cons 'expire (not perm)))))))))
-
-
-    (lyskom-end-of-command)))
-
-  
-
-
+            (progn
+              (setq text 
+                    (read-from-minibuffer (lyskom-get-string 
+                                           'filter-which-text)
+                                          (or text "")))
+              (setq filter (cons (cons 'text text) filter))
+              (setq conf (lyskom-read-conf-no
+                          (lyskom-get-string 'filter-in-conf)
+                          'all t
+                          (or (and (conf-stat->conf-no conf-stat)
+                                   (conf-stat->name conf-stat))
+                              "")
+                          t))
+              (if (/= conf 0)
+                  (setq filter (cons (cons 'recipient-no conf) filter)))
+              (setq action (lyskom-filter-read-action))
+              (setq perm (lyskom-filter-read-permanent))
+              (lyskom-add-filter
+               (make-filter filter
+                            (list (cons 'action action)
+                                  (cons 'expire (not perm))))))))))
 
 
 ;;;============================================================
@@ -635,24 +600,19 @@ the current text"
 ;;; Calls internal functions in filter-edit mode. This may or
 ;;; may not be a good idea, but it works...
 
-(defun kom-list-filters ()
+(def-kom-command kom-list-filters ()
   "Display all filters"
   (interactive)
-  (lyskom-start-of-command 'kom-view-filters)
-  (save-excursion
-    (unwind-protect
-        (let ((filters lyskom-filter-list)
-              (filter nil))
+  (let ((filters lyskom-filter-list)
+        (filter nil))
+    (goto-char (point-max))
+    (if (null filters)
+        (lyskom-insert (lyskom-get-string 'no-filters))
+      (progn
+        (lyskom-insert (lyskom-get-string 'view-filters-header))
+        (while filters
           (goto-char (point-max))
-          (if (null filters)
-              (lyskom-insert (lyskom-get-string 'no-filters))
-            (progn
-              (lyskom-insert (lyskom-get-string 'view-filters-header))
-              (while filters
-                (goto-char (point-max))
-                (lyskom-format-filter-pattern (car filters))
-                (setq filters (cdr filters)))
-              (lyskom-insert (lyskom-get-string 'view-filters-footer)))))
-      (progn (lyskom-insert "\n"))))
-  (lyskom-end-of-command))
+          (lyskom-format-filter-pattern (car filters))
+          (setq filters (cdr filters)))
+        (lyskom-insert (lyskom-get-string 'view-filters-footer))))))
 
