@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.7 1996-02-21 19:48:23 davidk Exp $
+;;;;; $Id: review.el,v 38.8 1996-03-04 15:13:14 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.7 1996-02-21 19:48:23 davidk Exp $\n"))
+	      "$Id: review.el,v 38.8 1996-03-04 15:13:14 byers Exp $\n"))
 
 
 
@@ -89,7 +89,7 @@ The defaults for this command is the conference that you are in."
 		  ((< count 0)
 		   (lyskom-format 'first-n (- count))))))
 	 (by (lyskom-read-conf-no (lyskom-format 'info-by-whom info)
-				  'pers 'empty))
+				  'pers 'empty nil t))
 	 (to (lyskom-read-conf-no (lyskom-format 'info-to-conf info)
 				  'all 
 				  ;; If person is not given we must give
@@ -99,7 +99,8 @@ The defaults for this command is the conference that you are in."
 				      ""
 				    (conf-stat->name
 				     (blocking-do 'get-conf-stat
-						  lyskom-current-conf))))))
+						  lyskom-current-conf)))
+				  t)))
 
     ;; Since we fetch everything anyway we don't need to do this.  If
     ;; we later choose to fetch all in small chunks we will have to do

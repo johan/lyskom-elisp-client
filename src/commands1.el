@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.17 1996-02-17 05:41:34 davidk Exp $
+;;;;; $Id: commands1.el,v 38.18 1996-03-04 15:12:57 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.17 1996-02-17 05:41:34 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.18 1996-03-04 15:12:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -223,7 +223,7 @@ as TYPE. If no such misc-info, return NIL"
         (let* ((tono (or pers-no
                          (lyskom-read-conf-no
                           (lyskom-get-string 'who-letter-to)
-                          'all)))
+                          'all nil nil t)))
                (conf-stat (blocking-do 'get-conf-stat tono)))
           (if (if (zerop (conf-stat->msg-of-day conf-stat))
                   t
@@ -911,7 +911,7 @@ Don't ask for confirmation."
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no 
 	      (lyskom-get-string 'what-to-change-pres-you)
-	      'all t)))
+	      'all t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -923,7 +923,7 @@ Don't ask for confirmation."
   (interactive)
   (lyskom-change-pres-or-motd-2
    (let ((no (lyskom-read-conf-no (lyskom-get-string 'who-to-put-motd-for)
-				  'all t)))
+				  'all t nil t)))
      (if (zerop no)
 	 (setq no lyskom-pers-no))
      (blocking-do 'get-conf-stat no))
@@ -1368,7 +1368,7 @@ If MARK-NO == 0, review all marked texts."
   "Change the password for a person."
   (interactive)
   (let ((pers-no (lyskom-read-conf-no (lyskom-get-string 'whos-passwd)
-				      'pers 'empty ""))
+				      'pers 'empty "" t))
 	(old-pw (silent-read (lyskom-get-string 'old-passwd)))
 	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
 	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
@@ -1421,12 +1421,12 @@ If MARK-NO == 0, review all marked texts."
   (interactive)
   (let ((who-info-list (blocking-do 'who-is-on)))
     (lyskom-insert
-     (lyskom-return-who-info-line "     "
+     (lyskom-return-who-info-line "      "
 				  (lyskom-get-string 'lyskom-name)
 				  (lyskom-get-string 'is-in-conf)))
     (if kom-show-where-and-what
 	(lyskom-insert
-	 (lyskom-return-who-info-line "     "
+	 (lyskom-return-who-info-line "      "
 				      (lyskom-get-string 'from-machine)
 				      (lyskom-get-string 'is-doing))))
 
@@ -1467,7 +1467,7 @@ MY-SESSION-NO is the session number of the running session.
 		     'lyskom-insert)))
     (funcall insertfun
 	     (lyskom-return-who-info-line-as-state 
-	      (format "%4d%s" 
+	      (format "%5d%s" 
 		      (who-info->connection who-info)
 		      (if (= my-session-no (who-info->connection who-info))
 			  "*"
@@ -1479,7 +1479,7 @@ MY-SESSION-NO is the session number of the running session.
     (if kom-show-where-and-what
 	(funcall insertfun
 		 (lyskom-return-who-info-line-as-state
-		  "     "
+		  "      "
 		  (lyskom-return-username who-info)
 		  (concat "(" 
 			  (who-info->doing-what who-info)
@@ -1498,25 +1498,27 @@ MY-SESSION-NO is the session number of the running session.
 (defun lyskom-return-who-info-line-as-state (prefix arg1 arg2)
   "Return the format state appropriate for the arguments and
 the window width."
-  (let ((formatstring
-	 (concat prefix
-		 "%=-"
-		 (int-to-string (/ (* 37 (- (lyskom-window-width) 7)) 73))
-		 (if (lyskom-conf-stat-p arg1) 
-		     (if (conf-type->letterbox
-			  (conf-stat->conf-type arg1))
-			 "#1P"
-		       "#1M")
-		   "#1s")
-		 " %=-"
-		 (int-to-string (/ (* 37 (- (lyskom-window-width) 8)) 73))
-		 (if (lyskom-conf-stat-p arg2) 
-		     (if (conf-type->letterbox
-			  (conf-stat->conf-type arg2))
-			 "#2P"
-		       "#2M")
-		   "#2s")
-		 "\n")))
+  (let* ((adj1 (+ (length prefix) 2))
+         (adj2 (+ adj1 1))
+         (formatstring
+          (concat prefix
+                  "%=-"
+                  (int-to-string (/ (* 37 (- (lyskom-window-width) adj1)) 73))
+                  (if (lyskom-conf-stat-p arg1) 
+                      (if (conf-type->letterbox
+                           (conf-stat->conf-type arg1))
+                          "#1P"
+                        "#1M")
+                    "#1s")
+                  " %=-"
+                  (int-to-string (/ (* 37 (- (lyskom-window-width) adj2)) 73))
+                  (if (lyskom-conf-stat-p arg2) 
+                      (if (conf-type->letterbox
+                           (conf-stat->conf-type arg2))
+                          "#2P"
+                        "#2M")
+                    "#2s")
+                  "\n")))
     (lyskom-format formatstring arg1 arg2)))
     
 

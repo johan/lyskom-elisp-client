@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.19 1996-03-02 21:38:05 davidk Exp $
+;;;;; $Id: commands2.el,v 38.20 1996-03-04 15:13:02 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.19 1996-03-02 21:38:05 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.20 1996-03-04 15:13:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -119,7 +119,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((conf-no
 	 (or conf-no
 	     (lyskom-read-conf-no (lyskom-get-string 'conf-for-status)
-				  'all)))
+				  'all nil nil t)))
 	conf-stat)
     (cache-del-conf-stat conf-no)
     (setq conf-stat (blocking-do 'get-conf-stat conf-no))
@@ -292,7 +292,7 @@ otherwise: the conference is read with lyskom-completing-read."
   (let ((pers-no
          (or pers-no
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
-                                  'pers "")))
+                                  'pers "" nil t)))
 	conf-stat
 	pers-stat)
     (cache-del-conf-stat pers-no)
@@ -495,7 +495,7 @@ otherwise: the conference is read with lyskom-completing-read."
 	      (if (string-match "^19" emacs-version)
 		  (cons lyskom-last-personal-message-sender 0)
 		lyskom-last-personal-message-sender)
-	    "")))))
+	    ""))) t))
    message))
   
 
@@ -1373,7 +1373,7 @@ membership info."
   (interactive)
   (let* ((conf-no (lyskom-read-conf-no
 		   (lyskom-get-string 'what-conf-to-change)
-		   'confs nil ""))
+		   'confs nil "" t))
 	 (open (j-or-n-p (lyskom-get-string 'anyone-member)))
 	 (secret (if (not open)
 		     (j-or-n-p (lyskom-get-string 'secret-conf))))
