@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.4 1995-03-04 14:16:12 byers Exp $
+;;;;; $Id: services.el,v 38.5 1995-09-21 17:40:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.4 1995-03-04 14:16:12 byers Exp $\n"))
+	      "$Id: services.el,v 38.5 1995-09-21 17:40:23 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -368,8 +368,8 @@ Args: KOM-QUEUE HANDLER COMMENT-TEXT-NO TEXT-NO &rest DATA."
 		      (lyskom-format-objects 33 comment-text-no text-no)))
 
 
-(defun lyskom-do-initiate-get-map (kom-queue handler conf-no first-local
-					     no-of-texts data-list)
+(defun initiate-get-map (kom-queue handler conf-no first-local
+				   no-of-texts &rest data-list)
   "Get mapping from local to global text-nos for CONF-NO from server.
 Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS DATA-LIST.
 Use initiate-get-map instead. This function has severe performance losses
@@ -380,7 +380,7 @@ with big maps."
 		      (lyskom-format-objects 34 conf-no
 					     first-local no-of-texts)))
 
-(defun initiate-get-map  (kom-queue handler conf-no first-local
+(defun z-initiate-get-map  (kom-queue handler conf-no first-local
 					     no-of-texts &rest data)
   "Get mapping from local to global text-nos for CONF-NO from server.
 Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS &rest DATA.
