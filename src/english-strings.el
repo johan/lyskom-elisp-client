@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.179 2002-04-09 23:07:57 byers Exp $
+;;;;; $Id: english-strings.el,v 44.180 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.179 2002-04-09 23:07:57 byers Exp $"))
+              "$Id: english-strings.el,v 44.180 2002-04-10 19:23:23 byers Exp $"))
 
 
 ;;; ================================================================
@@ -565,8 +565,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     
     (conf-for-status . "Get status of which conference? ")
     (no-such-conf . "The conference doesn't exist.\n")
-    (status-record . "Status of conference %#1M (%#2m) %#3s\n\n")
-    (change-type-prompt . "Change conference type for %#1M (%#2m) %#3s\n")
+    (status-record . "Status of conference %#1M (%#1m) %#2s\n\n")
+    (change-type-prompt . "Change conference type for %#1M (%#1m) (%#2s)...")
     (Mailbox . "Mailbox")
     (Protected . "Protected")
     (no-comments . "No comments")
@@ -608,7 +608,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-membership-line-2 . "                            Added %#1s by %#2P\n")
     (pers-for-status . "Get status of which user? ")
     (no-such-pers . "The user doesn't exist.\n")
-    (pers-status-record . "Status of user %#1P (%#2p)\n")
+    (pers-status-record . "Status of user %#1P (%#1p)\n")
     (created-time .  "Created:%34#1s\n\n")
     (created-confs . "Conferences created:%22#1d\n")
     (created-persons . "Users created:%28#1d\n")
@@ -1192,6 +1192,7 @@ before reading it.\n")
     (filter-action . "Filter how? ")
     (filter-in-conf . "In which conference? (all) ")
     (filter-subject . "Filter which subject? ")
+    (filter-recipient . "Filter which recipient? ")
     (filter-which-text . "Filter texts containing: ")
     (filter-author . "Filter which author? ")
     (permanent . "(permanent)")
@@ -1374,7 +1375,7 @@ On since %#8s%#9s")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>") 
-    (faq-in-text-aux . "FAQ in text:                 %10#1n")
+    (faq-in-text-aux . "FAQ in text:                 %10#1n %#2D")
     (conf-to-add-faq . "Which conference do you want to add an FAQ for? ")
     (text-to-add-as-faq . "Which text is the new FAQ? ")
     (text-to-change-as-faq . "Which FAQ do you want to change? ")
@@ -1390,7 +1391,7 @@ On since %#8s%#9s")
 %#2?b%[Text %#2n is still the FAQ.
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
-    (faq-in-text-by . "FAQ in text %#1n %#3sby %#2P %#4s")
+    (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
@@ -1756,6 +1757,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-force-logout         . "Kill session")
     (kom-filter-author        . "Filter author")
     (kom-filter-subject       . "Filter subject")
+    (kom-filter-recipient     . "Filter recipient")
     (kom-super-jump           . "Super jump")
     (kom-filter-edit          . "Edit filters")
     (kom-filter-text          . "Filter contents")

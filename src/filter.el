@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.20 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: filter.el,v 44.21 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.20 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: filter.el,v 44.21 2002-04-10 19:23:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -524,6 +524,23 @@ Otherwise return nil."
        (make-filter filter
                     (list (cons 'action action)
                           (cons 'expire (not permanent))))))))
+
+(def-kom-command kom-filter-recipient ()
+  "Interactively filter a recipient."
+  (interactive)
+  (let ((conf-no (lyskom-read-conf-no 'filter-recipient
+                                      '(all)
+                                      nil
+                                      nil
+                                      t))
+        (action (lyskom-filter-read-action))
+        (permanent (lyskom-filter-read-permanent)))
+    (cond ((and conf-no (not (zerop conf-no)))
+           (lyskom-add-filter
+            (make-filter (list (cons 'recipient-no conf-no))
+                         (list (cons 'action action)
+                               (cons 'expire (not permanent)))))
+           ))))
 
 
 

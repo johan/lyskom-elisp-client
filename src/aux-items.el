@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.25 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: aux-items.el,v 44.26 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.25 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: aux-items.el,v 44.26 2002-04-10 19:23:23 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -547,12 +547,48 @@ return non-nil if the item is to be included in the list."
   (concat "[" (aux-item->data item) "] "
           (lyskom-aux-item-terminating-button item obj)))
 
+(defun lyskom-print-faq-format-subject (text text-stat text-no)
+  (let ((subject ""))
+    (if (and text text-stat)
+        (concat "\""
+                (cond ((string-match "\n" (text->decoded-text-mass text text-stat))
+                       (substring (text->decoded-text-mass text text-stat) 0 (match-beginning 0)))
+                      (t ""))
+                "\"")
+      (lyskom-format 'no-such-text-no text-no))))
+
+(defun lyskom-deferred-print-faq (text-stat defer-info)
+  (if text-stat
+      (initiate-get-text 
+       'deferred 
+       (lambda (text text-stat defer-info)
+         (lyskom-replace-deferred defer-info 
+                                  (lyskom-format "%#1r" 
+                                                 (lyskom-print-faq-format-subject text
+                                                                                  text-stat
+                                                                                  (defer-info->data defer-info)))))
+       (text-stat->text-no text-stat)
+       text-stat
+       defer-info)
+    (lyskom-replace-deferred defer-info
+                             (lyskom-print-faq-format-subject nil nil (defer-info->data defer-info)))))
+
 (defun lyskom-status-print-faq-text (item &optional obj)
-  (lyskom-insert 
-   (concat 
-    (lyskom-format 'faq-in-text-aux (string-to-int (aux-item->data item)))
-    (lyskom-aux-item-terminating-button item obj)
-    "\n")))
+  (let* ((text-no (string-to-int (aux-item->data item)))
+         (subject (if kom-deferred-printing
+                      (lyskom-create-defer-info 'get-text-stat
+                                                text-no
+                                                'lyskom-deferred-print-faq
+                                                nil nil nil
+                                                text-no)
+                    (blocking-do-multiple ((text (get-text text-no))
+                                           (text-stat (get-text-stat text-no)))
+                      (lyskom-print-faq-format-subject text text-stat text-no)))))
+    (lyskom-format-insert 'faq-in-text-aux 
+                          text-no
+                          subject)
+    (lyskom-insert (lyskom-aux-item-terminating-button item obj))
+    (lyskom-insert "\n")))
 
 (defun lyskom-print-faq-for-conf (item &optional obj)
   (concat 

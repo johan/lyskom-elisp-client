@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.129 2002-04-09 23:07:56 byers Exp $
+;;;;; $Id: commands1.el,v 44.130 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.129 2002-04-09 23:07:56 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.130 2002-04-10 19:23:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -177,11 +177,15 @@
 
 (defun lyskom-print-comment-like-aux (item object)
   (let* ((text-no (string-to-int (aux-item->data item)))
-         (text-stat (if kom-deferred-printing
-                        (cache-get-text-stat text-no)
-                      (blocking-do 'get-text-stat text-no))))
+         (text-stat nil)
+         (text nil))
+    (unless kom-deferred-printing
+      (blocking-do-multiple ((x-text (get-text text-no))
+                             (x-text-stat (get-text-stat text-no)))
+        (setq text-stat x-text-stat text x-text)))
+
     (cond ((or text-stat (not kom-deferred-printing))
-           (lyskom-insert-comment-like-aux item text-no text-stat object))
+           (lyskom-insert-comment-like-aux item text-no text-stat text object))
           (t (let ((defer-info (lyskom-create-defer-info
                                 'get-text-stat
                                 text-no
@@ -193,13 +197,14 @@
                (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
                (lyskom-defer-insertion defer-info))))))
 
-(defun lyskom-insert-comment-like-aux (item text-no text-stat object)
+(defun lyskom-insert-comment-like-aux (item text-no text-stat text object)
   (let* ((author (if text-stat (text-stat->author text-stat) nil))
          (mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
                                             17)))
          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
                                               16)))
          (formats (lyskom-aux-item-definition-field item 'text-header-line))
+         (subject (lyskom-print-faq-format-subject text text-stat text-no))
          content-type
          )
     (if (and mx-from
@@ -220,13 +225,21 @@
                           author
                           content-type
                           (lyskom-aux-item-terminating-button item
-                                                              object))
+                                                              object)
+                          subject)
     (lyskom-insert "\n")))
 
 ;;; FIXME: This contains code that duplicates the code in 
 ;;; lyskom-insert-deferred-header-comm. That's a BAD THING.
 
 (defun lyskom-insert-deferred-comment-like-aux (text-stat defer-info)
+  (initiate-get-text 'deferred
+                     'lyskom-insert-deferred-comment-like-aux-2
+                     (elt (defer-info->data defer-info) 2)
+                     text-stat
+                     defer-info))
+
+(defun lyskom-insert-deferred-comment-like-aux-2 (text text-stat defer-info)
   (let* ((author (if text-stat (text-stat->author text-stat) nil))
          (item (elt (defer-info->data defer-info) 0))
          (object (elt (defer-info->data defer-info) 1))
@@ -236,6 +249,7 @@
          (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat)
                                               16)))
          (formats (lyskom-aux-item-definition-field item 'text-header-line))
+         (subject (lyskom-print-faq-format-subject text text-stat text-no))
          content-type
          )
     (if (and mx-from
@@ -258,7 +272,8 @@
                              author
                              content-type
                              (lyskom-aux-item-terminating-button item
-                                                                 object))))
+                                                                 object)
+                             subject)))
 
 
 
@@ -1120,18 +1135,17 @@ that text instead."
                    (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
                        t
                      nil)))
-               (if (= (text-stat->author text-stat) lyskom-pers-no)
-                   (lyskom-edit-text lyskom-proc
+
+               (lyskom-edit-text lyskom-proc
+                                 (if (= (text-stat->author text-stat) lyskom-pers-no)
                                      (lyskom-create-misc-list
                                       'recpt
                                       (text-stat->author text-stat))
-                                     "" "")
-                 (lyskom-edit-text lyskom-proc
                                    (lyskom-create-misc-list
                                     'comm-to (text-stat->text-no text-stat)
                                     'recpt (text-stat->author text-stat)
-                                    'recpt lyskom-pers-no)
-                                   subject "")))))))
+                                    'recpt lyskom-pers-no))
+                                 subject ""))))))
 
 
 ;;; ================================================================
@@ -1219,7 +1233,7 @@ Don't ask for confirmation."
   (interactive)
   (let* ((conf-no (lyskom-read-conf-no
                    (lyskom-get-string 'what-to-change-faq-you)
-                   '(conf) 
+                   '(conf pers) 
                    nil
                    (cons (if lyskom-current-conf
                              (let ((tmp (blocking-do 'get-uconf-stat lyskom-current-conf)))

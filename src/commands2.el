@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.110 2002-03-19 19:33:07 joel Exp $
+;;;;; $Id: commands2.el,v 44.111 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.110 2002-03-19 19:33:07 joel Exp $\n"))
+              "$Id: commands2.el,v 44.111 2002-04-10 19:23:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -174,7 +174,6 @@ otherwise: the conference is read with lyskom-completing-read."
                (pro (conf-type->rd_prot type))
                (sec (conf-type->secret type)))
           (lyskom-format-insert 'status-record
-                                conf-stat
                                 conf-stat
                                 (cond
                                  ((or box ori pro sec)
@@ -364,7 +363,6 @@ otherwise: the conference is read with lyskom-completing-read."
             (null conf-stat))
         (lyskom-insert-string 'no-such-pers)
       (lyskom-format-insert 'pers-status-record
-                            conf-stat
                             conf-stat)
       (lyskom-format-insert 'created-time
                             (lyskom-format-time
@@ -1961,7 +1959,6 @@ Return-value: 'no-session if there is no suitable session to switch to
     (lyskom-format-insert 
      'change-type-prompt
      uconf-stat
-     uconf-stat
      (mapconcat 'identity
                 (delq nil
                       (list (and box (lyskom-get-string 'Mailbox))
@@ -1998,7 +1995,8 @@ Return-value: 'no-session if there is no suitable session to switch to
                                          (conf-type->rsv3
                                           (uconf-stat->conf-type uconf-stat)))))
           (progn (lyskom-insert-string 'nope)
-                 (lyskom-insert-error))))))
+                 (lyskom-insert-error))
+        (lyskom-insert-string 'done)))))
 
 
 ;;; ============================================================
@@ -2200,7 +2198,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 (def-kom-command kom-add-faq (&optional conf-no text-no)
   "Add a FAQ to a conference"
-  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
+  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf pers) nil nil t)
                      (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
   (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
@@ -2224,7 +2222,7 @@ Return-value: 'no-session if there is no suitable session to switch to
   (interactive)
   (let* ((conf-stat (if conf-no 
                         (blocking-do 'get-conf-stat conf-no)
-                      (lyskom-read-conf-stat 'conf-to-del-faq '(conf) nil nil t)))
+                      (lyskom-read-conf-stat 'conf-to-del-faq '(conf pers) nil nil t)))
          (faq-list (when conf-stat
                      (let ((tmp nil))
                        (lyskom-traverse-aux item 
@@ -2260,7 +2258,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 (def-kom-command kom-review-faq (&optional conf-no)
   "View the FAQs for a conference"
-  (interactive (list (lyskom-read-conf-no 'view-which-faq '(conf) nil nil t)))
+  (interactive (list (lyskom-read-conf-no 'view-which-faq '(conf pers) nil nil t)))
   (let* ((conf-stat (blocking-do 'get-conf-stat conf-no))
          (faq-list (when conf-stat
                      (let ((tmp nil))

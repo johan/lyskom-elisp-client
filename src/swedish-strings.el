@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.212 2002-04-09 23:07:57 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.213 2002-04-10 19:23:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.212 2002-04-09 23:07:57 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.213 2002-04-10 19:23:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -545,8 +545,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (memberships-line . "%16#1s  %#2d\t%#3d\t%#4M\n")
     (conf-for-status . "Vilket möte vill du se statusen för? ")
     (no-such-conf . "Mötet finns ej.\n")
-    (status-record . "Status för möte %#1M (%#2m) %#3s\n\n")
-    (change-type-prompt . "Ändra mötestyp för möte %#1M (%#2m) %#3s\n")
+    (status-record . "Status för möte %#1M (%#1m) %#2s\n\n")
+    (change-type-prompt . "Ändra mötestyp för möte %#1M (%#1m) (%#2s)...")
     (Mailbox . "Brevlåda")
     (Protected . "Hemligt")
     (no-comments . "original")
@@ -588,7 +588,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-membership-line-2 . "                            Adderad %#1s av %#2P\n")
     (pers-for-status . "Vem vill du se statusen för? ")
     (no-such-pers . "Det finns ingen sådan person.\n")
-    (pers-status-record . "Status för person %#1P (%#2p)\n")
+    (pers-status-record . "Status för person %#1P (%#1p)\n")
     (created-time .  "Skapad:%34#1s\n\n")
     (created-confs . "Skapade möten:%27#1d\n")
     (created-persons . "Skapade personer:%24#1d\n")
@@ -1193,6 +1193,7 @@ att läsa det.\n")
     (filter-subject . "Filtrera vilket ärende? ")
     (filter-which-text . "Filtrera inlägg som innehåller: ")
     (filter-author . "Filtrera vilken författare? ")
+    (filter-recipient . "Vilken mottagare vill du filtrera? ")
     (permanent . "(permanent)")
     (temporary . "(tillfällig)")
     (filter-edit-buffer-name . "*LysKOM Filter Edit*")
@@ -1372,7 +1373,7 @@ Uppkopplad sedan %#8s%#9s")
     (other-fast-reply-aux . "  \"%#1t\" /%#2P/")
     
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
-    (faq-in-text-aux . "FAQ i inlägg:                   %10#1n")
+    (faq-in-text-aux . "FAQ i inlägg:                   %10#1n %#2D")
     (conf-to-add-faq . "Vilket möte vill du lägga till en FAQ för? ")
     (text-to-add-as-faq . "Vilken text vill du lägga till som FAQ? ")
     (text-to-change-as-faq . "Vilken FAQ vill du ändra? ")
@@ -1388,7 +1389,7 @@ Uppkopplad sedan %#8s%#9s")
 %#2?b%[Text %#2n är fortfarande FAQ.
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
-    (faq-in-text-by . "FAQ i text %#1n %#3sav %#2P %#4s")
+    (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
@@ -1755,6 +1756,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-filter-author        . "Filtrera författare")
     (kom-filter-subject       . "Filtrera ärende")
     (kom-filter-text          . "Filtrera innehåll")
+    (kom-filter-recipient     . "Filtrera mottagare")
     (kom-super-jump           . "Superhoppa")
     (kom-filter-edit          . "Ändra filter")
     (kom-list-filters         . "Lista filter")
