@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: defvar.el,v 44.6 1997-09-21 11:42:56 byers Exp $
+;;;;; $Id: defvar.el,v 44.7 1997-10-11 13:26:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.6 1997-09-21 11:42:56 byers Exp $\n"
+  "$Id: defvar.el,v 44.7 1997-10-11 13:26:15 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -41,6 +41,7 @@
 
 ;; Just to get rid of a compiler warning
 (defvar enable-multibyte-characters)
+(defvar kom-dont-read-saved-variables)
 
 (defvar lyskom-local-variables nil
   "List of variables to make local in a LysKOM buffer")
@@ -216,14 +217,20 @@ local-hook      A hook variable that is made local in LysKOM buffers."
               (t (error "LysKOM: Strange variable argument type: %S" 
                         (car arglist))))
         (setq arglist (cdr arglist)))
-      (` (progn (defvar (, name) (, value) (, doc-string))
+
+      (` (progn (dont-compile (if (and (boundp (quote (, name)))
+                                       (listp kom-dont-read-saved-variables))
+                                  (add-to-list 'kom-dont-read-saved-variables
+                                               (quote (, name)))))
+                (defvar (, name) (, value) (, doc-string))
                 (,@ (apply 'append
                            (list inherited
                                  protected
                                  elisp-block
                                  buffer-local
                                  minibuffer
-                                 widget-spec)))))))
+                                 widget-spec
+                                 )))))))
 )
 
 (put 'def-kom-var 'edebug-form-spec

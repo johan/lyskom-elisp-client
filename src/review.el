@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.8 1997-07-15 10:23:31 byers Exp $
+;;;;; $Id: review.el,v 44.9 1997-10-11 13:26:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.8 1997-07-15 10:23:31 byers Exp $\n"))
+	      "$Id: review.el,v 44.9 1997-10-11 13:26:17 byers Exp $\n"))
 
 (put 'lyskom-cant-review-error
      'error-conditions
@@ -266,12 +266,35 @@ The defaults for this command is the conference that you are in."
 (defun lyskom-get-texts-by-to (by to num &optional again)
   "Get NUM texts written by person number BY in conference number TO
 Args: BY TO NUM"
-
   (cond ((and (zerop by) 
               (zerop to)) (lyskom-get-texts-globally num again))
         ((zerop to) (lyskom-get-texts-by by num again))
         ((zerop by) (lyskom-get-texts-to to num again))
-        (t (lyskom-get-texts-by-and-to by to num again))))
+        ((and (eq by lyskom-pers-no)
+              (not (eq to by))
+              (let ((conf (blocking-do 'get-conf-stat to)))
+                (and (conf-type->letterbox (conf-stat->conf-type conf))
+                     (null (map->text-nos 
+                            (blocking-do 'get-map
+                                         (conf-stat->conf-no conf)
+                                         (conf-stat->first-local-no conf)
+                                         1))))))
+         (lyskom-get-texts-by-generic 
+          by num 
+          (function 
+           (lambda (x to)
+             (let ((found nil))
+               (lyskom-traverse misc (text-stat->misc-info-list x)
+                 (setq found 
+                       (or found
+                           (and (or (eq (misc-info->type misc) 'RECPT)
+                                    (eq (misc-info->type misc) 'CC-RECPT)
+                                    (eq (misc-info->type misc) 'BCC-RECPT))
+                                (eq (misc-info->recipient-no misc) to)))))
+               found)))
+          (list to)
+          again))
+         (t (lyskom-get-texts-by-and-to by to num again))))
 
 
 ;;; ============================================================
@@ -625,6 +648,12 @@ Args: persno confno num &optional again pstart cstart"
   "Get NUM texts written by PERSNO. Args: persno num"
   (let ((persstat (blocking-do 'get-pers-stat persno)))
     (lyskom-check-review-access t persstat)
+    (lyskom-get-texts-by-generic persno num nil nil again pstart)))
+
+(defun lyskom-get-texts-by-generic (persno num pred args 
+                                           &optional again pstart)
+  "Get NUM texts written by PERSNO. Args: persno num"
+  (let ((persstat (blocking-do 'get-pers-stat persno)))
 
     (cond ((and again (null num)) (setq num lyskom-last-review-num))
           ((and again (< lyskom-last-review-num 0)) (setq num (- num))))
@@ -676,13 +705,16 @@ Args: persno confno num &optional again pstart cstart"
           (lambda (x)
             (initiate-get-text-stat 'main 
                                     (function
-                                     (lambda (x collector)
-                                       (if x 
+                                     (lambda (x collector pred args)
+                                       (when (and x
+                                                  (or (null pred)
+                                                      (apply pred
+                                                             x
+                                                             args)))
                                            (collector-push 
                                             (text-stat->text-no x)
                                             collector))))
-                                    x
-                                    collector)))
+                                    x collector pred args)))
          data)
 
         (lyskom-wait-queue 'main)
@@ -708,8 +740,6 @@ Args: persno confno num &optional again pstart cstart"
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
           (nfirst (- num)  result))))))
-
-
 
 (defun lyskom-get-texts-to (confno num &optional again cstart)
   "From CONFNO get NUM texts."
@@ -777,6 +807,8 @@ Args: persno confno num &optional again pstart cstart"
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
           (nfirst (- num)  result))))))
+
+
 
 
 ;;; ============================================================
