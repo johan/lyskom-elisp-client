@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.1 1997-10-23 12:18:48 byers Exp $
+;;;;; $Id: aux-items.el,v 44.2 1997-10-24 10:50:19 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,12 +33,12 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.1 1997-10-23 12:18:48 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.2 1997-10-24 10:50:19 davidk Exp $\n"))
 
-(eval-when-compile
-  (require 'lyskom-defvar "defvar.el")
-  (require 'lyskom-vars "vars.el")
-  (require 'lyskom-types "komtypes.el"))
+;;; (eval-when-compile
+;;;   (require 'lyskom-defvar "defvar.el")
+;;;   (require 'lyskom-vars "vars.el")
+;;;   (require 'lyskom-types "komtypes.el"))
 
 
 (def-kom-var lyskom-aux-item-definitions nil
