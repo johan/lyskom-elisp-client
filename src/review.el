@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 44.12 1997-11-12 14:22:08 byers Exp $
+;;;;; $Id: review.el,v 44.13 1998-02-22 11:06:11 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.12 1997-11-12 14:22:08 byers Exp $\n"))
+	      "$Id: review.el,v 44.13 1998-02-22 11:06:11 nisse Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -97,7 +97,7 @@ The order of the list a is kept."
 
 
 (def-kom-command kom-review-more (&optional count)
-  "Review more articlies using the same critera as the last review."
+  "Review more articles using the same critera as the last review."
   (interactive "P")
   (if (not lyskom-have-review)
       (lyskom-format-insert 'no-review-done)
