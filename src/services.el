@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.36 2003-03-16 15:57:30 byers Exp $
+;;;;; $Id: services.el,v 44.37 2003-07-19 22:26:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.36 2003-03-16 15:57:30 byers Exp $\n"))
+	      "$Id: services.el,v 44.37 2003-07-19 22:26:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1241,13 +1241,33 @@ Args: KOM-QUEUE HANDLER SESSION-NO &rest DATA"
                                            no-of-texts &rest data)
   "Send local-to-global to server."
   (lyskom-server-call
-    (lyskom-call kom-queue lyskom-ref-no handler data
-                 'lyskom-parse-text-mapping no-of-texts)
-    (lyskom-send-packet kom-queue
-                        (lyskom-format-objects 103 
-                                               conf-no
-                                               first-local-no
-                                               no-of-texts))))
+    (cond ((lyskom-have-call 103)
+           (lyskom-call kom-queue lyskom-ref-no handler data
+                        'lyskom-parse-text-mapping no-of-texts)
+           (lyskom-send-packet kom-queue
+                               (lyskom-format-objects 103 
+                                                      conf-no
+                                                      first-local-no
+                                                      no-of-texts)))
+          (t (lyskom-call kom-queue lyskom-ref-no 
+                          'lyskom-l2g-fake-callback
+                          (cons handler data)
+                          'lyskom-parse-map)
+                 (lyskom-send-packet kom-queue 
+                                     (lyskom-format-objects 34 conf-no
+                                                            first-local-no
+                                                            no-of-texts))))))
+
+(defun lyskom-l2g-fake-callback (map handler &rest data)
+  (let ((mapping 
+         (and map (lyskom-create-text-mapping (map->first-local map)
+                                              (+ (map->first-local map)
+                                                 (length (map->text-nos map)))
+                                              (length (map->text-nos map))
+                                              t
+                                              'dense
+                                              map))))
+    (apply handler mapping data)))
 
 (defun initiate-map-created-texts (kom-queue handler
                                              author

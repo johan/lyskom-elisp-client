@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.27 2003-03-16 15:57:30 byers Exp $
+;;;;; $Id: prefetch.el,v 44.28 2003-07-19 22:26:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.27 2003-03-16 15:57:30 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.28 2003-07-19 22:26:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -174,31 +174,46 @@ This is used to prevent the prefetch code to reenter itself.")
   "Return t if the while membership list has been fetched, and nil otherwise."
   (eq lyskom-membership-is-read 't))
 
+;;KILLME (defun lyskom-fetch-start-of-map (conf-stat membership)
+;;KILLME   "Block fetching map for MEMBERSHIP until we see a text.
+;;KILLME Start the prefetch for the remainder of the map."
+;;KILLME   (let ((first-local (1+ (membership->last-text-read membership)))
+;;KILLME         (last-local (1- (+ (conf-stat->no-of-texts conf-stat)
+;;KILLME                            (conf-stat->first-local-no conf-stat))))
+;;KILLME         (done nil))
+;;KILLME     (while (not done)
+;;KILLME       (let ((map (blocking-do 'get-map 
+;;KILLME                               (membership->conf-no membership)
+;;KILLME                               first-local
+;;KILLME                               lyskom-fetch-map-nos)))
+;;KILLME         (setq first-local (+ first-local lyskom-fetch-map-nos))
+;;KILLME         (lyskom-enter-map-in-to-do-list map conf-stat membership)
+;;KILLME         (cond ((and (map->text-nos map)
+;;KILLME                     (< first-local last-local)
+;;KILLME                     (> (length (map->text-nos map)) 0))
+;;KILLME                (setq done t)
+;;KILLME                (lyskom-prefetch-map-using-conf-stat conf-stat
+;;KILLME                                                     first-local
+;;KILLME                                                     membership)
+;;KILLME                )
+;;KILLME 
+;;KILLME               ((< first-local last-local))
+;;KILLME               (t (setq done t)))))))
+
 (defun lyskom-fetch-start-of-map (conf-stat membership)
   "Block fetching map for MEMBERSHIP until we see a text.
 Start the prefetch for the remainder of the map."
-  (let ((first-local (1+ (membership->last-text-read membership)))
-        (last-local (1- (+ (conf-stat->no-of-texts conf-stat)
-                           (conf-stat->first-local-no conf-stat))))
-        (done nil))
-    (while (not done)
-      (let ((map (blocking-do 'get-map 
-                              (membership->conf-no membership)
-                              first-local
-                              lyskom-fetch-map-nos)))
-        (setq first-local (+ first-local lyskom-fetch-map-nos))
-        (lyskom-enter-map-in-to-do-list map conf-stat membership)
-        (cond ((and (map->text-nos map)
-                    (< first-local last-local)
-                    (> (length (map->text-nos map)) 0))
-               (setq done t)
-               (lyskom-prefetch-map-using-conf-stat conf-stat
-                                                    first-local
-                                                    membership)
-               )
-
-              ((< first-local last-local))
-              (t (setq done t)))))))
+  (let* ((first-local (1+ (membership->last-text-read membership)))
+         (map (blocking-do 'local-to-global
+                           (membership->conf-no membership)
+                           first-local
+                           lyskom-fetch-map-nos)))
+    (when map
+      (lyskom-enter-map-in-to-do-list map conf-stat membership)
+      (when (text-mapping->later-texts-exist map)
+        (lyskom-prefetch-map-using-conf-stat conf-stat
+                                             (text-mapping->range-end map)
+                                             membership)))))
 
 (defun lyskom-prefetch-conf (conf-no &optional queue)
   "Prefetch the conf-stat for the conference with number CONF-NO.
@@ -305,13 +320,12 @@ prefetched the prefetch is not done."
 (defun lyskom-prefetch-map (conf-no membership &optional queue)
   "Prefetches a map for conf CONFNO."
   (lyskom-prefetch-map-from conf-no
-			    (1+ (membership->last-text-read membership))
-			    membership
-			    queue))
-
+                            (1+ (membership->last-text-read membership))
+                            membership
+                            queue))
 
 (defun lyskom-prefetch-map-from (conf-no first-local membership
-					 &optional queue)
+                                         &optional queue)
   "Prefetches a map for conf CONFNO starting att FIRST-LOCAL."
   (if queue
       (lyskom-queue-enter queue (list 'CONFSTATFORMAP
@@ -493,7 +507,8 @@ Return t if an element was prefetched, otherwise return nil."
 	 ((and (listp element)
 	       (memq (car element)
 		     '(TEXTAUTH TEXT-ALL TEXTTREE ONE-MEMBERSHIP
-				CONFSTATFORMAP MAP MARKS
+				CONFSTATFORMAP
+                                MAP MARKS
 				MEMBERSHIP WHOBUFFER TEXTS)))
 	  (let ((queue (lyskom-queue-create)))
 	    (setcar prefetch-list queue)
@@ -585,20 +600,23 @@ Return t if an element was prefetched, otherwise return nil."
 	 queue)
       ; We are done
       (lyskom-prefetch-handler)))
+
    ((eq (car request) 'CONFSTATFORMAP)
     (initiate-get-conf-stat 'prefetch 'lyskom-prefetch-confstatformap-handler
 			    (nth 1 request) (nth 2 request) (nth 3 request)
 			    queue))
+
    ((eq (car request) 'MAP)
-    (initiate-get-map 'prefetch 'lyskom-prefetch-map-handler
-		      (conf-stat->conf-no
-		       (nth 1 request))	; conf-stat
-		      (nth 2 request)	; first-local
-		      lyskom-fetch-map-nos
-		      (nth 1 request)	; conf-stat
-		      (nth 2 request)	; first-local
-		      (nth 3 request)	; membership
-		      queue))
+    (initiate-local-to-global 'prefetch 'lyskom-prefetch-map-handler
+                              (conf-stat->conf-no
+                               (nth 1 request))	; conf-stat
+                              (nth 2 request) ; first-local
+                              lyskom-fetch-map-nos
+                              (nth 1 request) ; conf-stat
+                              (nth 2 request) ; first-local
+                              (nth 3 request) ; membership
+                              queue))
+
    ((eq (car request) 'MARKS)
     (initiate-get-marks 'prefetch 'lyskom-prefetch-marks-handler queue))
    ((eq (car request) 'WHOBUFFER)
@@ -753,22 +771,17 @@ Put the requests on QUEUE."
   (-- lyskom-pending-prefetch)
   (lyskom-start-prefetch))
 
-
 (defun lyskom-prefetch-map-handler (map conf-stat first-local membership queue)
   "Handle the return of the membership prefetch call.
 Maps are `cached' in lyskom-to-do-list."
   (lyskom-stop-prefetch)
-  (let ((next-start (+ first-local lyskom-fetch-map-nos))
-	(last-local (1- (+ (conf-stat->no-of-texts conf-stat)
-		  (conf-stat->first-local-no conf-stat)))))
+  (let ((next-start (and map (text-mapping->range-end map))))
     (when map
-      ;; An old version of this function tester if the map contained no
-      ;; texts. That is not a correct termination condition.
-      (when (< next-start last-local)
+      (when (text-mapping->later-texts-exist map)
 	(lyskom-prefetch-map-using-conf-stat conf-stat
-					     next-start
-					     membership
-					     queue))
+                                             next-start
+                                             membership
+                                             queue))
       (lyskom-enter-map-in-to-do-list map conf-stat membership)))
   (lyskom-queue-enter queue 'FINISHED)
   (-- lyskom-pending-prefetch)
