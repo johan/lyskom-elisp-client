@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.4 1996-10-08 02:56:21 davidk Exp $
+# $Id: Makefile,v 44.5 1996-10-08 12:26:41 nisse Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.4 1996-10-08 02:56:21 davidk Exp $
+# $Id: Makefile,v 44.5 1996-10-08 12:26:41 nisse Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -54,7 +54,7 @@ PARTS-EL = komtypes.el clienttypes.el  deferred-insert.el utilities.el \
 	prefetch.el \
 	elib-string.el  \
 	lyskom-rest.el
-HEADER-EL = vars.el macros.el
+HEADER-EL = vars.el macros.el language.el
 HEADER-ELC = vars.elc macros.elc deferred-insert.elc
 SWEDISH-EL = swedish-strings.el
 SWEDISH-ELC = swedish-strings.elc
