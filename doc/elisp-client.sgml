@@ -6,12 +6,12 @@
 <book>
 <bookinfo>
   <title>Användarhandledning för LysKOMs emacslispklient</title>
-  <date>2002-03-26</date>
-  <edition>0.46</edition>
+  <date>2002-08-13</date>
+  <edition>0.47</edition>
 
   <copyright>
     <year>1991</year>
-    <year>2001</year>
+    <year>2002</year>
     <holder>
       <ulink url="http://www.lysator.liu.se/">
         <citetitle>Lysator</citetitle>
@@ -309,6 +309,9 @@
 
     <sect2>
       <title>tty-klienten</title>
+      <comment>
+        Informationen OK med Linus Tolke 2002-04-14.
+      </comment>
 
       <para>
         <indexterm id="tty-1">
@@ -1210,8 +1213,8 @@
 
       <para>
         <comment>
-          Borde exemplet med hur en ny person skapas vara här istället
-          för i begrepp-sektionen, kanske?
+          Exemplet med hur en ny person skapas borde vara här istället
+          för i begrepp-sektionen.
 
           Här måste förklaras saker som namnkomplettering, hur man
           kommer åt kommandon som inte har snabbtangenter och så.
@@ -1464,7 +1467,7 @@
 
       <para>
         Det finns ett antal olika funktioner man kan använda för att
-        ändra egenskapar hos ett redan skapat möte som man är
+        ändra egenskaper hos ett redan skapat möte som man är
         organisatör för.
       </para>
 
@@ -1750,8 +1753,138 @@
   <sect1>
     <title>Läsa inlägg</title>
   
-    <para>  
-    </para>  
+    <para>
+      För att kunna delta i debatten i LysKOM måste man kunna läsa
+      texter som andra skrivit. Olika kommandon för att göra det
+      beskrivs i det här avsnittet.
+    </para>
+
+    <sect2>
+      <title>Läsa nästa inlägg - ni / Läsa nästa kommentar - nk</title>
+
+      <para>
+        <indexterm id="kom-read-next-text-1">
+          <primary>Läsning</primary>
+          <secondary>Läsa nästa inlägg</secondary>
+        </indexterm>
+        <indexterm id="kom-read-next-text-2">
+          <primary>Läsa nästa inlägg</primary>
+        </indexterm>
+        <indexterm id="kom-read-next-text-3">
+          <primary>Läsning</primary>
+          <secondary>Läsa nästa kommentar</secondary>
+        </indexterm>
+        <indexterm id="kom-read-next-text-4">
+          <primary>Läsa nästa kommentar</primary>
+        </indexterm>
+        Det finns kommandon för att explicit säga att man vill läsa
+        nästa olästa inlägg eller nästa olästa kommentar. Normalt sett
+        använder man inte dem för att läsa utan man trycker helt
+        enkelt på mellanslag för att visa nästa text. Vilket kommando
+        som kommer att utföras när man trycker på mellanslag (eller
+        return) varierar lite, men så länge man har olästa texter så
+        visar prompten ett läskommando (eller ett kommando för att gå
+        till nästa möte, så att man kan fortsätta att läsa texter
+        där). Om man istället trycker på linefeed (eller control-j) så
+        utförs det aktuella kommandot från prompten på samma sätt som
+        ovan, men inlägget skrivs ut från toppen av fönstret istället
+        för att scrolla fram.
+      </para>
+
+      <comment>
+        Uppmärkning av några tangenttryckningar saknas i föregående
+        stycke. 
+      </comment>
+
+      <para>
+        Om man håller på att återse när något av kommandona
+        <userinput>Läsa nästa inlägg</userinput> ges så kommer
+        informationen om vad man höll på att återse undan. Med
+        <userinput>Återse nästa</userinput> kan man senare återgå till
+        att återse (eller så görs det automatiskt när man inte har
+        fler olästa texter kvar).
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Endast läsa senaste - e</title>
+
+      <para>
+        <indexterm id="kom-set-unread-1">
+          <primary>Läsning</primary>
+          <secondary>Endast läsa senaste</secondary>
+        </indexterm>
+        <indexterm id="kom-set-unread-2">
+          <primary>Endast läsa senaste</primary>
+        </indexterm>
+        Ibland händer det att man får massor av olästa texter i ett
+        möte som man inte har lust att läsa. Det kan bero på att man
+        gått med i mötet nyligen eller att man varit på
+        semester. Genom att använda <userinput>Endast läsa
+        senaste</userinput>slipper man sitta och trycka sig förbi alla
+        inaktuella inläggen. Man får ange hur många texter man vill ha
+        kvar i mötet, de övriga markeras som lästa.
+      </para>
+
+      <screen>
+        Gå till nästa möte.
+        
+        Svenska Dagbladet (import av nyheter) - 1302 olästa
+        
+        Läsa nästa text - Endast läsa senaste
+        
+        Svenska Dagbladet (import av nyheter) - 25 olästa
+        
+        Läsa nästa text - 
+      </screen>
+    </sect2>
+
+    <sect2>
+      <title>Uppskjuta läsning - e</title>
+
+      <para>
+        <indexterm id="kom-set-unread-1">
+          <primary>Läsning</primary>
+          <secondary>Uppskjuta läsning</secondary>
+        </indexterm>
+        <indexterm id="kom-set-unread-2">
+          <primary>Uppskjuta läsning</primary>
+        </indexterm>
+        Ibland händer det att man får massor av olästa texter i ett
+        möte som man visserligen vill läsa men inte har tid med just
+        nu. Man vill dock inte kasta bort dem helt som med
+        <userinput>Endast läsa senaste</userinput>. Genom att använda
+        <userinput>Uppskjuta läsning</userinput> så kan man begränsa
+        antalet inlägg man får läsa i det aktuella mötet till ett
+        antal man anger; resten av inläggen sparas till nästa
+        session. Man får ange hur många texter man vill läsa nu i
+        mötet.  Resten sparas till nästa session.
+      </para>
+
+      <screen>
+        Häftiga Länkar (ingen URL i ärenderaden tack! /org) - 857 olästa.
+
+        Läsa nästa text - Uppskjuta läsning
+
+
+        Läsa nästa text - 
+      </screen>
+
+      <comment>
+        Exemplet ovan är rätt meningslöst. Det är buggrapporterat att
+        det saknas feedback, så förhoppningsvis är exemplet snart
+        inaktuellt. 
+      </comment>
+    </sect2>
+
+    Läsa inlägg
+      Vanlig läsning
+      Endast läsa senaste
+      Uppskjuta läsning
+      Återse
+      Filtrering
+      Markering
+
   </sect1>
   
   <sect1>
@@ -1839,10 +1972,10 @@ Struktur
       Skapa användare
       Ändra personuppgifter
     Få hjälp
-    Att hantera möten
-      Bli medlem
-      Skapa möte
-      Ändra mötesuppgifter
+#     Att hantera möten
+#       Bli medlem
+#       Skapa möte
+#       Ändra mötesuppgifter
     Läsa inlägg
       Vanlig läsning
       Återse
@@ -1869,7 +2002,7 @@ Struktur
     Prompten
     Färgläggning [rubrik?]
       [namn, nummer, mushantering, kontextmeny, *, vinkel-möte 6-vinkel]
-    Scrollning
+    Scrollning (SPC, RET, DEL, etc)
     Namn och namnkomplettering [senare]
   Inställningar
     Ändra inställningar
@@ -1888,6 +2021,37 @@ Struktur
     Hookar, etc ???
   
   Lägg till ett "Kom igång snabbt"-kapitel.
+
+
+Kolla även http://www.lysator.liu.se/~padrone/kom/om-kom.html.
+
+8744374 idag 15:42 /19 rader/ David Byers
+Kommentar till text 8744212 av Lappnarr (sommarledig)
+Mottagare: LysKOM Elispklient; diskussion och idéer <13701>
+Extra kopia: LysKOM Windowsklient (WinKOM); nyheter, diskussion och idéer <2856>
+Ärende: Länkar inom parantes
+------------------------------------------------------------
+Elispklienten fungerar lite annorlunda. Dels tillåter den URLer som
+inte uppfyller RFC 1738 (vi tillåter att tecken som egentligen ska
+vara kodade att förekomma okodade) och dels så ser vi till att sista
+tecknet i den markerade URLen inte är citationstecken, vinklar,
+krullar, parenteser, punkt, komma, utropstecken, frågetecken,
+apostrof, kolon, eller vertikalt streck. Antagligen kommer jag att
+lägga in hakparenteser och semikolon i den listan i kväll.
+
+Det innebär att vi klarar att folk skriver URLer i parenteser
+(http://www.dictionary.com/search?q=parenthesis) och mitt i meningar,
+som http://www.dictionary.com/search?q=comma, men om man har en URL
+som ska sluta med något av ovanstående tecken så kommer den att märkas
+upp fel. Det tycker jag är en vettig avvägning eftersom URLer som
+avslutas med underliga tecken inte är så vanliga.
+
+Om man vill vara garanterad att ens URL inte tolkas fel så måste man
+märka upp den enligt appendixet i RFC 1738 <URL:http://www.cis.ohio
+-state.edu/cgi-bin/rfc/rfc1738.html>. Då kan man till och med bryta
+URLen över flera rader.
+(8744374) /David Byers/-----------------------------
+
 </comment>
   </para>  
 </chapter>
