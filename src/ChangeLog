@@ -1,3 +1,12 @@
+Thu Dec  4 14:57:34 1997  David Byers  <dbyers@atp>
+
+	* async.el (lyskom-show-logged-out-person): Skriv ut server-alias
+	när någon loggar ut.
+	(lyskom-show-logged-in-person): Dito för inloggning.
+
+	* swedish-strings.el (lyskom-message): Fixade has-entered och
+	vänner så man kan skriva ut server-alias.
+
 Sun Nov 30 12:20:49 1997  David Byers  <dbyers@atp>
 
 	* completing-read.el (lyskom-complete-string-advance): Fixade

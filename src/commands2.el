@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.22 1997-11-30 17:19:04 byers Exp $
+;;;;; $Id: commands2.el,v 44.23 1997-12-04 20:39:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.22 1997-11-30 17:19:04 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.23 1997-12-04 20:39:34 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1605,6 +1605,32 @@ membership info."
 	    (switch-to-buffer (car lyskom-buffer-list))
 	  (lyskom-next-kom)))
     (error "No active LysKOM buffers")))
+
+;; (defun lyskom-next-kom ()
+  "Internal version of kom-next-kom"
+
+  ;; Find the lyskom-buffer to go from, to the next
+  ;;    If we are in a lyskom buffer that is in lyskom-buffer-list
+  ;;                    switch from the current buffer.
+  ;;    If we are in a lyskom buffer that is unlisted, 
+  ;;                    put this buffer in the list and switch from it
+  ;;    If we are in another buffer, switch from the last listed buffer
+
+  ;;    If we are switching from nil, then the target buffer is
+  ;;                    the first buffer in lyskom-buffer-list.
+  ;;    If we are switching from a buffer, then the target buffer is the
+  ;;                    first in the rest of the list, or the first buffer
+  ;;                    if we are at the end of the list
+  ;;    Splice the list as follows:
+  ;;    Put the rest of the list, after the current buffer in front of the
+  ;;                    buffer list, and remove it from the back. Now the
+  ;;                    buffer we switched from is at the back and the one
+  ;;                    we want to switch to is at the front.
+  ;;    Iterate over the buffer list and switch to the first buffer that
+  ;;                    is active. Remove any buffers that are inactive.
+  ;;    If the new target buffer after this is the one we were switching
+  ;;                    from, then signal an error
+;;)
 
 
 (defun lyskom-previous-kom ()
