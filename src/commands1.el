@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.13 1996-01-19 18:49:37 byers Exp $
+;;;;; $Id: commands1.el,v 38.14 1996-01-21 17:54:35 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.13 1996-01-19 18:49:37 byers Exp $\n"))
+	      "$Id: commands1.el,v 38.14 1996-01-21 17:54:35 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -1591,7 +1591,7 @@ If optional arg TEXT-NO is present then jump all comments to that text instead."
     (lyskom-end-of-command)))
 
 
-(defun lyskom-jump (text-stat mark-as-read)
+(defun lyskom-jump (text-stat mark-as-read &optional sync)
   "Jump past TEXT-STAT and all comments to it.
 Remove TEXT-STAT from all internal tables in the client.
 If MARK-AS-READ is non-nil, also mark TEXT-STAT and all comments (and
@@ -1614,13 +1614,17 @@ footnotes) to it as read in the server."
 		    (misc-info->comm-in misc)
 		  (misc-info->footn-in misc))
 		(text-stat->text-no text-stat)))
-	(initiate-get-text-stat 'main
-				'lyskom-jump
-				(if (eq (misc-info->type misc)
-					'COMM-IN)
-				    (misc-info->comm-in misc)
-				  (misc-info->footn-in misc))
-				mark-as-read)))))))
+	(let ((comment (if (eq (misc-info->type misc)
+			       'COMM-IN)
+			   (misc-info->comm-in misc)
+			 (misc-info->footn-in misc))))
+	  (if sync
+	      (lyskom-jump (blocking-do 'get-text-stat comment)
+			   mark-as-read sync)
+	    (initiate-get-text-stat 'main
+				    'lyskom-jump
+				    comment
+				    mark-as-read)))))))))
 
 
 ;;; ================================================================
