@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.107 2000-07-03 10:50:06 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.108 2000-07-30 14:28:05 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.107 2000-07-03 10:50:06 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.108 2000-07-30 14:28:05 jhs Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -766,18 +766,33 @@ found in lyskom-membership, a blocking call to the server is made."
 ;;;; ================================================================
 ;;;;                   Scrolling and text insertion.
 
+(defvar lyskom-trim-buffer-delete-to)
 
 (defun lyskom-trim-buffer ()
   "Trim the size of a lyskom buffer to lyskom-max-buffer-size"
-  (save-excursion
-    (if (and kom-max-buffer-size
+  (when (and kom-max-buffer-size
 	     (> (buffer-size) kom-max-buffer-size))
-	(let ((delchars (- (buffer-size) kom-max-buffer-size))
-	      (inhibit-read-only t))
-	  (goto-char (point-min))
-	  (while (< (point) delchars)
-	    (forward-line 1))
-	  (delete-region (point-min) (point))))))
+    (lyskom-save-excursion
+      (let ((lyskom-trim-buffer-delete-to (- (buffer-size)
+					     kom-max-buffer-size))
+	    (inhibit-read-only t))
+	(goto-char (point-min))
+	(while (< (point) lyskom-trim-buffer-delete-to)
+	  (forward-line 1))
+	(setq lyskom-trim-buffer-delete-to (point))
+	(run-hooks 'lyskom-trim-buffer-hook)
+	(delete-region (point-min) lyskom-trim-buffer-delete-to)))))
+
+(defun lyskom-garb-lyskom-buffer-to-file ()
+  "Appends the deleted initial portions of the buffer to a file.
+Put this function in your lyskom-trim-buffer-hook and set
+kom-max-buffer-size to something clever, and the trimmed text
+will automagically flow into your lyskom log file."
+  (append-to-file 1 lyskom-trim-buffer-delete-to
+		  (expand-file-name (concat "~/" (buffer-name) "-history"))))
+
+;(add-hook 'lyskom-trim-buffer-hook 'jhs-garb-lyskom-buffer-to-file)
+
 
 (defun lyskom-scroll ()
   "Scroll screen if necessary.

@@ -1,5 +1,14 @@
 2000-07-30  Johan Sundström  <jhs@lysator.liu.se>
 
+	* lyskom-rest.el (lyskom-trim-buffer): Point no longer flickers
+	when trimming the buffer.
+	(lyskom-trim-buffer-hook): New hook; run before the trimming.
+	(lyskom-trim-buffer-delete-to): New variable; how far the buffer
+	will be trimmed, useful in lyskom-trim-buffer-hook functions.
+	(lyskom-garb-lyskom-buffer-to-file): Fairly ugly hack for flowing
+	the trimmed portion of the lyskom buffer into a file. Ought to use
+	some configurable variable for the filename.
+
 	* commands2.el (kom-next-unread-kom): More info, as suggested by
 	Hans Persson. Tells whether there are any other sessions
 	whatsoever when there are no other sessions with unread texts.
