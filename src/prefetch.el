@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.5 1997-01-31 15:48:08 davidk Exp $
+;;;;; $Id: prefetch.el,v 44.6 1997-02-07 15:23:35 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.5 1997-01-31 15:48:08 davidk Exp $\n"))
+	      "$Id: prefetch.el,v 44.6 1997-02-07 15:23:35 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -304,6 +304,26 @@ prefetched the prefetch is not done."
 ;;      (lyskom-stack-push lyskom-prefetch-stack (list 'CONF-TEXTS text-list))))
 ;;  (lyskom-continue-prefetch))
 
+(defun lyskom-prefetch-text-list (text-list &optional queue)
+  "Prefetches a list of texts."
+  (if (null (text-list->texts text-list))
+      nil
+    (if queue
+	(lyskom-queue-enter queue (list 'TEXT-LIST (text-list->texts text-list)))
+      (lyskom-stack-push lyskom-prefetch-stack
+			 (list 'TEXT-LIST (text-list->texts text-list)))))
+  (lyskom-continue-prefetch))
+
+(defun lyskom-prefetch-text-list-continue (texts &optional queue)
+  "Prefetches a list of texts."
+  (if (null texts)
+      nil
+    (if queue
+	(lyskom-queue-enter queue (list 'TEXT-LIST-CONT texts))
+      (lyskom-stack-push lyskom-prefetch-stack
+			 (list 'TEXT-LIST-CONT texts))))
+  (lyskom-continue-prefetch))
+
 
 ;;; ================================================================
 ;;;           Functions internal to the prefetch package
@@ -390,7 +410,7 @@ Return t if an element was prefetched, otherwise return nil."
 	 ;; A simple request?
 	 ((and (listp element)
 	       (memq (car element)
-		     '(CONFSTAT PERSSTAT TEXTSTAT TEXTMASS)))
+		     '(CONFSTAT PERSSTAT TEXTSTAT TEXTMASS TEXT-LIST-CONT)))
 	  (setcar prefetch-list 'DONE)
 	  (lyskom-prefetch-one-request element nil)
 	  (setq result t))
@@ -400,7 +420,7 @@ Return t if an element was prefetched, otherwise return nil."
 	       (memq (car element)
 		     '(TEXTAUTH TEXT-ALL TEXTTREE 
 				CONFSTATFORMAP MAP MARKS
-				MEMBERSHIP WHOBUFFER)))
+				MEMBERSHIP WHOBUFFER TEXT-LIST)))
 	  (let ((queue (lyskom-queue-create)))
 	    (setcar prefetch-list queue)
 	    (lyskom-prefetch-one-request element queue)
@@ -498,6 +518,11 @@ Return t if an element was prefetched, otherwise return nil."
     (initiate-get-marks 'prefetch 'lyskom-prefetch-marks-handler queue))
    ((eq (car request) 'WHOBUFFER)
     (initiate-who-is-on 'prefetch 'lyskom-prefetch-whobuffer-handler queue))
+   ((or (eq (car request) 'TEXT-LIST) (eq (car request) 'TEXT-LIST-CONT))
+    (initiate-get-text-stat 'prefetch 'lyskom-prefetch-text-list-handler
+			    (car (nth 1 request))
+			    (cdr (nth 1 request))
+			    queue))
    
    (t (signal 'lyskom-internal-error
 	      (list "lyskom-prefetch-one-request - unknown key:"
@@ -657,6 +682,34 @@ Maps are `cached' in lyskom-to-do-list."
   (-- lyskom-pending-prefetch)
   )
 
+(defun lyskom-prefetch-text-list-handler (text-stat texts queue)
+  "Prefetch all info neccessary to write the text with text-stat TEXT-STAT.
+Put the requests on QUEUE."
+  (lyskom-stop-prefetch)
+  (lyskom-prefetch-conf (text-stat->author text-stat) queue)
+  (lyskom-prefetch-textmass (text-stat->text-no text-stat) queue)
+  (lyskom-traverse
+      misc
+      (text-stat->misc-info-list text-stat)
+    (let ((type (misc-info->type misc)))
+      (cond
+       ((or (eq type 'RECPT)
+	    (eq type 'CC-RECPT))
+	(lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
+       ((eq type 'COMM-IN)
+	(lyskom-prefetch-textauth (misc-info->comm-in misc) queue))
+       ((eq type 'FOOTN-IN)
+	(lyskom-prefetch-textauth (misc-info->footn-in misc) queue))
+       ((eq type 'COMM-TO)
+	(lyskom-prefetch-textauth (misc-info->comm-to misc) queue))
+       ((eq type 'FOOTN-TO)
+	(lyskom-prefetch-textauth (misc-info->footn-to misc) queue))
+       (t nil))))
+  (if (null texts)
+      (and queue (lyskom-queue-enter queue 'FINISHED))
+    (lyskom-prefetch-text-list-continue texts queue))
+  (-- lyskom-pending-prefetch)
+  (lyskom-start-prefetch))
 
 (defun lyskom-prefetch-handler (&rest data)
   "Handler called after each simple prefetch request is done."
