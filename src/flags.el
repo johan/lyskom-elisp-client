@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.2 1996-10-20 02:56:50 davidk Exp $
+;;;;; $Id: flags.el,v 44.3 1996-10-28 18:05:15 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.2 1996-10-20 02:56:50 davidk Exp $\n"))
+	      "$Id: flags.el,v 44.3 1996-10-28 18:05:15 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -55,7 +55,8 @@
 
 (defun lyskom-Edit-options-modify (modfun)
   (save-excursion
-   (let ((buffer-read-only nil) var pos tmp)
+   (let ((inhibit-read-only t)
+	 var pos tmp)
      (re-search-backward "^;; \\|\\`")
      (forward-char 3)
      (setq pos (point))
