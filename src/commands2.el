@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.127 2002-05-01 21:42:39 byers Exp $
+;;;;; $Id: commands2.el,v 44.128 2002-05-03 20:29:01 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.127 2002-05-01 21:42:39 byers Exp $\n"))
+              "$Id: commands2.el,v 44.128 2002-05-03 20:29:01 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2908,10 +2908,10 @@ Tryck på enter för att fortsätta.
 ----------------------------------------------------------------
 "
                                       '(face kom-warning-face))
-  (ding)
-  ;; Make sure the user actually gets a beep.
-  (if visible-bell
-      (let ((visible-bell nil))
-	(ding)))
+  ;; Beep both visibly and audibly, if possible.  We *want* to be annoying.
+  (let ((visible-bell t))
+    (ding))
+  (let ((visible-bell nil))
+    (ding)))
   (read-from-minibuffer 
    (lyskom-format "%#1@Tryck return eller enter för att gå vidare: " '(face kom-warning-face))))
