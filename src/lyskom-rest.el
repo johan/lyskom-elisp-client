@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.54 1997-11-30 17:19:22 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.55 1998-01-04 03:10:57 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.54 1997-11-30 17:19:22 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.55 1998-01-04 03:10:57 davidk Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3043,6 +3043,7 @@ One parameter - the prompt string."
 (lyskom-set-queue-priority 'main 9)
 (lyskom-set-queue-priority 'sending 9)
 (lyskom-set-queue-priority 'follow 9)
+(lyskom-set-queue-priority 'options 9)
 (lyskom-set-queue-priority 'deferred 6)
 (lyskom-set-queue-priority 'background 6)
 (lyskom-set-queue-priority 'modeline 6)
