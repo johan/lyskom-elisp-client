@@ -4,48 +4,9 @@
 @setfilename elisp-client
 @settitle Användarhandledning LysKOMs emacslispklient
 
-@c 
-@c  Jag har bara anvent funktions, variable och key indexen.
-@c  funktions-indexet anv{nds f|r olika funktioner. B}de
-@c  elisp-funktioner och "funktioner" p} lyskom-niv}.
-@c  variable-indexet anv{nds f|r variabler och flaggor, b}de emacs-lisp
-@c  flaggor och environment-variabler
-@c  key-indexet anv{nds f|r tangentbordsbindningar.
-@c
-
-
 @setchapternewpage odd
 
 @comment @documentstyle[12pt,latexinfo,lyskom]{rapport} @c -*- latexinfo -*- This must be the first line.
-
-@ifinfo
-$Id: elisp-client.texinfo,v 44.0 1996-08-30 14:42:11 davidk Exp $
-@end ifinfo
-
-@iftex
-@hyphenation{admini-stra-törs-mode admini-stra-tör använ-dar-namn}
-@hyphenation{data-bas-filen default-prio-ri-tet}
-@hyphenation{email-adress even-tu-ella}
-@hyphenation{emacs-lisp-biblioteket}
-@hyphenation{emacs-lisp-program}
-@hyphenation{förut-sätt-ningar}
-@hyphenation{inlogg-ningarna}
-@hyphenation{klient-modell}
-@hyphenation{kom-man-don}
-@hyphenation{kom-men-taren kom-men-tarer kom-men-tar}
-@hyphenation{kom-men-tars-träd}
-@hyphenation{kon-ver-terings-tabellen}
-@hyphenation{lösen-ordet}
-@hyphenation{mar-ker-ingen}
-@hyphenation{med-lem-mar}
-@hyphenation{name-server}
-@hyphenation{per-sonen}
-@hyphenation{prefix-argu-ment}
-@hyphenation{server-klient-modell}
-@hyphenation{sessions-nummer-ordning}
-@hyphenation{tangent-bords-bind-ningar}
-@hyphenation{ver-sionen versions-nummer}
-@end iftex
 
 @titlepage
 @title LysKOM Elispklient: Användarhandledning
@@ -56,33 +17,6 @@ $Id: elisp-client.texinfo,v 44.0 1996-08-30 14:42:11 davidk Exp $
 @author Inge Wallin
 @author David Byers
 @author David Kågedal
-
-@page
-Copyright @copyright{} 1991,1992,1993,1994,1995,1996 Lysator
-
-This file is part of the LysKOM server.
-
-LysKOM is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by 
-the Free Software Foundation; either version 1, or (at your option) 
-any later version.
-
-LysKOM is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with LysKOM; see the file COPYING.  If not, write to
-Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN,
-or the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-MA 02139, USA.
-
-Please mail bug reports to bug-lyskom@@lysator.liu.se.
-
-Tillstånd ges att kopiera denna manual och distribuera kopiorna, under
-förutsättning att denna copyrightnot och denna text finns med på alla
-kopior.
 
 @page
 Författarna till denna klient är alla medlemmar i Datorföreningen
@@ -104,27 +38,13 @@ Lars Willför @code{<willfor@@lysator.liu.se>}
 @end titlepage
 
 
-@node Top, Förord, (dir), (dir)
+@node Top, Uppstart, (dir), (dir)
 @ifinfo
-LysKOM-Projektet
-
-En klient skriven i GNU-emacs-lisp.
-
-@c Don't change this line. Check install in Makefile.
-@c davidk: Why not? This seems to be the place to change it.
 Dokumentationen uppdaterad till klient version 0.39
 @end ifinfo
 
 @menu
-* Förord::                      Förord
-* Historia::                    
-* Servern::                     Servern
-
 * Uppstart::                    Uppstart
-* Första gången::               Första gången du kör LysKOM
-
-* Möten::                       Om möten
-
 * Köra LysKOM::                 Köra LysKOM
 * Namn::                        Namn
 * Skriva inlägg::               Att skriva inlägg
@@ -140,12 +60,6 @@ Dokumentationen uppdaterad till klient version 0.39
 * Variabelindex::               Variabelindex
 
  --- Den specificerade nodlistan ---
-
-Förord
-
-* Historia:: Lite om koms historia fram till LysKOM.
-* Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
-* Andra klienter:: Alternativ till LysKOMs emacslispklient.
 
 Uppstart
 
@@ -169,7 +83,6 @@ Kommandon
 
 * Skriva::			Skriva
 * Lista::			Kommandon för att lista information.
-* Bli medlem::			Hur du blir medlem i och utträder ur möten.
 * Sluta::			När du har läst klart
 
 * Annat::			
@@ -197,147 +110,8 @@ Kommandon
 * Ändra inställningarna:: Hur man ändrar LysKOMklientens parametrar.
 @end menu
 
-@node Förord, Servern, Top, Top
-@comment  node-name,  next,  previous,  up
-@chapter Förord
 
-Meningen med detta dokument är att den ska beskriva allt man behöver
-veta om LysKOMs emacslisp-klient för att kunna använda den. Det förutsätts
-att läsaren känner till GNU Emacs. Om användaren har använt QZ-KOM är
-detta en fördel, men det är på inget vis nödvändigt för förståelsen av
-LysKOM.
-
-@menu
-* Historia:: Lite om koms historia fram till LysKOM.
-* Utveckling av klienten:: Förutsättningarna för lyskom-projektet.
-* Andra klienter:: Alternativ till LysKOMs emacslispklient.
-@end menu
-
-@c Ja, den h{r noden och de f|ljande: Utveckling av klienten och
-@c Historia ligger i "fel" ordning i dokumentet. Det beror p} att jag
-@c vill ha texten som ligger i dessa tv} f|ljande noder direkt under
-@c f|rordet medan det skall vara en egen nod i info-varianten.
-
-@node Utveckling av klienten, Andra klienter, Historia, Förord
-@comment  node-name,  next,  previous,  up
-
-All utveckling av LysKOMs emacslispklient, lyskom-systemet och i detta
-dokument nämnda andra klienter är ideelt arbete utfört av medlemmar i
-Lysator, datorföreningen vid Universitet och Tekniska Högskolan i
-Linköping.
-
-Om du vill deltaga i arbetet så är det bra om du skaffar dig en
-ordentlig introduktion till hur systemet fungerar. Detta kräver att du
-läser dokumentationen och studerar programkoden ordentligt. Men för att
-du snabbast ska kunna lära dig systemet är det bäst att du kontaktar
-någon av utvecklarna.
-
-@node Andra klienter, , Utveckling av klienten, Förord
-@comment  node-name,  next,  previous,  up
-
-Det finns alternativ till LysKOMs emacslispklient som också är fritt
-tillgängliga. I skrivande stund har ingen av dem riktigt
-emacslispklientens funktionalitet, utan är begränsade i något avseende
-men det sker utveckling av dem hela tiden.
-
-Samtliga här beskrivna LysKOMklienter har fördelen framför LysKOMs
-emacslispklient att de är mindre cpu-krävande och därför snabbare.
-
-@table @asis
-
-@item tty-klienten
-@itemx C-klienten
-tty-klienten är skriven i C med det ursprungliga målet att så troget som
-möjligt likna QZ-kom. Avvikelser från detta målet har skett dels
-beroende på de olika förutsättningar som LysKOM har jämfört med QZ-kom
-och dels beroende på personlig smak hos utvecklarna. När detta skrivs är
-tty-klienten (version L0.11) ganska stabil, den går lätt att kompilera
-och köra på flera olika system @footnote{SunOS4 (sun3 och sun4),
-Solaris, Linux, Dynix 3.0, Ultrix, HPUX} förusatt att man har GCC
-installerad.
-
-Den senaste versionen av tty-klienten finns att hämta via ftp från
-@file{ftp.lysator.liu.se} i underbiblioteket @file{/pub/lyskom/tty-client/}
-
-Den som gjort mest i tty-klienten är Thomas Bellman
-@code{<bellman@@lysator.liu.se>}.
-
-Den som för närvarande gör något och som är ansvarig för de senaste
-versionerna är Linus Tolke @code{<linus@@lysator.liu.se>}.
-
-@item tkom
-@itemx nilkom
-@itemx kom++
-tkom och nilkom är två olika klienter som bygger på samma grundstomme.
-Grundprogrammet som pratar med lyskom-servern är skrivet i C++ och sedan
-finns det två olika användargränssnitt som är skrivna i TCL. Nilkom kör
-mot en terminal medan tkom öppnar X-fönster.
-
-Målet med denna klient är att erbjuda ett gränssnitt till lyskom-servern
-som är bättre än protokollet och det finns redan nu rutiner för cache av
-personer och möten.
-
-tkom, nilkom, kom++-paketet kräver att C++ och TCL/Tk finns installerat på
-maskinen men om man vill använda paketet för att bygga en helt egen
-klient kan man klara sig utan TCL.
-
-Den senaste versionen av kom++-klienten finns att hämta via anonym ftp
-från @file{ftp.lysator.liu.se} i underbiblioteket @file{/pub/lyskom}.
-
-De som för närvarande jobbar med kom++-klienten är Per Cederqvist
-@code{<ceder@@lysator.liu.se>} och Inge Wallin @code{<ingwa@@isy.liu.se>}
-eller @code{<inge@@lysator.liu.se>}.
-
-@end table
-
-@node Historia, Utveckling av klienten, Förord, Förord
-@comment  node-name,  next,  previous,  up
-@chapter Historia
-
-LysKOM är ett konferenssystem som är inspirerat av KOM, det
-konferenssystem som skapades av QZ i Stockholm. Orsaken till att LysKOM
-skrevs var att det KOMsystem Lysators medlemmar hade tillgång till lades
-ner. QZ-KOM gick att köra på DEC-10 och DEC-20-maskiner och den sista
-DEC-20-maskinen på LiTH som studenterna hade tillgång till såldes och
-försvann. KOM hade blivit vanebildande för en del och det bedömdes att
-en ersättning var nödvändig.
-
-En tidig tanke när vi började jobba med LysKOM var att det skulle gå att
-ha flera olika användargränssnitt samtidigt. Någon vill se en grafisk
-struktur på hur inläggen hänger ihop på sin grafiska skärm, någon annan
-vill kunna fortsätta att använda sin gamla vt100. Det var också klart
-att systemet skulle köra under UNIX eftersom detta operativsystem
-bedömdes som vanligt i framtiden. Lysators medlemmar hade dessutom stor
-erfarenhet av UNIX och Lysator äger ett antal UNIX- maskiner.
-
-Bland annat av dessa orsaker valde vi att använda en
-server-klientmodell. En central server tar hand om alla inlägg och
-LysKOM:s hela databas. Mot denna server kan flera stycken klienter
-koppla upp sig via TCP/IP.
-
-När servern började fungera behövdes det en enkel klient för att kunna
-testa. Per Cederqvist skrev en enkel klient i emacslisp som sedan byggts
-på av ett antal lysatormedlemmar. Även personer utanför Lysator har
-bidragit till utvecklingen med färdiga funktioner och framför allt
-kommentarer och idéer. Det är detta som idag är LysKOMs emacslispklient.
-
-
-
-
-@node Servern, Uppstart, Förord, Top
-@comment  node-name,  next,  previous,  up
-@chapter Servern
-
-Servern, databashanteraren, är skriven i C och körs på
-@file{kom.lysator.liu.se}. Databasfilen är läsbar för flera av lysators
-medlemmar, vilket kan tyckas vara en bugg, men den är medveten. Vi vill
-inte ge någon en falsk känsla av säkerhet och på ett system sådant som
-Lysators är det alltför många som har privilegier för att man skall
-kunna garantera någon hemlighet.  På andra serverinstallationer kan
-situationen naturligtvis bli en annan.
-
-
-@node Uppstart, Första gången, Servern, Top
+@node Uppstart, Lysator, Top, Top
 @comment  node-name,  next,  previous,  up
 @chapter Uppstart
 @ifinfo
@@ -365,7 +139,7 @@ för att sätta igång. Svara på frågan om server med
 att trycka @key{RET}.
 
 
-@node Andra maskiner,  , Lysator, Uppstart
+@node Andra maskiner, Köra LysKOM, Lysator, Uppstart
 @comment  node-name,  next,  previous,  up
 @section Från andra maskiner
 
@@ -409,74 +183,7 @@ skrivar så kontakta utvecklarna via email till
 eller en postscript-fil.
 
 
-@node Första gången, Möten, Uppstart, Top
-@comment  node-name,  next,  previous,  up
-@chapter Första gången du kör LysKOM
-
-När du har svarat på frågan om server och uppkopplingen mellan klient
-och server är klar så får du en ny fråga; ditt namn. Det är sed att
-ange både för och efternamn samt den organisation du arbetar för, t ex
-@example
-Inge Wallin, ISY
-@end example
-Om du inte är från Linköping @footnote{Detta beror givetvis på vilken
-server du är uppkopplad mot. Olika konventioner används vid olika
-servrar och olika servrar ligger på olika ställen.} kan det också vara
-bra att på något sätt ange vilken stad du normalt finns i, t.ex
-@example
-Salvador Dalberg, Stacken, Stockholm
-@end example
-Om det inte fanns någon med det namn du angav så får du bekräfta att
-du har stavat ditt namn rätt. Därefter får du uppge ett personligt lösenord.
-@refill
-
-Du blir medlem i mötet @samp{Presentation (av nya) möten} automatiskt
-när du går in i LysKOM första gången. I det mötet hamnar beskrivningar
-av nya möten när de skapas och när beskrivningen ändras. Det kan vara
-bra att i lugn och ro läsa igenom detta möte och efterhand gå med i de
-möten som du finner intressanta.@refill
-
-För att titta på presentationen för ett möte igen kan man använda
-kommandot @code{Återse presentation}.
-@findex Återse presentation
-
-@node Möten, Köra LysKOM, Första gången, Top
-@comment  node-name,  next,  previous,  up
-@chapter Möten
-
-@c   Följande förvirrade beskrivning av möten har bevarats åt
-@c   eftervärlden, men är nog inte så lämplig som nybörjarförklaring.
-@c
-@c Debatten är uppdelad i olika möten. Möten är dataenheter som bl.a. har
-@c namn, medlemmar och mottagna inlägg. Medlemmarna förväntas vara
-@c intresserade av inläggen som skickas till just det mötet och läser
-@c dem. Namnen används som en kort presentation av mötet när man skall
-@c referera till det, dvs när man går till mötet eller skickar brev till
-@c mötet.
-
-Diskussionerna i LysKOM förs i olika @dfn{möten}. Alla inlägg läggs i
-ett eller flera sådana möten, och för att man ska se de inlägg som
-skapas krävs det att man är medlem i något av dessa möten. Ett möte har
-ett namn som kortfattat beskriver vad inläggen i mötet ska handla
-om. Möten har också presentationer som lite mer utförligt beskriver vad
-mötet är tänkt att handla om.
-
-De flesta möten är öppna för alla att bli medlemmar i, men det finns
-också slutna möten, som det krävs att man kontaktar administratören för
-mötet för att bli medlem i. Dessutom finns det hemliga möten, vars
-existens inte kan upptäckas annat än av medlemmarna i mötet.
-
-Det finns inga som helst mekanismer eller garantier för att kontrollera
-att medlemmarna i ett möte, och andra också för den delen, skickar
-inläggen till rätt möte. Det finns möjligheter för administratören av
-mötet eller författaren av inlägget att flytta inlägget om det hamnat
-fel men oftast är det författarens ansvar att se till att det hamnar
-rätt från början.
-
-Denna beskrivning av möten är något förenklad, och den intresserade
-studenten bör studera serverdokumentationen för en djupare förståelse.
-
-@node Köra LysKOM, Namn, Möten, Top
+@node Köra LysKOM, Namn, Andra maskiner, Top
 @comment  node-name,  next,  previous,  up
 @chapter Köra LysKOM
 
@@ -512,8 +219,6 @@ Tryck på mellanslag när du läst klart så scrollas nästa sida fram.
 @node Filtrering, Kommandon, Scrollning, Köra LysKOM
 @comment node-name, next, previous, up
 @section Filtrering
-
-@c Detta kapitel borde väl ligga på något bättre ställe?
 
 För att hantera den stora mängd information som kan finnas i LysKOM
 finns funktioner för att filtrera inlägg. Filtrering innebär att inlägg
@@ -579,7 +284,6 @@ De flesta kommandon kan avbrytas med @kbd{C-g}.
 
 * Skriva::			Skriva
 * Lista::			Kommandon för att lista information.
-* Bli medlem::			Hur du blir medlem i och utträder ur möten.
 * Sluta::			När du har läst klart
 
 * Annat::			
@@ -816,7 +520,7 @@ inlägg.
 
 @end table
 
-@node Lista, Bli medlem, Skriva, Kommandon
+@node Lista, Sluta, Skriva, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Lista
 
@@ -888,58 +592,7 @@ mötet, eller på dina markerade inlägg, när du har prompten
 @code{Återse nästa markerade -}.
 @end table
 
-@node Bli medlem, Sluta, Lista, Kommandon
-@comment  node-name,  next,  previous,  up
-@subsection Bli medlem
-
-Här beskriver vi hur du kan bli medlem i ett möte, samt hur du gör för
-att utträda.
-
-@table @asis
-@item @kbd{g}
-@itemx @code{Gå till möte}
-@findex Gå till möte
-@kindex g
-Gå till ett nytt möte för att börja läsa inlägg där. LysKOM frågar
-efter vilket möte du vill gå till.
-
-Om du inte är medlem i mötet så frågar LysKOM om du vill bli medlem
-i mötet och om man då svarar @kbd{j} så blir man medlem i mötet på samma
-sätt som om man hade gjort @kbd{m} (@code{Bli medlem i möte}). Efter det så går
-man till mötet på vanligt sätt.
-
-
-@item @kbd{m}
-@itemx @code{Bli medlem i möte}
-@findex Bli medlem i möte
-@kindex m
-Frågar efter ett möte och ser till att du blir medlem i det.
-
-Elispklienten kommer att sätta prioriteten för mötet till @code{100} om
-du inte har ändrat variabeln @code{kom-membership-default-priority} som
-kontrollerar detta.
-
-Normalt sett lägger elispklienten till nya möten sist i listan av möten
-du är medlem i, men detta beteende går att kontrollera med variabeln
-@code{kom-membership-default-placement}. Om du sätter denna variabel
-till @code{nil} så får du en fråga om var mötet ska läggas. Detta anges
-med ett heltal där 0 är allra först (före din brevlåda) och det högsta
-numret som finns som alternativ är sist i listan. Du kan också sätta
-variabeln till @code{first} eller @code{last}.
-
-Om mötet är slutet så kan man inte gå med i det. Detta kommando
-kan även användas för att ändra prioritet för ett möte som du
-redan är medlem i.
-
-
-@item @code{Utträda ur möte}
-@findex Utträda ur möte
-Frågar efter namnet på ett möte och gör så att du utträder ur
-mötet. Alla markeringar om eventuella lästa inlägg försvinner.
-Detta kommando har inte någon egen tangent.
-@end table
-
-@node Sluta, Annat, Bli medlem, Kommandon
+@node Sluta, Annat, Lista, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Sluta
 
@@ -1336,15 +989,6 @@ men som kan hittas under @kbd{a}
 @subsection Skapa
 
 @table @asis
-@item @code{Skapa möte}
-@findex Skapa möte
-Skapa ett nytt möte.
-
-@item @code{Utplåna}
-@findex Utplåna
-Utplåna en person eller ett möte. Om man inte är organisatör för
-mötet/personen så misslyckas kommandot.
-
 @item @code{Radera (text)}
 @findex Radera (text)
 Frågar efter inläggsnummer och raderar inlägget. Man kan även ange
@@ -1403,26 +1047,6 @@ Frågar efter två inläggsnummer. Om det första inlägget, som har
 aktuellt inlägg som default, är kommenterad av det andra inlägget
 kommer denna bindning att plockas bort.
 
-
-@item @code{Addera medlem}
-@findex Addera medlem
-Frågar efter person som skall adderas samt till vilket möte.
-Detta kommando måste användas för att addera medlemmar till ett
-slutet möte och det är bara organisatören för det mötet som kan
-använda det. Det kan också användas för att addera medlemmar till
-en brevlåda, dvs en person, om man vill att någon annan skall
-kunna läsa dennes post. Ett exempel är om man vill skapa en
-brevgrupp där flera personer kan läsa posten som kommer till
-gruppen. 
-
-
-@item @code{Uteslut medlem}
-@findex Uteslut medlem
-Frågar efter person som skall uteslutas samt vilket möte som
-personen skall uteslutas ifrån. Detta kommando kan t ex användas
-av organisatören för ett möte när han vill utesluta någon från
-mötet.
-
 @end table
 
 @node Ändra personuppgifter, Ändra mötesuppgifter, Kommandon för att addera och subtrahera, Kommandon
@@ -1473,48 +1097,6 @@ personen/mötet i fråga.
 @node Ändra mötesuppgifter, Meddelande, Ändra personuppgifter, Kommandon
 @comment  node-name,  next,  previous,  up
 @subsection Ändra mötesuppgifter
-
-@table @asis
-
-@item @code{Ändra organisatör}
-@findex Ändra organisatör
-Frågar först efter det möte eller en person som man vill ändra
-organisatör för. Sedan frågar den efter det möte eller den person
-som skall bli den nya organisatören. Om det inte gick bra så skrivs ett
-felmeddelande ut.
-
-
-@item @code{Ändra livslängd}
-@findex Ändra livslängd
-Frågar först efter det möte som du vill ändra inläggens livslängd
-i och sedan efter vilken den nya livslängden skall vara. Om du
-inte är organisatör för mötet så få du inte sätta en ny livslängd
-och då får du ett felmeddelande.
-
-
-@item @code{Ändra supermöte}
-@findex Ändra supermöte
-Frågar efter vilket möte vi skall ändra supermöte för
-samt vilket möte som skall vara det nya supermötet.
-
-Supermöte för ett möte är det möte till vilket inlägg som inte får
-skickas till mötet, skickas. Anledningarna till att inlägg inte får
-skickas till ett visst möte kan vara att det är skrivskyddat och den som
-försöker skicka in det tillhör inte de tillåtna författarna för det
-mötet eller att mötet är kommentarsskyddat och då skickas kommentarerna
-till supermötet.
-
-@c I nästa version av LysKOM-systemet (Protokoll B) kommer det att vara två
-@c olika möten beroende på om mötet är skrivskyddat eller kommentarsskyddat.
-
-@item @code{Ändra mötestyp}
-@findex Ändra mötestyp
-Detta kommando ändrar mötestyp för ett visst möte. Ett möte kan vara
-öppet, slutet eller hemligt. Dessutom får man ange om mötet skall vara
-ett originalmöte, dvs.@: om det är tillåtet att skriva kommentarer i
-mötet.
-
-@end table
 
 @node Meddelande, Filtrera, Ändra mötesuppgifter, Kommandon
 @comment  node-name,  next,  previous,  up
