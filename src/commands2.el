@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.109 2002-03-03 17:51:54 joel Exp $
+;;;;; $Id: commands2.el,v 44.110 2002-03-19 19:33:07 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.109 2002-03-03 17:51:54 joel Exp $\n"))
+              "$Id: commands2.el,v 44.110 2002-03-19 19:33:07 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1091,8 +1091,7 @@ included."
                                   (/ author-and-subject-fields-width 3)))
          (subject-field-width (- author-and-subject-fields-width
                                  author-field-width
-                                 1))
-         format)
+                                 1)))
     (if header
         (concat (if include-mark-field
                     (concat "%-" (int-to-string mark-field-width) "#6s"
