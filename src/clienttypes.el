@@ -19,14 +19,21 @@
 ;;; with unread texts. New read-infos are created and deleted
 ;;; all the time within a session.
 ;;;
-;;; +++Document here:
 ;;; The type is one of the following:
-;;;   REVIEW      - Explanation goes here...
-;;;   REVIEW-TREE - 
-;;;   REVIEW-MARK - 
-;;;   COMM-IN     - 
-;;;   FOOTN-IN    - 
-;;;   CONF        - 
+;;;   REVIEW      - Default review type, created by the kom-review-by-to
+;;;		    and the kom-review-comments
+;;;   REVIEW-TREE - List of texts created by one of the tree-reading 
+;;;		    commands: kom-find-root-review, kom-review-tree
+;;;   REVIEW-MARK - List of texts created by the review-mark command
+;;;   COMM-IN     - Type containing the list of comments to a text
+;;;   FOOTN-IN    - Type containing the list of footnotes to a text
+;;;   CONF        - Basic type of unread in a conf.
+;;;
+;;;   The types REVIEW-TREE, COMM-IN and FOOTN-IN are created for new for
+;;;   every text read (recursively) when appropriate.
+;;;
+;;;   The difference between REVIEW and REVIEW-MARK is just that there
+;;;   generate different prompts and different text from kom-review-stack.
 ;;;
 
 
