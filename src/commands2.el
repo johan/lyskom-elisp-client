@@ -1,6 +1,6 @@
  ;;;;; -*-coding: iso-8859-1;-*-
  ;;;;;
- ;;;;; $Id: commands2.el,v 44.99 2001-11-13 17:10:30 byers Exp $
+ ;;;;; $Id: commands2.el,v 44.100 2001-12-09 11:55:07 ceder Exp $
  ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
  ;;;;;
  ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
  (setq lyskom-clientversion-long 
        (concat lyskom-clientversion-long
-               "$Id: commands2.el,v 44.99 2001-11-13 17:10:30 byers Exp $\n"))
+               "$Id: commands2.el,v 44.100 2001-12-09 11:55:07 ceder Exp $\n"))
 
  (eval-when-compile
    (require 'lyskom-command "command"))
@@ -2454,12 +2454,11 @@ on one line."
 
  ;;; Author: Johan Sundström
 
-(def-kom-command kom-is-person-member-of-conference
-  (&optional pers-no &optional conf-no)
+(def-kom-command kom-is-person-member-of-conference (&optional pers-no conf-no)
   "Find out whether PERS-NO is a member of conference CONF-NO."
   (interactive)
   (let* ((pers-no
-          (or conf-no
+          (or pers-no
               (lyskom-read-conf-no (lyskom-get-string 'pers-to-check-mship-for)
                                    '(all) nil nil t)))
          (conf-no
