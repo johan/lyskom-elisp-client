@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.102 2000-05-31 15:35:37 byers Exp $
+;;;;; $Id: vars.el.in,v 44.103 2000-06-02 13:13:30 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.102 2000-05-31 15:35:37 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.103 2000-06-02 13:13:30 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -1760,6 +1760,30 @@ set to that text."
 (def-kom-var kom-session-filter-list nil
   "List of patterns to filter during this session"
   local)
+
+(def-kom-var kom-prompt-for-text-no 
+  '(kom-delete-text
+    kom-view
+    kom-write-footnote
+    kom-mark-text
+    kom-unmark-text
+    kom-add-recipient
+    kom-add-copy
+    kom-add-bcc
+    kom-sub-recipient
+    kom-move-text
+    kom-add-comment
+    kom-sub-comment
+    kom-save-text-body
+    kom-add-footnote
+    kom-sub-footnote
+    kom-add-faq
+    kom-add-no-comments
+    kom-add-private-answer
+    kom-add-request-confirm)
+  "*Commands that prompt for a text number rather than assume a default"
+  server
+  inherited)
 
 
 (def-kom-var lyskom-filter-list nil

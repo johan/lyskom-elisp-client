@@ -1,3 +1,43 @@
+2000-06-02  David Byers  <davby@ida.liu.se>
+
+ 	Unify reading of text numbers:
+	* commands2.el (kom-add-no-comments): Changed default text number.
+	(kom-agree): Argument is not optional.
+
+	* lyskom-rest.el (kom-save-text-body): Handle null text-no.
+
+	* commands1.el (kom-view-commented-text): Argument is not
+	optional.
+	(kom-review-presentation): Use def-kom-command.
+	(kom-comment-previous): Use lyskom-read-text-no-prefix-arg.
+	(kom-write-footnote): Argument is not optional. Don't force prompt
+	for text.
+	(kom-private-answer-previous): Use lyskom-read-text-no-prefix-arg.
+	
+
+	* review.el (kom-review-noconversion): Use def-kom-command.
+	(kom-review-tree): Use lyskom-read-text-no-prefix-arg.
+	(kom-find-root): Use lyskom-read-text-no-prefix-arg.
+	(kom-find-root-review): Use lyskom-read-text-no-prefix-arg.
+	(kom-review-comments): Use lyskom-read-text-no-prefix-arg.
+
+	* lyskom-rest.el (kom-view): Use lyskom-read-text-no-prefix-arg.
+
+	* commands1.el (lyskom-add-sub-footnote): Use
+	lyskom-read-text-no-prefix-arg.
+	(lyskom-add-sub-comment): Use lyskom-read-text-no-prefix-arg.
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Check
+	kom-prompt-for-text-no.
+
+	* commands1.el (lyskom-add-sub-recipient): Use
+	lyskom-read-text-no-prefix-arg.
+
+	* vars.el.in (kom-prompt-for-text-no): New variable.
+
+	* commands1.el (kom-delete-text): Use
+	lyskom-read-text-no-prefix-arg.
+
 2000-05-31  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-J

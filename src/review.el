@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.24 2000-04-29 06:03:18 jhs Exp $
+;;;;; $Id: review.el,v 44.25 2000-06-02 13:13:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.24 2000-04-29 06:03:18 jhs Exp $\n"))
+	      "$Id: review.el,v 44.25 2000-06-02 13:13:25 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -977,14 +977,7 @@ Descends recursively in the comment-tree without marking the texts as read.
 The tree is forgotten when a kom-go-to-next-conf command is issued.
 If optional prefix argument TEXT-NO is present view tree from that text 
 instead. In this case the text TEXT-NO is first shown." 
-  (interactive (list
-		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
-		 (t
-		  (signal 'lyskom-internat-error '(kom-review-tree))))))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-tree-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (if text-no
       (let ((ts (blocking-do 'get-text-stat text-no)))
@@ -995,14 +988,13 @@ instead. In this case the text TEXT-NO is first shown."
     (lyskom-insert-string 'read-text-first)))
 
 
-(def-kom-command kom-find-root (&optional text-no)
+(def-kom-command kom-find-root (text-no)
   "Finds the root text of the tree containing the text in lyskom-current-text."
-  (interactive)
+  (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond
-   (lyskom-current-text 
-    (let* ((ts (blocking-do 'get-text-stat (or text-no 
-					       lyskom-current-text)))
+   (text-no
+    (let* ((ts (blocking-do 'get-text-stat text-no))
 	   (r (lyskom-find-root ts t)))
       (cond ((> (length r) 1)
              (lyskom-format-insert-before-prompt
@@ -1022,14 +1014,14 @@ instead. In this case the text TEXT-NO is first shown."
     (lyskom-insert-string 'read-text-first))))
 
 
-(def-kom-command kom-find-root-review ()
+(def-kom-command kom-find-root-review (text-no)
   "Finds the root text of the tree containing the text in lyskom-current-text and
 reviews the whole tree in deep-first order."
-  (interactive)
+  (interactive (list (lyskom-read-text-no-prefix-arg 'find-root-review-q)))
   (lyskom-tell-internat 'kom-tell-review)
   (cond
-   (lyskom-current-text
-    (let* ((ts (blocking-do 'get-text-stat lyskom-current-text))
+   (text-no
+    (let* ((ts (blocking-do 'get-text-stat text-no))
            (start (lyskom-find-root ts t)))
       (cond ((> (length start) 1)
              (lyskom-format-insert-before-prompt
@@ -1203,14 +1195,16 @@ end."
 ;;; Author: Inge Wallin
 
 
-(def-kom-command kom-review-comments ()
+(def-kom-command kom-review-comments (text-no)
   "View the comments to this text.
 If the current text has comments in (footnotes in) some texts then the first
 text is shown and a REVIEW list is built to shown the other ones."
-  (interactive)
+  (interactive (list (lyskom-read-text-no-prefix-arg 'review-comments-q))
   (lyskom-tell-internat 'kom-tell-review)
-  (lyskom-review-comments
-   (blocking-do 'get-text-stat lyskom-current-text)))
+  (cond (text-no
+         (lyskom-review-comments
+          (blocking-do 'get-text-stat text-no)))
+        (t lyskom-insert-string 'read-text-first))))
 
 
 (defun lyskom-review-comments (text-stat)
@@ -1276,15 +1270,13 @@ text is shown and a REVIEW list is built to shown the other ones."
 ;;; Author: Linus Tolke
 ;;; Modified by: Johan Sundström
 
-(defun kom-review-noconversion (&optional text-no)
+(def-kom-command kom-review-noconversion (text-no)
   "Displays TEXT-NO or the last read text without any conversion."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-noconversion-q)))
-  (lyskom-start-of-command 'kom-review-noconversion)
   (let ((lyskom-format-special nil)
         (kom-smileys nil)
         (kom-autowrap nil))
-    (lyskom-view-text text-no))
-  (lyskom-end-of-command))
+    (lyskom-view-text text-no)))
 
 
 

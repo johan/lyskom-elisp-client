@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.70 2000-05-29 10:45:31 byers Exp $
+;;;;; $Id: commands2.el,v 44.71 2000-06-02 13:13:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.70 2000-05-29 10:45:31 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.71 2000-06-02 13:13:20 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2074,7 +2074,7 @@ Return-value: 'no-session if there is no suitable session to switch to
         ((listp text) (lyskom-default-agree-string
                        (elt text (random (length kom-agree-text)))))))
 
-(def-kom-command kom-agree (&optional text-no)
+(def-kom-command kom-agree (text-no)
   "Convenience function to add agreement."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no)))
   (if text-no
@@ -2107,7 +2107,7 @@ Return-value: 'no-session if there is no suitable session to switch to
 (def-kom-command kom-add-faq (&optional conf-no text-no)
   "Add a FAQ to a conference"
   (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
-                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq t 'last-seen-written)))
+                     (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
   (let ((text (blocking-do 'get-text-stat text-no)))
     (if (null text)
         (lyskom-format-insert 'no-such-text-no text-no)
@@ -2204,7 +2204,8 @@ Return-value: 'no-session if there is no suitable session to switch to
 
 (def-kom-command kom-add-no-comments (&optional text-no)
   "Add a don't comment me please aux-item to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no t)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-no-comments-no nil
+                                                     'last-seen-written)))
   (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
     ;; Make sure there is a text there in the first place
@@ -2241,98 +2242,105 @@ Return-value: 'no-session if there is no suitable session to switch to
                    (cache-del-text-stat text-no)))))))
 
 
-(def-kom-command kom-add-private-answer (&optional text-no)
+(def-kom-command kom-add-private-answer (text-no)
   "Add a private answer only please aux-item to a text."
-  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no t)))
-  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'what-private-answer-no nil
+                                                     'last-seen-written)))
+  (if text-no
+      (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
-    ;; Make sure there is a text there in the first place
+        ;; Make sure there is a text there in the first place
 
-    (if (null text-stat)
-        (lyskom-format-insert 'no-such-text-no text-no)
+        (if (null text-stat)
+            (lyskom-format-insert 'no-such-text-no text-no)
 
-      ;; Make sure that the text doesn't already have this kind of item
-      ;; created by the same person
+          ;; Make sure that the text doesn't already have this kind of item
+          ;; created by the same person
 
-      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
-                                  (lambda (el) 
-                                    (and (eq (aux-item->tag el) 5)
-                                         (eq (aux-item->creator el)
-                                             lyskom-pers-no))))
-          (lyskom-format-insert 'already-private-answer text-no)
+          (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
+                                      (lambda (el) 
+                                        (and (eq (aux-item->tag el) 5)
+                                             (eq (aux-item->creator el)
+                                                 lyskom-pers-no))))
+              (lyskom-format-insert 'already-private-answer text-no)
 
-        ;; If the author of the text is not the current user, ask if the
-        ;; user wants to try anyway (it might work...)
+            ;; If the author of the text is not the current user, ask if the
+            ;; user wants to try anyway (it might work...)
 
-        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
-            (progn (lyskom-format-insert 'adding-private-answer
-                                         text-no)
-                   (lyskom-report-command-answer
-                    (blocking-do 'modify-text-info
-                                 text-no
-                                 nil
-                                 (list
-                                  (lyskom-create-aux-item 
-                                   0 5 nil nil
-                                   (lyskom-create-aux-item-flags
-                                    nil nil nil nil nil nil nil nil) 0 ""))))
-                   (cache-del-text-stat text-no)))))))
+            (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
+                    (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+                (progn (lyskom-format-insert 'adding-private-answer
+                                             text-no)
+                       (lyskom-report-command-answer
+                        (blocking-do 'modify-text-info
+                                     text-no
+                                     nil
+                                     (list
+                                      (lyskom-create-aux-item 
+                                       0 5 nil nil
+                                       (lyskom-create-aux-item-flags
+                                        nil nil nil nil nil nil nil nil) 0 ""))))
+                       (cache-del-text-stat text-no))))))
+    (lyskom-insert 'have-to-read)))
 
-(def-kom-command kom-add-request-confirm (&optional text-no)
+(def-kom-command kom-add-request-confirm (text-no)
   "Add confirmation request aux-item to a text."
   (interactive (list (lyskom-read-text-no-prefix-arg
-                      'what-request-confirm-no t)))
-  (let ((text-stat (blocking-do 'get-text-stat text-no)))
+                      'what-request-confirm-no nil 'last-seen-written)))
+  (if text-no
+      (let ((text-stat (blocking-do 'get-text-stat text-no)))
 
-    ;; Make sure there is a text there in the first place
+        ;; Make sure there is a text there in the first place
 
-    (if (null text-stat)
-        (lyskom-format-insert 'no-such-text-no text-no)
+        (if (null text-stat)
+            (lyskom-format-insert 'no-such-text-no text-no)
 
-      ;; Make sure that the text doesn't already have this kind of item
-      ;; created by the same person
+          ;; Make sure that the text doesn't already have this kind of item
+          ;; created by the same person
 
-      (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
-                                  (lambda (el) 
-                                    (and (eq (aux-item->tag el) 6)
-                                         (eq (aux-item->creator el)
-                                             lyskom-pers-no))))
-          (lyskom-format-insert 'already-request-confirm text-no)
+          (if (lyskom-match-aux-items (text-stat->aux-items text-stat) 
+                                      (lambda (el) 
+                                        (and (eq (aux-item->tag el) 6)
+                                             (eq (aux-item->creator el)
+                                                 lyskom-pers-no))))
+              (lyskom-format-insert 'already-request-confirm text-no)
 
-        ;; If the author of the text is not the current user, ask if the
-        ;; user wants to try anyway (it might work...)
+            ;; If the author of the text is not the current user, ask if the
+            ;; user wants to try anyway (it might work...)
 
-        (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
-                (lyskom-j-or-n-p 'not-author-try-anyway-p t))
-            (progn (lyskom-format-insert 'adding-request-confirm
-                                         text-no)
-                   (lyskom-report-command-answer
-                    (blocking-do 'modify-text-info
-                                 text-no
-                                 nil
-                                 (list
-                                  (lyskom-create-aux-item 
-                                   0 6 nil nil
-                                   (lyskom-create-aux-item-flags
-                                    nil nil nil nil nil nil nil nil) 0 ""))))
-                   (cache-del-text-stat text-no)))))))
+            (if (or (eq (text-stat->author text-stat) lyskom-pers-no)
+                    (lyskom-j-or-n-p 'not-author-try-anyway-p t))
+                (progn (lyskom-format-insert 'adding-request-confirm
+                                             text-no)
+                       (lyskom-report-command-answer
+                        (blocking-do 'modify-text-info
+                                     text-no
+                                     nil
+                                     (list
+                                      (lyskom-create-aux-item 
+                                       0 6 nil nil
+                                       (lyskom-create-aux-item-flags
+                                        nil nil nil nil nil nil nil nil) 0 ""))))
+                       (cache-del-text-stat text-no))))))
+    (lyskom-insert 'have-to-read)))
 
-(def-kom-command kom-review-mail-headers (&optional text-no)
+(def-kom-command kom-review-mail-headers (text-no)
   "Review the mail headers of an imported message"
-  (interactive (list (lyskom-read-text-no-prefix-arg
-                      'review-mail-headers-to-what t)))
-  (let* ((text-stat (blocking-do 'get-text-stat text-no))
-         (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24)))
-         (lyskom-transforming-external-text t))
-    (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
-          ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
-          (t (lyskom-format-insert 'mail-headers-for text-no)
-             (mapcar (lambda (el) 
-                       (let ((kom-autowrap nil))
-                         (lyskom-format-insert "%#1t" (aux-item->data el))
-                         (lyskom-insert "\n")))
-                     headers)))))
+  (interactive (list (lyskom-read-text-no-prefix-arg 
+                      'review-mail-headers-to-what)))
+  (if text-no
+      (let* ((text-stat (blocking-do 'get-text-stat text-no))
+             (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24)))
+             (lyskom-transforming-external-text t))
+        (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
+              ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
+              (t (lyskom-format-insert 'mail-headers-for text-no)
+                 (mapcar (lambda (el) 
+                           (let ((kom-autowrap nil))
+                             (lyskom-format-insert "%#1t" (aux-item->data el))
+                             (lyskom-insert "\n")))
+                         headers))))
+    (lyskom-insert 'have-to-read)))
 
 
 ;;; ============================================================
