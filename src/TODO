@@ -3,6 +3,12 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
+När man har utplånat sig själv, och tryckt C-g vid loginprompten som
+följer blir vissa kommandon förvirrade.
+
+lyskom-count-down-edits blir förvirrad om man har
+kom-write-texts-in-window satt till 'other.
+
 lyskom-replace-deferred verkar inte använda lyskom-last-viewed i alla
 fall. Och den beter sig fel när man står vid prompten och vill bläddra
 bakåt.
@@ -61,16 +67,14 @@ parallella prefetcher på samma möte.
     Den försöker fortfarande följa hemliga kommentarer om
     kom-show-footnotes-immediately är satt.
 
-    Endast gör fel ibland.
-
     Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
     spara det på fil, så blir det bara fotnoten som sparas.  Man vill
     nog spara minst själva huvudinlägget, och nog också fotnoterna
     samtidigt.
 
-    Om ett namn som fylls i i efterhand gör att raden blir för lång,
-    så scrollar klienten ibland trots att den inte borde. [Troligen
-    fixat]
+Om ett namn som fylls i i efterhand gör att sista raden blir för lång,
+så scrollar klienten trots att den inte borde. Jag trodde jag hade
+fixat det.
 
     sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
     ut en session i ett ikonifierat fönster. Eller kanske till och med
@@ -136,6 +140,8 @@ parallella prefetcher på samma möte.
 
 
 -------- Fixade saker
+
+    Endast gör fel ibland. [FIXAT]
 
     Jag har satt kom-show-footnotes-immediately till nil. Det verkar
     som man inte får läsa fotnötter först då, t ex fick jag läsa
