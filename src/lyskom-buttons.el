@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.28 1999-06-22 13:37:01 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.29 1999-06-28 10:41:05 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.28 1999-06-22 13:37:01 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.29 1999-06-28 10:41:05 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -216,12 +216,15 @@ If there is no active area, then do something else."
          (text  (get-text-property pos 'lyskom-button-text))
          (buf   (get-text-property pos 'lyskom-buffer))
          (data  (assq type lyskom-button-actions))
-         (title (lyskom-format 
-                 (lyskom-get-string
-                  (or (intern-soft (concat (symbol-name type)
-                                           "-popup-title"))
-                      'generic-popup-title))
-                 text))
+         (title (if (get-text-property pos 'lyskom-button-menu-title)
+                    (apply 'lyskom-format
+                           (get-text-property pos 'lyskom-button-menu-title))
+                  (lyskom-format 
+                   (lyskom-get-string
+                    (or (intern-soft (concat (symbol-name type)
+                                             "-popup-title"))
+                        'generic-popup-title))
+                   text)))
          (actl  (or (and data (elt data 3)) nil)))
     (cond ((null data) (goto-char pos))
           ((null actl) (goto-char pos))
@@ -409,10 +412,12 @@ the current match-data."
 
 
 	
-(defun lyskom-generate-button (type arg &optional text face)
+(defun lyskom-generate-button (type arg &optional text face menu-title)
   "Generate the properties for a button of type TYPE with argument ARG.
 Optional argument TEXT is the button text to be saved as a property and
-FACE is the default text face for the button."
+FACE is the default text face for the button. Optional argument MENU-TITLE
+defines the title for the popup menu. See lyskom-default-button for more
+information."
   (let* ((persno (cond ((boundp 'lyskom-pers-no) lyskom-pers-no)
                        ((and (boundp 'lyskom-buffer) lyskom-buffer)
                         (save-excursion
@@ -438,6 +443,7 @@ FACE is the default text face for the button."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
+                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((and (eq type 'text) numarg)
                  (list 'face (or face 'kom-text-no-face)
@@ -445,6 +451,7 @@ FACE is the default text face for the button."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg numarg
+                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 ((eq type 'url)
                  (list 'face (or face 'kom-active-face)
@@ -452,6 +459,7 @@ FACE is the default text face for the button."
                        'lyskom-button-text text
                        'lyskom-button-type type
                        'lyskom-button-arg arg
+                       'lyskom-button-menu-title menu-title
                        'lyskom-buffer lyskom-buffer))
                 (t
 		 (list 'face (or face 'kom-active-face)
@@ -459,6 +467,7 @@ FACE is the default text face for the button."
 		       'lyskom-button-text text
 		       'lyskom-button-type type
 		       'lyskom-button-arg arg
+                       'lyskom-button-menu-title menu-title
 		       'lyskom-buffer lyskom-buffer)))))
 
     (append (list 'rear-nonsticky t)
@@ -470,10 +479,13 @@ FACE is the default text face for the button."
         
            
 
-(defun lyskom-default-button (type arg)
+(defun lyskom-default-button (type arg &optional menu-title)
   "Generate a button of type TYPE from data in ARG. ARG can be almost any
 type of data and is converted to the proper argument type for buttons of
-type TYPE before being send to lyskom-generate-button."
+type TYPE before being send to lyskom-generate-button. Optional argument
+MENU-TITLE is a list consisting of a format string or symbol and arguments
+for the format string. The arguments are not when the menu is popped
+up."
   (and kom-text-properties
        (let (xarg text)
 	 (cond ((eq type 'conf)
@@ -531,7 +543,7 @@ type TYPE before being send to lyskom-generate-button."
 		(cond ((stringp arg) (setq xarg nil text arg))
 		      (t (setq xarg nil text ""))))
 	       (t (setq xarg arg text "")))
-	 (lyskom-generate-button type xarg text nil))))
+	 (lyskom-generate-button type xarg text nil menu-title))))
                   
 
            

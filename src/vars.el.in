@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.69 1999-06-25 20:17:24 byers Exp $
+;;;;; $Id: vars.el.in,v 44.70 1999-06-28 10:41:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.69 1999-06-25 20:17:24 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.70 1999-06-28 10:41:16 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -456,7 +456,7 @@ for future use."
 passive. A second leave will actually remove the membership."
   server)
 
-(def-kom-var kom-membership-default-priority 100
+(def-kom-var kom-membership-default-priority 'ask
   "*Default priority when joining a new conference.
 If a valid priority then new conferences are read with this priority. 
 Otherwise ask the user for a priority.
@@ -985,7 +985,8 @@ hint for a new default action. The user has the option to ignore or used the
 hint.
 
 Also see the function \"lyskom-add-button-action\"."
-  local)
+  local
+  inherited)
 
 (put 'lyskom-button-actions 'lyskom-language-force t)
 

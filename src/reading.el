@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.5 1999-06-26 20:48:16 byers Exp $
+;;;;; $Id: reading.el,v 44.6 1999-06-28 10:41:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.5 1999-06-26 20:48:16 byers Exp $\n"))
+	      "$Id: reading.el,v 44.6 1999-06-28 10:41:08 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -68,6 +68,17 @@ lyskom-membership list then this item is not entered."
 	  nil
 	(setq lyskom-membership (append lyskom-membership (list (car list)))))
       (setq list (cdr list)))))
+
+(defun lyskom-insert-memberships-in-membership (memberships)
+  (let ((list (listify-vector memberships)))
+    (while list
+      ;; If membership is already added or passive, don't add it
+      (if (memq (membership->conf-no (car list))
+		(mapcar (function membership->conf-no) lyskom-membership))
+	  nil
+	(setq lyskom-membership (cons (car list) lyskom-membership)))
+      (setq list (cdr list))))
+  (setq lyskom-membership (sort lyskom-membership 'lyskom-membership-<)))
 
 
 (defun lyskom-insert-membership (membership membership-list)

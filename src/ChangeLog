@@ -1,3 +1,14 @@
+1999-06-27  David Byers  <davby@ida.liu.se>
+
+	* services.el (initiate-set-membership-type): Don't delete the
+	conference and person from the cache.
+
+	* startup.el (lyskom-refetch): Stop the prefetch while loading it
+	with stuff to do. Otherwise we'll get things in the wrong order.
+
+	* commands1.el (lyskom-try-add-member): Ask for priority when
+	adding new members.
+
 1999-06-26  David Byers  <davby@ida.liu.se>
 
 	*  Release 0.46-EBTA-4
