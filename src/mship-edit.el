@@ -1544,7 +1544,9 @@ Medlemskap för %#1M på %#2s
  Avsluta:            C-c C-c                           Mer hjälp:        C-h m
 ")
         buf
-        ))))
+        ))
+    (lyskom-wait-queue 'deferred)
+    ))
 
 
 (defun lyskom-read-time (prompt)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.157 2002-10-16 20:22:16 byers Exp $
+;;;;; $Id: commands1.el,v 44.158 2002-12-09 20:36:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.157 2002-10-16 20:22:16 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.158 2002-12-09 20:36:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2094,7 +2094,7 @@ exist."
           (setq mark-type (cdr mark-assoc)))
 
          ;; Incorrect completion, integer entered.
-         ((string-match "\\`[0-9]+\\'" mark)
+         ((string-match "\\`\\s-*[0-9]+\\s-*\\'" mark)
           (setq mark-type (string-to-int mark)))
 
          ;; Incorrect completion; create new symbolic mark type.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.277 2002-10-20 13:20:01 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.278 2002-12-09 20:36:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.277 2002-10-20 13:20:01 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.278 2002-12-09 20:36:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2791,6 +2791,9 @@ teckenkodning.
     (some-person . "Person")
     (format-html . "Formattera HTML:")
 
+    (url-transform-regexp . "Från (regexp):")
+    (url-transform-newtext . " Till:")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3721,6 +3724,16 @@ i servern. Annars sparas det i din .emacs.")
   möten de adderas till medan man är inloggad. Om man inte är inloggad
   så sker inte denna läsmarkering. Inlägg som adderas till ens brevlåda
   läsmarkeras dock aldrig automatiskt.")
+    (kom-url-transformation-rules-doc . "\
+  Regler för att transformera URLer innan de skickas till en webbläsare.
+  \"Från\" är ett mönster (en regexp) som skall översättas till texten
+  i \"Till\". Dokumentation om regexpar finns i Emacs-manualen. \"Till\" 
+  kan innehålla följande specialtecken:
+
+      \\& ersätts med den text som matchar regexpen
+      \\N ersätts med den text som matchar (...)-uttryck N i regexpen
+      \\\\ ersätts med en \\.")
+
 
 
     ;;
@@ -3900,6 +3913,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
     (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")
+    (kom-url-transformation-rules-tag . "Transformation av URLer:")
     )
 )
 

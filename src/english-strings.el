@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.241 2002-10-20 13:20:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.242 2002-12-09 20:36:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.241 2002-10-20 13:20:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.242 2002-12-09 20:36:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2737,6 +2737,8 @@ Select whether to execute command or keyboard macro.")
     (some-person . "Person")
     (format-html . "Format HTML:")
 
+    (url-transform-regexp . "From (regexp):")
+    (url-transform-newtext . " To:")
     ;;
     ;; Misc doc strings
     ;;
@@ -3661,6 +3663,15 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   marked as read in any conferences they are added to. This only works
   as long as the LysKOM session is logged in. Texts are never 
   automatically marked as read in your mailbox.")
+    (kom-url-transformation-rules-doc . "\
+  Rules for transformation of URLs before they are sent to a web browser.
+  \"From\" is a regexp that is replaced by \"To\". Regexps are documented
+  in the Emacs manual. The string in \"To\" can contain the following
+  special sequences:
+
+      \\& means substitute original matched text,
+      \\N means substitute match for (...) number N,
+      \\\\ means insert one \\.")
 
 
     ;;
@@ -3840,6 +3851,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-keyboard-menu-immediate-selection-tag . "Shortcuts in text menus require confirmation:")
     (kom-max-overlays-tag . "Maximum number of overlays:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")
+    (kom-url-transformation-rules-tag . "Transformation of URLs:")
     )
 )
 

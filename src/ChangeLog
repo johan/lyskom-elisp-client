@@ -1,5 +1,22 @@
+2002-12-09  David Byers  <david.byers@swipnet.se>
+
+	Bug 923:
+	* vars.el.in (kom-url-transformation-rules): New variable.
+
+	* lyskom-buttons.el (lyskom-transform-url): New function.
+	(lyskom-button-open-url): Use lyskom-transform-url.
+
+2002-11-26  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 880 and related problems:
+	* commands1.el (lyskom-read-mark-type): Ditto.
+
+	* lyskom-rest.el (lyskom-read-number): Permit whitespace around
+	the input.
+
 2002-11-21  David Byers  <david.byers@swipnet.se>
 
+	Fix compiler warnings for 21.3:
 	* lyskom-buttons.el (lyskom-generate-button): Protect call to car
 	that was done to cause an error if menu-title was not a cons from
 	warnings in the byte compiler.
