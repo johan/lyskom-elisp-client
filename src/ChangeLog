@@ -1,5 +1,8 @@
 1999-11-19  David Byers  <davby@ida.liu.se>
 
+	* parse.el (lyskom-init-parse): Turn off multibyte chars in the
+	parse buffer.
+
 	* utilities.el (lyskom-truncate-string-to-width): New function
 	copied from Gnu Emacs.
 
