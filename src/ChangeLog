@@ -1,3 +1,73 @@
+1999-06-29  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Passive
+	members should be added as direct recipients.
+	(lyskom-edit-send-check-recipients): Add each author only once.
+	Don't barf if the comment has been deleted.
+
+1999-06-28  David Byers  <davby@ida.liu.se>
+
+	Get rid of compiler warnings
+	* lyskom-rest.el (w3-finish-drawing): Get rid of warning.
+	
+	* compatibility.el (lyskom-xemacs-or-gnu): Evaluate the test at
+	compile time. The byte code is not compatible anyway.
+
+	* macros.el (define-widget): Autoload widget functions if
+	undefined.
+
+	* utilities.el (lyskom-ignore): New function.
+
+	* review.el (kom-review-noconversion): Use lyskom-ignore instead
+ 	of ignore to get rid of warnings.
+
+	* option-edit.el (lyskom-create-widget): Use lyskom-ignore instead 
+	of ignore to get rid of warnings.
+
+	* menus.el (lyskom-define-menu-xemacs): Use lyskom-ignore instead
+	of ignore to get rid of warnings.
+
+	* edit-text.el (kom-ispell-message): Use lyskom-ignore to get rid
+	of bound but not referenced error.
+	(lyskom-edit-send-check-recipients): Use lyskom-ignore instead of
+	ignore. 
+	(kom-edit-add-comment): Use lyskom-ignore to get rid of bound but
+	not referenced error.
+
+	* commands2.el (kom-set-unread): Use lyskom-ignore to get rid of
+	bound but not referenced warning.
+
+	* edit-text.el (kom-edit-add-comment): Got rid of compiler
+	warning.
+
+	* commands2.el (resize-minibuffer-mode): Got rid of compiler
+	warning.
+
+	* startup.el (lyskom-accept-async): Got rid of compiler warning.
+
+	* prefetch.el (lyskom-prefetch-membership-handler): Got rid of
+	compiler warning.
+
+	* aux-items.el (lyskom-maybe-add-face-to-string): Got rid of
+	compiler warning.
+
+	Treat reviewing as a conference in the read list
+	* lyskom-rest.el (kom-view-next-text): Delete reviewed texts from
+	lyskom-to-do-list.
+	(lyskom-go-to-next-conf): Update read lists when resuming review.
+	(lyskom-update-prompt): Update prompt for resuming review.
+
+	* review.el (lyskom-review-get-priority): New function.
+	(kom-review-tree): Use review priority if available.
+	(lyskom-review-tree): Ditto.
+	(kom-review-more): Enter review into lyskom-to-do-list.
+	(lyskom-review-by-to): Ditto.
+	(kom-find-root): Ditto.
+	(lyskom-review-comments): Ditto.
+	(kom-review-last-normally-read): Ditto.
+
+	* vars.el.in (kom-review-priority): New variable.
+
 1999-06-28  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (kom-silent-ansaphone): New variable.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.37 1999-06-26 20:48:08 byers Exp $
+;;;;; $Id: edit-text.el,v 44.38 1999-06-29 10:20:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.37 1999-06-26 20:48:08 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.38 1999-06-29 10:20:13 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -653,6 +653,7 @@ Based on ispell-message."
              (ispell-checking-message t)
              (subject-string 
               (concat "^" (regexp-quote (lyskom-get-string 'subject)))))
+        (lyskom-ignore ispell-checking-message)
         (goto-char (point-min))
         (while (if internal-messagep
                    (< (point) internal-messagep)
@@ -730,7 +731,7 @@ text is a member of some recipient of this text."
                              lyskom-pers-no))
          (num-me 0)
          (num-real-recpt 0))
-    (ignore text-stat)                  ; Have no idea if its ever used...
+    (lyskom-ignore text-stat)              ; Have no idea if its ever used...
 
     ;;
     ;; List all texts this text is a comment to
@@ -825,11 +826,12 @@ text is a member of some recipient of this text."
           ;; For each commented text, get the author
           ;;
         
-          (setq author-list (mapcar 
-                             (function (lambda (x)
-                                         (text-stat->author
-                                          (blocking-do 'get-text-stat x))))
-                             comm-to-list))
+          (mapcar 
+           (lambda (x)
+             (let ((text (blocking-do 'get-text-stat x)))
+               (when text
+                 (add-to-list 'author-list (text-stat->author text)))))
+           comm-to-list)
 
           ;;
           ;; For each author, see if the author is a direct recipient
@@ -869,9 +871,13 @@ text is a member of some recipient of this text."
                         recipient-list)
 
                        (lyskom-wait-queue 'sending)
-                       (setq author-is-member (collector->value collector))
+                       (setq author-is-member
+                             (and (car (collector->value collector))
+                                  (not (membership-type->passive
+                                        (membership->type
+                                         (car (collector->value collector)))))))
 
-                       (if (and (null (delq nil author-is-member))
+                       (if (and (not author-is-member)
 				(not (zerop author-number))
                                 (lyskom-is-permitted-author
                                  (blocking-do 'get-conf-stat author-number))
@@ -1011,6 +1017,7 @@ text is a member of some recipient of this text."
          (insert-at (point-min-marker))
          (text-no (lyskom-read-number (lyskom-get-string 'text-to-comment-q)))
          (text-stat (blocking-do 'get-text-stat text-no)))
+    (lyskom-ignore edit-buffer)
     (lyskom-save-excursion
      (if text-stat
          (lyskom-edit-get-commented-author 

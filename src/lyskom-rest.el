@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.73 1999-06-28 16:09:58 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.74 1999-06-29 10:20:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.73 1999-06-28 16:09:58 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.74 1999-06-29 10:20:19 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -355,9 +355,8 @@ If the optional argument REFETCH is non-nil, all caches are cleared and
 				(eq type 'REVIEW-MARK)
 				is-review-tree))
 		 (mark-as-read (not is-review)))
-	    (if is-review
-		(delq text-no 
-		      (read-info->text-list tri))) ;First entry only
+	    (when is-review
+              (delq text-no (read-info->text-list tri))) ;First entry only
 	    (setq action
 		  (lyskom-view-text text-no mark-as-read 
 				    (and kom-read-depth-first
@@ -458,13 +457,16 @@ in the current conf is placed."
   (if (not (read-list-isempty lyskom-to-do-list))
       (let ((conf-stat (read-info->conf-stat 
                         (read-list->first lyskom-to-do-list))))
-        (when conf-stat
-          (lyskom-set-mode-line conf-stat)
+        (if conf-stat
+            (progn (lyskom-set-mode-line conf-stat)
+                   (read-list-enter-first
+                    (read-list->first lyskom-to-do-list)
+                    lyskom-reading-list)
+                   (lyskom-enter-conf conf-stat 
+                                      (read-list->first lyskom-to-do-list)))
           (read-list-enter-first
            (read-list->first lyskom-to-do-list)
-           lyskom-reading-list)
-          (lyskom-enter-conf conf-stat 
-                             (read-list->first lyskom-to-do-list))))
+           lyskom-reading-list)))
     (lyskom-insert-string 'all-conf-unread-r)
     (lyskom-set-mode-line (lyskom-get-string 'all-conf-unread-s))))
 
@@ -1575,11 +1577,9 @@ Note that it is not allowed to use deferred insertions in the text."
 ;;; ================================================================
 ;;;			 Text body formatting
 
-;;; Author: David K}gedal
-;;; This should be considered an experiment
-
 (lyskom-external-function w3-fetch)
 (lyskom-external-function w3-region)
+(lyskom-external-function smiley-region)
 
 (defun lyskom-format-text-body (text &optional text-stat)
   "Format a text for insertion. Does parsing of special markers in the text."
@@ -1640,6 +1640,7 @@ in lyskom-messages."
       (setq lyskom-last-text-format-flags (cons how lyskom-last-text-format-flags))))
 
 
+(lyskom-external-function w3-finish-drawing)
 (defun lyskom-w3-region (start end)
   (unwind-protect
     (condition-case nil
@@ -2271,6 +2272,12 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	       ((eq 'REVIEW-MARK 
 		    (read-info->type (read-list->first lyskom-to-do-list)))
 		'go-to-conf-of-marked-prompt)
+               ((eq 'REVIEW
+                    (read-info->type (read-list->first lyskom-to-do-list)))
+                'go-to-conf-of-review-prompt)
+               ((eq 'REVIEW-TREE 
+                    (read-info->type (read-list->first lyskom-to-do-list)))
+                'go-to-conf-of-review-tree-prompt)
 	       ((/= lyskom-pers-no
 		    (conf-stat->conf-no
 		     (read-info->conf-stat (read-list->first

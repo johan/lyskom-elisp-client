@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.12 1999-01-01 19:50:26 ceder Exp $
+;;;;; $Id: flags.el,v 44.13 1999-06-29 10:20:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.12 1999-01-01 19:50:26 ceder Exp $\n"))
+	      "$Id: flags.el,v 44.13 1999-06-29 10:20:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -92,6 +92,7 @@
                        (lyskom-get-string 'could-not-save-options)))
 
 
+(lyskom-external-function edit-options)
 (defun kom-edit-options ()
   "Edit options for the lyskom client."
   (interactive)

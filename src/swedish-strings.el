@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.64 1999-06-28 10:41:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.65 1999-06-29 10:20:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.64 1999-06-28 10:41:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.65 1999-06-29 10:20:29 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -976,7 +976,9 @@ Du bör sätta den till ett bättre värde.\n")
     (read-next-footnote-prompt . "Läsa nästa fotnot")
     (read-next-comment-prompt . "Läsa nästa kommentar")
     (read-next-text-prompt . "Läsa nästa text")
-    (go-to-conf-of-marked-prompt . "Återse (nästa) markerade")
+    (go-to-conf-of-marked-prompt . "Återuppta återse markerade")
+    (go-to-conf-of-review-tree-prompt . "Återuppta återse kommentarer")
+    (go-to-conf-of-review-prompt . "Återuppta återse")
     (go-to-next-conf-prompt . "Gå till nästa möte")
     (go-to-your-mailbox-prompt . "Gå till din brevlåda")
     (the-command . "Kommandot: %#1C")

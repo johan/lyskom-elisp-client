@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.10 1999-06-22 13:36:55 byers Exp $
+;;;;; $Id: aux-items.el,v 44.11 1999-06-29 10:20:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.10 1999-06-22 13:36:55 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.11 1999-06-29 10:20:08 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -461,8 +461,7 @@
      (setq item (car item))
      (unless (find-face 'kom-xface)
        (make-face 'kom-xface))
-     (let* ((data (make-string 0 ?X))
-            (h (concat "X-Face: " (aux-item->data item)))
+     (let* ((h (concat "X-Face: " (aux-item->data item)))
             (g (intern h lyskom-xface-cache))
             (e (make-extent 0 (length string) string)))
        (if (boundp g)
