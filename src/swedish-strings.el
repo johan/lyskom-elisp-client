@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.14 1996-02-05 11:46:49 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.15 1996-02-17 05:42:23 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.14 1996-02-05 11:46:49 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.15 1996-02-17 05:42:23 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -163,7 +163,7 @@ Email-adress:\n\nAnnat:\t")
     (retrying-tcp . "Jag f\366rs\366ker igen.")
 
     ; From parse.el:
-    ; No entries.
+    (protocol-error . "protokollfel: %s")
 
     ; From services.el:
     (interrupted . "Kommandot avbrutet\n")
@@ -449,6 +449,10 @@ Meddelandet du f\366rs\366kte s\344nda till %#1M var:
     (does-not-exist . "Detta kommando finns inte.")
     (summary-line . "%=-7#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
 
+    (what-mark-to-list . "Vilken markering vill du lista? ")
+    (you-have-marks . "Du har %#1d inl\344gg markerade markerade med %#2d.\n")
+    (you-have-marks-all . "Du har %#1d markerade inl\344gg.\n")
+
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
     (buggreport-compilestart . "Skapar buggrapporten...")
@@ -616,9 +620,9 @@ men misslyckades eftersom alla tillg\344ngliga f\366rbindelser \344r
 upptagna. Logga ut och kom tillbaks senare om du v\344ntar nu.
 ===========================================================\n")
     (has-entered . "Nu har %#1:P g\345tt in i LysKOM.")
-    (has-entered-r . "Nu har %#1P g\345tt in i LysKOM.\n")
+    (has-entered-r . "%#2@Nu har %#1P g\345tt in i LysKOM.\n")
     (has-left . "Nu har %#1:P g\345tt ur LysKOM.")
-    (has-left-r . "Nu har %#1P g\345tt ur LysKOM.\n")
+    (has-left-r . "%#2@Nu har %#1P g\345tt ur LysKOM.\n")
     (unknown . "ok\344nd")
 
     (message-broadcast . 
@@ -869,6 +873,7 @@ Text:
     (kom-list-persons		"Lista personer")
     (kom-list-news              "Lista nyheter")
     (kom-membership		"Lista medlemsskap")
+    (kom-list-marks		"Lista markeringar") 
     (kom-postpone		"Uppskjuta l\344sning")
     (kom-set-session-priority	"S\344tt l\344sniv\345")
     (kom-prioritize		"Prioritera m\366ten")
@@ -1465,54 +1470,3 @@ Users are encouraged to use their best sense of humor.")
 (defun kom-list-files ()
   (interactive)
   (list-directory "/ftp@ftp.lysator.liu.se:/open"))
-
-
-(defmacro lyskom-make-face (name &rest body)
-  (` (if (memq (, name) (face-list))
-	 nil
-       (,@ body))))
-
-
-(if (and (eq window-system 'x)
-	 (x-display-color-p))
-    (progn
-      (lyskom-make-face 'kom-active-face
-			(copy-face 'default 'kom-active-face)
-			(set-face-foreground 'kom-active-face "blue4"))
-      (lyskom-make-face 'kom-url-face
-			(copy-face 'default 'kom-url-face)
-			(set-face-foreground 'kom-url-face "BlueViolet"))
-      (lyskom-make-face 'kom-me-face
-			(copy-face 'bold 'kom-me-face)
-			(set-face-foreground 'kom-me-face "yellow")
-			(set-face-background 'kom-me-face "black"))
-      (lyskom-make-face 'kom-highlight-face
-			(copy-face 'highlight 'kom-highlight-face)
-			(set-face-foreground 'kom-highlight-face 
-					     "midnight blue"))
-      (lyskom-make-face 'kom-text-face
-			(copy-face 'default 'kom-text-face))
-      (lyskom-make-face 'kom-subject-face
-			(copy-face 'kom-text-face 'kom-subject-face)
-			(set-face-foreground 'kom-subject-face
-					     "dark green"))
-      (lyskom-make-face 'kom-text-no-face
-			(copy-face 'kom-text-face 'kom-text-no-face)))
-  (progn
-    (lyskom-make-face 'kom-active-face
-		      (copy-face 'underline 'kom-active-face))
-    (lyskom-make-face 'kom-url-face
-		      (copy-face 'kom-active-face 'kom-url-face))
-    (lyskom-make-face 'kom-me-face
-		      (copy-face 'highlight 'kom-me-face))
-    (lyskom-make-face 'kom-highlight-face
-		      (copy-face 'highlight 'kom-highlight-face))
-    (lyskom-make-face 'kom-subject-face
-		      (copy-face 'default 'kom-subject-face))
-    (lyskom-make-face 'kom-text-face
-		      (copy-face 'default 'kom-subject-face))
-    (lyskom-make-face 'kom-text-no-face
-		      (copy-face 'default 'kom-subject-face))))
-
-
-

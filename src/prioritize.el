@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prioritize.el,v 38.1 1995-10-23 11:55:49 byers Exp $
+;;;;; $Id: prioritize.el,v 38.2 1996-02-17 05:42:13 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -28,7 +28,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prioritize.el,v 38.1 1995-10-23 11:55:49 byers Exp $\n"))
+	      "$Id: prioritize.el,v 38.2 1996-02-17 05:42:13 davidk Exp $\n"))
 
 
 
@@ -292,7 +292,8 @@ on the lines. Leaves point at the beginning of the moved line."
     (switch-to-buffer buffer)
     (lyskom-start-of-command "" t)
     (lyskom-insert-string 'wait)
-    (lyskom-refetch)))			;The internal structures SHOULD be
+    (lyskom-refetch)
+    (lyskom-end-of-command)))			;The internal structures SHOULD be
 					;updated when one move around the
 					;conferences in the prioritize-buffer,
 					;but it is simpler to do it this way...
