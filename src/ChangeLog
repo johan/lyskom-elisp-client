@@ -1,5 +1,9 @@
 2002-05-08  David Byers  <david.byers@swipnet.se>
 
+	Bug 516:
+	* menus.el (lyskom-define-menu-xemacs): Handle hline items in the
+	menu specification according to what works in XEmcas 21.4.
+
 	Automatic color selection for highlight colors:
 	* compatibility.el (lyskom-color-values): Smarter definition that
 	can handle both strings and specifiers in XEmacs.
