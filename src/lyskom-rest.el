@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.6 1996-04-22 21:05:32 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.7 1996-04-23 16:53:15 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.6 1996-04-22 21:05:32 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.7 1996-04-23 16:53:15 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -849,17 +849,29 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defun lyskom-format (format-string &rest argl)
-  (lyskom-do-format format-string argl))
+  (format-state->result (lyskom-do-format format-string argl)))
 
 (defun lyskom-format-insert (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING"
-  (lyskom-insert (lyskom-do-format format-string argl)))
+  (let* ((state (lyskom-do-format format-string argl t))
+	 (start (point-max-marker))
+	 (delayed (format-state->delayed-content state)))
+    (lyskom-insert (format-state->result state))
+    (while delayed
+      (let ((m1 (make-marker))
+	    (m2 (make-marker)))
+	(set-marker m1 (+ start (car (car delayed))))
+	(set-marker m2 (+ start (cdr (car delayed))))
+	(setcar (car delayed) m1)
+	(setcdr (car delayed) m2)
+	(setq delayed (cdr delayed))))))
 
 (defun lyskom-format-insert-before-prompt (format-string &rest argl)
-  (lyskom-insert-before-prompt (lyskom-do-format format-string argl)))
+  (lyskom-insert-before-prompt (format-state->result (lyskom-do-format format-string argl))))
 
 
-(defun lyskom-do-format (format-string &optional argl)
+(defun lyskom-do-format (format-string &optional argl accept-delay)
+  "Do the actual formatting and return the resulting format-state."
   (let ((fmt (cond ((stringp format-string) format-string)
 		   ((symbolp format-string) (lyskom-get-string 
 					     format-string))))
@@ -876,17 +888,18 @@ Args: FORMAT-STRING &rest ARGS"
 					    fmt
 					    0
 					    argl
-					    "")))
+					    "")
+					   accept-delay))
 	  (lyskom-format-error
 	   (error "LysKOM internal error formatting %s: %s%s"
 		  format-string (nth 1 error) (nth 2 error))))))
-    (format-state->result state)))
+    state))
 
 
 
 
 
-(defun lyskom-format-aux (format-state)
+(defun lyskom-format-aux (format-state accept-delay)
   (let ((format-length (length (format-state->format-string format-state)))
         (arg-no nil)
         (pad-length nil)
@@ -936,28 +949,28 @@ Args: FORMAT-STRING &rest ARGS"
                                  (match-end 0))
 
 	(setq equals-flag (match-beginning 1)
-          pad-length (if (match-beginning 2)
-                         (string-to-int (substring 
-                                         (format-state->format-string
-                                          format-state)
-                                         (match-beginning 2)
-                                         (match-end 2)))
-                       nil)
+	      pad-length (if (match-beginning 2)
+			     (string-to-int (substring 
+					     (format-state->format-string
+					      format-state)
+					     (match-beginning 2)
+					     (match-end 2)))
+			   nil)
 	      arg-no (if (match-beginning 4)
-                     (string-to-int (substring (format-state->format-string
-                                                format-state)
-                                               (match-beginning 4)
-                                               (match-end 4)))
-                   nil)
+			 (string-to-int (substring (format-state->format-string
+						    format-state)
+						   (match-beginning 4)
+						   (match-end 4)))
+		       nil)
 	      colon-flag (match-beginning 5)
 	      format-letter (if (match-beginning 6)
-                            (aref (format-state->format-string 
-                                   format-state)
-                                  (match-beginning 6))
-                          (signal 'lyskom-internal-error
-                                  (list 'lyskom-format-aux 
-                                        (format-state->format-string
-                                         format-state)))))
+				(aref (format-state->format-string 
+				       format-state)
+				      (match-beginning 6))
+			      (signal 'lyskom-internal-error
+				      (list 'lyskom-format-aux 
+					    (format-state->format-string
+					     format-state)))))
 
     ;;
     ;;  If the format letter is an end-of-group letter, abort
@@ -982,7 +995,8 @@ Args: FORMAT-STRING &rest ARGS"
                                 (match-beginning 2))
                           ?0))
                  ?0
-               ? )))))))
+               ? )
+	     accept-delay))))))
   (lyskom-tweak-format-state format-state))
 
 
@@ -992,7 +1006,8 @@ Args: FORMAT-STRING &rest ARGS"
                                format-letter
                                equals-flag
                                colon-flag
-                               pad-letter)
+                               pad-letter
+			       accept-delay)
   (let ((arg nil)
         (result nil)
         (propl nil)
@@ -1071,7 +1086,7 @@ Args: FORMAT-STRING &rest ARGS"
      ;;  of the list, augmenting the result and format state
      ;;
      ((= format-letter ?\[)
-      (setq format-state (lyskom-format-aux format-state)
+      (setq format-state (lyskom-format-aux format-state accept-delay)
             result nil))
      ;;
      ;;  Format a conference or person name by retreiving information
@@ -1082,19 +1097,36 @@ Args: FORMAT-STRING &rest ARGS"
           (= format-letter ?P))
       (setq result
             (cond ((stringp arg) arg)
-                  ((integerp arg)
-                   (let ((tmp (blocking-do 'get-conf-stat arg)))
+		  
+                  ((and (integerp arg)
+			accept-delay)
+		   (let ((tmp (cache-get-conf-stat arg)))
                      (if (null tmp)
-                         (progn
-                           (setq colon-flag t)
-                           (lyskom-format (if (= format-letter ?P)
+			 (let ((place (cons oldpos (+ oldpos 5))))
+			   (set-format-state->delayed-content
+			    format-state
+			    (cons place
+				  (format-state->delayed-content
+				   format-state)))
+			   (initiate-get-conf-stat
+			    'background 'lyskom-delayed-print-conf arg
+			    arg format-letter colon-flag place)
+			   "[...]")
+                       (setq arg tmp)
+                       (conf-stat->name arg))))
+
+		  ((integerp arg)
+		   (let ((conf-stat (blocking-do 'get-conf-stat arg)))
+		     (if (null conf-stat)
+			 (progn
+			   (lyskom-format (if (= format-letter ?P)
 					      (if (eq arg 0)
 						  'person-is-anonymous
 						'person-does-not-exist)
-                                            'conference-does-not-exist)
-                                          arg))
-                       (setq arg tmp)
-                       (conf-stat->name arg))))
+					    'conference-does-not-exist)
+					  arg))
+		       (conf-stat->name conf-stat))))
+
                   ((lyskom-conf-stat-p arg) (conf-stat->name arg))
                   (t (signal 'lyskom-internal-error
                              (list 'lyskom-format
@@ -1229,6 +1261,33 @@ Args: FORMAT-STRING &rest ARGS"
       (setq dp (cdr dp)))
     (set-format-state->delayed-propl format-state nil))
   format-state)
+
+
+(defun lyskom-delayed-print-conf (conf-stat arg format-letter colon-flag place)
+  (if (integerp (car place)) nil
+    (save-excursion
+      (goto-char (cdr place))
+
+      (let ((s (if (null conf-stat)
+		   (progn
+		     (lyskom-format (if (= format-letter ?P)
+					(if (eq arg 0)
+					    'person-is-anonymous
+					  'person-does-not-exist)
+				      'conference-does-not-exist)
+				    arg))
+		 (conf-stat->name conf-stat))))
+	(if (and (not colon-flag)
+		 conf-stat)
+	    (add-text-properties
+	     0 (length s) 
+	     (lyskom-default-button (if (= format-letter ?P) 'pers 'conf)
+				    conf-stat)
+	     s))
+	(insert-and-inherit s)))
+    (delete-region (car place) (cdr place))
+    (set-marker (car place) nil)
+    (set-marker (cdr place) nil)))
 
 
 ;;; ================================================================
@@ -1414,9 +1473,11 @@ don't signal an error if this call is interrupting another command.
 
 Special: if lyskom-is-waiting then we are allowed to break if we set 
 lyskom-is-waiting nil.
-	 This function checks if lyskom-doing-default-command and
-     lyskom-first-time-around are bound. The text entered in the
-     buffer is chosen according to this"
+
+This function checks if lyskom-doing-default-command and
+lyskom-first-time-around are bound. The text entered in the buffer is
+chosen according to this"
+
   (if (and lyskom-is-waiting
            (listp lyskom-is-waiting))
       (progn
@@ -1427,8 +1488,7 @@ lyskom-is-waiting nil.
   (if (not (and (boundp 'lyskom-doing-default-command)
                 lyskom-doing-default-command))
       (cond
-       ((and (boundp 'lyskom-first-time-around)
-             lyskom-first-time-around))
+       (lyskom-first-time-around)
        ((stringp function) (lyskom-insert function))
        ((and function (symbolp function))
         (let ((name (lyskom-command-name function)))
