@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.202 2003-06-01 19:01:46 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.203 2003-07-02 19:10:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.202 2003-06-01 19:01:46 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.203 2003-07-02 19:10:02 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2225,8 +2225,7 @@ in lyskom-messages."
 
 (defun lyskom-format-x-kom/user-area (text text-stat)
 ;  (condition-case nil
-      (let ((tmpbuf (lyskom-generate-new-buffer "lyskom-user-area"))
-            (result "")
+      (let ((result "")
             (user-area (lyskom-split-user-area text)))
         (while user-area
           (let ((key (car (car user-area)))

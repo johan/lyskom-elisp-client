@@ -1,3 +1,32 @@
+2003-07-02  David Byers  <byers@lysator.liu.se>
+
+	Removed unused variables:
+	* commands1.el (lyskom-get-marked-texts): Removed variable
+	mark-list.
+
+	* commands2.el (kom-leave-all-conferences): Removed variable
+	unsubscribed.
+
+	* lyskom-rest.el (lyskom-format-x-kom/user-area): Removed variable
+	tmpbuf.
+
+	* lyskom-buttons.el (lyskom-generate-button): Removed variable
+	persno.
+
+	Fixed empty lines in nameday display:
+	* names.el (lyskom-nameday-2): Say so when there are no namedays
+	(we more or less have to when showing names from more than one
+	list, and it ain't bad 
+
+	Fixed bug 1064:
+	* lyskom-buttons.el (kom-button-click): Handle null position
+	properly.
+
+2003-07-01  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el (lyskom-write-text): Handle prefix args correctly
+	(so C-u i works).
+
 2003-06-04  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1054:
