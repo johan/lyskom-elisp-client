@@ -1,5 +1,8 @@
 Sun Jul  5 05:02:37 1992  Linus Tolke Y  (linus@lysator)
 
+	* commands1.el (lyskom-write-comment, lyskom-comment-recipients):
+	  Now writing footnotes keep the cc-recipients.
+
 	* review.el (lyskom-review-by-to): Fixed the bug that made the
 	  function sometimes miss articles. 
 	  Optimized so that searching from the end, stopped when found the
