@@ -26,12 +26,12 @@ version=`grep "lyskom-clientversion " ../src/vars.el | \
 
 echo Skickar brev till ceder.
 ( cd ../src ; make lyskom.elc )
-sed -e 's/kom.lysator.liu.se/diag22/p' < ../src/lyskom.elc > cederslyskom.elc
-chmod 644 cederslyskom.elc
-gzip cederslyskom.elc
-uuencode cederslyskom.elc.gz pub/lyskom.elc.gz | 
+gawk '{ sub("\"kom.lysator.liu.se\"", "\"diag22.ida.liu.se\""); 
+	print;
+      }' < ../src/lyskom.elc |
+gzip |
+uuencode pub/lyskom.elc.gz | 
 	Mail -s "lyskom.elc version $version" d88perce@und.ida.liu.se
-rm cederslyskom.elc.gz
 
 
 # Klaus Zeuge <sojge@Minsk.DoCS.UU.SE>
@@ -47,7 +47,7 @@ Hej sojge!
 Nu finns det en ny version av elisp-klienten att h{mta fr}n
 ftp.lysator.liu.se.
 
-Det {r klient version nummer $version.
+Klienten har versionsnummer $version.
 
 H}ll till godo.
 EOLETTER
