@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: reading.el,v 38.1 1995-11-13 16:00:45 davidk Exp $
+;;;;; $Id: reading.el,v 38.2 1996-02-02 05:00:46 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,14 +35,14 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 38.1 1995-11-13 16:00:45 davidk Exp $\n"))
+	      "$Id: reading.el,v 38.2 1996-02-02 05:00:46 davidk Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat)
   "Takes a MAP and enters all its listed text-nos in the conference CONF-STAT.
 This works by modifying the lyskom-to-do-list which in some cases
 also means modifying the lyskom-reading-list. The zero text-nos are skipped."
-  (let ((list (lyskom-array-to-list (map->text-nos map))))
+  (let ((list (listify-vector (map->text-nos map))))
     (while list
       (if (zerop (car list))
 	  (setq list (cdr list))
@@ -70,7 +70,7 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
 If an item of the membership is already read and entered in the
 lyskom-membership list then this item is not entered and the variable
 lyskom-membership-is-read is decreased by 1."
-  (let ((list (lyskom-array-to-list membership)))
+  (let ((list (listify-vector membership)))
     (while list
       (if (memq (membership->conf-no (car list))
 		(mapcar (function membership->conf-no) lyskom-membership))
@@ -78,4 +78,4 @@ lyskom-membership-is-read is decreased by 1."
 	      (-- lyskom-membership-is-read))
 	(setq lyskom-membership (append lyskom-membership (list (car list)))))
       (setq list (cdr list)))
-    (setq list (lyskom-array-to-list membership))))
+    (setq list (listify-vector membership))))

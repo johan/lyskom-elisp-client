@@ -27,8 +27,44 @@ Mon Jan 29 17:23:36 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el: Rewritten
 
-	* commands*.el: Some more commands accept arguments
+	* commands1.el,commands2.el: Some more commands accept arguments
 	
+
+Mon Jan 29 00:30:42 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-visible-membership): Ny funktion.
+
+	* commands2.el (kom-set-session-priority): Nytt kommando.
+
+	* vars.el.in (lyskom-session-priority): Ny variabel.
+
+	* async.el (lyskom-add-new-text): Använd
+ 	lyskom-visible-membership.
+
+	* lyskom-rest.el (lyskom-prefetch-handle-conf): Använd
+ 	lyskom-visible-membership
+	(lyskom-set-mode-line): Ange lyskom-session-priority om den är
+ 	större än 0.
+
+Sun Jan 28 23:50:15 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-array-to-list): Tog bort.
+
+	* completing-read.el (listify-vector): Flyttade till
+ 	lyskom-rest.el
+
+Thu Jan 25 19:35:26 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* edit-text.el (lyskom-edit-get-commented): Kunde hamna i oändlig
+ 	loop.
+
+Tue Jan 23 21:33:49 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* parse.el (lyskom-parse-success): Liten fix.
+
+Mon Jan 22 19:23:34 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* review.el (kom-review-by-to): Använd def-kom-command.
 
 Mon Jan 22 17:27:59 1996  David Byers  <byers@lysator.liu.se>
 

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.21 1996-02-01 09:37:03 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.22 1996-02-02 05:00:33 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.21 1996-02-01 09:37:03 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.22 1996-02-02 05:00:33 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -628,11 +628,16 @@ CONF can be a a conf-stat or a string."
       (if (null name)
 	  nil
 	(setq mode-line-conf-name 
-	      (substring (concat (if (lyskom-conf-stat-p conf)
-				     (format "(%d/%d) " unread total-unread)
-				   "")
-				 name
-				 (make-string 27 ? ))
+	      (substring (concat
+			  (if (lyskom-conf-stat-p conf)
+			      (if (> lyskom-session-priority 0)
+				  (format "(%d/%d:%d) "
+					  unread total-unread
+					  lyskom-session-priority)
+				(format "(%d/%d) " unread total-unread))
+			    "")
+			  name
+			  (make-string 27 ? ))
 			 0 27))
 	(if (not kom-emacs-knows-iso-8859-1)
 	    (setq mode-line-conf-name
@@ -1696,10 +1701,11 @@ Args: CONF-STAT MEMBERSHIP"
   (++ lyskom-last-conf-received)
   (++ lyskom-last-conf-done)
   (cond
-   ((> (+ (conf-stat->first-local-no conf-stat)
-	  (conf-stat->no-of-texts conf-stat)
-	  -1)
-       (membership->last-text-read membership))
+   ((and (lyskom-visible-membership membership)
+	 (> (+ (conf-stat->first-local-no conf-stat)
+	       (conf-stat->no-of-texts conf-stat)
+	       -1)
+	    (membership->last-text-read membership)))
     ;; There are (probably) some unread texts in this conf.
     (initiate-get-map 'prefetch 'lyskom-prefetch-handle-map
 		      (conf-stat->conf-no conf-stat)
@@ -2016,6 +2022,15 @@ then a newline is printed after the name instead."
      (t (lyskom-print-name conf-stat)))))
 
 
+;;; Priority filtering
+
+(defun lyskom-visible-membership (membership)
+  "Is this conference visible?
+Return t is MEMBERSHIPs priority is higher than or equal to
+lyskom-session-priority and nil otherwise."
+  (>= (membership->priority membership)
+      lyskom-session-priority))
+
 ;;; The filter.
 
 (defun lyskom-filter (proc output)
@@ -2230,10 +2245,9 @@ One parameter - the prompt string."
     input-string))
 
 
-(defun lyskom-array-to-list (array)
-  "Return a list whose elements are the elements of ARRAY."
-  (append array nil))
-
+(defsubst listify-vector (vector)
+  "Turn VECTOR into a list"
+  (append vector nil))
 
 (defun reverse-assoc (key cache)
   "Same as assoc, but searches on last element in a list"

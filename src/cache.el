@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 38.3 1996-01-19 18:49:34 byers Exp $
+;;;;; $Id: cache.el,v 38.4 1996-02-02 05:00:02 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 38.3 1996-01-19 18:49:34 byers Exp $\n"))
+	      "$Id: cache.el,v 38.4 1996-02-02 05:00:02 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -167,7 +167,7 @@ Return the new uconf-stat or nil"
 (defun cache-set-marked-texts (mark-array)
   "Sets the marks for all marked texts. A mark-list is an array, but we
 want a list in the cache, so this remakes it into a list."
-  (setq lyskom-marked-text-cache (lyskom-array-to-list mark-array)))
+  (setq lyskom-marked-text-cache (listify-vector mark-array)))
 
 
 (defun cache-text-is-marked (text-no)
@@ -231,7 +231,7 @@ otherwise return nil"
    (local-set-key [mouse-2] 'kom-mouse-2)
    (erase-buffer))
   (mapcar 'cache-add-who-info
-	  (sort (lyskom-array-to-list who-info-arr)
+	  (sort (listify-vector who-info-arr)
 		(function (lambda (who1 who2)
 			    (< (who-info->connection who1)
 			       (who-info->connection who2)))))))
