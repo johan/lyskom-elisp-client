@@ -1,3 +1,11 @@
+Thu Apr 29 00:07:36 1993  Linus Tolke Y  (linus@bodil)
+
+	* edit-text.el (lyskom-create-text-handler): Better error message.
+
+	* commands1.el (lyskom-add-member-answer,
+	  lyskom-add-member-answer-rd_prot): Better message when trying to
+	  join a rd_protected conference.
+
 Tue Apr 27 00:48:00 1993  Linus Tolke Y  (linus@bodil)
 
 	* commands2.el, swedish-strings.el, english-strings.el

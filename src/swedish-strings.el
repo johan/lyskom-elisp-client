@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.2 1993-04-27 00:01:37 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.3 1993-04-28 22:43:30 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.2 1993-04-27 00:01:37 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.3 1993-04-28 22:43:30 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -199,6 +199,10 @@ Guran vill helst s\344tta en giftpil i dig.\n\n")
     (priority-q . "Prioritet p\345 m\366tet? (0 (l\345g) - 255 (h\366g)) ")
     (done . "klart.\n")
     (nope . "Det gick inte.\n")
+
+    (cant-find-supervisor . "Hittar inte organisat\366ren f\366r %#1s.\n")
+    (is-read-protected-contact-supervisor . "%#1s \344r slutet.
+Skicka ett brev till %#2s f\366r medlemsskap.\n")
 
     (conf-does-not-exist . "\nM\366tet finns inte.\n")
 
@@ -502,7 +506,7 @@ M\344rk kuvertet LysKOM buggrapport.\n\n")
     (added-carbon-copy . "Extra kopia till m\366te: ")
     (conf-has-motd-no . "M\366tet har en lapp p\345 d\366rren. (%#1d)\n\n%#2s")
     (still-want-to-add . "Vill du fortfarande addera m\366tet? ")
-    (could-not-create-text . "\nTexten kunde ej skapas. Felkod: %#1d.\n")
+    (could-not-create-text . "\nTexten kunde ej skapas. Felet: %#2s.\n")
     (no-get-text . "Du fick inte h\344mta texten.")
 
 
