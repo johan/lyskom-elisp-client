@@ -1,3 +1,15 @@
+1999-06-13  David Byers  <davby@ida.liu.se>
+
+	* commands2.el (kom-del-faq): New function.
+	(kom-add-faq): New function.
+	(kom-status-conf): Print aux items.
+	(kom-status-person): Print aux items.
+
+	* view-text.el (lyskom-view-text): Use text-print-when to contol
+	printing of aux-items.
+
+	* lyskom-rest.el (lyskom-read-number): Accept symbol for prompt.
+
 1999-06-12  David Byers  <davby@ida.liu.se>
 
 	* commands1.el (lyskom-who-is-on-check-membership-9): Don't

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.15 1999-06-10 13:36:07 byers Exp $
+;;;;; $Id: completing-read.el,v 44.16 1999-06-13 15:00:55 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.15 1999-06-10 13:36:07 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.16 1999-06-13 15:00:55 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -202,7 +202,9 @@ A string:    A name that matched nothing in the database."
 
     (while keep-going
       (lyskom-with-lyskom-minibuffer
-       (setq read-string (completing-read prompt
+       (setq read-string (completing-read (cond ((stringp prompt) prompt)
+                                                ((symbolp prompt) (lyskom-get-string prompt))
+                                                (t (lyskom-get-string 'conf-prompt)))
                                           'lyskom-read-conf-internal
                                           type
                                           mustmatch

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.31 1999-06-11 12:56:11 byers Exp $
+;;;;; $Id: commands2.el,v 44.32 1999-06-13 15:00:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.31 1999-06-11 12:56:11 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.32 1999-06-13 15:00:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -258,6 +258,12 @@ otherwise: the conference is read with lyskom-completing-read."
           (lyskom-format-insert 'conf-has-motd conf-stat)
           (lyskom-view-text (conf-stat->msg-of-day conf-stat)))
 
+        ;; Show aux items
+
+        (lyskom-traverse-aux item
+            (conf-stat->aux-items conf-stat)
+          (lyskom-aux-item-definition-call item 'status-print item conf-stat))
+
         ;; Show all members of CONF-STAT if the user so wishes."
         (lyskom-scroll)
         (if (lyskom-j-or-n-p
@@ -409,6 +415,12 @@ otherwise: the conference is read with lyskom-completing-read."
 	  (progn
 	    (lyskom-format-insert 'has-motd conf-stat)
 	    (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
+
+      ;; Show aux items
+      
+      (lyskom-traverse-aux item
+          (conf-stat->aux-items conf-stat)
+        (lyskom-aux-item-definition-call item 'status-print item conf-stat))
 
       ;; "Show all conferences CONF-STAT is a member of if the user so wishes."
       (lyskom-scroll)
@@ -1238,8 +1250,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 		    '(all) nil nil t)))
     (if (not conf-stat)
 	(lyskom-insert-string 'somebody-deleted-that-conf)
-      (let ((garb-nice (lyskom-read-number
-			(lyskom-get-string 'new-garb-nice-q))))
+      (let ((garb-nice (lyskom-read-number 'new-garb-nice-q)))
 	(lyskom-format-insert 'garb-nice-for-is
 			      conf-stat
 			      garb-nice)
@@ -1478,9 +1489,7 @@ current conference to another session."
   (interactive (list
 		(cond
 		 ((null current-prefix-arg)
-		  (lyskom-read-number
-		   (lyskom-get-string 'postpone-prompt)
-		   kom-postpone-default))
+		  (lyskom-read-number 'postpone-prompt kom-postpone-default))
 		 (t (prefix-numeric-value current-prefix-arg)))))
 
   (let ((len (read-list-length lyskom-reading-list))
@@ -1932,8 +1941,7 @@ is alive."
          (secret nil)
          (aux nil))
     (cond ((eq type 'text)
-           (setq objno
-                 (lyskom-read-number (lyskom-get-string 'label-what-text)))
+           (setq objno (lyskom-read-number 'label-what-text))
            (setq object (blocking-do 'get-text-stat objno))
            (when (null object)
              (lyskom-error 'no-such-text-no objno))
@@ -1991,14 +1999,14 @@ is alive."
   (cond
    ((null current-prefix-arg) lyskom-current-text)
    ((integerp current-prefix-arg) current-prefix-arg)
-   ((listp current-prefix-arg) 
-    (lyskom-read-number (lyskom-get-string prompt)))
+   ((listp current-prefix-arg) (lyskom-read-number prompt))
    (t (signal 'lyskom-internal-error (list command)))))  
 
 (def-kom-command kom-fast-reply (&optional text-no)
   "Add a fast reply to a text."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-fast-reply-no
                                                      'kom-fast-reply)))
+  (lyskom-format-insert 'fast-replying text-no)
   (lyskom-fast-reply text-no
                      (lyskom-read-string 
                       (lyskom-get-string 'fast-reply-prompt)
@@ -2011,7 +2019,7 @@ is alive."
   "Convenience function to add agreement."
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-agree-no
                                                      'kom-agree)))
-  (cache-del-text-stat text-no)
+  (lyskom-format-insert 'agreeing text-no)
   (lyskom-fast-reply text-no
                      (lyskom-read-string (lyskom-get-string 'agree-prompt)
                                          (lyskom-get-string 'default-agree-string)
@@ -2029,4 +2037,95 @@ is alive."
                                               (lyskom-create-aux-item-flags
                                                nil nil nil nil nil nil nil nil)
                                               0 message)))))
+
+
+;;; ======================================================================
+;;; FAQ Management
+;;;
+
+(def-kom-command kom-add-faq (&optional conf-no text-no)
+  "Add a FAQ to a conference"
+  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf) nil nil t)
+                     (lyskom-read-number 'text-to-add-as-faq)))
+  (let ((text (blocking-do 'get-text-stat text-no))
+        (current-faqs nil))
+    (if (null text)
+        (lyskom-format-insert 'no-such-text-no text-no)
+      (lyskom-format-insert 'adding-faq conf-no text-no)
+      (cache-del-text-stat text-no)
+      (cache-del-conf-stat conf-no)
+      (lyskom-report-command-answer
+       (blocking-do 'modify-conf-info
+                    conf-no
+                    nil
+                    (list (lyskom-create-aux-item 
+                           0 14 0 0 
+                           (lyskom-create-aux-item-flags nil nil nil nil
+                                                         nil nil nil nil)
+                           0
+                           (int-to-string text-no))))))))
                
+(def-kom-command kom-del-faq (&optional conf-no text-no)
+  "Remove a FAQ from a conference"
+  (interactive)
+  (let* ((conf-stat (if conf-no 
+                        (blocking-do 'get-conf-stat conf-no)
+                      (lyskom-read-conf-stat 'conf-to-del-faq '(conf) nil nil t)))
+         (faq-list (when conf-stat
+                     (let ((tmp nil))
+                       (lyskom-traverse-aux item 
+                           (conf-stat->aux-items conf-stat)
+                         (progn
+                           (when (eq (aux-item->tag item) 14)
+                             (setq tmp (cons (cons (aux-item->data item) (aux-item->aux-no item)) tmp)))))
+                       tmp)))
+         (text-no nil))
+    (cond
+     ((null conf-stat) 
+      (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
+     ((null faq-list) 
+      (lyskom-format-insert 'conf-has-no-faq conf-stat))
+     (t (setq text-no (completing-read (lyskom-get-string 
+                                        'text-to-del-as-faq) faq-list nil t))
+        (when text-no
+          (lyskom-format-insert 'deleting-faq 
+                                (string-to-int text-no)
+                                conf-stat)
+          (cache-del-text-stat (string-to-int text-no))
+          (cache-del-conf-stat (conf-stat->conf-no conf-no))
+          (lyskom-report-command-answer
+           (blocking-do 'modify-conf-info
+                        (conf-stat->conf-no conf-stat)
+                        (list (cdr (lyskom-string-assoc text-no faq-list)))
+                        nil)))))))
+
+(def-kom-command kom-review-faq (&optional conf-no)
+  "View the FAQs for a conference"
+  (interactive (list (lyskom-read-conf-no 'view-which-faq '(conf) nil nil t)))
+  (let* ((conf-stat (blocking-do 'get-conf-stat conf-no))
+         (faq-list (when conf-stat
+                     (let ((tmp nil))
+                       (lyskom-traverse-aux item 
+                           (conf-stat->aux-items conf-stat)
+                         (progn
+                           (when (eq (aux-item->tag item) 14)
+                             (setq tmp (cons 
+                                        (string-to-int (aux-item->data item))
+                                        tmp)))))
+                       tmp))))
+    (cond 
+     ((null conf-stat) 
+      (lyskom-format-insert 'conf-no-does-not-exist-r conf-no))
+     ((null faq-list) 
+      (lyskom-format-insert 'conf-has-no-faq conf-stat))
+     (t 
+      (lyskom-format-insert 'review-faq-for-r conf-stat)
+      (read-list-enter-read-info
+       (lyskom-create-read-info 'REVIEW
+                                nil
+                                (lyskom-get-current-priority)
+                                (lyskom-create-text-list faq-list)
+                                nil t)
+       lyskom-reading-list t)))))
+    
+                       

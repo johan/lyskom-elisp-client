@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.25 1999-06-10 13:36:12 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.26 1999-06-13 15:00:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.25 1999-06-10 13:36:12 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.26 1999-06-13 15:00:56 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -970,7 +970,7 @@ depending on the value of `kom-lynx-terminal'."
                                 (blocking-do 'get-text-stat (elt arg 1))))
                               ((eq 'conf (car arg))
                                (conf-stat->aux-items 
-                                (blocking-do 'get-conof-stat (elt arg 1))))
+                                (blocking-do 'get-conf-stat (elt arg 1))))
                               (t nil))))
              (while items
                (when (eq (aux-item->aux-no (car items)) (elt arg 2))
@@ -1003,7 +1003,7 @@ depending on the value of `kom-lynx-terminal'."
                                 (blocking-do 'get-text-stat (elt arg 1))))
                               ((eq 'conf (car arg))
                                (conf-stat->aux-items 
-                                (blocking-do 'get-conof-stat (elt arg 1))))
+                                (blocking-do 'get-conf-stat (elt arg 1))))
                               (t nil))))
              (while items
                (when (eq (aux-item->aux-no (car items)) (elt arg 2))
