@@ -1,5 +1,15 @@
 2002-12-13  David Byers  <david.byers@swipnet.se>
 
+	Bug 915:
+	* vars.el.in (kom-builtin-server-aliases): Renamed from
+	kom-server-aliases.
+	(kom-server-aliases): New variable.
+
+	* startup.el (lyskom-read-server-name): Use both
+	kom-server-aliases and kom-builtin-server-aliases.
+	(lyskom): Same here.
+
+	Fix obsoleteness:
 	* lyskom-rest.el (lyskom-update-prompt): Change `insert-string' to
 	`insert' since the former is obsolete.
 
