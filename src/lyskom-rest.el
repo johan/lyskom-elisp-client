@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.21 1996-08-02 00:35:26 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.22 1996-08-02 01:02:04 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.21 1996-08-02 00:35:26 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.22 1996-08-02 01:02:04 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1580,7 +1580,7 @@ chosen according to this"
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
   (let ((to-do (lyskom-what-to-do))
-	(new-prompt nil))
+	(prompt nil))
     (setq lyskom-command-to-do to-do)
     (cond
      
@@ -1646,25 +1646,27 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
      (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
 
     (if (not (equal prompt lyskom-current-prompt))
-	(progn
-	  (if lyskom-current-prompt
-	      ;; Replace the prompt
-	      (let ((inhibit-read-only t))
-		(save-excursion
-		  (goto-char (point-max))
-		  (beginning-of-line)
-		  (delete-region (point) (point-max)))))
-	  ;; Insert the new prompt
-	  (lyskom-insert-string
-	   (lyskom-modify-prompt
-	    (cond
-	     ((null prompt) "")
-	     ((symbolp prompt) (lyskom-get-string prompt))
-	     (t prompt))))
-	  
-	  ;; Insert " - "
-	  (if prompt
-	      (lyskom-insert lyskom-prompt-text))
+	(let ((inhibit-read-only t)
+	      (prompt-text (concat
+			    (lyskom-modify-prompt
+			     (cond
+			      ((null prompt) "")
+			      ((symbolp prompt) (lyskom-get-string prompt))
+			      (t prompt)))
+			    lyskom-prompt-text))
+	      (was-at-max (eq (point) (point-max))))
+	  (save-excursion
+	    ;; Insert the new prompt
+	    (goto-char (point-max))
+	    (beginning-of-line)
+	    (insert-string
+	     (if kom-emacs-knows-iso-8859-1
+		 prompt-text
+	       (iso-8859-1-to-swascii prompt-text)))
+	    ;; Delete the old prompt
+	    (if lyskom-current-prompt
+		(delete-region (point) (point-max))))
+	  (if was-at-max (goto-char (point-max)))
 	  
 	  (setq lyskom-current-prompt prompt))))
   (lyskom-set-mode-line))
