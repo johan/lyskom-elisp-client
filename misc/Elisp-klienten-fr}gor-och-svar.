@@ -2557,3 +2557,23 @@ Mottagare: M/S Polarstern (Ceci) <1281>
    se hur m}nga inl{gg det r|r sig om och l { (lista
    {renden) f|r att se vem som har skrivit och vilket {rende.
 (116535) -----------------------------------
+
+119458 1991-10-04  17:33  /11 rader/ ceder (Per Cederqvist  Lysator)
+Kommentar till text 116224 av meLazy
+Kommentar till text 119264 av Lars Rehnman
+Mottagare: Lars Rehnman <93>
+Mottagare: LysKOM fr}gor (&) svar; Elispklienten <131>
+[rende: elisp-klienten funkar inte p} hulio - {r det en decstation?
+------------------------------------------------------------
+Du k|r allts} med samma klient p} hulio som p} lysator. Det kan ev.
+bero p} att du g|r olika saker i din .emacs, eller p} att det {r olika
+versioner av emacs. Hulio r}kar inte m|jligtvis vara en dec-station?
+Prova att skriva
+	(string-to-int "\n 17")
+och trycka p} linefeed i *scratch*-bufferten. Om du f}r svaret 0 s}
+kommer det att funka om du applicerar patchen i text 116224.
+
+(I en kommande version kommer vi inte att anv{nda string-to-int med en
+str{ng som inneh}ller en newline. Emacs beter sig olika p} olika
+maskiner i det fallet.)
+(119458) -----------------------------------
