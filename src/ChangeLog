@@ -1,3 +1,19 @@
+Thu Jul 25 03:01:52 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* review.el (kom-review-last-normally-read): Bytte reverse mot
+ 	nreverse.
+
+	* vars.el.in (kom-bury-buffers): Ny variabel
+	(lyskom-elisp-variables): La till den.
+
+	* commands2.el (lyskom-update-lyskom-buffer-list): Kommenterade
+ 	bort.
+	(kom-next-kom, kom-previous-kom): Skrev om.
+
+	* startup.el (lyskom-clear-vars): Gjorde
+ 	lyskom-normally-read-texts lokal. Lägg till lysikom-buffer till
+ 	lyskom-buffer-list.
+
 Tue Jul 23 11:28:29 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Skrev om till
