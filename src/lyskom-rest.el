@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.59 1998-06-14 14:15:51 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.60 1998-08-10 01:37:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.59 1998-06-14 14:15:51 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.60 1998-08-10 01:37:14 davidk Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -163,7 +163,8 @@ assoc list."
 
 (defun kom-recover (&optional refetch)
   "Try to recover from an error.
-If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
+If the optional argument REFETCH is non-nil, all caches are cleared and
+`lyskom-refetch' is called."
   (interactive "p")
   (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
@@ -175,7 +176,9 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
       (++ i)))
   (setq lyskom-number-of-pending-calls 0)
   (setq lyskom-is-parsing nil)
-  (if refetch (lyskom-refetch))
+  (when refetch
+    (clear-all-caches)
+    (lyskom-refetch))
   (lyskom-tell-internat 'kom-tell-recover)
   (lyskom-end-of-command))
 

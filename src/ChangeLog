@@ -19,6 +19,11 @@ Thu Jul 23 15:03:10 1998  Peter Liljenberg  <petli@lysator.liu.se>
 	(lyskom-sv-edit-mode-map): Se ovan.
 
 
+Thu Jul 16 12:57:57 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (kom-recover): Anropar clear-all-caches när man
+	anropar med prefixargument.
+
 Wed Jul  8 13:12:48 1998  David Kagedal  <davidk@lysator.liu.se>
 
 	* startup.el (lyskom): Den frågade inte om man ville fortsätta med
