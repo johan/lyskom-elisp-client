@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: compatibility.el,v 44.12 1997-08-18 12:26:45 byers Exp $
+;;;;; $Id: compatibility.el,v 44.13 1997-09-10 13:14:55 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.12 1997-08-18 12:26:45 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.13 1997-09-10 13:14:55 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -143,6 +143,9 @@ of the lyskom-provide-* functions instead."
 (lyskom-provide-macro byte-code-function-p (obj)
   (` (compiled-function-p (, obj))))
 
+(lyskom-provide-function characterp (obj)
+  (integerp obj))
+
 (lyskom-compatibility-forms (fboundp 'frame-width)
     (fset 'frame-width 'screen-width))
 
@@ -177,13 +180,21 @@ of the lyskom-provide-* functions instead."
     (mouse-2 . (button2))
     (mouse-3 . (button3))
     (down-mouse-3 . (button3))
+    (C-å     . (control aring))
+    (C-ä     . (control adiaeresis))
+    (C-Å     . (control Aring))
+    (C-Ä     . (control Adiaeresis))
     (å       . aring)
     (Å       . Aring)
     (ä       . adiaeresis)
     (Ä       . Adiaeresis)))
 
 (defconst lyskom-gnu-keysym
-  '((å       . ?\å)
+  '((C-å     . (control å))
+    (C-ä     . (control ä))
+    (C-Å     . (control Å))
+    (C-Ä     . (control Ä))
+    (å       . ?\å)
     (Å       . ?\Å)
     (ä       . ?\ä)
     (Ä       . ?\Ä)
