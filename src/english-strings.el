@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.211 2002-05-26 23:15:53 byers Exp $
+;;;;; $Id: english-strings.el,v 44.212 2002-06-03 21:48:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.211 2002-05-26 23:15:53 byers Exp $"))
+              "$Id: english-strings.el,v 44.212 2002-06-03 21:48:19 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3506,6 +3506,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-highlight-text-body-doc . "\
   When this is on, the text body is shown with a different format than
   normal text.")
+    (kom-async-highlight-dashed-lines-doc . "\
+  When this is on, the lines before and after personal, group- and alarm
+  messages are shown with  a different format than normal text.")
+    (kom-async-highlight-text-body-doc . "\
+  When this is on, the body of personal, group- and alarm messages are
+  shown with a different format than normal text.")
     (kom-edit-hide-add-button-doc . "\
   When this is on, an [Add...] button will be shown after the list of
   recipients and auxiliary information when writing a new text.")
@@ -3681,6 +3687,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-highlight-first-line-tag . "Color fist line:")
     (kom-highlight-dashed-lines-tag . "Color dashed lines:")
     (kom-highlight-text-body-tag . "Color text backgrounds:")
+    (kom-async-highlight-dashed-lines-tag . "Color dashed lines around messages:")
+    (kom-async-highlight-text-body-tag . "Color message backgrounds:")
     (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
     )
 )

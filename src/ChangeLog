@@ -1,3 +1,21 @@
+2002-06-03  David Byers  <david.byers@swipnet.se>
+
+	* commands2.el (lyskom-send-message): Use new faces for dashed
+	lines and message bodies.
+
+	* vars.el.in (kom-async-highlight-dashed-lines): New variable.
+	(kom-async-highlight-text-body): New variable.
+	(lyskom-face-schemes): Added kom-async-dashed-lines-face and
+	kom-async-text-body-face to all schemes.
+	(lyskom-faces): Added kom-async-dashed-lines-face and
+	kom-async-text-body-face.
+
+	* utilities.el (lyskom-set-face-scheme): Set up faces for async
+	messages.
+
+	* distribution-Makefile.in (lyskom-@@CLIENTVERSION@@.elc): Load
+	help-compile.el when compiling.
+
 2002-06-02  David Byers  <david.byers@swipnet.se>
 
 	* Release of 0.47-BETA-2

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.198 2002-05-26 23:15:53 byers Exp $
+;;;;; $Id: vars.el.in,v 44.199 2002-06-03 21:48:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.198 2002-05-26 23:15:53 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.199 2002-06-03 21:48:20 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -146,6 +146,22 @@ other than t or nil are reserved for future use."
 
 (def-kom-var kom-highlight-dashed-lines t
   "*If t, overlay kom-dashed-lines-face on the lines surrounding texts.
+When this is enabled, an overlay or extent will be created that may
+override certain aspects of the underlying text's formatting. Values
+other than t or nil are reserved for future use."
+  server
+)
+
+(def-kom-var kom-async-highlight-text-body t
+  "*If t, overlay kom-text-body-face on asynchronous messages in LysKOM.
+When this is enabled, an overlay or extent will be created that may
+override certain aspects of the underlying text's formatting. Values
+other than t or nil are reserved for future use."
+  server
+)
+
+(def-kom-var kom-async-highlight-dashed-lines t
+  "*If t, overlay kom-dashed-lines-face on the lines surrounding messages.
 When this is enabled, an overlay or extent will be created that may
 override certain aspects of the underlying text's formatting. Values
 other than t or nil are reserved for future use."
@@ -2677,7 +2693,9 @@ the value of  kom-tell-phrases for fun.")
 		    kom-text-face kom-subject-face kom-text-no-face
 		    kom-friends-face kom-morons-face kom-presence-face
 		    kom-first-line-face kom-warning-face kom-mark-face
-                    kom-text-body-face kom-dashed-lines-face kom-dim-face)
+                    kom-text-body-face kom-dashed-lines-face 
+                    kom-async-text-body-face kom-async-dashed-lines-face
+                    kom-dim-face)
   "This is a list of the faces that LysKOM uses.")
 
 (defvar kom-face-schemes nil
@@ -2685,7 +2703,6 @@ the value of  kom-tell-phrases for fun.")
 
 (def-kom-var lyskom-face-schemes
   '((default
-     (kom-text-body-face nil nil "#f8f8ff")
      (kom-active-face default "blue4" nil)
      (kom-url-face default "BlueViolet" nil)
      (kom-me-face bold "blue3" "lavender")
@@ -2701,6 +2718,9 @@ the value of  kom-tell-phrases for fun.")
      (kom-first-line-face bold nil nil)
      (kom-dim-face default "gray" nil)
      (kom-dashed-lines-face nil nil "#e8e8ff")
+     (kom-text-body-face nil nil "#f8f8ff")
+     (kom-async-dashed-lines-face nil nil "#ffe8e8")
+     (kom-async-text-body-face nil nil "#fff8f8")
      (property expected-background "white")
      )
     (bark
@@ -2715,6 +2735,8 @@ the value of  kom-tell-phrases for fun.")
      (kom-presence-face default "Gold" nil)
      (kom-first-line-face bold nil nil)
      (kom-dashed-lines-face nil nil "#0a0a0a")
+     (kom-async-text-body-face nil nil "#181818")
+     (kom-async-dashed-lines-face nil nil "#0a0a0a")
      (kom-text-body-face nil nil "#181818")
      (kom-dim-face nil "DarkSlateGray")
      (kom-friends-face nil "Gold" "Black")
@@ -2723,7 +2745,6 @@ the value of  kom-tell-phrases for fun.")
      (property expected-background "black")
      )
     (black-and-tan
-      (kom-text-body-face nil nil "#f8f8f0")
       (kom-active-face default "#602000" nil)
       (kom-url-face default "#800040" nil)
       (kom-me-face bold "#602000" "#f0f0e0")
@@ -2738,11 +2759,13 @@ the value of  kom-tell-phrases for fun.")
       (kom-warning-face bold "red" nil)
       (kom-first-line-face bold nil nil)
       (kom-dim-face default "gray" nil)
+      (kom-text-body-face nil nil "#f8f8f0")
       (kom-dashed-lines-face nil nil "#f0f0e0")
+      (kom-async-text-body-face nil nil "#f8f8f0")
+      (kom-async-dashed-lines-face nil nil "#f0f0e0")
       (property expected-background "white")
       )
     (inverse
-     (kom-text-body-face nil nil "#080808")
      (kom-active-face default "lightblue" nil)
      (kom-url-face default "Moccasin" nil)
      (kom-me-face bold "gold" "black")
@@ -2757,11 +2780,16 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face bold "red" nil)
      (kom-first-line-face nil nil "black")
      (kom-dim-face default "gray" nil)
-     (kom-dashed-lines-face nil nil black)
+     (kom-dashed-lines-face nil nil "#101010")
+     (kom-text-body-face nil nil "#080808")
+     (kom-async-dashed-lines-face nil nil "#101030")
+     (kom-async-text-body-face nil nil "#000020")
      (property expected-background "black")
      )
     (monochrome
      (kom-text-body-face nil nil nil)
+     (kom-async-dashed-lines-face nil nil nil)
+     (kom-async-text-body-face nil nil nil)
      (kom-dashed-lines-face nil nil nil)
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
@@ -2780,7 +2808,6 @@ the value of  kom-tell-phrases for fun.")
      (property expected-background "white")
      )
     (minimal
-     (kom-text-body-face nil nil nil)
      (kom-active-face default nil nil)
      (kom-url-face default nil nil)
      (kom-me-face default nil "lavender")
@@ -2795,11 +2822,13 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face bold nil nil)
      (kom-first-line-face nil nil nil)
      (kom-dashed-lines-face nil nil nil)
+     (kom-text-body-face nil nil nil)
+     (kom-async-dashed-lines-face nil nil nil)
+     (kom-async-text-body-face nil nil nil)
      (kom-dim-face default nil nil)
      (property expected-background "white")
      )
     (highlight
-     (kom-text-body-face nil nil "#f8f8ff")
      (kom-active-face    default   nil          "aliceblue")
      (kom-url-face       default   nil          "yellow")
      (kom-me-face        bold      "darkblue"   "thistle")
@@ -2814,6 +2843,9 @@ the value of  kom-tell-phrases for fun.")
      (kom-warning-face   bold      "yellow"     "red")
      (kom-first-line-face nil  nil          "lavender")
      (kom-dashed-lines-face nil  nil          "lavender")
+     (kom-text-body-face nil nil "#f8f8ff")
+     (kom-async-dashed-lines-face nil  nil          "lavender")
+     (kom-async-text-body-face nil nil "#f8f8ff")
      (kom-dim-face       default   "gray"       nil)
      (property expected-background "white")
      ))

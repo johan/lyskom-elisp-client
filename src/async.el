@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.43 2002-05-07 20:12:11 byers Exp $
+;;;;; $Id: async.el,v 44.44 2002-06-03 21:48:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.43 2002-05-07 20:12:11 byers Exp $\n"))
+	      "$Id: async.el,v 44.44 2002-06-03 21:48:19 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -526,8 +526,10 @@ Non-nil NOBEEP means don't beep."
                            (t (lyskom-get-string 'unknown)))
                           message
                           when
-                          '(face kom-dashed-lines-face)
-                          '(face kom-text-body-face)))
+                          (when kom-async-highlight-dashed-lines
+                            '(face kom-async-dashed-lines-face))
+                          (when kom-async-highlight-text-body
+                            '(face kom-async-text-body-face))))
           ((= (conf-stat->conf-no recipient) lyskom-pers-no) ; Private
            (if (not nobeep) (lyskom-beep kom-ding-on-personal-messages sender))
            (lyskom-format (lyskom-get-string-sol 'message-from)
@@ -537,8 +539,10 @@ Non-nil NOBEEP means don't beep."
                            (t (lyskom-get-string 'unknown)))
                           message
                           when
-                          '(face kom-dashed-lines-face)
-                          '(face kom-text-body-face)))
+                          (when kom-async-highlight-dashed-lines
+                            '(face kom-async-dashed-lines-face))
+                          (when kom-async-highlight-text-body
+                            '(face kom-async-text-body-face))))
           (t                            ; Group message
            (if (not nobeep) (lyskom-beep kom-ding-on-group-messages recipient))
            (lyskom-format (lyskom-get-string-sol 'message-from-to)
@@ -552,8 +556,10 @@ Non-nil NOBEEP means don't beep."
                            (recipient recipient)
                            (t (lyskom-get-string 'unknown)))
                           when
-                          '(face kom-dashed-lines-face)
-                          '(face kom-text-body-face))))))
+                          (when kom-async-highlight-dashed-lines
+                            '(face kom-async-dashed-lines-face))
+                          (when kom-async-highlight-text-body
+                            '(face kom-async-text-body-face)))))))
 
 
   
