@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.18 1996-07-27 14:06:55 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.19 1996-08-01 21:01:39 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.18 1996-07-27 14:06:55 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.19 1996-08-01 21:01:39 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -713,6 +713,18 @@ kom-emacs-knows-iso-8859-1."
   "Insert STRING just before the prompt of if no prompt then just buffers.
 If prompt on screen then do the scroll if necessary.
 The strings buffered are printed before the prompt by lyskom-print-prompt."
+  ;;
+  ;; This is the policy for moving point:
+  ;;
+  ;; old-point-max is the point-max before the text is inserted
+  ;; new-point-max is the point-max after the text is inserted
+  ;;
+  ;; If point /= old-point-max, leave the point where it is, and don't
+  ;; scroll the window.
+  ;;
+  ;; If point = old-point-max, set it to new-point-max, and if the
+  ;; buffer is in a window, make sure that point is visible.
+  ;;
   (cond
    ((and lyskom-executing-command
          (not (eq lyskom-is-waiting t)))
@@ -721,30 +733,20 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
         (setq lyskom-to-be-printed-before-prompt (lyskom-queue-create)))
     (lyskom-queue-enter lyskom-to-be-printed-before-prompt 
                         (list string)))
-   (t (save-excursion
-    (let ((oldpoint (if (/= (point) (point-max)) (point) nil)))
+   (t
+    (save-excursion
       (goto-char (point-max))
-      (let* ((window (get-buffer-window (current-buffer)))
-             (pv (and window
-                      (pos-visible-in-window-p (point) window))))
-        (beginning-of-line)
-        (let ((buffer-read-only nil)
-              (start (point)))
-          (insert (if kom-emacs-knows-iso-8859-1
-                      string
-                    (iso-8859-1-to-swascii string))))
-        (goto-char (point-max))
-        (if (and pv
-                 (eq window (selected-window))
-                 (not (pos-visible-in-window-p (point) window)))
-              (recenter -1))
-
-        (if window
-            (if (pos-visible-in-window-p (point) window)
-                nil
-              (goto-char (window-start window))
-              (end-of-line (1- (window-height window)))))))))))
-
+      (beginning-of-line)
+      (let ((inhibit-read-only t))
+	(insert (if kom-emacs-knows-iso-8859-1
+		    string
+		  (iso-8859-1-to-swascii string)))))
+    (let ((window (get-buffer-window (current-buffer))))
+      (if (and window
+	       (not (pos-visible-in-window-p (point) window)))
+	  ;; This mease that the prompt has been pushed off the bottom
+	  (recenter -1))))))
+      
 
 (defun lyskom-message (format-string &rest args)
   "Like message, but converts iso-8859/1 texts to swascii if necessary.
