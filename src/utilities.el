@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.35 1999-10-13 15:50:41 byers Exp $
+;;;;; $Id: utilities.el,v 44.36 1999-10-14 10:39:45 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.35 1999-10-13 15:50:41 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.36 1999-10-14 10:39:45 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -701,3 +701,30 @@ return nil."
          (setq found (length (cdr (read-info->text-list (car rlist))))))
        (setq rlist (cdr rlist)))
      found)))
+
+(defun lyskom-prev-area (num prop)
+  (while (> num 0)
+    (let ((where (previous-single-property-change (point) prop)))
+      (when where
+        (if (not (get-text-property where prop))
+            (setq where (previous-single-property-change 
+                         where prop)))
+        (if where
+            (goto-char where)
+          (goto-char (point-min))
+          (setq num 1))))
+    (setq num (1- num))))
+
+(defun lyskom-next-area (num prop)
+  "Move the cursor to the next prompt in the LysKOM buffer"
+  (interactive "p")
+  (while (> num 0)
+    (let ((where (next-single-property-change (point) prop)))
+      (when where
+        (if (not (get-text-property where prop))
+            (setq where (next-single-property-change where prop)))
+        (if where
+            (goto-char where)
+          (goto-char (point-max))
+          (setq num 1))))
+    (setq num (1- num))))
