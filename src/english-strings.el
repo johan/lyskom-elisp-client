@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 35.6 1991-10-12 10:19:53 byers Exp $
+;;;;; $Id: english-strings.el,v 35.7 1991-10-14 09:05:22 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 35.6 1991-10-12 10:19:53 byers Exp $\n"))
+	      "$Id: english-strings.el,v 35.7 1991-10-14 09:05:22 byers Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Text follows this line, Post: C-c C-c, Kill: C-c C-k, Help: C-h m ---"
@@ -440,8 +440,8 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (head-Subject . "Subject: ")
     (Recipient . "Recipient")
     (Extra-recipient . "CC")
-    (send-at . "    Posted:     %#1s\n")
-    (sent-by . "    Posted by ")
+    (send-at . "   Posted:     %#1s\n")
+    (sent-by . "   Posted by ")
     (recieved-at . "    Received: %#1s\n")
     (written-by . "by %#1s")
     (comment-to-text-by . "Comment to article %#1d %#2s\n")
@@ -543,7 +543,7 @@ use. Please try later.
     (j-or-n . "(y or n) ")
     (y-instring . "yY ")
 
-    (person-does-not-exist . "Person %#1d (does not exist).")
+    (person-does-not-exist . "User %#1d (does not exist).")
     (conf-does-not-exist . "Conference %#1d (does not exist).")
 
     (process-signal . "Signal from the process.")
@@ -774,7 +774,7 @@ Cf. paragraph-start.")
 (defconst kom-tell-phrases
   '(
     (kom-tell-silence		"") ; Why ?
-    (kom-tell-send		"Is trying to post a article.")
+    (kom-tell-send		"Is trying to post an article.")
     (kom-tell-login		"Is logging in.")
     (kom-tell-read		"Is reading.")
     (kom-tell-1st-pres		"Is writing the first presentation.")
@@ -782,11 +782,11 @@ Cf. paragraph-start.")
     (kom-tell-write-footnote	"Is writing a footnote.")
     (kom-tell-write-letter	"Is writing a letter.")
     (kom-tell-write-reply	"Is writing a personal reply.")
-    (kom-tell-write-text	"Is writing a article.")
+    (kom-tell-write-text	"Is writing an article.")
     (kom-tell-conf-pres		"Is writing the presentation for a new conference.")
     (kom-tell-recover		"Performs a reset. Sigh.")
     (kom-tell-wait		"Is waiting.")
-    (kom-tell-regret		"Is decides to throw away the article.")
+    (kom-tell-regret		"Decides to throw away the article.")
     (kom-tell-review		"Is reviewing.")
     (kom-tell-change-name       "Takes on a new name.")
     (kom-tell-change-supervisor "Changes the organizer for something.")
