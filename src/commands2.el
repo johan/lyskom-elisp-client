@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.3 1991-09-15 10:06:17 linus Exp $
+;;;;; $Id: commands2.el,v 35.4 1991-10-02 22:03:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.3 1991-09-15 10:06:17 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.4 1991-10-02 22:03:42 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -950,14 +950,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (set-buffer repname)
       (goto-char (point-min))
       (replace-regexp "byte-code(\".*\""
-		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
-    (lyskom-edit-text lyskom-proc
-		      (lyskom-create-misc-list 'recpt 79 'cc-recpt lyskom-pers-no)
-		      (lyskom-format 'buggreport-subject
-			      lyskom-clientversion)
-		      (save-excursion
-			(set-buffer repname)
-			(buffer-string)))))
+		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))))
 
 
 ; ;;; ================================================================
