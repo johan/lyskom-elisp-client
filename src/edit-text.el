@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.4 1995-10-23 11:55:29 byers Exp $
+;;;;; $Id: edit-text.el,v 38.5 1995-10-25 09:30:14 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.4 1995-10-23 11:55:29 byers Exp $\n"))
+	      "$Id: edit-text.el,v 38.5 1995-10-25 09:30:14 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -192,24 +192,24 @@ footn-to	-> Fotnot till text %d."
 Args: CONF-STAT STRING STREAM NUMBER
 CONF-STAT is the conf-stat of the conference that is about to be put in,
 STRING is the string that is inserted.
-STREAM is the buffer of a marker telling the position.
+STREAM is the buffer or a marker telling the position.
 NUMBER is the number of the person. Used if the conf-stat is nil."
   (save-excursion
     (let ((buf (cond
 		((bufferp stream) stream)
 		((markerp stream) (marker-buffer stream)))))
-      (if buf
-	  (set-buffer buf)))
-    (save-excursion
-      (princ (concat string
-		     (format " <%d> " (if conf-stat
-					  (conf-stat->conf-no conf-stat)
-					number))
-		     (if conf-stat
-			 (conf-stat->name conf-stat)
-		       "")
-		     "\n")
-	     stream))))
+      (set-buffer buf)
+      (save-excursion
+	(if (markerp stream) (goto-char stream))
+	(princ (concat string
+		       (format " <%d> " (if conf-stat
+					    (conf-stat->conf-no conf-stat)
+					  number))
+		       (if conf-stat
+			   (conf-stat->name conf-stat)
+			 "")
+		       "\n")
+	       stream)))))
 
 
 (defun lyskom-edit-get-commented-author (text-stat string stream number)
@@ -494,38 +494,27 @@ Entry to this mode runs lyskom-edit-mode-hook."
 (defun lyskom-edit-add-recipient/copy (prompt string)
   "Adds a new recipient or a cc-recipient to the text which is being edited."
   (let ((marker (point-min-marker))
-	(edit-buffer (current-buffer)))
+	(edit-buffer (current-buffer))
+	(insert-at (point-min-marker))
+	(conf-stat (lyskom-read-conf-stat prompt 'all nil "")))
     (lyskom-save-excursion
+     ;;(save-excursion
      (set-buffer (process-buffer lyskom-proc))
-     (lyskom-completing-read-conf-stat 'edit 'lyskom-edit-add-recipient/copy-2
-				       prompt nil 
-				       nil "" string marker edit-buffer))))
-
-(defun lyskom-edit-add-recipient/copy-2 (conf-stat string stream buffer)
-  "Adds the conference with conf-stat CONF-STAT as a recipient of the
-text in BUFFER. If the conference has a set motd, then show it."
-  (let ((text-no (conf-stat->msg-of-day conf-stat)))
-    (if (zerop text-no)
-	(lyskom-edit-insert-misc-conf conf-stat string stream nil)
-      (lyskom-edit-add-recipient/copy-3 (blocking-do 'get-text text-no)
-					conf-stat string stream buffer))))
-
-
-(defun lyskom-edit-add-recipient/copy-3 (text conf-stat string stream buffer)
-  "Shows the motd TEXT in a temporary buffer and confirms that the user
-still wants to add the conference with conf-stat CONF-STAT as a recipient
-to the text in BUFFER."
-  (if (and text (get-buffer-window buffer))
-      (let ((win-config (current-window-configuration)))
-	(set-buffer buffer)
-	(with-output-to-temp-buffer "*Motd*"
-	  (princ (lyskom-format 'conf-has-motd-no
-				(text->text-no text)
-				(text->text-mass text))))
-	(and (j-or-n-p (lyskom-get-string 'still-want-to-add))
-	     (lyskom-edit-insert-misc-conf conf-stat string stream nil))
-	(set-window-configuration win-config))
-    (lyskom-edit-insert-misc-conf conf-stat string stream nil)))
+     (let ((text-no (conf-stat->msg-of-day conf-stat)))
+       (if (zerop text-no)
+	   (lyskom-edit-insert-misc-conf conf-stat string insert-at nil)
+	 (let ((text (blocking-do 'get-text text-no)))
+	   (if (and text (get-buffer-window edit-buffer))
+	       (let ((win-config (current-window-configuration)))
+		 ;;(set-buffer buffer)
+		 (with-output-to-temp-buffer "*Motd*"
+		   (princ (lyskom-format 'conf-has-motd-no
+					 (text->text-no text)
+					 (text->text-mass text))))
+		 (and (j-or-n-p (lyskom-get-string 'still-want-to-add))
+		      (lyskom-edit-insert-misc-conf conf-stat string insert-at nil))
+		 (set-window-configuration win-config))
+	     (lyskom-edit-insert-misc-conf conf-stat string insert-at nil))))))))
 
 
 
