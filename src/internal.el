@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 35.4 1991-09-15 10:05:39 linus Exp $
+;;;;; $Id: internal.el,v 35.5 1992-11-04 21:46:05 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 35.4 1991-09-15 10:05:39 linus Exp $\n"))
+	      "$Id: internal.el,v 35.5 1992-11-04 21:46:05 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -356,6 +356,14 @@ with big strings."
 	  (progn (lyskom-process-send-string-2 process string)
 		 nil)
 	(file-error
+	 (if lyskom-debug-communications-to-buffer
+	     (save-excursion
+	       (set-buffer (get-buffer-create
+			    lyskom-debug-communications-to-buffer-buffer))
+	       (save-excursion
+		 (goto-char (point-max))
+		 (insert (concat "Error: " (format "%s" err) "\n")))
+	       (set-buffer (process-buffer process))))
 	 (cond
 	  ((and (string= "writing to process" (car (cdr err)))
 		(or (string= "message too long" (car (cdr (cdr err))))
