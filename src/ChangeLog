@@ -1,3 +1,11 @@
+2003-03-03  Johan Sundström  <jhs@lysator.liu.se>
+
+	* english-strings.el, swedish-strings.el: Improved garb-nice strings.
+
+	* commands1.el (kom-create-conf): In the interest of not losing	texts
+	unintentionally due to a low default expiration time, always ask the
+	conference creator for its expiration policy.
+
 2003-03-03  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	Print the conference type when entering a conference.
@@ -920,6 +928,7 @@
 	* lyskom-rest.el (lyskom-a-or-b-or-c-p): New function. Generalized
 	y-or-n-p sort of.
 
+>>>>>>> 44.678
 2002-09-12  David Byers  <david.byers@swipnet.se>
 
 	* english-strings.el,swedish-strings.el: Fixed speling error for
