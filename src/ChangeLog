@@ -1,3 +1,10 @@
+2000-02-08  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-complete-numbers-before-names): New variable.
+
+	* completing-read.el (lyskom-read-conf-internal): Add the option
+	to complete numbers before completing names.
+
 2000-01-27  David Byers  <davby@ida.liu.se>
 
 	* flags.el (lyskom-flag-value-to-string): New function.

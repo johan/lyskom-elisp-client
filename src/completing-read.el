@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.26 1999-11-22 21:30:53 byers Exp $
+;;;;; $Id: completing-read.el,v 44.27 2000-02-08 14:59:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.26 1999-11-22 21:30:53 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.27 2000-02-08 14:59:38 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -354,7 +354,13 @@ function work as a name-to-conf-stat translator."
                                                           login-list
                                                           candidate-list)))
 
-          (cond ((= (length result-list) 1)
+          (cond ((and kom-complete-numbers-before-names
+                      specials)
+                 (lyskom-read-conf-lookup-specials string
+                                                   predicate
+                                                   login-list
+                                                   candidate-list))
+                ((= (length result-list) 1)
                  (car result-list))
                 ((and (> (length result-list) 1)
                       (lyskom-completing-member string names))
