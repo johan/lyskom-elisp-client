@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.4 1991-09-16 16:40:27 linus Exp $
+# $Id: Makefile,v 35.5 1991-09-16 18:02:02 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,15 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.4 1991-09-16 16:40:27 linus Exp $
+# $Id: Makefile,v 35.5 1991-09-16 18:02:02 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.4  1991-09-16 16:40:27  linus
+# Revision 35.5  1991-09-16 18:02:02  linus
+# * M ci     Makefile
+# * A ci     makealfa.l
+# =====================================================
+# makealfa.l created to make the alfa version of lyskom.elc
+#
+# Revision 35.4  1991/09/16  16:40:27  linus
 # alfa talar om att det {r alfa i versionsnumret.
 #
 # Revision 35.3  1991/09/15  10:07:04  linus
@@ -36,6 +42,9 @@
 # Revision 35.1  1991/08/21  15:44:47  linus
 # Lagt till lyskom-clientversion-long
 #
+
+include Topdir.make
+include $(TOPDIR)/scripts/import.make
 
 RM = /usr/gnu/bin/rm -vf
 EMACS-BATCH = emacs -batch -l /usr/local/lib/elisp/bytecomp
@@ -65,14 +74,18 @@ PARTS-ELC = $(SRC-ELC)
 
 all: lyskom.elc
 
-alfa: lyskom.elc
-	sed 's/^\(.*defconst.*clientversion[^"]*\)"\([^"]*\)"/\1"\2.alfa"/' < lyskom.elc > /usr/local/src/2kom/lyskom.elc
+LEX = flex -8
+alfa: lyskom.elc makealfa
+	./makealfa < lyskom.elc > /usr/local/src/2kom/lyskom.elc
 
 lyskom.elc: $(HEADER-ELC) $(PARTS-ELC)
 	cat $(HEADER-ELC) $(PARTS-ELC) > lyskom.elc
 
 lyskom.el: $(HEADER-EL) $(PARTS-EL)
 	cat $(HEADER-EL) $(PARTS-EL) > lyskom.el
+
+makealfa: makealfa.c
+	$(CC) -o makealfa $(CFLAGS) makealfa.c -ll
 
 
 elc-files: $(HEADER-ELC) $(PARTS-ELC) 
@@ -120,11 +133,11 @@ install: lyskom.elc lyskom.el doc
 	)
 
 clean:
-	$(RM) *~ *.elc core
+	$(RM) *~ *.elc $(GENERIC-CLEAN) makealfa.c
 	-$(RM) -r distribution
 
 distclean: clean
-	$(RM) TAGS Topdir.make */Topdir.make
+	$(RM) $(GENERIC-DIST-CLEAN) makealfa Topdir.make */Topdir.make
 
 
 distrib distribution: lyskom.el lyskom.elc doc
