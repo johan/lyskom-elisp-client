@@ -1,0 +1,72 @@
+
+                       Nyheter i lyskom.el 0.43
+                       ========================
+
+Version 0.43.3 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.43.3.el.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.43.3.
+
+Det viktiga med denna release är att klienten återigen går att köra
+under GNU Emacs 19.28.
+
+
+* Fitjurs och förbättringar
+
+** Man kan använda update-file-autoloads på lyskom.el. Tror jag.
+
+** När klienten frågar efter namn kan man alltid ange sessionsnummer
+   genom att skriva "s <nuffra>". Klienten tar det som att man anger
+   namnet på den person som för tillfället är inloggad i sessionen.
+
+** Flaggan kom-permissive-completion finns efter personlig begäran.
+   Genom att sätta den så begränsar inte elispklienten personnamn man
+   matar in till de som är inloggade när den läser sessionsnummer
+   eller namn för till exempel personliga meddelanden eller liknande. 
+
+** Klienten scrollar bufferten till mottagarlistan när den frågar om
+   alla mottagare är relevanta.
+
+** Hooken lyskom-view-text-hook anropas innan en text visas. Vid
+   anropet är variabeln text bundet till den text-mass som motsvarar
+   inlägget och text-stat är bundet till inläggets text-stat. 
+
+
+* Bugfixar
+
+** Elispklienten går att köra och kompilera under Emacs 19.28 och
+   kanske vissa tidigare versioner.
+
+** Tab-completion av vissa namn fungerade mycket dåligt. Det har
+   blivit bättre nu.
+
+** Det går att göra kommentarer till flera texter samtidigt igen.
+
+** Återse alla av en viss person fungerar bättre.
+
+
+
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Man kan få "Marker does not point anywhere" ibland. Det går att
+   reproducera under Emacs 19.28 om man trycker rätt tangenter med
+   rätt timing. Om man får det här felet är det en god idé att trycka
+   'R' så man slipper så många följdfel som möjligt. Den här buggen
+   kommer att fixas så fort den är lokaliserad.
+
+** Om man gör "Endast" kan klienten bete sig konstigt en kort stund,
+   och ibland får man inte läsa så många texter som man ville. Denna
+   bug har hängt med så länge som kommandot har funnits, men kommer 
+   antagligen att fixas till viss del (så man får läsa rätt antal
+   texter) så fort som jag har tid över. Don't hold your breath, med
+   andra ord.
+
+** Elispklienten fungerar inte under XEmacs eller Emacs 18. Frivilliga
+   att anpassa klienten får gärna anmäla sitt intresse till
+   davidk@lysator.liu.se eller byers@lysator.liu.se eller skicka brev
+   till Elispklientutvecklarnas interna möte i LysKOM på
+   kom.lysator.liu.se
+
+** Se även förra utgåvan av denna fil.
