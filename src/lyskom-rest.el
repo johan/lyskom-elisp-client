@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.26 1996-02-21 19:48:07 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.27 1996-02-27 23:15:24 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.26 1996-02-21 19:48:07 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.27 1996-02-27 23:15:24 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2042,9 +2042,12 @@ then a newline is printed after the name instead."
 (defun lyskom-visible-membership (membership)
   "Is this conference visible?
 Return t is MEMBERSHIPs priority is higher than or equal to
-lyskom-session-priority and nil otherwise."
-  (>= (membership->priority membership)
-      lyskom-session-priority))
+lyskom-session-priority and nil otherwise.
+
+If MEMBERSHIPs prioriy is 0, it always returns nil."
+  (let ((priority (membership->priority membership)))
+    (and (> priority 0)
+	 (>= priority lyskom-session-priority))))
 
 ;;; The filter.
 

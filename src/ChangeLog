@@ -1,14 +1,66 @@
+Tue Feb 27 03:26:01 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* startup.el (lyskom-clear-vars): Gjorde lyskom-last-group-message
+ 	recipient och lyskom-last-personal-message-sender buffertlokala.
+
 Mon Feb 26 12:31:30 1996  David Byers  <byers@lysator.liu.se>
 
 	* completing-read.el: Fixade bug i inläsning av mötesnamn och
 	mötesstatus.
+
+Sat Feb 24 20:00:45 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-visible-membership): Gör så att möten med
+	prioritet 0 alltid är inaktiva.
+
+Sat Feb 24 20:00:45 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-visible-membership): Gör så att möten med
+	prioritet 0 alltid är inaktiva.
 
 Fri Feb 23 13:27:46 1996  David Byers  <byers@lysator.liu.se>
 
 	* lyskom-buttons.el: Lade till lyskom-add-button-action och
  	lyskom-set-default-action
 
+Fri Feb 23 03:17:25 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* english-strings.el,swedish-strings.el (lyskom-mode-map): Band
+ 	mouse-3 till kom-mouse-null.
+
+	* lyskom-buttons.el (lyskom-mouse-3): Tog bort read-event-anropet.
+	(kom-mouse-null): Ny funktion.
+
+	* startup.el (lyskom-mode): Skrev om kommandobeskrivningen i
+ 	dokumentation.
+
+Wed Feb 21 03:34:34 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* commands2.el (kom-send-message): Stavfel.
+
+	* vars.el.in (kom-server-aliases): Bytte namn från
+ 	lyskom-server-aliases.
+
+Tue Feb 20 13:28:01 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* review.el (lyskom-get-texts-by-to): Återställde den gamla koden
+ 	så länge.
+
+	* vars.el.in: Putsade på färgvalet.
+
 Sun Feb 18 06:30:46 1996  David K}gedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-prefetch-and-print-prompt): Lätt
+	optimering.
+
+	* macros.el (when): Fugnerade inte.
+
+	* vars.el.in (lyskom-is-saving): Ny variabel.
+
+	* async.el (lyskom-parse-async): Sätt den.
+
+	* parse.el (lyskom-parse-unparsed): Återställ mode-line-process
+	efter att server slutat spara. Tog bort lite annan kod.
 
 	* services.el (blocking-do): Återställ lyskom-quit-flag på rätt
  	sätt.

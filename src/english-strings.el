@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.17 1996-02-21 19:48:00 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.18 1996-02-27 23:15:12 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.17 1996-02-21 19:48:00 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.18 1996-02-27 23:15:12 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -999,11 +999,12 @@ Cf. paragraph-start.")
 
   (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
   (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
+  (define-key lyskom-mode-map [mouse-3] 'kom-mouse-null)
   (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
   (define-key lyskom-mode-map "\M-f" 'kom-next-link)
   (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
 
-  ; These should be first in order to be last in the menu of alternatives.
+  ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-mode-map "A?" 'lyskom-help)
   (define-key lyskom-mode-map "r?" 'lyskom-help)
   (define-key lyskom-mode-map "f?" 'lyskom-help)
@@ -1093,7 +1094,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "sa" 'kom-save-text)
 
   (define-key lyskom-mode-map "\C-?" 'scroll-down)
-)
+  )
 
 
 ;;;==============================================================
