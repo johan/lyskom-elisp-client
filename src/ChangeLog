@@ -1,3 +1,14 @@
+Mon Mar  3 20:43:28 1997  David Kågedal  <kg@infovav.se>
+
+	* compatibility.el (lyskom-gnu-keysym): Använd tecken istället för
+ 	symboler för åäö.
+
+Sat Mar  1 10:55:04 1997  David Kågedal  <kg@infovav.se>
+
+	* async.el (lyskom-handle-as-personal-message): Använd rätt värde
+ 	på kom-pop-personal-messages och se till att meddelande-bufferten
+ 	scrollar till slutet.
+
 Tue Feb 18 13:30:34 1997  David Byers  <davby@sen22.ida.liu.se>
 
 	* completing-read.el (lyskom-complete-string-close-parens-2):
