@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.316 2003-12-11 22:39:01 byers Exp $
+;;;;; $Id: english-strings.el,v 44.317 2003-12-17 22:34:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.316 2003-12-11 22:39:01 byers Exp $"))
+              "$Id: english-strings.el,v 44.317 2003-12-17 22:34:15 byers Exp $"))
 
 
 ;;; ================================================================
@@ -660,7 +660,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M has a notice on his/her mailbox:\n")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
-    (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (created by %#2M)\n")
+    (status-aux-item . "Unknown property:              %11#1s%#3s (created by %#2M)\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (conf-mx-refuse-import . "Refuse import of:                        %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
@@ -1392,7 +1392,7 @@ Text:
     (conf-popup-title . "Conference %#1s")
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
-    (aux-popup-title  . "Auxiliary information")
+    (aux-popup-title  . "Property")
     (timestamp-popup-title . "Timestamp %#1s")
     (recpt-type-popup-title . "Recipient type: %#1s")
     (add-recpt-button-text . "[Add...]")
@@ -1562,7 +1562,7 @@ On since %#8s%#9s")
     (world-readable-text-aux . "The text can be read without logging on")
     (world-readable-text-edit-aux . "Make the text readable without logging on")
 
-    (cant-get-aux-item . "Can't find auxiliary information\n")
+    (cant-get-aux-item . "Can't find property\n")
     (aux-item-no-info . "No information available\n")
     (aux-item-info . "\
 Number:        %#1d %#6s
@@ -1582,7 +1582,7 @@ Contents:     \"%#9s\"
     (no-more-inheritance . "Inherit limit reached; will not be further inherited")
     (inherit-steps . "%#1d steps")
 
-    (aux-item-for . "Auxiliary information for ")
+    (aux-item-for . "Properties for ")
     (aux-item-for-conference-no . "conference <%#1m> %#1M")
     (aux-item-for-text-no . "text %#1n")
     (aux-item-for-server . "the server")
@@ -1841,7 +1841,7 @@ read from the server. You can remove the variables from the server by
 giving the command \"Save options\".\n\n")
 
 
-    (unknown-aux-item . "Unknown auxiliary information")
+    (unknown-aux-item . "Unknown property")
     (text-header-aux-item . "%#1s: <%#2d> \"%#3s\" %#4s")
 
     (aux-content-type-name . "Content type")
@@ -2240,7 +2240,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-set-presentation     . "Add presentation")
     (kom-remove-presentation  . "Remove presentation")
     (kom-set-motd-text        . "Add notice")
-    (kom-create-aux-item      . "Create auxiliary information")
+    (kom-create-aux-item      . "Create propoerty")
     (kom-status-server        . "Status (of) server")
     (kom-add-server-faq       . "Add server FAQ")
     (kom-del-server-faq       . "Remove server FAQ")
@@ -2430,12 +2430,24 @@ Change privileges for %#1P (%#1p)...")
     (conference . "Conference")
     (other     . "Other")
     (person    . "User")
+    (server    . "Server")
     (marks     . "Marks")
+    (filters   . "Filters")
     (move      . "Go")
     (info      . "About")
     (send      . "Send message")
+    (review    . "Review")
+    (unread    . "Unread")
     (receivers . "Receivers")
     (commented . "Commented")
+    (aux-items . "Properties")
+    (conf-admin . "Conference admin")
+    (server-admin . "Server admin")
+    (membership . "Membership")
+    (pers-admin . "User admin")
+    (autoreply . "Auto-reply")
+    (remote-control . "Remote control")
+
     (kom-edit-send . "Send")
     (kom-edit-send-anonymous . "Send anonymously")
     (kom-edit-quit . "Throw away") 
@@ -4006,7 +4018,7 @@ up menus.")
   shown with a different format than normal text.")
     (kom-edit-hide-add-button-doc . "\
   When this is on, an [Add...] button will be shown after the list of
-  recipients and auxiliary information when writing a new text.")
+  recipients and properties when writing a new text.")
     (kom-format-html-authors-doc . "\
   This setting controls which authors' HTML messages that the client will
   attempt to format.")
@@ -4477,8 +4489,8 @@ up menus.")
     (error-45 . "Temorary lossage. Please try again later")
     (error-46 . "Sending huge messages to the server is not a nice thing to do")
     (error-47 . "Anonymous texts are not accepted by all recipients")
-    (error-48 . "Invalid auxiliary information")
-    (error-49 . "Change of auxiliary information not permitted")
+    (error-48 . "Invalid property")
+    (error-49 . "Change of property not permitted")
     (error-50 . "Unknown asynchronous message")
     (error-51 . "Internal server error")
     (error-52 . "Feature disabled in the server")

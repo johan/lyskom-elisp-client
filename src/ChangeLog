@@ -1,3 +1,13 @@
+2003-12-17  David Byers  <byers@lysator.liu.se>
+
+	Update menus:
+	* utilities.el (lyskom-gensym): New function (it really seems that
+	elisp doesn't have a built-in gensym function).
+
+	* menus.el (lyskom-define-menu-gnu): Use gensym to generate
+	separator symbols (so we can say just (hline) in the menu spec).
+	(lyskom-menu-template): All-new menu definitions.
+
 2003-12-16  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands2.el (kom-change-language): Reverted my improper prefix

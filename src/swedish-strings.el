@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.357 2003-12-11 22:39:01 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.358 2003-12-17 22:34:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.357 2003-12-11 22:39:01 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.358 2003-12-17 22:34:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2458,13 +2458,24 @@ Nuvarande rättigheter för %#1P (%#1p):
     (write     . "Skriv")
     (conference . "Möte")
     (person    . "Person")
+    (server    . "Server")
     (other     . "Annat")
-    (marks     . "Markeringar")
     (move      . "Gå")
     (info      . "Om")
     (send      . "Sänd")
+    (unread    . "Markera oläst")
+    (review    . "Återse inlägg")
+    (marks     . "Markerade inlägg")
+    (filters   . "Filter")
     (receivers . "Mottagare")
     (commented . "Kommenterar")
+    (aux-items . "Tilläggsinformation")
+    (conf-admin . "Mötesadministration")
+    (server-admin . "Serveradministration")
+    (membership . "Medlemskap")
+    (pers-admin . "Personadministration")
+    (autoreply . "Automatsvar")
+    (remote-control . "Fjärrstyrning")
     (kom-edit-send . "Skicka in")
     (kom-edit-send-anonymous . "Skicka anonymt")
     (kom-edit-quit . "Kasta bort") 
