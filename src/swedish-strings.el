@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 39.0 1996-03-14 18:18:43 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 39.1 1996-03-17 17:45:33 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 39.0 1996-03-14 18:18:43 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 39.1 1996-03-17 17:45:33 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -684,6 +684,8 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
     (could-not-create-area . "Kunde ej skapa texten.\n")
     (could-not-set-user-area . "Kunde ej st\344lla om user-arean. Servern s\344ger felmeddelande: %#1d\n")
     (you-dont-exist . "Du finns inte.\n")
+    (error-in-options . "Det fanns ett fel i en av dina variabler (%#1s)
+Den sätts till nil istället. Skicka en bugrapport.\n")
 
     ; From elib-string.el:
     ; No entries.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 39.0 1996-03-14 18:17:40 davidk Exp $
+;;;;; $Id: flags.el,v 39.1 1996-03-17 17:45:30 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 39.0 1996-03-14 18:17:40 davidk Exp $\n"))
+	      "$Id: flags.el,v 39.1 1996-03-17 17:45:30 davidk Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -303,14 +303,14 @@ If successful then set the buffer not-modified. Else print a warning."
 		    (setq name (concat "UNK-" gname))
 		    (setq lyskom-global-non-boolean-variables
 			  (cons name lyskom-global-non-boolean-variables))))
-		(set (intern name) (car (read-from-string value))))))
+		(lyskom-set-var-from-string name value))))
 	   ((= r elisp-no)
 	    (let ((txt working)
 		  name value)
 	      (while (> (length txt) 2)
 		(setq name (lyskom-read-options-eval-get-holerith))
 		(setq value (lyskom-read-options-eval-get-holerith))
-		(set (intern name) (car (read-from-string value))))))
+		(lyskom-set-var-from-string name value))))
 	   (t
 	    (let ((pos lyskom-other-clients-user-areas))
 	      (while (and pos
@@ -342,3 +342,14 @@ If successful then set the buffer not-modified. Else print a warning."
     (prog1
 	(substring txt start (+ start len))
       (setq txt (substring txt (+ start len))))))
+
+(defun lyskom-set-var-from-string (var string)
+  "This is a wrapper aroud read-from-string.
+It returns nil, and writes a message when an error occurs."
+  (set (intern var)
+       (car
+	(condition-case err
+	    (read-from-string string)
+	  (invalid-read-syntax
+	   (lyskom-format-insert (lyskom-get-string 'error-in-options) var)
+	   nil)))))
