@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.16 1996-10-11 01:07:13 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.17 1996-10-11 11:19:02 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.16 1996-10-11 01:07:13 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.17 1996-10-11 11:19:02 nisse Exp $\n"))
 
 
 ;;;; ================================================================
@@ -154,7 +154,7 @@ assoc list."
 
 (defun lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (lyskom-get-string command 'command)) 
+  (lyskom-get-string command 'lyskom-command)) 
 
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
@@ -176,7 +176,7 @@ assoc list."
   (let* ((completion-ignore-case t)
 	 (alternatives (mapcar (function (lambda (pair)
 					   (cons (cdr pair) (car pair))))
-			       (lyskom-get-strings lyskom-commands 'command)))
+			       (lyskom-get-strings lyskom-commands 'lyskom-command)))
 	 (name (completing-read (lyskom-get-string 'extended-command)
 				alternatives 
 				;; lyskom-is-administrator is buffer-local and
@@ -607,10 +607,7 @@ CONF can be a a conf-stat or a string."
 			    "")
 			  name
 			  (make-string 27 ? ))
-			 0 27))
-	(if (not kom-emacs-knows-iso-8859-1)
-	    (setq mode-line-conf-name
-		  (iso-8859-1-to-swascii mode-line-conf-name))))
+			 0 27)))
       
       (if (zerop total-unread)
 	  (setq lyskom-sessions-with-unread
@@ -716,9 +713,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
     (save-excursion
       (goto-char (point-max))
       (let ((inhibit-read-only t))
-	(insert (if kom-emacs-knows-iso-8859-1
-		    string
-		  (iso-8859-1-to-swascii string))))
+	(insert string))
       (lyskom-trim-buffer))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window was-at-max)
@@ -732,9 +727,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
 The text is converted according to the value of
 kom-emacs-knows-iso-8859-1."
   (let ((buffer-read-only nil))
-    (insert (if kom-emacs-knows-iso-8859-1
-                string
-              (iso-8859-1-to-swascii string))))
+    (insert string))
   (lyskom-trim-buffer))  
 
 
@@ -768,9 +761,7 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
       (goto-char (point-max))
       (beginning-of-line)
       (let ((inhibit-read-only t))
-	(insert (if kom-emacs-knows-iso-8859-1
-		    string
-		  (iso-8859-1-to-swascii string))))
+	(insert string))
       (goto-char oldpoint))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window
@@ -785,18 +776,14 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
   "Like message, but converts iso-8859/1 texts to swascii if necessary.
 Args: FORMAT-STRING &rest ARGS"
   (let ((str (apply 'format format-string args)))
-    (if kom-emacs-knows-iso-8859-1
-	(message "%s" str)
-      (message "%s" (iso-8859-1-to-swascii str)))))
+    (message "%s" str)))
 
 
 (defun lyskom-error (format-string &rest args)
   "Like error, but converts iso-8859/1 texts to swascii if necessary.
 Args: FORMAT-STRING &rest ARGS"
   (let ((str (apply 'format format-string args)))
-    (if kom-emacs-knows-iso-8859-1
-	(error "%s" str)
-      (error "%s" (iso-8859-1-to-swascii str)))))
+    (error "%s" str)))
 
 
 (defun lyskom-set-last-viewed ()
@@ -1484,15 +1471,10 @@ The name of the file is read using the minibuffer and the default is kom-text."
 		(forward-text arg)
 		(beginning-of-line)
 		(point)))
-	  (name (read-file-name 
-		 (if kom-emacs-knows-iso-8859-1
-		     (lyskom-format 'save-on-file-q
+	  (name (read-file-name
+		 (lyskom-format 'save-on-file-q
 				    (file-name-nondirectory
 				     lyskom-saved-file-name))
-		   (iso-8859-1-to-swascii 
-		    (lyskom-format 'save-on-file-q
-				   (file-name-nondirectory
-				    lyskom-saved-file-name))))
 		 (file-name-directory lyskom-saved-file-name)
 		 lyskom-saved-file-name
 		 nil)))
@@ -1701,10 +1683,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	      ;; Insert the new prompt
 	      (goto-char (point-max))
 	      (beginning-of-line)
-	      (insert-string
-	       (if kom-emacs-knows-iso-8859-1
-		   prompt-text
-		 (iso-8859-1-to-swascii prompt-text)))
+	      (insert-string prompt-text)
 	      ;; Delete the old prompt
 	      (if lyskom-current-prompt
 		  (delete-region (point) (point-max))))
@@ -2044,9 +2023,7 @@ If quit is typed it executes lyskom-end-of-command."
 
 (defun lyskom-read-string (prompt &optional initial)
   "Read a string from the minibuffer. Arguments: PROMPT INITIAL"
-  (read-string (if kom-emacs-knows-iso-8859-1
-		   prompt
-		 (iso-8859-1-to-swascii prompt))
+  (read-string prompt
 	       initial))
 
 
@@ -2493,41 +2470,35 @@ from the value of kom-tell-phrases-internal."
 	  (append '("" lyskom-unread-mode-line) global-mode-string)))
 (setq lyskom-unread-mode-line
       (list (list 'lyskom-sessions-with-unread 
-		  (let ((str (lyskom-get-string 'mode-line-unread)))
-		    (if kom-emacs-knows-iso-8859-1
-			str
-		      (iso-8859-1-to-swascii str))))
+		  (lyskom-get-string 'mode-line-unread))
 	    (list 'lyskom-sessions-with-unread-letters
-		  (let ((str (lyskom-get-string 'mode-line-letters)))
-		    (if kom-emacs-knows-iso-8859-1
-			str
-		      (iso-8859-1-to-swascii str))))
+		  (lyskom-get-string 'mode-line-letters))
 	    " "))
 		 
 
 
 ;;; Formely lyskom-swascii-commands
-(lyskom-define-language 'command 'swascii
-  (mapcar 
-   (function (lambda (pair)
-	       (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-   (lyskom-get-strings lyskom-commands 'command)))
+;;(lyskom-define-language 'lyskom-command 'swascii
+;;  (mapcar 
+;;   (function (lambda (pair)
+;;		 (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+;;   (lyskom-get-strings lyskom-commands 'lyskom-command)))
 
 ;;(setq lyskom-swascii-header-separator 
 ;;	(iso-8859-1-to-swascii lyskom-header-separator))
 ;;(setq lyskom-swascii-header-subject
 ;;	(iso-8859-1-to-swascii lyskom-header-subject))
 
-(setq lyskom-swascii-filter-actions
-      (mapcar 
-       (function (lambda (pair)
-		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-       lyskom-filter-actions))
-(setq lyskom-swascii-filter-what
-      (mapcar 
-       (function (lambda (pair)
-		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
-       lyskom-filter-what))
+;;(setq lyskom-swascii-filter-actions
+;;	(mapcar 
+;;	 (function (lambda (pair)
+;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+;;	 lyskom-filter-actions))
+;;(setq lyskom-swascii-filter-what
+;;	(mapcar 
+;;	 (function (lambda (pair)
+;;		     (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
+;;	 lyskom-filter-what))
 
 
 ;; Setup the queue priorities
