@@ -8,6 +8,11 @@
 ;;;; Author: ceder
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: komtypes.el,v 35.1 1991-08-21 15:45:04 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                            conf-no-list
 

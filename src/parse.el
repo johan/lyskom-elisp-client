@@ -8,6 +8,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: parse.el,v 35.1 1991-08-21 15:45:11 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;        Errors that are handled of use while parsing
 

@@ -1,6 +1,14 @@
 ;;; ================================================================
 ;;;              Prioritera medlemsskap - Prioritize membership
 
+
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: prioritize.el,v 35.1 1991-08-21 15:45:14 linus Exp $\n"))
+
+
+
+
 ;;; Author: Per Cederqvist and Linus Tolke (some code from kom-membership)
 
 

@@ -10,6 +10,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: prefetch.el,v 35.1 1991-08-21 15:45:13 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                          Variables.
 

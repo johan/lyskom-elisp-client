@@ -11,6 +11,10 @@
 ;;;; Entry:  Inge Wallin
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: async.el,v 35.1 1991-08-21 15:44:49 linus Exp $\n"))
+
 
 (defun lyskom-parse-async (tokens buffer)
   "Parse an asynchronous message from the server.

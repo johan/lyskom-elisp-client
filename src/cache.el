@@ -9,6 +9,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: cache.el,v 35.1 1991-08-21 15:44:50 linus Exp $\n"))
+
+
 
 ;;; ================================================================
 ;;;                     Conf-stat cache.

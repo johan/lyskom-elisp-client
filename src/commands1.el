@@ -7,6 +7,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: commands1.el,v 35.1 1991-08-21 15:44:53 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                  F} uppmuntran - Get appreciation 
 

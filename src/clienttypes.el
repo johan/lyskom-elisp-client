@@ -11,6 +11,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: clienttypes.el,v 35.1 1991-08-21 15:44:51 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                            read-info
 

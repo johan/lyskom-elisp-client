@@ -5,6 +5,11 @@
 ;;;; and parsing the result.
 ;;;;
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: services.el,v 35.1 1991-08-21 15:45:17 linus Exp $\n"))
+
+
 ;;; ================================================================
 ;;;                     Requests for services
 

@@ -10,6 +10,11 @@
 ;;;;
 
 
+(setq lyskom-clientversion-long 
+      (concat lyskom-clientversion-long
+	      "$Id: swedish-strings.el,v 35.1 1991-08-21 15:45:20 linus Exp $\n"))
+
+
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
   "*String to separate headers from text body.")
 
