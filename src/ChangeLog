@@ -1,5 +1,8 @@
 Fri Jul 11 09:17:28 1997  David Byers  <davby@ida.liu.se>
 
+	* compatibility.el (char-to-int): Function, not subst, and things
+ 	work better.
+
 	* english-strings.el,swedish-strings.el (lyskom-custom-strings):
  	Lade till kom-ispell-dictionary-doc och kom-ispell-dictionary-tag.
 

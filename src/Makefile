@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.13 1997-07-07 15:25:10 byers Exp $
+# $Id: Makefile,v 44.14 1997-07-11 09:54:54 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.13 1997-07-07 15:25:10 byers Exp $
+# $Id: Makefile,v 44.14 1997-07-11 09:54:54 byers Exp $
 #
 
 
@@ -37,6 +37,7 @@
 #
 
 CLIENTVERSION = 0.45-beta
+DOCFILES=NEWS-0.45 MIGRATION-0.44-0.45
 
 FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 LISPDIR = /usr/gnu/share/emacs/site-lisp
@@ -146,6 +147,9 @@ release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
 		cp distribution-$$i lyskom-$(CLIENTVERSION)/$$i ; \
+	done
+	for i in $(DOCFILES) ; do \
+		cp ../doc/$$i lyskom-$(CLIENTVERSION)/$$i ; \
 	done
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar
