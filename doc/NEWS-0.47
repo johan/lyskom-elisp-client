@@ -89,9 +89,14 @@
    optimerade för antingen vit eller svart bakgrund. Det går att
    ställa enstaka färger i kom-login-hook om man så önskar.
 
-** Inledningsvis så får man läsa om alla FAQer man redan har läst
-   eftersom läsmarkeringen av en FAQ inte fungerar som andra
-   läsmarkeringar. Lev med det. Det går över.
+** FAQ-hanteringen har ändrats en del. Bland annat kommer du att få
+   läsa om alla FAQ:er en gång på grund av hur FAQ-läsmarkeringar
+   fungerar numera - information om vilka mötes-FAQ:er du läst sparas
+   i komservern, och varje gång det kommer en ny FAQ till ett möte du
+   är med i, kommer du att meddelas om det nästa gång du går in där.
+   Du kommer alltså inte behöva läsa om alla FAQ:er varje gång du
+   startar om klienten, men just första gången kan det kännas tradigt.
+   Lev med det.
 
 ** De alternativa utseendena som man kan ha på inläggstext,
    streckrader och första raden sträcker sig bara till textens slut
@@ -103,7 +108,11 @@
    Elispklienten detekterar om den finns och undviker dock att ladda
    den.
 
-** Många hookvariabler har bytt namn från "lyskom-..." till "kom-...". 
+** Förr hette många hookvariabler (oriktigt) "lyskom-..." i stället
+   för "kom-...". Använder du någon av dessa som slutar fungera, är
+   det förmodligen bara att byta prefix. Tanken är att kod användaren
+   ska eller vill peta i har prefixet "kom-"; "lyskom-..." är interna
+   klientfunktioner som löper större risk för inkompatibla ändringar.
 
 
 * Funktionalitet
@@ -111,15 +120,18 @@
 ** Språkbyten
 
 *** Nu ändrar Ändra språk inte menyer eller tangentbindningar (men
-    allting annat). Om man anger prefixargument till Ändra språk så
-    ändras alla språkberoende inställningar.
+    allting annat). Om man i stället kör kommandot med prefixargument
+    C-u, det vill säga C-u x Ändra språk, så ändras alla språkberoende
+    inställningar inklusive tangentbindningar.
 
 *** Klienten tittar på omgivningsvariablerna KOMLANGUAGE och LANG (i
-    den ordningen) för att bestämma defaultspråk.
+    den ordningen) för att bestämma defaultspråk. Lämpliga värden att
+    sätta variabeln till är sv eller en.
 
 *** Första gången man loggar in så sätts språket globalt
-    (tangentmappningar och allt) baserat på kom-default-language. Vid
-    efterföljande inloggningar så sker detta inte.
+    (tangentmappningar och allt) baserat på kom-default-language,
+    vilken kan ha värden som 'sv eller 'en. Vid efterföljande
+    inloggningar så sker detta inte.
 
 *** Defaultspråk har ändrats från svenska till engelska.
 
@@ -136,12 +148,14 @@
 
         Inget prefixargument        Kommandoberoende; oftast inlägget
                                     under markören (inte senast lästa
-                                    inlägg). 
+                                    inlägg).
         Positivt prefixargument     Inlägget N steg nedåt i bufferten.
         Negativt prefixargument     Inlägget N steg uppåt i bufferten.
-        Noll                        Prompta efter inlägg.
+        Noll                        Prompta efter inläggsnummer.
         N upprepningar av C-u       Arbeta på inlägget N steg upp i
-                                    kommentarskedjan.
+                                    kommentarskedjan. Om det pekar ut
+                                    mer än ett inlägg får du en prompt
+                                    med det första som skönsvärde.
 
     Betydelsen kan konfigureras för varje enskilt kommando genom
     variabeln lyskom-pick-text-no-strategy. Beteendet som gäller i
@@ -154,10 +168,16 @@
                       (setq lyskom-pick-text-no-strategy
                             lyskom-old-farts-text-prompt-strategy)))
 
-*** Man kan fortfarande konfigurera vilka kommandon som *alltid*
-    promptar efter inläggsnummer på samma sätt som i 0.46.2.
+*** Man kan med mycket god precision konfigurera på vilket sätt man
+    vill ha prefixargument översättas till inläggsnummer och vilket
+    skönsvärde man vill få, då det promptas efter inläggsnummer. Kika
+    på dokumentationen för variabeln lyskom-pick-text-no-strategy.
 
-
+*** Inläsningen av inläggsnummer till alla kommandon har gjorts mer
+    regelbunden. Man kan ställa in per kommando om kommandot alltid
+    skall fråga efter inläggsnummer eller använda strategierna enligt
+    ovan. (Nytt från 0.46.2 och anpassat efter den ovanstående nyheten
+    i 0.47-BETA-3.)
 
 ** Diverse
 
@@ -165,8 +185,10 @@
     beräknas automatiskt utifrån normal bakgrundsfärg. Denna funktion
     kan givetvis stängas av.
 
-*** Status (för) session visar nu information även för utloggade
-    personer.
+*** Status (för) session visar nu när en person loggade ut senast (om
+    personen inte var inloggad -- då det ser ut som förr). Har du i
+    Inställningar för LysKOM bett om att inte tillåta utloggade,
+    slipper du dock även fortsättningsvis besnegla utloggade personer.
 
 *** Gå till nästa möte tar prefixargument på samma sätt som Lista
     nyheter. Positivt prefixargument betyder gå till nästa möte med
@@ -176,7 +198,13 @@
 *** Om man ger prefixargument till Status (för) session så visar
     elispklienten status för den person som har skrivit inlägget man
     angav i prefixargumentet (prefixargumentet används på samma sätt
-    som för kommandon som behandlar inlägg).
+    som för alla vanliga kommandon som behandlar inlägg).
+
+*** Prefixargument till "Återse presentation" anger ett inlägg vars
+    författare man vill se presentation för på motsvarande vis.
+
+*** Prefixargument till "Status (för) person" anger ett inlägg vars
+    författare man vill se användarstatus för på motsvarande vis.
 
 *** Tangenterna * och = i inläggsskrivarbufferten fungerar på samma
     sätt som i LysKOM-bufferten. TAB och M-TAB kan användas för att
@@ -195,15 +223,15 @@
     inläggsnummer.
 
 *** Standardbeteendet för "Lista (med) regexpar" (l r) är nu att inte
-    göra skillnad på gemener och versaler. Ges prefixargument anses
-    det som förut vara skillnad.
+    göra skillnad på gemener och versaler. Ges prefixargument C-u,
+    anses det som förut vara skillnad.
 
 *** DSKOM och LysCOM har tillkommit i listan över LysKOM-servrar.
     CSD-KOM:s adress har uppdaterats, MedioKOM är borta och HelKOM
     kallas nu HesaKOM.
 
 *** Varje prompt har en tidsstämpel som visas om man högerklickar på
-    prompten.
+    prompten (och som även kan kopieras till klippbuffern).
 
 *** "Kontrollera (om person är) medlem (i möte)" skiljer på aktiva och
     passiva medlemskap.
@@ -224,32 +252,17 @@
 *** Namnsdagslistan har uppdaterats för att följa svenska
     språknämndens nya namnlängd.
 
-*** Inläsningen av inläggsnummer till alla kommandon har gjorts mer
-    regelbunden. Man kan ställa in per kommando om kommandot skall
-    fråga efter inläggsnummer eller gissa.
-
-*** Med prefixargument hoppar "Lista ärenden" (l ä) över inlägg som
-    har ett ärende som redan har listats, dvs endast unika ärenden
+*** Med prefixargument C-u hoppar "Lista ärenden" (C-u l ä) över
+    inlägg vars ärenderad redan har listats, dvs endast unika ärenden
     visas.
 
 *** Man kan skapa osynliga sessioner. Eftersom jag tycker att detta är
-    asocialt så tänker jag inte tala om hur man gör :-)
+    asocialt så tänker jag inte tala om hur man gör. :-)
 
 *** Nya val i menyn vid högerklick på inläggsnummer: "Återse träd",
     "Återse alla kommentarer", "Återse alla kommentarer rekursivt"
     (kallades förut "Återse träd"), "Fotnotera", "Anmärk" och "Kopiera
     inläggsnummer". 
-
-*** Ny funktion: lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1.
-    Denna kan läggas i kom-view-text-hook för att automagiskt
-    skriva om }{| till åäö i lästa inlägg. (Importerade e-brev
-    undantas från konverterering.)
-
-*** Prefixargument till "Återse presentation" anger ett inlägg vars
-    författare man vill se presentation för.
-
-*** Prefixargument till "Status (för) person" anger ett inlägg vars
-    författare man vill se presentation för.
 
 *** Det finns ytterligare några uppsättningar färger att välja mellan.
 
@@ -354,16 +367,16 @@
     påminna om flytten.
 
 *** Tangenten v har blivit prefix för alla vilka-relaterade kommandon.
-    Kommandot som förr låg på v ligger nu på vi.
+    Kommandot som förr låg på v ligger nu på v i.
 
-*** "Återse brevhuvud" finns nu på åb.
+*** "Återse brevhuvud" finns nu på å b.
 
 
 ** Symboliska markeringar
 
 *** Man kan ha symboliska markeringar genom att definiera att en viss
     markering har ett visst namn. Ange namnen via Inställningar (för)
-    LysKOM.
+    LysKOM eller när du skapar markeringen.
 
 *** Man kan få elispklienten att fråga efter nya markeringsnamn när
     man markerar inlägg (kom-default-mark).
@@ -425,7 +438,8 @@
 
 *** kom-text-no-prompts anger hur elispklienten skall fråga efter
     textnummer när man ger kommandon. Den ersätter
-    kom-prompt-for-text-no.
+    kom-prompt-for-text-no. Se även lyskom-read-text-no-prefix-arg och
+    lyskom-pick-text-no-strategy-alist för relevant info.
 
 *** kom-extended-status-information styr om man får se utökad
     information när man visar status för person, möte eller server.
@@ -433,13 +447,14 @@
 *** kom-after-change-conf-hook är en hook som körs precis efter man
     har bytt möte på något vis.
 
-*** Alla hook-variabler vars namn tidigare började på "lyskom" har nu
-    namn som börjar med "kom" (men som i övrigt är samma som det gamla
-    namnet).
-
-
 
 ** Färdigbakade hook-funktioner
+
+*** Funktionen lyskom-view-text-convert-ISO-646-SE-to-ISO-8859-1
+    är avsedd att läggas i kom-view-text-hook för att automagiskt
+    skriva om }{| till åäö i lästa inlägg. (Importerade e-brev
+    undantas dock från konverterering, eftersom smittan inte är lika
+    utbredd i mailvärlden.)
 
 *** Funktionen "kom-read-last-text-hook" är avsedd att stoppas in i
     kom-change-conf-hook. Den gör att man alltid får se endast det
@@ -617,5 +632,3 @@
    semikolon.
 
 ** Klienten är bättre på att välja teckenkodning i Gnu Emacs.
-
-
