@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.91 2000-06-02 14:40:49 byers Exp $
+;;;;; $Id: english-strings.el,v 44.92 2000-06-28 09:19:21 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.91 2000-06-02 14:40:49 byers Exp $"))
+              "$Id: english-strings.el,v 44.92 2000-06-28 09:19:21 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -1422,7 +1422,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-slow-mode            . "Long commands")
     (kom-quick-mode           . "Short commands")
     (kom-send-message         . "Send message")
-    (kom-send-alarm           . "Send alam")
+    (kom-send-alarm           . "Send alarm")
     (kom-create-conf          . "Create conference")
     (kom-delete-conf          . "Delete conference")
     (kom-delete-text          . "Remove text")
@@ -1471,7 +1471,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-view-next-text       . "(Read) next text")
     (kom-who-is-on            . "Who is on") 
     (kom-who-is-on-in-conference
-                              . "Who is on in conference") 
+                              . "Who is on in conference")
     (kom-who-am-i             . "Where (am) i")
     (kom-list-clients	      . "List clients")
     (kom-busy-wait            . "Wait (for news)")
