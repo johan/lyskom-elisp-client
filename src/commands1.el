@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.123 2002-01-02 14:32:41 byers Exp $
+;;;;; $Id: commands1.el,v 44.124 2002-01-13 16:18:29 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.123 2002-01-02 14:32:41 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.124 2002-01-13 16:18:29 davidk Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -348,7 +348,7 @@ as TYPE. If no such misc-info, return NIL"
       (when (equal type (misc-info->type (car list)))
         (setq result (cons (car list) result)))
       (setq list (cdr list)))
-    result))
+    (nreverse result)))
 
 
 ;;; ================================================================
