@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.29 1999-11-19 13:38:33 byers Exp $
+;;;;; $Id: parse.el,v 44.30 1999-11-19 13:50:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.29 1999-11-19 13:38:33 byers Exp $\n"))
+	      "$Id: parse.el,v 44.30 1999-11-19 13:50:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -988,6 +988,8 @@ i.e creates the buffer, sets all markers and pointers."
 	 (concat (if lyskom-debug-communications-to-buffer "" " ")
 		 (buffer-name)
 		 "-replies")))
+  (save-excursion (set-buffer lyskom-unparsed-buffer)
+		  (set-buffer-multibyte nil))
   (setq lyskom-unparsed-marker 
 	(lyskom-save-excursion
 	 (let ((proc lyskom-proc))
