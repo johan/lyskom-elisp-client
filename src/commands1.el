@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.5 1996-09-30 23:38:59 davidk Exp $
+;;;;; $Id: commands1.el,v 44.6 1996-10-03 00:20:25 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.5 1996-09-30 23:38:59 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.6 1996-10-03 00:20:25 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -395,8 +395,6 @@ Returns t if it was possible, otherwise nil."
     (if (= (conf-stat->conf-no pers-conf-stat)
 	   lyskom-pers-no)
 	(progn				; Adding myself
-	  ;;(setq lyskom-last-conf-received
-	  ;;      (1+ lyskom-last-conf-received))
 	  (lyskom-add-membership
 	   (blocking-do 'query-read-texts
 			lyskom-pers-no 
@@ -513,11 +511,6 @@ of the person."
 		 (progn 
 		   (set-read-list-empty lyskom-reading-list)
 		   (setq lyskom-current-conf 0)))
-	     (if self
-		 (progn
-		   (-- lyskom-last-conf-fetched)
-		   (-- lyskom-last-conf-received)
-		   (-- lyskom-last-conf-done)))
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
 					 lyskom-to-do-list))))))
 	   
