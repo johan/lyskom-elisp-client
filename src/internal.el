@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 36.1 1993-04-26 19:37:00 linus Exp $
+;;;;; $Id: internal.el,v 36.2 1993-05-05 03:13:03 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 36.1 1993-04-26 19:37:00 linus Exp $\n"))
+	      "$Id: internal.el,v 36.2 1993-05-05 03:13:03 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -362,7 +362,9 @@ with big strings."
 			    lyskom-debug-communications-to-buffer-buffer))
 	       (save-excursion
 		 (goto-char (point-max))
-		 (insert (concat "Error: " (format "%s" err) "\n")))
+		 (insert "\n" 
+			 (format "%s" process)
+			 (concat "Error: " (format "%s" err))))
 	       (set-buffer (process-buffer process))))
 	 (cond
 	  ((and (string= "writing to process" (car (cdr err)))
@@ -378,10 +380,10 @@ with big strings."
 	  ((and (string= "writing to process" (car (cdr err)))
 		(string= "host is unreachable" (car (cdr (cdr err)))))
 	   ;; The net is currently shaky. We try again in a while.
-	   (lyskom-message (lyskom-format 'shaky-tcp
-				   (make-string (++ tries) ?.)))
+	   (lyskom-message "%s" (lyskom-format 'shaky-tcp
+					       (make-string (++ tries) ?.)))
 	   (sit-for 4)
-	   (lyskom-message (lyskom-get-string 'retrying-tcp))
+	   (lyskom-message "%s" (lyskom-get-string 'retrying-tcp))
 	   t)
 	  
 	  (t
@@ -404,7 +406,9 @@ is sent with each packet. If STRING is longer it is splitted."
 			  lyskom-debug-communications-to-buffer-buffer))
 	     (save-excursion
 	       (goto-char (point-max))
-	       (insert (concat ">>>>>> " string "\n")))
+	       (insert "\n"
+		       (format "%s" process)
+		       (concat ">>>>>> " string)))
 	     (set-buffer (process-buffer process))))
        string)))
    (t
@@ -422,7 +426,9 @@ is sent with each packet. If STRING is longer it is splitted."
 			      lyskom-debug-communications-to-buffer-buffer))
 		 (save-excursion
 		   (goto-char (point-max))
-		   (insert (concat ">>>>>> " string "\n")))
+		   (insert "\n"
+			   (format "%s" process)
+			   (concat ">>>>>> " string)))
 		 (set-buffer (process-buffer process))))
 	   string))
 	(setq i (+ i lyskom-max-packet-size)))))))

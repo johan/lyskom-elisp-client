@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 36.1 1993-04-26 19:38:14 linus Exp $
+;;;;; $Id: startup.el,v 36.2 1993-05-05 03:14:11 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 36.1 1993-04-26 19:38:14 linus Exp $\n"))
+	      "$Id: startup.el,v 36.2 1993-05-05 03:14:11 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -51,9 +51,9 @@ Optional arguments: HOST, USERNAME and PASSWORD."
 		     nil
 		     nil))
 
-  (setq lyskom-default-user-name
+  (setq username
 	(if username username (getenv "KOMNAME")))
-  (setq lyskom-default-password
+  (setq password
 	(if password password (getenv "KOMPASSWORD")))
   (if (zerop (length host))
       (setq host (or (getenv "KOMSERVER")
@@ -68,19 +68,19 @@ Optional arguments: HOST, USERNAME and PASSWORD."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (let* ((name (buffer-name
-		  (generate-new-buffer
-		   (concat "*"
-			   (substring
-			    host
-			    (string-match "^[^.]*" host)
-			    (match-end 0))
-			   "*"))))
-	   (proc (open-network-stream name name host port)))
-      (setq lyskom-debug-communications-to-buffer-buffer
-	    (concat name "-debugs"))
-      (switch-to-buffer (process-buffer proc))
-      (lyskom-mode)
+    (let* ((buffer (generate-new-buffer
+		    (concat "*"
+			    (substring
+			     host
+			     (string-match "^[^.]*" host)
+			     (match-end 0))
+			    "*")))
+	   (name (buffer-name buffer))
+	   (proc (open-network-stream name buffer host port)))
+      (switch-to-buffer buffer)
+      (lyskom-mode)			;Clearing lyskom-default...
+      (setq lyskom-default-user-name username)
+      (setq lyskom-default-password password)
       (setq lyskom-proc proc)
       (lyskom-insert
        (lyskom-format 'try-connect lyskom-clientversion host))
@@ -96,28 +96,28 @@ Optional arguments: HOST, USERNAME and PASSWORD."
   "Receive connection acknowledgement from server."
   (sit-for 0)
   (let ((cur (current-buffer)))
-    (set-buffer (process-buffer proc))
-    (cond
-     (lyskom-debug-communications-to-buffer
-      (set-buffer
-       (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
-      (save-excursion
-	(goto-char (point-max))
-	(insert "-----> " output " <-----\n"))
-      (set-buffer (process-buffer proc))))
-    (cond
-      ((string= output "LysKOM\n")
-       (lyskom-init-parse)
-       (set-process-filter proc 'lyskom-filter)
-       (set-process-sentinel proc 'lyskom-sentinel)
-       (setq lyskom-executing-command nil)
-       (setq lyskom-is-parsing nil)
-       (initiate-get-server-info 'main 'lyskom-store-server-info))
-      ((string-match "\\`%%" output)
-       (lyskom-format-insert 'protocoll-error output)
-       (error "Protocol error. Servers says: %s" output))
-      (t))
-    (set-buffer cur)))
+    (unwind-protect
+	(progn
+	  (set-buffer (process-buffer proc))
+	  (if lyskom-debug-communications-to-buffer
+	      (save-excursion
+		(set-buffer
+		 (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
+		(goto-char (point-max))
+		(insert "\n" (format "%s" proc) "-----> " output)))
+	  (cond
+	   ((string= output "LysKOM\n")
+	    (lyskom-init-parse)
+	    (set-process-filter proc 'lyskom-filter)
+	    (set-process-sentinel proc 'lyskom-sentinel)
+	    (setq lyskom-executing-command nil)
+	    (setq lyskom-is-parsing nil)
+	    (initiate-get-server-info 'main 'lyskom-store-server-info))
+	   ((string-match "\\`%%" output)
+	    (lyskom-format-insert 'protocoll-error output)
+	    (error "Protocol error. Servers says: %s" output))
+	   (t)))
+      (set-buffer cur))))
 
 
 (defun lyskom-store-server-info (server-info)
@@ -502,7 +502,6 @@ Entry to this mode runs lyskom-mode-hook."
 (defun lyskom-clear-vars ()
   "Set up buffer-local vars."
   (let ((proc lyskom-proc)
-	(ref-no lyskom-ref-no)
 	(pers-no lyskom-pers-no)
 	(membership lyskom-membership)
 	(membership-is-read lyskom-membership-is-read)
@@ -517,7 +516,6 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'lyskom-is-writing)
     (make-local-variable 'lyskom-pending-calls)
     (make-local-variable 'lyskom-number-of-pending-calls)
-    (make-local-variable 'lyskom-ref-no)
     (make-local-variable 'lyskom-errno)
     (make-local-variable 'lyskom-pers-no)
     (make-local-variable 'lyskom-session-no)
@@ -527,6 +525,8 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'lyskom-text-cache)
     (make-local-variable 'lyskom-text-mass-cache)
     (make-local-variable 'lyskom-server-info)
+    (make-local-variable 'lyskom-default-user-name)
+    (make-local-variable 'lyskom-default-password)
     (make-local-variable 'lyskom-who-info-cache)
     (make-local-variable 'lyskom-who-info-buffer)
     (make-local-variable 'lyskom-who-info-buffer-is-on)
@@ -562,10 +562,9 @@ Entry to this mode runs lyskom-mode-hook."
     (make-local-variable 'lyskom-do-when-starting)
     (make-local-variable 'lyskom-do-when-done)
     (make-local-variable 'mode-line-conf-name)
-    (make-local-variable 'lyskom-debug-communications-to-buffer)
-    (make-local-variable 'lyskom-debug-communications-to-buffer-buffer)
+    (make-local-variable 'lyskom-output-queue)
+    (make-local-variable 'lyskom-options-done)
     (setq lyskom-proc proc)
-    (setq lyskom-ref-no ref-no)
     (setq lyskom-pers-no pers-no)
     (setq lyskom-membership membership)
     (setq lyskom-last-viewed last-viewed)

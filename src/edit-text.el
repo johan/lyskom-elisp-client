@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 36.2 1993-04-28 22:43:21 linus Exp $
+;;;;; $Id: edit-text.el,v 36.3 1993-05-05 03:12:48 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 36.2 1993-04-28 22:43:21 linus Exp $\n"))
+	      "$Id: edit-text.el,v 36.3 1993-05-05 03:12:48 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -84,7 +84,7 @@ Does lyskom-end-of-command."
     (setq lyskom-edit-handler-data data)
     (setq lyskom-edit-return-to-configuration config)
     (lyskom-edit-insert-miscs misc-list subject body)
-    (lyskom-message (lyskom-get-string 'press-C-c-C-c)))
+    (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
   (set-buffer (process-buffer lyskom-proc)))
 
 
@@ -399,7 +399,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	  (set-buffer buffer)
 	  (sit-for 0))
 	 (t
-	  (lyskom-message (lyskom-get-string 'no-such-text-m))))))))
+	  (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))))
 
 
 ;;; ================================================================
@@ -637,7 +637,7 @@ Point must be located on the line where the subject is."
      (lyskom-format 'could-not-create-text lyskom-errno
 		    (lyskom-get-error-text lyskom-errno)))
     (beep)
-    (lyskom-message (lyskom-format 'could-not-create-text lyskom-errno
+    (lyskom-message "%s" (lyskom-format 'could-not-create-text lyskom-errno
 				   (lyskom-get-error-text lyskom-errno)))
     (set-buffer edit-buffer)
     (setq mode-name lyskom-edit-mode-name)
@@ -717,7 +717,7 @@ The text is inserted in the buffer with '>' first on each line."
 	    (beginning-of-line)
 	    (insert 62)
 	    (backward-char 2))))
-    (lyskom-message (lyskom-get-string 'no-get-text))))
+    (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 
 ;;; ================================================================

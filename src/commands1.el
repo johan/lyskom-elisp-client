@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 36.2 1993-04-28 22:43:12 linus Exp $
+;;;;; $Id: commands1.el,v 36.3 1993-05-05 03:10:57 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 36.2 1993-04-28 22:43:12 linus Exp $\n"))
+	      "$Id: commands1.el,v 36.3 1993-05-05 03:10:57 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1463,7 +1463,7 @@ MARK:   A number that is used as the mark."
 	(if (= mark 0)
 	    (cache-del-marked-text text-no)
 	  (cache-add-marked-text text-no mark)))
-    (lyskom-insert-string 'nope))
+    (lyskom-insert-string 'nope))	;+++ lyskom-errno?
   (lyskom-end-of-command))
 
 

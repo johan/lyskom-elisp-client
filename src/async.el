@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 36.2 1993-04-27 00:00:57 linus Exp $
+;;;;; $Id: async.el,v 36.3 1993-05-05 03:10:31 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 36.2 1993-04-27 00:00:57 linus Exp $\n"))
+	      "$Id: async.el,v 36.3 1993-05-05 03:10:31 linus Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -130,7 +130,7 @@ this function shall be with current-buffer the BUFFER."
 	(set-buffer buffer)
 	(if (and (not (lyskom-is-in-minibuffer))
 		 kom-presence-messages)
-	    (lyskom-message (lyskom-get-string 'database-sync)))
+	    (lyskom-message "%s" (lyskom-get-string 'database-sync)))
 	(setq mode-line-process ": saving")
 	(set-buffer-modified-p (buffer-modified-p))
 	(sit-for 0)
@@ -205,8 +205,8 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message (lyskom-format 'has-entered
-			    (conf-stat->name conf-stat)))))
+    (lyskom-message "%s" (lyskom-format 'has-entered
+					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
     (lyskom-insert-before-prompt
@@ -219,7 +219,8 @@ this function shall be with current-buffer the BUFFER."
   (cond
    ((lyskom-is-in-minibuffer))
    (kom-presence-messages
-    (lyskom-message (lyskom-format 'has-left (conf-stat->name conf-stat)))))
+    (lyskom-message "%s" (lyskom-format 'has-left
+					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
     (lyskom-insert-before-prompt
@@ -346,8 +347,8 @@ The text is converted, before insertion."
     (if (and (not no-message)
 	     lyskom-is-waiting
 	     (not (lyskom-is-in-minibuffer)))
-	(lyskom-message (lyskom-format 'text-is-created
-				(text-stat->text-no text-stat))))))
+	(lyskom-message "%s" (lyskom-format 'text-is-created
+					    (text-stat->text-no text-stat))))))
 
   
 (defun lyskom-async-new-text (text-stat)

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 36.1 1993-04-26 19:36:09 linus Exp $
+;;;;; $Id: completing-read.el,v 36.2 1993-05-05 03:12:31 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 36.1 1993-04-26 19:36:09 linus Exp $\n"))
+	      "$Id: completing-read.el,v 36.2 1993-05-05 03:12:31 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -143,7 +143,7 @@ When C-G is pressed then lyskom-end-of-command is evaled."
 
      ((and (string= result "")
 	   (eq control ?X))
-      (lyskom-message (concat prompt " " result " [Not sole completion]"))
+      (lyskom-message "%s" (concat prompt " " result " [Not sole completion]"))
       (sit-for 2)
       (lyskom-completing-read-2 kom-queue handler prompt type new empty result
 				data curwin))
@@ -227,11 +227,11 @@ When C-G is pressed then lyskom-end-of-command is evaled."
 			 what kom-queue handler prompt type new empty initial
 			 data curwin))
        (t
-	(lyskom-message (concat prompt initial
-			 (if (= (length choice)
-				0)
-			     " [No match]"
-   			   " [Next char not unique]")))
+	(lyskom-message "%s" (concat prompt initial
+				     (if (= (length choice)
+					    0)
+					 " [No match]"
+				       " [Next char not unique]")))
 	(sit-for 2)
 	(lyskom-completing-read-2 kom-queue handler prompt type new empty 
 				  initial data curwin)))))
@@ -314,7 +314,7 @@ then completing and trying to read again."
      ((null (cdr conf-stats))		;Sole completion.
       (if (string= initial (conf-stat->name (car conf-stats)))
 	  (progn
-	    (lyskom-message (concat prompt initial " [Sole completion]"))
+	    (lyskom-message "%s" (concat prompt initial " [Sole completion]"))
 	    (sit-for 2)))
       (lyskom-completing-read-2 kom-queue handler prompt type new empty
 				(conf-stat->name (car conf-stats))
