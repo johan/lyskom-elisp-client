@@ -1,5 +1,3 @@
-* kom-quit-hook?
-
 * Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
   skall bli obsolete!
 
@@ -10,29 +8,8 @@
 * N{r n}gon g|r "aB|rja med nytt namn" s} hamnar hans session sist i
   who-bufferten hos alla andra som {r med i LysKOM.
 
-* VIKTIGT
-  N{r man kommenterar s} har f|rsta tangentnedtryckningen fel keymap.
-
-* Svensk text p}:
-   "[rende:" (i editbufferten)
-    ^
-   "--- Skriv texten nedanf|r denna rad ---" (i editbufferten)
-                           ^
-   "Ditt medlemsskap i olika KOM-möten:
-      Prio Mötesnr Mötesnamn"          (i prioritera-bufferten.)
-   Fler st{llen?
-
-* ]terse markerade g|r fel n{r man har }tersett det sista markerade.
-  Man f}r aldrig tillbaka prompten Se (tiden).  N{r det kommer ett
-  nytt inl{gg s} blir det r{tt igen.
-
 * ]terse senaste verkar missa ett inl{gg n{r vi g|r }terse fr}n b|rjan
   p} m|tet.
-
-* VIKTIGT
-  Min fix f|r att f} quit att fungera g|r att man inte l{ngre kan
-  avbryta funktioner som l{ser saker i minibufferten fr}n en handler.
-  M}ste }tg{rdas.
 
 * scrollningsvariableln skall nog nollst{llas oftare, kanske vid varje
   tangenttryckning. 
@@ -138,14 +115,6 @@ Inge: klart?
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
   who-info. 
-
-* Problem med overlay map & bellmans specialfix till edit-moden tror
-  jag.
-
-* ]terse (n{sta) markerade - Inte riktigt bra. N{r man l{ser markerade
-  plockas inte den tomma READ-INFOn bort efter sig. Kolla noga ceders
-  {ndringar som rationaliserade bort ett (initiate-get-text-stat 0)
-  Jag tror det {r det som strular.
 
 * cookie-mode skall anv{ndas till:
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
