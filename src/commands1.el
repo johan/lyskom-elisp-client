@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.9 1996-10-08 12:25:48 nisse Exp $
+;;;;; $Id: commands1.el,v 44.10 1996-10-10 13:59:26 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.9 1996-10-08 12:25:48 nisse Exp $\n"))
+	      "$Id: commands1.el,v 44.10 1996-10-10 13:59:26 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -399,11 +399,11 @@ Returns t if it was possible, otherwise nil."
 	   (blocking-do 'query-read-texts
 			lyskom-pers-no 
 			(conf-stat->conf-no conf-conf-stat))
-	   conf-conf-stat)))))
+	   (conf-stat->conf-no conf-conf-stat))))))
 
 
 
-(defun lyskom-add-membership (membership conf-stat)
+(defun lyskom-add-membership (membership conf-no)
   "Adds MEMBERSHIP to the sorted list of memberships.
 Args: MEMBERSHIP CONF-STAT THENDO DATA
 Also adds to lyskom-to-do-list."
@@ -411,34 +411,10 @@ Also adds to lyskom-to-do-list."
   ;;; kom-session-priority?
   (if membership
       (progn
-	(setq lyskom-membership (sort (cons membership lyskom-membership)
-				      'lyskom-membership-<))
-	;; (let ((map (blocking-do
-	;; 	       'get-map
-	;; 	       (conf-stat->conf-no conf-stat)
-	;; 	       (max (1+ (membership->last-text-read membership))
-	;; 		    (conf-stat->first-local-no conf-stat))
-	;; 	       (conf-stat->no-of-texts conf-stat))))
-	;;   (if map
-	;; 	 (let ((texts (skip-first-zeros
-	;; 		       (sort (listify-vector (map->text-nos map))
-	;; 			     '<))))
-	;; 	   (if texts
-	;; 	       (read-list-enter-read-info
-	;; 		(lyskom-create-read-info
-	;; 		 'CONF conf-stat
-	;; 		 (membership->priority membership)
-	;; 		 (lyskom-create-text-list
-	;; 		  texts)
-	;; 		 nil nil)
-	;; 		lyskom-to-do-list))))	  
-	;;   )
-	(lyskom-prefetch-map-using-conf-stat
-	 conf-stat
-	 (1+ (membership->last-text-read membership))
-	 membership))
-    (lyskom-insert-string 'conf-does-not-exist))
-  )
+	(lyskom-insert-membership membership lyskom-membership)
+	(lyskom-prefetch-map conf-no
+			     membership))
+    (lyskom-insert-string 'conf-does-not-exist)))
 
 
 
@@ -496,8 +472,8 @@ of the person."
 				    (conf-stat->conf-no conf)
 				    (conf-stat->conf-no pers)))
 	   (if self
-	       (lyskom-set-membership (blocking-do 'get-membership
-						   lyskom-pers-no)))
+	       (lyskom-remove-membership (conf-stat->conf-no conf)
+					 lyskom-membership))
 	   (if (not reply)
 	       (lyskom-format-insert 'unsubscribe-failed
 				     (if self
@@ -769,7 +745,7 @@ CCREP is a list of all recipients that are going to be cc-recipients."
 					 'cc-recpt
 				       'recpt)
 				     (conf-stat->comm-conf conf-stat)))))
-		(if (lyskom-member-p (conf-stat->conf-no conf-stat))
+		(if (lyskom-get-membership (conf-stat->conf-no conf-stat))
 		    (setq member t))
 		(setq recpts (cons (conf-stat->comm-conf conf-stat) recpts))))
 	    (setq data (cdr data)))
@@ -947,7 +923,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
    ((null conf-stat)			;+++ annan felhantering
     (lyskom-insert-string 'cant-get-conf-stat))
    ((or lyskom-is-administrator
-	(lyskom-member-p (conf-stat->supervisor conf-stat))
+	(lyskom-get-membership (conf-stat->supervisor conf-stat))
 	(= lyskom-pers-no (conf-stat->conf-no conf-stat)))
     (lyskom-dispatch-edit-text
      lyskom-proc
@@ -1004,7 +980,7 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
      ((null conf-stat)
       (lyskom-insert-string 'cant-get-conf-stat))
      ((or lyskom-is-administrator
-	  (lyskom-member-p (conf-stat->supervisor conf-stat)))
+	  (lyskom-get-membership (conf-stat->supervisor conf-stat)))
       ;; This works like a dispatch. No error handling.
       (lyskom-set-conf-motd 0 (conf-stat->conf-no conf-stat)))
      (t
@@ -1036,28 +1012,36 @@ back on lyskom-to-do-list."
 Allowed conferences are conferences and the mailboxes you are 
 member of."
   (if (numberp conf) (setq conf (blocking-do 'get-conf-stat conf)))
-  (let ((membership (lyskom-member-p
-		     (conf-stat->conf-no conf))))
+  (let ((membership (lyskom-get-membership (conf-stat->conf-no conf))))
     (lyskom-format-insert 'go-to-conf
 			  conf)
-    (cond
-     (membership
-      (lyskom-do-go-to-conf conf membership))
-     ((conf-type->letterbox (conf-stat->conf-type conf))
-      (lyskom-format-insert 'cant-go-to-his-mailbox
-			    conf))
-     (t
-      (progn
-	(lyskom-format-insert 'not-member-of-conf
-			      conf)
-	(lyskom-scroll)
-	(if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
-	    (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
-					 lyskom-pers-no)
-		(lyskom-do-go-to-conf conf
-				      (lyskom-member-p (conf-stat->conf-no conf)))
-	      (lyskom-insert-string 'nope))
-	  (lyskom-insert-string 'no-ok)))))))
+
+    ;; DEBUG+++
+    (let ((lyskom-inhibit-prefetch t))
+
+      (cond
+       (membership
+	(lyskom-do-go-to-conf conf membership))
+       ((conf-type->letterbox (conf-stat->conf-type conf))
+	(lyskom-format-insert 'cant-go-to-his-mailbox
+			      conf))
+       (t
+	(progn
+	  (lyskom-format-insert 'not-member-of-conf
+				conf)
+	  (lyskom-scroll)
+	  (if (lyskom-j-or-n-p (lyskom-get-string 'want-become-member))
+	      (if (lyskom-add-member-by-no (conf-stat->conf-no conf)
+					   lyskom-pers-no)
+		  (lyskom-do-go-to-conf conf
+					(lyskom-get-membership
+					 (conf-stat->conf-no conf)))
+		(lyskom-insert-string 'nope))
+	    (lyskom-insert-string 'no-ok))))))
+
+    ;; DEBUG+++
+    (lyskom-continue-prefetch)
+    ))
   
 
 ;; Dead function /davidk 960217
@@ -1075,32 +1059,48 @@ Args: CONF-STAT MEMBERSHIP"
     (lyskom-maybe-move-unread nil)
     (if conf-stat
 	(lyskom-set-mode-line conf-stat))
-    (cond
-     ((let ((r 0)
-	    (len (read-list-length lyskom-to-do-list)) 
-	    (found nil))
-	(while (and (not found)
-		    (< r len))
-	  (if (and (read-info->conf-stat (read-list->nth lyskom-to-do-list r))
-		   (= (conf-stat->conf-no conf-stat)
-		      (conf-stat->conf-no 
-		       (read-info->conf-stat 
-			(read-list->nth lyskom-to-do-list r)))))
-	      (setq found t)
-	    (++ r)))
-	(if found
-	    (let ((list (read-list->nth lyskom-to-do-list r)))
-	      (read-list-enter-first list lyskom-reading-list)
-	      (read-list-delete-read-info (conf-stat->conf-no conf-stat)
-					  lyskom-to-do-list)
-	      (read-list-enter-first list lyskom-to-do-list)))
-	found)
-      (set-read-info->priority (read-list->first lyskom-reading-list)
-			       priority)
-      (lyskom-enter-conf conf-stat (read-list->first lyskom-reading-list)))
+    (let ((r 0)
+	  (len (read-list-length lyskom-to-do-list)) 
+	  (found nil))
+      (while (and (not found)
+		  (< r len))
+	(if (and (read-info->conf-stat (read-list->nth lyskom-to-do-list r))
+		 (= (conf-stat->conf-no conf-stat)
+		    (conf-stat->conf-no 
+		     (read-info->conf-stat 
+		      (read-list->nth lyskom-to-do-list r)))))
+	    (setq found t)
+	  (++ r)))
 
-     (t
-      (lyskom-go-to-empty-conf conf-stat)))))
+      ;; If the membership list is prefetched there is no need to
+      ;; insert empty read-infos, but if there is a chance that
+      ;; there might be unknown texts that will be entered into the
+      ;; read-info later we'll insert an empty read-info. This
+      ;; enables the user to go to a conference before it is
+      ;; prefetched.
+
+      (cond (found
+	     (let ((read-info (read-list->nth lyskom-to-do-list r)))
+	       (read-list-enter-first read-info lyskom-reading-list)
+	       (read-list-delete-read-info (conf-stat->conf-no conf-stat)
+					   lyskom-to-do-list)
+	       (read-list-enter-first read-info lyskom-to-do-list)
+	       (set-read-info->priority read-info priority)
+	       (lyskom-enter-conf conf-stat read-info)))
+	      
+	    ((not (lyskom-membership-is-read))
+	     (let ((read-info (lyskom-create-read-info 
+			       'CONF conf-stat
+			       (membership->priority membership)
+			       (lyskom-create-text-list nil))))
+	       (read-list-enter-first read-info lyskom-reading-list)
+	       (read-list-delete-read-info (conf-stat->conf-no conf-stat)
+					   lyskom-to-do-list)
+	       (read-list-enter-first read-info lyskom-to-do-list)
+	       (lyskom-go-to-empty-conf conf-stat)))
+
+	    (t
+	     (lyskom-go-to-empty-conf conf-stat))))))
 
 
 
@@ -1191,7 +1191,7 @@ If you are not member in the conference it will be flagged with an asterisk."
   (lyskom-format-insert "%[%#1@%4#2:m %#3c %#4M%]\n"
 			(lyskom-default-button 'conf conf-no)
 			conf-no
-			(if (lyskom-member-p conf-no)
+			(if (lyskom-get-membership conf-no)
 			    32 ?*)
 			conf-no))
 

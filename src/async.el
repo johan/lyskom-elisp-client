@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.1 1996-09-29 15:18:08 davidk Exp $
+;;;;; $Id: async.el,v 44.2 1996-10-10 13:59:23 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.1 1996-09-29 15:18:08 davidk Exp $\n"))
+	      "$Id: async.el,v 44.2 1996-10-10 13:59:23 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -483,10 +483,11 @@ In that case, just discard this call."
     ;; We need a way to check if a conferences is fetched.
     ;; davidk /960924
     
-    (let ((member (lyskom-member-p (conf-stat->conf-no recipient))))
-      (if (and member
+    (let ((membership (lyskom-try-get-membership
+		       (conf-stat->conf-no recipient))))
+      (if (and membership
 	       ;; (lyskom-conf-fetched-p (conf-stat->conf-no recipient))
-	       (lyskom-visible-membership member)
+	       (lyskom-visible-membership membership)
 	       (not (read-list-enter-text text-no recipient
 					  lyskom-to-do-list)))
 	  ;; If we have already read all texts in the conference or the
@@ -494,8 +495,7 @@ In that case, just discard this call."
 	  (let ((info (lyskom-create-read-info
 		       'CONF
 		       recipient
-		       (membership->priority
-			(lyskom-member-p (conf-stat->conf-no recipient)))
+		       (membership->priority membership)
 		       (lyskom-create-text-list (list text-no)))))
 	    (read-list-enter-read-info info lyskom-to-do-list)
 	    (if (= lyskom-current-conf (conf-stat->conf-no recipient))

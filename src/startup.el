@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.7 1996-10-06 05:18:32 davidk Exp $
+;;;;; $Id: startup.el,v 44.8 1996-10-10 13:59:53 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.7 1996-10-06 05:18:32 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.8 1996-10-10 13:59:53 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -363,6 +363,8 @@ This is called at login and after prioritize and set-unread."
   ;; (lyskom-set-membership (blocking-do 'get-membership lyskom-pers-no))
   ;; (setq lyskom-membership-is-read t)
   ;; (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
+
+  (setq lyskom-membership nil)
 
   (lyskom-reset-prefetch)
   (lyskom-start-prefetch)

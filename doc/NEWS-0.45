@@ -16,7 +16,15 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 * Fitjurs och förbättringar
 
+** En nygammal prefetch har börjat användas. Detta gör att allting går
+   mycket fortare, men har sidoeffekten att det kan se ut som om man
+   har läst ut LysKOM innan klienten har läst in alla information från
+   servern.
+
 ** Det går hjälpligt att köra elispklienten under XEmacs.
+
+** Färgläggning av KOM-bufferten sker även under Windows-versionen av
+   Emacs.
 
 ** Kommandot "Återse fler inlägg", bunder till "åy" fortsätter ett
    återsekommando från den plats det slutade, med samma kriterier. Det
@@ -28,6 +36,9 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    kom-do-when-done. 
 
 ** kom-permissive-completion är satt till t per default.
+
+** LysKOM-bufferten är skrivskyddad (igen), och har undo-information
+   avslagen.
 
 ** En experimentell Ändra Variabler har inkluderats. För att den skall
    fungera krävs det att Emacs kan hitta Per Abrahamsens widget-paket
@@ -53,8 +64,14 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
    Hanteringen är dock något primitiv eftersom man inte kan välja
    vilket program som skall användas för att skicka mail.
 
+** Kommandona Medlem, Utträd och Endast har blivit både snabbare och
+   mer robusta.
 
 * Bugfixar
+
+** Koden för att läsa in textmappar har optimerats rejält. Det,
+   tillsammans med den nya prefetchen gör att man kan läsa I]M, även
+   med flera utlästa trådar.
 
 ** Completion fungerar bättre. Numera borde completion avslutas med SPC
    bara när det verkligen passar.
@@ -63,6 +80,10 @@ trevligt med nybörjarvänliga knappar och liknanade otyg.
 
 ** De engelska strängarna är översedda och genomgågna och stämmer nu
    väl överens med de svenska.
+
+** Chanserna att man får klienten att tappa orineteringen när man
+   trycker C-g har minskat. Nackdelen med detta är att C-g kan ge lite
+   sämre responstid, men det borde inte inte bli så mycket längre.
 
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
 

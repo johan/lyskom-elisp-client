@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.14 1996-10-08 12:24:06 nisse Exp $
+;;;;; $Id: lyskom-rest.el,v 44.15 1996-10-10 13:59:41 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.14 1996-10-08 12:24:06 nisse Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.15 1996-10-10 13:59:41 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -191,7 +191,7 @@ assoc list."
 				      alternative
 				      (, lyskom-is-administrator))))
 				t nil)))
-    (cdr (assq name alternatives))))
+    (cdr (assoc name alternatives))))
 
 ;;; Resume operation after a crash.
 
@@ -428,7 +428,8 @@ lyskom-mark-as-read."
       misc (text-stat->misc-info-list text-stat)
     (if (or (eq 'RECPT (misc-info->type misc))
 	    (eq 'CC-RECPT (misc-info->type misc)))
-	(let ((membership (lyskom-member-p (misc-info->recipient-no misc))))
+	(let ((membership (lyskom-try-get-membership
+			   (misc-info->recipient-no misc))))
 	  (if membership
 	      (set-membership->read-texts
 	       membership
@@ -631,9 +632,14 @@ CONF can be a a conf-stat or a string."
 ;;; +++Where should this be moved???
 
 
-(defun lyskom-member-p (conf-no)
+(defun lyskom-try-get-membership (conf-no)
   "Returns non-nil if conference CONF-NO is present on lyskom-membership.
-The value is actually the membership for the conference."
+The value is actually the membership for the conference.
+
+For foreground functions, lyskom-get-membership should probably be used
+instead.
+
+This function does not use blocking-do."
   (let ((list lyskom-membership)
 	(found nil))
     (while (and (not found) (not (null list)))
@@ -641,6 +647,21 @@ The value is actually the membership for the conference."
 	  (setq found (car list)))
       (setq list (cdr list)))
     found))
+
+
+(defun lyskom-get-membership (conf-no)
+  "Get the membership for CONF-NO, or nil if the user is not a member of
+CONF-NO.
+
+If the membership list is not fully prefetched and the membership can't be
+found inlyskom-membership, a blocking call to the server is made."
+  (or (lyskom-try-get-membership conf-no)
+      (and (not (lyskom-membership-is-read))
+	   (let ((membership
+		  (blocking-do 'query-read-texts lyskom-pers-no conf-no)))
+	     (if (and membership (lyskom-visible-membership membership))
+		 (lyskom-add-membership membership conf-no))
+	     membership))))
 
 
 ;;;; ================================================================
@@ -1834,6 +1855,16 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 ;;     (accept-process-output nil lyskom-apo-timeout-s lyskom-apo-timeout-ms)))
 
 ;; +++PREFETCH
+
+
+(defun lyskom-wait-for-membership ()
+  "If the full membership hase been read do nothing. Else give a message and
+wait for it to be prefetched."
+  (while (not (eq lyskom-membership-is-read t))
+    (lyskom-message (lyskom-get-string 'waiting-for-membership)
+		    lyskom-membership-is-read)
+    (lyskom-accept-process-output)))
+
 
 (defun lyskom-prefetch-all-confs ()
   "Gets all conferences using prefetch."
