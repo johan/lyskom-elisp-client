@@ -1,0 +1,97 @@
+2.2 After installing
+
+    After installing you can set Emacs to load LysKOM automatically.
+
+    1. Set up autoloading by adding the following line to your .emacs
+       or any other file that Emacs loads at startup (such as
+       site-start.el or default.el):
+
+            (autoload 'lyskom "lyskom" "Start LysKOM" t)
+
+    2. If you have your own LysKOM server you may want to modify the
+       variable kom-server-aliases. The best place to change it is in
+       your site init file (default.el or site-start.el). For example,
+       if you are running a server on kom.domain.org, you might want
+       to say something like this in your init file:
+   
+            (defvar kom-server-aliases 
+                    '(("kom.domain.org     . "DomainKOM")
+                      ("kom.lysator.liu.se . "LysKOM")))
+   
+       The first server listed in kom-server-aliases will be the
+       default server for new users.
+
+    3. Restart Emacs. You should be able to use the command lyskom
+       (M-x l y s k o m RET) to start the client. Enjoy!
+
+
+3.  Reporting bugs
+
+    Before reporting a bug, please check that it is not one of the
+    known issues below. Please report bugs by posting them to the
+    bugzilla at http://bugzilla.lysator.liu.se/. You can also e-mail
+    bug reports to bug-lyskom@lysator.liu.se. 
+
+    To evaluate your bug report we need the following information:
+
+    o   The LysKOM version you are using. This is shown when you start
+        LysKOM and is also contained in the variable
+        lyskom-clientversion.
+
+    o   The symptoms of the bug. Please be as detailed as possible.
+        Please do not try to make conclusions. Just give us the facts.
+
+    o   How you triggered the bug. If you know how to reproduce it,
+        please tell us. We're pretty good at fixing bugs we can
+        reproduce.
+
+    o   How you started Emacs, what variables you have changed and
+        which packages you have loaded. If possible, try to reproduce
+        the bug with Emacs started with the -q command line switch.
+
+    The command kom-bug-report may come in handy. It gives us a lot of
+    information that you might not think of (such as what the internal
+    data structures look like). If you post a bug report to our
+    bugzilla, please make the result of kom-bug-report an attachment
+    to your bug report.
+
+
+4. Known issues
+
+   Issue:  I see \201 before Swedish characters in the string showing
+           what some other user is doing (e.g. L\201äser).
+
+   Reason: The user is probably using an old version of the client in
+           a new version of Emacs. You can confirm this by using the
+           command kom-list-clients (Lista klienter, List clients).
+
+
+   Issue:  I get the message "Key sequence < m o u s e - 2 > uses
+           invalid prefix characters" when I load lyskom.elc.
+
+   Reason: You have a file named macedit.el or macedit.elc installed.
+           Remove this file.
+
+
+   Issue:  Columns containing Swedish characters or characters in
+           numeric representation are not aligned correctly.
+
+   Reason: This happens in certain versions of Emacs when running
+           without multi-byte character support and is due to bugs in
+           Emacs. The only workaround is to either upgrade Emacs or
+           enable multi-byte character support.
+
+
+   Issue:  Swedish characters show up as blanks, question marks or
+           numbers.
+
+   Reason: If Swedish characters show up as blanks your font probably
+           does not support them. If they show up as question marks or
+           numbers your language environment does not support them.
+
+           Make sure that your language environment is set correctly
+           with set-language-environment. Just setting the environment
+           variable LC_CTYPE to the proper value (iso_8859_1 is
+           usually correct) should be enough.
+
+           Do not use standard-display-european to fix this problem.

@@ -1,0 +1,68 @@
+2.  Installation
+
+    You will have received the client in a compressed tar archive or
+    in a zip archive. The archive contains all the files needed to
+    build the client.
+
+
+2.1 How to install
+
+    If you are on a Unix-like system (or anything that supports
+    Makefiles) you can use `make' to install the client.
+
+    1. Edit the Makefile in the distribution to reflect your
+       environment. There are instructions in the Makefile.
+
+       Optionally, use the configure script. It attempts to find
+       suitable defaults for the settings in the Makefile. Simply run
+       ./configure in the directory containing the client sources. 
+
+       You may customize the output of the configure script with the
+       following command-line arguments:
+
+       --with-emacs=EMACS   Specify the name of the Emacs you want to
+                            use (usually `emacs' or `xemacs'). The
+                            script will attempt to locate an emacs
+                            automatically.
+
+       --with-lispdir=DIR   Specify where to install the client. You
+                            will have to specify this if the script
+                            fails to locate a suitable directory
+                            automatically.
+
+       --enable-language=LANG
+                            Enable a language. Currently Swedish and
+                            English are available. If you do not
+                            explicitly enable any language, all will
+                            be enabled.
+
+       --with-default-language=LANG
+                            Set the default language to LANG (Swedish
+                            or English). If you do not specify a
+                            default language the script will choose
+                            one for you.
+
+       The configure script is an experiment. It might work and it
+       might not. If it doesn't, edit the Makefile by hand instead.
+
+    2. Run `make envcheck' to make sure your Emacs environment is set
+       up correctly. The environment check does not read your .emacs,
+       so it will not find libraries that are not in the default load
+       path. This means that it is possible that LysKOM will run just
+       fine for you even if it complains.
+
+    3. Edit the file lpath.el if you need to change the default load
+       path for compiling (this should only happen if the custom
+       package is not on your default load path).
+
+    4. If you changed the list of languages, ran the configure script
+       or are recompiling with a different Emacs version, run `make
+       clean'.
+
+    5. Run `make'. If your environment is set up correctly, LysKOM
+       should be compiled. When compilation is finished, type `make
+       install' to copy all the relevant files to the relevant places. 
+       If you do `make install' without just doing `make', you'll
+       bypass the environment check.
+
+

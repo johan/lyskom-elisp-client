@@ -24,7 +24,7 @@ The language must be one of swedish or english.]) ;;
 
   languages="${languages} ${val}"
 ],
-[ languages="swedish english" ]
+[ languages="english swedish" ]
 )
 
 

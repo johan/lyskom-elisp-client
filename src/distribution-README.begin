@@ -1,0 +1,102 @@
+
+
+
+    The LysKOM Emacs Lisp Client
+    -------------------------------------------
+    Release notes for version @@CLIENTVERSION@@
+
+
+
+    LysKOM is a project in progress at the Lysator Academic Computing
+    Society at Linköping University in Sweden. For information about
+    Lysator, see <URL:http://www.lysator.liu.se/>. For more information
+    on LysKOM, see <URL:http://www.lysator.liu.se/lyskom/>.
+
+    The latest version of the Emacs Lisp client for LysKOM is available 
+    from <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>.
+
+    LysKOM is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2, or (at your
+    option) any later version.
+
+    LysKOM is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with LysKOM; see the file COPYING. If not, write to Lysator,
+    c/o ISY, Linköpings universitet, S-581 83 Linköping, SWEDEN, or
+    the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA
+    02139, USA.
+
+    Please mail bug reports to bug-lyskom@lysator.liu.se. 
+    Please mail change requests to kom@lysator.liu.se.
+
+
+
+1.  REQUIREMENTS
+
+    You need an Emacs. The client appears to work with the following
+    versions of Emacs:
+
+    * XEmacs version 20.4, 21.1 and newer
+    * Gnu Emacs version 19.34 [1]
+    * Gnu Emacs version 20.7 and newer [2]
+
+    [1] You'll have to replace the included custom package, and if you 
+        use Gnus, you may have to update that as well.
+
+    [2] It should be possible to run the client in Gnu Emacs 20.2 and
+        later, but you may experience some additional problems. Column
+        alignment is known to fail in version 20.2.
+
+
+    There are also some requirements on supplemental elisp packages:
+
+    * custom
+
+      You need to have a recent version of the custom package
+      installed. The custom.el file that is bundled with Gnu Emacs
+      19.34 and older versions of Gnus will not work.
+
+      The version that is bundled with recent versions of XEmacs, with
+      Gnu Emacs 20, with recent versions of Gnus and w3 is the one you
+      need.
+
+      Custom is not longer distributed as a separate package, but it
+      may be available at <URL:http://www.dina.kvl.dk/~abraham/
+      custom/>. An old version is available in the elisp-client ftp
+      directory at <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-
+      client/>.
+
+      If you have a version of Gnus installed that uses the old custom
+      package, it's time to upgrade. The latest version of Gnus is
+      available from <URL:http://www.gnus.org/>.
+
+    * You must NOT HAVE macedit.el
+
+      Make sure you do not have a file called macedit.el early in your
+      load path. This file redefines a function that the client relies
+      heavily on. The redefinition is buggy. You can recognize this
+      problem if your Emacs says something like this: "Key sequence <
+      m o u s e - 2 > uses invalid prefix characters" when you load or
+      compile the elisp client.
+
+    * w3 4.0 or later (optional)
+
+      LysKOM can use w3 for displaying HTML. At the time of writing
+      this, the latest version of W3 is 4.0. It is available from
+      <URL:http://www.cs.indiana.edu/elisp/w3/w3.html> and included in
+      many distributions of Emacs. If w3 is not installed, LysKOM will
+      be unable to display HTML.
+
+    * calc (optional)
+
+      LysKOM uses calc to implement the "Compute" command. If you want
+      to use it you need calc. The latest version of calc, as of
+      writing this, is available at <URL:ftp://ftp.gnu.org/pub/gnu/
+      calc/calc-2.02f.tar.gz>
+
+
