@@ -5,6 +5,11 @@
 	New function.
 	(lyskom-read-conf): Put it into before-change-functions in
 	minibuffer-setup-hook.
+	(lyskom-read-conf): Set pre-command-hook and post-command-hook.
+	(lyskom-read-from-minibuffer-cancel-magic): New function.
+	(lyskom-read-from-minibuffer-pre-command): New funtion.
+	(lyskom-read-from-minibuffer-post-command): New function.
+	(lyskom-minibuffer-point): New variable.
 
 2003-08-12  David Byers  <byers@lysator.liu.se>
 
