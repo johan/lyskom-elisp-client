@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.18 1997-03-11 13:49:13 byers Exp $
+;;;;; $Id: vars.el.in,v 44.19 1997-05-14 11:12:48 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.18 1997-03-11 13:49:13 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.19 1997-05-14 11:12:48 petli Exp $\n"))
 
 (provide 'lyskom)
 
@@ -547,8 +547,13 @@ to some URL viewers.")
 			    "mail-mode"
 			    lyskom-view-url-mailmode)
 			   ("mosaic"
-			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|te|net\\)"
-			    lyskom-view-url-mosaic))
+			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+			    "NCSA Mosaic"
+			    lyskom-view-url-mosaic)
+			   ("lynx"
+			    "\\(http\\|gopher\\|ftp\\|mailto\\|news\\|wais\\|file\\|telnet\\)"
+			    "Lynx"
+			    lyskom-view-url-lynx))
 
   "List of URL managers. Each element is a list consisting of
 (MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
@@ -571,6 +576,25 @@ Netscape. The remaining elements are used as arguments to Netscape.
 For instance, a value of \"netscape\" is valid, but \"netscape -d host:0\"
 is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)")
 
+(def-kom-var kom-lynx-terminal 'xterm
+  "*Where to start Lynx.
+Valid values are 'xterm (start Lynx in an xterm) and 'terminal (start
+Lynx in Emacs terminal mode.")
+
+(def-kom-var kom-lynx-xterm-command
+  '("xterm" "-geometry" "90x50+100+100" "-e" "lynx")
+  "*Command to run to start Lynx in an xterm.
+Must be a list of strings, where the first element is the name of the
+xterm program, and the remaining elements are arguments to the
+xterm. The last elements should be \"-e\" \"lynx\", or something similar,
+to start Lynx.")
+
+(def-kom-var kom-lynx-terminal-command "lynx"
+  "*Command to run Lynx in Emacs terminal mode.
+
+This can be either a string, to start Lynx with no arguments, or a
+list of strings, where the first element is the command, and the rest
+are arguments to Lynx.")
 
 (def-kom-var kom-confirm-multiple-recipients 'after
   "*Non-nil means ask the user for confirmation about recipients.
