@@ -1,5 +1,9 @@
 Sun Aug 18 02:07:59 1991  Linus Tolke Y  (linus at lysator)
 
+	* commands2.el (lyskom-status-conf, lyskom-status-pers-2): Bytt
+	  n}gra gl|mda  
+	  (lyskom-insert (lyskom-format )) till (lyskom-format-insert )
+
 	* lyskom-rest.el (iso-8859-1-table): Patchat tabellen f|r thorn,
 	  eth. N}gon annan sm}sak ocks}.
 
