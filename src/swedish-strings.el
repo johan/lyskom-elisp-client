@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.13 1991-10-08 18:10:34 inge Exp $
+;;;;; $Id: swedish-strings.el,v 35.14 1991-10-23 18:26:13 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,10 +36,59 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.13 1991-10-08 18:10:34 inge Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.14 1991-10-23 18:26:13 linus Exp $\n"))
 
 
-(defvar lyskom-header-separator "--- Skriv nedan. Skicka in=C-c C-c, Avbryt=C-c C-k, Annat se C-h m ---"
+;;; ================================================================
+;;; lyskom-edit-mode-map
+
+(defvar lyskom-edit-mode-map nil
+  "Mode map for LysKOM edit.")
+
+;;; Set the keymap for lyskom-edit-mode
+
+(if lyskom-edit-mode-map
+    nil
+  (setq lyskom-edit-mode-map (make-sparse-keymap))
+  (fset 'lyskom-edit-prefix (make-keymap))
+  (fset 'lyskom-edit-review-prefix (make-keymap))
+  (fset 'lyskom-edit-insert-prefix (make-keymap))
+  (define-key lyskom-edit-mode-map "\C-c"	'lyskom-edit-prefix)
+  (define-key lyskom-edit-mode-map "\C-c?"	'lyskom-help)
+  (define-key lyskom-edit-mode-map "\C-c}"	'lyskom-edit-review-prefix)
+  (define-key lyskom-edit-mode-map "\C-c]"	'lyskom-edit-review-prefix)
+  (define-key lyskom-edit-mode-map "\C-ci"	'lyskom-edit-insert-prefix)
+  (define-key lyskom-edit-mode-map "\C-c\C-c"	'kom-edit-send)
+  (define-key lyskom-edit-mode-map "\C-ck"	'kom-edit-quit)
+  (define-key lyskom-edit-mode-map "\C-c\C-k"	'kom-edit-quit)
+  (define-key lyskom-edit-mode-map "\C-c}?"	'lyskom-help)
+  (define-key lyskom-edit-mode-map "\C-c}k"	'kom-edit-show-commented)
+  (define-key lyskom-edit-mode-map "\C-ci?"	'lyskom-help)
+  (define-key lyskom-edit-mode-map "\C-cik"	'kom-edit-insert-commented)
+  (define-key lyskom-edit-mode-map "\C-ci1"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci2"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci3"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci4"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci5"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci6"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci7"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci8"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci9"	'kom-edit-insert-digit-text)
+  (define-key lyskom-edit-mode-map "\C-ci "	'kom-edit-insert-text)
+  (fset 'lyskom-edit-add-prefix (make-keymap))
+  (define-key lyskom-edit-mode-map "\C-ca" 'lyskom-edit-add-prefix)
+  (define-key lyskom-edit-mode-map "\C-cam" 'kom-edit-add-recipient)
+  (define-key lyskom-edit-mode-map "\C-cak" 'kom-edit-add-copy)
+  (define-key lyskom-edit-mode-map "\C-ca?" 'lyskom-help))
+
+
+(defvar lyskom-header-separator
+  (substitute-command-keys
+   "\\<lyskom-edit-mode-map>\
+--- Skriv nedan. \
+Skicka in=\\[kom-edit-send], \
+Avbryt=\\[kom-edit-quit], \
+Annat se \\[describe-mode] ---")
   "*String to separate headers from text body.")
 
 
@@ -781,6 +830,25 @@ Cf. paragraph-start.")
 )
 
 
+(defvar lyskom-prioritize-mode-map nil
+  "Keymap used in lyskom-prioritize-mode.")
+
+
+(if lyskom-prioritize-mode-map
+    nil
+  (setq lyskom-prioritize-mode-map (make-keymap))
+  (suppress-keymap lyskom-prioritize-mode-map)
+  (define-key lyskom-prioritize-mode-map "\C-?" 'previous-line)
+  (define-key lyskom-prioritize-mode-map " "    'next-line)
+  (define-key lyskom-prioritize-mode-map "\C-k" 'kom-prioritize-kill)
+  (define-key lyskom-prioritize-mode-map "\C-y" 'kom-prioritize-yank)
+  (define-key lyskom-prioritize-mode-map "p"     'kom-prioritize-set-priority)
+  (define-key lyskom-prioritize-mode-map "\C-c\C-c" 'kom-prioritize-quit)
+  (define-key lyskom-prioritize-mode-map "q"     'kom-prioritize-quit)
+  (define-key lyskom-prioritize-mode-map "S"     'kom-prioritize-quit)
+  (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
+  (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
+)
 
 ;;;; ================================================================
 ;;;; Tell phrases should be configured with the default language used
