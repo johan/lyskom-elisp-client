@@ -1,3 +1,17 @@
+Wed Aug 28 11:00:40 1996  David Kågedal  <kg@infovav.se>
+
+	* commands2.el (lyskom-memb-received-1,lyskom-memb-received):
+	Försök inte hämta för stora mappar.
+
+Tue Aug 27 17:35:06 1996  David Kågedal  <kg@infovav.se>
+
+	* view-text.el (lyskom-view-text): Sätt inhibit-read-only.
+
+	* startup.el (lyskom): Använd lyskom-insert istället för insert.
+
+	* lyskom-rest.el (lyskom-insert): Använd inhibit-read-only
+ 	istället för buffer-read-only.
+
 Tue Aug 27 08:49:11 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* commands1.el (kom-quit): Fånga C-g.

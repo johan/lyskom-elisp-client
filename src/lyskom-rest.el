@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.9 1996-08-27 15:15:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 43.10 1996-08-28 09:02:27 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.9 1996-08-27 15:15:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.10 1996-08-28 09:02:27 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -691,7 +691,7 @@ The text is converted according to the value of kom-emacs-knows-iso-8859-1."
   (let ((was-at-max (= (save-excursion (end-of-line) (point)) (point-max))))
     (save-excursion
       (goto-char (point-max))
-      (let ((buffer-read-only nil))
+      (let ((inhibit-read-only t))
 	(insert (if kom-emacs-knows-iso-8859-1
 		    string
 		  (iso-8859-1-to-swascii string))))
