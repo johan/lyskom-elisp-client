@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.136 2001-05-22 10:01:47 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.137 2001-05-24 12:02:35 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.136 2001-05-22 10:01:47 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.137 2001-05-24 12:02:35 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -613,28 +613,37 @@ If CONF is nil, check the first conf on the to-do list."
 Prints the name and amount of unread in the conference we just went to 
 according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
-  (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                             lyskom-current-conf
-                             (conf-stat->conf-no conf-stat))
-  (unless lyskom-is-anonymous
-    (initiate-pepsi 'main nil (conf-stat->conf-no conf-stat)))
-  (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
-  (let ((num-unread (text-list->length (read-info->text-list read-info))))
-    (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
-                              'enter-conf
-                            (if (= num-unread 1)
-                                'one-unread
-                              'several-unread))
-                          conf-stat
-                          num-unread)))  
+  (let ((from-conf lyskom-current-conf)
+        (to-conf (conf-stat->conf-no conf-stat)))
+    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                               from-conf
+                               to-conf)
+    (unless lyskom-is-anonymous
+      (initiate-pepsi 'main nil to-conf))
+    (setq lyskom-current-conf to-conf)
+    (let ((num-unread (text-list->length (read-info->text-list read-info))))
+      (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
+                                'enter-conf
+                              (if (= num-unread 1)
+                                  'one-unread
+                                'several-unread))
+                            conf-stat
+                            num-unread)
+      (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
+                                 from-conf
+                                 to-conf))))
 
 (defun lyskom-leave-current-conf ()
   "Leave the current conference without going to another one."
-  (set-read-list-empty lyskom-reading-list)
-  (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                             lyskom-current-conf 0)
-  (setq lyskom-current-conf 0)
-  (initiate-pepsi 'main nil 0))
+  (let ((from-conf lyskom-current-conf))
+    (set-read-list-empty lyskom-reading-list)
+    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+                               from-conf 0)
+    (setq lyskom-current-conf 0)
+    (initiate-pepsi 'main nil 0)
+    (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
+                               from-conf 0)
+    ))
 
 
 ;;;================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.54 2001-05-21 12:39:29 byers Exp $
+;;;;; $Id: view-text.el,v 44.55 2001-05-24 12:02:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.54 2001-05-21 12:39:29 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.55 2001-05-24 12:02:38 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -1195,11 +1195,12 @@ Returns the time structure if successful, otherwise nil."
              (year (string-to-number (match-string 1 (aux-item->data mx-date))))
              (tzhr (match-string 7 (aux-item->data mx-date)))
              (tzmin (or (match-string 8 (aux-item->data mx-date)) ""))
-             (wday (elt 
-                    (calendar-iso-from-absolute
-                     (calendar-absolute-from-gregorian
-                      (list mon mday year)))
-                    1)))
+             (wday (abs
+                    (elt 
+                     (calendar-iso-from-absolute
+                      (calendar-absolute-from-gregorian
+                       (list mon mday year)))
+                     1))))
         (lyskom-create-time secs mins hour mday mon year wday 0 nil tzhr tzmin))))
 
 ;;; Local Variables: 

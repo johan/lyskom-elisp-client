@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.111 2001-05-22 10:01:45 byers Exp $
+;;;;; $Id: commands1.el,v 44.112 2001-05-24 12:02:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.111 2001-05-22 10:01:45 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.112 2001-05-24 12:02:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1346,7 +1346,8 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
          (apply
           'lyskom-create-misc-list
           (if (and (eq type 'pres)
-                   (not (zerop (conf-stat->presentation conf-stat))))
+                   (not (or (zerop (conf-stat->presentation conf-stat))
+                            (null text-stat))))
               (append
                (lyskom-get-recipients-from-misc-list
                 (text-stat->misc-info-list text-stat))
@@ -1514,7 +1515,10 @@ Args: CONF-STAT MEMBERSHIP"
                       (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
   (lyskom-format-insert 'conf-all-read 
-			conf-stat))
+			conf-stat)
+  (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook 
+                      lyskom-current-conf
+                      (conf-stat->conf-no conf-stat)))
 
 
 

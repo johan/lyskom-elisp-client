@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.84 2001-04-26 11:14:12 jhs Exp $
+;;;;; $Id: utilities.el,v 44.85 2001-05-24 12:02:36 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.84 2001-04-26 11:14:12 jhs Exp $\n"))
+	      "$Id: utilities.el,v 44.85 2001-05-24 12:02:36 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -722,9 +722,9 @@ The order of the list a is kept."
 (defun lyskom-run-hook-with-args (hook &rest args)
   "Run HOOK with the specified arguments ARGS in the LysKOM buffer.
 See run-hook-with-args for detailed information."
-  (save-excursion (set-buffer (or (and (boundp 'lyskom-buffer)
-                                       lyskom-buffer)
-                                  (current-buffer)))
+  (lyskom-save-excursion (set-buffer (or (and (boundp 'lyskom-buffer)
+                                              lyskom-buffer)
+                                         (current-buffer)))
                   (apply 'run-hook-with-args hook args)))
 
 
