@@ -1,3 +1,12 @@
+2002-06-28  Ulrik Haugen  <qha@lysator.liu.se>
+
+        * doc/NEWS-0.47: Updated to this point in ChangeLog in preparation
+	for release of 0.47-BETA-3 some time soon.
+
+	* lyskom-rest.el (lyskom-format-text-body): add text-properties
+	for unification if latin-unity is available.
+	(lyskom-unity-text): new function.
+
 2002-06-26  David Byers  <david.byers@swipnet.se>
 
 	* keyboard-menu.el: New file.
@@ -26,8 +35,8 @@
 
 2002-06-22  David Byers  <david.byers@swipnet.se>
 
-        * doc/NEWS-0.47: Uppdaterad till denna punkt i ChangeLog inför
-	release av 0.47-BETA-3 någon gång snart.
+        * doc/NEWS-0.47: Updated to this point in ChangeLog in preparation
+	for release of 0.47-BETA-3 some time soon.
 
 	* startup.el (lyskom): Renamed all proxy-* variables to
 	www-proxy-*. Changed open-network-stream to
