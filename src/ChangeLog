@@ -1,3 +1,11 @@
+2000-01-11  David Byers  <davby@ida.liu.se>
+
+	* flags.el (kom-save-options): Was removed by mistake.
+
+	* compatibility.el (plist-member): New function.
+
+	* distribution-Makefile (SOURCES): Added mship-edit.el
+
 Tue Jan 11 00:37:57 2000  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-E

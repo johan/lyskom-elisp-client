@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.21 2000-01-10 13:33:45 byers Exp $
+;;;;; $Id: flags.el,v 44.22 2000-01-11 10:05:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.21 2000-01-10 13:33:45 byers Exp $\n"))
+	      "$Id: flags.el,v 44.22 2000-01-11 10:05:07 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -46,6 +46,16 @@
 (def-kom-var lyskom-options-done nil
   "When we have read all options this is turned non-nil."
   local)
+
+(def-kom-command kom-save-options ()
+  "Save options that have been set somewhere."
+  (interactive)
+  (lyskom-save-options (or lyskom-buffer 
+                           (current-buffer))
+                       (lyskom-get-string 'saving-settings)
+                       (lyskom-get-string 'saving-settings-done)
+                       (lyskom-get-string 'could-not-save-options)))
+
 
 ;;;============================================================
 ;;;  lyskom-save-options

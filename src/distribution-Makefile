@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.7 1999-11-19 02:16:00 byers Exp $
+# $Id: distribution-Makefile,v 44.8 2000-01-11 10:05:06 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -74,6 +74,7 @@ SOURCES	 = 	$(LANGUAGE-EL) \
 		view-text.el \
 		async.el \
 		completing-read.el \
+		mship-edit.el \
 		prioritize.el \
 		flags.el \
 		messages.el \
