@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.0 1996-08-30 14:45:52 davidk Exp $
+;;;;; $Id: completing-read.el,v 44.1 1996-09-03 16:01:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.0 1996-08-30 14:45:52 davidk Exp $\n"))
+       "$Id: completing-read.el,v 44.1 1996-09-03 16:01:25 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -362,6 +362,11 @@ function work as a name-to-conf-stat translator."
                                                           login-list
                                                           candidate-list)))
           (cond ((= (length result-list) 1) t)
+                ((and (> (length result-list) 1)
+                      (let ((names (mapcar 'conf-z-info->name
+                                           result-list)))
+                        (and (lyskom-completing-member string names)
+                             t))))
                 (result-list nil)
                 ((= (length specials) 1) t)
                 (specials nil)
@@ -369,6 +374,7 @@ function work as a name-to-conf-stat translator."
                                string) nil)
                 ((string-match (lyskom-get-string 'session-no-regexp)
                                string) nil)
+
                 (t (lyskom-read-conf-internal-verify-type nil
                                                           nil
                                                           predicate
@@ -446,7 +452,8 @@ function work as a name-to-conf-stat translator."
               (found nil))
           (if specials (setq name-list (nconc specials name-list)))
 
-          (cond ((lyskom-completing-member string name-list) t) ; Exact match
+          (cond ((lyskom-completing-member string name-list) 
+                 (or (and (= (length name-list) 1) t) string)) ; Exact match
                 ((= (length name-list) 1) (car name-list))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
@@ -679,12 +686,13 @@ the LysKOM rules of string matching."
 
     (setq main-accumulator (nreverse main-accumulator))
 
-        (if (memq 'HERE main-accumulator)
-            (let ((backup (length (memq 'HERE main-accumulator))))
+    (if (memq 'HERE main-accumulator)
+        (let ((backup (length (memq 'HERE main-accumulator))))
+          (if lyskom-experimental-features
               (setq unread-command-events
                     (append (cons ? (make-list (1- backup) 2))
-                            unread-command-events))
-              (setq main-accumulator (delq 'HERE main-accumulator))))
+                            unread-command-events)))
+          (setq main-accumulator (delq 'HERE main-accumulator))))
 
     (let ((tmp (make-string (length main-accumulator) 0))
           (index 0))

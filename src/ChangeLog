@@ -1,3 +1,27 @@
+Mon Sep  2 08:47:36 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* completing-read.el (lyskom-read-conf-internal): Returnera t för
+ 	'lambda vid lite fler tillfällen, hantera try-completion på det
+ 	sätt som C-koden säger att det skall fungera, inte som
+ 	info-manualen säger.
+
+Sun Sep  1 09:48:07 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-view-url-dired): Hantera ftp-URL
+ 	enligt RFC 1738.
+	(lyskom-view-url-telnet): Hantera telnet-url enligt RFC.
+	
+
+Sat Aug 31 11:37:45 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* lyskom-rest.el (lyskom-get-string): Lade till assoc-list som
+ 	optional parameter.
+	(lyskom-read-extended-command): Ny funktion.
+	(kom-extended-command): Använd lyskom-read-extended-command.
+
+	* commands2.el (kom-send-message): Sätt mustmatch så inte
+ 	oinloggade personer gör att man sänder allänna meddelanden.
+
 Fri Aug 30 16:35:37 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Version 0.44 släppt.
