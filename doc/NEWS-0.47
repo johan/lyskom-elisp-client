@@ -37,6 +37,33 @@
     senare i 21-serien). Det kanske fungerar med andra versioner
     också. Lycka till.
 
+* Problem med teckenuppsättningar
+
+** Om du använder language-environment Latin-9 kommer du att få
+   problem när du kommenterar texter skrivna med Latin-1. Om du
+   använder language-environment Latin-1 kommer du istället att
+   få problem när/om du kommenterar texter skrivna med Latin-9.
+
+   Om du använder GNU Emacs 21 kan du använda ucs-tables.el som
+   antagligen kommer att följa med i version 21.3. (Hämtas t ex
+   från cvs <url:http://savannah.gnu.org/cgi-bin/viewcvs/emacs/
+   emacs/lisp/international/ucs-tables.el> revision 1.12 har vi
+   testat.) När du hämtat filen behöver du lägga den någonstans
+   i din load-path och se till att den används. Någonting i den
+   här stilen borde fungera om du lagt ucs-tables.el i ~/elisp:
+
+   (setq load-path (cons (expand-file-name "~/elisp")
+                         load-path))
+   (require 'ucs-tables)
+   (unify-8859-on-encoding-mode 1)
+   (unify-8859-on-decoding-mode 1)
+
+   För de som använder XEmacs innehåller elispklienten en patch
+   som förhoppningsvis gör att paketet latin-unity kan användas
+   för att avhjälpa samma problem. Följande i .emacs borde göra
+   susen om latin-unity är installerat:
+
+   (latin-unity-install)
 
 
 * Migreringsproblem och kompatibilitetsproblem
