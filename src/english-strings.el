@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 41.3 1996-05-04 01:03:51 davidk Exp $
+;;;;; $Id: english-strings.el,v 41.4 1996-05-06 14:58:03 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 41.3 1996-05-04 01:03:51 davidk Exp $"))
+              "$Id: english-strings.el,v 41.4 1996-05-06 14:58:03 davidk Exp $"))
 
 
 
@@ -620,6 +620,12 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (footnote-to-text . "Footnote to article %#1n")
     (comment-in-text . "Comment in article %#1n")
     (footnote-in-text . "Footnote in article %#1n")
+
+    (comment-to-text-by . "Comment to article %#1n by %#2P")
+    (footnote-to-text-by . "Footnote to article %#1n by %#2P")
+    (comment-in-text-by . "Footnote in article %#1n by %#2P")
+    (footnote-in-text-by . "Footnote in article %#1n by %#2P")
+
     (written-by . " by %#1P\n")
 
     ; From async.el:

@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.2 1996-05-04 17:55:44 davidk Exp $
+;;;;; $Id: vars.el.in,v 41.3 1996-05-06 14:58:21 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.2 1996-05-04 17:55:44 davidk Exp $\n"
+  "$Id: vars.el.in,v 41.3 1996-05-06 14:58:21 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -1128,6 +1128,13 @@ the value of  kom-tell-phrases  for fun.")
 ;; Set up default faces in case no face scheme is selected
 ;;
 
+(defvar lyskom-faces
+  '(kom-active-face kom-url-face kom-me-face kom-highlight-face
+		    kom-text-face kom-subject-face kom-text-no-face
+		    kom-friends-face kom-presence-face
+		    kom-first-line-face)
+  "This is a list of the faces that LysKOM uses.")
+
 (defvar lyskom-face-schemes
   '((default
      (kom-active-face default "blue4" nil)
@@ -1210,7 +1217,7 @@ to be bold with yellow text on a red background."
     (error nil)))
 
 
-(defun lyskom-set-face-scheme (scheme)
+(defun lyskom-set-face-scheme (scheme &optional)
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
 in lyskom-face-schemes."
   (let ((tmp (assoc scheme lyskom-face-schemes)))
@@ -1219,13 +1226,43 @@ in lyskom-face-schemes."
           (mapcar 
            (function
             (lambda (spec)
-              (copy-face (or (elt spec 1) 'default) (elt spec 0))
+	      (copy-face (or (elt spec 1) 'default) (elt spec 0))
               (if (elt spec 2)
                   (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
               (if (elt spec 3)
                   (lyskom-set-face-background (elt spec 0) (elt spec 3)))))
-           (cdr tmp))))))
+	   (cdr tmp))))))
 
 (lyskom-set-face-scheme kom-default-face-scheme)
 
 
+;;; Look for X resources specifying faces.
+
+(if (eq window-system 'x)
+    (let* ((set-p (function
+		   (lambda (face-name resource)
+		     (x-get-resource (concat face-name ".attribute" resource)
+				     (concat "Face.Attribute" resource)))))
+	   (on-p (function
+		  (lambda (face-name resource)
+		    (let ((set (funcall set-p face-name resource)))
+		      (cond ((null set) nil)
+			    ((member (downcase set) '("on" "true")) 'on)
+			    (t 'off)))))))
+      (mapcar
+       (function
+	(lambda (face)
+	  (let* ((face-name (symbol-name face))
+		 (fg (funcall set-p face-name "Foreground"))
+		 (bg (funcall set-p face-name "Background"))
+		 (bl (funcall on-p face-name "Bold"))
+		 (it (funcall on-p face-name "Italic"))
+		 (ul (funcall on-p face-name "Underline")))
+	    (if fg (set-face-foreground face fg))
+	    (if bg (set-face-background face bg))
+	    (if (eq bl 'on) (make-face-bold face nil t))
+	    (if (eq bl 'off) (make-face-unbold face nil t))
+	    (if (eq it 'on) (make-face-italic face nil t))
+	    (if (eq it 'off) (make-face-unitalic face nil t))
+	    (if ul (set-face-underline-p face (eq ul 'on))))))
+       lyskom-faces)))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 41.3 1996-05-05 22:20:08 davidk Exp $
+;;;;; $Id: view-text.el,v 41.4 1996-05-06 14:58:24 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 41.3 1996-05-05 22:20:08 davidk Exp $\n"))
+	      "$Id: view-text.el,v 41.4 1996-05-06 14:58:24 davidk Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -441,33 +441,59 @@ Args: TEXT-STAT of the text being read."
 
 (defun lyskom-print-header-comm (text misc)
   "Get author of TEXT-NO and print a header line."
-  (let ((text-stat (if kom-deferred-printing
+  (let ((type (misc-info->type misc))
+	(text-stat (if kom-deferred-printing
 		       (cache-get-text-stat text)
 		     (blocking-do 'get-text-stat text))))
+
+    ;; Print information about the link
     (if text-stat
 	(progn
-	  (lyskom-insert-header-comm text-stat misc
-				     'lyskom-format-insert))
+	  (lyskom-insert-header-comm text-stat misc))
       (let ((defer-info (lyskom-create-defer-info
-			 'initiate-get-text-stat
+			 'get-text-stat
 			 text
 			 'lyskom-insert-deferred-header-comm
 			 (point-max-marker)
-			 (1+ (length lyskom-defer-indicator))
-			 "%#1s"
+			 (length lyskom-defer-indicator)
+			 nil		; Filled in later
 			 misc)))
 	(lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
-	(lyskom-defer-insertion defer-info)))))
+	(lyskom-defer-insertion defer-info)))
+
+    ;; Print information about who added the link
+    (if (misc-info->sent-at misc)
+	(lyskom-format-insert 'send-at (lyskom-return-date-and-time 
+					(misc-info->sent-at misc))))
+    (if (misc-info->sender misc)
+	(lyskom-format-insert 'sent-by (misc-info->sender misc)))))
 
 
 (defun lyskom-insert-deferred-header-comm (text-stat defer-info)
-  (lyskom-replace-deferred defer-info
-    (lyskom-insert-header-comm text-stat (defer-info->data defer-info)
-			       'lyskom-format-insert-at-point)))
+  (let* ((author (if text-stat (text-stat->author text-stat) nil))
+	 (misc (defer-info->data defer-info))
+	 (type (misc-info->type misc))
+	 fmt data)
+    (cond
+     ((eq type 'COMM-TO)
+      (setq fmt (if author 'comment-to-text-by 'comment-to-text)
+	    data (misc-info->comm-to misc)))
+     ((eq type 'FOOTN-TO)
+      (setq fmt (if author 'footnote-to-text-by 'footnote-to-text)
+	    data (misc-info->footn-to misc)))
+     ((eq type 'COMM-IN)
+      (setq fmt (if author 'comment-in-text-by 'comment-in-text)
+	    data (misc-info->comm-in misc)))
+     ((eq type 'FOOTN-IN)
+      (setq fmt (if author 'footnote-in-text-by 'footnote-in-text)
+	    data(misc-info->footn-in misc)))) 
+    (set-defer-info->format defer-info fmt)
+    ; Note: author is ignored if fmt is not *-by
+    (lyskom-replace-deferred defer-info data author)))
 
 
 
-(defun lyskom-insert-header-comm (text-stat misc insertfun)
+(defun lyskom-insert-header-comm (text-stat misc)
   "Get author of TEXT-NO and print a header line."
   ;;+++ error kommer att se annorlunda ut.
   (let ((author (if text-stat
@@ -476,23 +502,16 @@ Args: TEXT-STAT of the text being read."
 	(type (misc-info->type misc)))
     (cond
      ((eq type 'COMM-TO)
-      (funcall insertfun 'comment-to-text (misc-info->comm-to misc)))
+      (lyskom-format-insert 'comment-to-text (misc-info->comm-to misc)))
      ((eq type 'FOOTN-TO)
-      (funcall insertfun 'footnote-to-text (misc-info->footn-to misc)))
+      (lyskom-format-insert 'footnote-to-text (misc-info->footn-to misc)))
      ((eq type 'COMM-IN)
-      (funcall insertfun 'comment-in-text (misc-info->comm-in misc)))
+      (lyskom-format-insert 'comment-in-text (misc-info->comm-in misc)))
      ((eq type 'FOOTN-IN)
-      (funcall insertfun 'footnote-in-text (misc-info->footn-in misc))))
+      (lyskom-format-insert 'footnote-in-text (misc-info->footn-in misc))))
     (if author
-	(funcall insertfun 'written-by author)
-      (lyskom-insert-at-point "\n"))
-    
-    ;; Print information about who added the link
-    (if (misc-info->sent-at misc)
-	(funcall insertfun 'send-at (lyskom-return-date-and-time 
-				     (misc-info->sent-at misc))))
-    (if (misc-info->sender misc)
-	(funcall insertfun 'sent-by (misc-info->sender misc)))))
+	(lyskom-format-insert 'written-by author)
+      (lyskom-insert-at-point "\n"))))
 
 
 

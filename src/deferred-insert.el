@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 41.2 1996-05-05 22:19:56 davidk Exp $
+;;;;; $Id: deferred-insert.el,v 41.3 1996-05-06 14:57:59 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -55,11 +55,17 @@
 ;;;                      data. This should normally only contain a
 ;;;                      single format atom using argument 1
 ;;;                      (i.e. "%#1P").
-;;;        DATA        - any data that you want to send to HANDLER.
+;;;        DATA        - any data that you might want to use in
+;;;                      HANDLER.
 ;;;
 ;;;  3. Call `lyskom-defer-insertion' with the defer-info as argument.
 ;;;
-;;;  4. Sit back and watch it work.
+;;;  4. Write a handler function that takes two arguments, the server
+;;;     reply and the defer-info. This function should replace the
+;;;     temporary text. A convenient way to do this is to use
+;;;     `lyskom-replace-deferred'.
+;;;
+;;;  5. Sit back and watch it work.
 ;;;  
 ;;;  Notes:
 ;;;  
@@ -71,7 +77,8 @@
 ;;;  least the POS parameter is determined before any text is
 ;;;  inserted.
 ;;;
-
+;;;  You should only defer text if kom-deferred-printing is non-nil.
+;;;
 
 
 
@@ -108,61 +115,39 @@
   "Defer insertion of something.
 The insertion will be at (point)."
   (goto-char (defer-info->pos defer-info))
-  (funcall (defer-info->server-call defer-info)
+  (funcall (intern-soft (concat "initiate-"
+				(symbol-name (defer-info->server-call
+					       defer-info)))) 
 	   'deferred
 	   (defer-info->handler defer-info)
 	   (defer-info->call-par defer-info)
 	   defer-info))
 
-(defmacro lyskom-replace-deferred (defer-info &rest body)
+(defun lyskom-replace-deferred (defer-info &rest replacement-data)
   "Replace some defered text."
-  (append (list 'save-excursion
-		(list 'goto-char (list 'defer-info->pos defer-info)))
-	  body
-	  (list
-	   (list 'let (list (list 'inhibit-read-only t))
-		 (list 'delete-char (list 'defer-info->del-chars defer-info)))
-	   (list 'set-marker (list 'defer-info->pos defer-info) nil))))
+  (save-excursion
+    (goto-char (defer-info->pos defer-info))
+    (apply 'lyskom-format-insert-at-point
+	   (defer-info->format defer-info)
+	   replacement-data)
+    (let ((inhibit-read-only t))
+      (delete-char (defer-info->del-chars defer-info)))
+    (set-marker (defer-info->pos defer-info) nil)))
 	
-
-(put 'lyskom-replace-deferred 'edebug-form-spec '(eval body))
-(put 'lyskom-replace-deferred 'lisp-indent-function 1)
 
 (defun lyskom-deferred-insert-conf (conf-stat defer-info)
   "Insert the name of a conference at a previously reserved place."
-  (lyskom-replace-deferred defer-info
-    (if (null conf-stat)
-	(lyskom-format-insert-at-point
-	 (defer-info->format defer-info)
-	 (lyskom-format 
-	  (or (defer-info->data defer-info)
-	      (if (conf-type->letterbox (conf-stat->conf-type conf-stat))
-		  (if (= (defer-info->call-par defer-info) 0)
-		      'person-is-anonymous
-		    'person-does-not-exist)
-		'conference-does-not-exist))
-	  (defer-info->call-par defer-info)))
-      (lyskom-format-insert-at-point (defer-info->format defer-info)
-				     conf-stat))))
+  (lyskom-replace-deferred
+   defer-info
+   (if (null conf-stat)
+       (lyskom-format 
+	(or (defer-info->data defer-info)
+	    (if (conf-type->letterbox (conf-stat->conf-type conf-stat))
+		(if (= (defer-info->call-par defer-info) 0)
+		    'person-is-anonymous
+		  'person-does-not-exist)
+	      'conference-does-not-exist))
+	(defer-info->call-par defer-info))
+     conf-stat)))
 
 
-;;;(defun lyskom-deferred-insert-conf (conf-stat defer-info)
-;;;  "Insert the name of a conference at a previously reserved place."
-;;;  (save-excursion
-;;;    (goto-char (defer-info->pos defer-info))
-;;;    (if (null conf-stat)
-;;;	(lyskom-format-insert-at-point
-;;;	 (defer-info->format defer-info)
-;;;	 (lyskom-format 
-;;;	  (or (defer-info->data defer-info)
-;;;	      (if (conf-type->letterbox (conf-stat->conf-type conf-stat))
-;;;		  (if (= (defer-info->call-par defer-info) 0)
-;;;		      'person-is-anonymous
-;;;		    'person-does-not-exist)
-;;;		'conference-does-not-exist))
-;;;	  (defer-info->call-par defer-info)))
-;;;      (lyskom-format-insert-at-point (defer-info->format defer-info)
-;;;				     conf-stat))
-;;;    (let ((inhibit-read-only t))
-;;;      (delete-char (defer-info->del-chars defer-info)))
-;;;    (set-marker (defer-info->pos defer-info) nil)))
