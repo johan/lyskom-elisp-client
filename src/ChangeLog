@@ -1,3 +1,7 @@
+Thu May  4 15:05:51 2000  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-I
+
 2000-05-04  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-buglist): Use our copy of
