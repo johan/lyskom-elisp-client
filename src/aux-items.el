@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.20 2000-08-11 09:43:36 byers Exp $
+;;;;; $Id: aux-items.el,v 44.21 2001-01-28 21:16:07 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.20 2000-08-11 09:43:36 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.21 2001-01-28 21:16:07 joel Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -160,11 +160,9 @@ return non-nil if the item is to be included in the list."
   (info  . lyskom-aux-item-info))
 
 (def-aux-item fast-reply 2
-  (text-print-when . footer)
   (parse . nil)
   (parse-data . lyskom-aux-item-decode-data)
   (encode-data . lyskom-aux-item-encode-data)
-  (text-print . lyskom-print-fast-reply)
   (info . lyskom-aux-item-info))
 
 (def-aux-item cross-reference 3
@@ -280,6 +278,12 @@ return non-nil if the item is to be included in the list."
   (text-print-when . header)
   (info . lyskom-aux-item-info))
 
+(def-aux-item recommended-conf 29
+  (info . lyskom-aux-item-info))
+
+(def-aux-item allowed-content-type 30
+  (info . lyskom-aux-item-info))
+
 
 
 
@@ -346,12 +350,6 @@ return non-nil if the item is to be included in the list."
 (defun lyskom-parse-content-type ()
   (and (looking-at (lyskom-get-string 'content-type-regexp))
        (match-string 1)))
-
-(defun lyskom-print-fast-reply (item &optional obj)
-  (concat (lyskom-format 'fast-reply-aux
-                         (aux-item->data item)
-                         (aux-item->creator item))
-          (lyskom-aux-item-terminating-button item obj)))
 
 (defun lyskom-parse-cross-reference ()
   (or (and (looking-at (lyskom-get-string 'cross-reference-text-regexp))
