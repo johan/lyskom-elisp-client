@@ -1,3 +1,13 @@
+Sun Feb  9 11:25:35 1997  David Byers  <davby@sen22.ida.liu.se>
+
+	* utilities.el (lyskom-apo-timeout): Ny variabel.
+	(lyskom-apo-timeout-index): Dito.
+	(lyskom-apo-timeout-vector): Dito.
+	(lyskom-apo-timeout-vector-max): Dito.
+	(lyskom-accept-process-output): Ny definition.
+	(lyskom-next-apo-timeout): Ny funktion.
+	(lyskom-reset-apo-timeout): Ny funktion.
+
 Fri Feb  7 18:03:58 1997  David Byers  <davby@sen22.ida.liu.se>
 
 	* lyskom-rest.el (lyskom-update-prompt): Ny parameter,
