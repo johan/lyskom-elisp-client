@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.112 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: edit-text.el,v 44.113 2003-08-04 15:09:13 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.112 2003-08-02 20:21:46 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.113 2003-08-04 15:09:13 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1752,7 +1752,7 @@ Point must be located on the line where the subject is."
 
 (defun lyskom-edit-fcc-text (conf-stat text text-no is-anonymous)
   (condition-case arg
-      (let ((start 1) (end 0))
+      (let ((start 1) (end 0) (inhibit-read-only t))
         (save-excursion
           (set-buffer (lyskom-get-buffer-create 'fcc "*kom*-fcc" t))
           (erase-buffer)
