@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.10 1994-01-06 00:04:42 linus Exp $
+# $Id: Makefile,v 35.11 1994-01-06 00:40:23 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,10 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 35.10  1994-01-06 00:04:42  linus
+# Revision 35.11  1994-01-06 00:40:23  linus
+# Install directive moved here.
+#
+# Revision 35.10  1994/01/06  00:04:42  linus
 # Fixed so info-nuke works even if infod using makeinfo.
 #
 #
@@ -64,6 +67,18 @@ $(INDEXES): indexes
 elisp-client.dvi: $(INDEXES)
 	@echo pass 3
 	tex elisp-client.texinfo
+
+.PHONY: install
+install: elisp-client elisp-client.txt
+	cp elisp-client elisp-client-? /usr/gnu/info
+	(VER=`grep "^Dokumentationen uppdaterad till klient version " elisp-client.texinfo | \
+	sed -n 's/version \(.*\)/\1/p'` ; \
+	tar cf elisp-client.info-$${VER}.tar elisp-client elisp-client-? ; \
+	gzip elisp-client.info-$${VER}.tar; \
+	gzip < elisp-client.txt > elisp-client.txt-$${VER}.gz; \
+	mv elisp-client.info-$${VER}.tar.gz elisp-client.txt-$${VER}.gz \
+	 /usr/ftp/pub/lyskom/elisp-client; )
+
 
 smallclean:
 	$(RM) *.fns *.kys *.pgs *.tps *.vrs *.cps indexes
