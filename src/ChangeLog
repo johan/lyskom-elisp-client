@@ -1,5 +1,14 @@
 2003-08-24  David Byers  <byers@lysator.liu.se>
 
+	* completing-read.el (lyskom-default-conference-empty): New function.
+
+	* vars.el.in (lyskom-default-conference-strategy): Corrected
+	listings for review and unread functions.
+
+	* review.el (lyskom-review-by-to): Correct prompt in call to
+	lyskom-read-conf-no.
+	(lyskom-unread-by-to): Same here.
+
 	* commands1.el (kom-status-session): Pass prompt to
 	lyskom-read-session-no as symbol.
 

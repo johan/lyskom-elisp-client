@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.267 2003-08-24 21:12:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.268 2003-08-24 22:05:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.267 2003-08-24 21:12:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.268 2003-08-24 22:05:35 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -270,35 +270,35 @@ the priority among links that match the same text is undefined."
                         (filter . (lyskom-default-conference-not-self))))
 
 
-    (kom-review-by-to (info-by-whom
+    (kom-review-by-to (review-by-whom
                        (default . (lyskom-default-conference-at-point
                                    lyskom-default-conference-empty)))
-                      (info-to-conf))
+                      (review-to-conf))
 
-    (kom-review-first (info-by-whom
+    (kom-review-first (review-by-whom
                        (default . (lyskom-default-conference-at-point
                                    lyskom-default-conference-empty)))
-                      (info-to-conf))
+                      (review-to-conf))
 
-    (kom-review-all (info-by-whom
+    (kom-review-all (review-by-whom
                      (default . (lyskom-default-conference-at-point
                                  lyskom-default-conference-empty)))
-                    (info-to-conf))
+                    (review-to-conf))
 
-    (kom-unread-by-to (info-by-whom
+    (kom-unread-by-to (unread-by-whom
                        (default . (lyskom-default-conference-at-point
                                    lyskom-default-conference-empty)))
-                      (info-to-conf))
+                      (unread-to-conf))
 
-    (kom-unread-first (info-by-whom
+    (kom-unread-first (unread-by-whom
                       (default . (lyskom-default-conference-at-point
                                   lyskom-default-conference-empty)))
-                      (info-to-conf))
+                      (unread-to-conf))
 
-    (kom-unread-all (info-by-whom 
+    (kom-unread-all (unread-by-whom 
                      (default . (lyskom-default-conference-at-point
                                  lyskom-default-conference-empty)))
-                    (info-to-conf))
+                    (unread-to-conf))
 
     (kom-set-permitted-submitters (conf-to-set-permitted-submitters-q)
                                   (new-permitted-submitters-q

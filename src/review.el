@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.55 2003-08-17 12:48:06 byers Exp $
+;;;;; $Id: review.el,v 44.56 2003-08-24 22:05:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.55 2003-08-17 12:48:06 byers Exp $\n"))
+	      "$Id: review.el,v 44.56 2003-08-24 22:05:34 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -299,13 +299,10 @@ all review-related functions."
                             ((< count 0)
                              (lyskom-format 'first-n
                                             (- count))))))
-         (by (lyskom-read-conf-no 
-              `(review-info ,(lyskom-format 'info-by-whom info))
-              '(pers) t nil t))
-         (to (lyskom-read-conf-no 
-              `(review-info ,(lyskom-format 'info-to-conf info))
-              '(all) 
-              t nil t)))
+         (by (lyskom-read-conf-no `(review-by-whom ,info)
+                                  '(pers) t nil t))
+         (to (lyskom-read-conf-no `(review-to-conf ,info)
+                                  '(all) t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
@@ -377,12 +374,10 @@ texts, review the last N texts instead of the first (you can use
                             ((< count 0)
                              (lyskom-format 'first-n
                                             (- count))))))
-         (by (lyskom-read-conf-no 
-              `(unread-info ,(lyskom-format 'info-by-whom info))
-              '(pers) t nil t))
-         (to (lyskom-read-conf-no 
-              `(unread-info ,(lyskom-format 'info-to-conf info))
-              '(all) t nil t)))
+         (by (lyskom-read-conf-no `(unread-by-whom ,info)
+                                  '(pers) t nil t))
+         (to (lyskom-read-conf-no `(unread-to-conf ,info)
+                                  '(all) t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
