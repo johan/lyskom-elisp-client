@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.199 2003-08-24 21:12:43 byers Exp $
+;;;;; $Id: commands1.el,v 44.200 2003-10-23 20:24:37 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.199 2003-08-24 21:12:43 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.200 2003-10-23 20:24:37 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2285,6 +2285,8 @@ exist."
                     prompt
                     (lyskom-maybe-frob-completion-table completions)))
              (mark-assoc (lyskom-string-assoc mark completions)))
+        (when (null mark)
+          (setq mark ""))
         (cond
          ;; Default completion.
          ((and nildefault
@@ -2302,6 +2304,7 @@ exist."
 
          ;; Incorrect completion; create new symbolic mark type.
          ((and create-nonexistent
+               (not (string= mark ""))
                (lyskom-j-or-n-p
                 (lyskom-format (lyskom-get-string
                                 'want-to-create-symbolic-mark)
