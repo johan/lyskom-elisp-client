@@ -172,3 +172,19 @@
 
 
 
+    Da Trapz:
+
+    These are things you might want to do in a callback that you
+    can't do, but that work most of the time.
+
+    * Call lyskom-view-text
+
+      There is no workaround for this one yet. Sorry.
+
+
+    * Call lyskom-get-membership
+
+      Use lyskom-try-get-membership for a non-blocking version. The
+      problem is that if you get nil back you don't know if you are a
+      member or not. As far as I know there is no workaround for that
+      either.
