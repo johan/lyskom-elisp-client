@@ -1,3 +1,12 @@
+2003-01-09  David Byers  <david.byers@swipnet.se>
+
+	* option-edit.el (lyskom-create-widget): Insert the variable name
+	in the buffer, after the help toggle. This is to make the buffer
+	searchable for the actual variable names.
+
+	* lyskom-rest.el (lyskom-format-format): Added format-letter % so
+	the sequence %% works.
+
 2003-01-08  David Byers  <david.byers@swipnet.se>
 
 	* filter.el (kom-super-jump): Fixed problem with prefix arg.
@@ -8,7 +17,7 @@
 	* commands1.el: Fixed some invalid variable references in the new
 	docstrings.
 
-	* faqs.el: Fixed some invalid variable references in the new
+	* faqs.el: Fixed some invalid vxariable references in the new
 	docstrings.
 
 2003-01-08  David Byers  <davby@ida.liu.se>

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.292 2003-01-08 00:33:15 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.293 2003-01-09 21:41:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.292 2003-01-08 00:33:15 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.293 2003-01-09 21:41:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -4020,7 +4020,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-remote-controllers-tag . "Tillåtna fjärrstyrare:")
 
     (kom-customize-format-tag . "Visa hjälptexterna för inställningar:")
-    (kom-default-language-tag . "Språk:           ")
+    (kom-default-language-tag . "Språk:")
     (kom-ispell-dictionary-tag . "Ordlista:")
     (kom-show-namedays-tag .    "Visa dagens namn:")
 

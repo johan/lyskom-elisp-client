@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.189 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.190 2003-01-09 21:41:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.189 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.190 2003-01-09 21:41:43 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1186,7 +1186,7 @@ Args: FORMAT-STRING &rest ARGS"
 
 
 (defvar lyskom-format-format
-  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxcCSDF?]\\)"
+  "%\\(=\\)?\\(-?[0-9]+\\)?\\(#\\([0-9]+\\)\\)?\\(_\\)?\\(:\\)?\\(&\\)?\\([][$@MmPpnrtsdoxcCSDF%?]\\)"
   "regexp matching format string parts.")
 
 (defun lyskom-insert-string (atom)
