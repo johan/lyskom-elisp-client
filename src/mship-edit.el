@@ -1,3 +1,57 @@
+;;; TO DO
+;;;
+;;; -------------------------------------------------------------------------
+;;; When prioritizing an entry we need to sort the read lists to put
+;;; the entries in the proper order. It's possible that we'll have to
+;;; change the prompt.
+;;;
+;;; Test cases:
+;;;
+;;; Change the priority of the current conf to lower than one we have
+;;; unreads in. Should trigger prompt change.
+;;;
+;;; Change the priority of the current conf to higher than one that
+;;; was higher previously and had unreads. This should trigger a
+;;; prompt change.
+;;;
+;;; Re-order two confs we are not in by changing their priority. Check
+;;; that we get to read them in the correct order.
+;;;
+;;; Re-order two confs without changing their priority. Check that we
+;;; get to read them in the correct order.
+;;; -------------------------------------------------------------------------
+;;;
+;;; -------------------------------------------------------------------------
+;;; Changing priority might put the conference above or below the
+;;; current session priority. We need to fetch or delete maps.
+;;;
+;;; Test cases:
+;;;
+;;; Prioritize a conf under the session priority to above the session
+;;; priority. Should give us more unreads. Might trigger prompt change.
+;;;
+;;; Prioritize a conf with unreads to under the session priority. 
+;;; Should give us less unreads. Might trigger prompt change.
+;;;
+;;; While prefetching a conf, change its priority to below the session
+;;; priority. The prefetched maps should be discarded automatically.
+;;; -------------------------------------------------------------------------
+;;;          
+;;; What we need is a general function we use to change the priority of a 
+;;; membership. Since we do all the updates in the background it's OK to
+;;; send an update off as soon as we change the priority of a membership.
+;;; 
+;;; This function should... 
+;;; - Change the priority and placement of the membership in the server
+;;; - See if the priority has changed re the session priority and if so
+;;;   either start a prefetch for the conference or remove the unreads
+;;;   for the conference from all read lists.
+;;; - Remove and reinsert the unreads in the reading lists, then update
+;;;   the prompt.
+;;; - Sort the membership list.
+;;;
+;;;
+
 (def-komtype lp--entry 
   start-marker                          ; Where the entry is in the buffer
   end-marker                            ; Where it ends in the buffer
@@ -22,6 +76,19 @@
 
 ;;; ============================================================
 ;;; Entry drawing
+
+(defmacro lp--save-excursion (&rest body)
+  `(let* ((lp--saved-entry  (lp--entry-at (point)))
+          (lp--saved-column (and lp--saved-entry
+                                 (- (point) 
+                                    (lp--entry->start-marker
+                                     lp--saved-entry)))))
+     (save-excursion ,@body)
+     (if (and lp--saved-entry
+              (lp--entry->start-marker lp--saved-entry))
+         (goto-char (+ lp--saved-column (lp--entry->start-marker 
+                                         lp--saved-entry))))))
+
 
 (defun lp--compute-format-string ()
   (if (and lp--last-format-string
@@ -162,6 +229,7 @@ Medlemskap för %#1M på %#2s
 " lyskom-pers-no lyskom-server-name)
       (setq lp--list-start-marker (point-marker))
       (goto-char (point-max))
+      (lyskom-sort-membership)
       (lyskom-display-buffer buf)
       (lyskom-traverse mship (lyskom-default-value 'lyskom-membership)
         (blocking-do 'get-conf-stat (membership->conf-no mship))
@@ -276,7 +344,7 @@ entry priority"
   (let ((cur (lp--get-entry to)))
     (if cur
         (goto-char (lp--entry->start-marker cur))
-      (goto-char (lp--list-end-marker)))
+      (goto-char lp--list-end-marker))
     (lp--set-entry-list (lp--add-to-list to entry (lp--all-entries)))
     (lp--print-entry entry)))
 
@@ -468,6 +536,26 @@ Forces a mode line update"
 
 
 ;;; ------------------------------------------------------------
+;;; Server update functions
+
+(defun lp--update-membership (entry-list)
+  "Update the server version of all entries in ENTRY-LIST"
+  (save-excursion
+    (set-buffer lyskom-buffer)
+    (mapcar 
+     (lambda (el)
+       (let ((mship (lp--entry->membership el)))
+         (initiate-add-member 'background nil 
+                              (membership->conf-no mship)
+                              lyskom-pers-no
+                              (membership->priority mship)
+                              (lp--entry-position el)
+                              (membership->type mship))))
+     entry-list)
+    (lyskom-sort-membership)))
+
+
+;;; ------------------------------------------------------------
 ;;; User-level functions
 
 
@@ -487,8 +575,8 @@ Forces a mode line update"
 
 (defun lp--toggle-membership-selection (where)
   "Toggle selection of the membership that point is on."
-  (interactive)
-  (let ((entry (lp--entry-at (point))))
+  (interactive "d")
+  (let ((entry (lp--entry-at where)))
     (when entry
       (lp--select-entries (list entry) (not (lp--entry->selected entry))))))
 
@@ -563,7 +651,10 @@ possible in the list."
                (let ((new-pos (lp--entry-position 
                                (lp--find-new-position entry priority))))
                  (set-lp--entry->priority entry priority)
-                 (lp--move-entry entry new-pos)))
+                 (set-membership->priority
+                  (lp--entry->membership entry) priority)
+                 (lp--move-entry entry new-pos)
+                 (lp--update-membership (list entry))))
              entries))))
                               
 
@@ -572,17 +663,77 @@ possible in the list."
 ;;; ============================================================
 ;;; Motion commands
 
+(defun lp--previous-entry (count)
+  "Move the cursor up COUNT lines.
+The cursor will always move to the start of the target entry."
+  (interactive "p")
+  (let* ((entry (lp--entry-at (point)))
+         (pos (max 0 (- (lp--entry-position entry) count))))
+    (goto-char (lp--entry->start-marker (lp--get-entry pos)))))
 
+(defun lp--next-entry (count)
+  "Move the cursor down COUNT lines.
+The cursor will always move to the start of the target entry."
+  (interactive "p")
+  (let* ((entry (lp--entry-at (point)))
+         (pos (min (1- (length (lp--all-entries)))
+                   (+ (lp--entry-position entry) count))))
+    (condition-case nil
+        (goto-char (lp--entry->start-marker (lp--get-entry pos)))
+      (error nil))))
 
+(defun lp--first-entry ()
+  "Move point to the first entry in the membership list."
+  (interactive)
+  (condition-case nil
+      (goto-char (lp--entry->start-marker (lp--get-entry 0)))
+    (error nil)))
 
-(defmacro lp--save-excursion (&rest body)
-  `(let* ((lp--saved-entry  (lp--entry-at (point)))
-          (lp--saved-column (and lp--saved-entry
-                                 (- (point) 
-                                    (lp--entry->start-marker
-                                     lp--saved-entry)))))
-     (save-excursion ,@body)
-     (if (and lp--saved-entry
-              (lp--entry->start-marker lp--saved-entry))
-         (goto-char (+ lp--saved-column (lp--entry->start-marker 
-                                         lp--saved-entry))))))
+(defun lp--last-entry ()
+  "Move point to the last entry in the membership list."
+  (interactive)
+  (condition-case nil
+      (goto-char
+       (lp--entry->start-marker (lp--get-entry (1- (length lp--all-entries)))))
+    (error nil)))
+
+(defun lp--goto-priority (priority)
+  "Move to the closest entry with priority ARG.
+If there is no entry with the specified priority, move to the nearest 
+entry with an adjacent priority."
+  (interactive "P")
+  (let* ((entry (lp--entry-at (point)))
+         (seen-me nil)
+         (done nil)
+         (entry-list (lp--all-entries)))
+
+    ;; Get the priority to move to
+
+    (unless (numberp priority)
+      (setq priority
+            (lyskom-read-num-range 0 255 "Gå till prioritet: " t)))
+
+    ;; Figure out where to move
+    ;; Loop over all entries
+
+    (while (and (not done) (cdr entry-list))
+      (when (eq (car entry-list) entry) (setq seen-me t))
+      (if (or (< (lp--entry->priority (car entry-list))
+                 priority)
+              (and seen-me (= (lp--entry->priority (car entry-list))
+                              priority)))
+          (setq done t)
+        (setq entry-list (cdr entry-list))))
+
+    (when entry-list
+      (goto-char (lp--entry->start-marker (car entry-list))))))
+    
+(defun lp--toggle-entry-expansion ()
+  "Toggle the expanded state of the current entry."
+  (interactive)
+  (let ((entry (lp--entry-at (point))))
+    (when entry
+      (set-lp--entry->state 
+       entry
+       (if (eq (lp--entry->state entry) 'expanded) 'contracted 'expanded))
+      (lp--redraw-entry entry))))
