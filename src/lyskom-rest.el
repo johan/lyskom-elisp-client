@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.232 2004-02-29 18:20:01 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.233 2004-02-29 21:49:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.232 2004-02-29 18:20:01 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.233 2004-02-29 21:49:32 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1908,8 +1908,12 @@ Deferred insertions are not supported."
      ;;  properties and the subject to the result list
      ;;
      ((= format-letter ?r)
-      (setq result (cond ((stringp arg) (lyskom-button-transform-text arg))
-                         ((consp arg) (lyskom-button-transform-text (cdr arg) (car arg)))
+      (setq result (cond ((stringp arg) 
+                          (lyskom-format-plaintext-fonts arg)
+                          (lyskom-button-transform-text arg))
+                         ((consp arg) 
+                          (lyskom-format-plaintext-fonts (cdr arg))
+                          (lyskom-button-transform-text (cdr arg) (car arg)))
                          (t (signal 'lyskom-internal-error
                                     (list 'lyskom-format
                                           ": argument error (expected subject)"
@@ -2168,20 +2172,38 @@ Deferred insertions are not supported."
                                         gr nil t))))
       (error nil))))
 
+
+(defmacro lyskom-format-plaintext-fonts-body ()
+  "Internal macro for lyskom-format-plaintext-fonts"
+  (let* ((re-x 0)
+         (re-1 "[^\]\}\) ^\n\r\t%s]")
+         (re-2 "[^^<>=%%$\r\n%s]")
+         (re-3 '(("_" . italic) ("*" . bold)))
+         (re (mapconcat (lambda (x)
+                          (setq x (regexp-quote (car x)))
+                          (format "\\(%s%s\\(%s*%s\\)?%s\\)"
+                                  x
+                                  (format re-1 x)
+                                  (format re-2 x)
+                                  (format re-1 x)
+                                  x))
+                        re-3
+                        "\\|")))
+    `(let ((start 0))
+       (while (string-match ,re text start)
+         (add-text-properties (1+ (match-beginning 0))
+                              (1- (match-end 0))
+                              (cond ,@(mapcar (lambda (el)
+                                                (prog1
+                                                    `((match-beginning ,(+ 1 (* re-x 2)))
+                                                      '(face ,(cdr (elt re-3 re-x))))
+                                                  (setq re-x (1+ re-x))))
+                                              re-3))
+                              text)
+         (setq start (1- (match-end 0)))))))
+
 (defun lyskom-format-plaintext-fonts (text)
-  (let ((start 0))
-    (while (string-match "\\(_[^ ^\n\r\t_]\\([^_^<>=%$\n]*[^ ^\n\r\t_]\\)?_\\)\\|\\(/[^ ^\n\r\t/]\\([^/^<>=%$\n]*[^ ^\n\r\t/]\\)?/\\)\\|\\(\\*[^ ^\n\r\t*]\\([^*^<>=%$\n]*[^ ^\n\r\t*]\\)?\\*\\)"
-                         text start)
-      (add-text-properties (1+ (match-beginning 0))
-                           (1- (match-end 0))
-                           `(face ,(cond ((match-beginning 1) 'underline)
-                                         ((match-beginning 3) 'italic)
-                                         ((match-beginning 5) 'bold)))
-                           text)
-      (setq start (1- (match-end 0))))))
-
-
-
+  (lyskom-format-plaintext-fonts-body))
 
 
 (defun lyskom-signal-reformatted-text (how)
