@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.269 2003-08-25 09:10:58 byers Exp $
+;;;;; $Id: vars.el.in,v 44.270 2003-08-25 14:08:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.269 2003-08-25 09:10:58 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.270 2003-08-25 14:08:03 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4120,6 +4120,11 @@ texts that is to be sent to the server.")
 (def-kom-var lyskom-saved-read-only nil
   "Saved value of buffer-read-only when in slow mode."
   local)
+
+(def-kom-var lyskom-read-conf-saved-inputs nil
+  "Saved inputs from lyskom-read-conf."
+  local)
+
 
 (defvar lyskom-line-start-chars-string
   "\"$&'()*+-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abcdefghijklmnopqrstuvwxyz¡£¤¥§©ª«­®±²³µ¶¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõöøùúûüışÿ"

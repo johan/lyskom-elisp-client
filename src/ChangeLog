@@ -1,5 +1,20 @@
 2003-08-25  David Byers  <davby@ida.liu.se>
 
+	Fix problems entering conferences in the edit buffer:
+	* completing-read.el (lyskom-default-conference-saved): Read the
+	value of lyskom-read-conf-saved-inputs in the LysKOM buffer.
+	(lyskom-read-conf-save-input): Same here.
+	(lyskom-get-initial-conf-strategy): Print warning about missing
+	strategy in LysKOM buffer.
+
+	* vars.el.in (lyskom-read-conf-saved-inputs): Moved here from
+	completing-read.el and made it buffer-local.
+
+	* completing-read.el (lyskom-read-conf): Create dynamic binding of
+	lyskom-current-command to lyskom-current-command or this-command
+	so lyskom-read-conf-guess-initial has good data to operate on even
+	if this-command is changed during execution of lyskom-read-conf.
+
 	* vars.el.in (lyskom-last-personal-message-sender): Default to
 	nil. 
 	(lyskom-last-group-message-recipient): Default to nil.
