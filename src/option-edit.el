@@ -1097,8 +1097,8 @@ customize buffer but do not save them to the server."
          (string (save-excursion
                    (set-buffer lyskom-buffer)
                    (cond ((null value) "")
-                         (t (or (car-safe (cdr-safe
-                                           (assq value lyskom-commands)))
+                         (t (or (cdr-safe
+				 (assq value lyskom-commands))
                                 (lyskom-format
                                  (lyskom-custom-string 'unknown-command)
                                  (symbol-name value))))))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.7 1996-10-06 05:18:01 davidk Exp $
+;;;;; $Id: commands1.el,v 44.8 1996-10-08 02:44:15 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.7 1996-10-06 05:18:01 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.8 1996-10-08 02:44:15 nisse Exp $\n"))
 
 
 ;;; ================================================================
@@ -620,8 +620,8 @@ If optional arg TEXT-NO is present write a comment to that text instead."
 		 (t
 		  (signal 'lyskom-internal-error '(kom-write-comment))))))
   (lyskom-start-of-command (concat 
-			    (car (cdr (assoc 'kom-write-comment
-					     lyskom-commands)))
+			    (lyskom-get-string 'kom-write-comment
+					       lyskom-commands)
 			    (if text-no 
 				(format " (%d)" text-no)
 			      "")))

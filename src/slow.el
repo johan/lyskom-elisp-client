@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: slow.el,v 44.0 1996-08-30 14:48:00 davidk Exp $
+;;;;; $Id: slow.el,v 44.1 1996-10-08 02:47:21 nisse Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -70,7 +70,8 @@ If the completion was not exact it returns nil."
   (interactive)
   (let* ((text (lyskom-get-entered-slow-command))
 	 (completion-ignore-case t)
-	 (alternatives (mapcar 'reverse
+	 (alternatives (mapcar (function (lambda (pair)
+					   (list (cdr pair) (car pair))))
 			       (if kom-emacs-knows-iso-8859-1
 				   lyskom-commands
 				 lyskom-swascii-commands)))
@@ -83,10 +84,10 @@ If the completion was not exact it returns nil."
       (lyskom-insert-before-prompt (lyskom-get-string 'no-such-command))
       (lyskom-beep t))
      ((= (length completes) 1)
-      (setq command (cons (car (reverse-assoc (car completes)
-					      (if kom-emacs-knows-iso-8859-1
-						  lyskom-commands
-						lyskom-swascii-commands)))
+      (setq command (cons (car (rassq (car completes)
+				      (if kom-emacs-knows-iso-8859-1
+					  lyskom-commands
+					lyskom-swascii-commands)))
 			  (point)))
       (delete-region (point) (point-max))
       (insert (car completes)))
