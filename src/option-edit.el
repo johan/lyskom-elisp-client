@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.40 2000-03-15 17:15:47 byers Exp $
+;;;;; $Id: option-edit.el,v 44.41 2000-03-26 13:30:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.40 2000-03-15 17:15:47 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.41 2000-03-26 13:30:52 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -70,6 +70,7 @@
     [kom-show-since-and-when]
     "\n"
     [kom-friends]
+    [kom-morons]
     "\n"
     [kom-presence-messages]
     [kom-presence-messages-in-buffer]
@@ -572,6 +573,7 @@ customize buffer but do not save them to the server."
               (const (last-recipient-recpt last-recipient)))))
     (lyskom-filter-outgoing-messages (noggle (yes no)))
     (kom-friends (repeat (person nil :tag name) :indent 4))
+    (kom-morons (repeat (person nil :tag name) :indent 4))
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
                                         :indent 4))
     (kom-mosaic-command (file))

@@ -1,3 +1,22 @@
+2000-03-26  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (kom-morons): New variable.
+	(lyskom-faces): Added kom-morons-face.
+	(lyskom-face-schemes): Added kom-korons-face.
+
+	* vars.el (kom-presence-messages): Document use of morons.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added kom-korons.
+	(lyskom-custom-variables): Added kom-morons.
+
+	* lyskom-buttons.el (lyskom-generate-button): Added support for
+	kom-morons.
+
+	* english-strings.el (lyskom-custom-strings): Added strings for
+	kom-morons.
+
+	* async.el (lyskom-show-presence): Added support for kom-morons.
+
 2000-03-22  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el (signum): New compatibility function.

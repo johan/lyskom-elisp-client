@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.50 2000-02-17 17:01:44 byers Exp $
+;;;;; $Id: utilities.el,v 44.51 2000-03-26 13:30:56 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.50 2000-02-17 17:01:44 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.51 2000-03-26 13:30:56 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -661,6 +661,12 @@ in lyskom-face-schemes."
   "Initalize the faces in the LysKOM client.
 This sets the face scheme according to `kom-default-face-scheme', and
 also reads the proper X resources."
+  (unless (find-face 'strikethrough)
+    (make-face 'strikethrough)
+    (condition-case nil
+        (set-face-strikethru-p 'strikethrough t)
+      (error (set-face-underline-p 'strikethrough t))))
+
   (unless kom-default-face-scheme
     (setq kom-default-face-scheme
 	  (condition-case nil
