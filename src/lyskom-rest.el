@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.252 2005-01-09 22:09:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.253 2005-01-19 13:41:27 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.252 2005-01-09 22:09:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.253 2005-01-19 13:41:27 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2864,7 +2864,15 @@ See `kom-save-text' for an alternative command."
                                  (set-buffer buf)
                                  (erase-buffer)
                                  (insert str)
-                                 (write-region (point-min) (point-max) filename))
+				 (let* ((cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
+					(content-type (and cti (aux-item->data (car cti))))
+					(charset (cdr (assoc 'charset 
+							     (cdr (lyskom-mime-decode-content-type 
+								   content-type)))))
+					(coding-system-for-write (or charset
+								     lyskom-server-coding-system)))
+                                 (write-region (point-min) (point-max) filename)))
+
                                (lyskom-insert (lyskom-get-string 'done)))
                            (quit (lyskom-insert (lyskom-get-string 'cancelled)))
                            (error (lyskom-insert (lyskom-get-string 'nope))))))))))))
