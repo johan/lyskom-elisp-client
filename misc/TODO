@@ -1,3 +1,6 @@
+* ]terse senaste verkar missa ett inl{gg n{r vi g|r }terse fr}n b|rjan
+  p} m|tet.
+
 * VIKTIGT
   Min fix f|r att f} quit att fungera g|r att man inte l{ngre kan
   avbryta funktioner som l{ser saker i minibufferten fr}n en handler.
