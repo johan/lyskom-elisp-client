@@ -1,3 +1,8 @@
+Sat May 29 00:15:14 1993  Linus Tolke Y  (linus@mauritz)
+
+	* async.el (lyskom-async-new-text): reinserted lost call to
+	  lyskom-prefetch-and-print-prompt.
+
 Thu May 27 16:17:18 1993  Linus Tolke Y  (linus@bodil)
 
 	* Distribuerat version 0.36	 	16.00
