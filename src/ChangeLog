@@ -1,3 +1,17 @@
+1999-10-18  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-client-date): Off-by-one error in
+	day-of-month fixed.
+
+	* edit-text.el (lyskom-edit-get-commented-author): Print the
+	name of the real author of an imported e-mail, not the importer's
+	name. 
+
+1999-10-17  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-client-date-string): Don't add 1900 to
+	result of decode-time.
+
 Sun Oct 17 00:52:05 1999  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-A
