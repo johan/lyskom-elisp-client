@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.32 2000-08-31 12:29:42 byers Exp $
+;;;;; $Id: completing-read.el,v 44.33 2000-09-02 14:23:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.32 2000-08-31 12:29:42 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.33 2000-09-02 14:23:10 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -550,15 +550,18 @@ function work as a name-to-conf-stat translator."
     result))
 
 
-(defun lyskom-completing-strip-name (string)
-  "Strip parens and crap from a name"
+(defun lyskom-completing-strip-name (string &optional dont-strip-spaces)
+  "Strip parens and crap from a name.
+If optional DONT-STRIP-SPACES is non-nil, don't strip spaces at front
+and back of the string."
   (while (string-match "([^()]*)" string)
     (setq string (replace-match " " t t string)))
   (while (string-match "\\s-\\s-+" string)
     (setq string (replace-match " " t t string)))
   (while (string-match "([^()]*$" string)
     (setq string (substring string 0 (match-beginning 0))))
-  (if (string-match "^\\s-*\\(.*\\S-\\)\\s-*$" string)
+  (if (and (not dont-strip-spaces)
+	   (string-match "^\\s-*\\(.*\\S-\\)\\s-*$" string))
       (match-string 1 string)
     string))
 
