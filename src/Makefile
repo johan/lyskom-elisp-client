@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.5 1993-08-31 11:22:12 linus Exp $
+# $Id: Makefile,v 36.6 1993-09-10 16:36:51 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.5 1993-08-31 11:22:12 linus Exp $
+# $Id: Makefile,v 36.6 1993-09-10 16:36:51 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.5  1993-08-31 11:22:12  linus
+# Revision 36.6  1993-09-10 16:36:51  linus
+# Removed distribution script.
+#
+# Revision 36.5  1993/08/31  11:22:12  linus
 # Corrected ftp-site. compress => gzip
 #
 # Revision 36.4  1993/07/26  19:07:12  linus
@@ -201,10 +204,10 @@ installnodoc: lyskom.elc lyskom.el
 	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp lyskom.elc lyskom-$${VER}.elc;\
 	 gzip lyskom-$${VER}.elc;\
-	 mv lyskom-$${VER}.elc.Z /usr/ftp/pub/lyskom/elisp-client;\
+	 mv lyskom-$${VER}.elc.gz /usr/ftp/pub/lyskom/elisp-client;\
 	 cp lyskom.el lyskom-$${VER}.el;\
 	 gzip lyskom-$${VER}.el;\
-	 cp lyskom-$${VER}.el.Z /usr/ftp/pub/lyskom/elisp-client;)
+	 cp lyskom-$${VER}.el.gz /usr/ftp/pub/lyskom/elisp-client;)
 
 
 installdoc: doc
@@ -212,50 +215,15 @@ installdoc: doc
 	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp ../doc/elisp-client ../doc/elisp-client.txt .;\
 	 gzip elisp-client elisp-client.txt;\
-	 mv elisp-client.Z \
-		/usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.info.Z; \
-	 mv elisp-client.txt.Z \
-	     /usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.txt.Z; \
+	 mv elisp-client.gz \
+		/usr/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.info.gz; \
+	 mv elisp-client.txt.gz \
+	     /usr/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.txt.gz; \
 	 cp ../doc/elisp-client /usr/gnu/info; \
 	)
 
 clean:
 	$(RM) *~ *.elc $(GENERIC-CLEAN) makealfa.c
-	-$(RM) -r distribution
 
 distclean: clean
 	$(RM) $(GENERIC-DIST-CLEAN) makealfa Topdir.make */Topdir.make
-
-
-distrib distribution: lyskom.el lyskom.elc doc
-	-$(RM) -r distribution
-	$(MKDIR)  distribution
-	cp distribution-makefile distribution/Makefile
-	cp distribution-README distribution/README
-	cp $(HEADER-EL) $(PARTS-EL) $(SWEDISH-EL) $(ENGLISH-EL) distribution
-	cat distribution-README vars.el > distribution/vars.el
-	cp README distribution
-	cat distribution-README lyskom.el  > distribution/lyskom.el
-	$(RM) lyskom.el
-	cat distribution-README lyskom.elc > distribution/lyskom.elc
-	cp ../doc/elisp-client.txt ../doc/elisp-client distribution
-	cd distribution; \
-	  shar -v -cCmx -l 50 -o PARTS README Makefile $(HEADER-EL) $(PARTS-EL)  $(SWEDISH-EL) $(ENGLISH-EL)
-	cd distribution; \
-	  shar -v -cCmx -l 50 -o ALL lyskom.el
-	cd distribution; \
-	  shar -v -cCmx -l 50 -o BYTEC README lyskom.elc
-	cd distribution; \
-	  ( $(RM) lyskom.elc ; \
-	    sed 's/kom\.lysator\.liu\.se/diag19.ida.liu.se/g' > lyskom.elc )\
-	  < lyskom.elc ; \
-	  chmod 644 lyskom.el lyskom.elc elisp-client.txt
-	cd distribution; \
-	  shar -v -cCmx -l 50 -o DOC elisp-client.txt
-	cd distribution; \
-	  shar -v -cCmx -l 50 -o IDOC elisp-client
-
-
-send:
-	cd distribution ; ../../bin/lyskom-do-send
-
