@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.3 2003-01-02 23:42:53 byers Exp $
+;;;;; $Id: faces.el,v 44.4 2003-01-06 11:18:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.3 2003-01-02 23:42:53 byers Exp $\n"))
+	      "$Id: faces.el,v 44.4 2003-01-06 11:18:26 byers Exp $\n"))
 
 
 
@@ -280,15 +280,24 @@ This is a LysKOM face variable."
 
 (defun lyskom-setup-faces-for-buffer ()
   "Set up faces for the current buffer."
-  (let ((faces (lyskom-generate-faces-for-background
-                (or (face-background 'default)
-                    (frame-property (selected-frame) 'background-color)
-                    "#ffffff"))))
-    (setq lyskom-default-text-body-face (cdr (assq 'text-body faces)))
-    (setq lyskom-default-dashed-lines-face (cdr (assq 'dashed-lines faces)))
-    (setq lyskom-default-async-text-body-face (cdr (assq 'async-text-body faces)))
-    (setq lyskom-default-async-dashed-lines-face (cdr (assq 'async-dashed-lines faces)))
-    ))
+    (setq lyskom-default-text-body-face 'default)
+    (setq lyskom-default-dashed-lines-face 'default)
+    (setq lyskom-default-async-text-body-face 'default)
+    (setq lyskom-default-async-dashed-lines-face 'default)
+    (condition-case nil
+	(let ((faces (lyskom-generate-faces-for-background
+		      (or (face-background 'default)
+			  (frame-property (selected-frame) 'background-color)
+			  "#ffffff"))))
+	  (setq lyskom-default-text-body-face
+		(cdr (assq 'text-body faces))
+		lyskom-default-dashed-lines-face
+		(cdr (assq 'dashed-lines faces))
+		lyskom-default-async-text-body-face
+		(cdr (assq 'async-text-body faces))
+		lyskom-default-async-dashed-lines-face
+		(cdr (assq 'async-dashed-lines faces))))
+      (error nil)))
 
 
 ;;; ================================================================

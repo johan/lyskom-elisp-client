@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.187 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.188 2003-01-06 11:18:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.187 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.188 2003-01-06 11:18:26 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1015,31 +1015,23 @@ will automagically flow into your lyskom log file."
 The position lyskom-last-viewed will always remain visible."
   ;; Find a window to scroll. Scroll the selected window if that shows LysKOM.
   ;; Otherwise scroll any window currently showing LysKOM.
-  (let ((win
-	 (cond
-	  ((eq (window-buffer (selected-window)) (current-buffer))
-	   (selected-window))
-	  (t				;(get-buffer-window (current-buffer))
-	   nil))))
-    (if (and win			;Do nothing if no window showed LysKOM.
-	     (not (pos-visible-in-window-p (point-max))))
-	(progn
-	  (goto-char (point-max))
-	  (recenter -1)
-	  (if (not (pos-visible-in-window-p lyskom-last-viewed))
-	      (progn
-		(set-window-start win lyskom-last-viewed)
-		(move-to-window-line -1)
-		(vertical-motion 1)
-		(when (not (pos-visible-in-window-p))
-		    (forward-char -1)
-                    (when (> (current-column)
-                             (window-width))
-                      (backward-char (+ (- (current-column)
-                                            (window-width))
-                                        2)))
-                    )))))))
-	
+  (let ((win (cond ((eq (window-buffer (selected-window)) (current-buffer))
+                    (selected-window))
+                   (t nil))))
+    (when (and win (not (pos-visible-in-window-p (point-max))))
+      (goto-char (point-max))
+      (recenter -1)
+      (unless (pos-visible-in-window-p lyskom-last-viewed)
+        (set-window-start win lyskom-last-viewed)
+        (move-to-window-line -1)
+        (vertical-motion 1)
+        (when (not (pos-visible-in-window-p))
+          (forward-char -1)
+          (when (> (current-column) (window-width))
+            (backward-char (+ (- (current-column) (window-width)) 6)))
+          )))))
+
+
 ;;;
 ;;; Thanks to the stupid danish fool who wrote the widget package, we
 ;;; have to do it this way, because w3 uses widgets, and because
@@ -1050,7 +1042,6 @@ The position lyskom-last-viewed will always remain visible."
 ;;;
 ;;; (Me, upset? Why would you think *that*?)
 ;;;
-
 
 (defun lyskom-do-special-inserts (start sym)
   (condition-case var
