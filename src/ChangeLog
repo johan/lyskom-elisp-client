@@ -1,3 +1,8 @@
+Tue Aug 20 01:18:17 1991  Per Cederqvist  (ceder at lysator)
+
+	* clienttypes.el (read-list-delete-text) Tog bort en gammal,
+	  bortkommenterad, rekursiv, version.
+
 Mon Aug 19 03:35:15 1991  Per Cederqvist  (ceder at lysator)
 
 	* commands2.el, swedish-strings.el (kom-postpone) Nyskriven.
