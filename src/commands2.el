@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.133 2002-05-26 21:34:15 byers Exp $
+;;;;; $Id: commands2.el,v 44.134 2002-05-26 23:15:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.133 2002-05-26 21:34:15 byers Exp $\n"))
+              "$Id: commands2.el,v 44.134 2002-05-26 23:15:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2446,30 +2446,6 @@ The variable kom-keep-alive-interval controls the frequency of the request."
 	  (lyskom-format-insert 'pers-is-member-of-conf pers-no conf-no))
       (lyskom-format-insert 'pers-is-not-member-of-conf pers-no conf-no))))
 
-;; (def-kom-command kom-help ()
-;;   "Get some help with LysKOM"
-;;   (interactive)
-;;   (let* ((completion-ignore-case t)
-;;          (table (mapcar (lambda (x)
-;;                           (cons (lyskom-get-string (car x) 'lyskom-help-strings)
-;;                                 (car x)))
-;;                         lyskom-help-categories))
-;;          (category nil))
-;; 
-;;     (while (null category)
-;;       (setq category
-;;             (lyskom-string-assoc
-;;              (lyskom-completing-read (lyskom-get-string 'help-with-what)
-;;                                      table
-;;                                      nil
-;;                                      t
-;;                                      nil
-;;                                      'lyskom-help-history)
-;;              table)))
-;;     (lyskom-format-insert "Hjälp för %#1s\n\n" 
-;;                           (car category))
-;;     (lyskom-display-help-category (cdr category))))
-
 (def-kom-command kom-help ()
   "Get some help with LysKOM."
   (interactive)
@@ -2494,56 +2470,6 @@ The variable kom-keep-alive-interval controls the frequency of the request."
     (lyskom-format-insert 'help-for (car section))
     (lyskom-help-format-section (cdr section))))
 
-
-
-
-
-
-(defun lyskom-display-help-category (category &optional flags)
-  "Display help category CATEGORY."
-  (let ((cat-name (lyskom-get-string category 'lyskom-help-strings)))
-    (lyskom-format-insert "%#1@%[%#2s%]\n" '(face bold) cat-name)
-    (lyskom-insert (make-string (length cat-name) ?=))
-    (lyskom-insert "\n")
-    (unless (memq 'summary flags) (lyskom-insert "\n"))
-    (mapcar (lambda (x) (lyskom-display-help-item x flags))
-            (cdr (assq category lyskom-help-categories))
-            )
-    (when (memq 'summary flags) (lyskom-insert "\n"))))
-
-(defun lyskom-display-help-item (item &optional flags)
-  "Display help item ITEM."
-  (let ((type (elt item 0)))
-    (cond ((eq type 'command)
-           (let* ((command (elt item 1))
-                  (keys (delq nil
-                              (mapcar (lambda (x)
-                                        (if (and (arrayp x)
-                                                 (eq (elt x 0) 'menu-bar))
-                                            nil
-                                          x))
-                                      (where-is-internal command))))
-                  (command-name (lyskom-get-string command 'lyskom-command))
-                  (heading (lyskom-format "%#1@%[%#2s%]%#3?b%[ (%#3s)%]%[%]\n"
-                                          '(face italic)
-                                          command-name
-                                          (and keys 
-                                               (mapconcat 'key-description
-                                                          keys
-                                                          "; ")))))
-             (lyskom-insert heading)
-             (unless (memq 'summary flags)
-               (lyskom-format-insert "%#1s\n%#2s\n\n"
-                                     (make-string (1- (length heading)) ?-)
-                                     (lyskom-get-string command
-                                                        'lyskom-help-strings))))
-           )
-
-          ((eq type 'category) 
-           (let ((category (elt item 1))
-                 (flags (and (> (length item) 2)
-                             (elt item 2))))
-             (lyskom-display-help-category category flags))))))
 
 (def-kom-command kom-make-review-mark-as-read ()
   "Makes all review commands mark texts as read. Overrides the value of the

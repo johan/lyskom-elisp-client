@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.1 2002-05-26 21:34:16 byers Exp $
+;;;;; $Id: help.el,v 44.2 2002-05-26 23:15:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.1 2002-05-26 21:34:16 byers Exp $\n"))
+	      "$Id: help.el,v 44.2 2002-05-26 23:15:53 byers Exp $\n"))
 
 
 
@@ -46,15 +46,15 @@
   "Faces for use in the LysKOM elisp client."
   :group 'default)
 
-(defface lyskom-help-h1-face '((t (:weight bold :underline t :height 2.0)))
+(defface lyskom-help-h1-face '((t (:weight bold :underline t :height 2.0 :family "helvetica")))
   "First level header in LysKOM help."
   :group 'lyskom-faces)
 
-(defface lyskom-help-h2-face '((t (:weight bold :underline t :height 1.5)))
+(defface lyskom-help-h2-face '((t (:weight bold :underline t :height 1.5 :family "helvetica")))
   "Second level header in LysKOM help."
   :group 'lyskom-faces)
 
-(defface lyskom-help-h3-face '((t (:weight bold :underline t)))
+(defface lyskom-help-h3-face '((t (:weight bold :family "helvetica")))
   "Third level header in LysKOM help."
   :group 'lyskom-faces)
 
@@ -122,8 +122,9 @@
   (lyskom-insert "\n\n"))
 
 (defun lyskom-help-format-h2 (data)
+  (lyskom-insert "\n")
   (lyskom-help-format-text-properties data '(face lyskom-help-h2-face))
-  (lyskom-insert "\n"))
+  (lyskom-insert "\n\n"))
 
 (defun lyskom-help-format-h3 (data)
   (lyskom-help-format-text-properties data '(face lyskom-help-h3-face))
@@ -165,7 +166,7 @@
                                    nil
                                  x))
                              (where-is-internal command))))
-         (heading (lyskom-format "%#1@%[%#2s%]%#3?b%[ (%#3s)%]%[%]\n"
+         (heading (lyskom-format "%#1@%[%#2s%]%#3?b%[ (%#3s)%]%[%]"
                                  '(face italic)
                                  command-name
                                  (and keys 
@@ -184,12 +185,11 @@
   (let ((start (point-marker)))
     (lyskom-traverse el (lyskom-help-data-get-data data)
       (lyskom-do-help-format el))
-    (save-restriction
       (save-excursion
-        (narrow-to-region start (point))
-        (goto-char (point-min))
-        (while (re-search-forward "^\\s-+" nil t)
-          (replace-match "" nil nil))
-        (lyskom-fill-region (point-min) (point-max)))
-      (goto-char (point-max))
-      (lyskom-insert "\n\n"))))
+        (save-restriction
+          (narrow-to-region start (point))
+          (goto-char (point-min))
+          (while (re-search-forward "^\\s-+" nil t)
+            (replace-match "" nil nil))
+          (lyskom-fill-region (point-min) (point-max))))
+      (lyskom-insert "\n\n")))
