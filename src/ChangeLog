@@ -1,3 +1,10 @@
+Tue Aug  6 23:32:48 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* Jag gick igenom och uppdaterade Copyright-årtal och GPL-version
+ 	i alla filerna, genom att använda M-x copyright-update.
+
+	* Makefile: Rensade bort lite gammalt skräp.
+
 Mon Aug  5 02:16:04 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-update-prompt): Testa

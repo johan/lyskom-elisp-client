@@ -1,12 +1,12 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: utilities.el,v 41.1 1996-05-03 16:52:27 byers Exp $
+;;;;; $Id: utilities.el,v 41.2 1996-08-06 21:34:05 davidk Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
-;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; the Free Software Foundation; either version 2, or (at your option) 
 ;;;;; any later version.
 ;;;;; 
 ;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
@@ -25,7 +25,7 @@
 ;;;; ================================================================
 ;;;; ================================================================
 ;;;;
-;;;; File: lisp-utils.el
+;;;; File: utilities.el
 ;;;;
 ;;;; This file contains general lisp utility functions and
 ;;;; lyskom-specific utility functions (such as date formatting and
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 41.1 1996-05-03 16:52:27 byers Exp $\n"))
+	      "$Id: utilities.el,v 41.2 1996-08-06 21:34:05 davidk Exp $\n"))
 
 
 ;;;
