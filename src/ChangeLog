@@ -1,3 +1,8 @@
+Thu Sep  5 15:55:30 1991  Linus Tolke Y  (linus at lysator)
+
+	* view-text.el (lyskom-print-text): Nu uppdaterar vi sk{rmen innan
+	  vi jobbar vidare med parsningen av cachen.
+
 Wed Sep  4 17:21:17 1991  Linus Tolke Y  (linus at lysator)
 
 	* internal.el (lyskom-apply-handler): Det funkade inte att
