@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.400 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.401 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.400 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.401 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -1411,6 +1411,13 @@ att läsa det.\n")
     (filter-edit-help . 
 		      "p,n Upp/ned, i/M-i Ny rad/filter, d/M-d Radera rad/filter, C-h m Mer hjälp")
     (filter-edit-header . "Ändra filter för \"%s\"\n")
+    (filter-edit-footer . "
+ Upp rad:    p  Ny rad:          i    Ta bort rad:     d
+ Upp filter: P  Nytt filter:     M-i  Ta bort filter:  M-d
+ Ned rad:    n  Spara ändringar: s    Ändra handling:  a
+ Ned filter: N  Ångra ändringar: g    Ändra permanens: t
+ Avsluta:    q                        Mer hjälp:       C-h m
+")
     (filter-edit-saving . "Sparar ändringarna...")
     (filter-edit-saving-done . "Sparar ändringarna...klart")
     (filter-edit-saving-error . "Kunde inte spara ändringarna!")

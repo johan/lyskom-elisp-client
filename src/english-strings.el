@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.356 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.357 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.356 2005-02-25 09:19:22 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.357 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -1360,6 +1360,13 @@ before reading it.\n")
     (filter-edit-restart-p . "You have made changes. Really revert? ")
     (filter-edit-help . "p Up, n Down, i New line, M-i New filter, d Delete line, M-d Delete filter")
     (filter-edit-header . "Edit filters on \"%s\"\n")
+    (filter-edit-footer . "
+ Up line:     p  New line:       i    Delete line:       d
+ Up filter:   P  New filter:     M-i  Delete filter:     M-d
+ Down line:   n  Save changes:   s    Change action:     a
+ Down filter: N  Revert changes: g    Change permanence: t
+ Quit:        q                       More help:         C-h m
+")
     (filter-edit-saving . "Saving changes...")
     (filter-edit-saving-done . "Saving changes...done")
     (filter-edit-saving-error . "Couldn't save changes!")

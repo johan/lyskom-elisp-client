@@ -1,3 +1,16 @@
+2005-03-02  Pontus Freyhult  <pont@soua.net>
+
+        Bugfix: Revert didn't work properly
+	* filter-edit.el (lyskom-filter-edit-revert): Use 
+	filter-edit-filter-list instead of lyskom-filter-list.
+	Update filter-edit-list-end marker.
+
+	Give some guidance when editing filters:
+	* english-strings.el, swedish-strings.el (lyskom-messages):
+	Added filter-edit-footer.
+
+	* filter-edit.el (kom-filter-edit): Output filter-edit-footer.
+	
 2005-02-25  Pontus Freyhult  <pont@soua.net>
 
 	* swedish-strings.el, english-string.el (lyskom-custom-strings): 
