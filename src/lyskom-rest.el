@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.139 2001-08-22 20:13:40 qha Exp $
+;;;;; $Id: lyskom-rest.el,v 44.140 2001-10-13 13:17:55 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.139 2001-08-22 20:13:40 qha Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.140 2001-10-13 13:17:55 qha Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2518,7 +2518,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
               (goto-char (point-max))
               (beginning-of-line)
               (add-text-properties 0 (length prompt-text)
-                                   '(read-only t rear-nonsticky t)
+				   '(read-only t rear-nonsticky t)
                                    prompt-text)
               (insert-string prompt-text)
               ;; Delete the old prompt
@@ -2549,7 +2549,16 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                                                  kom-user-prompt-format-executing
                                                kom-user-prompt-format)))
                                     s)))
-    (add-text-properties 0 (length text) '(lyskom-prompt t) text)
+    (add-text-properties 0 (length text)
+			 (append
+			  (lyskom-default-button
+			   'timestamp lyskom-current-prompt-timestamp
+			   (list 'timestamp-popup-title
+				 (format-time-string "%Y-%m-%d %H:%M"
+						     lyskom-current-prompt-timestamp)))
+			  '(lyskom-prompt t))
+			 text)
+    (when executing (setq lyskom-current-prompt-timestamp (current-time)))
     text))
            
 

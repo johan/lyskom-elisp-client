@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.56 2001-08-09 22:06:14 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.57 2001-10-13 13:17:54 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.56 2001-08-09 22:06:14 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.57 2001-10-13 13:17:54 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -472,7 +472,7 @@ information."
 (defun lyskom-default-button (type arg &optional menu-title)
   "Generate a button of type TYPE from data in ARG. ARG can be almost any
 type of data and is converted to the proper argument type for buttons of
-type TYPE before being send to lyskom-generate-button. Optional argument
+type TYPE before being sent to lyskom-generate-button. Optional argument
 MENU-TITLE is a list consisting of a format string or symbol and arguments
 for the format string. The arguments are not when the menu is popped
 up."
@@ -506,7 +506,8 @@ up."
 			     text (conf-stat->name arg)))
                       ((lyskom-uconf-stat-p arg)
 		       (setq xarg (uconf-stat->conf-no arg)
-			     text (uconf-stat->name arg)))		      ((lyskom-pers-stat-p arg)
+			     text (uconf-stat->name arg)))
+		      ((lyskom-pers-stat-p arg)
 		       (setq xarg (pers-stat->pers-no arg)
 			     text 
                              (or (conf-stat->name
@@ -538,6 +539,13 @@ up."
                 (setq face 'kom-url-face)
                 (cond ((stringp arg) (setq xarg nil text arg))
                       (t (setq xarg nil text ""))))
+
+	       ((eq type 'timestamp)
+		(setq face 'kom-text-face)
+		(cond ((null arg) (setq xarg (current-time)
+					 text (format-time-string "%Y-%m-%d %H:%M")))
+		      (t (setq xarg arg
+			       text (format-time-string "%Y-%m-%d %H:%M" arg)))))
 
 	       (t (setq xarg arg text "")))
 	 (lyskom-generate-button type xarg text face menu-title))))
@@ -753,7 +761,16 @@ This is a LysKOM button action."
   (setq arg (replace-in-string arg "\n" " " t))
   (setq arg (replace-in-string arg " +" " " t))
   (Info-goto-node arg))
- 
+
+;;;
+;;;	Timestamp button
+;;;
+
+(defun lyskom-button-copy-timestamp (but arg text)
+  "In the LysKOM buffer BUF, ignore TEXT and copy ARG to the kill ring
+after formating it as time. This is a LysKOM button action."
+  (kill-new (format-time-string "%Y-%m-%d %H:%M" arg)))
+
 
 ;;;
 ;;;	LysKOM URL Management

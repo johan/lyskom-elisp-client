@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.146 2001-09-21 20:21:57 joel Exp $
+;;;;; $Id: vars.el.in,v 44.147 2001-10-13 13:17:57 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.146 2001-09-21 20:21:57 joel Exp $\n"))
+	      "$Id: vars.el.in,v 44.147 2001-10-13 13:17:57 qha Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -581,8 +581,13 @@ a string indicating the prompt shown in the LysKOM buffer."
   local)
 
 (def-kom-var lyskom-current-prompt-args nil
-  "The current prompt arguments
+  "The current prompt arguments.
 These are arguments used to format the current prompt."
+  local)
+
+(def-kom-var lyskom-current-prompt-timestamp nil
+  "The creationtime of the current prompt.
+This is used when updating the prompt and on lyskom-start-of-command."
   local)
 
 (def-kom-var lyskom-need-prompt-update nil
@@ -1228,6 +1233,11 @@ each time ."
      nil
      lyskom-button-apply
      nil
+     nil)
+    (timestamp
+     timestamp-popup-title
+     (lambda (buffer argument text) nil)
+     ((lyskom-button-copy-timestamp-action . lyskom-button-copy-timestamp))
      nil)
     )
   "This variable defines valid button types in LysKOM. Each element is a

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.184 2001-10-09 18:41:05 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.185 2001-10-13 13:17:56 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.184 2001-10-09 18:41:05 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.185 2001-10-13 13:17:56 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1253,6 +1253,7 @@ Text:
     (pers-popup-title . "Person %#1s")
     (url-popup-title  . "URL %#1s")
     (aux-popup-title  . "Tilläggsinformation")
+    (timestamp-popup-title . "Tidsstämpel %#1s")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P är inte närvarande i något möte\n")
@@ -1563,6 +1564,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-copy-email-action . "Kopiera")
     (lyskom-button-info-aux-action . "Information")
     (lyskom-button-delete-aux-action . "Radera")
+    (lyskom-button-copy-timestamp-action . "Kopiera")
     (lyskom-edit-toggle-secret-aux-action . "Växla \"hemlig\"")
     (lyskom-edit-toggle-anonymous-aux-action . "Växla \"anonym\"")
     (lyskom-edit-toggle-inherit-aux-action   . "Växla \"ärvd\"")
