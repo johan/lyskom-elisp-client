@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.224 2002-07-23 18:28:40 byers Exp $
+;;;;; $Id: english-strings.el,v 44.225 2002-07-24 19:40:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.224 2002-07-23 18:28:40 byers Exp $"))
+              "$Id: english-strings.el,v 44.225 2002-07-24 19:40:48 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2570,6 +2570,8 @@ Select whether to execute command or keyboard macro.")
     (selected-mark . "Mark          ")
     (conf-or-person . "Person or conference")
     (ask .           "Ask every time         ")
+    (limited-number . "A limited number")
+    (unlimited-number . "Unlimited")
 
     (before . "Before the text")
     (after . "After the text")
@@ -3592,6 +3594,12 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   This setting controls whether keyboard shortcuts in text-based context
   menus require confirmation with return or not. With this on you have
   to confirm all selections with return.")
+    (kom-max-overlays-doc . "\
+  Use this setting to limit the number of overlays in the LysKOM buffer
+  \(overlays are used to create the colored backgrounds for texts\). By
+  limiting the number of overlays it is possible to speed up operations
+  such as scrolling significantly. Each text requires 1-4 overlays for
+  highlighting, depending on other settings.")
 
 
     ;;
@@ -3769,6 +3777,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-edit-hide-add-button-tag . "Show add button when writing texts:")
     (kom-format-html-authors-tag . "Format HTML-messages per author:")
     (kom-keyboard-menu-immediate-selection-tag . "Shortcuts in text menus require confirmation:")
+    (kom-max-overlays-tag . "Maximum number of overlays:")
     )
 )
 

@@ -1,3 +1,8 @@
+2002-07-24  David Byers  <david.byers@swipnet.se>
+
+	* doc/NEWS-0.47: Updated to here for imminent release of
+	0.42-BETA-3.
+
 2002-07-24  Johan Sundström  <jhs@lysator.ida.liu.se>
 
 	* utilities.el (lyskom-minusp): Very significant bugfix. :)

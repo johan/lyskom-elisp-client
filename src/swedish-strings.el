@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.259 2002-07-23 18:28:41 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.260 2002-07-24 19:40:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.259 2002-07-23 18:28:41 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.260 2002-07-24 19:40:48 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2627,6 +2627,8 @@ kommandot \"Spara variabler\".\n\n")
     (last . "Sist ")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
+    (limited-number . "Ett begränsat antal")
+    (unlimited-number . "Obegränsat")
 
     (ar-message-type . "Meddelandetyp")
     (ar-personal     . "Personligt meddelande")
@@ -3652,6 +3654,11 @@ i servern. Annars sparas det i din .emacs.")
   Den här inställningen styr huruvida snabbtangenter automatiskt bekräftar
   val i textbaserade menyer eller inte. Om detta är påslaget så måste man
   alltid trycka retur för att välja i textbaserade menyer.")
+    (kom-max-overlays-doc . "\
+  Med denna inställning kan man begränsa antalet färgmarkeringar (som
+  används bland annat för färgade inläggsbakgrunder). Genom att begränsa
+  antalet markeringar kan scrollning gå mycket fortare. Varje inlägg
+  behöver mellan 1 och 4 markeringar beroende på andra inställningar.")
 
 
     ;;
@@ -3829,6 +3836,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-edit-hide-add-button-tag . "Visa Addera-knappen när man skriver inlägg:")
     (kom-format-html-authors-tag . "Formattera HTML-meddelanden per författare:")
     (kom-keyboard-menu-immediate-selection-tag . "Snabbval i textmenyer kräver bekräftelse:")
+    (kom-max-overlays-tag . "Högsta antal färgmarkeringeingar:")
     )
 )
 
