@@ -126,7 +126,7 @@
     This procedure should work on any system, including Windows.
 
     1. Compile the client with the command `emacs -batch -f
-       batch-byte-compile-file lyskom-@@CLIENTVERSION@@.el' 
+       batch-byte-compile lyskom-@@CLIENTVERSION@@.el' 
 
        You may see some warnings when you compile. Most of these can
        be ignored. When compilation is done you should have a new file

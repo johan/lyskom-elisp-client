@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.90 2000-10-01 19:52:25 ceder Exp $
+;;;;; $Id: commands1.el,v 44.91 2000-10-10 13:04:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.90 2000-10-01 19:52:25 ceder Exp $\n"))
+	      "$Id: commands1.el,v 44.91 2000-10-10 13:04:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1406,7 +1406,8 @@ Args: CONF-STAT MEMBERSHIP"
 
 (defun lyskom-go-to-empty-conf (conf-stat)
   "Go to a conference with no unseen messages. Args: CONF-STAT."
-  (blocking-do 'pepsi (conf-stat->conf-no conf-stat))
+  (unless lyskom-is-anonymous
+    (blocking-do 'pepsi (conf-stat->conf-no conf-stat)))
   (lyskom-run-hook-with-args 'lyskom-change-conf-hook 
                       lyskom-current-conf
                       (conf-stat->conf-no conf-stat))
