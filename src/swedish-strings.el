@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.248 2002-06-06 22:39:14 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.249 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.248 2002-06-06 22:39:14 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.249 2002-06-09 21:47:16 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1746,11 +1746,14 @@ Antal sessioner:     %21#1d (totalt)
     (external-program-missing . "Hittar inte det externa programmet \"%#1s\" som krävs för att genomföra kommandot.")
     (ignored-user-area-var . "\
 
-Ignorerar variabeln %#1s i dina inställningar.
-Variabeln är inte en registrerad LysKOM-variabel och kan därför inte
-läsas från servern. Om variabeln motsvarar en inställning som har
-tagits bort så kan du åtgärda genom att ge kommandot \"Spara 
-variabler\".\n\n")
+Ignorerar följande variabeler i dina inställningar:
+
+    %#1s
+
+Variablerna är inte registrerade LysKOM-variabeler och kan därför
+inte läsas från servern. Om någon av variablerna motsvarar en
+inställning som har tagits bort så kan du åtgärda genom att ge
+kommandot \"Spara variabler\".\n\n")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -3092,18 +3095,19 @@ i servern. Annars sparas det i din .emacs.")
     Läsa nästa text - ")
 
 
-    (kom-presence-messages-doc . "\
-  Om man vill ha meddelanden i minibufferten när någon loggar in, ut eller
+    (kom-presence-messages-in-echo-area-doc . "\
+
+  Om man vill ha meddelanden i ekoarean när någon loggar in, ut eller
   byter namn i LysKOM bör man slå på den här inställningen. Meddelanden
-  visas i minibufferten. Om man vill ha information om endast vissa
-  personer går det att ange en lista av personer. Vill man inte ha några
+  visas i ekoarean. Om man vill ha information om endast vissa personer
+  går det att ange en lista av personer. Vill man inte ha några
   meddelanden alls är det bara att ange en tom lista.")
 
     (kom-presence-messages-in-buffer-doc . "\
   Om man vill ha meddelanden i LysKOM-bufferten när någon loggar in, ut eller
   byter namn i LysKOM bör man slå på den här inställningen.  Meddelanden
-  visas i minibufferten. Om man vill ha information om endast vissa
-  personer går det att ange en lista av personer. Vill man inte ha några
+  visas i LysKOM-bufferten. Om man vill ha information om endast vissa 
+  personer går det att ange en lista av personer. Vill man inte ha några 
   meddelanden alls är det bara att ange en tom lista.")
 
     (kom-show-where-and-what-doc . "\
@@ -3637,8 +3641,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-deferred-printing-tag . "Fördröjda utskrifter:")
     (kom-continuous-scrolling-tag . "Omedelbar scrollning:")
 
-    (kom-presence-messages-tag . 
-"Närvaromeddelanden på eller av:       ")
+    (kom-presence-messages-in-echo-area-tag . 
+"Närvaromeddelanden i ekoarean:        ")
     (kom-presence-messages-in-buffer-tag .
 "Närvaromeddelanden i LysKOM-bufferten:")
     (kom-page-before-command-tag . "Rensa skärmen:")

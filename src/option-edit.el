@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.73 2002-06-03 21:48:20 byers Exp $
+;;;;; $Id: option-edit.el,v 44.74 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.73 2002-06-03 21:48:20 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.74 2002-06-09 21:47:16 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -79,7 +79,7 @@
     [kom-morons]
     "\n"
     [kom-show-unread-in-frame-title]
-    [kom-presence-messages]
+    [kom-presence-messages-in-echo-area]
     [kom-presence-messages-in-buffer]
     "\n"
     [kom-text-no-prompts]
@@ -542,12 +542,13 @@ customize buffer but do not save them to the server."
     (kom-truncate-show-lines (number nil))
 
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
-    (kom-presence-messages (choice ((const (on t))
-                                    (const (friends friends))
-                                    (repeat (person nil :tag name)
-                                            :indent 4
-                                            :tag some-persons
-                                            :menu-tag some-persons))))
+    (kom-presence-messages-in-echo-area
+     (choice ((const (on t))
+              (const (friends friends))
+              (repeat (person nil :tag name)
+                      :indent 4
+                      :tag some-persons
+                      :menu-tag some-persons))))
     (kom-presence-messages-in-buffer
      (choice ((const (on t))
               (const (friends friends))

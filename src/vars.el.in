@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.199 2002-06-03 21:48:20 byers Exp $
+;;;;; $Id: vars.el.in,v 44.200 2002-06-09 21:47:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.199 2002-06-03 21:48:20 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.200 2002-06-09 21:47:17 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -418,9 +418,29 @@ entering a conference."
 LysKOM session."
   server)
 
+;; In the common block of the user-area is a simple boolean variable
+;; `presence-messages'.  The control of presence messages in the Emacs
+;; Lisp client is more advanced, using two non-boolean variables instead
+;; (`kom-presence-messages-in-echo' and `kom-presence-messages-in-buffer').
+;;
+;; Keep track of the common block variable too, although it isn't used here.
+;; `lyskom-save-options' sets it before saving it in obvious cases,
+;; but generally it's not possible to know what value it should have.
+;; (It could also be used for default values for the presence options for
+;; users converting from another client, but that isn't done.)
+
 (def-kom-var kom-presence-messages t
+  "Equivalent of the variable `presence-messages' in the user-area.
+This is a boolean where other clients may store whether the user wants
+messages about people logging in and out of LysKOM.  Here this is instead
+controlled by `kom-presence-messages-in-echo-area' and
+`kom-presence-messages-in-buffer', so only use this variable to
+influence what this client stores in the common block of the user-area."
+  server)
+
+(def-kom-var kom-presence-messages-in-echo-area t
   "*If non-nil, LysKOM prints continuous info about what other people are doing.
-Info is printed on the message line and never in the buffer. If minibuffer is
+Info is printed on the echo area and never in the buffer. If minibuffer is
 used, no message is printed.
 
 A list of integers means show messages for those users.
@@ -436,9 +456,12 @@ If you want the messages in the buffer, you could set the variable
 kom-presence-messages-in-buffer."
   server)
 
+
+
 (def-kom-var kom-presence-messages-in-buffer nil
-  "*If t, LysKOM prints information about what other people are doing in the buffer.
+  "*If non-nil, LysKOM prints information about what other people are doing in the buffer.
 All printing is done just before the prompt.
+
 If nil no messages are printed.
 If 'presence, messages about people logging in, out and people 
 changing name are printed."

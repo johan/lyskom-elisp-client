@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.44 2002-06-03 21:48:19 byers Exp $
+;;;;; $Id: async.el,v 44.45 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.44 2002-06-03 21:48:19 byers Exp $\n"))
+	      "$Id: async.el,v 44.45 2002-06-09 21:47:16 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -51,10 +51,12 @@
 The message consists of TOKENS tokens. Unknown messages are skipped.
 Actions are taken to perform the various tasks that is required on reciept of
 an asynchronous message.
-If variable kom-presence-messages is non-nil or some minibuffer editing is 
-going on then nothing is printed on the message area.
-This function is called with the lyskom-unparsed-buffer as current-buffer.
-All calls using the lyskom-variables have to be made using the buffer BUFFER.
+
+If variable `kom-presence-messages-in-echo-area' is non-nil or some
+minibuffer editing is going on then nothing is printed on the message
+area. This function is called with the lyskom-unparsed-buffer as
+current-buffer. All calls using the lyskom-variables have to be made
+using the buffer BUFFER.
 
 Be careful when editing this. All parsing is done with the buffer this
 function is called with as the current-buffer, while all calls from
@@ -104,7 +106,7 @@ this function shall be with current-buffer the BUFFER."
              (set-uconf-stat->name cached-ustat new-name)))
 	 (cond
 	  ((lyskom-is-in-minibuffer))
-          ((lyskom-show-presence conf-no kom-presence-messages)
+          ((lyskom-show-presence conf-no kom-presence-messages-in-echo-area)
 	   (lyskom-message "%s" (lyskom-format 'name-has-changed-to-name
 					       old-name new-name))))
 	 (cond
@@ -212,7 +214,7 @@ this function shall be with current-buffer the BUFFER."
 	 (if (and lyskom-pers-no
 		  (not (zerop lyskom-pers-no))
 		  (/= lyskom-pers-no pers-no)
-		  (or (lyskom-show-presence pers-no kom-presence-messages)
+		  (or (lyskom-show-presence pers-no kom-presence-messages-in-echo-area)
 		      (lyskom-show-presence pers-no kom-presence-messages-in-buffer)))
 	     (initiate-get-conf-stat 'follow
 				     'lyskom-show-logged-out-person
@@ -357,7 +359,7 @@ according to the value of FLAG."
     (cond
      ((lyskom-is-in-minibuffer))
      ((lyskom-show-presence (conf-stat->conf-no conf-stat)
-                            kom-presence-messages)
+                            kom-presence-messages-in-echo-area)
       (lyskom-message
        "%s"
        (lyskom-format 'has-entered
@@ -389,7 +391,7 @@ according to the value of FLAG."
   (cond
    ((lyskom-is-in-minibuffer))
    ((lyskom-show-presence (conf-stat->conf-no conf-stat) 
-                          kom-presence-messages)
+                          kom-presence-messages-in-echo-area)
     (lyskom-message
      "%s"
      (lyskom-format 'has-left (or conf-stat
@@ -417,7 +419,7 @@ according to the value of FLAG."
       (progn
 	(cond
 	 ((and (lyskom-show-presence (conf-stat->conf-no personconfstat)
-                                     kom-presence-messages)
+                                     kom-presence-messages-in-echo-area)
 	       (or (= 0 conf-num)
 		   (eq conf-num lyskom-current-conf))
 	       (/= 0 (length doing)))

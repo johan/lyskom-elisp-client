@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.5 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: mime.el,v 44.6 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.5 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: mime.el,v 44.6 2002-06-09 21:47:16 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -45,6 +45,7 @@
     ((ascii greek-iso8859-7)				. iso-8859-7)
     ((ascii hebrew-iso8859-8)				. iso-8859-8)
     ((ascii latin-iso8859-9)				. iso-8859-9)
+    ((ascii latin-iso8859-15)				. iso-8859-15)
     ((ascii latin-jisx0201
 	    japanese-jisx0208-1978 japanese-jisx0208)	. iso-2022-jp)
     ((ascii latin-jisx0201

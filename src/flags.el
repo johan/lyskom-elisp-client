@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.26 2002-06-06 22:39:14 byers Exp $
+;;;;; $Id: flags.el,v 44.27 2002-06-09 21:47:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.26 2002-06-06 22:39:14 byers Exp $\n"))
+	      "$Id: flags.el,v 44.27 2002-06-09 21:47:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -66,6 +66,18 @@
 ;;;  Messages are given in the minibuffer
 
 (defun lyskom-save-options (kombuf start-message done-message error-message)
+  ;; `kom-presence-messages' isn't used directly by the emacs lisp client.
+  ;; Since there is much finer control of what presence messages to give
+  ;; it's hard to encode this is a single boolean, so usually don't try.
+  ;; Ony if the user sees all or no presence messages is it rather clear
+  ;; what the common block value should be:
+  (cond ((or (eq kom-presence-messages-in-buffer t)
+ 	     (eq kom-presence-messages-in-echo-area t))
+ 	 (setq kom-presence-messages t))
+ 	((not (or kom-presence-messages-in-buffer
+ 		  kom-presence-messages-in-echo-area))
+ 	 (setq kom-presence-messages nil)))
+
   (let* ((print-readably t)
          (common-block 
           (concat
@@ -177,13 +189,14 @@
 	     (blocking-do 'get-text
 			  (pers-stat->user-area pers-stat))))))))
 
-
+(defvar lyskom-ignored-user-area-vars)
 (defun lyskom-read-options-eval (text)
   "Handles the call from where we have the text."
   (condition-case nil
       (if text				;+++ Other error handler
 	  (let* ((lyskom-options-text (text->text-mass text))
 		 (pointers (lyskom-read-options-eval-get-holerith t))
+                 (lyskom-ignored-user-area-vars nil)
 		 common-no elisp-no
 		 (rest lyskom-options-text)
 		 working
@@ -252,6 +265,13 @@
 					;was stored.
 	      (++ r))
 
+            (when lyskom-ignored-user-area-vars
+              (lyskom-format-insert-before-prompt
+               'ignored-user-area-var
+               (mapconcat 'symbol-name 
+                          lyskom-ignored-user-area-vars
+                          "\n    ")))
+
 	    (mapcar 'lyskom-recompile-filter kom-permanent-filter-list)
 	    (mapcar 'lyskom-recompile-filter kom-session-filter-list)
 
@@ -303,9 +323,11 @@ if the variable is in kom-dont-read-saved-variables."
   (cond ((eq kom-dont-read-saved-variables t) nil)
         ((memq (intern var) kom-dont-read-saved-variables) nil)
         ((not (or (memq (intern var) lyskom-elisp-variables)
-;                  (memq (intern var) lyskom-global-non-boolean-variables)
+                  (memq (intern var) lyskom-global-non-boolean-variables)
                   (memq (intern var) lyskom-global-boolean-variables)))
-         (lyskom-format-insert-before-prompt 'ignored-user-area-var var))
+         (setq lyskom-ignored-user-area-vars 
+               (cons (intern var)
+                     lyskom-ignored-user-area-vars)))
         (t (lyskom-set-var-from-string var string))))
 
 (defun lyskom-set-var-from-string (var string)
