@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.4 1996-10-24 09:47:28 byers Exp $
+;;;;; $Id: async.el,v 44.5 1997-02-05 23:46:35 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.4 1996-10-24 09:47:28 byers Exp $\n"))
+	      "$Id: async.el,v 44.5 1997-02-05 23:46:35 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -462,6 +462,9 @@ converted, before insertion."
 		(list 'lyskom-async-new-text
 		      "Unexpected misc-info in new text "
 		      type))))))
+
+  ;; A little to much work, really
+  (lyskom-prefetch-text-all (text-stat->text-no text-stat))
 
   ;; Give a message if the user is waiting. Update the prompt.
   (lyskom-run 'async 'lyskom-default-new-text-hook text-stat)
