@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: internal.el,v 39.0 1996-03-14 18:17:44 davidk Exp $
+;;;;; $Id: internal.el,v 39.1 1996-03-21 20:28:11 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 39.0 1996-03-14 18:17:44 davidk Exp $\n"))
+	      "$Id: internal.el,v 39.1 1996-03-21 20:28:11 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -192,9 +192,8 @@ producing errors stripped."
   "Use the previously collected results from calls to the server.
 Args: KOM-QUEUE MULTI-HANDLER &rest MULTI-HANDLER-DATA
 
-MULTI-HANDLER is a function that is called when all previous
-results have been handled. The first argument is a list of
-the results. MULTI-HANDLER-DATA is a list of additional
+MULTI-HANDLER is a function that is called when all previous results
+have been handled. MULTI-HANDLER-DATA is a list of additional
 arguments the multi-handler wants.
 
 See also lyskom-list-use."

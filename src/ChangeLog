@@ -1,3 +1,8 @@
+Thu Mar 21 20:51:58 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* filter.el (lyskom-filter-text-p-3): Hängde om författaren inte
+ 	fanns.
+
 Tue Mar 19 00:03:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-start-of-command): Gör (sit-for 0)
