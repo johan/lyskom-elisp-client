@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.173 2001-07-11 19:25:35 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.174 2001-07-11 20:10:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.173 2001-07-11 19:25:35 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.174 2001-07-11 20:10:15 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -514,7 +514,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (no-unread-lyskom . "Hittar ingen aktiv LysKOM-session med olästa.")
 
     (who-is-on-in-what-conference . "Vilka i vilket möte: ")
-    (who-is-active-in-what-conference . "Vilka närvarande i vilket möte: ")
+    (who-is-present-in-what-conference . "Vilka närvarande i vilket möte: ")
     (who-is-active-and-member . "Visar endast medlemmar i %#1M.\n")
     (who-is-active-and-present . "Visar endast medlemmar närvarande i %#1M.\n")
     

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.115 2001-07-11 19:25:31 byers Exp $
+;;;;; $Id: commands1.el,v 44.116 2001-07-11 20:10:12 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.115 2001-07-11 19:25:31 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.116 2001-07-11 20:10:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2734,7 +2734,7 @@ prefix is negative, invisible sessions are also shown.
 If the prefix is 0, all visible sessions are shown."
   (interactive "P")
   (let ((conf-stat 
-	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-active-in-what-conference)
+	 (lyskom-read-conf-stat (lyskom-get-string 'who-is-present-in-what-conference)
 			      '(all) nil nil t)))
     (condition-case nil
 	(if (lyskom-have-feature dynamic-session-info)
@@ -2752,10 +2752,10 @@ Uses Protocol A version 8 calls"
 			       (conf-stat
 				(lyskom-who-is-on-check-membership-8 who-info-list conf-stat))
 			       (t
-				(listify-vector who-info-list))
-			       (function (lambda (who1 who2)
-					   (< (who-info->connection who1)
-					      (who-info->connection who2)))))))
+				(listify-vector who-info-list)))
+			 (function (lambda (who1 who2)
+				     (< (who-info->connection who1)
+					(who-info->connection who2))))))
 	 (total-users (length who-list))
 	 (session-width (1+ (length (int-to-string
 				     (who-info->connection

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.141 2001-07-11 19:25:32 byers Exp $
+;;;;; $Id: english-strings.el,v 44.142 2001-07-11 20:10:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.141 2001-07-11 19:25:32 byers Exp $"))
+              "$Id: english-strings.el,v 44.142 2001-07-11 20:10:13 byers Exp $"))
 
 
 ;;; ================================================================
@@ -525,7 +525,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
 
     (who-is-on-in-what-conference . "Who in which conference: ")
-    (who-is-active-in-what-conference . "Who present in which conference: ")
+    (who-is-present-in-what-conference . "Who present in which conference: ")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
     (who-is-active-and-present . "Only members present in %#1M are shown.\n")
 
