@@ -1,3 +1,9 @@
+Mon Dec 16 01:03:06 1991  Linus Tolke Y  (linus at robin)
+
+	* async.el (lyskom-add-new-text): om vi inte f}r h{mta
+	  conf-statusen f|r ett m|te som inl{gget skickades till s}
+	  sm{ller denna funktion. Nu hanterar den det.
+
 Fri Dec 13 19:50:56 1991  Linus Tolke Y  (linus at ruben)
 
 	* lyskom-rest.el, review.el, swedish-strings.el, vars.el
