@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.47 2003-05-04 17:23:29 byers Exp $
+;;;;; $Id: command.el,v 44.48 2003-08-02 20:21:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.47 2003-05-04 17:23:29 byers Exp $\n"))
+	      "$Id: command.el,v 44.48 2003-08-02 20:21:45 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -79,18 +79,19 @@
     `(defun ,cmd ,args
        ,doc
        ,(lyskom-fix-interactive-decl interactive-decl cmd)
-       (lyskom-start-of-command ',cmd)
-       (let ((,bufsym (current-buffer)))
-         (unwind-protect
-             (condition-case nil
-                 (progn ,@forms)
-               (quit (ding)
-                     (lyskom-insert-before-prompt
-                      (lyskom-get-string 'interrupted))))
-           (lyskom-save-excursion
-            (when (buffer-live-p ,bufsym)
-              (set-buffer ,bufsym))
-             (lyskom-end-of-command)))))))
+       (let ((lyskom-command-point (point)))
+         (lyskom-start-of-command ',cmd)
+         (let ((,bufsym (current-buffer)))
+           (unwind-protect
+               (condition-case nil
+                   (progn ,@forms)
+                 (quit (ding)
+                       (lyskom-insert-before-prompt
+                        (lyskom-get-string 'interrupted))))
+             (lyskom-save-excursion
+               (when (buffer-live-p ,bufsym)
+                 (set-buffer ,bufsym))
+               (lyskom-end-of-command))))))))
 
 ;;
 ;; def-kom-emacs-command works like def-kom-command, but the template 

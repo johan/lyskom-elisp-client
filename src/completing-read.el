@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.39 2003-07-27 14:17:24 byers Exp $
+;;;;; $Id: completing-read.el,v 44.40 2003-08-02 20:21:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.39 2003-07-27 14:17:24 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.40 2003-08-02 20:21:46 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -180,6 +180,23 @@ See lyskom-read-conf for a description of the parameters."
 	  ((lyskom-uconf-stat-p conf-z-info) (uconf-stat->name conf-z-info))
 	  (t (conf-z-info->name conf-z-info)))))
 
+
+(defun lyskom-read-conf-guess-initial (predicate)
+  "Return a guess for the initial value for lyskom-read-conf."
+  (let* ((pos (or lyskom-command-point (point)))
+         (type (and pos (get-text-property pos 'lyskom-button-type)))
+         (conf-nos (delq nil
+                         (list (and (memq type '(conf pers))
+                                    (get-text-property pos 'lyskom-button-arg))
+                               lyskom-current-conf
+                               lyskom-pers-no))))
+    (lyskom-traverse conf-no conf-nos
+      (let ((uc (blocking-do 'get-uconf-stat conf-no)))
+        (when (lyskom-read-conf-internal-verify-type 
+               conf-no (uconf-stat->conf-type uc)
+               predicate nil nil)
+          (lyskom-traverse-break (uconf-stat->name uc)))))))
+
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
 
@@ -208,8 +225,24 @@ nil:         Nothing was entered, or
 A string:    A name that matched nothing in the database."
 
   (lyskom-completing-clear-cache)
-  (when (integerp initial)
-    (setq initial (conf-stat->name (blocking-do 'get-uconf-stat initial))))
+  (setq initial
+        (cond ((integerp initial)
+               (uconf-stat->name (blocking-do 'get-uconf-stat initial)))
+              ((stringp initial) initial)
+              ((lyskom-conf-stat-p initial)
+               (conf-stat->name initial))
+              ((lyskom-uconf-stat-p initial)
+               (uconf-stat->name initial))
+              ((lyskom-conf-z-info-p initial)
+               (conf-z-info->name initial))
+              ((consp initial) initial)
+              ((lyskom-read-conf-guess-initial type))
+              ((and lyskom-current-conf
+                    (not (eq lyskom-current-conf 0)))
+               (uconf-stat->name
+                (blocking-do 'get-uconf-stat lyskom-current-conf)))
+              (t nil)))
+
   (let* ((completion-ignore-case t)
          (minibuffer-local-completion-map 
           lyskom-minibuffer-local-completion-map)

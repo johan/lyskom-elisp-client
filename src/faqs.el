@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.12 2003-07-27 20:40:41 byers Exp $
+;;;;; $Id: faqs.el,v 44.13 2003-08-02 20:21:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.12 2003-07-27 20:40:41 byers Exp $\n"))
+              "$Id: faqs.el,v 44.13 2003-08-02 20:21:46 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -83,7 +83,8 @@ a conference that doesn't have one, or change an existing FAQ, use
 
 This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
-  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq '(conf pers) nil nil t)
+  (interactive (list (lyskom-read-conf-no 'conf-to-add-faq
+                                          '(conf pers) nil nil t)
                      (lyskom-read-text-no-prefix-arg 'text-to-add-as-faq nil 'last-seen-written)))
   (lyskom-add-faq conf-no text-no))
 
@@ -197,10 +198,7 @@ do this. To add a FAQ, use `kom-add-server-faq'."
 (def-kom-command kom-review-faq (&optional conf-no)
   "View the FAQs for a particular conference."
   (interactive 
-   (list 
-    (let* ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
-           (initial (and conf-stat (cons (conf-stat->name conf-stat) 0))))
-      (lyskom-read-conf-no 'view-which-faq '(conf pers) t initial t))))
+   (list (lyskom-read-conf-no 'view-which-faq '(conf pers) t nil t)))
   (if (zerop conf-no)
       (lyskom-review-faq nil (server-info->aux-item-list
                               (blocking-do 'get-server-info)))
@@ -212,10 +210,7 @@ do this. To add a FAQ, use `kom-add-server-faq'."
 (def-kom-command kom-unread-faq (&optional conf-no)
   "Marks the FAQs for a particular conference as unread."
   (interactive 
-   (list 
-    (let* ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf))
-           (initial (and conf-stat (cons (conf-stat->name conf-stat) 0))))
-      (lyskom-read-conf-no 'unread-which-faq '(conf pers) t initial t))))
+   (list (lyskom-read-conf-no 'unread-which-faq '(conf pers) t nil t)))
   (if (zerop conf-no)
       (lyskom-unread-faq nil (server-info->aux-item-list
                               (blocking-do 'get-server-info)))
@@ -281,13 +276,7 @@ create a new FAQ."
   (interactive)
   (let* ((conf-no (lyskom-read-conf-no
                    (lyskom-get-string 'what-to-change-faq-you)
-                   '(conf pers) 
-                   nil
-                   (cons (if lyskom-current-conf
-                             (let ((tmp (blocking-do 'get-uconf-stat lyskom-current-conf)))
-                               (if tmp (uconf-stat->name tmp) ""))
-                           "") 0)
-                   t))
+                   '(conf pers) nil nil t))
          (conf-stat (when conf-no       ; Need this to make sure the conf-stat is up-to-date!
                       (cache-del-conf-stat conf-no)
                       (blocking-do 'get-conf-stat conf-no))))
@@ -469,10 +458,7 @@ create a new FAQ."
 (def-kom-command kom-list-faqs (conf-stat)
   "List all FAQs for a conference."
   (interactive (list (lyskom-read-conf-stat "Conference: " 
-                                            '(conf)
-                                            nil
-                                            lyskom-current-conf
-                                            t)))
+                                            '(conf) nil nil t)))
   (lyskom-do-list-faqs conf-stat
                        (lyskom-get-aux-item 
                         (conf-stat->aux-items conf-stat)

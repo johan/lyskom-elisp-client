@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.111 2003-07-27 22:31:57 byers Exp $
+;;;;; $Id: edit-text.el,v 44.112 2003-08-02 20:21:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.111 2003-07-27 22:31:57 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.112 2003-08-02 20:21:46 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1284,7 +1284,7 @@ WHAT-TO-DO is a function to call to do the insertion.
 RECPT-TYPE is the type of recipient to add."
   (let ((edit-buffer (current-buffer))
 	(insert-at (point-min-marker))
-	(conf-stat (lyskom-read-conf-stat prompt '(all) nil "" t)))
+	(conf-stat (lyskom-read-conf-stat prompt '(all) nil nil t)))
     (lyskom-save-excursion
      (save-excursion
      (set-buffer lyskom-buffer)

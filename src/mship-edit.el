@@ -10,7 +10,11 @@
 ;; happens, but I had it happen when changing priorities in the main
 ;; buffer. The start and end markers seem to be unaffected.
 ;;
-;;
+;; Reprioritize in kom-handle-membership probably does not remove
+;; texts from the reading lists when the conference moves below the
+;; session priority. It would be useful to have an internal function
+;; that handles this and other mechanics. There is probably one to be
+;; extracted from this file.
 ;;
 ;;
 ;; see tmp.el

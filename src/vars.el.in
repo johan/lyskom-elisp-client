@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.252 2003-07-27 22:31:58 byers Exp $
+;;;;; $Id: vars.el.in,v 44.253 2003-08-02 20:21:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.252 2003-07-27 22:31:58 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.253 2003-08-02 20:21:46 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3626,6 +3626,10 @@ Most commands can't be interrupted by another command."
 
 (def-kom-var lyskom-current-command nil
   "The command currently being executed."
+  local)
+
+(def-kom-var lyskom-command-point nil
+  "The point where the most recent command was started."
   local)
 
 (def-kom-var lyskom-current-function nil

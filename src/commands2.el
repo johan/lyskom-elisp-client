@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.171 2003-07-30 19:34:49 byers Exp $
+;;;;; $Id: commands2.el,v 44.172 2003-08-02 20:21:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.171 2003-07-30 19:34:49 byers Exp $\n"))
+              "$Id: commands2.el,v 44.172 2003-08-02 20:21:45 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -395,7 +395,7 @@ This command accepts text number prefix arguments \(see
 	       (text-stat->author (blocking-do 'get-text-stat text-or-pers-no)))
 	     text-or-pers-no
              (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
-                                  '(pers) nil "" t)))
+                                  '(pers) nil nil t)))
         (kom-print-seconds-in-time-strings nil)
         conf-stat
         pers-stat)
@@ -610,7 +610,6 @@ See `kom-default-message-recipient'."
                       (if kom-permissive-completion
                           '(all)
                         '(login conf))
-                      ;; Initial string:
                       t
                       (cond
                        ((eq kom-default-message-recipient 'everybody) nil)
@@ -634,7 +633,7 @@ See `kom-default-message-recipient'."
                        (t 
                         (if lyskom-last-personal-message-sender
                             (cons lyskom-last-personal-message-sender 0)
-                          "")))
+                          nil)))
                       t))))
     (if (zerop target)
         (lyskom-format-insert 'message-use-alarm-instead
