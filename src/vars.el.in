@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.144 2001-08-23 23:13:17 qha Exp $
+;;;;; $Id: vars.el.in,v 44.145 2001-09-06 21:47:12 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.144 2001-08-23 23:13:17 qha Exp $\n"))
+	      "$Id: vars.el.in,v 44.145 2001-09-06 21:47:12 joel Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -2266,10 +2266,10 @@ in any conference other than the person's letterbox."
 
 (def-kom-var lyskom-personal-message-hook nil
   "*Hook to run when a personal message is received.
-When the hook is run, 'sender' is bound to the pers-stat of the sender
+When the hook is run, 'sender' is bound to the conf-stat of the sender
 of the message (or possibly nil), 'recipient' is 0 if the message is a
-public message and otherwise the pers-no of the user, and 'message' is
-a string that holds the message."
+public message and otherwise the conf-stat of the recipient, and
+'message' is a string that holds the message."
   local-hook)
 
 

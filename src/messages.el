@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: messages.el,v 44.7 1999-11-21 17:59:37 byers Exp $
+;;;;; $Id: messages.el,v 44.8 2001-09-06 21:47:12 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: messages.el,v 44.7 1999-11-21 17:59:37 byers Exp $\n"))
+	      "$Id: messages.el,v 44.8 2001-09-06 21:47:12 joel Exp $\n"))
 
 (defvar lyskom-personal-message-handlers nil
   "A list of personal message handlers.
@@ -64,9 +64,9 @@ handlers."
 (defun lyskom-handle-personal-message (sender recipient text)
   "Handle a personal message.
 
-SENDER is the sender of the message (a conf-stat) RECIPIENT is the
-recipient of the message (a conf-stat or zero for common
-messages. TEXT is the text of the message."
+SENDER is the sender of the message (a conf-stat). RECIPIENT is the
+recipient of the message (a conf-stat or 0 for common messages).
+TEXT is the text of the message."
   (let ((message-type (cond ((eq recipient 0) 'common)
                             ((= (conf-stat->conf-no recipient)
                                 lyskom-pers-no) 'personal)

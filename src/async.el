@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.39 2001-05-02 07:31:41 byers Exp $
+;;;;; $Id: async.el,v 44.40 2001-09-06 21:47:11 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.39 2001-05-02 07:31:41 byers Exp $\n"))
+	      "$Id: async.el,v 44.40 2001-09-06 21:47:11 joel Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -447,8 +447,7 @@ according to the value of FLAG."
 (defun lyskom-show-personal-message (sender recipient message 
                                             &optional when nobeep)
   "Insert a personal message into the lyskom buffer.
-Args: SENDER: conf-stat for the person issuing the broadcast message or a
-	      string that is the sender.
+Args: SENDER: conf-stat for the person sending the message.
       RECIPIENT: 0 if this message is for everybody, otherwise the conf-stat
                  of the recipient.
       MESSAGE: A string containing the message.
@@ -471,8 +470,9 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
                                               &optional when nobeep)
   "Insert a personal message in the current buffer.
 Arguments: SENDER RECIPIENT MESSAGE.
-SENDER is a conf-stat (possibly nil) or a string.
-RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
+SENDER is a conf-stat (possibly nil).
+RECIPIENT is 0 if the message is public, otherwise the conf-stat of the
+recipient.
 MESSAGE is a string containing the message.
 WHEN, if given, is the time when the message arrived. It must be a lyskom
 time structure.
@@ -488,8 +488,9 @@ Non-nil NOBEEP means don't beep."
                                           &optional when nobeep)
   "Formats a personal message, returning it as a string.
 Arguments: SENDER RECIPIENT MESSAGE.
-SENDER is a conf-stat (possibly nil) or a string.
-RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
+SENDER is a conf-stat (possibly nil).
+RECIPIENT is 0 if the message is public, otherwise the conf-stat of the
+recipient.
 MESSAGE is a string containing the message.
 WHEN, if given, is the time when the message arrived. It must be a lyskom
 time structure.
