@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.19 1999-06-10 13:49:46 byers Exp $
+;;;;; $Id: macros.el,v 44.20 1999-06-11 08:54:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.19 1999-06-10 13:49:46 byers Exp $\n"))
+	      "$Id: macros.el,v 44.20 1999-06-11 08:54:51 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -43,23 +43,6 @@
 
 (require 'custom)
 (require 'widget)
-
-
-
-;;; ======================================================================
-;;; Defining keys
-;;;
-
-(or (fboundp 'kbd)
-    (defmacro kbd (keys)
-      "Convert KEYS to the internal Emacs key representation.
-KEYS should be a string in the format used for saving keyboard macros
-\(see `insert-kbd-macro')."
-      (if (or (stringp keys)
-              (vectorp keys))
-          (read-kbd-macro keys)
-        `(read-kbd-macro ,keys))))
-
 
 ;;; ======================================================================
 ;;; lyskom-traverse - traverse a sequence.
@@ -127,7 +110,7 @@ Value returned is always nil."
 	      '(set-buffer __buffer__))))
 
 (put 'lyskom-save-excursion 'edebug-form-spec t)
-(put 'lyskom-provide-macro 'lisp-indent-hook 2)
+(put 'lyskom-save-excursion 'lisp-indent-hook 0)
 
 ;;; ======================================================================
 ;;; Some useful macros to make the code more readable.
