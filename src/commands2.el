@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.5 1991-10-23 22:19:53 linus Exp $
+;;;;; $Id: commands2.el,v 35.6 1991-10-28 22:31:25 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.5 1991-10-23 22:19:53 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.6 1991-10-28 22:31:25 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -903,6 +903,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 			    debugger-old-buffer
 			  (void-variable (current-buffer))))
 	 (repname "*lyskom-bugreport*"))
+    (lyskom-message (lyskom-get-string 'buggreport-compilestart))
     (set-buffer old-buf)
     (cond
      ((eq old-buf (process-buffer lyskom-proc)))
@@ -919,21 +920,24 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
       (princ (lyskom-get-string 'buggreport-internals))
       (princ (lyskom-get-string 'buggreport-version))
       (print lyskom-clientversion)
-      (print lyskom-server-info)
-      (princ (lyskom-get-string 'buggreport-pending-calls))
-      (print lyskom-pending-calls)
-      (princ (lyskom-get-string 'buggreport-call-data))
-      (print lyskom-call-data)
+      (princ (lyskom-get-string 'buggreport-emacs-version))
+      (print (emacs-version))
+      (princ (lyskom-get-string 'buggreport-system-id))
+      (print system-type)
+      (princ (lyskom-get-string 'buggreport-ctl-arrow-doc))
+      (print (condition-case error
+		 (documentation-property 'ctl-arrow 'variable-documentation)
+	       (error)))
+
       (princ (lyskom-get-string 'buggreport-unparsed))
       (print (save-excursion
 	       (set-buffer lyskom-unparsed-buffer)
 	       (goto-char (point-min))
 	       (forward-line 10)
 	       (buffer-substring (point-min) (point))))
-      (princ (lyskom-get-string 'buggreport-reading-list))
-      (print lyskom-reading-list)
-      (princ (lyskom-get-string 'buggreport-to-do-list))
-      (print lyskom-to-do-list)
+      (princ (lyskom-get-string 'buggreport-command-keys))
+      (terpri)
+      (princ (key-description (recent-keys)))
       (if (condition-case ()
 	      debugger-old-buffer
 	    (void-variable nil))
@@ -947,12 +951,28 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	    (princ (lyskom-get-string 'buggreport-communications))
 	    (print (save-excursion
 		     (set-buffer lyskom-debug-communications-to-buffer-buffer)
-		     (buffer-substring (point-min) (point-max)))))))
+		     (buffer-substring (point-min) (point-max))))))
+      (princ (lyskom-get-string 'buggreport-all-kom-variables))
+      (mapatoms
+       (function
+	(lambda (symbol)
+	  (and (boundp symbol)
+	       (string-match "^\\(kom-\\|lyskom-\\)" (symbol-name symbol))
+	       (not (string-match "-cache$\\|^kom-dict$\\|^lyskom-strings$\
+\\|-map$\\|^lyskom-commands$"
+				  (symbol-name symbol)))
+	       (progn
+		 (terpri)
+		 (princ (symbol-name symbol))
+		 (princ ":")
+		 (print (symbol-value symbol))))))))
+    
     (save-excursion
       (set-buffer repname)
       (goto-char (point-min))
       (replace-regexp "byte-code(\".*\""
-		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))))
+		      (lyskom-get-string 'buggreport-instead-of-byte-comp)))
+    (lyskom-message (lyskom-get-string 'buggreport-compileend))))
 
 
 ; ;;; ================================================================
