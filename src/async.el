@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.47 2002-08-05 18:18:43 byers Exp $
+;;;;; $Id: async.el,v 44.48 2002-10-20 13:20:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.47 2002-08-05 18:18:43 byers Exp $\n"))
+	      "$Id: async.el,v 44.48 2002-10-20 13:20:00 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -620,7 +620,8 @@ converted, before insertion."
 
   ;; If the text is read in another conference, mark it as read here too
   ;; unless the new recipient is the mailbox
-  (if (and (lyskom-text-read-at-least-once-p text-stat t)
+  (if (and kom-mark-read-texts-as-read-in-new-recipient
+           (lyskom-text-read-at-least-once-p text-stat t)
            (not (eq conf-no lyskom-pers-no)))
       (initiate-mark-as-read 'follow
                              nil

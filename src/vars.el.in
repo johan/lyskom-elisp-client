@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.210 2002-09-16 22:14:16 byers Exp $
+;;;;; $Id: vars.el.in,v 44.211 2002-10-20 13:20:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.210 2002-09-16 22:14:16 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.211 2002-10-20 13:20:01 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -193,6 +193,9 @@ The cdrs on the list may be either of:
   '(my-get-text-no abs 17 4711) entry would result in a my-get-text-no call
   (funcall my-get-text-no (abs prefix-arg) prompt default nil 17 4711)."
   )
+
+(def-kom-var kom-check-configuration-on-startup t
+  "*When non-nil, check Emacs configuration on client startup.")
 
 
 (def-kom-var kom-keyboard-menu-immediate-selection nil
@@ -366,8 +369,15 @@ The value of this variable is the file name on which to save new texts."
   server
   inherited)
 
-(def-kom-var kom-created-texts-are-read t
+(def-kom-var kom-created-texts-are-read nil
   "*Non-nil means automatically mark texts that you create as read."
+  server)
+
+(def-kom-var kom-mark-read-texts-as-read-in-new-recipient t
+  "*When t, silently mark texts as read when they are added to a new
+recipient, if they have been read in any conference. When nil, do not
+mark as read. Values other than t or nil are reserved for future
+extensions."
   server)
 
 (def-kom-var kom-customize-in-window nil

@@ -32,7 +32,7 @@
   (let ((path load-path)
 	(result nil))
     (while path
-      (if (string-match "/site-lisp" (car path))
+      (if (string-match "/site-lisp/*$" (car path))
 	  (progn (setq result (car path))
                  (setq path nil))
 	(setq path (cdr path))))
