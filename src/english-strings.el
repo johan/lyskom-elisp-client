@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 36.3 1993-05-11 13:17:06 linus Exp $
+;;;;; $Id: english-strings.el,v 36.4 1993-05-22 21:06:23 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 36.3 1993-05-11 13:17:06 linus Exp $\n"))
+	      "$Id: english-strings.el,v 36.4 1993-05-22 21:06:23 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -892,6 +892,10 @@ Cf. paragraph-start.")
 ;;;; Aronsson was here 4 DEC 1990, thus creating version 0.18
 					; Created *-tell-*
 
+
+;;; To coders of the elisp-client:
+;;; You not only have to change the text here, you also have to change 
+;;; in vars.el if you want add/rename/remove one of these.
 
 (defconst kom-tell-phrases
   '(
