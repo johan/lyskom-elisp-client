@@ -1,3 +1,14 @@
+Wed Aug  7 20:35:59 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* Makefile: Förbättrade ännu mer.
+
+	* swedish-strings.el: Tog bort bindningar av M-e etc.
+
+	* lyskom-rest.el (lyskom-insert-before-prompt): recenter buggade
+ 	ur om minibufferten var aktiv.
+
+	* Släppte 0.42
+	
 Tue Aug  6 23:32:48 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Jag gick igenom och uppdaterade Copyright-årtal och GPL-version
