@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.74 2001-01-03 22:02:53 qha Exp $
+;;;;; $Id: edit-text.el,v 44.75 2001-01-28 12:49:29 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.74 2001-01-03 22:02:53 qha Exp $\n"))
+	      "$Id: edit-text.el,v 44.75 2001-01-28 12:49:29 joel Exp $\n"))
 
 
 ;;;; ================================================================
@@ -403,7 +403,7 @@ Commands:
 \\[kom-edit-add-recipient]   asks for another recipient and adds him to the header.
 \\[kom-edit-add-copy]   as \\[kom-edit-add-recipient] but adds him as copy-recipient.
 
-\\[kom-edit-insert-commented]   inserts the commented of footnoted text.
+\\[kom-edit-insert-commented]   inserts the commented or footnoted text.
 \\[kom-edit-insert-text]   inserts the shown text, you tell the number.
 
 Even though this is a minor mode, it's not intended to be turned on and off,

@@ -124,7 +124,7 @@ The %[ direcive also accepts format-props structures as its (optional)
 argument, but ignores the regular argument part of the structure, but
 applies the text properties to the entire subformat result. Thus,
 
-	(lyskom-format-insert "%[%#1@From: %#2P]\n" 
+	(lyskom-format-insert "%[%#1@From: %#2P%]\n" 
 		(make-format-props nil '(face blue))
 		pers-conf-stat)
 

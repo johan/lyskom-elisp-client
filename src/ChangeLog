@@ -1,3 +1,8 @@
+2001-01-28  Joel Rosdahl  <joel@rosdahl.net>
+
+	* edit-text.el (lyskom-edit-mode): Fixed typo found by Per
+	Starbäck.
+
 2001-01-07  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el: Changed useful bindings of button2up to
