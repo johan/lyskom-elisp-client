@@ -1,3 +1,13 @@
+2002-07-13  Johan Sundström  <jhs@lysator.liu.se>
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Replaced bad code
+	that tried and failed to catch errors in strategy predicates. 
+	Replaced cl plusp and minusp calls with lyskom client calls that
+	don't bail out on any valid prefix argument.
+
+	(lyskom-plusp): New function.
+	(lyskom-minusp): New function.
+
 2002-07-11  Johan Sundström  <jhs@lysator.liu.se>
 
 	* lyskom-rest.el (kom-view): Dropped the call to
