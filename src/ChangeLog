@@ -1,3 +1,13 @@
+2002-09-12  David Byers  <david.byers@swipnet.se>
+
+	* english-strings.el,swedish-strings.el: Fixed speling error for
+	ssh-closing (was ssh-closnig).
+
+	Fix bug 745:
+	* commands1.el (lyskom-quit): Check that lyskom-ssh-proxy is
+	non-nil before trying to use it. Otherwise this function will die
+	and we will call lyskom-end-of-command in kom-quit.
+
 2002-09-11  David Byers  <david.byers@swipnet.se>
 
 	* vars.el.in (kom-old-farts-text-prompt-strategy): Renamed from

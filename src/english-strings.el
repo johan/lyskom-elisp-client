@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.231 2002-09-10 16:32:59 joel Exp $
+;;;;; $Id: english-strings.el,v 44.232 2002-09-12 21:02:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.231 2002-09-10 16:32:59 joel Exp $"))
+              "$Id: english-strings.el,v 44.232 2002-09-12 21:02:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1793,7 +1793,7 @@ giving the command \"Save options\".\n\n")
     (using-ssh-connection . "Using ssh connection to %#1s...")
     (opening-ssh-connection . "Opening ssh connection to %#1s...")
     (ssh-cant-connect . "Unable to open ssh connection: %s")
-    (ssh-closnig . "Closing ssh connection to %#1s")
+    (ssh-closing . "Closing ssh connection to %#1s")
     (ssh-unknown-host . "unknown host")
 
     (keyboard-cancel . "Cancel")

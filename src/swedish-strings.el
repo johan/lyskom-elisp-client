@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.267 2002-09-10 16:32:59 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.268 2002-09-12 21:02:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.267 2002-09-10 16:32:59 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.268 2002-09-12 21:02:35 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1806,7 +1806,7 @@ ge kommandot \"Spara variabler\".\n\n")
     (using-ssh-connection . "Använder ssh-uppkoppling till %#1s...")
     (opening-ssh-connection . "Öppnar ssh-uppkoppling till %#1s...")
     (ssh-cant-connect . "Kan inte göra ssh-uppkopplingen: %s")
-    (ssh-closnig . "Stänger ssh-uppkopplingen till %#1s")
+    (ssh-closing . "Stänger ssh-uppkopplingen till %#1s")
     (ssh-unknown-host . "okänd värd")
 
     (keyboard-cancel . "Avbryt")

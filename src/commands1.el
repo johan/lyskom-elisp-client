@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.153 2002-09-08 15:18:41 byers Exp $
+;;;;; $Id: commands1.el,v 44.154 2002-09-12 21:02:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.153 2002-09-08 15:18:41 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.154 2002-09-12 21:02:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1222,7 +1222,8 @@ Don't ask for confirmation."
     (setq mode-line-process (lyskom-get-string 'mode-line-down))
     (run-hooks 'kom-quit-hook)
 
-    (when (boundp 'lyskom-ssh-proxy)
+    (when (and (boundp 'lyskom-ssh-proxy)
+               lyskom-ssh-proxy)
       (let* ((numleft (1- (get lyskom-ssh-proxy 'num-connected)))
              (procname (symbol-name lyskom-ssh-proxy))
              (bufname (concat " *" procname "*"))
