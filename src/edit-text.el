@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.62 2000-05-04 13:57:41 byers Exp $
+;;;;; $Id: edit-text.el,v 44.63 2000-05-28 17:38:16 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.62 2000-05-04 13:57:41 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.63 2000-05-28 17:38:16 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1003,10 +1003,15 @@ Cannot be called from a callback."
   (lyskom-edit-get-commented 'lyskom-edit-show-commented))
 
 
-(defun kom-edit-insert-commented ()
-  "Insert the commented text with '>' first on each line."
-  (interactive)
-  (lyskom-edit-get-commented 'lyskom-edit-insert-commented))
+(defun kom-edit-insert-commented (arg)
+  "Insert the commented text. Unless an empty prefix argument is
+given, prepend each line with your commenting prefix (or '>')."
+  (interactive "P")
+  (lyskom-edit-get-commented
+   'lyskom-edit-insert-commented
+   (list (cond ((and arg (listp arg)) "")
+	       (t (or (lyskom-default-value 'kom-cite-string)
+		      62)))))) ; '>'
 
 
 (defun kom-edit-insert-buglist ()
@@ -1043,10 +1048,12 @@ Cannot be called from a callback."
     (lyskom-use 'edit 'lyskom-edit-insert-commented buffer window)
     (set-buffer buffer)
     (sit-for 0)))
-    
 
-(defun lyskom-edit-get-commented (thendo)
-  "Get the commented text and text stat and then do THENDO with it."
+
+(defun lyskom-edit-get-commented (thendo &optional arg-list)
+  "Get the commented text and text stat and then do THENDO with it.
+This function is called with an argument list TEXT TEXT-STAT BUFFER
+WINDOW plus any optional arguments given in ARG-LIST."
   (let ((p (point)))
     (save-excursion
       (let* ((buffer (current-buffer))
@@ -1068,7 +1075,7 @@ Cannot be called from a callback."
           (blocking-do-multiple ((text (get-text no))
                                  (text-stat (get-text-stat no)))
             (set-buffer buffer)
-            (funcall thendo text text-stat buffer window)))
+            (apply thendo text text-stat buffer window arg-list)))
          (t
           (lyskom-message "%s" (lyskom-get-string 'no-such-text-m))))))
     (sit-for 0)))
@@ -1715,11 +1722,14 @@ the with-output-to-temp-buffer command is issued to make them both apear."
                              (lyskom-view-mode)))))))
 
 
-(defun lyskom-edit-insert-commented (text text-stat editing-buffer window)
+(defun lyskom-edit-insert-commented (text text-stat editing-buffer window &optional prefix)
   "Handles the TEXT and TEXT-STAT from the return of the call of the text.
-The text is inserted in the buffer with '>' first on each line."
+When given a PREFIX string, that is prepended to each inserted line."
   (if (and text text-stat)
-      (let ((str (text->decoded-text-mass text text-stat)))
+      (let ((str (text->decoded-text-mass text text-stat))
+	    (prefix (or prefix ; FIXME: kludge that should be removed; it's here just
+			(lyskom-default-value 'kom-cite-string); because I didn't see
+			62)))  ; how to patch kom-edit-insert-text to behave. :-/    /jhs
         (set-buffer editing-buffer)
         (and (not (bolp))
              (insert "\n"))
@@ -1731,9 +1741,9 @@ The text is inserted in the buffer with '>' first on each line."
           (insert te)
           (while (<= pb (point))
             (beginning-of-line)
-            (insert (or (lyskom-default-value 'kom-cite-string) 62))
-            (forward-line -1)
-            )))
+	    (when prefix
+	      (insert prefix))
+            (forward-line -1))))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 
