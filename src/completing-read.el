@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.40 2003-08-02 20:21:46 byers Exp $
+;;;;; $Id: completing-read.el,v 44.41 2003-08-05 06:47:42 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.40 2003-08-02 20:21:46 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.41 2003-08-05 06:47:42 ceder Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -203,10 +203,10 @@ See lyskom-read-conf for a description of the parameters."
 PROMPT is the prompt type type.
 TYPE   is the type of conferences to return. It is a list of one or
 more of the following:
-    all     Return any conference,
-    conf    Return conferences (not letterboxes),
-    pers    Return persons (letterboxes),
-    login   Return persons who are also logged-in, and
+    all     Return any conference.
+    conf    Return conferences (not letterboxes).
+    pers    Return persons (letterboxes).
+    login   Return persons who are also logged-in.
     membership Return only conferences and letterboxes lyskom-pers-no
             is a member of.
     none    Return names that do not match anything in the database.

@@ -1,3 +1,7 @@
+2003-08-05  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	* completing-read.el (lyskom-read-conf): Typographic doc fix.
+
 2003-08-05  Johan Sundström  <jhs@lysator.liu.se>
 
 	* commands1.el (kom-go-to-conf): Never suggest going to the
