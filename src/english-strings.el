@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.205 2002-05-07 20:12:11 byers Exp $
+;;;;; $Id: english-strings.el,v 44.206 2002-05-08 19:50:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.205 2002-05-07 20:12:11 byers Exp $"))
+              "$Id: english-strings.el,v 44.206 2002-05-08 19:50:09 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2222,6 +2222,7 @@ Number of sessions:  %21#1d (total)
   (define-key lyskom-en-mode-map (kbd "f s") 'kom-filter-subject)
   (define-key lyskom-en-mode-map (kbd "f a") 'kom-filter-author)
   (define-key lyskom-en-mode-map (kbd "f c") 'kom-filter-text)
+  (define-key lyskom-en-mode-map (kbd "f r") 'kom-filter-recipient)
   (define-key lyskom-en-mode-map (kbd "w w") 'kom-who-is-on)
   (define-key lyskom-en-mode-map (kbd "w c") 'kom-who-is-on-in-conference)
   (define-key lyskom-en-mode-map (kbd "w p") 'kom-who-is-present-in-conference)

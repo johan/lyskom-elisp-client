@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.53 2002-05-01 21:42:39 byers Exp $
+;;;;; $Id: compatibility.el,v 44.54 2002-05-08 19:50:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.53 2002-05-01 21:42:39 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.54 2002-05-08 19:50:09 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -597,17 +597,20 @@ Otherwise treat \\ in NEWTEXT string as special:
 ;;; ================================================================
 ;;; Color stuff
 
-(defun lyskom-color-values (color &optional frame)
+(defun lyskom-color-values (color)
   nil)
 
 (eval-and-compile
   (cond ((fboundp 'color-values) (fset 'lyskom-color-values 'color-values))
-        ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values))
-        ((fboundp 'make-specifier)
-         (defun lyskom-color-values (color &optional frame)
-           (let ((spec (make-specifier 'color)))
-             (set-specifier spec color)
-             (color-rgb-components spec))))))
+        ((and (fboundp 'color-rgb-components)
+              (fboundp 'make-specifier))
+         (defun lyskom-color-values (color)
+           (when (stringp color)
+             (let ((spec nil))
+               (set-specifier (setq spec (make-specifier 'color)) color)
+               (setq color spec)))
+           (color-rgb-components color)))
+        ((fboundp 'x-color-values) (fset 'lyskom-color-values 'x-color-values))))
 
 
 ;;; ======================================================================

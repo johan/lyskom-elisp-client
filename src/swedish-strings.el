@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.239 2002-05-07 20:12:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.240 2002-05-08 19:50:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.239 2002-05-07 20:12:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.240 2002-05-08 19:50:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2682,6 +2682,7 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
   (define-key lyskom-sv-mode-map (kbd "f i") 'kom-filter-text)
+  (define-key lyskom-sv-mode-map (kbd "f m") 'kom-filter-recipient)
   (define-key lyskom-sv-mode-map (kbd "v i") 'kom-who-is-on)
   (define-key lyskom-sv-mode-map (kbd "v m") 'kom-who-is-on-in-conference)
   (define-key lyskom-sv-mode-map (kbd "v n") 'kom-who-is-present-in-conference)
