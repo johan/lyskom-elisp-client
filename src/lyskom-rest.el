@@ -1439,31 +1439,43 @@ then a newline is printed after the name instead."
 
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
-  (setq inhibit-quit t)
-  (set-buffer (process-buffer proc))
-  (cond
-   (lyskom-debug-communications-to-buffer
-    (set-buffer (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
-    (save-excursion
-      (goto-char (point-max))
-      (insert "-----> "  output " <-----\n"))
-    (set-buffer (process-buffer proc))))
-  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
-  (setq inhibit-quit nil)		;We are allowed to break here.
-  (setq inhibit-quit t)
-  (cond
-   ((null lyskom-is-parsing)		;Parse one reply at a time.
-    (setq lyskom-is-parsing t)
+  (let ((inhibit-quit t)		;inhibit-quit is automatically set
+					;to t in version 18.57, but not in
+					;all older versions of emacs.
+	(old-match-data (match-data))
+	(old-buffer (current-bufer)))
     (unwind-protect
-	(condition-case
-	    error-type
-	    (lyskom-parse-unparsed)
-	  (lyskom-parse-incomplete))	;It isn't an error if the answer was
-					;incomplete.
-      (set-buffer (process-buffer proc))
-      (setq lyskom-is-parsing nil)
-      (set-buffer (window-buffer (selected-window))))))
-  (set-buffer (window-buffer (selected-window))))
+	(progn
+
+	  (cond
+	   (lyskom-debug-communications-to-buffer
+	    (set-buffer (get-buffer-create
+			 lyskom-debug-communications-to-buffer-buffer))
+	    (save-excursion
+	      (goto-char (point-max))
+	      (insert "-----> "  output " <-----\n"))))
+
+	  (set-buffer (process-buffer proc))
+	  (princ output lyskom-unparsed-marker)	;+++lyskom-string-skip-whitespace
+	  (setq inhibit-quit nil)	;We are allowed to break here.
+	  (setq inhibit-quit t)
+	  (cond
+	   ((null lyskom-is-parsing)	;Parse one reply at a time.
+	    (setq lyskom-is-parsing t)
+	    (unwind-protect
+		(condition-case
+		    error-type
+		    (lyskom-parse-unparsed)
+		  (lyskom-parse-incomplete)) ;Incomplete answers are normal.
+	      (set-buffer (process-buffer proc)) ;In case it was changed by
+					;        ;the handler.
+	      (setq lyskom-is-parsing nil)))))
+
+      ; Restore selected buffer and match data.
+
+      (store-match-data old-match-data)
+      (set-buffer old-buffer))))
+      
 
 
 ;;; The sentinel

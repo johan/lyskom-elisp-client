@@ -1,3 +1,8 @@
+ Sun Aug 18 19:32:00 1991  Per Cederqvist  (ceder at lysator)
+
+	* lyskom-rest.el (lyskom-filter) Nu sparas match-data alltid. R{tt
+	  buffert }terst{lls. Inhibit-quit s{tts ej globalt.
+
 Sun Aug 18 02:07:59 1991  Linus Tolke Y  (linus at lysator)
 
 	* commands2.el (lyskom-status-conf, lyskom-status-pers-2): Bytt
