@@ -1,3 +1,13 @@
+Wed Apr 15 10:32:41 1992  Inge Wallin  (inge@robert)
+
+	* cache.el(lyskom-set-who-info-buffer-2): Use insert instead of
+	  lyskom-insert in the who-buffer.  Send 'insert to the call to
+	  lyskom-print-who-info. 
+
+	* commands1.el(lyskom-print-who-info): Take new optional parameter
+	  INSERT-FUNCTION telling which function to use for text insertion
+	  into the buffer.  Use lyskom-insert as default.
+
 Tue Mar 24 03:03:41 1992  Lars Willf|r  (willfor@lysator)
 
 	* lyskom-rest.el: Har lagt in s} att den s{tter lyskom-last-viewed

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 35.17 1992-03-06 16:02:02 linus Exp $
+;;;;; $Id: commands1.el,v 35.18 1992-04-15 08:37:16 inge Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.17 1992-03-06 16:02:02 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.18 1992-04-15 08:37:16 inge Exp $\n"))
 
 
 ;;; ================================================================
@@ -1596,32 +1596,38 @@ args: TIME."
   (lyskom-run 'who-is-on 'lyskom-run 'main 'lyskom-end-of-command))
 
 
-(defun lyskom-print-who-info (conf-stat working who-info my-session-no)
-  "Print a line about a user. Args: CONF-STAT WORKING WHO-INFO MY-SESSION-NO.
+(defun lyskom-print-who-info (conf-stat working who-info my-session-no 
+					&optional insert-function)
+  "Print a line about a user. 
+Args: CONF-STAT WORKING WHO-INFO MY-SESSION-NO &optional INSERT-FUNCTION.
 CONF-STAT refer to the user.
 WORKING is the conf-stat of his current working conference.
 WHO-INFO is the who-info.
-MY-SESSION-NO is the session number of the running session."
-  (lyskom-insert
-   (lyskom-return-who-info-line (format "%4d%s" 
-					(who-info->connection who-info)
-					(if (= my-session-no
-					       (who-info->connection who-info))
-					    "*"
-					  " "))
-				(conf-stat->name conf-stat)
-				(cond
-				 ((conf-stat->name working))
-				 (t (lyskom-get-string
-				     'not-present-anywhere)))))
-  (cond
-   (kom-show-where-and-what
-    (lyskom-insert
-     (lyskom-return-who-info-line "     "
-				  (lyskom-return-username who-info)
-				  (concat "(" 
-					  (who-info->doing-what who-info)
-					  ")"))))))
+MY-SESSION-NO is the session number of the running session.
+&optional INSERT-FUNCTION is the function for inserting the text into
+                          the buffer. If nil, use lyskom-insert."
+  (let ((insertfun (if insert-function
+		       insert-function
+		     'lyskom-insert)))
+    (funcall insertfun
+	     (lyskom-return-who-info-line 
+	      (format "%4d%s" 
+		      (who-info->connection who-info)
+		      (if (= my-session-no (who-info->connection who-info))
+			  "*"
+			" "))
+	      (conf-stat->name conf-stat)
+	      (cond
+	       ((conf-stat->name working))
+	       (t (lyskom-get-string 'not-present-anywhere)))))
+    (if kom-show-where-and-what
+	(funcall insertfun
+		 (lyskom-return-who-info-line 
+		  "     "
+		  (lyskom-return-username who-info)
+		  (concat "(" 
+			  (who-info->doing-what who-info)
+			  ")"))))))
 
 		 
 (defun lyskom-fix-str (len str)
