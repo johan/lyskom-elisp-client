@@ -1,4 +1,28 @@
+Mon Oct 30 16:31:30 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* vars.el.in (kom-text-buttons): JySKom enhanced, preliminärt.
+
+	* startup.el (lyskom): Skicka med buffer till lyskom-init-parse
+	(lyskom-clear-vars): Gör lyskom-buffer lokal
+
+	* parse.el (lyskom-init-parse): S{tt lyskom-buffer fr}n
+	   parameter.
+
+	* lyskom-rest.el (lyskom-do-format): Bytte kom-buffer mot
+	   lyskom-buffer
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Parsa hela
+	   texten f|r varje typ, och anv{nd f|rsta parentesparet f|r
+	   lyskom-default-button.
+	   (lyskom-button-view-pres): Fixade semantik f|r args
+	   (lyskom-button-send-mail): Ny funktion
+
 Sun Oct 29 07:30:14 1995  David K}gedal  <davidk@lysator.liu.se>
+
+	* startup.el (kom-start-anew): Skydda mot avbrott.
+
+	* commands1.el (kom-sub-self): Placera point i b|rjan p}
+	   f|reslaget m|tesnamn
 
 	* lyskom-rest.el (skip-first-zeros): Ny funktion.
 

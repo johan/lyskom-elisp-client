@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 38.8 1995-10-28 11:08:07 byers Exp $
+;;;;; $Id: startup.el,v 38.9 1995-10-30 15:42:14 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 38.8 1995-10-28 11:08:07 byers Exp $\n"))
+	      "$Id: startup.el,v 38.9 1995-10-30 15:42:14 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -100,7 +100,7 @@ See lyskom-mode for details."
 	    (set-process-sentinel proc 'lyskom-sentinel)
 
 	    (save-excursion
-	      (lyskom-init-parse))
+	      (lyskom-init-parse buffer))
 
 	    (setq lyskom-server-info (blocking-do 'get-server-info))
 	    (lyskom-format-insert 
@@ -157,56 +157,65 @@ See lyskom-mode for details."
   "Start as a new person."
   (interactive)
   (lyskom-start-of-command 'kom-start-anew)
-  (if first-time-around
-      nil
-    (lyskom-tell-internat 'kom-tell-login))
-  (setq lyskom-pers-no nil)
-  (while (not lyskom-pers-no)
-    (if (and first-time-around
-	     lyskom-default-user-name)
-	(setq lyskom-pers-no  ;; This is nil if we can't find a unique match.
-	      (lyskom-read-conf-name-internal lyskom-default-user-name
-					      'pers 'conf-no)))
-    (if lyskom-pers-no
-	nil
-      (setq lyskom-pers-no
-	    (lyskom-read-conf-no (lyskom-get-string 'what-is-your-name)
-				 'pers nil "")))
-    ;; Now lyskom-pers-no contains a number of a person.
-    ;; Lets log him in.
-    (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-      (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
-      (setq first-time-around nil)
-      (if (blocking-do 'login lyskom-pers-no
-		       (if lyskom-default-password
-			   (prog1
-			       lyskom-default-password
-			     (setq lyskom-default-password nil)
-			     (set-default 'lyskom-default-password nil))
-			 (silent-read (lyskom-get-string 'password))))
-	  nil
-	(lyskom-insert-string 'wrong-password)
-	(setq lyskom-pers-no nil))))
-
-  ;; Now we are logged in.
-  (lyskom-insert-string 'are-logged-in)
-  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
-    (if (and conf-stat
-	     (/= (conf-stat->msg-of-day conf-stat) 0))
+  (let ((old-me lyskom-pers-no))
+    (unwind-protect
 	(progn
-	  (lyskom-insert-string 'you-have-motd)
-	  (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
-    (if (and conf-stat
-	     (zerop (conf-stat->presentation conf-stat))
-	     (not (zerop (conf-stat->no-of-texts conf-stat))))
-	(lyskom-insert-string 'presentation-encouragement)))
-  (lyskom-read-options) 
-  (lyskom-refetch)
-  ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
-  (cache-set-marked-texts (blocking-do 'get-marks))
-  ;; What is this variable? It is never used. It is ust to fill the cache?
-  (setq lyskom-who-am-i (blocking-do 'who-am-i))
-  (lyskom-end-of-command))
+	  (if first-time-around
+	      nil
+	    (lyskom-tell-internat 'kom-tell-login))
+	  (setq lyskom-pers-no nil)
+	  (while (not lyskom-pers-no)
+	    (if (and first-time-around
+		     lyskom-default-user-name)
+		;; This is nil if we can't find a unique match.
+		(setq lyskom-pers-no
+		      (lyskom-read-conf-name-internal lyskom-default-user-name
+						      'pers 'conf-no)))
+	    (if lyskom-pers-no
+		nil
+	      (setq lyskom-pers-no
+		    (lyskom-read-conf-no (lyskom-get-string 'what-is-your-name)
+					 'pers nil "")))
+	    ;; Now lyskom-pers-no contains a number of a person.
+	    ;; Lets log him in.
+	    (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+	      (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
+	      (setq first-time-around nil)
+	      (if (blocking-do 'login lyskom-pers-no
+			       (if lyskom-default-password
+				   (prog1
+				       lyskom-default-password
+				     (setq lyskom-default-password nil)
+				     (set-default 'lyskom-default-password
+						  nil))
+				 (silent-read (lyskom-get-string 'password))))
+		  nil
+		(lyskom-insert-string 'wrong-password)
+		(setq lyskom-pers-no nil))))
+
+	  ;; Now we are logged in.
+	  (lyskom-insert-string 'are-logged-in)
+	  (let ((conf-stat (blocking-do 'get-conf-stat lyskom-pers-no)))
+	    (if (and conf-stat
+		     (/= (conf-stat->msg-of-day conf-stat) 0))
+		(progn
+		  (lyskom-insert-string 'you-have-motd)
+		  (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
+	    (if (and conf-stat
+		     (zerop (conf-stat->presentation conf-stat))
+		     (not (zerop (conf-stat->no-of-texts conf-stat))))
+		(lyskom-insert-string 'presentation-encouragement)))
+	  (lyskom-read-options) 
+	  (lyskom-refetch)
+	  ;; (cache-initiate-who-info-buffer (blocking-do 'who-is-on))
+	  (cache-set-marked-texts (blocking-do 'get-marks))
+	  ;; What is this variable? It is never used. It is ust to
+	  ;; fill the cache?
+	  (setq lyskom-who-am-i (blocking-do 'who-am-i)))
+
+      ;; If something failed, make sure we are someone
+      (if (null lyskom-pers-no) (setq lyskom-pers-no old-me))
+      (lyskom-end-of-command))))
 
 
 (defun lyskom-refetch ()
@@ -460,6 +469,7 @@ to see, set of call."
 	(server-name lyskom-server-name)
 	)
     (kill-all-local-variables)
+    (make-local-variable 'lyskom-buffer)
     (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-unparsed-buffer)
     (make-local-variable 'lyskom-unparsed-marker)

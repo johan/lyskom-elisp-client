@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: review.el,v 38.4 1995-10-23 11:55:52 byers Exp $
+;;;;; $Id: review.el,v 38.5 1995-10-30 15:42:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 38.4 1995-10-23 11:55:52 byers Exp $\n"))
+	      "$Id: review.el,v 38.5 1995-10-30 15:42:10 davidk Exp $\n"))
 
 
 
@@ -106,10 +106,10 @@ The defaults for this command is the conference that you are in."
 	; Since we fetch everything anyway we don't need to do this.
 	; If we later choose to fetch all in small chunks we will have
 	; to do this then.
-	; (if (not (zerop to))
-	;   (cache-del-conf-stat to))
-	; (if (not (zerop by)) 
-	;   (cache-del-pers-stat by))
+	(if (not (zerop to))
+	    (cache-del-conf-stat to))
+	(if (not (zerop by)) 
+	    (cache-del-pers-stat by))
 	(let* ((info-by (if (zerop by) 
 			    (lyskom-get-string 'anybody)
 			  (blocking-do 'get-conf-stat by)))
