@@ -1,25 +1,17 @@
 * I docen: Att Ändra inställningarna heter Ändra variabler
   {r en bugg. 
+Linus: Jag har f|r mig jag fixade det. Det {r bara som funktion [ndra
+       variabler finns kvar.
 
 * M kan vara din egen brevl\aa{}da, men du kan inte Review texter till
 n\aa{}gon annans brevl\aa{}da. Det beror p\aa{} en bug i server som kommer att
 r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
 
-* av ceder: N{r man kommenterar ett inl{gg som har m}nga mottagare f}r man en
-	    fr}ga om de ska forts{tta att vara mottagare eller inte. Om man
-	    trycker C-g d} f}r man ingen ny prompt.
-
-	    Linus, kan du titta p} det h{r? Jag lyckades inte r{tta det...
-
-
-* Ta bort lapp p} d|rren borde ha dig sj{lv som default.
-
 * p-P som k-K
 
 * Dokumentera ]terse igen.
 
-* Sina egna s{nda personliga meddelanden i egna bufferten. Svara p}
-  personligt meddelande kanske {r en kul finess.
+* Svara p} personligt meddelande kanske {r en kul finess.
 
 * Visa senaste text med \344-notation.
 
@@ -43,9 +35,6 @@ r\"{a}ttas, f\"{o}rhoppningsvis f\"{o}re sommaren 1991.
 * klienten skall fr}ga efter en presentation.
 
 * flags.el: string-to-int sm{ller.
-
-* a[ndra namn RET p 5 RET ^g
-  ^G tas inte om hand snyggt. lyskom-end-of-command blir aldrig k|rd.
 
 * Trunkera detta m|te ur kommentarskedjan. (Tommy)
 
@@ -132,8 +121,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
 
   (* = dokumenterat (tror jag))
 
-* Dokumentera alla {ndringar.
-
 * lyskom-end-of-command-hook.
 
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
@@ -144,11 +131,6 @@ Linus: R{cker inte ceders uppdelning av anropen?
   l}ngt vi f}r skrolla.
 
 * who-bufferten har f|r m}nga mellanslag i slutet av raderna.
-
-* Kolla s} att man kan ha flera sessioner ig}ng alltid, dvs kolla att
-  alla variabler {r bufferlokala (utom t ex
-  kom-emacs-knows-iso-8859-1). 
-Inge: klart?
 
 * Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
 
