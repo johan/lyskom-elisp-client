@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.180 2002-04-10 19:23:23 byers Exp $
+;;;;; $Id: english-strings.el,v 44.181 2002-04-10 19:50:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.180 2002-04-10 19:23:23 byers Exp $"))
+              "$Id: english-strings.el,v 44.181 2002-04-10 19:50:24 byers Exp $"))
 
 
 ;;; ================================================================
@@ -955,6 +955,9 @@ for a text.
     (no-longer-member . "You are no longer a member of %#1M.\n")
     (no-longer-member-n . "You are no longer a member of %#1m (conference is gone).\n")
     (have-become-member . "You have become a member of %#1M.\n")
+    (have-become-invited-member . "You have been invited to %#1M.
+Go to the conference to accept or decline the invitation. You can also use
+the command 'Join conference' to accept the invitation.\n")
     (have-become-passive-member . "You have become a passive member of %#1M.\n")
 
 
@@ -1673,7 +1676,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-prioritize           . "Prioritize conferences")
     (kom-status-person        . "Status (of) user")
     (kom-status-conf          . "Status (of) conference")
-    (kom-add-self             . "Join (a) conference")
+    (kom-add-self             . "Join conference")
     (kom-change-priority      . "Change priority")
     (kom-list-summary         . "List text (subjects)")
     (kom-sub-self             . "Leave (a) conference")

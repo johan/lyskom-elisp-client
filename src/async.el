@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.41 2002-02-24 20:23:25 joel Exp $
+;;;;; $Id: async.el,v 44.42 2002-04-10 19:50:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.41 2002-02-24 20:23:25 joel Exp $\n"))
+	      "$Id: async.el,v 44.42 2002-04-10 19:50:24 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -307,12 +307,15 @@ this function shall be with current-buffer the BUFFER."
   ;; Are we already members?
 
   (when membership
-    (let ((cur-mship (lyskom-try-get-membership conf-no t)))
+    (let ((cur-mship (lyskom-try-get-membership conf-no t))
+          (mship-type (membership->type membership)))
       (unless cur-mship
         (lyskom-format-insert-before-prompt 
-         (if (membership-type->passive (membership->type membership))
-             'have-become-passive-member
-           'have-become-member)
+         (cond ((membership-type->invitation mship-type)
+                'have-become-invited-member)
+               ((membership-type->passive mship-type)
+                'have-become-passive-member)
+               (t 'have-become-member))
          conf-conf-stat))
 
     (cond ((membership-type->passive (membership->type membership))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.213 2002-04-10 19:23:24 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.214 2002-04-10 19:50:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.213 2002-04-10 19:23:24 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.214 2002-04-10 19:50:24 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -954,6 +954,9 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (no-longer-member-n . "Du är inte längre medlem i möte %#1m (finns inte).\n")
 
     (have-become-member . "Du har blivit medlem i %#1M.\n")
+    (have-become-invited-member . "Du har bjudits in till %#1M.
+Gå till mötet för att acceptera eller tacka nej till inbjudan. Du kan även
+använda kommandot 'Bli medlem i möte' för att acceptera inbjudan.\n")
     (have-become-passive-member . "Du har blivit passiv medlem i %#1M.\n")
 
     (message-broadcast . "\

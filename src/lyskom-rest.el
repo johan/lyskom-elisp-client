@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.145 2002-04-09 23:07:57 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.146 2002-04-10 19:50:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.145 2002-04-09 23:07:57 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.146 2002-04-10 19:50:24 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -589,8 +589,9 @@ If CONF is nil, check the first conf on the to-do list."
                                             (membership->type mship))
               (setq continue t))
           (progn
-            (lyskom-sub-member (blocking-do 'get-pers-stat lyskom-pers-no)
-                               conf-stat)
+            (let ((kom-unsubscribe-makes-passive nil))
+              (lyskom-sub-member (blocking-do 'get-pers-stat lyskom-pers-no)
+                                 conf-stat))
             (setq continue nil)
             )))
 
