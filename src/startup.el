@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.8 1992-06-13 21:17:08 linus Exp $
+;;;;; $Id: startup.el,v 35.9 1992-07-26 23:46:11 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.8 1992-06-13 21:17:08 linus Exp $\n"))
+	      "$Id: startup.el,v 35.9 1992-07-26 23:46:11 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -254,55 +254,137 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
 	     (zerop (conf-stat->presentation conf-stat))
 	     (not (zerop (conf-stat->no-of-texts conf-stat))))
 	(lyskom-insert-string 'presentation-encouragement))
-    (lyskom-collect 'main)
-    (initiate-get-membership 'main nil pers-no)
-    (initiate-get-unread-confs 'main nil pers-no)
-    (initiate-get-marks 'main nil)
-    (initiate-who-is-on 'main nil)
-    (initiate-who-am-i 'main nil)
-    (lyskom-use 'main 'lyskom-prefetch nil)
-    (lyskom-read-options))))
+    (lyskom-setup-prefetch)
+    (lyskom-start-prefetch)
+    (setq lyskom-membership-is-read 0)
+    (setq lyskom-membership nil)
+    (setq lyskom-command-to-do 'unknown)
+    (setq lyskom-unread-confs)
+    (setq lyskom-options-done)
+    (setq lyskom-to-do-list (lyskom-create-read-list))
+    (setq lyskom-reading-list (lyskom-create-read-list))
+    (initiate-get-unread-confs 'main 'lyskom-register-unread-confs pers-no)
+    (lyskom-read-options)		; Check this to be finished before
+					; printing the first prompt
+    (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3 pers-no
+				     lyskom-membership-is-read
+				     lyskom-fetch-membership-length)
+    (lyskom-prefetch-all-conf-stats)
+    (lyskom-prefetch-marks)
+    (lyskom-prefetch-who-is-on)
+    (lyskom-prefetch-membership pers-no))))
 
 
-(defun lyskom-refetch ()
-  "Refetch membership-list and dependent structures."
-  (setq lyskom-membership-is-read nil)
-  (setq lyskom-membership nil)
-  (setq lyskom-command-to-do 'unknown)
-  (set-read-list-empty lyskom-reading-list)
-  (lyskom-collect 'main)
-  (initiate-get-membership 'main nil lyskom-pers-no)
-  (initiate-get-unread-confs 'main nil lyskom-pers-no)
-  (lyskom-use 'main 'lyskom-prefetch))
+(defun lyskom-register-unread-confs (unread-confs)
+  "Saves the list of UNREADCONFS in a variable for later use."
+  (setq lyskom-unread-confs unread-confs))
 
 
-(defun lyskom-prefetch (membership conf-no-list 
-			&optional marks who-info-list session-no noend)
-  "Prefetch conf-stats for the first lyskom-prefetch-confs confs.
-Args: MEMBERSHIP, CONF-NO-LIST, MARKS, WHO-INFO-LIST SESSION-NO NOEND
-If optional NOEND is non-nil then do not do lyskom-end-of-command."
-  (lyskom-set-membership membership)
-  (if marks
-      (cache-set-marked-texts marks))
-  (if who-info-list
-      (cache-set-who-info-list who-info-list))
-  (if session-no
-      (setq lyskom-session-no session-no))
-  (setq lyskom-unread-confs conf-no-list)
-  (setq lyskom-last-conf-fetched -1)
-  (setq lyskom-last-conf-received -1)
-  (setq lyskom-to-do-list (lyskom-create-read-list))
-  (setq lyskom-reading-list (lyskom-create-read-list))
-  (if (not noend)
+(defun lyskom-start-anew-login-3 (part-of-membership)
+  "Puts the membersship, or part of it in the lyskom-to-do-list.
+If we have got enough information to be able to decide upon the first
+prompt the prompt is printed and this function is left. If not, fetch
+more membership.
+
+Information required for this:
+- lyskom-unread-confs
+- lyskom-options-done
+- an article in one of the conferences in the membership."
+  (if (symbolp part-of-membership)
+      nil
+    (if (< (length part-of-membership) lyskom-fetch-membership-length) ; all
+	(setq lyskom-membership-is-read 'almost)
+      (setq lyskom-membership-is-read (+ lyskom-membership-is-read 
+					 lyskom-fetch-membership-length)))
+    (lyskom-append-to-membership part-of-membership))
+  (if (and lyskom-unread-confs
+	   lyskom-options-done	; We have the fundamental stuff
+	   (or (not (read-list-isempty lyskom-to-do-list))
+	       (eq lyskom-membership-is-read t))
+	   )
       (lyskom-end-of-command)))
+		
+
+; obsolete
+;(defun lyskom-set-membership (membership)
+;  "Sets lyskom-membership to a new value.
+;Args: MEMBERSHIP."
+;  (setq lyskom-membership (sort (lyskom-array-to-list membership)
+;				'lyskom-membership-<))
+;  (setq lyskom-membership-is-read t))
+
+(defun lyskom-append-to-membership (membership)
+  "Adds a PART last in the membership-list."
+  (let ((list (lyskom-array-to-list membership))
+	sent)
+    (setq lyskom-membership (append lyskom-membership list))
+    (let ((reverse (reverse lyskom-membership)))
+      (while reverse
+	(lyskom-prefetch-conf (membership->conf-no (car reverse)))
+	(setq reverse (cdr reverse))))
+    (while (and (not sent) list)
+      (if (and lyskom-unread-confs
+	       (not (memq (membership->conf-no (car list))
+			  (lyskom-array-to-list
+			   (conf-no-list->conf-nos lyskom-unread-confs)))))
+	  nil
+	(initiate-get-conf-stat 'main 'lyskom-decide-unread-conf
+				(membership->conf-no (car list))
+				(car list)
+				(cdr list))
+	(setq sent t))
+      (setq list (cdr list)))))
 
 
-(defun lyskom-set-membership (membership)
-  "Sets lyskom-membership to a new value.
-Args: MEMBERSHIP."
-  (setq lyskom-membership (sort (lyskom-array-to-list membership)
-				'lyskom-membership-<))
-  (setq lyskom-membership-is-read t))
+(defun lyskom-decide-unread-conf (conf-stat membship rest-memblist)
+  "Checks if we have unread in the conf CONF-STAT using MEMBERSHIP.
+If not, fetch next conf-stat from REST-MEMBERSHIPLIST."
+  (if (cond
+       ((not conf-stat)			; error
+	nil)
+       ((> (+ (conf-stat->first-local-no conf-stat)
+	      (conf-stat->no-of-texts conf-stat)
+	      -1)
+	   (membership->last-text-read membship))
+	;; There are (probably) some unread texts in this conf.
+	(lyskom-prefetch-map (conf-stat->conf-no conf-stat) 
+			     (+ lyskom-fetch-map-nos
+				(membership->last-text-read membship)))
+	(initiate-get-map 'main 'lyskom-decide-unread-map
+			  (conf-stat->conf-no conf-stat)
+			  (1+ (membership->last-text-read membship))
+			  lyskom-fetch-map-nos
+			  conf-stat)
+	t))
+      nil
+    (if rest-memblist
+	(progn
+	  (initiate-get-conf-stat 'main 'lyskom-decide-unread-conf
+				  (membership->conf-no (car rest-memblist))
+				  (car rest-memblist)
+				  (cdr rest-memblist))
+	  (lyskom-run 'main 'lyskom-start-anew-login-3 'cont))
+      (if (numberp lyskom-membership-is-read)
+	  (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
+					   lyskom-membership-is-read
+					   lyskom-fetch-membership-length)
+	(lyskom-run 'main 'lyskom-start-anew-login-3 'cont)))))
+
+
+(defun lyskom-decide-unread-map (map conf)
+  "Enters this map in the lyskom-to-do-list and returns to lyskom-start-anew-login-3."
+  (let ((list (lyskom-array-to-list (map->text-nos map))))
+    (while list
+      (if (read-list-enter-text (car list) conf lyskom-to-do-list)
+	  (setq list (cdr list))
+	(let ((info (lyskom-create-read-info 
+		     'CONF conf
+		     (membership->priority 
+		      (lyskom-member-p (conf-stat->conf-no conf)))
+		     (lyskom-create-text-list list))))
+	  (read-list-enter-read-info info lyskom-to-do-list))
+	(setq list))))
+  (lyskom-start-anew-login-3 'cont))
 
 
 (defun lyskom-print-name (conf-stat)
