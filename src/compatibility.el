@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.28 1999-11-19 23:19:50 byers Exp $
+;;;;; $Id: compatibility.el,v 44.29 1999-11-20 21:55:19 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.28 1999-11-19 23:19:50 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.29 1999-11-20 21:55:19 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -120,11 +120,12 @@ of the lyskom-provide-* functions instead."
 ;;; lyskom-xemacs-or-gnu
 ;;;
 
-(defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
-  "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
-  (if (string-match "XEmacs" (emacs-version))
-      xemacs-form
-    gnu-form))
+(eval-and-compile
+  (defmacro lyskom-xemacs-or-gnu (xemacs-form gnu-form)
+    "Eval XEMACS-FORM in XEmacs and GNU-FORM in Gnu Emacs."
+    (if (string-match "XEmacs" (emacs-version))
+        xemacs-form
+      gnu-form)))
 
 (put 'lyskom-xemacs-or-gnu 'edebug-form-spec '(form form))
 
@@ -290,6 +291,22 @@ string to search in."
 (lyskom-provide-function char-width (c) 1)
 (lyskom-provide-function find-charset-string (str) '(ascii))
 (lyskom-provide-function string-as-unibyte (str) str)
+(lyskom-provide-function string-make-unibyte (str) str)
+(lyskom-provide-function string-make-multibyte (str) str)
+(lyskom-provide-function multibyte-string-p (str) nil)
+
+(eval-and-compile
+  (lyskom-xemacs-or-gnu
+   (fset 'lyskom-string-width (symbol-function 'string-width))
+   (defun lyskom-string-width (str)
+     (cond ((and (multibyte-string-p str)
+                 (null enable-multibyte-characters))
+            (string-width (string-make-unibyte str)))
+           ((and (null (multibyte-string-p str))
+                 enable-multibyte-characters)
+            (string-width (string-make-multibyte str)))
+           (t (string-width str))))))
+
 
 (lyskom-provide-function last (x &optional n)
   "Returns the last link in the list LIST.
