@@ -23,8 +23,8 @@ M-x lyskom.
 %build
 make
 %install
-install -o root -g root -m 644 lyskom.el  /usr/share/emacs/site-lisp/lyskom.el
-install -o root -g root -m 644 lyskom.elc /usr/share/emacs/site-lisp/lyskom.elc
+install -o root -g root -m 644 lyskom-#CLIENTVERSION#.el  /usr/share/emacs/site-lisp/lyskom.el
+install -o root -g root -m 644 lyskom-#CLIENTVERSION#.elc /usr/share/emacs/site-lisp/lyskom.elc
 
 %files
 /usr/share/emacs/site-lisp/lyskom.el

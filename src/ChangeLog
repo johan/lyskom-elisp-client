@@ -1,5 +1,8 @@
 2000-11-18  Joel Rosdahl  <joel@rosdahl.net>
 
+	* lyskom-elisp-client.spec: Changed file names in %install
+	section.
+
 	* commands1.el (kom-change-parenthesis): Handle multiple
 	parentheses and paranthesis not located at the end.
 
