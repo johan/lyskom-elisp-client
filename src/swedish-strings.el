@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.180 2001-08-23 22:36:46 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.181 2001-08-23 22:49:12 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.180 2001-08-23 22:36:46 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.181 2001-08-23 22:49:12 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -1635,7 +1635,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-who-is-on-in-conference
      			      . "Vilka är inloggade i möte") 
     (kom-who-is-present-in-conference
-     			      . "Vilka är närvarande i möte") 
+     			      . "Vilka är närvarande i möte")
+    (kom-who-is-on-and-friend . "Vilka vänner är inloggade")
     (kom-who-am-i             . "Var (är) jag")
 ;    (kom-display-who-buffer	"Visa vilkalistan")
     (kom-list-clients	      . "Lista klienter")
@@ -2360,12 +2361,14 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-prefix-command 'lyskom-sv-S-prefix)
   (define-prefix-command 'lyskom-sv-fast-reply-prefix)
   (define-prefix-command 'lyskom-sv-filter-get-prefix)
+  (define-prefix-command 'lyskom-sv-who-prefix)
 
   (define-key lyskom-sv-mode-map (kbd "f") 'lyskom-sv-filter-get-prefix)
   (define-key lyskom-sv-mode-map (kbd "n") 'lyskom-sv-next-prefix)
   (define-key lyskom-sv-mode-map (kbd "l") 'lyskom-sv-list-prefix)
   (define-key lyskom-sv-mode-map (kbd "s") 'lyskom-sv-S-prefix)
   (define-key lyskom-sv-mode-map (kbd "r") 'lyskom-sv-fast-reply-prefix)
+  (define-key lyskom-sv-mode-map (kbd "v") 'lyskom-sv-who-prefix)
   (define-key lyskom-sv-mode-map (lyskom-keys 'ä) 'lyskom-sv-change-prefix)
   (define-key lyskom-sv-mode-map (lyskom-keys 'Ä) 'lyskom-sv-change-prefix)
   (define-key lyskom-sv-mode-map (lyskom-keys 'Å) 'lyskom-sv-review-prefix)
@@ -2436,8 +2439,6 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "l {") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l [") 'kom-list-summary)
   (define-key lyskom-sv-mode-map (kbd "l f") 'kom-list-filters)
-  (define-key lyskom-sv-mode-map (kbd "l v") 'kom-who-is-on-in-conference)
-  (define-key lyskom-sv-mode-map (kbd "l a") 'kom-who-is-present-in-conference)
   (define-key lyskom-sv-mode-map (kbd "m")   'kom-add-self)
   (define-key lyskom-sv-mode-map (kbd "M")   'kom-mark-text)
   (define-key lyskom-sv-mode-map (kbd "A")   'kom-unmark-text)
@@ -2462,7 +2463,10 @@ Visar vilka som för tillfället är närvarande i ett visst möte")
   (define-key lyskom-sv-mode-map (kbd "f [") 'kom-filter-subject)
   (define-key lyskom-sv-mode-map (kbd "f f") 'kom-filter-author)
   (define-key lyskom-sv-mode-map (kbd "f i") 'kom-filter-text)
-  (define-key lyskom-sv-mode-map (kbd "v")   'kom-who-is-on)
+  (define-key lyskom-sv-mode-map (kbd "v i") 'kom-who-is-on)
+  (define-key lyskom-sv-mode-map (kbd "v m") 'kom-who-is-on-in-conference)
+  (define-key lyskom-sv-mode-map (kbd "v a") 'kom-who-is-present-in-conference)
+  (define-key lyskom-sv-mode-map (kbd "v v") 'kom-who-is-on-and-friend)
   (define-key lyskom-sv-mode-map (kbd "J")   'kom-who-am-i)
   (define-key lyskom-sv-mode-map (kbd "V")   'kom-busy-wait)
   (define-key lyskom-sv-mode-map (kbd "{ p") 'kom-change-presentation)

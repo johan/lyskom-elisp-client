@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.148 2001-08-23 22:36:48 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.149 2001-08-23 22:49:11 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.148 2001-08-23 22:36:48 ceder Exp $"))
+              "$Id: english-strings.el,v 44.149 2001-08-23 22:49:11 qha Exp $"))
 
 
 ;;; ================================================================
@@ -1638,6 +1638,7 @@ You must become an active member of the conference to enter it.\n")
                               . "Who is on in conference")
     (kom-who-is-present-in-conference
                               . "Who is present in conference")
+    (kom-who-is-on-and-friend . "Which friends are on")
     (kom-who-am-i             . "Where (am) i")
     (kom-list-clients	      . "List clients")
     (kom-busy-wait            . "Wait (for news)")
@@ -1955,6 +1956,7 @@ You must become an active member of the conference to enter it.\n")
   (define-prefix-command 'lyskom-en-filter-get-prefix)
   (define-prefix-command 'lyskom-en-S-prefix)
   (define-prefix-command 'lyskom-en-previous-prefix)
+  (define-prefix-command 'lyskom-en-who-prefix)
   (define-key lyskom-en-mode-map (kbd "A") 'lyskom-en-change-prefix)
   (define-key lyskom-en-mode-map (kbd "r") 'lyskom-en-review-prefix)
   (define-key lyskom-en-mode-map (kbd "f") 'lyskom-en-filter-get-prefix)
@@ -1962,6 +1964,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "l") 'lyskom-en-list-prefix)
   (define-key lyskom-en-mode-map (kbd "s") 'lyskom-en-S-prefix)
   (define-key lyskom-en-mode-map (kbd "b") 'lyskom-en-previous-prefix)
+  (define-key lyskom-en-mode-map (kbd "w") 'lyskom-en-who-prefix)
 
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
   (define-key lyskom-en-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
@@ -2006,8 +2009,6 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "l s") 'kom-membership)
   (define-key lyskom-en-mode-map (kbd "l a") 'kom-list-summary)
   (define-key lyskom-en-mode-map (kbd "l f") 'kom-list-filters)
-  (define-key lyskom-en-mode-map (kbd "l w") 'kom-who-is-on-in-conference)
-  (define-key lyskom-en-mode-map (kbd "l p") 'kom-who-is-present-in-conference)
   (define-key lyskom-en-mode-map (kbd "S")  'kom-add-self)
   (define-key lyskom-en-mode-map (kbd "M")  'kom-mark-text)
   (define-key lyskom-en-mode-map (kbd "U")  'kom-unmark-text)
@@ -2025,7 +2026,10 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "f s") 'kom-filter-subject)
   (define-key lyskom-en-mode-map (kbd "f a") 'kom-filter-author)
   (define-key lyskom-en-mode-map (kbd "f c") 'kom-filter-text)
-  (define-key lyskom-en-mode-map (kbd "w")  'kom-who-is-on)
+  (define-key lyskom-en-mode-map (kbd "w l")  'kom-who-is-on)
+  (define-key lyskom-en-mode-map (kbd "w c") 'kom-who-is-on-in-conference)
+  (define-key lyskom-en-mode-map (kbd "w a") 'kom-who-is-present-in-conference)
+  (define-key lyskom-en-mode-map (kbd "w f") 'kom-who-is-on-and-friend)
   (define-key lyskom-en-mode-map (kbd "I")  'kom-who-am-i)
   (define-key lyskom-en-mode-map (kbd "W")  'kom-busy-wait)
   (define-key lyskom-en-mode-map (kbd "A p") 'kom-change-presentation)
