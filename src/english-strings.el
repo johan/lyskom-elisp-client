@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.33 1997-11-30 17:19:14 byers Exp $
+;;;;; $Id: english-strings.el,v 44.34 1997-12-06 15:26:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.33 1997-11-30 17:19:14 byers Exp $"))
+              "$Id: english-strings.el,v 44.34 1997-12-06 15:26:21 byers Exp $"))
 
 
 ;;; ================================================================
@@ -131,6 +131,7 @@
     (server-q . "LysKOM server? (%#1s) ")
     (try-connect . "LysKOM elisp client version %#1s.\nAttempting to connect to %#2s.\n")
     (protocoll-error . "Protocol error. Servers says: %#1s")
+    (too-old-server . "The server is too old for this version of the client.")
     (connection-done . "Connection established. Server version is %#1s.\n\n")
     (what-is-your-name . "What is your name? ")
     (password . "Your Password? ")
@@ -219,6 +220,12 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (you-have-deleted-yourself . "You have deleted yourself.\n")
 
     (what-text-to-delete . "Remove which article? ")
+    (delete-marked-text . "The article is %#1s. Delete anyway? ")
+    (delete-marked-by-you . "marked by you")
+    (delete-marked-by-you-and-one . "marked by you and someone else")
+    (delete-marked-by-you-and-several . "marked by you and %#1d others")
+    (delete-marked-by-one . "marked by 1 user")
+    (delete-marked-by-several . "marked %#1d users")
     (deleting-text . "Removing article %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")
@@ -231,6 +238,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (no-comment-to . "There is no commented article.\n")
 
     (who-letter-to . "Send a letter to whom? ")
+    (who-send-text-to . "Send article to which conference? ")
     (has-motd . "%#1P has a note on the door:\n\n")
     (motd-persist-q . "Send the letter? ")
 
@@ -307,6 +315,7 @@ and you have finished reading. Please come back later.
     (what-mark . "Set which mark? ")
     (unmarking-textno . "Unmarking article %#1n...")
     (marking-textno . "Marking article %#1n...")
+    (list-which-mark . "List articles with which mark (0-255, RET for all)? ")
 
     (new-passwd-again . "Repeat the new password for confirmation: ")
     (what-mark-to-view . "Review which mark? ")
@@ -526,6 +535,8 @@ The message you were sending to %#1M was:
     (Lines . "Len.")
     (Author . "  Author")
     (Subject . "  Subject")
+    (mark-type . "Mrk")
+
     (could-not-read . "You couldn't read the article (%#1n).\n")
     (multiple-choice . "There are several alternatives.")
 
@@ -646,6 +657,12 @@ Article %#1n has more than one root but only one of the trees will be shown.\n")
     (blank-carbon-copy . "Blind Carbon copy:")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
     (blank-carbon-copy-prefix . "[Bb]\\([Ll]\\|[Cc][Cc]\\)")
+
+    (secret-aux-flag . "secret")
+    (anonymous-aux-flag . "anonymous")
+    (inherit-aux-flag  . "inherited")
+    (aux-item-prefix . "> ")
+
     (header-subject . "Subject: ")
     (header-separator . "\\<lyskom-edit-mode-map>\
 --- Write below. \
@@ -675,7 +692,7 @@ Help: \\[describe-mode] ---")
     (lines ." /%#1d lines/ ")
 
     (marked-by-you . "Marked by you.\n")
-    (marked-by-you-and-one . "Marked by dig and someone else.\n")
+    (marked-by-you-and-one . "Marked by you and someone else.\n")
     (marked-by-you-and-several . "Marked by you and %#1d other users.\n")
     (marked-by-one . "Marked by 1 user.\n")
     (marked-by-several . "Marked by %#1d users.\n")
@@ -728,10 +745,10 @@ but failed since all connections available to LysKOM are in
 use. Please leave and return later if you are just waiting
 for an article.
 ===========================================================\n")
-    (has-entered . "%#1:P has entered LysKOM.")
-    (has-entered-r . "%#2@%#1P has entered LysKOM.\n")
-    (has-left . "%#1:P has left LysKOM.")
-    (has-left-r . "%#2@%#1P has left LysKOM.\n")
+    (has-entered . "%#1:P has entered %#2s.")
+    (has-entered-r . "%#2@%#1P has entered %#3s.\n")
+    (has-left . "%#1:P has left %#2s.")
+    (has-left-r . "%#2@%#1P has left %#3s.\n")
     (unknown . "unknown")
     (secret-person . "Secret user")
 
@@ -991,6 +1008,7 @@ Text:
     (conf-popup-title . "Conference %#1s")
     (pers-popup-title . "User %#1s")
     (url-popup-title  . "URL %#1s")
+    (aux-popup-title  . "Extra information")
     (generic-popup-title . "%#1s")
 
     (who-i-am-not-present . "%#1P (not in any conference) \n")
@@ -1034,12 +1052,92 @@ On since %#8s%#9s")
     (language-set-to . "Language set to %#1s.\n")
     (language-not-loaded . "%#1s is unavailable.\n")
 
+    (reformat-generic . "(%#1s)")
     (reformat-html . "(HTML)")
     (reformat-enriched . "(Enriched)")
     (reformat-filled . "(Filled)")
 
     (need-library . "The \"%#1s\" package is required for this command.\n")
     (calc-expression . "Expression: ")
+
+    ;; From aux-items.el
+
+    (content-type-aux . "Content type: %#1s")
+    (content-type-regexp . "Content type: \\(\\S-+\\)")
+    
+    (fast-reply-aux . "%#1t /%#2P/")
+    
+    (cross-reference-text-aux . "See article %#1n /%#2P/")
+    (cross-reference-conf-aux . "See conference <%#1m> %#1M /%#2P/")
+    (cross-reference-pers-aux . "See user <%#1p> %#1P /%#2P/")
+    (cross-reference-text-regexp . "See article \\([0-9]+\\)")
+    (cross-reference-conf-regexp . "See conference <\\([0-9]+\\)>")
+    (cross-reference-pers-regexp . "See user <\\([0-9]+\\)>")
+    (strange-cross-reference . "See %#1s, whatever that might mean")
+    
+    (no-comments-aux . "The author has requested others not to comment this article")
+    (no-comments-edit-aux . "Request that others do not comment")
+    (no-comments-regexp . "Request that others do not comment")
+    
+    (personal-comment-aux . "The author requests private replies only")
+    (personal-comment-edit-aux . "Request private replies only")
+    (personal-comment-regexp . "Request private replies only")
+    
+    (request-confirmation-aux . "The author requests confirmation of reading")
+    (request-confirmation-edit-aux . "Request confirmation of reading")
+    (request-confirmation-regexp . "Request confirmation of reading")
+    (confirm-read-q . "Confirm reading article %#1n? ")
+    
+    (read-confirm-aux . "Confirmed reading: %#1P %#2s")
+
+    (redirect-email-aux . "Send e-mail to %#1s")
+    (redirect-lyskom-aux . "Send articles to conference %#1M")
+
+    (label-what-kind . "Set personal label on what (article, conference, user)? ")
+    (label-what-text . "Set personal label on text: ")
+    (label-what-conf . "Set personal label on which conference? ")
+    (label-what-pers . "Set personal label on which person? ")
+    (label-what-label . "Personal label: ")
+    (label-secret    . "Should others to be able to see the label? ")
+
+    (cant-get-aux-item . "Can't find extra information")
+    (aux-item-no-info . "No information available\n")
+    (aux-item-info . "\
+Number:        %#1d %#6s
+Type:          %#2d (%#3s)
+Created by:    %#4P <%#4p>
+Created:       %#5s
+Flags:         %#7s
+Inherit limit: %#8s
+Contents:     \"%#9s\"
+")
+    (secret . "Secret")
+    (deleted . "Deleted")
+    (hide-creator . "Secret creator")
+    (inherit . "Inherited")
+    (unlimited-inherit . "Unlimited inheritance")
+    (no-inheritance . "Inheritance is off")
+    (no-more-inheritance . "Inherit limit reached; will not be further inherited")
+    (inherit-steps . "%#1d steps")
+
+    (aux-item-for . "Extra information for ")
+    (conference-no . "conference <%#1m> %#1M")
+    (text-no . "article %#1n")
+
+    ;; Aux-item stuff from edit-text
+
+    (person . "User")
+    (conference . "Conference")
+    (text . "Article")
+
+    (xref-type . "What to you want to refer to (article, conference or person)? ")
+    (which-text-to-xref . "Add reference to text: ")
+    (which-text-to-xref-err . "Text not found. Add reference to text: ")
+    (which-pers-to-xref . "Add reference to user: ")
+    (which-conf-to-xref . "Add reference to conference: ")
+
+    (no-comments-q . "Author requestes no comments. Comment anyway? ")
+    (private-answer-q . "Author requests private replies. Write private reply? ")
     ))
 
 
@@ -1174,6 +1272,7 @@ On since %#8s%#9s")
     (kom-customize      . "Customize LysKOM")
     (kom-change-language . "Change language")
     (kom-calculate            . "Calculate")
+    (kom-list-marks             . "List marked articles")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -2554,7 +2653,14 @@ Lists etc.   :  [INS] Add a line   [DEL] Remove a line   [*] Modify")
     (error-44 . "Can't unmark an article that was not marked")
     (error-45 . "Temorary lossage. Please try again later")
     (error-46 . "Sending huge messages to the server is not a nice thing to do")
-    (error-47 . "Anonymous texts are not accepted by all recipients")))
+    (error-47 . "Anonymous texts are not accepted by all recipients")
+    (error-48 . "Invalid extra information")
+    (error-49 . "Change of extra information not permitted")
+    (error-50 . "Unknown asynchronous message")
+    (error-51 . "Internal server error")
+    (error-52 . "Feature disabled in the server")
+    (error-53 . "Unable to send message")
+))
 
 
      
