@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.66 1999-06-14 15:32:48 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.67 1999-06-15 14:38:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.66 1999-06-14 15:32:48 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.67 1999-06-15 14:38:20 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1115,11 +1115,11 @@ Note that it is not allowed to use deferred insertions in the text."
      ;;  it into the result list
      ;;
      ((= format-letter ?c)
-      (setq result (if (integerp arg)
-                       (char-to-string arg)
-                     (signal 'lyskom-internal-error
-                             (list 'lyskom-format
-                                   ": argument error")))))
+      (setq result (cond ((integerp arg) (char-to-string (int-to-char arg)))
+                         ((characterp arg) (char-to-string arg))
+                         (t (signal 'lyskom-internal-error
+                                    (list 'lyskom-format
+                                          ": argument error"))))))
      ;;
      ;;  Format a literal percent character by inserting a string
      ;;  containing it into the result list

@@ -1,3 +1,11 @@
+1999-06-15  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-format-aux-help): Handle actual character 
+	arguments for ?c.
+
+	* compatibility.el (int-to-char): Provide compatibility for
+	int-to-char.
+
 1999-06-14  David Byers  <davby@ida.liu.se>
 
 	* lyskom-buttons.el (lyskom-default-button): Handle uconf-stats.
