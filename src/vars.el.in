@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.106 2000-06-10 16:51:02 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.107 2000-07-03 10:50:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.106 2000-06-10 16:51:02 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.107 2000-07-03 10:50:14 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -482,7 +482,7 @@ hooks are called, lyskom-add-sub-recipient-action is bound to the
 action in progress, lyskom-add-sub-recipient-source-conf to the
 conference being moved from (when lyskom-add-sub-recipient-action is
 'move) and lyskom-add-sub-recipient-target-conf to the conference
-being movedd to/added to/subtracted from. See also
+being moved to/added to/subtracted from. See also
 `lyskom-add-sub-recipient'.")
 
 
@@ -742,7 +742,7 @@ conference and person buttons are not expected.")
 
     ;; Info node reference
 
-    ("\\*Note[ \n\t]+\\([^:\n]*\\(\n[^:\n]*\\)?\\):\\([^.,\t\n]*\\(\n[^.,\t\n]*\\)?\\)[.,\t]" 
+    ("\\*Note[ \n\t]+\\([^:\n]*\\(\n[^:\n]*\\)?\\):\\s-*\\(\\(([^\)]+)\\)?[^.,\t\n]*\\(\n[^.,\t\n]*\\)?\\)[.,\t]" 
      info-node 1 3 kom-url-face)
 
     )
@@ -1078,7 +1078,8 @@ at random and used. This element may be a string, function or list."
 
 (def-kom-var kom-ispell-dictionary nil
   "*Dictionary to use for spell checking."
-  server)
+  server
+  inherited)
 
 (def-kom-var lyskom-button-actions nil
   "This variable defines valid button types in LysKOM. Each element is a

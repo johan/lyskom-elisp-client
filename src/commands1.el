@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.75 2000-06-10 16:51:00 jhs Exp $
+;;;;; $Id: commands1.el,v 44.76 2000-07-03 10:49:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.75 2000-06-10 16:51:00 jhs Exp $\n"))
+	      "$Id: commands1.el,v 44.76 2000-07-03 10:49:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -585,7 +585,8 @@ of the person."
      (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
                             '(all) nil 
                             (let ((ccn 
-                                   (if (or (zerop lyskom-current-conf))
+                                   (if (or (null lyskom-current-conf)
+                                           (zerop lyskom-current-conf))
                                        ""
                                      (conf-stat->name
                                       (blocking-do 'get-conf-stat
@@ -1362,7 +1363,8 @@ Args: CONF-STAT MEMBERSHIP"
                           '(all) nil nil t)))
           ((numberp arg) (setq recpt arg))
           (t (setq recpt lyskom-current-conf)))
-    (if (zerop recpt)
+    (if (or (null recpt)
+            (zerop recpt))
 	(lyskom-insert-string 'no-in-conf)
       (lyskom-tell-internat 'kom-tell-write-text)
       (lyskom-edit-text lyskom-proc
@@ -2956,9 +2958,9 @@ lyskom-add-sub-recipient in a more readable fashion."
 (defvar lyskom-add-sub-recipient-source-conf)
 (defvar lyskom-add-sub-recipient-target-conf)
 
-(defun lyskom-annoying-verify-add-rcpt ()
-  "Make sure the (l?)user really does mean to add a recipient
-conference instead of just adding a carbon copy as (s?)he most likely
+(defun lyskom-verify-add-recipient ()
+  "Make sure the user really does mean to add a recipient
+conference instead of just adding a carbon copy as he most likely
 ought to. Useful as a lyskom-add-sub-recipient-hook only."
   (when (and
 	 (eq lyskom-add-sub-recipient-action 'add-rcpt)

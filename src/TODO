@@ -3,11 +3,43 @@
 Att göra i elisp-klienten
 =========================
 
+* SPRÅK
+
+Moderaden och fönstertiteln ändras inte om man byter språk.
+
+* PREFETCH
+
+Prefetchen verkar ställa till problem. När man skickar ett mail till
+sig själv med attachments så kommer klienten att hämta text-stat för
+brevet innan det har fått mx-attachments-in satt, och trots att man
+raderar det ur cachen när attachmentet dyker upp.
+
+Jag misstänker att det finns en prefetch inlagd som hämtar text-staten
+innan importören har hunnit sätta mx-attachments-in. Det vore bra om
+man kunde fördröja den en aning.
+
+Man skulle kunna slå på debugging och titta i lyskom-prefetch-stack
+och i anropsköerna när attachmentet kommer fram. Ett problem bara...
+Om anropet redan ligger ute så kommer det att gå klart medan man
+hattar runt i debuggern (iofs så tror jag inte att anropet redan
+ligger ute då).
+
+Dessutom såg jag att textmassan för inlägg verkar hämtas två gånger,
+vilket inte är så himlans bra.
+
+
+
 * INTRESSANTA SAKER
+
+Johans hack av lyskom-add-sub-recipient gjorde koden ännu fulare.
+Eliminera lyskom-add-sub-recipient *helt*.
 
 Kommentera inlägg med vänner borde kolla om man försöker kommentera en
 bilaga. I så fall borde man få förslag att kommentera "urinlägget"
 istället. Klienten får följa "belongs-to"-länkarna uppåt. 
+
+Det vore trevligt om man kunde välja vilka sorters bilagor man inte
+vill följa kommentarer till.
 
 Inför en ATTACHMENT-IN type i read-listan som komplement till COMM-IN.
 Prompten blir läsa nästa bilaga.

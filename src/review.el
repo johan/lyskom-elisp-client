@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.29 2000-06-14 08:47:47 joel Exp $
+;;;;; $Id: review.el,v 44.30 2000-07-03 10:50:08 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.29 2000-06-14 08:47:47 joel Exp $\n"))
+	      "$Id: review.el,v 44.30 2000-07-03 10:50:08 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -196,7 +196,8 @@ The defaults for this command is the conference that you are in."
               ;; If person is not given we must give
               ;; conf  -- Not anymore!
               ;; (not (zerop by))
-              (if (zerop lyskom-current-conf)
+              (if (or (null lyskom-current-conf)
+                      (zerop lyskom-current-conf))
                   ""
                 (cons (conf-stat->name
                          (blocking-do 'get-conf-stat

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.92 2000-06-28 09:19:21 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.93 2000-07-03 10:50:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.92 2000-06-28 09:19:21 jhs Exp $"))
+              "$Id: english-strings.el,v 44.93 2000-07-03 10:50:03 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3261,20 +3261,28 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
      aux-text
      lyskom-button-info-aux
      (("Information" . lyskom-button-info-aux)
-      ("Delete" . lyskom-button-delete-aux)))
+      ("Delete" . lyskom-button-delete-aux))
+     nil)
     (aux-edit-menu
      nil
      nil
      (("Toggle \"secret\"" . lyskom-edit-toggle-secret-aux)
       ("Toggle \"anonymous\"" . lyskom-edit-toggle-anonymous-aux)
       ("Toggle \"inherited\""   . lyskom-edit-toggle-inherit-aux)
-      ("Delete"          . lyskom-edit-delete-aux)))
+      ("Delete"          . lyskom-edit-delete-aux))
+     nil)
     (prioritize-flag-menu
      nil
      lyskom-prioritize-flag-toggle
      (("Toggle" . lyskom-prioritize-flag-toggle)
       ("Set"    . lyskom-prioritize-flag-set)
-      ("Clear"  . lyskom-prioritize-flag-clear)))
+      ("Clear"  . lyskom-prioritize-flag-clear))
+     nil)
+    (func
+     nil
+     lyskom-button-apply
+     nil
+     nil)
 ))
 
 

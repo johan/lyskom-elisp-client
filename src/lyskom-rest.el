@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.106 2000-06-02 14:40:53 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.107 2000-07-03 10:50:06 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.106 2000-06-02 14:40:53 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.107 2000-07-03 10:50:06 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2207,13 +2207,13 @@ A list of pairs means OPTARG will be used as a key to look up the real
 (defun backward-text (&optional arg)
   "Searches backwards for a text start and recenters with that text at the top."
   (interactive "p")
-  (lyskom-prev-area (or arg 1) 'lyskom-text-start)
+  (lyskom-prev-area (or arg 1) 'lyskom-text-start t)
   (beginning-of-line))
 
 (defun forward-text (&optional arg)
   "Searches forward for a text start and recenters with that text at the top."
   (interactive "p")
-  (lyskom-next-area (or arg 1) 'lyskom-text-start))
+  (lyskom-next-area (or arg 1) 'lyskom-text-start t))
 
 
 (def-kom-command kom-save-text (arg &optional list-of-texts)

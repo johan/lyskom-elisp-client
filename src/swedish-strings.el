@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.121 2000-06-11 11:33:41 joel Exp $
+;;;;; $Id: swedish-strings.el,v 44.122 2000-07-03 10:50:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.121 2000-06-11 11:33:41 joel Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.122 2000-07-03 10:50:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3355,20 +3355,28 @@ i servern. Annars sparas det i din .emacs.")
      aux-text
      lyskom-button-info-aux
      (("Information" . lyskom-button-info-aux)
-      ("Radera" . lyskom-button-delete-aux)))
+      ("Radera" . lyskom-button-delete-aux))
+     nil)
     (aux-edit-menu
      nil
      aux-edit-menu-text
      (("Växla \"hemlig\"" . lyskom-edit-toggle-secret-aux)
       ("Växla \"anonym\"" . lyskom-edit-toggle-anonymous-aux)
       ("Växla \"ärvd\""   . lyskom-edit-toggle-inherit-aux)
-      ("Ta bort"          . lyskom-edit-delete-aux)))
+      ("Ta bort"          . lyskom-edit-delete-aux))
+     nil)
     (prioritize-flag-menu
      nil
      lyskom-prioritize-flag-toggle
      (("Växla" . lyskom-prioritize-flag-toggle)
       ("Sätt på" . lyskom-prioritize-flag-set)
-      ("Stäng av" . lyskom-prioritize-flag-clear)))
+      ("Stäng av" . lyskom-prioritize-flag-clear))
+     nil)
+    (func
+     nil
+     lyskom-button-apply
+     nil
+     nil)
 ))
         
 
