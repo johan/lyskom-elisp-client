@@ -11,6 +11,78 @@ Fri Oct 11 02:52:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* vars.el.in (lyskom-fetched-texts): Tog bort.
 
+Thu Oct 10 01:01:41 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* vars.el.in (kom-emacs-knows-iso-8859-1): Borta.
+
+	* slow.el (kom-expand-slow-command): Rätt argument till
+	lyskom-get-strings 
+
+	* menus.el (lyskom-menus): Ny layouten.
+	(lyskom-popup-menus): Ny variabel.
+	(lyskom-edit-menus): Ny layout. Tog bort kom-edit-send-anonymous och
+	kom-edit-insert-commented 
+	(lyskom-popup-menu-map): Ny variabel.
+	(lyskom-build-menus): Skapa lyskom-popup-menu-map.
+	(lyskom-define-menu): Låt hline ta ett argument.
+	(lyskom-background-menu): Använd lyskom-pupup-menu-map.
+
+	* lyskom-rest.el (lyskom-command-name): Rätt argument till
+	lyskom-get-string. 
+	(lyskom-read-extended-command): Rätt argument till
+	lyskom-get-strings. 
+	(lyskom-read-extended-command): assoc, inte assq
+	(lyskom-message): Tog bort swasciistöd. Funktionen borde nog
+	ersättas med ett makro som är att alias för message.
+	(lyskom-error): Dito.
+
+	* language.el (lyskom-language-symbols): Ny variabel.
+	(lyskom-language-categories): Ny variabel.
+	(lyskom-define-language): Omskriven. Uppslagningen katagori ->
+	property är borta. Definierade symboler och kategorier loggas.
+	(lyskom-get-string-internal): Ny funktion.
+	(lyskom-get-string-error): Ny funktion.
+	(lyskom-get-menu-string): Ny funktion.
+	(lyskom-get-string): Omskriven. Kategorierna är inte hårdkodade,
+	används direkt som properties, och ska vara unika, som
+	'lyskom-message. 
+	(lyskom-string-check-category): Ny funktion.
+
+	* filter.el (lyskom-filter-read-action): Tog bort swasciivarianten
+	av lyskom-filter-actions.
+
+	* filter-edit.el (lyskom-filter-format-entry-header): Tog bort
+ 	swasciivarianten av lyskom-filter-actions.
+	(lyskom-filter-edit-insert-entry): Dito.
+	(lyskom-filter-edit-toggle-action): Dito.
+	(lyskom-format-filter-pattern-insert): Tog bort swasciivarianten
+ 	av lyskom-filter-what.
+	(lyskom-filter-edit-insert-pattern): Dito.
+
+	* edit-text.el (lyskom-edit-insert-miscs): Gör
+	substitute-command-keys på header-separator strängen 
+	(lyskom-edit-mode): Dito.
+	(lyskom-edit-parse-headers): Dito.
+	(lyskom-edit-extract-text): Dito.
+
+	* commands2.el (kom-bug-report): Tog bort lyskom-swascii* 
+
+	* commands1.el (kom-write-comment): Rätt argument till
+	lyskom-get-string 
+
+	* async.el (lyskom-show-changed-person): Tog bort swasciistöd
+	(lyskom-handle-as-personal-message):  Dito.
+	* edit-text.el (lyskom-edit-show-commented):  Dito.
+	* lyskom-rest.el: Kommenterade ut alla swasciivariabler. 
+	* lyskom-rest.el (lyskom-set-mode-line): Dito.
+	(lyskom-insert): Dito.
+	(lyskom-insert-at-point): Dito.
+	(lyskom-insert-before-prompt): Dito.
+	(kom-save-text):  Dito.
+	(lyskom-update-prompt): Dito.
+	(lyskom-read-string): Dito.
+	(lyskom-unread-mode-line): Dito
+
 Thu Oct 10 00:32:38 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* Makefile (PARTS-EL,SRC-ELC): Flyttade upp prefetch.el.
@@ -66,6 +138,16 @@ Thu Oct 10 00:32:38 1996  David Kågedal  <davidk@lysator.liu.se>
 	(lyskom-reset-prefetch): Anropa lyskom-setup-prefetch, helt
  	enkelt.
 	(lyskom-membership-is-read): Ny funktion.
+
+Wed Oct  9 15:59:06 1996  Niels Möller  <nisse@lysator.liu.se>
+
+	* swedish-strings.el (message): Tog bort substitute-comamnd-keys
+	från strängen header-separator. Får göras där den används
+	istället.
+	
+	* menus.el (lyskom-define-menu): Ta hand om argument till hline
+
+	* swedish-strings.el (menu): Lade till nya menynamn
 
 Tue Oct  8 14:33:24 1996  Niels Möller  <nisse@lysator.liu.se>
 
