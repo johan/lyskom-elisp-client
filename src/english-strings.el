@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.172 2002-03-03 17:51:54 joel Exp $
+;;;;; $Id: english-strings.el,v 44.173 2002-03-03 19:59:05 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.172 2002-03-03 17:51:54 joel Exp $"))
+              "$Id: english-strings.el,v 44.173 2002-03-03 19:59:05 joel Exp $"))
 
 
 ;;; ================================================================
@@ -150,6 +150,7 @@
 
 (lyskom-language-ending-mismatch lyskom-message carbon-copy-prefix en sv)
 (lyskom-language-ending-mismatch lyskom-message blank-carbon-copy-prefix en sv)
+(lyskom-language-ending-mismatch lyskom-message newyeareve en sv)
 
 ;;; Formely known as lyskom-strings
 (lyskom-language-strings lyskom-message en 
@@ -471,7 +472,7 @@ Leave the conference again to unsubscribe completely.\n")
     (xmasday . "Christmas day.\nDid you get any nice gifts this year?")
     (newyearday . "\nMay %#1d be a prosperous and good year for you!")
     (newyeareve . "Happy New Year!")
-    (newyearevelate . "Less than an hour to go...")
+    (newyearevelate . "Less than an hour left of %#1d...")
     (lysbday . "
 On this day, in 1973, the Lysator Academic Computer Society was
 formed, and it was a great day in the history of computing in Sweden.
@@ -1622,9 +1623,9 @@ You must become an active member of the conference to enter it.\n")
     ))
 
 
-(lyskom-language-var lyskom-month-names sv
-  '(("jan" . 1)  ("januari" . 1)
-    ("feb" . 2)  ("februari" . 2)
+(lyskom-language-var lyskom-month-names en
+  '(("jan" . 1)  ("january" . 1)
+    ("feb" . 2)  ("february" . 2)
     ("mar" . 3)  ("march" . 3)
     ("apr" . 4)  ("april" . 4)
     ("may" . 5)  ("may" . 5)
