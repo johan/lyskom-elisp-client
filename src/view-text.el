@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 35.5 1991-10-16 17:00:33 ceder Exp $
+;;;;; $Id: view-text.el,v 35.6 1992-05-11 01:54:33 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 35.5 1991-10-16 17:00:33 ceder Exp $\n"))
+	      "$Id: view-text.el,v 35.6 1992-05-11 01:54:33 linus Exp $\n"))
 
 
 (defun lyskom-view-text (queue text-no &optional mark-as-read
@@ -288,8 +288,6 @@ recipients to it that the user is a member in."
   "Print a text. The header must already be printed.
 Print an error message if TEXT-STAT or TEXT is nil.
 Mark the text as read if (and only if) MARK-AS-READ is non-nil.
-If the text is represented by a text type in the cache then this is substituted
-by a textpointers type.
 Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
   (cond
      ((or (null text)
@@ -322,9 +320,7 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
 		t2 (point-max))
 	  (setq lyskom-current-subject "")))
 	(if (lyskom-text-p (cache-get-text (text->text-no text)))
-	    (cache-add-text 
-	     (lyskom-create-textpointers (text->text-no text)
-					 s1 s2 t1 t2)))
+	    (cache-del-text (text->text-no text)))
 	(sit-for 0)
 	(lyskom-insert (format
 			(if kom-dashed-lines
