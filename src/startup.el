@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.9 1992-07-26 23:46:11 linus Exp $
+;;;;; $Id: startup.el,v 35.10 1992-07-30 02:04:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.9 1992-07-26 23:46:11 linus Exp $\n"))
+	      "$Id: startup.el,v 35.10 1992-07-30 02:04:50 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -255,7 +255,6 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
 	     (not (zerop (conf-stat->no-of-texts conf-stat))))
 	(lyskom-insert-string 'presentation-encouragement))
     (lyskom-setup-prefetch)
-    (lyskom-start-prefetch)
     (setq lyskom-membership-is-read 0)
     (setq lyskom-membership nil)
     (setq lyskom-command-to-do 'unknown)
@@ -263,16 +262,19 @@ Optional argument CONF-STAT is used to check for a msg-of-day on the person."
     (setq lyskom-options-done)
     (setq lyskom-to-do-list (lyskom-create-read-list))
     (setq lyskom-reading-list (lyskom-create-read-list))
-    (initiate-get-unread-confs 'main 'lyskom-register-unread-confs pers-no)
+    (initiate-get-unread-confs 'main 'lyskom-register-unread-confs 
+			       lyskom-pers-no)
     (lyskom-read-options)		; Check this to be finished before
 					; printing the first prompt
-    (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3 pers-no
+    (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3 
+				     lyskom-pers-no
 				     lyskom-membership-is-read
 				     lyskom-fetch-membership-length)
     (lyskom-prefetch-all-conf-stats)
     (lyskom-prefetch-marks)
     (lyskom-prefetch-who-is-on)
-    (lyskom-prefetch-membership pers-no))))
+    (lyskom-prefetch-membership pers-no)
+    (lyskom-start-prefetch))))
 
 
 (defun lyskom-register-unread-confs (unread-confs)
@@ -317,11 +319,14 @@ Information required for this:
   "Adds a PART last in the membership-list."
   (let ((list (lyskom-array-to-list membership))
 	sent)
-    (setq lyskom-membership (append lyskom-membership list))
-    (let ((reverse (reverse lyskom-membership)))
-      (while reverse
-	(lyskom-prefetch-conf (membership->conf-no (car reverse)))
-	(setq reverse (cdr reverse))))
+    (while list
+      (if (memq (membership->conf-no (car list))
+		(mapcar (function membership->conf-no) lyskom-membership))
+	  (if (numberp lyskom-membership-is-read)
+	      (-- lyskom-membership-is-read))
+	(setq lyskom-membership (append lyskom-membership (list (car list)))))
+      (setq list (cdr list)))
+    (setq list (lyskom-array-to-list membership))
     (while (and (not sent) list)
       (if (and lyskom-unread-confs
 	       (not (memq (membership->conf-no (car list))
@@ -333,7 +338,17 @@ Information required for this:
 				(car list)
 				(cdr list))
 	(setq sent t))
-      (setq list (cdr list)))))
+      (setq list (cdr list)))
+    (if sent
+	nil
+      (initiate-get-part-of-membership 'main 'lyskom-start-anew-login-3
+				       lyskom-pers-no
+				       lyskom-membership-is-read
+				       lyskom-fetch-membership-length))
+    (let ((reverse (reverse lyskom-membership)))
+      (while reverse
+	(lyskom-prefetch-conf (membership->conf-no (car reverse)))
+	(setq reverse (cdr reverse))))))
 
 
 (defun lyskom-decide-unread-conf (conf-stat membship rest-memblist)
