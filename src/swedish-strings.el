@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.61 1999-06-25 20:17:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.62 1999-06-26 20:48:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.61 1999-06-25 20:17:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.62 1999-06-26 20:48:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -575,7 +575,7 @@ Meddelandet du försökte sända till %#1M var:
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")
     (you-have-unreads-special . "Du har %#1d okommentera%#1?d%[t%]%[de%] inlägg i %#2M\n")
-    (you-have-no-unreads . "Du har inget oläst i %#1M.\n")
+    (you-have-no-unreads . "Du har inget oläst i %#1M\n")
     (you-have-read-everything . "Du har sett alla nyheter.\n")
     (total-unreads . "\nDu har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2d möte%#2?d%[%]%[n%].\n")
     (list-unread-with-n-unread . "Visar endast möten med minst %#1d olästa.\n")
@@ -780,6 +780,7 @@ Annat se \\[describe-mode] ---")
     (today . "idag")
     (yesterday . "igår")
     (no-such-text-no . "Det finns inget sådant inlägg. (%#1:n)\n")
+    (time-yyyy-mm-dd . "%4#1d-%02#2d-%02#3d")
 
     (head-Subject . "Ärende: ")
     (Recipient . "Mottagare")
@@ -829,10 +830,11 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (unknown . "okänd")
     (unknown-person . "Okänd person")
 
-    (no-longer-member . "Du är inte längre medlem i %#1M\n")
+    (no-longer-member . "Du är inte längre medlem i %#1M.\n")
     (no-longer-member-n . "Du är inte längre medlem i möte %#1m (finns inte.)\n")
 
-    (have-become-member . "Du har blivit medlem i %#1M\n")
+    (have-become-member . "Du har blivit medlem i %#1M.\n")
+    (have-become-passive-member . "Du har blivit passiv medlem i %#1M.\n")
 
     (message-broadcast . "\
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

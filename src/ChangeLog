@@ -1,4 +1,22 @@
+1999-06-26  David Byers  <davby@ida.liu.se>
+
+	* prefetch.el, startup.el, async.el: Use get-unread-confs to get
+	memberships in confs with unreads before 
+
+	* view-text.el (lyskom-print-text): Moved printing of the newline
+	after a text to the text body (that way smileys at the end of a
+	text are done correctly.)
+
+	* prioritize.el (lyskom-prioritize-tell-server): Ignore new
+	membership asyncs.
+
 1999-06-25  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-visible-membership): Deal with passive
+	memberships the way they're supposed to be dealt with.
+
+	* reading.el (lyskom-add-memberships-to-membership): Don't add
+	passive memberships.
 
 	* review.el (kom-review-stack): Print information about all kinds
 	of things on the stack, not just review commands.
