@@ -1,0 +1,7 @@
+Kolla variablerna i början av Makefile. De som kan vara intressanta
+att sätta är USER och TARGET. Sätt dem *inte* i Makefile utan på 
+kommandoraden.
+
+Kör make all för att bygga och checka ut allt. Kör make index för att
+bygga om indexfilerna efter en uppdatering av mallen eller filerna i
+items.
