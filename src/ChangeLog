@@ -1,3 +1,13 @@
+2002-05-07  David Byers  <david.byers@swipnet.se>
+
+        Every KOM client needs color model conversion code:
+	* utilities.el (lyskom-string-to-rgb): New function.
+	(lyskom-rgb-to-hls): New function.
+	(lyskom-hls-to-rgb): New function.
+	(lyskom-hls-to-rgb-value): New function.
+	(lyskom-get-color-highlight): New function.
+	(lyskom-string-to-rgb): New function.
+
 2002-05-06  David Byers  <david.byers@swipnet.se>
 
 	* utilities.el (lyskom-unicase): Get the length from the converted

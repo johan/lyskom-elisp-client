@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.99 2002-05-07 20:12:13 byers Exp $
+;;;;; $Id: utilities.el,v 44.100 2002-05-07 23:12:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.99 2002-05-07 20:12:13 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.100 2002-05-07 23:12:02 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1422,3 +1422,183 @@ in the 20th century")
                                    nil
                                    nil)))
 
+
+
+;;; ================================================================
+;;; Color model manipulations
+;;;
+;;; (Of COURSE you need this in a KOM client!)
+;;;
+
+(defun lyskom-get-color-highlight (color distance)
+  "Create a highlight color for COLOR that is DISTANCE away.
+COLOR is a string naming the color and DISTANCE is a non-negative
+integer no larger than 255, that in some way specifies how far
+away from the original color the new color should be."
+  (let* ((hls (lyskom-rgb-to-hls (lyskom-string-to-rgb color)))
+         (l (elt hls 1)))
+    (if (> l 0.6)
+        (setq l (- l (/ distance 255.0)))
+      (setq l (+ l (/ distance 255.0))))
+    (cond ((> l 1.0) (setq l 1.0))
+          ((< l 0.0) (setq l 0.0)))
+    (aset hls 1 l)
+
+    (apply 'format "#%02x%02x%02x"
+           (mapcar (lambda (c) (round (* 255 c)))
+                   (lyskom-hls-to-rgb hls)))))
+
+
+(defun lyskom-string-to-rgb (color)
+  "Convert the name of a color to RGB values."
+  (mapcar (lambda (x) (/ x 65535.0)) (lyskom-color-values color)))
+
+(defun lyskom-rgb-to-hls (rgb)
+  "Convert a point in RGB color space to a point in HLS color space.
+
+Input value is a vector [R G B], where R, G and B represent red, green
+and blue components, respectively. Each value is a non-negative
+floating-point value no larger than 1.0.
+
+Output is a vector [H L S], where H, L and S represend hue, lightness
+and saturation, respectively. H is in the range 0..360, L and S are
+non-negative floating-point numbers no higher than 1.0. If the input
+color is a shade of gray (all components are equal), then H in the
+output is nil.
+
+Algorithm adapted from Foley, \"Computer Graphics\"."
+  (let* ((r (elt rgb 0))
+         (g (elt rgb 1))
+         (b (elt rgb 2))
+         (rgbmin (min r g b))
+         (rgbmax (max r g b))
+         (h nil)
+         (l (/ (+ rgbmax rgbmin) 2.0))
+         (s nil)
+         (delta (- rgbmax rgbmin)))
+    (if (zerop delta)
+        (setq s 0.0)
+      (if (<= l 0.5)
+          (setq s (/ delta (+ rgbmax rgbmin)))
+        (setq s (/ delta (- 2.0 rgbmax rgbmin))))
+      (cond ((= r rgbmax)
+             (setq h (/ (- g b) delta)))
+            ((= g rgbmax)
+             (setq h (+ 2.0 (/ (- b r) delta))))
+            ((= b rgbmax)
+             (setq h (+ 4.0 (/ (- r g) delta)))))
+      (setq h (* h 60.0))
+      (if (< h 0)
+          (setq h (+ 360.0 h))))
+    (vector h l s)))
+
+(defun lyskom-hls-to-rgb-value (n1 n2 h)
+  "Helper function for lyskom-hls-to-rgb"
+  (cond ((> h 360) (setq h (- h 360.0)))
+        ((< h 0) (setq h (+ h 360.0))))
+
+  (cond ((< h 60)  (+ n1 (* (- n2 n1) (/ h 60.0))))
+        ((< h 180) n2)
+        ((< h 240) (+ n1 (* (- n2 n1) (/ (- 240.0 h) 60.0))))
+        (t n1)))
+
+(defun lyskom-hls-to-rgb (hls)
+  "Convert a point in HLS color space to a point in RGB color space.
+
+Input HLS is a vector [H L S], where H, L and S represend hue,
+lightness and saturation, respectively. H is in the range 0..360, L
+and S are non-negative floating-point numbers no higher than 1.0. If
+the input color is a shade of gray (all components are equal), then S
+in the input is ignored and may be anything.
+
+Output value is a vector [R G B], where R, G and B represent red,
+green and blue components, respectively. Each value is in the range
+1..1.0.
+
+This algorithm is adapted from Foley, \"Computer Graphics\" (and
+has the bug in that algorithm fixed)."
+  (let* ((h (elt hls 0))
+         (l (elt hls 1))
+         (s (elt hls 2))
+         (m2 (if (<= l 0.5)
+                 (* l (+ 1.0 s))
+               (+ l (* s (- 1 l)))))
+         (m1 (- (* 2 l) m2)))
+    (if (zerop s)
+        (vector l l l)
+      (vector (lyskom-hls-to-rgb-value m1 m2 (+ h 120))
+              (lyskom-hls-to-rgb-value m1 m2 h)
+              (lyskom-hls-to-rgb-value m1 m2 (- h 120))))))
+
+
+;;; ================================================================
+;;; Automatically test that RGB->X and X->RGB color model conversions
+;;; really are the inverse of each other.
+;;; 
+;;; (defun lyskom-test-color-model ()
+;;;   (let ((r 0.0)
+;;;         (g 0.0)
+;;;         (b 0.0)
+;;;         (step 0.05))
+;;;     (while (<= r 1.0)
+;;;       (setq g 0.0)
+;;;       (while (<= g 1.0)
+;;;         (setq b 0.0)
+;;;         (while (<= b 1.0)
+;;;           (let ((tmp (lyskom-hls-to-rgb
+;;;                       (lyskom-rgb-to-hls (vector r g b)))))
+;;;             (unless (and (< (- r (elt tmp 0)) 0.000000001)
+;;;                          (< (- g (elt tmp 1)) 0.000000001)
+;;;                          (< (- b (elt tmp 2)) 0.000000001))
+;;;               (message "Mismatch %1.2f,%1.2f,%1.2f gave %S/%S" r g b (lyskom-rgb-to-hls (vector r g b)) tmp)))
+;;;           (setq b (+ b step)))
+;;;         (setq g (+ g step)))
+;;;       (setq r (+ r step)))))
+
+;;; (defun lyskom-test-auto-colors ()
+;;;   (make-face 'test-1)
+;;;   (make-face 'test-2)
+;;;   (make-face 'test-default)
+;;;   (while t
+;;;     (let ((foreground (read-from-minibuffer "Foreground: "))
+;;;           (background (read-from-minibuffer "Background: ")))
+;;;       (pop-to-buffer (get-buffer-create "*kom*-test"))
+;;;       (erase-buffer)
+;;;       (set-face-foreground 'test-default foreground)
+;;;       (set-face-background 'test-default background)
+;;;       (set-face-background 'test-1 (lyskom-get-color-highlight background 16))
+;;;       (set-face-background 'test-2 (lyskom-get-color-highlight background 8))
+;;;       (let ((lyskom-buffer (current-buffer)))
+;;;         (lyskom-format-insert "\
+;;; %#3@Läsa nästa fotnot...
+;;; 8408827 idag 00:40 /1 rad/ Lunkwill/CH ( Auf das Universum! )
+;;; Fotnot till text 8408825 av Lunkwill/CH ( Auf das Universum! )
+;;; Mottagare: Nätverk, Internet, LysNET, Sunet... <30873>
+;;; Mottagare: SUBnet (Stångåstadens och LiU:s) studentbostadsnät <12152>
+;;; Mottagare: Lunkwill/CH ( Auf das Universum! ) <2092>
+;;; Ärende: Vårmötet
+;;; %[%#1$------------------------------------------------------------
+;;; %]%[%#2$Och tack så mycket för förklaringarna! =)
+;;; %]%[%#1$(8408827) /Lunkwill/CH ( Auf das Universum! )/------
+;;; %]Gå till nästa möte...
+;;; SUN erfarenhetsutbyte - 1 oläst
+;;; Läsa nästa text...
+;;; 8408823 idag 00:39 /4 rader/ Erik Persson, Lysato(r)
+;;; Kommentar till text 8407161 av Dejan (något desperat)
+;;; Mottagare: SUN erfarenhetsutbyte <23622>
+;;; Ärende: Skapa partitionstabell
+;;; %[%#1$------------------------------------------------------------
+;;; %]%[%#2$Om du nu vill spela Fibre Channel med IDE-RAID så går du över ån efter
+;;; vatten. Det finns redan IDE-RAID med FC-interface.  Dock har jag inte
+;;; sett någon som stödjer något annat än FC-AL vilket är lite
+;;; begränsande.
+;;; %]%[%#1$(8408823) ------------------------------------------
+;;; %]Gå till nästa möte...
+;;; 
+;;; 
+;;; 
+;;; "
+;;;                               '(face test-1)
+;;;                               '(face test-2)
+;;;                               '(face test-default))))))
+;;;
