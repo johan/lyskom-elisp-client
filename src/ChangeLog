@@ -1,3 +1,7 @@
+Wed Aug 21 02:15:04 1991  Linus Tolke Y  (linus at lysator)
+
+	* Distribuerat version 0.34		02:10
+
 Tue Aug 20 22:58:03 1991  Linus Tolke Y  (linus at lysator)
 
 	* flags.el (lyskom-read-options-eval): Bugfix kom-do-when-done.
