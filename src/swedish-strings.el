@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.74 1999-10-09 16:13:27 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.75 1999-10-09 16:45:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.74 1999-10-09 16:13:27 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.75 1999-10-09 16:45:13 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1352,9 +1352,9 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (adding-request-confirm . "Begär läsbekräftelse till inlägg %#1n...")
     (already-request-confirm . "Inlägg %#1n har redan begäran om läsbekräftelse.\n")
 
-    (review-mail-headers-to-what . "Vilken texts mailhuvuden vill du se? ")
-    (no-mail-headers . "Inlägg %#1n har inga mailhuvuden\n")
-    (mail-headers-for . "Mailheaders för inlägg %#1n:\n")
+    (review-mail-headers-to-what . "Vilken texts brevhuvud vill du se? ")
+    (no-mail-headers . "Inlägg %#1n har inget brevhuvud\n")
+    (mail-headers-for . "Brevhuvud för inlägg %#1n:\n")
     (email-name-prefix . "")
     (email-name-suffix . "")
 ))
@@ -1513,7 +1513,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-add-private-answer   . "Begär personligt svar")
     (kom-add-request-confirm  . "Begär läsbekräftelse")
 
-    (kom-review-mail-headers  . "Återse mailhuvuden")
+    (kom-review-mail-headers  . "Återse brevhuvud")
     ))
 
 (lyskom-language-var lyskom-language-codes sv
