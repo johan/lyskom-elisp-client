@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.137 2001-05-22 10:01:46 byers Exp $
+;;;;; $Id: english-strings.el,v 44.138 2001-05-25 11:33:51 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.137 2001-05-22 10:01:46 byers Exp $"))
+              "$Id: english-strings.el,v 44.138 2001-05-25 11:33:51 joel Exp $"))
 
 
 ;;; ================================================================
@@ -135,6 +135,16 @@
 (lyskom-language-missing-string lyskom-message cgdag en)
 (lyskom-language-missing-string lyskom-message sixjune en)
 (lyskom-language-missing-string lyskom-message holdnose en)
+(lyskom-language-missing-string lyskom-message 13dayxmas en)
+(lyskom-language-missing-string lyskom-message 20dayxmas en)
+(lyskom-language-missing-string lyskom-message kyndeldag en)
+(lyskom-language-missing-string lyskom-message skottdag en)
+(lyskom-language-missing-string lyskom-message intwomday en)
+(lyskom-language-missing-string lyskom-message mariebdag en)
+(lyskom-language-missing-string lyskom-message johannesddag en)
+(lyskom-language-missing-string lyskom-message fnday en)
+(lyskom-language-missing-string lyskom-message allhelgonadag en)
+(lyskom-language-missing-string lyskom-message varnlosdag en)
 
 (lyskom-language-ending-mismatch lyskom-message carbon-copy-prefix en sv)
 (lyskom-language-ending-mismatch lyskom-message blank-carbon-copy-prefix en sv)
