@@ -1,3 +1,11 @@
+2004-10-28  Pontus Freyhult  <pont@soua.net>
+
+	* mship-edit.el (lp--entry-set-foreground): Do not try to handle
+	missing start-marker or end-marker.
+	(lp--entry-set-background): Dito.
+	(lp--print-entry): Add end-marker before calling 
+	lp--format-insert-entry and correct it afterwards.
+
 2004-10-27  Pontus Freyhult  <pont@soua.net>
 
 	* mship-edit.el (lp--erase-entry): Point old markers to nil before
