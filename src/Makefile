@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.77 2001-03-15 20:24:59 joel Exp $
+# $Id: Makefile,v 44.78 2001-04-21 16:03:00 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.77 2001-03-15 20:24:59 joel Exp $
+# $Id: Makefile,v 44.78 2001-04-21 16:03:00 joel Exp $
 #
 
 
@@ -144,6 +144,10 @@ fast: $(HEADER-ELC) $(SOURCES-ELC)
 	cat $(HEADER-ELC) $(SOURCES-ELC) > $(TARGET)
 
 $(TARGET-EL): $(HEADER) $(SOURCES)
+	if test -d CVS -a x$(DO_RELEASE) = x; then \
+		rm -f vars.el ; \
+		$(MAKE) vars.el ; \
+	fi
 	cat $(HEADER) $(SOURCES) > $(TARGET-EL)
 
 $(TARGET): $(TARGET-EL)
