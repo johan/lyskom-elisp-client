@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 43.4 1996-08-22 06:57:55 byers Exp $
+;;;;; $Id: startup.el,v 43.5 1996-08-26 23:08:39 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 43.4 1996-08-22 06:57:55 byers Exp $\n"))
+	      "$Id: startup.el,v 43.5 1996-08-26 23:08:39 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -43,7 +43,7 @@
 
 
 ;;;###autoload
-(defun lyskom (&optional host username password)
+(defun lyskom (&optional host username password session-priority)
   "Start a LysKOM session.
 Optional arguments: HOST, USERNAME and PASSWORD.
 
@@ -53,7 +53,10 @@ See lyskom-mode for details."
 				     (or (getenv "KOMSERVER")
 					 lyskom-default-server)))
 		     nil
-		     nil))
+		     nil
+		     (if current-prefix-arg
+			 (prefix-numeric-value current-prefix-arg)
+		       nil)))
 
   (run-hooks 'lyskom-init-hook)
   (setq username
@@ -107,6 +110,8 @@ See lyskom-mode for details."
 	      (setq proc (open-network-stream name buffer host port))
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
+	      (if session-priority
+		  (setq lyskom-session-priority session-priority))
 	      (setq lyskom-buffer buffer)
 	      (setq lyskom-default-user-name username)
 	      (setq lyskom-default-password password)
