@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 35.6 1992-01-12 05:10:00 inge Exp $
+;;;;; $Id: startup.el,v 35.7 1992-05-11 02:01:14 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 35.6 1992-01-12 05:10:00 inge Exp $\n"))
+	      "$Id: startup.el,v 35.7 1992-05-11 02:01:14 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -491,7 +491,6 @@ Entry to this mode runs lyskom-mode-hook."
   (setq major-mode 'lyskom-mode)
   (setq mode-name "LysKOM")
   (setq mode-line-process '(": %s"))
-  (setq buffer-read-only t)
   (use-local-map lyskom-mode-map)
   (run-hooks 'lyskom-mode-hook))
 
