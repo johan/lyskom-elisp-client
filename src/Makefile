@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.95 2002-06-13 22:31:12 qha Exp $
+# $Id: Makefile,v 44.96 2002-06-14 20:19:27 ceder Exp $
 
 # Useful targets:
 #
@@ -144,7 +144,7 @@ all: $(TARGET)
 
 vars.el: vars.el.in Makefile
 	rm -f $@
-	sed "s/@@CLIENTVERSION@@/$(CLIENTVERSION) (from CVS; built `date +%Y-%m-%d`)/g" <$< >$@
+	sed "s/@@CLIENTVERSION@@/$(CLIENTVERSION) (`date +%Y-%m-%d`; CVS)/g" <$< >$@
 	chmod 444 $@
 
 vars.el-release: vars.el.in Makefile
