@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.1 1996-09-03 18:43:00 davidk Exp $
+;;;;; $Id: startup.el,v 44.2 1996-09-29 15:18:56 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.1 1996-09-03 18:43:00 davidk Exp $\n"))
+	      "$Id: startup.el,v 44.2 1996-09-29 15:18:56 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -121,11 +121,12 @@ See lyskom-mode for details."
 	      (lyskom-insert
 	       (lyskom-format 'try-connect lyskom-clientversion host))
 	      (set-process-filter proc 'lyskom-connect-filter)
-	      (lyskom-process-send-string proc
-					  (concat "A"
-						  (lyskom-format-objects
-						   (concat (user-login-name)
-							   "%" (system-name)))))
+	      (lyskom-process-send-string
+	       proc
+	       (concat "A"
+		       (lyskom-format-objects
+			(concat (user-login-name)
+				"%" (system-name)))))
 	      (while (eq 'lyskom-connect-filter (process-filter proc))
 		(accept-process-output proc))
 	      ;; Now we have got the correct response.
@@ -134,16 +135,20 @@ See lyskom-mode for details."
 	      (save-excursion
 		(lyskom-init-parse buffer))
 
+	      ;; +++PREFETCH+++
+	      (lyskom-setup-prefetch)
+
 	      ;; Tell the server who we are
 	      (initiate-set-client-version 'background nil
 					   "lyskom.el" lyskom-clientversion)
 
 	      (setq lyskom-server-info (blocking-do 'get-server-info))
-	      (setq lyskom-server-version
-		    (list (/ (server-info->version lyskom-server-info) 10000)
-			  (/ (% (server-info->version lyskom-server-info) 10000)
-			     100)
-			  (% (server-info->version lyskom-server-info) 100)))
+	      (setq
+	       lyskom-server-version
+	       (list (/ (server-info->version lyskom-server-info) 10000)
+		     (/ (% (server-info->version lyskom-server-info) 10000)
+			100)
+		     (% (server-info->version lyskom-server-info) 100)))
 	      (lyskom-setup-client-for-server-version)
 	      (lyskom-format-insert 
 	       'connection-done
@@ -155,7 +160,8 @@ See lyskom-mode for details."
                          (elt lyskom-server-version 0)
                          (elt lyskom-server-version 1)
                          (elt lyskom-server-version 2))))
-	      (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
+	      (if (not (zerop (server-info->motd-of-lyskom
+			       lyskom-server-info)))
 		  (let ((text (blocking-do 'get-text 
 					   (server-info->motd-of-lyskom
 					    lyskom-server-info))))
@@ -349,13 +355,21 @@ variable documentation for lyskom-server-feautres"
 (defun lyskom-refetch ()
   "Resets and fetches all reading info.
 This is called at login and after prioritize and set-unread."
+  ;; +++PREFETCH+++
+
   ;; The whole membership!
-  (lyskom-set-membership (blocking-do 'get-membership lyskom-pers-no))
-  (setq lyskom-membership-is-read t)
-  (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
-  (setq lyskom-last-conf-fetched -1)
+  ;; (lyskom-set-membership (blocking-do 'get-membership lyskom-pers-no))
+  ;; (setq lyskom-membership-is-read t)
+  ;; (setq lyskom-unread-confs (blocking-do 'get-unread-confs lyskom-pers-no))
+
   (setq lyskom-last-conf-received -1)
   (setq lyskom-last-conf-done -1)
+
+  (lyskom-reset-prefetch)
+  (lyskom-start-prefetch)
+  (lyskom-prefetch-membership lyskom-pers-no)
+
+  (setq lyskom-last-conf-fetched -1)
   (setq lyskom-to-do-list (lyskom-create-read-list))
   (setq lyskom-reading-list (lyskom-create-read-list)))
 

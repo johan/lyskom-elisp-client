@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.2 1996-09-24 16:24:46 byers Exp $
+# $Id: Makefile,v 44.3 1996-09-29 15:18:03 davidk Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.2 1996-09-24 16:24:46 byers Exp $
+# $Id: Makefile,v 44.3 1996-09-29 15:18:03 davidk Exp $
 #
 
 CLIENTVERSION = 0.45-beta
@@ -51,6 +51,7 @@ PARTS-EL = komtypes.el clienttypes.el  deferred-insert.el utilities.el \
 	view-text.el async.el completing-read.el \
 	prioritize.el flags.el messages.el ansaphone.el remote-control.el \
 	slow.el \
+	prefetch.el \
 	elib-string.el  \
 	lyskom-rest.el
 HEADER-EL = vars.el macros.el
@@ -67,7 +68,7 @@ SRC-ELC = komtypes.elc clienttypes.elc deferred-insert.elc utilities.elc \
 	filter.elc filter-edit.elc lyskom-buttons.elc \
 	view-text.elc async.elc completing-read.elc \
 	prioritize.elc flags.elc messages.elc ansaphone.elc \
-	remote-control.elc slow.elc elib-string.elc \
+	remote-control.elc slow.elc prefetch.elc elib-string.elc \
 	lyskom-rest.elc 
 PARTS-ELC = $(SRC-ELC)
 
