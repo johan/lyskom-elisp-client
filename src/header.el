@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: header.el,v 44.4 2002-04-27 18:30:33 byers Exp $
+;;;;; $Id: header.el,v 44.5 2002-04-28 11:50:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -64,14 +64,28 @@
 
 ;;; Check some basic misfeatures that are still all too common
 
+
+
 (eval-and-compile
-  (if (and (stringp (read-kbd-macro "<SPC>"))
-           (string-equal (read-kbd-macro "<SPC>") "<SPC>"))
-      (let ((elc-location (locate-library "macedit.elc"))
-            (el-location (locate-library "macedit.el"))
-            (elz-location (locate-library "macedit.el.gz")))
-        (cond ((or el-location elc-location)
-               (message "\
+  (defmacro lyskom-detect-read-kbd-macro-bug ()
+    `(and (stringp (read-kbd-macro "<SPC>"))
+          (string-equal (read-kbd-macro "<SPC>") "<SPC>")))
+
+  (let ((libraries-to-try '("edmacro")))
+    (while libraries-to-try
+      (if (lyskom-detect-read-kbd-macro-bug)
+          (progn (condition-case nil
+                     (load-library (car libraries-to-try))
+                   (error nil))
+                 (setq libraries-to-try (cdr libraries-to-try)))
+        (setq libraries-to-try nil)))
+
+    (if (lyskom-detect-read-kbd-macro-bug)
+        (let ((elc-location (locate-library "macedit.elc"))
+              (el-location (locate-library "macedit.el"))
+              (elz-location (locate-library "macedit.el.gz")))
+          (cond ((or el-location elc-location)
+                 (message "\
 
 You probably have a file named macedit.elc in Emacs' load path.
 
@@ -92,16 +106,16 @@ loaddefs.el, located elsewhere.
 With Gnu Emacs you may be successful in removing references
 by using the command update-autoloads-from-directories.
 "
-                      (mapconcat (lambda (x) (or x "")) 
-                                 (list elc-location el-location elz-location) 
-                                 "\n"))
-               (error "Unable to run or compile due to obsolete macedit package."))
-              (t
-               (message "\
+                          (mapconcat (lambda (x) (or x "")) 
+                                     (list elc-location el-location elz-location) 
+                                     "\n"))
+                 (error "Unable to run or compile due to obsolete macedit package."))
+                (t
+                 (message "\
 
 Your definition of read-kbd-macro appears to be obsolete. This
 is usually caused by having a package called macedit in Emacs
 load path, but I am unable to find this package. LysKOM cannot
 run with your version of read-kbd-macro.
 ")
-               (error "Unable to run or compile due to obsolete definition of read-kbd-macro."))))))
+                 (error "Unable to run or compile due to obsolete definition of read-kbd-macro.")))))))

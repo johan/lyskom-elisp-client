@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.140 2002-04-27 17:38:36 qha Exp $
+;;;;; $Id: commands1.el,v 44.141 2002-04-28 11:50:34 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.140 2002-04-27 17:38:36 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.141 2002-04-28 11:50:34 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2711,11 +2711,16 @@ If MARK-NO is nil, review all marked texts."
      '(error lyskom-error lyskom-no-users))
 
 (def-kom-command kom-who-is-on (&optional arg)
-  "Display a list of all connected users.
-The prefix arg controls the idle limit of the sessions showed. If the
-prefix is negative, invisible sessions are also shown.
+  "Display a list of active connected users.
+With a positive prefix argument ARG, list sessions who have been active 
+in the last ARG minutes.
 
-If the prefix is 0, all visible sessions are shown."
+With a positive zero prefix argument ARG, list all visible sessions.
+
+With a negative nonzero prefix argument ARG, list both visible and
+invisible sessions who have been active in the last -ARG minutes.
+
+With a negative zero prefix argument (C-u -), list all sessions."
   (interactive "P")
   (condition-case nil
       (if (lyskom-have-feature dynamic-session-info)
