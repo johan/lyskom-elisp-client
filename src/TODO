@@ -3,13 +3,17 @@ Att göra i elisp-klienten
 
 -------- Buggar
 
-    Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+lyskom-replace-deferred verkar inte använda lyskom-last-viewed i alla
+fall. Och den beter sig fel när man står vid prompten och vill bläddra
+bakåt.
 
-    prefix-kommandon änndras inte vid språkbyten.
+prefix-kommandon änndras inte vid språkbyten.
 
-    Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
-    endast i ett möte (säg IÅM) innan det prefetchas får man två
-    parallella prefetcher på samma möte.
+Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+
+Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
+endast i ett möte (säg IÅM) innan det prefetchas får man två
+parallella prefetcher på samma möte.
 
     I vilkalistan borde nog hemliga personer skrivas ut med någon
     annan text än "Ej närvarande i något möte"
