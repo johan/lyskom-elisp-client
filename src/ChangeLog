@@ -1,3 +1,7 @@
+2004-04-12  Johan Sundström  <jhs@lysator.liu.se>
+
+	* vars.el.in (lyskom-commands): Add kom-review-cross-references.
+
 2004-04-11  Johan Sundström  <jhs@lysator.liu.se>
 
 	* review.el (kom-review-cross-references): New command. Reviews
