@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.70 2000-05-26 10:49:41 byers Exp $
+;;;;; $Id: commands1.el,v 44.71 2000-05-26 14:35:14 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.70 2000-05-26 10:49:41 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.71 2000-05-26 14:35:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1071,10 +1071,7 @@ If optional argument is non-nil then dont ask for confirmation."
   "Quit a session. Kill process and buffer-local variables.
 Don't ask for confirmation."
     (initiate-logout 'main nil)
-    (setq lyskom-sessions-with-unread
-	  (delq lyskom-buffer lyskom-sessions-with-unread))
-    (setq lyskom-sessions-with-unread-letters
-	  (delq lyskom-buffer lyskom-sessions-with-unread-letters))
+    (lyskom-remove-unread-buffer lyskom-buffer)
     (set-process-sentinel lyskom-proc nil)
     (delete-process lyskom-proc)
     (lyskom-insert-string (lyskom-get-string-sol 'session-ended))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.84 2000-05-19 02:22:21 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.85 2000-05-26 14:35:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.84 2000-05-19 02:22:21 jhs Exp $"))
+              "$Id: english-strings.el,v 44.85 2000-05-26 14:35:16 byers Exp $"))
 
 
 ;;; ================================================================
@@ -973,6 +973,8 @@ Send a bug report.\n")
 
     (mode-line-unread . " Unread ")
     (mode-line-letters . "letters ")
+    (frame-title-unread . "Unread")
+    (frame-title-letters . " letters")
     (sessions-with-unreads . "Sessions with unread texts")
     (unread-letters . "unread letters")
 

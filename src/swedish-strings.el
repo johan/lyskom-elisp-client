@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.111 2000-05-19 02:22:25 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.112 2000-05-26 14:35:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.111 2000-05-19 02:22:25 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.112 2000-05-26 14:35:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -979,6 +979,8 @@ Skicka en bugrapport.\n")
 		
     (mode-line-unread . " Olästa ")
     (mode-line-letters . "brev ")
+    (frame-title-unread . "Olästa")
+    (frame-title-letters . " brev")
     (sessions-with-unreads . "Sessioner med olästa")
     (unread-letters . "olästa brev")
 
