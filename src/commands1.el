@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.200 2003-10-23 20:24:37 joel Exp $
+;;;;; $Id: commands1.el,v 44.201 2003-10-26 11:24:36 joel Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.200 2003-10-23 20:24:37 joel Exp $\n"))
+	      "$Id: commands1.el,v 44.201 2003-10-26 11:24:36 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2371,13 +2371,14 @@ increasing number of marks per mark type (and, when equal, by mark type)."
 	(cnt-alist nil)) ; the number of texts marked by each mark type
     ;; Count the number of texts marked per mark type:
     (while (not (null mark-list))
-      (let* ((mark (car mark-list))
-	     (type (mark->mark-type mark))
-	     (tcnt (assq type cnt-alist)))
-	(when tcnt (setq tcnt (cdr tcnt)))
-	(setq cnt-alist
-	      (lyskom-set-alist
-	       cnt-alist type (if (null tcnt) 1 (1+ tcnt)))))
+      (let ((mark (car mark-list)))
+        (when mark
+          (let* ((type (mark->mark-type mark))
+                 (tcnt (assq type cnt-alist)))
+            (when tcnt (setq tcnt (cdr tcnt)))
+            (setq cnt-alist
+                  (lyskom-set-alist
+                   cnt-alist type (if (null tcnt) 1 (1+ tcnt)))))))
       (setq mark-list (cdr mark-list)))
 
     ;; Sort the list, least-used, lowest number of mark type first:
