@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.306 2003-03-16 15:57:30 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.307 2003-03-16 17:34:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.306 2003-03-16 15:57:30 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.307 2003-03-16 17:34:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -437,7 +437,9 @@ du har läst klart allting. Kom tillbaks senare.
     (text-has-no-recipients-r . "Inlägg %#1n har inga mottagare\n")
 
     (where-on-list-q . "Placering på listan? (0-%#1d) ")
-    (member-in-conf . "Bli medlem i %#1M...")
+    (member-in-conf . "Bli medlem i %#1M%#2?b%[ %#2s%]%[%]...")
+    (member-in-conf-with-unread-date . "med olästa från %#3d %#2s %#1d")
+    (member-in-conf-with-unread . "med %#1d olästa")
     (add-member-in . "Addera %#1P som medlem i %#2M...")
     (change-priority-for-q . "Ändra prioritet för möte: ")
     (change-priority-for . "Ändra prioritet på %#2M...")
@@ -722,6 +724,7 @@ Ditt alarmmeddelande löd:
 Meddelandet du försökte sända till %#1M var:
 %#2t\n")
     (only-last . "Endast läsa senaste i %#1s: ")
+    (initial-unread . "Initialt antal olästa (tomt för alla): ")
     (only-error . "Något gick galet. Ledsen.\n")
 
     (you-have-unreads . "Du har %#1d oläst%#1?d%[%]%[a%] inlägg i %#2M\n")

@@ -1,5 +1,21 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 260:
+	* commands1.el (kom-add-self): Ask for number of unread.
+	 (lyskom-try-add-member): Show no-of-unread in text.
+	 (lyskom-add-member-answer): Set unread if requested.
+
+	* lyskom-rest.el (lyskom-read-num-range-or-date): Added initial,
+	empty and default arguments.
+
+	Language-dependent variables were set incorrectly in all but the
+	first session:
+	* startup.el (kom-start-anew): Unconditionally set the language,
+	even if it looks like we're already on the right page.
+
+	* language.el (lyskom-set-language-vars): When setting the
+	language globally, muck with the default values of variables too.
+
 	Fix bug 859:
 	* swedish-strings.el,english-string.el (lyskom-messages): Fixed
 	show-membership-info-q.
