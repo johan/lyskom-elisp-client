@@ -1,5 +1,5 @@
 #
-# $Id: mailing-do-list,v 35.1 1991-09-15 10:02:43 linus Exp $
+# $Id: mailing-do-list,v 35.2 1992-02-20 00:02:39 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -42,7 +42,7 @@ ACTIVE -a./ -i./ geuder@informatik.uni-stuttgart.de
 #
 
 # Zeuge
-ACTIVE -ADI Klaus.Zeuge@DoCS.UU.SE
+ACTIVE -m Klaus.Zeuge@DoCS.UU.SE
 #
 
 # KPJ Jaakola
