@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.135 2002-05-28 20:56:45 byers Exp $
+;;;;; $Id: commands2.el,v 44.136 2002-05-29 20:22:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.135 2002-05-28 20:56:45 byers Exp $\n"))
+              "$Id: commands2.el,v 44.136 2002-05-29 20:22:32 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2919,3 +2919,113 @@ v m"
   (interactive)
   (lyskom-insert-before-prompt "Kommandot \"Vilka (är inloggade i) möte\" är flyttat till v m\n"))
 
+
+(defun kom-apropos (re do-all)
+  "List LysKOM-related symbols whose name or documentation matches a regexp.
+With prefix argument, also list symbols that are not part of the semi-stable
+interface (i.e. symbols whose name starts with \"lyskom\")."
+  (interactive "sLysKOM-apropos (regexp): \nP")
+  (message "Searching for %s..." re)
+  (let ((result nil)
+        (case-fold-search t))
+    (mapatoms
+     (lambda (atom)
+       (let ((string nil))
+         (when (and (or (boundp atom) (fboundp atom))
+                    (or (and do-all (string-match "^lyskom-" (symbol-name atom)))
+                        (string-match "^kom-" (symbol-name atom)))
+                    (or (string-match re (symbol-name atom))
+                        (and (fboundp atom)
+                             (string-match re (or (documentation atom) "")))
+                        (and (boundp atom)
+                             (string-match re (or
+                                               (documentation-property 
+                                                atom 'variable-documentation)
+                                               "")))))
+           (setq result (cons atom result))))))
+    (setq result 
+          (sort result (lambda (a b)
+                         (string-lessp (symbol-name a)
+                                       (symbol-name b)))))
+    (message "Searching for %s...formatting..." re)
+    (if result
+        (let ((buffer (get-buffer-create "*LysKOM-Apropos*")))
+          (save-window-excursion
+            (let ((inhibit-read-only t))
+              (set-buffer buffer)
+              (help-mode)
+              (lyskom-view-mode)
+              (erase-buffer)
+              (insert "\
+In this buffer, go to the name of the symbol and type * to
+get full documentation.
+
+")
+              (lyskom-traverse el result
+                (lyskom-apropos-insert el))
+              (toggle-read-only 1))
+            (message "Searching for %s...formatting...done" re)
+            (display-buffer buffer)
+            (goto-char (point-min))))
+      (message "Nothing found that matches \"%s\"" re))))
+
+
+(defun lyskom-apropos-insert (sym)
+  (let ((start (point)))
+    (insert (symbol-name sym))
+    (add-text-properties start (point) 
+                         `(face bold 
+                           mouse-face highlight
+                           lyskom-button t
+                           lyskom-button-text ,(symbol-name sym)
+                           lyskom-button-type func
+                           lyskom-buffer ,(current-buffer)
+                           lyskom-button-arg (lyskom-apropos-item ,sym)))
+    (insert "\n")
+    (lyskom-apropos-insert-docstring 'func
+                                     sym
+                                     (when (fboundp sym)
+                                       (documentation sym)))
+    (lyskom-apropos-insert-docstring 'var
+                                     sym 
+                                     (when (boundp sym)
+                                       (documentation-property 
+                                        sym 'variable-documentation)))
+    (insert "\n")))
+
+(defun lyskom-apropos-insert-docstring (type sym doc)
+  (when doc
+    (insert "    ")
+    (let ((start (point)))
+      (cond ((eq type 'func) (insert "Func: "))
+            ((eq type 'var)  (insert "Var:  ")))
+      (when (not (eq start (point)))
+        (add-text-properties start (point)
+                             `(face italic
+                                    mouse-face highlight
+                                    lyskom-button t
+                                    lyskom-button-text ""
+                                    lyskom-button-type func
+                                    lyskom-buffer ,(current-buffer)
+                                    lyskom-button-arg (lyskom-apropos-item 
+                                                       (,sym ,type)))))
+
+      (insert
+       (lyskom-truncate-string-to-width
+
+        (if (string-match "\\(\r\\|\n\\)" doc)
+            (substring doc 0 (string-match "\\(\r\\|\n\\)" doc))
+          doc)
+        (- (window-width) 12)))
+      (insert "\n"))))
+
+
+(defun lyskom-apropos-item (args)
+  (let ((sym (elt args 0))
+        (type (elt args 1)))
+    (cond ((eq type 'func) (describe-function sym))
+          ((eq type 'var)  (describe-variable sym))
+          (t  (cond ((fboundp sym)
+                     (describe-function sym))
+                    ((boundp sym)
+                     (describe-variable sym)))))))

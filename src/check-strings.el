@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.19 2002-05-27 00:28:28 byers Exp $
+;;;;; $Id: check-strings.el,v 44.20 2002-05-29 20:22:32 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -103,7 +103,11 @@
             tmp)))
 
 (defun lcs-check-help ()
-  "Check the help files"
+  "Check the help files."
+  (lcs-check-help-sections))
+
+(defun lcs-check-help-sections ()
+  "Check that all sections exist in all languages."
   (let* ((help (mapcar (lambda (x) (cons (car x)
                                          (mapcar 'car (eval (cdr x)))))
                        (get 'lyskom-help-data 'lyskom-language-var)))
@@ -227,8 +231,8 @@ STRING is the string."
 			      (concat
 			       (match-string 1 string)
 			       (match-string 3 string)
-			       (match-string 5 string)
-			       (match-string 6 string))
+			       (match-string 6 string)
+			       (match-string 8 string))
 			      result))))
     result))
 
