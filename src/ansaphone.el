@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.10 2001-04-23 21:39:40 joel Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: ansaphone.el,v 44.11 2002-02-24 20:23:25 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -44,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.10 2001-04-23 21:39:40 joel Exp $\n"))
+	      "$Id: ansaphone.el,v 44.11 2002-02-24 20:23:25 joel Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 

@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.12 2001-01-03 22:02:54 qha Exp $
-;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
+;;;;; $Id: filter-edit.el,v 44.13 2002-02-24 20:23:27 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.12 2001-01-03 22:02:54 qha Exp $\n"))
+	      "$Id: filter-edit.el,v 44.13 2002-02-24 20:23:27 joel Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil

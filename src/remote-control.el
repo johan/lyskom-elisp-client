@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: remote-control.el,v 44.8 2001-04-23 21:39:48 joel Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: remote-control.el,v 44.9 2002-02-24 20:23:27 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 44.8 2001-04-23 21:39:48 joel Exp $\n"))
+	      "$Id: remote-control.el,v 44.9 2002-02-24 20:23:27 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
