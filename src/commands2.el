@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.155 2003-01-07 21:17:12 byers Exp $
+;;;;; $Id: commands2.el,v 44.156 2003-02-13 19:09:10 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.155 2003-01-07 21:17:12 byers Exp $\n"))
+              "$Id: commands2.el,v 44.156 2003-02-13 19:09:10 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1739,11 +1739,9 @@ a prefix argument this command will prompt for the number of texts."
          ((memq type lyskom-comment-types-list)
           (set-read-list-del-first lyskom-reading-list))
          ((eq type 'CONF)
-          (let* ((rlist (read-info->text-list
-                         (read-list->first lyskom-reading-list)))
-                 (cell (nthcdr (max (- (length rlist) today) 1)
-                               rlist)))
-            (setcdr rlist cell))
+	  (text-list->trim-head
+	   (read-info->text-list (read-list->first lyskom-reading-list))
+	   today)
           (setq finished t))
          ((eq type 'RE-EDIT-TEXT))
          ((eq type 'PRI-SESSION))
