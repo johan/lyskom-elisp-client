@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.79 2000-08-28 13:32:05 byers Exp $
+;;;;; $Id: commands2.el,v 44.80 2000-08-28 13:54:42 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.79 2000-08-28 13:32:05 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.80 2000-08-28 13:54:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2159,7 +2159,7 @@ Return-value: 'no-session if there is no suitable session to switch to
       (lyskom-format-insert 'conf-has-no-faq conf-stat))
      (t (setq text-no
               (if (eq 1 (length faq-list))
-                  (car faq-list)
+                  (car (car faq-list))
                 (lyskom-completing-read (lyskom-get-string 'text-to-del-as-faq)
                                         (lyskom-maybe-frob-completion-table 
                                          faq-list)
