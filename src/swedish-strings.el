@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.120 2000-06-02 14:40:57 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.121 2000-06-11 11:33:41 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.120 2000-06-02 14:40:57 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.121 2000-06-11 11:33:41 joel Exp $\n"))
 
 
 ;;; ================================================================
@@ -249,7 +249,7 @@ Guran vill helst sätta en giftpil i dig.\n\n")
 
     (cant-find-supervisor . "Hittar inte organisatören för %#1M.\n")
     (is-read-protected-contact-supervisor . "%#1M är slutet.
-Skicka ett brev till %#2P för medlemsskap.\n")
+Skicka ett brev till %#2P för medlemskap.\n")
 
     (conf-does-not-exist . "\nMötet finns inte.\n")
 
@@ -274,7 +274,7 @@ Skicka ett brev till %#2P för medlemsskap.\n")
     (really-quit . "Vill du verkligen avsluta sessionen? ")
     (session-ended . "
 *****************************
-Lyskom-sessionen är avslutad.
+LysKOM-sessionen är avslutad.
 *****************************\n")
     (session-auto-ended . "
 ===========================================================
@@ -283,7 +283,7 @@ du har läst klart allting. Kom tillbaks senare.
 ===========================================================\n\n")
     (session-ended-long . "
 *******************************************************************************
-Lyskom-sessionen är avslutad.
+LysKOM-sessionen är avslutad.
 *******************************************************************************
 ")
     (session-auto-ended-long . "
@@ -342,7 +342,7 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-add-copy . "Vilket inlägg vill du addera en extra kopia till:")
     (text-to-add-bcc . "Vilket inlägg vill du skicka för kännedom:")
     (text-to-delete-recipient . "Vilket inlägg vill du subtrahera mottagare från:")
-    (text-to-move . "Vilket inlägg vill du flytta: ")
+    (text-to-move . "Vilket inlägg vill du flytta:")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till:")
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
@@ -575,7 +575,8 @@ Ditt alarmmeddelande löd:
 
 %#1t
 -------------------------------------------------------------------------------
-")    (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
+")
+    (message-use-alarm-instead . "Använd kommandot %#1s för att skicka alarmmeddelanden.\n")
     (message-all-info . "Sänd alarmmeddelande\n")
     (message-recipient-info . "Sänd meddelande till %#1M\n")
     (message-nope
@@ -616,7 +617,7 @@ Meddelandet du försökte sända till %#1M var:
     (you-have-marks-all . "Du har %#1d markerade inlägg.\n")
 
 
-    ;; Only people fixing bugs or recieving bugg-reports should
+    ;; Only people fixing bugs or receiving bug reports should
     ;; change these:
     (buggreport-compilestart . "Skapar buggrapporten...")
     (buggreport-compileend . "Skapar buggrapporten...klart")
@@ -936,14 +937,14 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
     (no-selection . "Ingen markerad")
     (selection . "%d markerade")
 
-    (cannot-get-membership . "Kan ej hämta medlemsskap för dig.")
+    (cannot-get-membership . "Kan ej hämta medlemskap för dig.")
     (cannot-get-pers-stat . "Kan ej hämta personstatus för dig.")
     (prioritize-help .
 		     "u,n Flytta möte, SPC markera, p prioritera markerade, q avsluta, C-h m hjälp")
     (your-priorities . " Prioritet  Mötesnamn
 -------------------------------------------------------------------------------
 ")
-    (your-membship . "Ditt medlemsskap i olika KOM-möten:
+    (your-membship . "Ditt medlemskap i olika KOM-möten:
   Prio Mötesnr Mötesnamn\n")
     (prio-row . " %5#1d%5#2m  %#3M\n")
     (too-high-goto-2 . "Du står för högt upp. Gå ner till rad 2.")
@@ -1056,7 +1057,7 @@ Du bör sätta den till ett bättre värde.\n")
     (closed-connection . "
 **************************************************
 %#2s
-Lyskom-sessionen onormalt stängd.
+LysKOM-sessionen onormalt stängd.
 Felmeddelande: %#1s**************************************************")
     (dead-session . "LysKOM-sessionen är inte aktiv.")
     (not-lyskom-buffer . "Detta är inte en aktiv LysKOM-session.")
@@ -1473,7 +1474,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-list-persons	      . "Lista personer")
     (kom-list-news            . "Lista nyheter")
     (kom-list-re              . "Lista (med) regexpar")
-    (kom-membership	      . "Lista medlemsskap")
+    (kom-membership	      . "Lista medlemskap")
     (kom-postpone	      . "Uppskjuta läsning")
     (kom-set-session-priority . "Sätt läsnivå")
     (kom-prioritize	      . "Prioritera möten")
@@ -2360,7 +2361,7 @@ i servern. Annars sparas det i din .emacs.")
         man bekräfta alla mottagare i klump.) Det går också att slå av
         helt.
 
-    Kontroll av kommenterad författares medlemsskap
+    Kontroll av kommenterad författares medlemskap
         Kontrollera att författaren till det kommenterade inlägget är
         medlem i någon av mottagarna för kommentaren. Om så inte är fallet,
         erbjuder LysKOM att lägga till författaren som mottagare till
@@ -2442,7 +2443,7 @@ i servern. Annars sparas det i din .emacs.")
   Bestämmer i vilket fönster man visar kommenterarer medan man skriver nya.")
 
     (kom-list-membership-in-window-doc . "\
-  Bestämmer i vilket fönster man listar medlemsskap.")
+  Bestämmer i vilket fönster man listar medlemskap.")
 
 
     (kom-user-prompt-format-doc . "\
@@ -3132,7 +3133,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-prioritize-in-window-tag      . "Prioritera möten:         ")
     (kom-edit-filters-in-window-tag    . "Ändra filter:             ")
     (kom-view-commented-in-window-tag  . "Återse kommenterer:       ")
-    (kom-list-membership-in-window-tag . "Lista medlemsskap:        ")
+    (kom-list-membership-in-window-tag . "Lista medlemskap:         ")
 
     (kom-user-prompt-format-tag . "Promptformat:")
     (kom-user-prompt-format-executing-tag . "Promptformat vid körning:")
