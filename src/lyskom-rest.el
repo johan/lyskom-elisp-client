@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.64 1999-06-10 13:36:14 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.65 1999-06-13 15:00:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.64 1999-06-10 13:36:14 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.65 1999-06-13 15:00:57 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -2593,9 +2593,9 @@ to return nil."
       (setq numstr
 	    (prog1
 		(lyskom-read-string
-		 (concat (if prompt 
-			     prompt
-			   (lyskom-get-string 'give-a-number))
+		 (concat (cond ((null prompt) (lyskom-get-string 'give-a-number))
+                               ((symbolp prompt) (lyskom-get-string prompt))
+                               (t prompt))
 			 (if numdefault 
 			     (format " (%d) " numdefault)
 			   " "))

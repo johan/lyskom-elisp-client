@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.54 1999-06-11 12:56:16 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.55 1999-06-13 15:01:00 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.54 1999-06-11 12:56:16 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.55 1999-06-13 15:01:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -461,8 +461,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (created-by . "Skapat av person %25#1p %#3s(%#2P)\n")
     (created-at . "Skapad:%35#1s\n")
     (members .    "Antal medlemmar: %25#1d\n")
-    (conf-allows-secret-members . "Hemliga medlemmar:                      %#1s\n")
-    (conf-allows-anon-texts .     "Anonyma inlägg:                         %#1s\n")
+    (conf-allows-secret-members . "Hemliga medlemmar:                       %#1s\n")
+    (conf-allows-anon-texts .     "Anonyma inlägg:                          %#1s\n")
     (anon-texts-permitted . "Anonyma inlägg är tillåtna")
     (anon-texts-not-permitted . "Anonyma inlägg är inte tillåtna")
     (secret-members-permitted . "Hemliga medlemmar är tillåtna")
@@ -478,6 +478,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (supervisor-is-no-name . "Organisatör:     %25#1p %#3s(%#2P)\n")
     (presentation-no . "Presentation:    %25#1n\n")
     (conf-has-motd . "\n%#1M har en lapp på dörren:\n")
+    (status-conf-generic . "%-40#1s %#2s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -832,6 +833,7 @@ Gruppmeddelande till %#3M\nfrån %#2P (%#4s):
 	   
     (person-or-conf-no-regexp . "\\`[ \t]*[mpMP]\\w*[ \t]+\\([0-9]+\\)\\'")
     (session-no-regexp . "\\`[ \t]*[sS]\\w*[ \t]+\\([0-9]+\\)\\'")
+    (conf-prompt . "Vilket möte/person? ")
 
     ;;n From prioritize.el:
 
@@ -937,6 +939,7 @@ Du bör sätta den till ett bättre värde.\n")
 
     (person-does-not-exist . "Person %#1d (finns inte).")
     (conference-does-not-exist . "Möte %#1d (finns inte).")
+    (conf-no-does-not-exist-r . "Möte %#1d finns inte.")
     (person-is-anonymous . "Anonym person")
 
     (process-signal . "Signal från processen.")
@@ -1128,8 +1131,27 @@ Uppkopplad sedan %#8s%#9s")
     (content-type-aux . "Innehållstyp: %#1s")
     (content-type-regexp . "Innehållstyp: \\(\\S-+\\)")
     
+    (agreeing . "Håller med om inlägg %#1n...")
+    (fast-replying . "Kort replik till inlägg %#1n...")
     (fast-reply-aux . "\"%#1t\" /%#2P/")
     
+    (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>") 
+    (faq-in-text-aux . "FAQ i inlägg:                   %10#1n")
+    (conf-to-add-faq . "Vilket möte vill du lägga till en FAQ för? ")
+    (text-to-add-as-faq . "Vilken text vill du lägga till som FAQ? ")
+    (adding-faq . "Lägger till inlägg %#1n som FAQ för %#2M...")
+    (conf-to-del-faq . "Vilket möte vill du ta bort en FAQ från? ")
+    (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
+    (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2M...")
+    (conf-has-no-faq . "%#1M har ingen FAQ\n")
+    (view-which-faq . "Återse FAQ för vilket möte? ")
+    (review-faq-for-r . "Återse FAQ för %#1M.\n")
+
+
+    (cross-reference-text-status-aux . "Se även inlägg:                 %10#1n /%#2P/")
+    (cross-reference-conf-status-aux . "Se även möte:                           <%#1m> %#1M /%#2P/")
+    (cross-reference-pers-status-aux . "Se även person:                         <%#1p> %#1P /%#2P/")
+    (strange-cross-reference-status .  "Se även:                                 %#1s (vad nu det betyder)")
     (cross-reference-text-aux . "Se även inlägg %#1n /%#2P/")
     (cross-reference-conf-aux . "Se även möte <%#1m> %#1M /%#2P/")
     (cross-reference-pers-aux . "Se även person <%#1p> %#1P /%#2P/")
@@ -1162,6 +1184,8 @@ Uppkopplad sedan %#8s%#9s")
     (label-what-pers . "Sätt personligt namn på vilken person? ")
     (label-what-label . "Personligt namn: ")
     (label-secret    . "Skall andra kunna se namnet? ")
+
+    (creating-software-aux . "Skapad med %#1s")
 
     (cant-get-aux-item . "Hittar inte tilläggsinformationen")
     (aux-item-no-info . "Ingen information tillgänglig\n")
@@ -1357,12 +1381,12 @@ Innehåll:    \"%#9s\"
     (kom-change-language      . "Ändra språk")
     (kom-calculate            . "Beräkna")
     (kom-list-marks           . "Lista markeringar")
-
     (kom-where-is             . "Var finns kommandot")
-
     (kom-fast-reply           . "Snabb replik")
     (kom-agree                . "Hålla med")
-    
+    (kom-add-faq              . "Addera FAQ")
+    (kom-del-faq              . "Ta bort FAQ")
+    (kom-review-faq           . "Återse FAQ")
     ))
 
 (lyskom-language-var lyskom-language-codes sv

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.20 1999-06-11 08:54:51 byers Exp $
+;;;;; $Id: macros.el,v 44.21 1999-06-13 15:00:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.20 1999-06-11 08:54:51 byers Exp $\n"))
+	      "$Id: macros.el,v 44.21 1999-06-13 15:00:59 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -92,6 +92,8 @@ Value returned is always nil."
 
 (put 'lyskom-traverse-aux 'edebug-form-spec
      '(sexp form body))
+
+(put 'lyskom-traverse-aux 'lisp-indent-hook 2)
 
 (put 'lyskom-traverse 'edebug-form-spec
      '(sexp form body))

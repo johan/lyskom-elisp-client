@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.15 1999-02-18 16:29:53 petli Exp $
+;;;;; $Id: view-text.el,v 44.16 1999-06-13 15:01:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.15 1999-02-18 16:29:53 petli Exp $\n"))
+	      "$Id: view-text.el,v 44.16 1999-06-13 15:01:04 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -168,17 +168,17 @@ Note that this function must not be called asynchronously."
                                             (text-stat->aux-items text-stat)
                          (when (and
                              (or (eq (lyskom-aux-item-definition-field aux
-                                                                 'print-when)
+                                                                 'text-print-when)
                                      'header)
                               (and (eq (lyskom-aux-item-definition-field aux
-                                                                  'print-when)
+                                                                  'text-print-when)
                                        'comment)
                                (not kom-reading-puts-comments-in-pointers-last)
                                ))
                              (setq text 
                                    (lyskom-aux-item-definition-call 
                                     aux
-                                    'print
+                                    'text-print
                                     aux
                                     text-stat)))
                            (lyskom-insert text)
@@ -212,17 +212,17 @@ Note that this function must not be called asynchronously."
                                             (text-stat->aux-items text-stat)
                          (when (and
                              (or (eq (lyskom-aux-item-definition-field aux
-                                                                 'print-when)
+                                                                 'text-print-when)
                                      'footer)
                               (and (eq (lyskom-aux-item-definition-field aux
-                                                                  'print-when)
+                                                                  'text-print-when)
                                        'comment)
                                    kom-reading-puts-comments-in-pointers-last
                                ))
                              (setq text 
                                    (lyskom-aux-item-definition-call 
                                     aux
-                                    'print
+                                    'text-print
                                     aux
                                     text-stat)))
                            (lyskom-insert text)
