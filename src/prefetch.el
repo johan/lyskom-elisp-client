@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.7 1997-02-07 18:08:00 byers Exp $
+;;;;; $Id: prefetch.el,v 44.8 1997-02-13 11:36:30 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.7 1997-02-07 18:08:00 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.8 1997-02-13 11:36:30 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -309,10 +309,11 @@ prefetched the prefetch is not done."
 
 (defun lyskom-prefetch-text-list (text-list &optional queue)
   "Prefetches a list of texts."
-  (if (null (text-list->texts text-list))
+  (if (text-list->empty text-list)
       nil
     (if queue
-	(lyskom-queue-enter queue (list 'TEXT-LIST (text-list->texts text-list)))
+	(lyskom-queue-enter queue
+			    (list 'TEXT-LIST (text-list->texts text-list)))
       (lyskom-stack-push lyskom-prefetch-stack
 			 (list 'TEXT-LIST (text-list->texts text-list)))))
   (lyskom-continue-prefetch))
