@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 41.11 1996-07-15 19:31:52 davidk Exp $
+;;;;; $Id: vars.el.in,v 41.12 1996-07-17 09:00:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 41.11 1996-07-15 19:31:52 davidk Exp $\n"
+  "$Id: vars.el.in,v 41.12 1996-07-17 09:00:25 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -482,12 +482,21 @@ is not. Instead, the latter should be \(\"netscape\" \"-d\" \"host:0\"\)
 
 This variable is not saved in the LysKOM server.")
 
-(defvar kom-confirm-multiple-recipients t
+(defvar kom-confirm-multiple-recipients 'after
   "*Non-nil means ask the user for confirmation about recipients.
 When the user writes a comment to a text with more than one recipient
-he gets a y-or-n-p question for all recipients.
+he gets a y-or-n-p question for all recipients. 'before means check
+before opening the edit buffer. Anything else means check before
+sending the article.
 
 This variable is stored in the LysKOM server.")
+
+(defvar kom-check-commented-author-membership t
+  "*Non-nil means check that the authors of the commented texts are
+members of at least one of the recipient conferences. If not, offer to
+add them as recipients.
+
+This variable is saved in the LysKOM server.")
 
 (defvar kom-inhibit-typeahead nil
   "*If non-nil, discard keyboard input that arrives while a LysKOM command is
@@ -621,6 +630,7 @@ This variable is not saved in the LysKOM server.")
     kom-show-footnotes-immediately
     kom-follow-comments-outside-membership
     kom-friends
+    kom-check-commented-author-membership
     lyskom-fetch-map-nos
     lyskom-new-text-hook
     lyskom-prefetch-conf-tresh 
@@ -663,6 +673,55 @@ Dont change these. These are defined by the protocol.")
 
 (defconst lyskom-max-int 8388607
   "The largest int emacs, and thus this LysKOM client, can handle.")
+
+(defconst lyskom-server-features
+  '(((>= 1 9 0) (lyskom-accept-async-flag))
+    ((>= 1 8 0) (lyskom-long-conf-types-flag 
+                 lyskom-set-last-read-flag
+                 lyskom-uconf-stats-flag))
+    ((>= 1 7 0) (lyskom-z-lookup-flag))
+    ((= 1 9 0) ((protocol-version 9)))
+    ((= 1 8 0) ((protocol-version 8)))
+    ((= 1 7 0) ((protocol-version 7)))
+    ((= 1 7 1) ((protocol-version 7))))
+  "List describing which features a certain server version has.
+Each element is a list containing the server version and what it
+supports:
+
+\(VERSION SUPPORTS\)
+
+VERSION is a list of \(RELATION MAJOR MINOR REVISION\) RELATION is one
+of >= \(features apply to server at or above the specified version\)
+or = \(features apply to only that server version\). MAJOR, MINOR and
+REVISION are integers that are compared to the actual server version.
+
+SUPPORTS is a list of cons pairs and symbols. Cons pairs are placed in
+the lyskom-server-supports list, symbols are interpreted as variable
+names set to 't'.")
+
+
+(defvar lyskom-server-version '(0 0 0)
+  "The version of the server.  A list of three integers, major
+version, minor version and revision.")
+
+(defvar lyskom-server-supports nil
+  "Assoc list of features supported by the LysKOM server. See
+lyskom-server-features for more information.")
+
+(defvar lyskom-long-conf-types-flag nil
+  "t if extended conf types are supported by the server.")
+
+(defvar lyskom-set-last-read-flag nil
+  "t if the set-last-read call is supported by the server.")
+
+(defvar lyskom-uconf-stats-flag nil
+  "t if the server supports the get-uconf-stat call.")
+
+(defvar lyskom-z-lookup-flag nil
+  "t if the server supports regexp name lookups.")
+
+(defvar lyskom-accept-async-flag nil
+  "t if the server supports the accept-async call.")
 
 (defvar lyskom-max-packet-size lyskom-max-int
   "The largest possible packet size that can be transmitted to a
@@ -1081,6 +1140,11 @@ an unknown conference.")
 (defvar lyskom-dont-read-user-area nil
   "If non-nil the user area will not be read on login.")
 
+(defvar lyskom-show-comments t
+  "This should always be set to t.")    ;+++SOJGE
+
+(defvar kom-no-comments-to-motd nil
+  "This should always be set to nil unless you are Klaus Zeuge.") ;+++SOJGE
 
 ;;;; lyskom-tell-phrases-validation-keyword-list
 ;;; This is a list of keywords for kom-tell-phrases.

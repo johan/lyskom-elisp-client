@@ -3,10 +3,7 @@ Att göra i elisp-klienten
 
 Buggar
 
-    Completion bryr sig inte om MUSTMATCH-parametern.
-
-    Om KOMNAME är satt till "" så kommer completionkoden att försöka
-    komplettera det till alla personer. Det vill man *inte*.
+    Ändra variabler klarar inte att hantera buffertlokala variabler.
 
     Completion-koden är ivägen när man vill skapa nya personer. [Nåja,
     inte så mycket. Det är bara att man inte får skapa namn som är
@@ -25,17 +22,6 @@ Buggar
     läsa 1443602 (en fotnot till 1443554. Det är inte första gången
     det händer.
 
-    Man kan inte skicka in inlägg med kom-emacs-knows-iso-8859-1 satt
-    till nil. (FIXAT)
-
-    LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
-    (FIXAT)
-
-    lyskom-try-complete-partials borde returnera exakta matchar före
-    längsta match. Nu blir (lyskom-try-complete-partials "link"
-    '(("(foo) link (bar)" . 1) ("linkfoobar" . 2))) "linkfoobar", inte
-    "(foo) link (bar)". (FUNKTIONEN ERSATT; FIXAT)
-
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
     så scrollar klienten ibland trots att den inte borde.
 
@@ -50,18 +36,11 @@ Buggar
 
     Fotnoter som visas på en gång filtreras inte.
 
-    M-> i prioritera-bufferten. Text 1320736. (FIXAT)
-
     Det har hänt att call-info har blivit nil i lyskom-parse-error.
 
     lyskom-add-membership gör membership-listan sorterad, vilket inte
     prefetch-koden är gjord för. Alltså borde det kunna bli problem
     att gå med i möten om man ger dem fel prioritet.
-
-    Om man försöker logga in med en förkortning som matchar flera namn
-    tror klienten att man inte finns. (FIXAT?)
-
-    Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
 
     När jag ska läsa en kommentar till ett brev i min brevlåda så blir
     prompten "Läsa nästa brev" i stället för "Läsa nästa
@@ -102,3 +81,31 @@ Allmänna förbättringar
     Återinför Olästa
 
     Reentrant blocking-do
+
+
+Fixade saker
+
+    Completion bryr sig inte om MUSTMATCH-parametern. (FIXAT)
+
+    Om KOMNAME är satt till "" så kommer completionkoden att försöka
+    komplettera det till alla personer. Det vill man *inte*. (FIXAT)
+    (lyskom-lookup-conf-by name är snabbare på att returnera nil).
+
+    Man kan inte skicka in inlägg med kom-emacs-knows-iso-8859-1 satt
+    till nil. (FIXAT)
+
+    LysKOMs completing-read är skit. Den gör fel. Den borde skrivas om.
+    (FIXAT)
+
+    lyskom-try-complete-partials borde returnera exakta matchar före
+    längsta match. Nu blir (lyskom-try-complete-partials "link"
+    '(("(foo) link (bar)" . 1) ("linkfoobar" . 2))) "linkfoobar", inte
+    "(foo) link (bar)". (FUNKTIONEN ERSATT; FIXAT)
+
+    M-> i prioritera-bufferten. Text 1320736. (FIXAT)
+
+    Om man försöker logga in med en förkortning som matchar flera namn
+    tror klienten att man inte finns. (FIXAT?)
+
+    Lista meddelanden via fjärrkontroll listar baklänges. (FIXAT)
+

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 41.2 1996-06-12 07:55:53 byers Exp $
+;;;;; $Id: parse.el,v 41.3 1996-07-17 08:59:59 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 41.2 1996-06-12 07:55:53 byers Exp $\n"))
+	      "$Id: parse.el,v 41.3 1996-07-17 08:59:59 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -286,7 +286,7 @@ result is assigned to the element."
                            original
                            secret
                            letterbox
-                           anarchy
+                           (eq anarchy t)
                            (and (not (eq anarchy 'space))
                                 (lyskom-parse-1-or-0))
                            (and (not (eq anarchy 'space))
