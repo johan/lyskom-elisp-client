@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.5 1996-10-06 05:18:10 davidk Exp $
+;;;;; $Id: completing-read.el,v 44.6 1996-10-06 22:13:11 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.5 1996-10-06 05:18:10 davidk Exp $\n"))
+       "$Id: completing-read.el,v 44.6 1996-10-06 22:13:11 davidk Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -303,7 +303,6 @@ function work as a name-to-conf-stat translator."
            (candidate-list 
             (and x-list
                  (listify-vector (conf-z-info-list->conf-z-infos x-list))))
-           (lyskom-read-conf-internal-result-list nil)
            (result-list nil))
 
       ;;
@@ -460,8 +459,7 @@ function work as a name-to-conf-stat translator."
               (specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          candidate-list))
-              (found nil))
+                                                          candidate-list)))
           (if specials (setq name-list (nconc specials name-list)))
 
           (cond ((lyskom-completing-member string name-list) 

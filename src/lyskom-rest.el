@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.10 1996-10-06 05:18:22 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.11 1996-10-06 22:13:14 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.10 1996-10-06 05:18:22 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.11 1996-10-06 22:13:14 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -823,7 +823,9 @@ Args: FORMAT-STRING &rest ARGS"
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at the end of the buffer with `lyskom-insert'."
   (let* ((state (lyskom-do-format format-string argl t))
-	 (start (point-max))
+	 ;; We have to use a marker, because lyskom-insert may trim
+	 ;; the buffer size.
+	 (start (point-max-marker))
 	 (deferred (format-state->delayed-content state)))
     (lyskom-insert (format-state->result state))
     (while deferred
@@ -832,7 +834,8 @@ The string is inserted at the end of the buffer with `lyskom-insert'."
 	(set-marker m (+ start (defer-info->pos defer-info)))
 	(set-defer-info->pos defer-info m)			     
 	(lyskom-defer-insertion defer-info)
-	(setq deferred (cdr deferred))))))
+	(setq deferred (cdr deferred))))
+    (set-marker start nil)))
 
 (defun lyskom-format-insert-at-point (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
