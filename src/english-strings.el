@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.21 1996-03-12 02:17:59 davidk Exp $
+;;;;; $Id: english-strings.el,v 38.22 1996-03-13 13:44:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.21 1996-03-12 02:17:59 davidk Exp $"))
+	      "$Id: english-strings.el,v 38.22 1996-03-13 13:44:39 byers Exp $"))
 
 
 ;;; ================================================================
@@ -981,8 +981,7 @@ Text:
   "The swascii version of lyskom-filter-what")
 
 
-(defvar lyskom-text-start "
-[0-9]+ 199[0-9]-[0-1][0-9]-[0-3][0-9] +[0-2][0-9]:[0-5][0-9]  /[0-9]+ line\\(s\\)?/ "
+(defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ line\\(s\\)?/ "
   "Regexp matching beginning of a article in LysKOM buffer.
 Cf. paragraph-start.")
 

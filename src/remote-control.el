@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: remote-control.el,v 38.3 1996-03-04 15:13:12 byers Exp $
+;;;;; $Id: remote-control.el,v 38.4 1996-03-13 13:44:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: remote-control.el,v 38.3 1996-03-04 15:13:12 byers Exp $\n"))
+	      "$Id: remote-control.el,v 38.4 1996-03-13 13:44:51 byers Exp $\n"))
 
 
 ;;;============================================================
@@ -78,7 +78,8 @@ turn auto-reply on, off turn it off and nil toggle its state."
                                  session-no
                                  (cond ((eq state 'on) "on")
                                        ((eq state 'off) "off")
-                                       (t ""))))))
+                                       (t "")))
+			 t)))
 
 (def-kom-command kom-remote-set-message (&optional session-no message)
   "Remotely set the default reply message of another client.
@@ -97,7 +98,8 @@ Optional argument MESSAGE specifies the message."
                          (format "Remote-command: %d %d\nset message\n%s"
                                  lyskom-session-no
                                  session-no
-                                 message))))
+                                 message)
+			 t)))
 
 (def-kom-command kom-remote-list-messages (&optional session-no)
   "List messages collected from a remote auto-reply facility.
@@ -111,7 +113,8 @@ Optional argument SESSION-NO specifies the target session."
     (lyskom-send-message (session-info->pers-no info)
                          (format "Remote-command: %d %d\nlist messages\n"
                                  lyskom-session-no
-                                 session-no))))
+                                 session-no)
+			 t)))
 
 
 
@@ -127,7 +130,8 @@ Optional argument SESSION-NO specifies the target session."
     (lyskom-send-message (session-info->pers-no info)
                          (format "Remote-command: %d %d\nerase messages\n"
                                  lyskom-session-no
-                                 session-no))))
+                                 session-no)
+			 t)))
 
 
 (def-kom-command kom-remote-quit (&optional session-no)
@@ -142,7 +146,8 @@ Optional argument SESSION-NO specifies the target session."
     (lyskom-send-message (session-info->pers-no info)
                          (format "Remote-command: %d %d\nquit\n"
                                  lyskom-session-no
-                                 session-no))))
+                                 session-no)
+			 t)))
 
 ;;;============================================================
 ;;;

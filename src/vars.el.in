@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.27 1996-03-13 01:46:51 davidk Exp $
+;;;;; $Id: vars.el.in,v 38.28 1996-03-13 13:45:00 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.27 1996-03-13 01:46:51 davidk Exp $\n"))
+	      "$Id: vars.el.in,v 38.28 1996-03-13 13:45:00 byers Exp $\n"))
 
 
 
@@ -343,8 +343,12 @@ kom-url-managers is a list of all available viewers.")
 			    lyskom-view-url-mosaic))
 
   "List of URL managers. Each element is a list consisting of
-(MANAGER_REGEXP . VIEW_FUNCTION). Manager regexp is matched against
-the user's kom-url-viewer setting.")
+(MANAGER-REGEXP PROTOCOLS NAME VIEW-FUNCTION). When LysKOM attempts to
+view an URL, kom-url-viewer-preferences is scanned, and the URL
+manager whose MANAGER-REGEXP first matches an element in
+kom-url-viewer-preferences and whose PROTOCOLS matches the protocol of
+the selected URL is used to view the URL by calling its VIEW-FUNCTION
+with the URL and the manager entry as arguments.")
 
 (defvar kom-mosaic-command "/usr/local/bin/mosaic"
   "*Command to run to start Mosaic")
@@ -359,7 +363,7 @@ he gets a y-or-n-p question for all recipients.")
 (defvar kom-max-buffer-size nil
   "*If non-nil, ensure that buffers won't grow any larger than this")
 
-(defvar lyskom-print-complex-dates (and (>= emacs-minor-version 28)
+(defvar lyskom-print-complex-dates (and (>= emacs-minor-version 29)
 					(>= emacs-major-version 19))
   "*If non-nil, print today and yesterday using a special format.")
 
@@ -372,10 +376,53 @@ he gets a y-or-n-p question for all recipients.")
     ("kom.mds.mdh.se" . "MdS-KOM"))
   "An alist mapping server names to shorter identification strings")
 
+
+(defvar kom-ansaphone-on nil
+  "t if automatic replies to personal messages are in effect.")
+
+
+(defvar kom-remote-control t
+  "*t if LysKOM may be remotely controlled.")
+
+(defvar kom-remote-controllers nil 
+  "*Persons who may control LysKOM using messages.By default you can
+always control your own sessions. See kom-self-control for more
+information.")
+
+(defvar kom-self-control t
+  "*If non-nil, remote control commands are accepted from sessions logged
+in as the same user as the current session.")
+
+(defvar kom-ansaphone-replies
+  '((group nil nil nil nil)
+    (common nil nil nil nil))
+  "*List of automatic replies to various messages.
+
+A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
+    MESSAGE-TYPE is one of personal, group or common or nil
+    SENDER is a list of integers or a single integer or nil
+    RECIPIENT is a list of integers or a single integer or nil
+    TEXT is a regular expression or nil
+    REPLY is a string or nil
+
+When an incoming message arrives and the auto-reply facility is on,
+this list is checked for automatic replies. The message type, sender,
+recipient and text of the incoming messages is matched against the 
+elements of this list. If a match is found, the corresponding reply is
+send. A nil in one of the message-type, sender, recipient or text
+components in the list is taken to mean a wildcard. A null reply means
+don't send a reply.
+
+If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
+
+
 (defconst lyskom-elisp-variables
   '(kom-ding-on-personal-messages
     kom-ding-on-group-messages
     kom-ding-on-common-messages
+    kom-ding-on-priority-break
+    kom-show-personal-messages-in-buffer
+    kom-pop-personal-messages
     kom-do-when-done
     kom-higher-priority-breaks
     kom-login-hook
@@ -394,6 +441,8 @@ he gets a y-or-n-p question for all recipients.")
     kom-remote-controllers
     kom-ansaphone-on
     kom-ansaphone-default-reply
+    kom-ansaphone-replies
+    kom-show-footnotes-immediately
     lyskom-fetch-map-nos
     lyskom-new-text-hook
     lyskom-prefetch-conf-tresh 
@@ -705,51 +754,13 @@ This is used by the command kom-busy-wait.")
   "Hook to run when the LysKOM session is correctly ended.")
 
 (defvar kom-quit-when-idle t
-  "*Non-niil to automatically quit when LysKOM is full and the session is idle")
-
-(defvar kom-ansaphone-on nil
-  "t if automatic replies to personal messages are in effect.")
-
-
-(defvar kom-remote-control t
-  "*t if LysKOM may be remotely controlled.")
-
-(defvar kom-remote-controllers nil 
-  "*Persons who may control LysKOM using messages.By default you can
-always control your own sessions. See kom-self-control for more
-information.")
-
-(defvar kom-self-control t
-  "*If non-nil, remote control commands are accepted from sessions logged
-in as the same user as the current session.")
+  "Non-niil to automatically quit when LysKOM is full and the session is idle")
 
 (defvar kom-permanent-filter-list nil
-  "*List of patterns to filter permanently")
+  "List of patterns to filter permanently")
 
 (defvar kom-session-filter-list nil
   "List of patterns to filter during this session")
-
-(defvar kom-ansaphone-replies
-  '((group nil nil nil nil)
-    (common nil nil nil nil))
-  "*List of automatic replies to various messages.
-
-A list of (MESSAGE-TYPE SENDER RECIPIENT TEXT REPLY)
-    MESSAGE-TYPE is one of personal, group or common or nil
-    SENDER is a list of integers or a single integer or nil
-    RECIPIENT is a list of integers or a single integer or nil
-    TEXT is a regular expression or nil
-    REPLY is a string or nil
-
-When an incoming message arrives and the auto-reply facility is on,
-this list is checked for automatic replies. The message type, sender,
-recipient and text of the incoming messages is matched against the 
-elements of this list. If a match is found, the corresponding reply is
-send. A nil in one of the message-type, sender, recipient or text
-components in the list is taken to mean a wildcard. A null reply means
-don't send a reply.
-
-If none of the elements match, KOM-ANSAPHONE-DEFAULT-REPLY is sent.")
 
 
 (defvar lyskom-filter-list nil
@@ -895,6 +906,17 @@ the value of  kom-tell-phrases  for fun.")
 	 nil
        (,@ body))))
 
+(defun lyskom-set-face-foreground (face color)
+  (condition-case error
+      (set-face-foreground face color)
+    (error nil)))
+
+(defun lyskom-set-face-background (face color)
+  (condition-case error
+      (set-face-background face color)
+    (error nil)))
+
+
 (put 'lyskom-make-face 'lisp-indent-function 1)
 
 (when (eq window-system 'x)
@@ -904,22 +926,22 @@ the value of  kom-tell-phrases  for fun.")
 	;; Face for text buttons and other KOM buttons
 	(lyskom-make-face 'kom-active-face
 	  (copy-face 'default 'kom-active-face)
-	  (set-face-foreground 'kom-active-face
+	  (lyskom-set-face-foreground 'kom-active-face
 			       (if dark-bg "lightblue" "blue4")))
 	;; Face for URL buttons
 	(lyskom-make-face 'kom-url-face
 	  (copy-face 'default 'kom-url-face)
-	  (set-face-foreground 'kom-url-face
+	  (lyskom-set-face-foreground 'kom-url-face
 			       (if dark-bg "Moccasin" "BlueViolet")))
 	;; Face for highlighting you own name
 	(lyskom-make-face 'kom-me-face
 	  (copy-face 'bold 'kom-me-face)
-	  (set-face-foreground 'kom-me-face "gold")
-	  (set-face-background 'kom-me-face "black"))
+	  (lyskom-set-face-foreground 'kom-me-face "gold")
+	  (lyskom-set-face-background 'kom-me-face "black"))
 	;; Not sure what this is for
 	(lyskom-make-face 'kom-highlight-face
 	  (copy-face 'highlight 'kom-highlight-face)
-	  (set-face-foreground 'kom-highlight-face 
+	  (lyskom-set-face-foreground 'kom-highlight-face 
 			       "midnight blue"))
 	;; This face is not used at the moment (960226)
 	(lyskom-make-face 'kom-text-face
@@ -927,7 +949,7 @@ the value of  kom-tell-phrases  for fun.")
 	;; Face for the subject string
 	(lyskom-make-face 'kom-subject-face
 	  (copy-face 'kom-text-face 'kom-subject-face)
-	  (set-face-foreground 'kom-subject-face
+	  (lyskom-set-face-foreground 'kom-subject-face
 			       (if dark-bg "Khaki" "dark green")))
 	;; Not used (960226)
 	(lyskom-make-face 'kom-text-no-face
