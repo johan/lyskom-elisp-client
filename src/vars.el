@@ -149,19 +149,26 @@ otherwise => the new conf is entered after all conferences.")
   "Tells the client what flags and hooks that are to be saved in the server.
 These are the flags that are saved in the elisp-client part of the server.")
 
-(defconst lyskom-global-variables '(
+(defconst lyskom-global-boolean-variables '(
   kom-created-texts-are-read
   kom-dashed-lines
-  kom-default-mark
   kom-presence-messages
   kom-print-number-of-unread-on-entrance
   kom-read-depth-first
   kom-reading-puts-comments-in-pointers-last
 )
-  "Tells the client what flags that are to be saved in the common block.
+  "List of flags that are to be saved as booleans in the common block.
+
 Dont change this. These are defined by the protocol.")
 				  
-		     
+(defconst lyskom-global-non-boolean-variables '(
+  kom-default-mark
+)
+  "List of flags that are to be saved in the common block.
+These are the non-boolean ones. See: lyskom-global-boolean-variables.
+
+Dont change this. These are defined by the protocol.")
+
 
 ;;; ================================================================
 ;;;                  Internal variables and constants
