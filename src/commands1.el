@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.1 1995-02-23 20:41:14 linus Exp $
+;;;;; $Id: commands1.el,v 38.2 1995-03-04 14:16:06 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.1 1995-02-23 20:41:14 linus Exp $\n"))
+	      "$Id: commands1.el,v 38.2 1995-03-04 14:16:06 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -351,13 +351,13 @@ Returns t if it was possible, otherwise nil."
 		(lyskom-format 'where-on-list-q
 			       (length lyskom-membership))))))))
 
-      (lyskom-insert (if (= (conf-stat->conf-no pers-conf-stat)
-			    lyskom-pers-no)
-			 (lyskom-format 'member-in-conf
-					(conf-stat->name conf-conf-stat))
-		       (lyskom-format 'add-member-in
-				      (conf-stat->name pers-conf-stat)
-				      (conf-stat->name conf-conf-stat))))
+      (if (= (conf-stat->conf-no pers-conf-stat)
+	     lyskom-pers-no)
+	  (lyskom-format-insert 'member-in-conf
+				(conf-stat->name conf-conf-stat))
+	(lyskom-format-insert 'add-member-in
+			      (conf-stat->name pers-conf-stat)
+			      (conf-stat->name conf-conf-stat)))
       (blocking-do 'add-member 
 		   (conf-stat->conf-no conf-conf-stat)
 		   (conf-stat->conf-no pers-conf-stat)
@@ -505,13 +505,13 @@ user so instead."
 	 (lyskom-insert-string 'error-fetching-conf)
 	 (lyskom-end-of-command))
 	(t
-	 (lyskom-insert (if (= (conf-stat->conf-no pers-conf-stat)
-			       lyskom-pers-no)
-			    (lyskom-format 'unsubscribe-to
-					   (conf-stat->name conf-conf-stat))
-			  (lyskom-format 'exclude-from
-					 (conf-stat->name pers-conf-stat)
-					 (conf-stat->name conf-conf-stat))))
+	 (if (= (conf-stat->conf-no pers-conf-stat)
+		lyskom-pers-no)
+	     (lyskom-format-insert 'unsubscribe-to
+				   (conf-stat->name conf-conf-stat))
+	   (lyskom-format-insert 'exclude-from
+				 (conf-stat->name pers-conf-stat)
+				 (conf-stat->name conf-conf-stat)))
 	 (initiate-sub-member 'main 'lyskom-sub-member-answer
 			      (conf-stat->conf-no conf-conf-stat) 
 			      (conf-stat->conf-no pers-conf-stat)
@@ -1345,10 +1345,9 @@ MARK:   A number that is used as the mark."
 	      (or kom-default-mark
 		  (lyskom-read-num-range
 		   1 255 (lyskom-get-string 'what-mark) t))))
-    (lyskom-insert (if (equal mark 0)
-		       (lyskom-format 'unmarking-textno text-no)
-		     (lyskom-format 'marking-textno text-no)))
-
+    (if (equal mark 0)
+	(lyskom-format-insert 'unmarking-textno text-no)
+      (lyskom-format-insert 'marking-textno text-no))
     
     (if (blocking-do 'mark-text text-no mark)
 	(progn
@@ -1814,10 +1813,9 @@ DO-ADD: NIL if a comment should be subtracted.
 	   (if (= text-no lyskom-current-text)
 	       nil
 	     lyskom-current-text)))
-    (lyskom-insert 
      (if do-add
-	 (lyskom-format 'add-comment-to comment-text-no text-no)
-       (lyskom-format 'sub-comment-to comment-text-no text-no)))
+	 (lyskom-format-insert 'add-comment-to comment-text-no text-no)
+       (lyskom-format-insert 'sub-comment-to comment-text-no text-no))
     (if do-add
 	(initiate-add-comment 'main
 			      'lyskom-handle-command-answer
