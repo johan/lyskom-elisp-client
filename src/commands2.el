@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.0.2.1 1995-01-07 12:30:24 linus Exp $
+;;;;; $Id: commands2.el,v 38.0.2.2 1995-01-07 12:38:34 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.0.2.1 1995-01-07 12:30:24 linus Exp $\n"))
+	      "$Id: commands2.el,v 38.0.2.2 1995-01-07 12:38:34 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1444,6 +1444,7 @@ current conference to another session."
 
 ;;; =======================================================
 ;;; Listing people using regexps.
+
 (defun kom-list-re (regexp)
   "List all persons and conferences whose name matches REGEXP."
   (interactive "sSearch regexp: ")

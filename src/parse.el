@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $
+;;;;; $Id: parse.el,v 38.1.2.1 1995-01-07 12:38:43 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.1 1994-01-14 00:28:23 linus Exp $\n"))
+	      "$Id: parse.el,v 38.1.2.1 1995-01-07 12:38:43 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -667,6 +667,29 @@ Args: TEXT-NO. Value: text-stat."
   "Parse a who-info-list. Returns a vector."
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info))
   
+
+
+;;; ================================================================
+;;; Parsing things for the regexp-matching of persons
+;;;
+
+(defun lyskom-parse-conf-z-info-list ()
+  "Parse result from functions that return a conf-z-info-list."
+  (let* ((list-len (lyskom-parse-num)))
+    (lyskom-create-conf-z-info-list
+     (lyskom-parse-vector list-len 'lyskom-parse-conf-z-info))))
+
+(defun lyskom-parse-conf-z-info ()
+  "Parse a conf-z-info."
+  (lyskom-create-conf-z-info
+   (lyskom-parse-string)		;name
+   (lyskom-parse-conf-type)		;conf-type
+   (lyskom-parse-num)))			;conf-no
+
+
+
+;;; ================================================================
+;;; Initialization of the parsing buffer.
 
 (defun lyskom-init-parse ()
   "Does all initialization of the parsing routines.

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 38.1 1994-01-14 00:28:33 linus Exp $
+;;;;; $Id: services.el,v 38.1.2.1 1995-01-07 12:38:47 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 38.1 1994-01-14 00:28:33 linus Exp $\n"))
+	      "$Id: services.el,v 38.1.2.1 1995-01-07 12:38:47 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -618,6 +618,16 @@ Args: KOM-QUEUE HANDLER &rest DATA."
   (lyskom-call kom-queue lyskom-ref-no handler data
 	       'lyskom-parse-num)
   (lyskom-send-packet kom-queue (lyskom-format-objects 56)))
+
+
+(defun initiate-re-z-lookup (kom-queue handler regexp want-persons want-confs
+				       &rest data)
+  "Perform a regexp lookup.
+Args: KOM-QUEUE HANDLER REGEXP WANT-PERSONS WANT-CONFS &rest DATA."
+  (lyskom-call kom-queue lyskom-ref-no handler data
+	       'lyskom-parse-conf-z-info-list)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 74 regexp want-persons
+						       want-confs)))
 
 
 ;;; ================================================================

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 38.0 1994-01-06 01:58:08 linus Exp $
+;;;;; $Id: komtypes.el,v 38.0.2.1 1995-01-07 12:38:40 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 38.0 1994-01-06 01:58:08 linus Exp $\n"))
+	      "$Id: komtypes.el,v 38.0.2.1 1995-01-07 12:38:40 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -1574,4 +1574,88 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   (eq (car-safe object) 'SERVER-INFO))
 
 
+
 ;;; ================================================================
+;;;                            conf-z-info-list
+
+
+;;; Constructor:
+
+(defun lyskom-create-conf-z-info-list (conf-z-infos)
+  "Create a conf-z-info-list from all parameters."
+  (cons
+   'CONF-Z-INFO-LIST
+   (vector conf-z-infos)))
+
+
+;;; Selector:
+
+(defun conf-z-info-list->conf-z-infos (conf-z-info-list)
+  "Get conf-z-infos from conf-z-info-list."
+  (elt (cdr conf-z-info-list) 0))
+
+
+;;; Modifier:
+
+(defun set-conf-z-info-list->conf-z-infos (conf-z-info-list newval)
+  "Set conf-z-infos in conf-z-info-list to NEWVAL."
+  (aset (cdr conf-z-info-list) 0 newval))
+
+
+;;; Predicate:
+
+(defun lyskom-conf-z-info-list-p (object)
+  "Return t if OBJECT is a conf-z-info-list."
+  (eq (car-safe object) 'CONF-Z-INFO-LIST))
+
+;;; ================================================================
+;;;                            conf-z-info
+
+;;; Constructor:
+
+(defun lyskom-create-conf-z-info (name
+				  conf-type
+				  conf-no)
+  "Create a conf-z-info from all parameters."
+  (cons
+   'CONF-Z-INFO
+   (vector name conf-type conf-no)))
+
+
+;;; Selectors:
+
+(defun conf-z-info->name (conf-z-info)
+  "Get name from conf-z-info."
+  (elt (cdr conf-z-info) 0))
+
+(defun conf-z-info->conf-type (conf-z-info)
+  "Get conf-type from conf-z-info."
+  (elt (cdr conf-z-info) 1))
+
+(defun conf-z-info->conf-no (conf-z-info)
+  "Get conf-no from conf-z-info."
+  (elt (cdr conf-z-info) 2))
+
+
+;;; Modifiers:
+
+(defun set-conf-z-info->name (conf-z-info newval)
+  "Set name in conf-z-info to NEWVAL."
+  (aset (cdr conf-z-info) 0 newval))
+
+(defun set-conf-z-info->conf-type (conf-z-info newval)
+  "Set conf-type in conf-z-info to NEWVAL."
+  (aset (cdr conf-z-info) 1 newval))
+
+(defun set-conf-z-info->conf-no (conf-z-info newval)
+  "Set conf-no in conf-z-info to NEWVAL."
+  (aset (cdr conf-z-info) 2 newval))
+
+
+;;; Predicate:
+
+(defun lyskom-conf-z-info-p (object)
+  "Return t if OBJECT is a conf-z-info."
+  (eq (car-safe object) 'CONF-Z-INFO))
+
+;;; =======================================================
