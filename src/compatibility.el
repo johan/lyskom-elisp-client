@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.21 1999-06-29 10:20:11 byers Exp $
+;;;;; $Id: compatibility.el,v 44.22 1999-08-23 09:51:42 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.21 1999-06-29 10:20:11 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.22 1999-08-23 09:51:42 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -278,6 +278,9 @@ string to search in."
   (put 'enable-multibyte-characters 'permanent-local t)
   (make-local-variable 'enable-multibyte-characters)
   (setq enable-multibyte-characters arg))
+
+(lyskom-provide-function set-process-coding-system (proc &optional encoding decoding)
+  )
 
 ;;; ======================================================================
 ;;; Event stuff

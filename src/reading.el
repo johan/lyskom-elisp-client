@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.6 1999-06-28 10:41:08 byers Exp $
+;;;;; $Id: reading.el,v 44.7 1999-08-23 09:51:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,16 +36,16 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.6 1999-06-28 10:41:08 byers Exp $\n"))
+	      "$Id: reading.el,v 44.7 1999-08-23 09:51:44 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
   "Takes a MAP and enters all its listed text-nos in the conference CONF-STAT.
 This works by modifying the lyskom-to-do-list which in some cases
 also means modifying the lyskom-reading-list. The zero text-nos are skipped."
-  (let ((list (lyskom-list-unread map membership)))
-    (if (null list)
-	nil
+  (let ((list (lyskom-list-unread map membership))
+        (mship (lyskom-try-get-membership (conf-stat->conf-no conf-stat))))
+    (when (and list mship)
       (read-list-enter-read-info
        (lyskom-create-read-info 
 	'CONF conf-stat

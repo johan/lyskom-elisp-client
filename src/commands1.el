@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.51 1999-08-22 16:04:44 byers Exp $
+;;;;; $Id: commands1.el,v 44.52 1999-08-23 09:51:39 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.51 1999-08-22 16:04:44 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.52 1999-08-23 09:51:39 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -568,6 +568,7 @@ of the person."
     (cond ((null pers) (lyskom-insert-string 'error-fetching-person))
 	  ((null conf) (lyskom-insert-string 'error-fetching-conf))
           (passivate 
+           (lyskom-prefetch-cancel-prefetch-map (conf-stat->conf-no conf))
            (lyskom-format-insert 'unsubscribe-to conf)
            (set-membership-type->passive (membership->type mship) t)
            (setq reply (blocking-do 'set-membership-type
@@ -589,6 +590,9 @@ of the person."
 	     (read-list-delete-read-info (conf-stat->conf-no conf)
 					 lyskom-to-do-list)))
 	  (t
+           (when self
+             (lyskom-prefetch-cancel-prefetch-map (conf-stat->conf-no conf)))
+
 	   (if self
 	       (lyskom-format-insert 'unsubscribe-to conf)
 	     (lyskom-format-insert 'exclude-from pers conf))
