@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.3 1996-08-09 13:57:06 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.4 1996-08-09 20:56:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.3 1996-08-09 13:57:06 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.4 1996-08-09 20:56:44 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -382,6 +382,10 @@ i svensk datorhistoria. L\344s mer p\345 http://www.lysator.liu.se/history/")
     (checking-rcpt-done . "Kontrollerar mottagare...klart")
     (add-recipient-p . "Addera %#1P som mottagare? ")
     (matching-regexp . "M\366ten/personer som matchar '%#1s'\n")
+
+    (who-is-active-all . "Visar alla sessioner.\n")
+    (who-is-active-last-minutes . "Visar alla sessioner som har varit aktiva de senaste %#1d minuterna.\n")
+    (showing-invisibles . "Visar osynliga sessioner.\n")
 
     ; From commands2.el:
 
@@ -953,6 +957,12 @@ Text:
     (session-status . "Session %#1d \344r %#2P <%#2p>
 %#5s %#7s %#4M
 K\366r %#6D fr\345n %#3s\n")
+    (session-status-9 . "Session %#1d \344r %#2P <%#2p>
+%#5s %#7s %#4M
+K\366r %#6D fr\345n %#3s
+Uppkopplad sedan %#8s
+och har inte varit aktiv p\345 %#9d minuter\n")
+    (session-is-invisible . "Denna session \344r osynlig.\n")
     (status-for-session . "Sessionsstatus f\366r vilken person? ")
     (unknown-doing-what . "Existerar")
     (doing-where-conn . "i")

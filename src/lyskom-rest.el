@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.1 1996-08-07 20:02:23 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 43.2 1996-08-09 20:56:37 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.1 1996-08-07 20:02:23 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.2 1996-08-09 20:56:37 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1538,6 +1538,7 @@ chosen according to this"
         (lyskom-set-last-viewed)))
   (setq lyskom-executing-command t)
   (setq lyskom-current-command function)
+  (setq lyskom-current-prompt nil)
   (lyskom-insert "\n")
   (if (and (eq (window-buffer (selected-window))
                (current-buffer))
@@ -1567,7 +1568,7 @@ chosen according to this"
       (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt)))
   (setq lyskom-executing-command nil)
   (setq lyskom-current-command nil)
-  (setq lyskom-current-prompt nil)
+  (setq lyskom-current-prompt nil)	; Already set in s-o-c really
   (lyskom-scroll)
   (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
   (if (pos-visible-in-window-p (point-max) (selected-window))
@@ -1583,7 +1584,8 @@ chosen according to this"
 (defun lyskom-update-prompt ()
   "Print prompt if the client knows which command will be default.
 Set lyskom-current-prompt accordingly. Tell server what I am doing."
-  (if lyskom-dont-change-prompt
+  (if (or lyskom-dont-change-prompt
+	  lyskom-executing-command)
       nil
     (let ((to-do (lyskom-what-to-do))
 	  (prompt nil))

@@ -1,5 +1,12 @@
 Fri Aug  9 01:18:34 1996  David Kågedal  <davidk@lysator.liu.se>
 
+	* vars.el.in (kom-idle-hide): Ny variabel.
+
+	* commands1.el (lyskom-combine-username): Hantera username utan
+ 	"%".
+	(lyskom-insert-deferred-session-info): Ny funktion.
+	(lyskom-who-is-on-9): Fördröj utskrifter av static-session-info.
+
 	* swedish-strings.el (lyskom-parse-command-and-execute): Bort med
  	swascii och lite kosmetiska fixar.
 	(kom-expand-slow-command): Ny funktion.
@@ -16,6 +23,53 @@ Thu Aug  8 12:33:03 1996  David Byers  <davby@sen2.ida.liu.se>
 	* flags.el (kom-edit-options-send): Bugga inte ur om inga
  	ändringar har gjorts genom att sätta bufferten rätt. Fixade en
  	kosmesisk bug som dök upp när den riktiga blev rättad.
+
+Thu Aug  8 00:04:41 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* commands1.el (lyskom-combine-username): Ny funktion.
+
+	* services.el (initiate-get-static-session-info): Använd cache.
+
+	* cache.el (cache-get-static-session-info): Ny funktion.
+	(cache-add-static-session-info): Ny funktion.
+	(cache-del-static-session-info): Ny funktion.
+
+	* vars.el.in (lyskom-static-session-info-cache): Ny variabel.
+
+	* deferred-insert.el (lyskom-replace-deferred): Använd en sparad
+ 	kopia av lyskom-last-viewed.
+
+	* swedish-strings.el (lyskom-strings): Införde session-status-9
+ 	och session-is-invisible.
+
+	* commands1.el (lyskom-who-is-on-8): Gamla kom-who-is-on.
+	(kom-who-is-on): Numera en dispatcher till de riktiga
+ 	funktionerna.
+	(lyskom-who-is-on-9): Ny funktion.
+	(lyskom-status-session-8): Bytte namn från
+ 	lyskom-status-session-2.
+	(lyskom-status-session-9): Ny funktion.
+
+	* swedish-strings.el (lyskom-strings): La till who-is-active,
+ 	who-is-active-last-minutes och showing-invisibles.
+
+	* english-strings.el (lyskom-strings): Dito.
+
+	* komtypes.el (def-komtype): Nytt makro. Det kommer att flyttas
+ 	till macros.el senare.
+	(session-flags): Ny typ.
+	(dynamic-session-info): Ny typ.
+	(static-session-info): Ny typ.
+
+	* parse.el (lyskom-parse-session-flags): Ny funktion.
+	(lyskom-parse-dynamic-session-info): Ny funktion.
+	(lyskom-parse-dynamic-session-info-list): Ny funktion.
+
+	* services.el (initiate-who-is-on-dynamic): Ny funktion.
+	(initiate-get-static-session-info): Ny funktion.
+
+	* lyskom-rest.el (lyskom-update-prompt): Kolla om
+ 	lyskom-executing-command är satt.
 
 Wed Aug  7 20:35:59 1996  David Kågedal  <davidk@lysator.liu.se>
 

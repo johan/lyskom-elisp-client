@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 43.0 1996-08-07 16:40:41 davidk Exp $
+;;;;; $Id: parse.el,v 43.1 1996-08-09 20:56:39 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 43.0 1996-08-07 16:40:41 davidk Exp $\n"))
+	      "$Id: parse.el,v 43.1 1996-08-09 20:56:39 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -567,6 +567,32 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
    (lyskom-parse-time)))		;connect-time
 
 
+;; prot-A.txt says that this should allow more or less flags than
+;; specified, but I can't figure out how. /davidk
+(defun lyskom-parse-session-flags ()
+  "Parse session-flags."
+  (lyskom-create-session-flags
+   (lyskom-parse-1-or-0)		;invisible
+   (lyskom-parse-1-or-0)		;user_active_used
+   (lyskom-parse-1-or-0)		;user_absent
+   (lyskom-parse-1-or-0)		;flg4 
+   (lyskom-parse-1-or-0)		;flg5 
+   (lyskom-parse-1-or-0)		;flg6 
+   (lyskom-parse-1-or-0)		;flg7 
+   (lyskom-parse-1-or-0)))		;flg8 
+
+	
+(defun lyskom-parse-dynamic-session-info ()
+  "Parse a dynamic-session-info."
+  (lyskom-create-dynamic-session-info
+   (lyskom-parse-num)			;session-no
+   (lyskom-parse-num)			;pers-no
+   (lyskom-parse-num)			;working-conf
+   (lyskom-parse-num)			;idle-time
+   (lyskom-parse-session-flags)		;session-flags
+   (lyskom-parse-string)))		;doing
+
+
 ;;; High level parsing. Parsing of complete replies.
 
 
@@ -604,6 +630,19 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
 ;;;================================================================
 ;;; Parsing of datatypes with cache
 
+
+(defun lyskom-parse-static-session-info (session)
+  "Parse a static-session-info and add it to the cache."
+  (let ((info (lyskom-create-static-session-info
+	       (lyskom-parse-string)	;username
+	       (lyskom-parse-string)	;hostname
+	       (lyskom-parse-string)	;ident-user
+	       (lyskom-parse-time))))	;connection-time
+    (lyskom-save-excursion
+    	(set-buffer lyskom-buffer)
+    	(cache-add-static-session-info session info))
+    info))
+    
 
 (defun lyskom-parse-conf-stat (conf-no)
   "Parse a conf-stat, add add it in the cache.
@@ -735,6 +774,11 @@ Args: TEXT-NO. Value: text-stat."
 (defun lyskom-parse-who-info-list ()
   "Parse a who-info-list. Returns a vector."
   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-who-info))
+  
+
+(defun lyskom-parse-dynamic-session-info-list ()
+  "Parse a who-info-list. Returns a vector."
+  (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-dynamic-session-info))
   
 
 (defun lyskom-init-parse (buffer)
