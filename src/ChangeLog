@@ -1,3 +1,17 @@
+2000-05-24  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-default-collate-table): Removed \201s added 
+	by MULE Emacs. ¡ELUM ckuF
+
+	* compatibility.el (lyskom-encode-coding-char): New set of
+	compatibility definitions for Gnu Emacs.
+
+	* utilities.el (lyskom-unicase): Don't use aset on a string. Make
+	a vector from the string, use aset and make a string from the
+	vector.
+	(string-to-sequence): Stole from Gnu Emacs mule-utils.
+	(string-to-vector): Also stolen.
+
 2000-05-23  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el: Detect buggy versions of encode-coding-string

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.58 2000-05-23 15:40:01 byers Exp $
+;;;;; $Id: utilities.el,v 44.59 2000-05-24 16:55:04 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.58 2000-05-23 15:40:01 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.59 2000-05-24 16:55:04 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -266,6 +266,31 @@ of \(current-time\)."
 ;;; LysKOM utility functions
 ;;;
 
+(lyskom-provide-function string-to-sequence (string type)
+  "Convert STRING to a sequence of TYPE which contains characters in STRING.
+TYPE should be `list' or `vector'."
+  (let ((len (length string))
+	(i 0)
+	val)
+    (cond ((eq type 'list)
+	   (setq val (make-list len 0))
+	   (let ((l val))
+	     (while (< i len)
+	       (setcar l (aref string i))
+	       (setq l (cdr l) i (1+ i)))))
+	  ((eq type 'vector)
+	   (setq val (make-vector len 0))
+	   (while (< i len)
+	     (aset val i (aref string i))
+	     (setq i (1+ i))))
+	  (t
+	   (error "Invalid type: %s" type)))
+    val))
+
+(lyskom-provide-subst string-to-vector (string)
+  "Return a vector of characters in STRING."
+  (string-to-sequence string 'vector))
+
 ;;;
 ;;; WARNING!
 ;;;
@@ -275,9 +300,11 @@ of \(current-time\)."
 ;;; you're done, run through the mappings of all 256 characters to
 ;;; make sure they look OK.
 ;;;
+;;; Make sure your MULE Emacs doesnt fuck it up for you. It did for me.
+;;;
 
 (defvar lyskom-default-collate-table
-  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
+  "\000\001\002\003\004\005\006\007\010 \012\013\014\015\016\017\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ !¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿AAAA[]ACEEEEIIIIÐNOOOO\\×OUUUYYÞßAAAA[]ACEEEEIIIIðNOOOO\\÷OUUUYYþÿ"
   "String mapping lowercase to uppercase and equivalents to each others.")
 
 (defsubst lyskom-maybe-recode-string (s)
@@ -302,11 +329,12 @@ of \(current-time\)."
   (lyskom-save-excursion
    (set-buffer lyskom-buffer)
    (let ((l (length s))
-	 (s2 (encode-coding-string s lyskom-server-coding-system)))
+	 (s2 (string-to-vector 
+              (encode-coding-string s lyskom-server-coding-system))))
      (while (> l 0)
        (setq l (1- l))
        (aset s2 l (lyskom-unicase-char (aref s2 l))))
-     s2)))
+     (concat s2))))
 
 (defun lyskom-looking-at (s)
   "Version of looking-at that will work in Gnu Emacs 20.3"
@@ -618,42 +646,45 @@ If optional APPEND is non-nil, add at the end of HOOK."
 ;;; Printing
 ;;;
 ;;; XEmacs princ does not insert text properties. This function is based
-;;; on the C code for princ. It only works on strings
+;;; on the C code for princ. 
 ;;;
 
-(defun lyskom-princ (string &optional stream)
-  "Output the printed representation of STRING, any Lisp STRING.
+(defun lyskom-princ (object &optional stream)
+  "Output the printed representation of OBJECT, any Lisp OBJECT.
 No quoting characters are used; no delimiters are printed around
 the contents of strings. Text properties are retained.
 
 Output stream is STREAM, or value of standard-output, and must be a
-buffer or a marker. Function or minibuffer streams are not supported."
-  (let ((old-point nil)
-        (start-point nil)
-        (old-buffer (current-buffer)))
-    (unwind-protect
-        (progn
-          (cond ((bufferp stream) (set-buffer stream))
-                ((markerp stream) 
-                 (setq old-point (point))
-                 (set-buffer (marker-buffer stream))
-                 (goto-char stream)
-                 (setq start-point (point)))
-                ((null stream)
-                 (cond ((bufferp standard-output) (set-buffer standard-output))
-                       ((markerp standard-output) 
-                        (setq old-point (point))
-                        (set-buffer (marker-buffer standard-output))
-                        (goto-char standard-output)
-                        (setq start-point (point))))))
+buffer or a marker. Function or minibuffer streams are not supported
+for strings."
+  (if (not (stringp object))
+      (princ object stream)
+    (let ((old-point nil)
+          (start-point nil)
+          (old-buffer (current-buffer)))
+      (unwind-protect
+          (progn
+            (cond ((bufferp stream) (set-buffer stream))
+                  ((markerp stream) 
+                   (setq old-point (point))
+                   (set-buffer (marker-buffer stream))
+                   (goto-char stream)
+                   (setq start-point (point)))
+                  ((null stream)
+                   (cond ((bufferp standard-output) (set-buffer standard-output))
+                         ((markerp standard-output) 
+                          (setq old-point (point))
+                          (set-buffer (marker-buffer standard-output))
+                          (goto-char standard-output)
+                          (setq start-point (point))))))
 
-          (insert string))
-      (cond ((markerp stream) 
-             (set-marker stream (point))
-             (if (>= old-point start-point)
-                 (goto-char (+ old-point (- (point) start-point)))
-               (goto-char old-point))))
-      (set-buffer old-buffer))))
+            (insert object))
+        (cond ((markerp stream) 
+               (set-marker stream (point))
+               (if (>= old-point start-point)
+                   (goto-char (+ old-point (- (point) start-point)))
+                 (goto-char old-point))))
+        (set-buffer old-buffer)))))
 
 
 ;;; ======================================================================
