@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.4 1993-05-21 15:43:44 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.5 1993-06-01 19:40:14 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.4 1993-05-21 15:43:44 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.5 1993-06-01 19:40:14 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -273,7 +273,7 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 
 (defun kom-initial-digit-view ()
   (interactive)
-  (if (fboundp 'map-keymap)
+  (if (boundp 'unread-command-event)
       (setq unread-command-event last-command-event)
     (setq unread-command-char last-command-char))
   (call-interactively 'kom-view nil))

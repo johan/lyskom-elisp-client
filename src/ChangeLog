@@ -1,3 +1,14 @@
+Tue Jun  1 21:27:09 1993  Linus Tolke Y  (linus@mauritz.lysator.liu.se)
+
+	* completing-read.el, edit-text.el, lyskom-rest.el
+	  (unread-command-event): (boundp 'unread-command-event) is
+	  used instead of (fboundp 'map-keymap) to detect lucid.
+	* edit-text.el, completing-read.el (map-keymap): The function
+	  called by map-keymap is called with a key event. Not the key
+	  sequence. Now we make it into a sequence before calling
+	  define-key. Now works with lucid and emacs19 with and
+	  without the lucid compatibility library.
+
 Sat May 29 00:15:14 1993  Linus Tolke Y  (linus@mauritz)
 
 	* async.el (lyskom-async-new-text): reinserted lost call to
