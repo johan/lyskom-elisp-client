@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-1.00.el,v 39.0 1996-03-14 18:16:02 davidk Exp $
+;;;;; $Id: lyskom-1.00.el,v 40.0 1996-03-26 08:29:26 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
