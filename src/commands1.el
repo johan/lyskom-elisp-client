@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.160 2002-12-13 22:16:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.161 2003-01-01 03:27:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.160 2002-12-13 22:16:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.161 2003-01-01 03:27:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3226,23 +3226,11 @@ WHO-INFOS that are potential sessions."
   "Jumps all comments to the current text. Descends recursively in comment tree.
 The three is truncated if we encounter an older text.
 If optional arg TEXT-NO is present then jump all comments to that text instead."
-  (interactive (list
-		(cond
-		 ((null current-prefix-arg)
-		  lyskom-current-text)
-		 ((integerp current-prefix-arg)
-		  current-prefix-arg)
-		 ((and (listp current-prefix-arg)
-		       (integerp (car current-prefix-arg))
-		       (null (cdr current-prefix-arg)))
-		  (car current-prefix-arg))
-		 (t
-		  (signal 'lyskom-internal-error '(kom-jump))))))
+  (interactive (list (lyskom-read-text-no-prefix-arg 'jump-from-text)))
   (cond ((and (null current-prefix-arg)
-              (eq 'REVIEW-TREE (read-info->type
-                                (read-list->first
-                                 lyskom-reading-list))))
+              (eq 'REVIEW-TREE (read-info->type (read-list->first lyskom-reading-list))))
          (lyskom-start-of-command 'kom-jump)
+         (lyskom-format-insert 'jumping-from-text-review)
          (unwind-protect
              (progn 
                (set-read-list-del-first lyskom-reading-list)
@@ -3250,6 +3238,7 @@ If optional arg TEXT-NO is present then jump all comments to that text instead."
            (lyskom-end-of-command)))
         (text-no
          (lyskom-start-of-command 'kom-jump)
+         (lyskom-format-insert 'jumping-from-text text-no)
          (initiate-get-text-stat 'main 'lyskom-jump text-no t)
          (lyskom-run 'main 'lyskom-end-of-command))
         (t (lyskom-start-of-command 'kom-jump)
