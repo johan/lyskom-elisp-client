@@ -1,3 +1,40 @@
+2003-12-04  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-read-number): Use lyskom-string-to-int so
+	we never create floats by mistake.
+
+	More features for padding and truncating formatted strings:
+	* commands1.el (lyskom-print-comment-like-aux): Don't print FAQ
+	links if the data in the aux-item is invalid.
+
+	* utilities.el (lyskom-truncate-string-to-width): New simpler
+	implementation that only supports the features we use and supports
+	the TRAILER argument.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Support < > and = to
+	specify stuff in pad-length. Support a ... trailer for truncated
+	strings.
+
+	Improve handling of invalid numeric data:
+	* aux-items.el (lyskom-status-print-faq-text): Handle invalid data
+	in aux item.
+	(lyskom-faq-for-conf-action): Use lyskom-string-to-int to convert
+	data and throw an error on invalid format.
+	(lyskom-aux-item-validate): New function.
+	(lyskom-status-print-faq-text): Validate aux-item data before
+	printing.
+	(lyskom-print-faq-for-conf): Same here.
+	(lyskom-print-send-comments-to): Same here.
+	(lyskom-print-recommended-conf): Same here.
+
+	* utilities.el (lyskom-string-to-int): New function.
+	(lyskom-integer-conversion-error): New error symbol.
+
+	Fix bug 1229:
+	* commands2.el (kom-list-new-conferences): The data got from the
+	server is a conf-stat, not an uconf-stat. Treat it as such...
+	(lyskom-list-new-conferences): Same here.
+
 2003-12-03  David Byers  <davby@ida-gw.sysinst.ida.liu.se>
 
 	* names.el: Changed some names and tpyos.

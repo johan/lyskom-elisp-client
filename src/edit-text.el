@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.115 2003-08-28 19:28:15 byers Exp $
+;;;;; $Id: edit-text.el,v 44.116 2003-12-05 00:04:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.115 2003-08-28 19:28:15 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.116 2003-12-05 00:04:21 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1102,9 +1102,7 @@ given, prepend each line with your commenting prefix (or '>')."
   (interactive (list
 		(cond
 		 ((null current-prefix-arg)
-		  (string-to-int 
-		   (lyskom-read-from-minibuffer 
-		    (format "%s" (lyskom-get-string 'which-text-include)))))
+                  (lyskom-read-number 'which-text-include))
 		 ((prefix-numeric-value current-prefix-arg)))))
   (let ((buffer (current-buffer))
         (window (selected-window)))

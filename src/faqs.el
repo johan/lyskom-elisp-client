@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.18 2003-11-17 21:03:49 byers Exp $
+;;;;; $Id: faqs.el,v 44.19 2003-12-05 00:04:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.18 2003-11-17 21:03:49 byers Exp $\n"))
+              "$Id: faqs.el,v 44.19 2003-12-05 00:04:21 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -145,15 +145,17 @@ do this. To add a FAQ, use `kom-add-server-faq'."
 
 (defun lyskom-del-faq (conf-stat)
   (let ((faq-list 
-         (mapcar (lambda (aux)
-                   (cons (aux-item->data aux)
-                         (aux-item->aux-no aux)))
-                 (lyskom-get-aux-item
-                  (if (null conf-stat)
-                      (server-info->aux-item-list
-                       (blocking-do 'get-server-info))
-                    (conf-stat->aux-items conf-stat))
-                  14)))
+         (delq nil
+               (mapcar (lambda (aux)
+                         (and (lyskom-string-to-int (aux-item->data aux))
+                              (cons (aux-item->data aux)
+                                    (aux-item->aux-no aux))))
+                       (lyskom-get-aux-item
+                        (if (null conf-stat)
+                            (server-info->aux-item-list
+                             (blocking-do 'get-server-info))
+                          (conf-stat->aux-items conf-stat))
+                        14))))
         (text-no nil))
 
     (cond
@@ -221,9 +223,10 @@ do this. To add a FAQ, use `kom-add-server-faq'."
 
 
 (defun lyskom-unread-faq (conf-stat aux-list)
-  (let ((faq-list (mapcar (lambda (aux)
-                            (string-to-int (aux-item->data aux)))
-                          (lyskom-get-aux-item aux-list 14))))
+  (let ((faq-list (delq nil 
+                        (mapcar (lambda (aux)
+                                  (lyskom-string-to-int (aux-item->data aux)))
+                                (lyskom-get-aux-item aux-list 14)))))
     (if (null faq-list) 
         (lyskom-format-insert 'conf-has-no-faq conf-stat)
       (lyskom-traverse text-no faq-list
@@ -232,9 +235,10 @@ do this. To add a FAQ, use `kom-add-server-faq'."
          (lyskom-mark-unread text-no))))))
 
 (defun lyskom-review-faq (conf-stat aux-list)
-  (let ((faq-list (mapcar (lambda (aux)
-                            (string-to-int (aux-item->data aux)))
-                          (lyskom-get-aux-item aux-list 14))))
+  (let ((faq-list (delq nil
+                        (mapcar (lambda (aux)
+                                  (lyskom-string-to-int (aux-item->data aux)))
+                                (lyskom-get-aux-item aux-list 14)))))
     (cond 
      ((null faq-list) 
       (lyskom-format-insert 'conf-has-no-faq conf-stat))
@@ -290,10 +294,13 @@ create a new FAQ."
   "Change a FAQ for a conference."
   ;; Get a list of FAQ texts and corresponding aux-item-numbers
   ;; Get the FAQ to change
-  (let* ((faq-list (mapcar (lambda (x)
-                             (cons (aux-item->data x)
-                                   (aux-item->aux-no x)))
-                           aux-list))
+  (let* ((faq-list
+          (delq nil 
+                (mapcar (lambda (x)
+                          (and (lyskom-string-to-int (aux-item->data x))
+                               (cons (aux-item->data x)
+                                     (aux-item->aux-no x))))
+                        aux-list)))
          (text-no-aux (cond ((= (length faq-list) 1) (car faq-list))
                             ((null faq-list) nil)
                             (t (lyskom-string-assoc
@@ -419,11 +426,13 @@ create a new FAQ."
                        (conf-stat->aux-items conf-stat)
                      (server-info->aux-item-list lyskom-server-info)))
          (faq-list
-          (filter-list (lambda (faq)
-                         (not (lyskom-faq-is-read conf-no faq)))
-                       (mapcar (lambda (aux)
-                                 (string-to-int (aux-item->data aux)))
-                               (lyskom-get-aux-item aux-list 14)))))
+          (filter-list 
+           (lambda (faq)
+             (not (lyskom-faq-is-read conf-no faq)))
+           (delq nil
+                 (mapcar (lambda (aux)
+                           (lyskom-string-to-int (aux-item->data aux)))
+                         (lyskom-get-aux-item aux-list 14))))))
 
     ;; Filter out FAQs that don't exist
     (let ((collector (make-collector)))
@@ -473,11 +482,13 @@ create a new FAQ."
 
 
 (defun lyskom-do-list-faqs (conf-stat faq-list)
+  (setq faq-list (delq nil 
+                       (mapcar (lambda (aux)
+                                 (lyskom-string-to-int (aux-item->data aux)))
+                               faq-list)))
   (cond (faq-list
          (lyskom-format-insert 'all-faqs-header 
                                (and conf-stat
                                     (conf-stat->conf-no conf-stat)))
-         (lyskom-do-list-summary (mapcar (lambda (faq)
-                                           (string-to-int (aux-item->data faq)))
-                                         faq-list)))
+         (lyskom-do-list-summary faq-list))
         (t (lyskom-format-insert 'conf-has-no-faq conf-stat))))

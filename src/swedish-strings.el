@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.353 2003-12-03 08:47:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.354 2003-12-05 00:04:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.353 2003-12-03 08:47:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.354 2003-12-05 00:04:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -660,9 +660,13 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
     (conf-mx-refuse-import . "Vägra import av:                         %#1s %#2s\n")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
+    (bad-recommended-conf-aux . "Rekommenderat möte:                     \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s\n")
     (status-read-faq-aux-item . "Läst FAQ:                 %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
+    (bad-status-read-faq-aux-item . "Läst FAQ:                              \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:            %#1M %#2s\n")
+    (bad-status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:           \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s\n")
     (status-send-comments-to . "Dirigera om kommentarer till:           %#1M <%#1m> %#2s\n")
+    (bad-status-send-comments-to . "Dirigera om kommentarer till:          \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1517,8 +1521,10 @@ Uppkopplad sedan %#8s%#9s")
     
     (conf-to-list-faqs . "Lista FAQ för vilket möte: ")
     (faq-for-conf-aux . "Texten är FAQ för %#1M <%#1m>")
+    (bad-faq-for-conf-aux . "Texten är FAQ: \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s")
     (faq-for-server-aux . "Texten är FAQ för LysKOM-servern") 
     (faq-in-text-aux . "FAQ i inlägg:                   %10#1n %#2D")
+    (bad-faq-in-text-aux . "FAQ i inlägg:                            \"%<20...#1s\" %[%#2@[ogiltigt]%] %#3s")
     (conf-to-add-faq . "Vilket möte vill du lägga till en FAQ för? ")
     (text-to-add-as-faq . "Vilken text vill du lägga till som FAQ? ")
     (text-to-change-as-faq . "Vilken FAQ vill du ändra? ")
@@ -1527,7 +1533,7 @@ Uppkopplad sedan %#8s%#9s")
     (text-to-del-as-faq . "Vilken text vill du ta bort som FAQ? ")
     (deleting-faq . "Tar bort inlägg %#1n som FAQ för %#2?b%[%#2M%]%[servern%]...")
     (conf-has-no-faq . "%#1?b%[%#1M%]%[Servern%] har ingen FAQ\n")
-    (unread-which-faq . "Återse FAQ för vilket möte? ")
+    (unread-which-faq . "Oläsmarkera FAQ för vilket möte? ")
     (view-which-faq . "Återse FAQ för vilket möte? ")
     (review-faq-for-r . "Återse FAQ för %#1?b%[%#1M%]%[servern%].\n")
     (set-faq-for-conf-done . "Text %#3n är nu FAQ för %#1?b%[%#1M%]%[servern%].\n")
