@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 43.1 1996-08-09 20:56:24 davidk Exp $
+;;;;; $Id: async.el,v 43.2 1996-08-23 10:38:06 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 43.1 1996-08-09 20:56:24 davidk Exp $\n"))
+	      "$Id: async.el,v 43.2 1996-08-23 10:38:06 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -59,8 +59,8 @@ this function shall be with current-buffer the BUFFER."
       (let* ((text-no (lyskom-parse-num))
 	     (text-stat (lyskom-parse-text-stat text-no)))
 	(lyskom-save-excursion
-	  (set-buffer buffer)
-	  (lyskom-async-new-text text-stat)))) ;
+	 (set-buffer buffer)
+	 (lyskom-async-new-text text-stat)))) ;
 
      ((eq msg-no 1)			; Logout (obsolete)
       (lyskom-skip-tokens tokens))
@@ -74,125 +74,129 @@ this function shall be with current-buffer the BUFFER."
      ((eq msg-no 4)			; Conference created
       (lyskom-skip-tokens tokens))
 
-     ((eq msg-no 5)             ; A person or conference has changed name.
+     ((eq msg-no 5)			; A person or conference has
+					; changed name.
       (let ((conf-no (lyskom-parse-num))
 	    (old-name (lyskom-parse-string))
 	    (new-name (lyskom-parse-string)))
 	(lyskom-save-excursion
-	  (set-buffer buffer)
-	  (if (and lyskom-pers-no (= conf-no lyskom-pers-no))
-	      (lyskom-format-insert-before-prompt 
-	       'you-changed-name-to
-	       new-name
-	       (lyskom-default-button 'conf conf-no)))
-	  (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
-	  (cond
-	   ((lyskom-is-in-minibuffer))
-	   (kom-presence-messages
-	    (lyskom-message "%s" (lyskom-format 'name-has-changed-to-name
-						old-name new-name))))
-	  (cond
-	   (kom-presence-messages-in-buffer
-	    (lyskom-format-insert-before-prompt
-	      'name-has-changed-to-name-r 
-	      old-name 
+	 (set-buffer buffer)
+	 (if (and lyskom-pers-no (= conf-no lyskom-pers-no))
+	     (lyskom-format-insert-before-prompt 
+	      'you-changed-name-to
 	      new-name
-	      (lyskom-default-button 'conf conf-no)))))))
-
+	      (lyskom-default-button 'conf conf-no)))
+	 ;; (cache-del-conf-stat conf-no) ;+++Borde {ndra i cachen i st{llet.
+	 (let ((cached-stat (cache-get-conf-stat conf-no)))
+	   (if cached-stat
+	       (set-conf-stat->name cached-stat new-name)))
+	 (cond
+	  ((lyskom-is-in-minibuffer))
+	  (kom-presence-messages
+	   (lyskom-message "%s" (lyskom-format 'name-has-changed-to-name
+					       old-name new-name))))
+	 (cond
+	  (kom-presence-messages-in-buffer
+	   (lyskom-format-insert-before-prompt
+	    'name-has-changed-to-name-r 
+	    old-name 
+	    new-name
+	    (lyskom-default-button 'conf conf-no)))))))
+     
      ((eq msg-no 6)			;i_am_on - something is moving
       (let ((info (lyskom-parse-who-info)))
 	(lyskom-save-excursion
-	  (set-buffer buffer)
-	  (if (or (not lyskom-pers-no)
-		  (zerop lyskom-pers-no))
-	      nil
-	    (cache-add-who-info info)))))
-
+	 (set-buffer buffer)
+	 (if (or (not lyskom-pers-no)
+		 (zerop lyskom-pers-no))
+	     nil
+	   (cache-add-who-info info)))))
+     
      ((eq msg-no 7)			; Database is syncing.
       (lyskom-save-excursion
-	(set-buffer buffer)
-	;; I removed the test for kom-presence-messages /david
-	(if (not (lyskom-is-in-minibuffer))
-	    (lyskom-message "%s" (lyskom-get-string 'database-sync)))
-	(setq mode-line-process (lyskom-get-string 'mode-line-saving))
-	(setq lyskom-is-saving t)
-	;; I guess the following two lines could be replaced by
-	;; force-mode-line-update in a modern emacs.
-	(set-buffer-modified-p (buffer-modified-p))
-	(sit-for 0)
-	(if (not lyskom-pending-calls)
-	    (initiate-get-time 'async nil))))
-
+       (set-buffer buffer)
+       ;; I removed the test for kom-presence-messages /david
+       (if (not (lyskom-is-in-minibuffer))
+	   (lyskom-message "%s" (lyskom-get-string 'database-sync)))
+       (setq mode-line-process (lyskom-get-string 'mode-line-saving))
+       (setq lyskom-is-saving t)
+       ;; I guess the following two lines could be replaced by
+       ;; force-mode-line-update in a modern emacs.
+       (set-buffer-modified-p (buffer-modified-p))
+       (sit-for 0)
+       (if (not lyskom-pending-calls)
+	   (initiate-get-time 'async nil))))
+     
      ((eq msg-no 8)			; Forced leave conference
       (lyskom-skip-tokens tokens))
-
+     
      ((eq msg-no 9)			; A person has logged in
       (let ((pers-no (lyskom-parse-num))
 	    (session-no (lyskom-parse-num)))
 	(lyskom-save-excursion
-	  (set-buffer buffer)
-	  (if (and lyskom-pers-no
-		   (not (zerop lyskom-pers-no))
-		   (/= pers-no lyskom-pers-no))
+	 (set-buffer buffer)
+	 (if (and lyskom-pers-no
+		  (not (zerop lyskom-pers-no))
+		  (/= pers-no lyskom-pers-no))
 					; Don't show myself.
-	      (initiate-get-conf-stat 'follow
-				      'lyskom-show-logged-in-person
-				      pers-no))
-	  (if (and lyskom-pers-no
-		   (not (zerop lyskom-pers-no))
-		   lyskom-who-info-buffer-is-on)
-	      (initiate-get-session-info 'who-buffer 'cache-add-session-info
-					 session-no))
-	  )))
+	     (initiate-get-conf-stat 'follow
+				     'lyskom-show-logged-in-person
+				     pers-no))
+	 (if (and lyskom-pers-no
+		  (not (zerop lyskom-pers-no))
+		  lyskom-who-info-buffer-is-on)
+	     (initiate-get-session-info 'who-buffer 'cache-add-session-info
+					session-no))
+	 )))
 
-; msg-no 10 is the old broadcast message. No longer used.
-
+     ;; msg-no 10 is the old broadcast message. No longer used.
+     
      ((eq msg-no 11)
       (lyskom-save-excursion
        (set-buffer buffer)
        (lyskom-insert-before-prompt (lyskom-get-string 'lyskom-is-full))
-;       (if (and (eq major-mode 'lyskom-mode)
-;		(not (listp lyskom-time-last-command))
-;		kom-auto-quit-when-idle)
-;	   (progn
-;	     (lyskom-insert-before-prompt
-;	      (lyskom-get-string 'session-auto-ended))
-;	      (kom-quit 1)
-))
-	   
-
+;;;       (if (and (eq major-mode 'lyskom-mode)
+;;;		(not (listp lyskom-time-last-command))
+;;;		kom-auto-quit-when-idle)
+;;;	   (progn
+;;;	     (lyskom-insert-before-prompt
+;;;	      (lyskom-get-string 'session-auto-ended))
+;;;	      (kom-quit 1)
+       ))
+     
+     
      ((eq msg-no 12)			; Message to the user (or everybody)
       (let ((recipient (lyskom-parse-num))
 	    (sender (lyskom-parse-num))
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	   (if (zerop recipient)
-	       (initiate-get-conf-stat 'async
-				       'lyskom-handle-personal-message
-				       sender
-				       0
-				       message)
-	     (lyskom-collect 'async)
-	     (initiate-get-conf-stat 'async nil sender)
-	     (initiate-get-conf-stat 'async nil recipient)
-	     (lyskom-use 'async 'lyskom-handle-personal-message message)))))
-
+	 (if (zerop recipient)
+	     (initiate-get-conf-stat 'async
+				     'lyskom-handle-personal-message
+				     sender
+				     0
+				     message)
+	   (lyskom-collect 'async)
+	   (initiate-get-conf-stat 'async nil sender)
+	   (initiate-get-conf-stat 'async nil recipient)
+	   (lyskom-use 'async 'lyskom-handle-personal-message message)))))
+     
      ((eq msg-no 13)			; New logout
       (let ((pers-no (lyskom-parse-num))
 	    (session-no (lyskom-parse-num)))
 	(lyskom-save-excursion
-	  (set-buffer buffer)
-	  (if (and lyskom-pers-no
-		   (not (zerop lyskom-pers-no))
-		   (/= lyskom-pers-no pers-no)
-		   (or kom-presence-messages
-		       kom-presence-messages-in-buffer))
-	      (initiate-get-conf-stat 'follow
-				      'lyskom-show-logged-out-person
-				      pers-no session-no))
-	  (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
-	      (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
+	 (set-buffer buffer)
+	 (if (and lyskom-pers-no
+		  (not (zerop lyskom-pers-no))
+		  (/= lyskom-pers-no pers-no)
+		  (or kom-presence-messages
+		      kom-presence-messages-in-buffer))
+	     (initiate-get-conf-stat 'follow
+				     'lyskom-show-logged-out-person
+				     pers-no session-no))
+	 (if (and lyskom-pers-no (not (zerop lyskom-pers-no)))
+	     (lyskom-run 'who-buffer 'cache-del-who-info session-no)))))
 
      (t
       (lyskom-skip-tokens tokens)))))

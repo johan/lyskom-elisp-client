@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.12 1996-08-22 06:58:02 byers Exp $
+;;;;; $Id: swedish-strings.el,v 43.13 1996-08-23 10:38:20 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.12 1996-08-22 06:58:02 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.13 1996-08-23 10:38:20 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -665,7 +665,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "idag")
     (yesterday . "ig\345r")
-    (no-such-text-no . "Det finns ingen s\345dan text. (%#1n)\n")
+    (no-such-text-no . "Det finns inget s\345dant inl\344gg. (%#1:n)\n")
 
     (head-Subject . "\304rende: ")
     (Recipient . "Mottagare")
