@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.41 2003-12-05 00:04:20 byers Exp $
+;;;;; $Id: aux-items.el,v 44.42 2004-02-24 12:23:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.41 2003-12-05 00:04:20 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.42 2004-02-24 12:23:16 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -335,7 +335,7 @@ Invalid tests are silently ignored."
 
 (def-aux-item send-comments-to 33
   (text-name aux-send-comments-to-name)
-  (info . lyskom-print-aux-item-info)
+  (info . lyskom-aux-item-info)
   (status-print . lyskom-print-send-comments-to))
 
 (def-aux-item world-readable 34
