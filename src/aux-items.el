@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.40 2003-08-16 16:58:44 byers Exp $
+;;;;; $Id: aux-items.el,v 44.41 2003-12-05 00:04:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.40 2003-08-16 16:58:44 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.41 2003-12-05 00:04:20 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -143,6 +143,19 @@ in ADDED added."
     (nconc (filter-list (lambda (el) (not (memq (aux-item->aux-no el) new-nos)))
                         item-list)
            added)))
+
+(defun lyskom-aux-item-validate (data &rest tests)
+  "Validata aux-item data.
+DATA is data to validate. TESTS are the tests to use.
+A test can be a function or a regular expression to match.
+Invalid tests are silently ignored."
+  (not (lyskom-traverse test tests
+         (condition-case nil
+             (unless
+                 (cond ((stringp test) (string-match test data))
+                       ((functionp test) (funcall test data)))
+               (lyskom-traverse-break t))
+           (error (lyskom-traverse-break t))))))
 
 
 ;;; ======================================================================
@@ -430,6 +443,10 @@ in ADDED added."
                        pers)
                   pers
                 (aux-item->creator item))))
+
+    ;; We use string-to-int here since we handle floats in 
+    ;; lyskom-format.
+
     (concat
      (cond ((string-match "^P\\([0-9]+\\)" (aux-item->data item))
             (lyskom-format 'cross-reference-pers-aux 
@@ -457,6 +474,8 @@ in ADDED added."
      )))
 
 (defun lyskom-status-print-cross-reference (item &optional obj pers)
+  ;; We use string-to-int here since we handle floats in 
+  ;; lyskom-format.
   (lyskom-insert 
    (concat
     (cond ((string-match "^P\\([0-9]+\\)" (aux-item->data item))
@@ -527,8 +546,11 @@ in ADDED added."
 (defun lyskom-faq-for-conf-action (text-stat)
   (let ((faqs (text-stat-find-aux text-stat 28)))
     (lyskom-traverse aux faqs
-      (lyskom-register-read-faq (string-to-int (aux-item->data aux))
-                                (text-stat->text-no text-stat)))))
+      (condition-case nil
+          (lyskom-register-read-faq (lyskom-string-to-int
+                                     (aux-item->data aux) t)
+                                    (text-stat->text-no text-stat))
+       (lyskom-integer-conversion-error nil)))))
 
 (defun lyskom-request-confirmation-action (text-stat)
   (let ((confirmations (text-stat-find-aux text-stat 7))
@@ -565,6 +587,8 @@ in ADDED added."
 
 
 (defun lyskom-print-redirect (item &optional obj)
+  ;; We use string-to-int here since we handle floats in 
+  ;; lyskom-format.
   (concat
    (cond ((string-match "^E-mail:\\(.*\\)$" (aux-item->data item))
           (lyskom-format 'redirect-email-aux 
@@ -639,28 +663,38 @@ in ADDED added."
                              (lyskom-print-faq-format-subject nil nil (defer-info->data defer-info)))))
 
 (defun lyskom-status-print-faq-text (item &optional obj)
-  (let* ((text-no (string-to-int (aux-item->data item)))
-         (subject (if kom-deferred-printing
-                      (lyskom-create-defer-info 'get-text-stat
-                                                text-no
-                                                'lyskom-deferred-print-faq
-                                                nil nil nil
-                                                text-no)
-                    (blocking-do-multiple ((text (get-text text-no))
-                                           (text-stat (get-text-stat text-no)))
-                      (lyskom-print-faq-format-subject text text-stat text-no)))))
-    (lyskom-format-insert 'faq-in-text-aux 
-                          text-no
-                          subject)
-    (lyskom-insert (lyskom-aux-item-terminating-button item obj))
-    (lyskom-insert "\n")))
+  (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+      (let* ((text-no (string-to-int (aux-item->data item)))
+             (subject (if kom-deferred-printing
+                          (lyskom-create-defer-info 'get-text-stat
+                                                    text-no
+                                                    'lyskom-deferred-print-faq
+                                                    nil nil nil
+                                                    text-no)
+                        (blocking-do-multiple ((text (get-text text-no))
+                                               (text-stat (get-text-stat text-no)))
+                          (lyskom-print-faq-format-subject text text-stat text-no)))))
+        (lyskom-format-insert 'faq-in-text-aux 
+                              text-no
+                              subject)
+        (lyskom-insert (lyskom-aux-item-terminating-button item obj)))
+    (lyskom-format-insert 'bad-faq-in-text-aux
+                          (aux-item->data item)
+                          `(face ,kom-warning-face)
+                          (lyskom-aux-item-terminating-button item obj)))
+  (lyskom-insert "\n"))
 
 (defun lyskom-print-faq-for-conf (item &optional obj)
-  (let ((conf-no (string-to-int (aux-item->data item))))
-    (concat 
-     (cond ((zerop conf-no) (lyskom-get-string 'faq-for-server-aux))
-          (t (lyskom-format 'faq-for-conf-aux conf-no)))
-     (lyskom-aux-item-terminating-button item obj))))
+  (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+      (let ((conf-no (string-to-int (aux-item->data item))))
+        (concat 
+         (cond ((zerop conf-no) (lyskom-get-string 'faq-for-server-aux))
+               (t (lyskom-format 'faq-for-conf-aux conf-no)))
+         (lyskom-aux-item-terminating-button item obj)))
+    (lyskom-format 'bad-faq-for-conf-aux 
+                   (aux-item->data item)
+                   `(face ,kom-warning-face)
+                   (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-creating-software (item &optional obj)
   (when (or kom-show-creating-software
@@ -670,11 +704,15 @@ in ADDED added."
      (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-send-comments-to (item &optional obj)
-  (when (string-match "^\\([0-9]+\\)" (aux-item->data item))
-    (let ((conf-no (string-to-int (match-string 1 (aux-item->data item)))))
-      (lyskom-format-insert 'status-send-comments-to
-                            conf-no 
-                            (lyskom-aux-item-terminating-button item obj)))))
+  (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+      (let ((conf-no (string-to-int (aux-item->data item))))
+        (lyskom-format-insert 'status-send-comments-to
+                              conf-no 
+                              (lyskom-aux-item-terminating-button item obj)))
+    (lyskom-format-insert 'bad-status-send-comments-to
+                          (aux-item->data item)
+                          `(face ,kom-warning-face)
+                          (lyskom-aux-item-terminating-button item obj))))
 
 
 
@@ -705,28 +743,41 @@ in ADDED added."
                           (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-recommended-conf (item &optional obj)
-  (let ((conf-no (string-to-int (if (string-match " " (aux-item->data item))
-                                    (substring (aux-item->data item) 0 (match-beginning 0))
-                                  (aux-item->data item)))))
-    (lyskom-format-insert 'recommended-conf-aux
-                          conf-no
+  (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+      (let ((conf-no (string-to-int (aux-item->data item))))
+        (lyskom-format-insert 'recommended-conf-aux
+                              conf-no
+                              (lyskom-aux-item-terminating-button item obj)))
+    (lyskom-format-insert 'bad-recommended-conf-aux
+                          (aux-item->data item)
+                          `(face ,kom-warning-face)
                           (lyskom-aux-item-terminating-button item obj))))
 
 (defun lyskom-print-elisp-client-read-faq (item &optional obj)
   (when (lyskom-extended-status-information 'read-faq)
     (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
-      (let ((conf-no (string-to-int (match-string 1 (aux-item->data item))))
-            (text-no (string-to-int (match-string 2 (aux-item->data item)))))
-        (lyskom-format-insert 'status-read-faq-aux-item 
-                              conf-no 
-                              text-no
-                              (lyskom-aux-item-terminating-button item obj))))))
+      (condition-case nil
+          (let ((conf-no (lyskom-string-to-int (match-string 1 (aux-item->data item)) t))
+                (text-no (lyskom-string-to-int (match-string 2 (aux-item->data item)) t)))
+            (lyskom-format-insert 'status-read-faq-aux-item 
+                                  conf-no 
+                                  text-no
+                                  (lyskom-aux-item-terminating-button item obj)))
+        (lyskom-integer-conversion-error
+         (lyskom-format-insert 'bad-status-read-faq-aux-item
+                               (aux-item->data item)
+                               `(face ,kom-warning-face)
+                               (lyskom-aux-item-terminating-button item obj)))))))
 
 (defun lyskom-print-elisp-client-rejected-invitation (item &optional obj)
-  (when (string-match "^\\([0-9]+\\)" (aux-item->data item))
-    (let ((conf-no (string-to-int (match-string 1 (aux-item->data item)))))
-      (lyskom-format-insert 'status-rejected-recommendation-aux-item
-                            conf-no 
-                            (lyskom-aux-item-terminating-button item obj)))))
+  (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+      (let ((conf-no (string-to-int (aux-item->data item))))
+        (lyskom-format-insert 'status-rejected-recommendation-aux-item
+                              conf-no 
+                              (lyskom-aux-item-terminating-button item obj)))
+    (lyskom-format-insert 'bad-status-rejected-recommendation-aux-item
+                          (aux-item->data item)
+                          `(face ,kom-warning-face)
+                          (lyskom-aux-item-terminating-button item obj))))
 
 (provide 'lyskom-aux-items)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.312 2003-12-03 08:47:13 byers Exp $
+;;;;; $Id: english-strings.el,v 44.313 2003-12-05 00:04:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.312 2003-12-03 08:47:13 byers Exp $"))
+              "$Id: english-strings.el,v 44.313 2003-12-05 00:04:21 byers Exp $"))
 
 
 ;;; ================================================================
@@ -662,9 +662,13 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (conf-mx-refuse-import . "Refuse import of:                        %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
+    (bad-recommended-conf-aux . "Recommended conference:                  \"%<20...#1s\" %[%#2@[invalid]%] %#3s\n")
     (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
+    (bad-status-read-faq-aux-item . "Read FAQ:                                \"%<20...#1s\" %[%#2@[invalid]%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Rejected recommendation for:             %#1M %#2s\n")
+    (bad-status-rejected-recommendation-aux-item . "Rejected recommendation for:             \"%<20...#1s\" %[%#2@[invalid]%] %#3s\n")
     (status-send-comments-to . "Redirect comments to:                    %#1M <%#1m> %#2s\n")
+    (bad-status-send-comments-to . "Redirect comments to:                    \"%<20...#1s\" %[%#2@[invalid]%] %#3s\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1483,8 +1487,10 @@ On since %#8s%#9s")
 
     (conf-to-list-faqs . "List FAQ for which conference: ")
     (faq-for-conf-aux . "FAQ for %#1M <%#1m>")
+    (bad-faq-for-conf-aux . "FAQ: \"%<20...#1s\" %[%#2@[invalid]%] %#3s")
     (faq-for-server-aux . "FAQ for the LysKOM-server") 
     (faq-in-text-aux . "FAQ in text:                 %10#1n %#2D")
+    (bad-faq-in-text-aux . "FAQ in text:                             \"%<20...#1s %[%#2@[invalid]%] %#3s")
     (conf-to-add-faq . "Which conference do you want to add an FAQ for? ")
     (text-to-add-as-faq . "Which text is the new FAQ? ")
     (text-to-change-as-faq . "Which FAQ do you want to change? ")

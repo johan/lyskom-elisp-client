@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.23 2003-07-28 20:02:33 byers Exp $
+;;;;; $Id: check-strings.el,v 44.24 2003-12-05 00:04:20 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -211,9 +211,9 @@ STRING is the string."
 		(setq result (cons 
 			      (concat
 			       (match-string 1 string)
-			       (match-string 4 string)
-			       (match-string 7 string)
-			       (match-string 9 string))
+			       (match-string 5 string)
+			       (match-string 8 string)
+			       (match-string 19 string))
 			      result))))
     result))
 

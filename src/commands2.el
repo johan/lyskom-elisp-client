@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.195 2003-11-17 22:56:24 byers Exp $
+;;;;; $Id: commands2.el,v 44.196 2003-12-05 00:04:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.195 2003-11-17 22:56:24 byers Exp $\n"))
+              "$Id: commands2.el,v 44.196 2003-12-05 00:04:20 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3534,7 +3534,7 @@ was given."
                                'conferences
                                (lambda (el)
                                  (not (conf-type->letterbox
-                                       (uconf-stat->conf-type el))))))
+                                       (conf-stat->conf-type el))))))
 
 (def-kom-command kom-list-new-persons ()
   "List persons created since the last time this command
@@ -3544,7 +3544,7 @@ was given."
                                'persons
                                (lambda (el)
                                  (conf-type->letterbox
-                                  (uconf-stat->conf-type el)))))
+                                  (conf-stat->conf-type el)))))
 
 (defun lyskom-list-new-conferences (varsym obj filter)
   "List conferences created since the last time this command
@@ -3573,7 +3573,7 @@ was given."
              (lyskom-format-insert "%5#1m %#2c %#1M\n"
                                    conf
                                    (lyskom-list-conf-membership-char
-                                    (uconf-stat->conf-no conf)))
+                                    (conf-stat->conf-no conf)))
              (set-marker (cdr count) (point))))
          conf-no filter count time-string)
         (setq conf-no (1+ conf-no)))
@@ -3728,7 +3728,6 @@ get full documentation.
 
       (insert
        (lyskom-truncate-string-to-width
-
         (if (string-match "\\(\r\\|\n\\)" doc)
             (substring doc 0 (string-match "\\(\r\\|\n\\)" doc))
           doc)

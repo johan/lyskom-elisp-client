@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.147 2003-08-27 11:02:59 byers Exp $
+;;;;; $Id: utilities.el,v 44.148 2003-12-05 00:04:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.147 2003-08-27 11:02:59 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.148 2003-12-05 00:04:22 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -415,56 +415,37 @@ point."
 
 ;; Stolen from Gnu Emacs
 
-(defun lyskom-truncate-string-to-width (str end-column &optional start-column padding)
+(defun lyskom-truncate-string-to-width (str end-column &optional trailer)
   "Truncate string STR to end at column END-COLUMN.
-The optional 2nd arg START-COLUMN, if non-nil, specifies
-the starting column; that means to return the characters occupying
-columns START-COLUMN ... END-COLUMN of STR.
 
-The optional 3rd arg PADDING, if non-nil, specifies a padding character
-to add at the end of the result if STR doesn't reach column END-COLUMN,
-or if END-COLUMN comes in the middle of a character in STR.
-PADDING is also added at the beginning of the result
-if column START-COLUMN appears in the middle of a character in STR.
+If optional TRAILER is non-nil, it is a string to append if STR is
+truncated. The total width will still be at most END-COLUMN."
+  (when (and trailer (>= (lyskom-string-width trailer) end-column))
+    (setq trailer nil))
 
-If PADDING is nil, no padding is added in these cases, so
-the resulting string may be narrower than END-COLUMN."
-  (or start-column
-      (setq start-column 0))
-  (let ((len (length str))
-	(idx 0)
-	(column 0)
-	(head-padding "") (tail-padding "")
-	ch last-column last-idx from-idx)
-    (condition-case nil
-	(while (< column start-column)
-	  (setq ch (aref str idx)
-		column (+ column (lyskom-char-width ch))
-		idx (1+ idx)))
-      (args-out-of-range (setq idx len)))
-    (if (< column start-column)
-	(if padding (make-string end-column padding) "")
-      (if (and padding (> column start-column))
-	  (setq head-padding (make-string (- column start-column) padding)))
-      (setq from-idx idx)
-      (if (< end-column column)
-	  (setq idx from-idx)
-	(condition-case nil
-	    (while (< column end-column)
-	      (setq last-column column
-		    last-idx idx
-		    ch (aref str idx)
-		    column (+ column (lyskom-char-width ch))
-		    idx (1+ idx)))
-	  (args-out-of-range (setq idx len)))
-	(if (> column end-column)
-	    (setq column last-column idx last-idx))
-	(if (and padding (< column end-column))
-	    (setq tail-padding (make-string (- end-column column) padding))))
-      (setq str (substring str from-idx idx))
-      (if padding
-	  (concat head-padding str tail-padding)
-	str))))
+  (cond ((< (lyskom-string-width str) end-column) str)
+        (t (when trailer 
+             (setq end-column (- end-column (lyskom-string-width trailer))))
+           (let ((idx 0)
+                 (column 0)
+                 (len (length str))
+                 ch last-column last-idx)
+
+             (condition-case nil
+                 (while (< column end-column)
+                   (setq last-column column
+                         last-idx idx
+                         ch (aref str idx)
+                         column (+ column (lyskom-char-width ch))
+                         idx (1+ idx)))
+               (args-out-of-range (setq idx len)))
+             (if (> column end-column)
+                 (setq column last-column idx last-idx))
+             (setq str (substring str 0 idx))
+             (when trailer
+               (setq str (concat str trailer)))
+             str))))
+
 
 
 (defun lyskom-buffer-display-message (string &optional buffer)
@@ -2179,5 +2160,20 @@ suitable for use as initial input in a magic minibuffer."
          (make-variable-buffer-local 'lyskom-server-uses-utc)
          (setq lyskom-server-uses-utc val)))
      lyskom-buffer)))
+
+(put 'lyskom-integer-conversion-error 'error-conditions '(lyskom-integer-conversion-error lyskom-error error))
+(put 'lyskom-integer-conversion-error 'error-message "Invalid integer conversion")
+
+(defun lyskom-string-to-int (string &optional signal-error)
+  "Convert STRING to an integer by parsing it as a decimal number.
+This does not parse floating point numbers.
+It ignores leading spaces and tabs."
+  (or (let ((tmp (string-to-int string)))
+        (cond ((eq tmp 0) 
+               (and (string-match "^\\s-*0+\\s-*" string) 0))
+              ((integerp tmp) tmp)
+              (t nil)))
+      (and signal-error
+           (signal 'lyskom-integer-conversion-error string))))
 
 (put 'lyskom-with-magic-minibuffer 'edebug-form-spec '(body))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.205 2003-12-03 08:47:13 byers Exp $
+;;;;; $Id: commands1.el,v 44.206 2003-12-05 00:04:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.205 2003-12-03 08:47:13 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.206 2003-12-05 00:04:20 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -239,26 +239,27 @@ This command accepts text number prefix arguments (see
       (lyskom-print-comment-like-aux faq conf-stat))))  
 
 (defun lyskom-print-comment-like-aux (item object)
-  (let* ((text-no (string-to-int (aux-item->data item)))
-         (text-stat nil)
-         (text nil))
-    (unless kom-deferred-printing
-      (blocking-do-multiple ((x-text (get-text text-no))
-                             (x-text-stat (get-text-stat text-no)))
-        (setq text-stat x-text-stat text x-text)))
+  (when (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
+    (let* ((text-no (string-to-int (aux-item->data item)))
+           (text-stat nil)
+           (text nil))
+      (unless kom-deferred-printing
+        (blocking-do-multiple ((x-text (get-text text-no))
+                               (x-text-stat (get-text-stat text-no)))
+          (setq text-stat x-text-stat text x-text)))
 
-    (cond ((or text-stat (not kom-deferred-printing))
-           (lyskom-insert-comment-like-aux item text-no text-stat text object))
-          (t (let ((defer-info (lyskom-create-defer-info
-                                'get-text-stat
-                                text-no
-                                'lyskom-insert-deferred-comment-like-aux
-                                (point-max-marker)
-                                (length lyskom-defer-indicator)
-                                nil     ; Filled in later
-                                (list item object text-no))))
-               (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
-               (lyskom-defer-insertion defer-info))))))
+      (cond ((or text-stat (not kom-deferred-printing))
+             (lyskom-insert-comment-like-aux item text-no text-stat text object))
+            (t (let ((defer-info (lyskom-create-defer-info
+                                  'get-text-stat
+                                  text-no
+                                  'lyskom-insert-deferred-comment-like-aux
+                                  (point-max-marker)
+                                  (length lyskom-defer-indicator)
+                                  nil   ; Filled in later
+                                  (list item object text-no))))
+                 (lyskom-format-insert "%#1s\n" lyskom-defer-indicator)
+                 (lyskom-defer-insertion defer-info)))))))
 
 (defun lyskom-insert-comment-like-aux (item text-no text-stat text object)
   (let* ((author (if text-stat (text-stat->author text-stat) nil))
