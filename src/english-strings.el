@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.7 1996-10-11 01:05:57 davidk Exp $
+;;;;; $Id: english-strings.el,v 44.8 1996-10-11 11:15:25 nisse Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.7 1996-10-11 01:05:57 davidk Exp $"))
+              "$Id: english-strings.el,v 44.8 1996-10-11 11:15:25 nisse Exp $"))
 
 
 
@@ -88,29 +88,30 @@
   (define-key lyskom-edit-mode-map "\C-ca?" 'lyskom-help))
 
 
-(defvar lyskom-header-separator
-  (substitute-command-keys
-   "\\<lyskom-edit-mode-map>\
---- Write below. \
-Post: \\[kom-edit-send], \
-Kill: \\[kom-edit-quit], \
-Help: \\[describe-mode] ---")
-  "*String to separate headers from text body.")
-
-(defvar lyskom-swascii-header-separator nil
-  "The swascii version of lyskom-header-separator.")
-
-(defvar lyskom-header-subject "Subject: "
-  "*String to prompt for subject in the edit buffer.")
-
-
-(defvar lyskom-swascii-header-subject nil
-  "The swascii version of lyskom-header-subject.")
+;;(defvar lyskom-header-separator
+;;  (substitute-command-keys
+;;   "\\<lyskom-edit-mode-map>\
+;;--- Write below. \
+;;Post: \\[kom-edit-send], \
+;;Kill: \\[kom-edit-quit], \
+;;Help: \\[describe-mode] ---")
+;;  "*String to separate headers from text body.")
+;;
+;;(defvar lyskom-swascii-header-separator nil
+;;  "The swascii version of lyskom-header-separator.")
+;;
+;;(defvar lyskom-header-subject "Subject: "
+;;  "*String to prompt for subject in the edit buffer.")
+;;
+;;
+;;(defvar lyskom-swascii-header-subject nil
+;;  "The swascii version of lyskom-header-subject.")
 
 (defconst lyskom-strings-missing
   '(cgdag sixjune holdnose))
 
-(defconst lyskom-strings 
+;;; Formely known as lyskom-strings
+(lyskom-define-language 'lyskom-message 'en 
   '(
     ; From vars.el: 
     ; From komtypes.el: nil
@@ -227,7 +228,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (nope . "didn't work.\n")
 
     (cant-find-supervisor . "Can't find supervisor of %#1M.\n")
-    (is-read-protected-contact-supervisor . "%#1M \344r closed.
+    (is-read-protected-contact-supervisor . "%#1M is closed.
 Send a letter to  %#2P to apply for membership.")
 
     (conf-does-not-exist . "\nThe conference doesn't exist.\n")
@@ -613,6 +614,12 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (recipient-prefix . "[Rr]")
     (carbon-copy . "Carbon copy:")
     (carbon-copy-prefix . "[Cc]\\([Aa]\\|[Cc]\\)")
+    (header-subject . "Subject: ")
+    (header-separator . "\\<lyskom-edit-mode-map>\
+--- Write below. \
+Post: \\[kom-edit-send], \
+Kill: \\[kom-edit-quit], \
+Help: \\[describe-mode] ---")
     (text-mass . "%#4s%#1s\n%#2s\n%#3s")
     (comment-to-by . "%#1s to article %#2d%#3s.\n")
     (already-sent . "You have already posted this article. Post it anyway? ")
@@ -977,16 +984,15 @@ On since %#8s%#9s")
     ;; From slow.el
     (no-such-command . "There is no such command.\n")
     (command-completions . "You may mean one of the following:\n %#1s\n")
-    )
-  "Assoc list containing pairs of atoms and strings")
-
+    ))
 
 
 ;;; ================================================================
 ;;;              The commands and their associated functions
 
 
-(defconst lyskom-commands
+;;; Formely known as lyskom-commands
+(lyskom-define-language 'lyskom-command 'en
   '(
     (describe-mode            . "Help")
     (kom-slow-mode            . "Long commands")
@@ -1104,15 +1110,34 @@ On since %#8s%#9s")
     (kom-remote-autoreply     . "Remote control ansaphone")
     (kom-remote-set-message   . "Remote control change ansaphone message")
     (kom-remote-list-messages . "Remote control list messages")
-    (kom-remote-erase-messages. "Remote control erase messages")
+    (kom-remote-erase-messages . "Remote control erase messages")
     (kom-remote-quit          . "Remote control quit")
 
     (kom-status-session . "Status (of a) session")
-    )
-  "A list of LysKOM-commands recognized by the extended parser.")
+    ))
 
-(defvar lyskom-swascii-commands nil
-  "The swascii-versions of lyskom-commands.")
+(lyskom-define-language 'lyskom-menu 'en
+  '((lyskom    . "LysKOM")
+    (read      . "Read")
+    (dont-read . "Jump")
+    (write     . "Write")
+    (conference . "Conference")
+    (person    . "Person")
+    (move      . "Go")
+    (info      . "About")
+    (send      . "Send message")
+    (recievers . "Recievers")
+    (commented . "Commented")
+    (kom-edit-send . "Send")
+    (kom-edit-send-anonymous . "Send anonymously")
+    (kom-edit-quit . "Throw away") 
+    (kom-edit-add-recipient . "Add recipient")
+    (kom-edit-add-copy . "Add carbon copy")
+    (kom-edit-show-commented . "Review commented")
+    (kom-edit-insert-commented . "Cite commented")))
+
+;;(defvar lyskom-swascii-commands nil
+;;  "The swascii-versions of lyskom-commands.")
 
 (defvar lyskom-onoff-table
   '(("on" . on) ("off" . off))
@@ -1141,10 +1166,10 @@ On since %#8s%#9s")
         (skip-tree . "Skip comments"))
       "A list of legal filter actions an their textual representation.")
                                
-(defvar lyskom-swascii-filter-actions nil
-  "The swascii-versions of lyskom-filter-actions.")
-(defvar lyskom-swascii-filter-what nil
-  "The swascii version of lyskom-filter-what")
+;;(defvar lyskom-swascii-filter-actions nil
+;;  "The swascii-versions of lyskom-filter-actions.")
+;;(defvar lyskom-swascii-filter-what nil
+;;  "The swascii version of lyskom-filter-what")
 
 
 (defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|today\\|yesterday\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ line\\(s\\)?/ "
