@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.53 1997-11-14 21:37:27 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.54 1997-11-30 17:19:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -82,7 +82,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.53 1997-11-14 21:37:27 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.54 1997-11-30 17:19:22 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -136,7 +136,8 @@
     (lyskom-insert-string 'nope)
     (lyskom-format-insert 'error-code
 			  (lyskom-get-error-text lyskom-errno)
-			  lyskom-errno)))
+			  lyskom-errno))
+  answer)
 
 
 ;;; ----------------------------------------------------------------
@@ -2331,7 +2332,8 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 If the full membership hase been read do nothing."
   (let ((total (pers-stat->no-of-confs (blocking-do 'get-pers-stat
 						    lyskom-pers-no))))
-    (while (not (lyskom-membership-is-read))
+    (while (and (not (lyskom-membership-is-read))
+                (numberp lyskom-membership-is-read))
       (lyskom-message (lyskom-get-string 'waiting-for-membership)
 		      lyskom-membership-is-read
 		      total)
@@ -2462,15 +2464,19 @@ VECTOR has to be sorted with regard to <."
      (t (lyskom-binsearch-internal num vector split last+1)))))
 
       
-(defun lyskom-read-num-range (low high &optional prompt show-range default)
+(defun lyskom-read-num-range (low high &optional prompt show-range default history nildefault)
   "Read a number from the minibuffer.
 Args: LOW HIGH &optional PROMPT SHOW-RANGE with default value DEFAULT.
 The read number must be within the range [LOW HIGH].
 If SHOW-RANGE is non-nil, the prompt will include the range for information
-to the user."
+to the user.
+HISTORY is the history list to use.
+If NILDEFAULT is non-nil, return nil if the user enters an empty string"
   (let ((number (1- low)))
-    (while (or (< number low)
-	       (> number high))
+    (while (and (not (and nildefault
+                          (null number)))
+                (or (< number low)
+                    (> number high)))
       (setq number (lyskom-read-number 
 		    (concat (if prompt
 				prompt
@@ -2478,22 +2484,26 @@ to the user."
 			    (if show-range
 				(format "(%d-%d) " low high)
 			      ""))
-		    default)))
+		    default
+                    history
+                    nildefault)))
     number))
 
 
-(defun lyskom-read-number (&optional prompt default history)
+(defun lyskom-read-number (&optional prompt default history nildefault)
   "Read a number from the minibuffer. Optional arguments: PROMPT DEFAULT
 If DEFAULT is non-nil, it is written within parenthesis after the prompt.
 DEFAULT could also be of the type which (interactive P) generates.
-If quit is typed it executes lyskom-end-of-command."
+If NILDEFAULT is non-null then typing return will cause the function 
+to return nil."
   (let ((numdefault (cond ((null default) nil)
 			  ((integerp default) default)
 			  ((listp default) (car default))
 			  (t nil)))
 	(number nil)
-	(numstr nil))
-    (while (not number)
+	(numstr nil)
+        (done nil))
+    (while (not done)
       (setq numstr
 	    (prog1
 		(lyskom-read-string
@@ -2505,11 +2515,13 @@ If quit is typed it executes lyskom-end-of-command."
 			   " "))
                  nil
                  history)))
-      (cond ((and (string= numstr "") 
-		  numdefault)
-	     (setq number numdefault))
+      (cond ((and (string= numstr "") numdefault)
+	     (setq number numdefault done t))
+            ((and (string= numstr "") nildefault)
+             (setq number nil done t))
 	    ((string-match "\\`[0-9]+\\'" numstr)
-	     (setq number (string-to-int numstr)))
+	     (setq number (string-to-int numstr))
+             (setq done number))
 	    (t (beep))))
     number))
 

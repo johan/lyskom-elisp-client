@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.44 1997-11-14 21:37:31 byers Exp $
+;;;;; $Id: vars.el.in,v 44.45 1997-11-30 17:19:44 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.44 1997-11-14 21:37:31 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.45 1997-11-30 17:19:44 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -965,7 +965,7 @@ Users are encouraged to use their best sense of humor."
     kom-list-news
     kom-list-re
     kom-membership
-    ;; kom-list-marks
+    kom-list-marks
     kom-postpone
     kom-set-session-priority
     kom-prioritize
@@ -1792,6 +1792,15 @@ should be dynamically bound whenever it needs to be used.")
 ;;; client is loaded, i.e. by lyskom-tell-phrases-validate that causes
 ;;; an error if any keyword is not present or any non-keyword is
 ;;; present.
+
+(defvar kom-tell-phrases nil
+  "*A list of phrases describing what the client is doing. Each element in
+the list is a pair \(KEY . PHRASE\) where KEY is one of the keywords in
+lykom-tell-phrases-validation-keyword-list and PHRASE is the phrase to
+sent to the server then the client is doing what KEY describes.
+
+If the value of this variable is nil, suitable defaults for the currently
+selected language will be selected.")
 
 (defconst lyskom-tell-phrases-validation-keyword-list
   '(

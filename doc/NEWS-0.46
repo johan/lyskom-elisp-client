@@ -1,0 +1,135 @@
+
+		       Nyheter i lyskom.el 0.46
+		       ========================
+
+Version 0.46 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.46.tar.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.46 samt under namnet NEWS-0.46 i
+tar-arkivet.
+
+                                David Byers   <byers@lysator.liu.se>
+                                David Kågedal <davidk@lysator.liu.se>
+
+
+* Försämringar
+
+** En hel del bakåtkompatibilitet är borta. Det går antagligen inte
+   att köra Elispklienten mot lyskomd 1.7.0 eller äldre.
+
+
+* Fitjurs, förbättringar och andra förändringar
+
+** Stöd för tilläggsinformation på inlägg och möten. Se nedan.
+
+** Lista markeringar ger en lista av alla markerade inlägg.
+   Ett numeriskt prefixargument väljer vilken markeringstyp man vill
+   lista. 
+
+** Om man skickar brev till ett möte man är medlem i så läggs man inte
+   längre till som mottagare.
+
+** Man kan ge prefixargument när man skriver inlägg. C-u i gör att
+   elispklienten frågar efter mottagare. Kommandot skiljer sig från
+   att skicka brev genom att avsändaren inte läggs till som mottagare.
+   Man kan ge numeriskt prefix också. Då blir mottagaren för brevet
+   mötet med det nummer man angav, vare sig mötet finns eller inte och
+   helt oavsett om man kan skriva inlägg i mötet eller inte.
+
+** Om man försöker radera ett inlägg som är markerat av någon så
+   gnäller elispklienten lite, och begär att man bekräftar det.
+
+** Om man raderar ett inlägg som man själv har markerat så avmarkeras
+   det samtidigt.
+
+** Elispklienten frågar om man vill lägga till en kommenterad
+   författare som mottagare enbart om man har rätt att skicka brev
+   till den mottagaren.
+
+** Frågan om alla mottagare till ett inlägg är relevanta ställs enbart
+   om det finns mer än en fullvärdig mottagare. Extrakopiemottagare
+   och för kännedom räknas inte.
+
+** Man kan markera med markering 0 nu.
+
+
+* Tilläggsinformation
+
+I den senaste versionen av LysKOM-protokollet finns det möjlighet att
+knyta godtycklig information till inlägg och till möten. Den största
+ändringen i elispklienten från version 0.45.1 är möjligheten att
+utnyttja detta. Det har tillkommit ett antal nya kommandon för detta i
+LysKOM-bufferten och i inläggsbufferten.
+
+** Tilläggsinformation i LysKOM-bufferten
+
+*** Sätt personlig etikett sätter en personlig etikett på ett möte, en
+    person eller ett inlägg. Denna etikett visas oftast istället för
+    person- eller mötesnamnet eller inläggets ärenderad.
+
+*** Efter tilläggsinformation visas en liten knapp "[*]". Om man
+    klickar på den så visas full information om tillägget.
+
+*** Om man håller nere högerknappen över en såan knapp så går det även
+    att radera tillägget.
+
+*** Om ett inlägg är märkt med typinformation så används den
+    informationen för att formattera inlägget. 
+
+*** Om författaren till ett inlägg har begärt att ingen skall
+    kommentera inlägget så ber elispklienten om bekräftelse innan man
+    kommenterar.
+
+*** Om författaren till ett inlägg har begärt personliga svar och man
+    försöker kommentera inlägget så frågar klienten om man vill skriva
+    personligt svar istället.
+
+*** Om författaren till ett inlägg har begärt att alla som läser det
+    skall bekräfta läsning så frågar elispklienten om man vill
+    bekräfta varje gång inlägget visas (tills man har bekräftat det
+    förstås.)
+
+
+** Tilläggsinformation i inläggsbufferten
+
+*** Det går att skapa korsreferenser till andra inlägg eller möten
+    genom att trycka på C-c C-a C-x. Korsreferenser är bra när man
+    vill hänvisa till ett annat inlägg eller till ett möte. De visas
+    samlat, och eftersom klienterna vet vad de är så kan de lätt visa
+    det som hänvisas till.
+
+*** Genom att trycka på C-c C-x C-b så kan man begära att alla som
+    läser inlägget bekräftar detta. Elispklienten frågar om man vill
+    bekräfta läsning när ett sådant inlägg visas.
+
+*** Om man inte vill att andra skall kommentera ens inlägg så kan man
+    trycka på C-c C-x C-n för att begära detta. Detta är rådgivande,
+    inte tvingande. Det går fortfarande att kommentera inlägget. I
+    elispklienten måste man bekräfta att man vill kommentera ett
+    inlägg med denna markering.
+
+*** Om man enbart vill ha personliga svar till ett inlägg så kan man
+    begära detta genom att trycka på C-c C-x C-p. Det går fortfarande
+    att skriva vanliga kommentarer, men klienter som känner till den
+    här markeringen bör göra det lite svårare.
+
+*** Genom att manipulera menyn som visas när man håller ned höger
+    musknapp ovanför den lilla haken i vänstermarginalen framför
+    tilläggsinformationen så kan man växla vissa parametrar. Hemlig
+    innebär att tillägget inte visas för någon annan, anonym att vem
+    som lade till tillägget inte visas för någon annan (informationen
+    lagras dock i servern) och ärvd innebär att tillägget kopieras
+    till kommentarer som skrivs till inlägget.
+
+    Notera att servern helt godtyckligt kan ta bort eller lägga till
+    flaggor, utan någon som helst varning.
+
+
+Bugfixar
+
+** Om man inte har w3 installerat så försöker klienten inte längre
+   anropa w3 för att formattera HTML.
+
+** Vi använder lite färre gamla anrop som vi inte borde använda. 

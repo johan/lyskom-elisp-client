@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.21 1997-10-23 12:18:55 byers Exp $
+;;;;; $Id: commands2.el,v 44.22 1997-11-30 17:19:04 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.21 1997-10-23 12:18:55 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.22 1997-11-30 17:19:04 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -882,6 +882,91 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 						   text-no)
 			    subject))))
 
+
+
+;;; ============================================================
+;;; kom-list-marks                      Lista markeringar
+;;; Author: David Byers
+
+(def-kom-command kom-list-marks (&optional which-mark)
+  (interactive "P")
+  (when (not (numberp which-mark))
+    (setq which-mark (lyskom-read-num-range 
+                      0 255
+                      (lyskom-get-string 'list-which-mark) nil nil nil t)))
+  (let ((marks
+         (sort (listify-vector (blocking-do 'get-marks))
+               (lambda (a b) (< (mark->mark-type a) (mark->mark-type b))))))
+  (let ((time (blocking-do 'get-time))
+	(author-width (/ (- (lyskom-window-width) 26) 3)))
+    
+    ;; Start fetching all text-stats and text to list them.
+    (lyskom-format-insert (concat "%-4#6s%-8#1s%-6#2s%-4#3s %-"
+				  (int-to-string author-width)
+				  "#4s  %#5s\n")
+			  (lyskom-get-string 'Texts)
+			  (lyskom-get-string 'Date)
+			  (lyskom-get-string 'Lines)
+			  (lyskom-get-string 'Author)
+			  (lyskom-get-string 'Subject)
+                          (lyskom-get-string 'mark-type))
+;    (lyskom-insert (make-string (1- (window-width)) ?-))
+;    (lyskom-insert "\n")
+    (lyskom-traverse
+	mark marks
+      (when (or (null which-mark)
+                (eq (mark->mark-type mark) which-mark))
+        (let* ((text-no (mark->text-no mark))
+               (text-stat (blocking-do 'get-text-stat text-no))
+               (text (blocking-do 'get-text text-no))
+	    ;; We could do som optimization here. 
+	    ;; We really don't need the whole text.
+	    )
+          (lyskom-print-mark-summary-line mark text-stat text text-no 
+                                     (time->year time) (time->yday time))
+          (sit-for 0))))
+;    (lyskom-insert (make-string (1- (window-width)) ?-))
+;    (lyskom-insert "\n")
+    )))
+                           
+(defun lyskom-print-mark-summary-line (mark text-stat text text-no year day)
+  "Handle the info, fetch the author and print it.
+Args: TEXT-STAT TEXT TEXT-NO YEAR DAY.
+The year and day is there to be able to choose format on the day.
+Format is 23:29 if the text is written today. Otherwise 04-01."
+  (lyskom-format-insert "%3#1d " (mark->mark-type mark))
+  (if (not (and text-stat text))	;+++ B{ttre felhantering.
+      (lyskom-format-insert 'could-not-read text-no)
+    (let* ((lines (text-stat->no-of-lines text-stat))
+	   (txt (text->text-mass text))
+	   (eos (string-match (regexp-quote "\n") txt))
+	   (subject (substring txt 0 eos))
+	   ;; length of the number %%%%%% :8
+	   ;; length for time is: 6
+	   (time (text-stat->creation-time text-stat))
+	   (time (if (and (= year (time->year time))
+			  (= day (time->yday time)))
+		     (format "%02d:%02d" (time->hour time)
+			     		 (time->min time))
+		   (format "%02d-%02d" (1+ (time->mon time))
+			   	       (time->mday time))))
+	   ;; length for lines is: 4
+	   ;; We split the rest between author and subject
+	   (namelen (/ (- (lyskom-window-width) 26) 3))
+	   (subjlen (/ (* (- (lyskom-window-width) 26) 2) 3))
+	   (format-string (concat "%=-8#1n%#2s%4#3d  %=-"
+				  (int-to-string namelen)
+				  "#4P  %[%#5@%=-"
+				  (int-to-string subjlen)
+				  "#6r%]\n")))
+      (lyskom-format-insert format-string
+			    text-no
+			    time
+			    lines
+			    (text-stat->author text-stat)
+			    (lyskom-default-button 'text
+						   text-no)
+			    subject))))
 
 
 ;;; ============================================================

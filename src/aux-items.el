@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.2 1997-10-24 10:50:19 davidk Exp $
+;;;;; $Id: aux-items.el,v 44.3 1997-11-30 17:18:56 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.2 1997-10-24 10:50:19 davidk Exp $\n"))
+	      "$Id: aux-items.el,v 44.3 1997-11-30 17:18:56 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -62,7 +62,7 @@
   (let ((items (text-stat->aux-items text-stat)))
     (while items
       (when (and (car items) 
-                 (not (aux-item-flag->deleted (aux-item->flags items))))
+                 (not (aux-item-flags->deleted (aux-item->flags items))))
         (funcall fn (car items)))
       (setq items (cdr items)))))
 

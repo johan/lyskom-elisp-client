@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.16 1997-09-26 10:07:51 byers Exp $
+;;;;; $Id: option-edit.el,v 44.17 1997-11-30 17:19:26 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.16 1997-09-26 10:07:51 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.17 1997-11-30 17:19:26 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -405,7 +405,7 @@ customize buffer but do not save them to the server."
     (kom-user-prompt-format-executing (string))
     (kom-cite-string (string))
     (kom-created-texts-are-read (toggle (yes no)))
-    (kom-default-mark (choice ((number (1 255) 
+    (kom-default-mark (choice ((number (0 255) 
                                        :tag selected-mark
                                        :format "%[%t%] (%v)"
                                        :size 0)

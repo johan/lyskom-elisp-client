@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.29 1997-10-23 12:18:51 byers Exp $
+;;;;; $Id: commands1.el,v 44.30 1997-11-30 17:18:59 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.29 1997-10-23 12:18:51 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.30 1997-11-30 17:18:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -116,13 +116,44 @@
   (let ((text-no (cond ((null text-no-arg) 0)
 		       ((integerp text-no-arg) text-no-arg)
 		       ((listp text-no-arg) (car text-no-arg))
-		       (t 0))))
+		       (t 0)))
+        (do-delete t))
+
     (if (zerop text-no)
 	(setq text-no 
 	      (lyskom-read-number (lyskom-get-string 'what-text-to-delete)
 				  lyskom-current-text)))
-    (lyskom-format-insert 'deleting-text text-no)
-    (lyskom-report-command-answer (blocking-do 'delete-text text-no))))
+    (let* ((text-stat (blocking-do 'get-text-stat text-no))
+           (num-marks (text-stat->no-of-marks text-stat))
+           (is-marked-by-me (cache-text-is-marked text-no)))
+                          
+      (cond ((null text-stat) 
+             (lyskom-report-command-answer nil)
+             (setq do-delete nil))
+
+            ((> (text-stat->no-of-marks text-stat) 0)
+             (setq do-delete
+                   (lyskom-j-or-n-p 
+                    (lyskom-format 'delete-marked-text
+		       (if (> num-marks 0)
+			    (if is-marked-by-me
+				(if (= num-marks 1)
+				    (lyskom-get-string 'delete-marked-by-you)
+				  (if (= num-marks 2)
+				      (lyskom-get-string 
+				       'marked-by-you-and-one)
+				    (lyskom-format 'delete-marked-by-you-and-several
+						   (1- num-marks))))
+			      (if (= num-marks 1)
+				  (lyskom-get-string 'delete-marked-by-one)
+				(lyskom-format 'delete-marked-by-several
+					       num-marks)))))))))
+      (when do-delete
+        (lyskom-format-insert 'deleting-text text-no)
+        (when (lyskom-report-command-answer 
+               (blocking-do 'delete-text text-no))
+          (lyskom-unmark-text text-no nil))))))
+
 
 
 ;;; ================================================================
@@ -269,8 +300,11 @@ as TYPE. If no such misc-info, return NIL"
                                     (lyskom-create-misc-list 'recpt tono)
                                     "" "")
                 (lyskom-edit-text lyskom-proc
-                                  (lyskom-create-misc-list 'recpt tono
-                                                           'recpt lyskom-pers-no)
+                                  (if (lyskom-get-membership tono)
+                                      (lyskom-create-misc-list 'recpt tono)
+                                      (lyskom-create-misc-list 
+                                       'recpt tono
+                                       'recpt lyskom-pers-no))
                                   "" "")))))
     (quit (signal 'quit "Quitting in letter"))))
 
@@ -1235,19 +1269,23 @@ Args: CONF-STAT MEMBERSHIP"
 ;;; Author: ???
 
 
-(def-kom-command kom-write-text ()
+(def-kom-command kom-write-text (&optional arg)
   "write a text."
-  (interactive)
-;  (lyskom-start-of-command 'kom-write-text)
-  (if (zerop lyskom-current-conf)
-      (progn
+  (interactive "P")
+  (let ((recpt nil))
+    (cond ((listp arg) (setq recpt
+                         (lyskom-read-conf-no
+                          (lyskom-get-string 'who-send-text-to)
+                          '(all) nil nil t)))
+          ((numberp arg) (setq recpt arg))
+          (t (setq recpt lyskom-current-conf)))
+    (if (zerop recpt)
 	(lyskom-insert-string 'no-in-conf)
-	(lyskom-end-of-command))
-    (lyskom-tell-internat 'kom-tell-write-text)
-    (lyskom-edit-text lyskom-proc
-		      (lyskom-create-misc-list 'recpt
-					       lyskom-current-conf)
-		      "" "")))
+      (lyskom-tell-internat 'kom-tell-write-text)
+      (lyskom-edit-text lyskom-proc
+                        (lyskom-create-misc-list 'recpt
+                                                 recpt)
+                        "" ""))))
 
 
 ;;; ================================================================
@@ -1402,22 +1440,20 @@ If the argument TEXT-NO-ARG is non-nil, the user has used a prefix
 command argument. If kom-defaul-mark is a number it is used as the
 mark. If it is nil the user is prompted for the mark to use."
   (interactive "P")
-  (lyskom-mark-text text-no-arg (lyskom-get-string 'text-to-mark) 1))
+  (lyskom-mark-text text-no-arg (lyskom-get-string 'text-to-mark)))
 
 
 (def-kom-command kom-unmark-text (text-no-arg)
   "Unmark a text. If the argument TEXT-NO-ARG is non-nil, the user has used
 a prefix command argument."
   (interactive "P")
-  (lyskom-mark-text text-no-arg (lyskom-get-string 'text-to-unmark) 0))
+  (lyskom-unmark-text text-no-arg (lyskom-get-string 'text-to-unmark)))
   
 
-
-(defun lyskom-mark-text (text-no-arg prompt mark)
+(defun lyskom-unmark-text (text-no-arg prompt)
   "Get the number of the text that is to be marked and do the marking.
 Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number.
-MARK:   A number that is used as the mark."
+PROMPT: A string that is used when prompting for a number."
   (let ((text-no (cond ((integerp text-no-arg) text-no-arg)
                        ((and text-no-arg
                              (listp text-no-arg))
@@ -1425,23 +1461,37 @@ MARK:   A number that is used as the mark."
                        (t lyskom-current-text))))
     (if prompt
         (setq text-no (lyskom-read-number prompt text-no)))
-    (if (not (eq mark 0))
-        (setq mark
-              (or kom-default-mark
-                  (lyskom-read-num-range
-                   1 255 (lyskom-get-string 'what-mark) t))))
-    (if (equal mark 0)
-        (lyskom-format-insert 'unmarking-textno 
-                              text-no)
-      (lyskom-format-insert 'marking-textno 
-                            text-no))
+    (lyskom-format-insert 'unmarking-textno text-no)
+    
+    (if (blocking-do 'unmark-text text-no)
+        (progn
+          (lyskom-insert-string 'done)	  
+          (cache-del-marked-text text-no))
+      (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
+    (cache-del-text-stat text-no)))
+
+
+(defun lyskom-mark-text (text-no-arg prompt)
+  "Get the number of the text that is to be marked and do the marking.
+Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
+PROMPT: A string that is used when prompting for a number."
+  (let ((text-no (cond ((integerp text-no-arg) text-no-arg)
+                       ((and text-no-arg
+                             (listp text-no-arg))
+                        (car text-no-arg))
+                       (t lyskom-current-text)))
+        (mark nil))
+    (if prompt
+        (setq text-no (lyskom-read-number prompt text-no)))
+    (setq mark 
+          (or kom-default-mark (lyskom-read-num-range
+                                0 255 (lyskom-get-string 'what-mark) t)))
+    (lyskom-format-insert 'marking-textno text-no)
     
     (if (blocking-do 'mark-text text-no mark)
         (progn
           (lyskom-insert-string 'done)	  
-          (if (= mark 0)
-              (cache-del-marked-text text-no)
-            (cache-add-marked-text text-no mark)))
+          (cache-add-marked-text text-no mark))
       (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
     (cache-del-text-stat text-no)))
 
@@ -1457,30 +1507,30 @@ MARK:   A number that is used as the mark."
   (interactive)
   (lyskom-review-marked-texts 
    (lyskom-read-num-range 
-    1 255 (lyskom-get-string 'what-mark-to-view) t)))
+    0 255 (lyskom-get-string 'what-mark-to-view) t)))
 
 
 (def-kom-command kom-review-all-marked-texts ()
   "Review all marked texts"
   (interactive)
-  (lyskom-review-marked-texts 0))
+  (lyskom-review-marked-texts nil))
 
 
 (defun lyskom-review-marked-texts (mark-no)
   "Review all marked texts with the mark equal to MARK-NO. 
-If MARK-NO == 0, review all marked texts."
+If MARK-NO is nil, review all marked texts."
   (let ((mark-list (cache-get-marked-texts))
 	(text-list nil))
     (while (not (null mark-list))
       (let ((mark (car mark-list)))		
 	(if (and mark
-		 (or (eq mark-no 0)
+		 (or (null mark-no)
 		     (eq mark-no (mark->mark-type mark))))
 	    (setq text-list (cons (mark->text-no mark)
 				  text-list))))
       (setq mark-list (cdr mark-list)))
-    (if (equal (length text-list) 0)
-	(lyskom-insert (if (eq mark-no 0)
+    (if (eq (length text-list) 0)
+	(lyskom-insert (if (null mark-no)
 			   (lyskom-get-string 'no-marked-texts)
 			 (lyskom-format 'no-marked-texts-mark mark-no)))
       (let ((read-info (lyskom-create-read-info

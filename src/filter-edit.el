@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.4 1997-02-07 18:07:39 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.5 1997-11-30 17:19:17 byers Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.4 1997-02-07 18:07:39 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.5 1997-11-30 17:19:17 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -482,7 +482,7 @@ If NEWLINE is non-nil, insert a newline after the header."
                                     nil
                                     t))
       (setq permanent
-            (lyskom-j-or-n-p (lyskom-get-string 'filter-permanent)))
+            (lyskom-j-or-n-p (lyskom-get-string 'filter-permanent) t))
       (setq filter (make-filter nil
                                 (list (cons 'action 
                                             (cdr (assoc action rev-actions)))
@@ -719,7 +719,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   (let ((save nil))
     (if filter-edit-change-flag
         (setq save (lyskom-j-or-n-p 
-                    (lyskom-get-string 'filter-edit-save-p))))
+                    (lyskom-get-string 'filter-edit-save-p) t)))
     (if save
         (lyskom-filter-edit-save))
     (set-window-configuration lyskom-edit-return-to-configuration)))
@@ -752,7 +752,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   (if (and 
        (lyskom-filter-empty-patterns-p)
        (lyskom-j-or-n-p
-        (lyskom-get-string 'filter-edit-remove-empty)))
+        (lyskom-get-string 'filter-edit-remove-empty) t))
       (lyskom-filter-edit-expunge))
 
   (let ((e filter-edit-currently-edited-filter-entry-list)
@@ -792,7 +792,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
   (interactive)
   (if (or (not filter-edit-change-flag)
           (and filter-edit-change-flag
-               (lyskom-j-or-n-p (lyskom-get-string 'filter-edit-restart-p))))
+               (lyskom-j-or-n-p (lyskom-get-string 'filter-edit-restart-p) t)))
       (let ((inhibit-read-only t))
         (setq filter-edit-currently-edited-filter-entry-list nil)
         (delete-region filter-edit-list-start filter-edit-list-end)

@@ -3,16 +3,33 @@
 Att göra i elisp-klienten
 =========================
 
+            Om du fixar någonting som står med på den här
+            listan, glöm inte att ta bort det från listan!
+
+
 * SAKER ATT KOLLA
 
-    XEmacs 20.3 kanske har init-filer i .xemacs/init.el. Kolla att vi
-    fortfarande kan spara variabelinställningar där. Om inte där så
-    kommer den kanske att spara saker i custom-file eller nåt sånt. 
-    .xemacs-options är det väl. Hur ser man till att inte XEmacs
-    zappar sånt som LysKOM sätter dit?
+    Hur och var skall man egentligen spara inställningar? .emacs är
+    kanske inte det bästa alternativet. 
 
 
 * BUGGAR
+
+** OSORTERADE
+
+    Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
+    och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
+    blev det rätt. 
+
+    Race condition när man skickar in inlägg. Fönsterkonfigurationen
+    återställs asynkront, och det går att trycka C-c C-c k
+    tillräckligt fort att man skapar den nya inläggsbufferten innan
+    den gamla fönsterkonfigurationen (för den förra inläggsbufferten)
+    återställs. Resultatet är att man aldrig ser den nya bufferten.
+
+    Endast gör fortfarande fel. Den klarar inte hål och använder inte
+    set-last-read, utan set-unread.
+
 
 ** CACHE
 
@@ -21,23 +38,11 @@ Att göra i elisp-klienten
     kommenterar så måste inlägget hämtas igen. [DET VERKAR INTE VARA
     SÅ]
 
-** HOOKAR
-
-    Det verkar som om ens lapp på dörren visas innan lyskom-login-hook
-    har körts. Det är inte så bra. Den verkar köras innan user-arean
-    har lästs in. Det är för tidigt. Alla inställningar för
-    inläggsformattering blir default, inte vad man har i sin
-    user-area.
-
 
 ** MULE-RELATERAT SKRÄP
 
-    Vi har nog inte satt enable-multibyte-characters till nil i
-    minibufferten.
-
-    Alla bakslaskade tecken skall bytas mot sina riktiga tecken, för
-    annars kan skrotet som läser in dem bli förvirrad. Kanske. De
-    svenska tecknen är nämligen ogiltiga enligt MULE.
+    Vi har kanske inte satt enable-multibyte-characters till nil i
+    minibufferten. 
 
 
 ** VIKTIGA BUGGAR
@@ -51,40 +56,15 @@ Att göra i elisp-klienten
     lyskom-format-html får inte försöka formattera som HTML om det
     inte går att ladda w3.
 
-    Komplettering av "Link" i LysKOM ofungerar. Alternativen skall
-    vara "(lokalt) Linköping (och övriga) Östergötland" och "Linköpings
-    Science Fiction-Förening (info och stuff)". Det går bra att lista
-    completions, men inte att trycka på TAB.
-
-    ** Observationer
-       
-       Det bidde fel på RST, men kanske inte hemma. Det verkar ha att
-       göra med att ö betraktas som whitespace. Det hänger när
-       completion har kommit fram till "ötland" vs.
-       "Fiction-Förening". 
-
-       Workaround: (require 'iso-syntax)
-       Snabbfix:   Byt ut `\\s' mot `[ \t]' och `\\S' mot `[^ \t]'.
-
-       Minitestfall: (lyskom-complete-string '("L\t" "L s")).
-       Problem uppstår om man får space-mismatch pga att två olika
-       tecken med spacesemantik mismatchar (fin svenska, eller hur.)
-       Man borde få match när det inträffar.
-
-       Man skulle kunna tänka sig att lyskom-complete-string upptäcker
-       om den itererar över samma tecken mer än en gång och i så fall
-       avbryta och ta vad den har som completion (och skicka
-       bugrapport.)
-
-    Ingen av initiate-funktionerna fungerar i något annat än LysKOMs
-    huvudbuffert. De borde alla undersöka om det finns några köer i
-    den aktuella bufferten, och om det inte gör det, försöka hitta en
-    LysKOM-buffert att göra anropet i. [KANSKE FIXAT]
-
 
 ** OMBRYTNING
 
     Vi klarar inte emailheaders som är brutna över flera rader.
+    Klienten tror att den indragna fortsättningen är början på ett
+    nytt stycke. Man skulle kunna tänka sig att nytt-stycke-regeln
+    inte gör nytt stycke om alla rader har börjat med ord: och man
+    hamnar på en indragen rad. Indragna rader skulle inte sabotera
+    ord:-prefixet. 
 
 
 ** DEFERRED INSERT
@@ -94,8 +74,9 @@ Att göra i elisp-klienten
     vill bläddra bakåt.
 
     Om ett namn som fylls i i efterhand gör att sista raden blir för
-    lång, så scrollar klienten trots att den inte borde. Jag trodde
-    jag hade fixat det.
+    lång, så scrollar klienten trots att den inte borde. David Kågedal
+    trodde att han hade fixat det. (Detta är en gammal rapport. Den
+    kanske inte stämmer.)
 
 
 ** PREFETCH 
@@ -109,10 +90,23 @@ Att göra i elisp-klienten
     Om man går till ett möte som inte prefetchats och inte har några
     inlägg blir promten fel, och man får ett felmeddelande.
 
-    Lista nyheter visar fel innan prefetchen har hämtat alla mappar.
-
 
 ** COMPLETING READ
+
+    I LysKOM verkar "Da " expanderas till "D", vilket är Helt Fel.
+
+    Man kan få oländiga loopar i completion. Just nu är det inte så
+    lätt, men det går fortfarande. Problemet uppstår då två teckern
+    har spacesemantik men inte mappas till samma tecken av
+    collate-tabellen. Den riktiga fixen är i två steg: (1) se till att
+    collate-tabellen alltid mappar alla space till space (2) se till
+    att lyskom-complete-string kan detektera en oländig loop och
+    stoppa den. 
+
+        Minitestfall: (lyskom-complete-string '("L\t" "L s")).
+        Problem uppstår om man får space-mismatch pga att två olika
+        tecken med spacesemantik mismatchar (fin svenska, eller hur.)
+        Man borde få match när det inträffar.
 
     lyskom-read-session-no hanterar inte att man anger specifikt
     sessionsnummer om samma person har flera sessioner, tror jag.
@@ -158,7 +152,9 @@ Att göra i elisp-klienten
     bara i en gömd buffert.
 
     Tommy Persson får LysKOM protocol error. Det kan bero på strulande
-    modem.
+    modem. Tyvärr var det någon annan som också fick det, som kanske
+    inte sitter bakom modem. Nu fick Kågedal också problemet, men
+    fortfarande kan ingen reproducera det. 
 
 
 
@@ -173,16 +169,17 @@ Att göra i elisp-klienten
     blinka på första kolumnen i raden som var längst ner på skärmen
     innan man tryckte space. Från Teddy (inlägg 2495321.)
 
-        * En testimplementation av detta finns nu.
+        * En testimplementation av detta finns nu och fungerar rätt så
+          bra. Att använda simple.el var dock inte en bra idé.
 
 
     Det vore skoj om lyskom.el kunde, som jag har för mig att någon
-    föreslog en gång, parsa fotnoter av det där slaget (^s/) och
-    applicera dem på texten. Det korrigerade inlägget skulle ha
-    formatmarkeringen (korrigerad av 123455) i foten. Återse
-    omodifierat skulle visa inlägget okorrigerat. Den korrigerande 
-    fotnoten visas inte i den normala läsordningen och markeras 
-    som läst automatiskt.
+    föreslog en gång, parsa fotnoter av det där slaget [sed-mönster
+    ungefär] och applicera dem på texten. Det korrigerade inlägget
+    skulle ha formatmarkeringen (korrigerad av 123455) i foten. Återse
+    omodifierat skulle visa inlägget okorrigerat. Den korrigerande
+    fotnoten visas inte i den normala läsordningen och markeras som
+    läst automatiskt.
 
         * Krävs inkrokningar view-text.el för att inte skriva ut att
           det finns en fotnot.
@@ -191,15 +188,56 @@ Att göra i elisp-klienten
 
         * Krävs att man hämtar fotnoter innan man visar inlägget.
 
+        * Troligtvis är det bättre att använda aux-items för detta.
+
 
 
 ** SKRIVA INLÄGG
 
-    Skicka Brev skall inte lägga till författaren som mottagare om
-    författaren är medlem i någon av mottagarena.
+    Frågan om flera mottagare kanske inte borde ställas om man har
+    arrangerat om mottagarlistan rejält. Den skall ställas om man
+    lägger till en mottagare till en existerande. Den kanske inte
+    behöver ställas om man har arrangerat om alla mottagare. Frågan är
+    vad som händer mittemellan.
 
-    C-u i borde fråga efter mottagare, och alltså fungera på samma
-    sätt som Skicka Brev efter ovanstående ändring.
+    Varningen om olästa kommentarer är inte perfekt. Det finns flera
+    förslag till ändringar. Ett är att varna bara för kommentarer som
+    skapades efter man började skriva kommentaren, men det verkar vara
+    en kompromiss. Minst en som efterfrågade det ville i själva verket
+    kunna slå på/av varningarna per möte. Bellman ville att varningen
+    inte skulle gå att slå av helt med mindre än att man explicit slår
+    av den i alla möten som man är med i.
+
+        * Den rätta saken att göra är antagligen att göra det möjligt
+          att ge variabeln ett defaultvärde och ha möjlighet att ge
+          undantag. 
+
+        * Defaultvärden skulle kunna vara varna, varna inte och varna
+          för nya. Ett förslag är också att varna för nya enbart om
+          man har läst minst en eller kanske alla av kommentarerna
+          till inlägget man kommenterar.
+
+        * Eventuellt skulle det vara bra med en varning innan man
+          börjar kommentera om kommentarer som redan finns där. Den
+          varningen borde vara oberoende av den som kommer när man
+          skickar in.
+
+    Addera det kommenterades författare som mottagare vid behov när
+    man börjar skriva inlägget. Se till att inte gnälla om denna
+    mottagare när man skickar in inlägget.
+
+        * När man börjar skriva inlägg, håll reda på att man har lagt
+          till författare automatiskt, och försök låta bli att gnälla
+          om dessa. 
+
+        * Hans Persson ville att att det kommenterades författare
+          skulle läggas till automatiskt, men att om man har editerad
+          headrarna så skulle kontrollen göras om igen när man
+          skickade in inlägget. Dock skulle den *inte* göras om man
+          manuellt tog bort det kommenterades författare (det här
+          skulle hindra att man tog bort mottagare så att det
+          kommenterades författare blev utan.) Hans Persson har helt
+          rätt.
 
 
 ** EDIT-BUFFERTEN
@@ -212,6 +250,13 @@ Att göra i elisp-klienten
     Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
     ploppa upp edit-bufferten, alternativt ha ett kommando för att
     göra det (och göra det till defaultkommandot.)
+
+    Det borde gå att ändra mottagare till cc-mottagare genom att bara
+    lägga till mottagaren igen som cc-mottagare. Motsvarande för bcc
+    och så vidare.
+
+    Man borde kunna manipulera mottagare i editbufferten med musen (ta
+    bort, ändra typ.)
 
 
 ** FILTER
@@ -258,6 +303,9 @@ Att göra i elisp-klienten
 
     Återse alla markerade borde gå att avbryta med nästa möte.
 
+    Det vore trevligt om inlägg man återsåg inte bidde varnade för när
+    man skriver kommentarer.
+
 
 ** INTERNA SAKER
 
@@ -289,7 +337,6 @@ Att göra i elisp-klienten
     Man skulle kunna låta fönstrets titelrad indikera om man har
     olästa i någon session. Det skulle vara praktiskt för oss som har
     KOM igång ikonifierad i en separat Emacs större delen av tiden.
-
     Klickbara kommandon, vad nu det är.
 
     Det behövs dokumentation: fråmst användarhandledning, men det
@@ -298,18 +345,36 @@ Att göra i elisp-klienten
 
     Språkgranskning av den engelska versionen.
 
+    Det skulle vara bra om man kunde ange för varje inställning om den
+    skulle sparas i servern eller inte. I princip är det enkelt, men
+    det behövs ett gränssnitt för det.
+
+
+** AUX-ITEMS
+
+    Implementera en FAQ aux-item. Detta kommer att kräva en flagga
+    till i servern som talar om för servern att inte garba ett inlägg.
+    Det i sin tur kräver att man fixar dbck att forcera garb av inlägg
+    med den här flaggan som inte borde ha den eller nåt sånt.
+
+
+** MARKERINGAR
+
+    JySKomska markeringstyper.
+
 
 ** DIVERSE OSORTERAT
-
-    Radera inlägg borde gnälla lite om det finns markeringar.
-
-    Presentationer ska ha samma mottagare som tidigare
-    presentationer.
 
     Sortera vilkaslistan efter t.ex. idletid.
 
     Lista nyheter borde göra start of command innan den pratar om att
     vänta på medlemskapslistan. Den gör rätt ibland, men inte alltid.
+
+    Man borde använda get-unread-confs för att lista ut vilka
+    medlemsskap som skall prefetchas först. Då måste man ordna så att
+    ingenting är beroende av att medlemsskapslistan hämtas i
+    prioritetsordning. Prefetchen måste kunna sortera in medlemsskap i
+    prioritetsordning när den får dem från servern.
 
 
 
