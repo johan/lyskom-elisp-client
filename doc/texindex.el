@@ -3,18 +3,18 @@
 (defconst subst-tabell
   ; Ja, detta {r konstigt men jag anv{nder bokst{verna till att f} r{tt
   ; ordning. Det konverteras tillbaka sedan. Var lugna.
-  '(("ä" "^^e5")
-    ("Ä" "^^c5")
-    ("Å" "^^c4")
-    ("å" "^^e4")
-    ("Ö" "^^d6")
-    ("ö" "^^f6")
-    ))
+  (` (("ä" "^^e5")
+      ("Ä" "^^c5")
+      ("Å" "^^c4")
+      ("å" "^^e4")
+      ("Ö" "^^d6")
+      ("ö" "^^f6")
+      ("|" "{\\tt\\char'174}")
+      )))
     
-     
-(defun find-sort-key (string)
-  "Convert a string containing strange dvi-output to iso-chars."
-  (setq string (concat " " string))
+
+(defun texindex-tomine (string)
+  "Convert to my representation."
   (let ((change t)
 	(completion-ignore-case nil))
     (while change
@@ -26,7 +26,34 @@
 				   (car (car s))
 				   (substring string (match-end 0)))
 		    change t))
-	  (setq s (cdr s))))
+	  (setq s (cdr s))))))
+  string)
+
+(defun texindex-back (string)
+  "Convert back to original."
+  (let ((change t)
+	(completion-ignore-case nil))
+    (while change
+      (setq change nil)
+      (let ((s subst-tabell))
+	(while s
+	  (if (string-match (regexp-quote (car (car s))) string)
+	      (setq string (concat (substring string 0 (match-beginning 0))
+				   (car (cdr (car s)))
+				   (substring string (match-end 0)))
+		    change t))
+	  (setq s (cdr s))))))
+  string)
+
+
+(defun find-sort-key (string)
+  "Convert a string containing strange dvi-output to iso-chars."
+  (setq string (concat " " string))
+  (let ((change t)
+	(completion-ignore-case nil))
+    (while change
+      (setq change nil)
+      (setq string (texindex-tomine string))
 
       (if (string-match "(.*)" string)
 	  (setq string (concat (substring string 0 (match-beginning 0))
@@ -35,6 +62,10 @@
       (if (string-match "\\s-\\s-" string)
 	  (setq string (concat (substring string 0 (match-beginning 0))
 			       " "
+			       (substring string (match-end 0)))
+		change t))
+      (if (string-match (regexp-quote "\\sl ") string)
+	  (setq string (concat (substring string 0 (match-beginning 0))
 			       (substring string (match-end 0)))
 		change t))
       ))
@@ -101,14 +132,15 @@
 		(setq last-marker (point))
 		(goto-char (point-max)))
 	    (if (string= current-letter
-			 (substring (upcase (car (car all-info))) 0 1))
+			 (substring (texindex-tomine (upcase (car (car all-info))))
+				    0 1))
 		nil
 	      (setq current-letter 
-		    (substring (upcase (car (car all-info))) 0 1))
+		    (substring (texindex-tomine (upcase 
+						 (car (car all-info))))
+			       0 1))
 	      (insert "\\initial {" 
-		      (if (assoc current-letter subst-tabell)
-			  (car (cdr (assoc current-letter subst-tabell)))
-			current-letter)
+		      (texindex-back (capitalize current-letter))
 		      "}\n"))
 	    (insert "\\entry {"
 		    (car (cdr (cdr (car all-info))))

@@ -1855,7 +1855,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\dfn##1{\realbackslash dfn {##1}}
 }
 
-\def\thischaptername{No Chapter Title}
+\def\thischaptername{Inget kapitelnamn}
 \outer\def\chapter{\parsearg\chapterzzz}
 \def\chapterzzz #1{\seccheck{chapter}%
 \secno=0 \subsecno=0 \subsubsecno=0
@@ -3214,7 +3214,7 @@ July\or August\or September\or October\or November\or December\fi
 section ``\printednodename'' in \cite{\printedmanual}%
 \else%
 \turnoffactive%
-\refx{#1-snt}{} [\printednodename], page\tie\refx{#1-pg}{}%
+\refx{#1-snt}{} [\printednodename], sidan\tie\refx{#1-pg}{}%
 \fi
 \endgroup}
 
@@ -3241,21 +3241,21 @@ section ``\printednodename'' in \cite{\printedmanual}%
 \def\Ynothing{}
 
 \def\Ysectionnumberandtype{%
-\ifnum\secno=0 Chapter\xreftie\the\chapno %
-\else \ifnum \subsecno=0 Section\xreftie\the\chapno.\the\secno %
+\ifnum\secno=0 kapitel\xreftie\the\chapno %
+\else \ifnum \subsecno=0 stycke\xreftie\the\chapno.\the\secno %
 \else \ifnum \subsubsecno=0 %
-Section\xreftie\the\chapno.\the\secno.\the\subsecno %
+stycke\xreftie\the\chapno.\the\secno.\the\subsecno %
 \else %
-Section\xreftie\the\chapno.\the\secno.\the\subsecno.\the\subsubsecno %
+stycke\xreftie\the\chapno.\the\secno.\the\subsecno.\the\subsubsecno %
 \fi \fi \fi }
 
 \def\Yappendixletterandtype{%
 \ifnum\secno=0 Appendix\xreftie'char\the\appendixno{}%
-\else \ifnum \subsecno=0 Section\xreftie'char\the\appendixno.\the\secno %
+\else \ifnum \subsecno=0 stycke\xreftie'char\the\appendixno.\the\secno %
 \else \ifnum \subsubsecno=0 %
-Section\xreftie'char\the\appendixno.\the\secno.\the\subsecno %
+stycke\xreftie'char\the\appendixno.\the\secno.\the\subsecno %
 \else %
-Section\xreftie'char\the\appendixno.\the\secno.\the\subsecno.\the\subsubsecno %
+stycke\xreftie'char\the\appendixno.\the\secno.\the\subsecno.\the\subsubsecno %
 \fi \fi \fi }
 
 \gdef\xreftie{'tie}
