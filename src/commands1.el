@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.105 2001-04-25 12:31:35 byers Exp $
+;;;;; $Id: commands1.el,v 44.106 2001-04-25 21:11:33 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.105 2001-04-25 12:31:35 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.106 2001-04-25 21:11:33 joel Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1962,7 +1962,7 @@ If no such existed either, nil is returned."
       (when (and used
 		 (< (length used) 256)
 		 (< (length list) 256))
-	(cdar used)))))
+	(cdr (car used))))))
 
 
 (defun lyskom-get-least-used-mark-types-alist ()

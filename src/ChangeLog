@@ -1,5 +1,10 @@
 2001-04-25  Joel Rosdahl  <joel@rosdahl.net>
 
+	* utilities.el (lyskom-compute-char-classes): Portability:
+	don't use cdar.
+
+	* commands1.el (lyskom-allocate-mark-type): Ditto.
+
 	* commands2.el (kom-list-marks): Wider date/time field.
 	(lyskom-print-mark-summary-line): Ditto.
 	(lyskom-list-summary): Ditto.
