@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 39.0 1996-03-14 18:16:47 davidk Exp $
+;;;;; $Id: async.el,v 39.1 1996-03-18 23:34:00 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 39.0 1996-03-14 18:16:47 davidk Exp $\n"))
+	      "$Id: async.el,v 39.1 1996-03-18 23:34:00 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -111,8 +111,8 @@ this function shall be with current-buffer the BUFFER."
      ((eq msg-no 7)			; Database is syncing.
       (lyskom-save-excursion
 	(set-buffer buffer)
-	(if (and (not (lyskom-is-in-minibuffer))
-		 kom-presence-messages)
+	;; I removed the test for kom-presence-messages /david
+	(if (not (lyskom-is-in-minibuffer))
 	    (lyskom-message "%s" (lyskom-get-string 'database-sync)))
 	(setq mode-line-process (lyskom-get-string 'mode-line-saving))
 	(setq lyskom-is-saving t)
