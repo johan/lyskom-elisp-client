@@ -41,6 +41,11 @@
    The relative performance change is huge, but if it only takes a
    millisecond to begin with...
 
+** New data structures for the membership list have resulted in huge
+   (relative) performance increases across the board. The performance
+   increases are particularly noticeable for people who are members of
+   very many conferences.
+
 
 
 * New system for handling fonts and faces
@@ -104,6 +109,9 @@
 
 ** The binding for kom-review-backward is now under the prefix for
    review commands.
+
+** Unmodified < and > go to the beginning and end of the buffer,
+   respectively.
 
 
 
@@ -328,6 +336,11 @@
    Swedish name: Återse konverterat [å v]
    English name: Review converted [r v]
 
+** kom-review-rot13: Displays the text using rot13.
+
+   Swedish name: Återse rot13 [å 3]
+   English-name: Review rot13 [r 3]
+
 
 ** kom-change-message-flag: Control reception of group messages
    (requires a server that supports this feature).
@@ -354,6 +367,13 @@
 
    Swedish name: Ändra rättigheter
    English name: Change privileges
+
+
+** kom-list-sessions: List current LysKOM sessions and unread messages
+   for each session.
+
+   Swedish name: Lista sessioner [l k]
+   English name: List sessions [l k]
 
 
 
@@ -417,6 +437,44 @@
 ** kom-fontify-text: controls if bold/italic fontification of texts
    takes place.
 
+** kom-format-show-images: controls in-line display of images. When
+   set to `t', images are displayed in-line (if possible). When set to
+   `nil', they are treated as normal texts.
+
+** kom-remember-password: controls whether to remember password in
+   session buffer. When this is enabled, the client will store the
+   password used to log on in the session buffer. This may be useful
+   with automatic re-logins enabled (see kom-relogin-behavior, below).
+
+** kom-relogin-behavior: controls how to behave when commands are
+   issued in dead sessions. Using this variable, it is possible to
+   have the client automatically reconnect to the server when a
+   command is issued in a dead session.
+
+** kom-relogin-inhibit-commands: a list of commands that don't cause
+   the client to log in automatically in dead sessions (if that
+   function is enabled at all).
+
+** kom-show-imported-message-id: controls whether to display the
+   message ID of imported e-mails by default or not.
+
+** kom-default-server: indicates the default server to connect to.
+
+** kom-default-user-name: indicates the default user to log in as.
+
+** kom-default-password: indicates the password to use when logging
+   in.
+
+** kom-session-nickname: a nickname for the current session. The
+   session nickname is used in every place where the session name is
+   shown.
+
+** kom-unread-mode-line-type: determines the format of the mode line.
+   The mode line can now list all sessions with unreads instead of
+   just a collective unread indicator.
+
+** kom-membership-default-message-flag: default setting for reception
+   of group messages to new memberships.
 
 
 
@@ -444,12 +502,22 @@
 
 
 
-
-
-
-
-
 * Other new major features
+
+** The old modes for listing and prioritizing memberships have been
+   replaced with a completely new mode. It is accessible from the same
+   commands as before, and integrates all the functionality of the old
+   modes and much more.
+
+   The new mode has menus and mode documentation in addition to a
+   quick reference at the end of the buffer.
+
+   Certain functions, such as the ability to show only a subset of the
+   conferences, in the new mode are still experimental.
+
+   Note that the names of all functions and variables related to this
+   new mode will change in the future. Do not rely on any Lisp names
+   starting with `lp--'.
 
 ** The initial values shown when reading conference names have been
    altered. Now (nearly) all commands provide an initial value. The
@@ -467,16 +535,36 @@
    The initial value is deleted automatically if you start typing a
    new name, and can be edited by moving the cursor before typing.
 
+** Om versions of Emacs that support it, the client can display
+   images. This behavior is controled with kom-format-show-images.
+
+** The client can re-connect to the server when a command is issued in
+   a dead session. See the variables kom-relogin-behavior,
+   kom-relogin-inhibit-commands and kom-remember-password for more
+   information.
+
 ** On servers that support it, the client uses UTC timestamps, and
    will display dates and times in the local time zone, rather than
-   the server time zone.
+   the server time zone. Some versions of Emacs (e.g. XEmacs 21.4
+   under Windows) have bugs that prevent this feature from working. In
+   these cases, the client will revert to its old behavior.
 
 ** kom-move-text can move attachments and footnotes with the main
    text. It asks for confirmation before doing so.
 
+** kom-move-text-tree can now be used to add a recipient to a tree.
+   Just give an empty answer when being asked for a conference to move
+   from.
+
+** kom-move-text-tree can leave the original recipient as a CC
+   recipient when moving.
+
 ** kom-sub-recipient can remove recipients from attachments and
    footnotes as it removed recipients from the main text. It asks for
    confirmation before doing so.
+
+** Using M-c as a prefix to any review command toggles whether it will
+   use the cace or not.
 
 ** Reception of group messages can be controlled separately of the
    passive/active status of a membership. This requires a server that
@@ -547,11 +635,31 @@
 ** The menus have been completely revamped. The goal is now to include
    (almost) all commands in the menus.
 
+** HTML can now be rendered with w3m.
+
 
 
 * Additional changes and bug fixes
 
+** The default session priority is now zero. The old value of one was
+   appropriate during a transitional period, but isn't appropriate for
+   new users.
+
 ** Bold and italic markup in texts.
+
+** When HTML is not being rendered, generate links for URLs and things
+   as if the text were plaintext.
+
+** The mode line showing the unread indicator can now list all
+   sessions with unread texts explicitly. See
+   kom-unread-mode-line-type for details.
+
+** Sessions can have nicknames, which makes it easier to distinguish
+   between sessions (particularly sessions on the same server). The
+   session nickname is shown wherever the session name normally would
+   be shown. See kom-session-nickname for more details.
+
+** Added MysKOM to the predefined servers list.
 
 ** When using non-English, a text is shown in English to help users
    switch to a different language.
@@ -559,6 +667,9 @@
 ** The client will no longer treat texts with unknown content types as
    plain text. This improves performance when displaying virus-laden
    attachments to imported e-mail messages.
+
+** The client can display message IDs of imported e-mail messages by
+   default. This is controlled by kom-show-imported-message-id.
 
 ** The likelihood of unintentionally sending alarm messages has been
    reduced further by prompting for recipients in kom-send-alarm and
@@ -594,7 +705,7 @@
    retained.
 
 ** kom-is-person-member-of-conference now shows the number of unread
-   texts the person has.
+   texts the person has and the priority of the membership.
 
 ** Improved diagnostic messages.
 
@@ -696,6 +807,11 @@
 ** Saved texts do not have relative dates.
 
 ** The client recognizes RTSP URLs.
+
+** Avoid counting unread texts twice when joining new conferences.
+
+** Footnotes are not displayed automatically when doing
+   kom-review-noconversion (Återse omodifierat).
 
 
 
