@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.38 2004-07-11 23:01:04 byers Exp $
+;;;;; $Id: macros.el,v 44.39 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.38 2004-07-11 23:01:04 byers Exp $\n"))
+	      "$Id: macros.el,v 44.39 2004-07-12 18:11:16 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -75,7 +75,7 @@ Value returned is always nil."
 Variable VAR is bound to each membership, in turn, and FORMS are evaluated."
   `(catch 'lyskom-traverse
      (lyskom-avltree-traverse
-      (lambda (,var) ,@forms) (lyskom-mship-cache-data))))
+      (lambda (,var) ,@forms) (lyskom-with-lyskom-buffer (lyskom-mship-cache-data)))))
 
 (defmacro lyskom-traverse-aux (atom sequence &rest body)
   "Bind ATOM to each element in SEQUENCE and execute BODY.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.33 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: menus.el,v 44.34 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.33 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: menus.el,v 44.34 2004-07-12 18:11:16 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -498,7 +498,7 @@
                               " "))))
                  (if shortcut
                      (progn (when (memq window-system '(win32 mswindows w32))
-                              (setq shortcut (encode-coding-string shortcut 'iso-8859-1)))
+                              (setq shortcut (lyskom-encode-coding-string shortcut 'iso-8859-1)))
                             (define-key map (vector symbol)
                               `(menu-item ,(lyskom-get-menu-string symbol) ,symbol
                                           :keys ,shortcut)))

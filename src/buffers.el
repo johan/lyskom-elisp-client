@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.26 2003-08-17 15:33:18 byers Exp $
+;;;;; $Id: buffers.el,v 44.27 2004-07-12 18:11:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.26 2003-08-17 15:33:18 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.27 2004-07-12 18:11:16 byers Exp $\n"))
 
 
 ;;;;
@@ -576,7 +576,7 @@ Returns the window displaying BUFFER."
             (make-local-variable 'lyskom-saved-window-configuration)
             (setq lyskom-saved-window-configuration
                   saved-window-configuration)
-            (make-local-hook 'kill-buffer-hook)
+            (lyskom-make-local-hook 'kill-buffer-hook)
             (add-hook 'kill-buffer-hook
                       'lyskom-undisplay-buffer-hook nil t)
             (put 'kill-buffer-hook 'permanent-local t)
