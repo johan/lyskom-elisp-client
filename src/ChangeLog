@@ -1,3 +1,13 @@
+Tue Aug 20 17:16:14 1991  Linus Tolke Y  (linus at lysator)
+
+	* vars.el, flags.el (lyskom-read-options-eval,
+	  kom-edit-options-send): Nu anv{nder den 2 variabler f|r att
+	  spara till common-arean: lyskom-global-boolean-variables och
+	  lyskom-global-non-boolean-variables.
+	  Dessutom sparas alla ok{nda variabler fr}n common-arean som
+	  UNK-`common-area-namnet'.
+	  Detta inneb{r att buggen med att markera inte fungerar {r fixad.
+
 Tue Aug 20 01:18:17 1991  Per Cederqvist  (ceder at lysator)
 
 	* clienttypes.el (read-list-delete-text) Om text-no {r nil s}

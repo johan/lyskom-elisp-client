@@ -55,13 +55,23 @@
     (let ((buf lyskom-buffer)
 	  (optbuf (current-buffer))
 	  (common-block 
-	   (mapconcat (function
-		       (lambda (var)
-			 (lyskom-format-objects
-			  (substring (symbol-name var) 4) 
-			  (if (symbol-value var) "1" "0"))))
-		      lyskom-global-variables
-		      "\n"))
+	   (concat
+	    (mapconcat (function
+			(lambda (var)
+			  (lyskom-format-objects
+			   (substring (symbol-name var) 4) 
+			   (if (symbol-value var) "1" "0"))))
+		       lyskom-global-boolean-variables
+		       "\n")
+	    "\n"
+	    (mapconcat (function
+			(lambda (var)
+			  (lyskom-format-objects
+			   (substring (symbol-name var) 4) 
+			   (prin1-to-string (symbol-value var)))))
+		       lyskom-global-non-boolean-variables
+		       "\n")
+	    ))
 	  (elisp-block
 	   (mapconcat (function
 		       (lambda (var)
@@ -163,14 +173,21 @@ If successful then set the buffer not-modified. Else print a warning."
 	  (cond
 	   ((= r common-no)
 	    (let ((txt working)
-		  name value)
+		  name gname value)
 	      (while (> (length txt) 2)
-		(setq name (lyskom-read-options-eval-get-holerith))
+		(setq gname (lyskom-read-options-eval-get-holerith))
 		(setq value (lyskom-read-options-eval-get-holerith))
-		(setq name (concat "kom-" name))
-		(if (string= value "1")
-		    (setq value "t")
-		  (setq value "nil"))
+		(setq name (concat "kom-" gname))
+		(if (memq (intern-soft name) lyskom-global-boolean-variables)
+		    (if (string= value "1")
+			(setq value "t")
+		      (setq value "nil"))
+		  (if (memq (intern-soft name) 
+			    lyskom-global-non-boolean-variables)
+		      nil
+		    (setq name (concat "UNK-" gname))
+		    (setq lyskom-global-non-boolean-variables
+			  (cons name lyskom-global-non-boolean-variables))))
 		(set (intern name) (car (read-from-string value))))))
 	   ((= r elisp-no)
 	    (let ((txt working)
@@ -205,7 +222,3 @@ If successful then set the buffer not-modified. Else print a warning."
     (prog1
 	(substring txt start (+ start len))
       (setq txt (substring txt (+ start len))))))
-
-
-
-
