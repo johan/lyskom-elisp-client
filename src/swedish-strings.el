@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.8 1993-06-23 21:51:43 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.9 1993-07-14 15:52:42 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.8 1993-06-23 21:51:43 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.9 1993-07-14 15:52:42 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -301,7 +301,7 @@ Lyskom-sessionen \344r avslutad.
     (cant-go-to-his-mailbox . "Du f\345r inte g\345 till %#1ss brevl\345da.\n")
     (not-member-of-conf . "Du \344r inte medlem i %#1s.\n")
     (change-name-done . "\nKlart. Nytt namn: %#1s.\n")
-    (change-name-nope . "\nDet gick inte bra. Kanske n\345got annat redan heter %#1s?\n")
+    (change-name-nope . "\nDet gick inte bra att \344ndra till %#1s.\nFelkod %#3d. %#2s.\n")
     (change-supervisor-from-to . "Ändra organisat\366r f\366r %#1s till %#2s...")
     (change-supervisor-nope . 
      "\nDet gick inte. Kanske du inte f\345r \344ndra organisat\366r f\366r %#1s?\n")
@@ -983,10 +983,10 @@ Users are encouraged to use their best sense of humor.")
     (12 . "Otill\345ten operation")
     (13 . "Du \344r inte medlem i m\366tet")
     (14 . "Inget s\345dant textnummer")
-    (15 . "Du kan inte anv\344nda globalt text nummer 0")
+    (15 . "Du kan inte anv\344nda globalt textnummer 0")
     (16 . "Inget s\345dant lokalt textnummer")
-    (17 . "Du kan inte anv\344nda lokalt text nummer 0")
-    (18 . "Felaktiga tecken i namnet")
+    (17 . "Du kan inte anv\344nda lokalt textnummer 0")
+    (18 . "Namnet f\366r kort eller f\366r l\345ngt eller inneh\345ller felaktiga tecken")
     (19 . "Index utanf\366r gr\344nserna")
     (20 . "M\366tet existerar redan")
     (21 . "Personen existerar redan")
