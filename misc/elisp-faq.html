@@ -1,5 +1,5 @@
 <html>
-<!-- $Id: elisp-faq.html,v 38.1 1994-06-02 14:29:49 linus Exp $ -->
+<!-- $Id: elisp-faq.html,v 38.2 1994-06-06 16:20:52 linus Exp $ -->
 <head>
 <link rev=made href="mailto:linus@lysator.liu.se">
 <title>Ofta ställda frågor för LysKOM emacslispklienten.</title>
@@ -29,14 +29,13 @@ och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
 <li><a href="#Videditering">Vid editering</a>
 <li><a href="#Möten">Möten</a>
 <li><a href="#Frågorominlägg">Frågor om inlägg</a>
-<li><a href="#Konstigheter">Konstigheter</a>
 <li><a href="#Lapparpådörrar">Lappar på dörrar</a>
 <li><a href="#Markering">Markering</a>
 <li><a href="#Personer">Personer</a>
 <li><a href="#Sessionen">Sessionen</a>
 <li><a href="#Systemet">Systemet</a>
 <li><a href="#Maskinspecifikasaker">Maskinspecifika saker</a>
-<li><a href="#VadhändermedLysKOM i framtiden">Vad händer med LysKOM i framtiden</a>
+<li><a href="#VadhändermedLysKOMiframtiden">Vad händer med LysKOM i framtiden</a>
 <li><a href="#Historia">Historia</a>
 </menu>
 <p>
@@ -44,7 +43,7 @@ och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
 
 <a name="Allmännafrågor"><h3>Allmänna frågor:</h3></a>
 <menu>
-<li><a href="#a1"><a name="Fa1">a1: Vad är LysKOM?</a></a>
+<li><a href="#a1" name="Fa1">a1: Vad är LysKOM?</a>
 <li><a href="#a2">a2: Vad är elispklienten?</a>
 <li><a href="#a3">a3: Var finns den att hitta?</a>
 <li><a href="#a4">a4: Vad finns det för typ av dokumentation?</a>
@@ -70,8 +69,10 @@ och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
 <li><a href="#e1">e1: Kan jag få saker att hända automatiskt när jag börjar skriva en kommentar?</a>
 <li><a href="#e2">e2: Hur gör jag för att binda speciella tangenter för att skriva en kommentar?</a>
 <li><a href="#e3">e3: Jag får upp en tom buffert och ett pip när jag skall till att editera. Vad har jag gjort för fel?</a>
+<li><a href="#e4">e4: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
 <p>
-<li><a href="#f1">f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
+<li><a href="#f1">f1: Hur anger man För kännedomsmottagare?</a>
+<li><a href="#f2">f2: Hur flyttar man inlägg?</a>
 </menu>
 
 <a name="Möten"><h3>Möten:</h3></a>
@@ -82,17 +83,10 @@ och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
 
 <a name="Frågorominlägg"><h3>Frågor om inlägg:</h3></a>
 <menu>
-<li><a href="#i1">i1: Hur anger man För kännedomsmottagare?</a>
-<li><a href="#i2">i2: Hur flyttar man inlägg?</a>
-</menu>
-
-<a name="Konstigheter"><h3>Konstigheter:</h3></a>
-<menu>
-<li><a href="#k1">k1: Varför tar det så lång tid att logga in?</a>
-<li><a href="#k2">k2: Varför tar det så lång tid att göra endast?</a>
-<li><a href="#k3">k3: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
-<li><a href="#k4">k4: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
-<li><a href="#k5">k5: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
+<li><a href="#i1">i1: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
+<li><a href="#i2">i2: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
+<li><a href="#i3">i3: Hur gör man för att hoppa över ett helt kommentarsträd?</a>
+<li><a href="#i4">i4: Hur länge sparas inlägg som inte har några mottagare.</a>
 </menu>
 
 <a name="Lapparpådörrar"><h3>Lappar på dörrar:</h3></a>
@@ -117,6 +111,9 @@ och därefter samma frågor igen fast <a href="#medsvar">med svar</a>.
 <a name="Sessionen"><h3>Sessionen:</h3></a>
 <menu>
 <li><a href="#s1">s1: Kan jag återstarta sessionen efter det att jag gått ur lyskom?</a>
+<li><a href="#s2">s2: Varför tar det så lång tid att logga in?</a>
+<li><a href="#s3">s3: Varför tar det så lång tid att göra endast?</a>
+<li><a href="#s4">s4: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
 </menu>
 
 <a name="Systemet"><h3>Systemet:</h3></a>
@@ -320,7 +317,7 @@ misslyckats. Kolla vad den försöker göra och fixa så att den inte
 misslyckas.
 
 <dt>
-<a name="f1">f1: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
+<a name="e4">e4: Hur gör jag för att behålla lyskom-bufferten på skärmen medan jag skriver en kommentar, ett inlägg eller ett brev?</a>
 <dd>
 
 Du talar om för elisp-klienten att du vill att den skall använda det
@@ -328,7 +325,26 @@ andra fönstret/skapa ett nytt fönster för att skriva i genom att sätta
 variabeln kom-write-texts-in-window till other.
 <p>
 (setq kom-write-texts-in-window 'other) i din .emacs till exempel.
+
+
+<dt>
+<a name="f1">f1: Hur anger man För kännedomsmottagare?</a>
+<dd>
+
+Det finns inte någon sådan möjlighet. Använd Mottagare eller Extra
+kopiemottagare:
+
+<dt>
+<a name="f2">f2: Hur flyttar man inlägg?</a>
+<dd>
+
+Det finns ingen sådan möjlighet. Använd kommandona Addera mottagare
+eller Addera extra kopiemottagare resp. Subtrahera mottagare för vart
+och ett av inläggen du vill flytta. Om du vill skriva kommandona
+Flytta inlägg, eller flytta kommentarsträd så får du.
+
 </dl>
+
 
 <h3>Möten:</h3>
 <dl>
@@ -337,7 +353,29 @@ variabeln kom-write-texts-in-window till other.
 <a name="g1">g1: Hur gör man för att ändra typen på ett möte?</a>
 <dd>
 
-Det gör du inte med elisp-klienten.
+Det gör du inte med emacslispklienten.
+<p>
+
+Det är klart att det går eftersom det här handlar om emacs men det
+finns inte förberett snygg hantering i emacslispklienten.
+<pre>
+ESC ESC (initiate-set-conf-type 'foo nil 87 
+                                (lyskom-create-conf-type nil t nil nil)) RET
+</pre>
+<dl>
+<dt> 'foo <dd> Den interna kön som kommer att hantera det här. 
+Om du råkar välja någon av de köer som används av klienten så kommer det
+som klienten normalt gör mha den kön att få vänta under den bråkdelen av
+en sekund som det här anropet tar. Inga problem.
+<dt> nil <dd> Den funktion som kommer att anropas när operationen är klar.
+I en snygg implementationen hade man här sett till att cachen töms och 
+att man skriver ut "Det gick bra" eller något till användaren.
+<dt> 87 <dd> Numret på mötet man vill ändra typen för. 
+Det måste man ta reda på på annat sätt.
+<dt> typen <dd> Du kan få lite hjälp om vad de olika "bittarna" motsvarar
+i typen genom att titta på dokumentationssträngen till lyskom-create-conf-type.
+</dl>
+
 
 <dt>
 <a name="g2">g2: Hur ändrar man hur många dagar artiklar i ett visst möte sparas?</a>
@@ -346,57 +384,11 @@ Det gör du inte med elisp-klienten.
 Använd kommandot ändra livslängd.
 </dl>
 
+
 <h3>Frågor om inlägg:</h3>
 <dl>
-
 <dt>
-<a name="i1">i1: Hur anger man För kännedomsmottagare?</a>
-<dd>
-
-Det finns inte någon sådan möjlighet. Använd Mottagare eller Extra
-kopiemottagare:
-
-<dt>
-<a name="i2">i2: Hur flyttar man inlägg?</a>
-<dd>
-
-Det finns ingen sådan möjlighet. Använd kommandona Addera mottagare
-eller Addera extra kopiemottagare resp. Subtrahera mottagare för vart
-och ett av inläggen du vill flytta. Om du vill skriva kommandona
-Flytta inlägg, eller flytta kommentarsträd så får du.
-</dl>
-
-<h3>Konstigheter:</h3>
-<dl>
-<dt>
-<a name="k1">k1: Varför tar det så lång tid att logga in?</a>
-<dd>
-
-Lokalt på din maskin sparas ingen som helst information om vilka
-texter du läst eller vilka möten du är medlem i. Allt detta hämtas
-nytt varje gång du loggar in. Dessutom hämtas en lista på alla texter
-du har markerat (för att du skall kunna få fram texten Markerat av
-dig. eller Markerat av dig och 5 andra. när du läser).
-<p>
-Det som tar längst tid är antabligen vilka möten du är medlem i och
-listan över olästa inlägg i dessa mötena.
-
-<dt>
-<a name="k2">k2: Varför tar det så lång tid att göra endast?</a>
-<dd>
-Se <a href="#k3">nästa fråga</a>.
-
-<dt>
-<a name="k3">k3: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
-<dd>
-
-Endast är för tillfället lite korkat implementerat. Det finns nämligen
-ett anrop till servern som gör just endast. Detta använder sig
-klienten av och sedan gör den det som är lättast: Hämtar om all din
-information från början igen (som när du loggade in).
-
-<dt>
-<a name="k4">k4: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
+<a name="i1">i1: Varför stämmer inte antalet olästa inlägg när jag gör status person som när jag gör lista nyheter?</a>
 <dd>
 
 Antalet olästa du får fram med lista nyheter är det antal som klienten
@@ -409,7 +401,7 @@ därifrån och sedan inte läst något där så har det sista du läste i
 mötet mycket lägre nummer än det sista skrivna inlägget i mötet.
 
 <dt>
-<a name="k5">k5: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
+<a name="i2">i2: Varför är antalet olästa i vissa möten negativt när man gör status?</a>
 <dd>
 
 Antalet olästa när du gör status person beräknas ur en ganska simpel
@@ -423,12 +415,34 @@ möte ligger i klienten sparad hos mötet och uppdateras för varje
 inlägg som skrivs. Informationen om vilket det sista inlägg du läste
 ligger i klienten sparad hos personen och uppdateras bara om du ändrar
 namn.
+
+<dt>
+<a name="i3">i3: Hur gör man för att hoppa över ett helt
+kommentarsträd?</a>
+<dd>
+Kommentarsträd läses normalt i djup-först ordning. (Du kan sätta om
+det här genom att sätta variablen kom-read-depth-first till nil.) Om
+du vill hoppa över ett helt träd måste du använda hoppa utgående från
+inlägget längst upp i trädet. Annars kan det fortfarande finnas kvar
+inlägg från trädet som du inte har läst/läsmarkerat.
+<pre>
+Återse urinlägget - ( å u eller å r )
+Hoppa - (h)
+</pre>
+
+<dt>
+<a name="i4">i4: Hur länge sparas inlägg som inte har några mottagare.</a>
+<dd>
+24 timmar.
+
 </dl>
+
 
 <h3>Lappar på dörrar:</h3>
 <dl>
 <dt>
-<a name="l1">l1: Varför får jag Du har en lapp på dörren, det finns ingen sådan text när jag loggar in?</a>
+<a name="l1">l1: Varför får jag Du har en lapp på dörren, det finns
+ingen sådan text när jag loggar in?</a> 
 <dd>
 
 Du har tagit bort lappen på fel sätt. Du skall använda kommandot 
@@ -497,7 +511,36 @@ mycket inlägg personen skrivit, hur länge han har varit inne i LysKOM.
 <dd>
 
 Nej.
+
+<dt>
+<a name="s2">s2: Varför tar det så lång tid att logga in?</a>
+<dd>
+
+Lokalt på din maskin sparas ingen som helst information om vilka
+texter du läst eller vilka möten du är medlem i. Allt detta hämtas
+nytt varje gång du loggar in. Dessutom hämtas en lista på alla texter
+du har markerat (för att du skall kunna få fram texten Markerat av
+dig. eller Markerat av dig och 5 andra. när du läser).
+<p>
+Det som tar längst tid är antabligen vilka möten du är medlem i och
+listan över olästa inlägg i dessa mötena.
+
+<dt>
+<a name="s3">s3: Varför tar det så lång tid att göra endast?</a>
+<dd>
+Se <a href="#s4">nästa fråga</a>.
+
+<dt>
+<a name="s4">s4: Varför sorterar elisp-klienten om mötena i samma ordning som när jag går in i lyskom varje gång jag gör endast?</a>
+<dd>
+
+Endast är för tillfället lite korkat implementerat. Det finns nämligen
+ett anrop till servern som gör just endast. Detta använder sig
+klienten av och sedan gör den det som är lättast: Hämtar om all din
+information från början igen (som när du loggade in).
+
 </dl>
+
 
 <h3>Systemet:</h3>
 <dl>
