@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.22 1997-02-07 18:07:50 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.23 1997-02-09 10:50:43 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.22 1997-02-07 18:07:50 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.23 1997-02-09 10:50:43 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2112,10 +2112,10 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
   (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
-  (let (; (inhibit-quit t)		;inhibit-quit is automatically set
-					;to t in version 18.57, but not in
-					;all older versions of emacs.
-	(old-match-data (match-data))
+;  (setq lyskom-apo-timeout-log
+;        (cons lyskom-apo-timeout lyskom-apo-timeout-log))
+  (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
+  (let ((old-match-data (match-data))
 	;; lyskom-filter-old-buffer is also changed when starting to edit
 	;; in function lyskom-edit-text.
 	(lyskom-filter-old-buffer (current-buffer)))
