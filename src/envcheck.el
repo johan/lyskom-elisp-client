@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: envcheck.el,v 1.4 1997-08-18 12:27:03 byers Exp $
+;;;;; $Id: envcheck.el,v 1.5 1997-09-16 10:19:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -93,7 +93,14 @@ is used instead of `load-path'."
         (have-cus-edit (lyskom-locate-library "cus-edit"))
         (have-cus-face (lyskom-locate-library "cus-face"))
         (have-w3 (lyskom-locate-library "w3"))
+        (have-calc (lyskom-locate-library "calc"))
         (fatal nil))
+
+    (message "\
+
+===============================================================================
+                Checking the Emacs environment for LysKOM.
+")
 
     ;;
     ;; Check the custom library
@@ -103,7 +110,8 @@ is used instead of `load-path'."
       (when have-custom
         (load-library "custom")
         (when (not (fboundp 'custom-declare-group))
-          (message "
+          (message "Checking custom and widget...error
+
 --- Antique version the custom library detected (FATAL)
 
 You have an old version of the custom library in your load path that is
@@ -116,7 +124,8 @@ or that all users of LysKOM prepend a directory containing the new version
 of custom to their load path.
 
 You can get a copy of the most recent version of the custom library from
-http://www.dina.kvl.dk/~abraham/custom/")
+http://www.dina.kvl.dk/~abraham/custom/
+")
 
           (setq fatal t)
           (throw 'terminate nil))
@@ -125,7 +134,8 @@ http://www.dina.kvl.dk/~abraham/custom/")
                         have-wid-browse
                         have-cus-edit
                         have-cus-face))
-          (message "
+          (message "Checking custom and widget...error
+
 --- Parts of the custom library appear to be missing (FATAL)
 
 It looks like you have a recent version of custom, but some of the
@@ -135,19 +145,24 @@ example, wid-edit.el used to be widget-edit.el.) If that is the case,
 you should get a new copy of the library. You can download the custom
 library from http://www.dina.kvl.dk/~abraham/custom/
 ")
-          (message "  custom " (message (if have-custom "found" "not found")))
-          (message "  cus-edit " (message (if have-cus-edit "found"
-                                            "not found")))
-          (message "  cus-face " (message (if have-cus-face "found" 
-                                            "not found")))
-          (message "  widget " (message (if have-widget "found" "not found")))
-          (message "  wid-edit " (message (if have-wid-edit "found"
-                                          "not found")))
-          (message "  wid-browse " (message (if have-wid-browse "found"
-                                          "not found")))
-          (setq fatal t)))
+          (message "  custom %s"  (if have-custom "found" "not found"))
+          (message "  cus-edit %s" (if have-cus-edit "found"
+                                            "not found"))
+          (message "  cus-face %s" (if have-cus-face "found" 
+p                                            "not found"))
+          (message "  widget %s" (if have-widget "found" "not found"))
+          (message "  wid-edit %s" (if have-wid-edit "found"
+                                          "not found"))
+          (message "  wid-browse %s" (if have-wid-browse "found"
+                                          "not found"))
+          (message "")
+          (setq fatal t)
+          (throw 'terminate nil))
+
+        (message "Checking custom and widget...OK"))
       (unless have-custom
-        (message "\
+        (message "Checking custom and widget...error
+
 --- The custom library is not in the default load path (FATAL)
 
 For LysKOM to work you need to install the custom library, a library
@@ -155,7 +170,8 @@ that implements a reasonably user-friendly configuration interface to
 Emacs. Note that modern versions of custom are incompatible with the
 early version distributed with some versions of Gnus. Recent versions
 of Gnus use the new library. You can download a copy of the custom
-library from http://www.dina.kvl.dk/~abraham/custom/")
+library from http://www.dina.kvl.dk/~abraham/custom/
+")
         (setq fatal t)))
 
     ;;
@@ -166,18 +182,51 @@ library from http://www.dina.kvl.dk/~abraham/custom/")
       (if have-w3
           (progn
             (load-library "w3")
-            (unless (fboundp 'w3-region)
-              (message "
+            (if (not (fboundp 'w3-region))
+                (message "Checking w3...error
+
 --- Antique version of w3 detected (WARNING)
 
 You have a version of w3 installed that is of no use to LysKOM. Although
 LysKOM will work, it will be unable to format articles containing HTML.
-You may want to upgrade your w3 to version 3.something.")))
-        (message "
+You may want to upgrade your w3 to version 3.something.
+")
+
+              (message "Checking w3...OK")))
+        (message "Checking w3...error
+
 --- Didn't find w3 at all (WARNING)
 
 Without w3 LysKOM will be unable to format articles containing HTML code.
-You may want to install w3 too.")))
+You may want to install w3 too.
+")))
+
+    ;;
+    ;; Check calc
+    ;;
+
+    (catch 'terminate
+      (if have-calc
+          (progn
+            (load-library "calc")
+            (if (not (fboundp 'calc-eval))
+                (message "Checking calc...error
+
+--- Antique version of calc (WARNING)
+
+You have a version of calc that does not include the function calc-eval, 
+which LysKOM uses. LysKOM will still work, but the Calculate command 
+won't. 
+")
+              (message "Checking calc...OK")))
+        (message "Checking calc...error
+
+--- Didn't find calc at all (WARNING)
+
+Without calc LysKOM's Calculate command will not work. You may want to
+get and install calc.
+")))
+
 
 
     ;;
@@ -186,13 +235,16 @@ You may want to install w3 too.")))
 
     (if fatal
         (message "
-===============================================================================
+
 FATAL ERRORS DETECTED!
 
 Some of the errors detected are fatal. If you don't fix them LysKOM will
 not work and might not even compile.
 ===============================================================================
+
 ")
       (message "
-You should be able to compile and install LysKOM without too much trouble"))))
+You should be able to compile and install LysKOM without too much trouble
+===============================================================================
+"))))
 

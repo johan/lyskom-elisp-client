@@ -8,8 +8,6 @@ Att göra i elisp-klienten
     alla fall. Och den beter sig fel när man står vid prompten och
     vill bläddra bakåt.
 
-    Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
-
     Dubbla prefetcher kan vara väldigt förvirrande. Om man t.ex. gör
     endast i ett möte (säg IÅM) innan det prefetchas får man två
     parallella prefetcher på samma möte.
@@ -263,3 +261,5 @@ Att göra i elisp-klienten
     Nu när lyskom-bufferten återanvänds så kanske M-x lyskom inte ska
     döda bufferten om den misslyckas med att koppla upp sig. [FIXAT]
     
+    Långsamma kommandon buggar, eftersom bufferten är skrivskyddad.
+

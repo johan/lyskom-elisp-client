@@ -20,8 +20,8 @@
 
     LysKOM is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2, or (at your option)
-    any later version.
+    the Free Software Foundation; either version 2, or (at your
+    option) any later version.
 
     LysKOM is distributed in the hope that it will be useful, but
     WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -94,7 +94,9 @@
 
     Type `make'. If your environment is set up correctly, LysKOM
     should be compiled. When compilation is finished, type `make
-    install' to copy all the relevant files to the relevant places.
+    install' to copy all the relevant files to the relevant places. If
+    you do `make install' without just doing `make', you'll bypass the
+    environment check, which is probably not a good idea.
 
     Start Emacs, load lyskom.elc and type M-x lyskom RET, and you
     should be in business.
