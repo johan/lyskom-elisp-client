@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.10 1997-12-04 20:39:31 byers Exp $
+;;;;; $Id: async.el,v 44.11 1997-12-28 19:16:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.10 1997-12-04 20:39:31 byers Exp $\n"))
+	      "$Id: async.el,v 44.11 1997-12-28 19:16:13 byers Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -421,14 +421,23 @@ converted, before insertion."
 	 (if pop (display-buffer (current-buffer))))
 	((null kom-show-personal-messages-in-buffer))
 	(t
-	 (set-buffer (get-buffer-create kom-show-personal-messages-in-buffer))
-	 (goto-char (point-max))
-	 (lyskom-insert string )
-	 (if pop
-	     (save-selected-window
-	       (select-window (display-buffer (current-buffer)))
-	       (goto-char (point-max))
-	       (recenter -1)))))))))
+         (let ((inhibit-read-only t))
+           (let ((message-buffer
+                  (car (lyskom-buffers-of-category 'personal-messages))))
+             (if message-buffer
+                 (set-buffer message-buffer)
+               (set-buffer (lyskom-get-buffer-create 
+                            'personal-messages 
+                            kom-show-personal-messages-in-buffer t))
+               (lyskom-view-mode)
+               (setq buffer-read-only t)))
+           (goto-char (point-max))
+           (lyskom-insert string )
+           (if pop
+               (save-selected-window
+                 (select-window (lyskom-display-buffer (current-buffer)))
+                 (goto-char (point-max))
+                 (recenter -1))))))))))
   
 
 ;;; ================================================================

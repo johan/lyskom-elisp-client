@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 44.31 1997-11-30 17:28:15 byers Exp $
+;;;;; $Id: commands1.el,v 44.32 1997-12-28 19:16:16 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.31 1997-11-30 17:28:15 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.32 1997-12-28 19:16:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -152,7 +152,8 @@
         (lyskom-format-insert 'deleting-text text-no)
         (when (lyskom-report-command-answer 
                (blocking-do 'delete-text text-no))
-          (lyskom-unmark-text text-no nil))))))
+          (when is-marked-by-me
+            (lyskom-unmark-text text-no nil)))))))
 
 
 
@@ -2042,7 +2043,8 @@ If MARK-NO is nil, review all marked texts."
   (let* ((time (or now (blocking-do 'get-time)))
          (mlist (cdr (assq (1+ (time->mon time)) lyskom-nameday-alist)))
          (dlist (cdr (assq (time->mday time) mlist))))
-    (cond ((eq 1 (length dlist))
+    (cond ((null dlist) nil)
+          ((eq 1 (length dlist))
            (lyskom-format "%#1s har namnsdag i dag." (car dlist)))
           ((eq 2 (length dlist))
            (lyskom-format "%#1s och %#2s har namnsdag i dag."
