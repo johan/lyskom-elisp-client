@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.32 2002-04-28 11:50:35 byers Exp $
+;;;;; $Id: services.el,v 44.33 2002-05-21 22:05:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.32 2002-04-28 11:50:35 byers Exp $\n"))
+	      "$Id: services.el,v 44.33 2002-05-21 22:05:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -520,7 +520,7 @@ Args: KOM-QUEUE HANDLER COMMENT-TEXT-NO TEXT-NO &rest DATA."
 				   no-of-texts &rest data-list)
   "Get mapping from local to global text-nos for CONF-NO from server.
 Args: KOM-QUEUE HANDLER CONF-NO FIRST-LOCAL NO-OF-TEXTS DATA-LIST.
-Use initiate-get-map instead. This function has severe performance losses
+Use z-initiate-get-map instead. This function has severe performance losses
 with big maps."
   (lyskom-server-call
     (lyskom-call kom-queue lyskom-ref-no handler data-list 'lyskom-parse-map)

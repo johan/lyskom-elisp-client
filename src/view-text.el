@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.65 2002-05-07 20:12:13 byers Exp $
+;;;;; $Id: view-text.el,v 44.66 2002-05-21 22:05:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.65 2002-05-07 20:12:13 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.66 2002-05-21 22:05:44 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -869,21 +869,17 @@ Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO FLAT-REVIEW."
           ;; (setq t1 (point-max))
 
 	  ;; Truncate body if flat-review and long text
-	  (if (and flat-review kom-truncate-show-lines kom-truncate-threshold)
-	      (let ((lines 0)
-		    (pos 0)
-		    (show-lines (min kom-truncate-show-lines
-				     kom-truncate-threshold))
-		    last-line)
-		(while (and pos (setq pos (string-match "\n" body pos)))
-		  (setq pos (1+ pos))
-		  (setq lines (1+ lines))
-		  (if (= lines show-lines)
-		      (setq last-line (1- pos)))
-		  (if (>= lines kom-truncate-threshold)
-		      (setq body (substring body 0 last-line)
-			    pos nil
-			    truncated t)))))
+	  (when (and flat-review
+                     (numberp kom-truncate-show-lines)
+                     (numberp kom-truncate-threshold))
+            (let* ((truncated-body
+                    (lyskom-truncate-to-lines body
+                                              kom-truncate-threshold
+                                              (min kom-truncate-show-lines
+                                                   kom-truncate-threshold))))
+              (unless (eq truncated-body body)
+                (setq body truncated-body
+                      truncated t))))
 
           (let ((lyskom-current-function-phase 'body))
             (lyskom-format-insert "%#2$%#1t\n" 

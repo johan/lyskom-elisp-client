@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.16 2002-04-27 18:30:33 byers Exp $
+;;;;; $Id: check-strings.el,v 44.17 2002-05-21 22:05:42 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -273,11 +273,11 @@ Check that all server-stored variables are customizeable."
               (if (memq var cust-vars-in-buffer)
                   (lcs-message nil "(%s:%s) Variable declared as missing in custom buffer."
                                'lyskom-custom-variables var))
-              (if (lyskom-get-string-internal (intern (format "%s-tag" var))
+              (if (lyskom-try-get-string (intern (format "%s-tag" var))
                                               'Lyskom-custom-strings)
                   (lcs-message nil "(%s:%s) Tag string for variable declared as missing."
                                'lyskom-custom-strings var))
-              (if (lyskom-get-string-internal (intern (format "%s-doc" var))
+              (if (lyskom-try-get-string (intern (format "%s-doc" var))
                                               'lyskom-custom-strings)
                   (lcs-message nil "(%s:%s) Doc string for variable declared as missing."
                                'lyskom-custom-strings var)))
@@ -287,12 +287,12 @@ Check that all server-stored variables are customizeable."
              ((not (memq var cust-vars-in-buffer))
               (lcs-message nil "(%s:%s) Variable not in customize buffer."
                            'lyskom-customize-buffer-format var))
-             (t (unless (lyskom-get-string-internal 
+             (t (unless (lyskom-try-get-string 
                          (intern (format "%s-tag" var))
                          'lyskom-custom-strings)
                   (lcs-message nil "(%s:%s) No tag string"
                                'lyskom-custom-strings var))
-                (unless (lyskom-get-string-internal 
+                (unless (lyskom-try-get-string 
                          (intern (format "%s-doc" var))
                          'lyskom-custom-strings)
                   (lcs-message nil "(%s:%s) No doc string"

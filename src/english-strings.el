@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.206 2002-05-08 19:50:09 byers Exp $
+;;;;; $Id: english-strings.el,v 44.207 2002-05-21 22:05:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.206 2002-05-08 19:50:09 byers Exp $"))
+              "$Id: english-strings.el,v 44.207 2002-05-21 22:05:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -292,7 +292,7 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (who-to-add . "Whom do you want to add? ")
     (where-to-add . "To which conference? ")
     (where-to-add-self . "Join which conference? ")
-    (priority-q . "Conference priority? (0 (passive membership), 1 (low) - 255 (high)) ")
+    (priority-q . "Priority of your membership? (0 (low) - 255 (high)) ")
     (done . "done.\n")
     (cancelled . "cancelled.\n")
     (nope . "didn't work.\n")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.130 2002-05-07 20:12:11 byers Exp $
+;;;;; $Id: commands2.el,v 44.131 2002-05-21 22:05:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.130 2002-05-07 20:12:11 byers Exp $\n"))
+              "$Id: commands2.el,v 44.131 2002-05-21 22:05:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2926,3 +2926,11 @@ Tryck på enter för att fortsätta.
     (ding))
   (read-from-minibuffer 
    (lyskom-format "%#1@Tryck return eller enter för att gå vidare: " '(face kom-warning-face))))
+
+
+(defun kom-obsolete-who-is-on-in-conference ()
+  "Temporary function for when we moved kom-who-is-on-in-conference from l v to 
+v m"
+  (interactive)
+  (lyskom-insert-before-prompt "Kommandot \"Vilka (är inloggade i) möte\" är flyttat till v m\n"))
+

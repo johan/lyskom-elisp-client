@@ -1,3 +1,51 @@
+2002-05-22  David Byers  <david.byers@swipnet.se>
+
+	* utilities.el (lyskom-get-color-highlight): Handle the case of
+	the color parameter being nil.
+
+2002-05-21  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 561:
+	* lyskom-rest.el (lyskom-get-error-text): Renamed call to
+	lyskom-get-string-internal.
+
+	* check-strings.el (lcs-check-customize-variables): Renamed call
+	to lyskom-get-string-internal.
+
+	* option-edit.el (lyskom-widget-command-value-create): Use
+	lyskom-try-get-string instead of lyskom-get-string-internal.
+
+	* language.el (lyskom-try-get-string): Renamed from
+	lyskom-get-string-internal.
+	(lyskom-get-string): Renamed call to lyskom-get-string-internal.
+	(lyskom-get-string-sol): Same.
+	(lyskom-get-menu-string): Same.
+
+	Fix bug 531:
+	* view-text.el (lyskom-print-text): Use lyskom-truncate-to-lines
+	so we can take the setting of truncate-lines into account. Check
+	truncation settings using numberp.
+
+	* utilities.el (lyskom-truncate-to-lines): New function.
+
+	Fix bug 529:
+	* commands2.el (kom-obsolete-who-is-on-in-conference): New
+	function.
+
+	* swedish-strings.el (lyskom-sv-mode-map): Added key binding lv.
+
+	Fix bug 566:
+	* services.el (initiate-get-map): Updated docstring.
+
+	Fix bug 532:
+	* swedish-strings.el,english-strings.el (lyskom-messages): Removed
+	information about passive memberships by priority (it doesn't work
+	that way now). Changed wording of priority-q.
+
+	Fix bug 530:
+	* commands1.el (kom-move-text-tree): Fix bug that caused only
+	every other text to be moved.
+
 2002-05-08  David Byers  <david.byers@swipnet.se>
 
 	Bug 516:
