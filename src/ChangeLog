@@ -1,3 +1,10 @@
+2003-04-20  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1013:
+	* lyskom-buttons.el (lyskom-default-button): Fixed cut-and-paste
+	bug that caused uconf-stat and pers-stat-based buttons not to be
+	generated correctly in many cases.
+
 2003-04-14  Per Cederqvist  <ceder@ceder.dyndns.org>
 
 	Fix bug 1012:
