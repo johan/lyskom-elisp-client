@@ -1,3 +1,12 @@
+Wed Jul 28 20:18:24 1993  Linus Tolke Y  (linus@varg)
+
+	* commands1.el, command2.el, completing-read.el, edit-text.el:
+	  Some functions rewritten to use the blocking-do construct.
+
+	* startup.el (lyskom-start-anew-create-handler): No presentation
+	  offer.
+	* services.el (blocking-do): New functions.
+
 Fri Jul 23 09:01:58 1993  Linus Tolke Y  (linus@bodil)
 
         * swedish-strings.el, commands2.el (kom-bug-report,
