@@ -1,8 +1,24 @@
+2000-09-14  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el: We tried to bind things in the *swedish*
+	keymaps. Bad idea. Fixed.
+
+2000-09-13  David Byers  <davby@sen2.ida.liu.se>
+
+	* english-strings.el: Bind C-c C-y in edit mode. Bind keys in
+	lyskom-en-customize-map (used to say lyskom-sv-customize-map). 
+
 2000-09-14  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* vars.el.in: Proof-read variable descriptions.
 
 2000-09-09  David Byers  <davby@sen2.ida.liu.se>
+
+	Fix problems with slow commands:
+	* slow.el (lyskom-expand-slow-command): Return the command when
+	there is an exact match.
+	(kom-parse-command-and-execute): Use lyskom-expand-slow-command
+	instead of kom-expand-slow-command.
 
 	* Release av 0.46.1-BETA-1
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.36 2000-09-09 12:01:11 byers Exp $
+;;;;; $Id: command.el,v 44.37 2000-09-14 08:07:53 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.36 2000-09-09 12:01:11 byers Exp $\n"))
+	      "$Id: command.el,v 44.37 2000-09-14 08:07:53 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -284,8 +284,60 @@ and back of the string."
     (setq string (substring string 0 (match-beginning 0))))
   string)
 
-;;; FIXME HARDER: Completion of single SPC should 
-;;; be "" or possibly nil.
+;;; FIXME: Below is an idea on how to do command completion more right.
+;;;
+;;; Precompute lists of words in all commands. Include the optional words 
+;;; and mark them as optional. Possibly allow sublists in the list, and
+;;; make lists of words into sublists and mark the entire sublist as
+;;; optional.
+;;;
+;;; When matching, divide the input into a list of words. Start matchin
+;;; prefixes against the list of words for a command. It goes something 
+;;; like this:
+;;;
+;;; C = 0, I = 0
+;;; while there are more words in the input and command
+;;;    A = word I of the input
+;;;    B = word C of the command
+;;;    if B is an optional word then
+;;;       N = index of word following optional group that B is part of
+;;;       push N,I onto backtracking stack
+;;;    if A is a prefix of B then
+;;;       I = I + 1
+;;;	  C = C + 1
+;;;       next iteration of the loop
+;;;    if the backtracking stack is empty then
+;;;       return mismatch
+;;;    pop X,Y from the backtracking stack
+;;;    C = X
+;;;    I = Y
+;;;    next iteration of the loop
+;;; end while
+;;; if there are left-over words in C then
+;;;    return a mismatch
+;;; else
+;;;    return a match (I,C)
+;;;
+;;; When doing a word completion we can let the completion function do the
+;;; actual work. It computes the longest possible completion we can have
+;;; (i.e. one full word more than what we've got) and hands that over to
+;;; lyskom-complete-string. Computing the longest possible completion
+;;; goes something like this:
+;;;
+;;; W = nil
+;;; Store I,C for all matches
+;;; for all matches M = 1 .. N do
+;;;    do something useful
+;;;
+;;; The idea is to get the last word that matches the input by storing
+;;; the results of the match computation and then looking at the
+;;; following word in all possible completions. If the following word
+;;; is a word in an optional group that is the same in all possible
+;;; completions, then that plus the first C words of any of the
+;;; possible completions is the maximum possible. If the next word is
+;;; a word of an optional group that does *not* match in all
+;;; possibles, then ignore the optional group and look at the next
+;;; word instead.
 
 (defun lyskom-complete-command (string predicate all)
   "Completion function for LysKOM commands."
