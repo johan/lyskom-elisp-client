@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.34 2003-08-24 18:41:36 byers Exp $
+;;;;; $Id: macros.el,v 44.35 2004-02-12 21:07:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.34 2003-08-24 18:41:36 byers Exp $\n"))
+	      "$Id: macros.el,v 44.35 2004-02-12 21:07:52 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -164,26 +164,23 @@ The value of the last form in BODY is returned.
 Each element in BIND-LIST is a list (SYMBOL FORM) which binds SYMBOL to
 the result of the server call FORM, which is the same as used in blocking-do.
 All the forms in BIND-LIST are evaluated before any symbols are bound."
-  (let ((bindsym 'multiple-bind-sym)
-	(index 0))
-    (` (let (((, bindsym)
-	      (lyskom-blocking-do-multiple
-	       (list (,@ (mapcar (function (lambda (x) 
-					     (` (list '(, (car (car (cdr x))))
-						      (,@ (cdr (car (cdr x))))))))
-			   bind-list))))))
-	 (let ((,@ (mapcar (function 
-			    (lambda (bpat)
-			      (prog1
-				  (` ((, (car bpat))
-				      (elt (, bindsym) (, index))))
-				(setq index (1+ index)))))
-			   bind-list)))
-	   (,@ body))))))
+  (let ((index 0))
+    `(let ((lyskom-multiple-bind-sym
+            (lyskom-blocking-do-multiple
+             (list ,@(mapcar (lambda (x) 
+                               `(list ',(car (car (cdr x)))
+                                      ,@(cdr (car (cdr x)))))
+                             bind-list)))))
+       (let (,@(mapcar (lambda (bpat)
+                         (prog1
+                             `(,(car bpat) (elt lyskom-multiple-bind-sym
+                                                ,index))
+                           (setq index (1+ index))))
+                       bind-list))
+         ,@body))))
 
-(put 'blocking-do-multiple 'edebug-form-spec
-     '(sexp body))
 
+(put 'blocking-do-multiple 'edebug-form-spec '(sexp body))
 (put 'blocking-do-multiple 'lisp-indent-function 1)
 
 
@@ -346,6 +343,11 @@ the current buffer, and its value is copied from the LysKOM buffer."
 (defmacro lyskom-setq-default (name value)
   (` (lyskom-set-default (quote (, name))
                          (, value))))
+
+(defmacro lyskom-ref-no ()
+  `(prog1 lyskom-ref-no
+     (setq lyskom-ref-no (1+ lyskom-ref-no))
+     (when (< lyskom-ref-no 0) (setq lyskom-ref-no 1))))
 
 
 (eval-and-compile (provide 'lyskom-macros))

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.283 2004-01-28 23:26:18 byers Exp $
+;;;;; $Id: vars.el.in,v 44.284 2004-02-12 21:07:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.283 2004-01-28 23:26:18 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.284 2004-02-12 21:07:53 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3833,6 +3833,10 @@ set to that text."
 
 (def-kom-var lyskom-current-subject ""
   "Current subject."
+  local)
+
+(def-kom-var lyskom-current-user-area nil
+  "Text-no of user area that current settings come from."
   local)
 
 (def-kom-var kom-saved-file-name (concat default-directory "kom-text")

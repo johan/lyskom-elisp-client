@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.56 2004-01-26 21:51:10 byers Exp $
+;;;;; $Id: parse.el,v 44.57 2004-02-12 21:07:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.56 2004-01-26 21:51:10 byers Exp $\n"))
+	      "$Id: parse.el,v 44.57 2004-02-12 21:07:52 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1255,8 +1255,8 @@ CALL-INFO is destructively changed to
 (defun lyskom-tr-call-to-parsed (call-info result)
   "Transform a CALL to a PARSED."
   (setcar call-info 'PARSED)
-  (setcar (cdr call-info) result)
-  (setcdr (cdr call-info) (cdr (cdr (cdr (cdr call-info))))))
+  (setcar (cdr (cdr call-info)) result)
+  (setcdr (cdr (cdr call-info)) (cdr (cdr (cdr (cdr call-info))))))
 
 
 (defun lyskom-parse-error (ref-no buffer)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.199 2004-01-01 22:01:38 byers Exp $
+;;;;; $Id: commands2.el,v 44.200 2004-02-12 21:07:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.199 2004-01-01 22:01:38 byers Exp $\n"))
+              "$Id: commands2.el,v 44.200 2004-02-12 21:07:51 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3542,58 +3542,105 @@ are advisory; clients may ignore them."
                       (membership->type mship)))
         (lp--update-buffer (uconf-stat->conf-no uconf-stat))))))
 
-(def-kom-command kom-list-new-conferences ()
+(def-kom-command kom-list-new-conferences (arg)
   "List conferences created since the last time this command
-was given."
-  (interactive)
+was given. With prefix argument, prompt for a date to start at."
+  (interactive "P")
   (lyskom-list-new-conferences 'lyskom-last-known-conf-no
                                'conferences
                                (lambda (el)
                                  (not (conf-type->letterbox
-                                       (conf-stat->conf-type el))))))
+                                       (conf-stat->conf-type el))))
+                               arg))
 
-(def-kom-command kom-list-new-persons ()
+(def-kom-command kom-list-new-persons (arg)
   "List persons created since the last time this command
-was given."
-  (interactive)
+was given. With prefix argument, prompt for a date to start at."
+  (interactive "P")
   (lyskom-list-new-conferences 'lyskom-last-known-pers-no
                                'persons
                                (lambda (el)
                                  (conf-type->letterbox
-                                  (conf-stat->conf-type el)))))
+                                  (conf-stat->conf-type el)))
+                               arg))
 
-(defun lyskom-list-new-conferences (varsym obj filter)
-  "List conferences created since the last time this command
-was given."
+(defun lyskom-list-new-conferences (varsym obj filter &optional list-from-date)
+  "List conferences created since a particular point in history.
+
+VARSYM is the name of a variable that should be bound to a cons of the 
+last conference number displayed and the date when it was displayed 
+\(lyskom-time structure).
+
+OBJ is the type of object. It should be a symbol that can be passed
+to lyskom-get-string to get a text representation of the object type.
+
+FILTER is a function called on each conference. It should return
+non-nil for conferences that should be displayed.
+
+If optional LIST-FROM-DATE is non-nil, prompt for a date and list
+all conferences from that date forward."
   (interactive)
-  (let* ((var (symbol-value varsym))
-         (conf-no (or (car var) 1))
-         (last-conf-no (blocking-do 'first-unused-conf-no))
+  (let* ((last-conf-no (blocking-do 'first-unused-conf-no))
+         (var (or (and (null list-from-date) 
+                       (symbol-value varsym))
+                  (let* ((n (lyskom-read-date 
+                             (lyskom-format 'list-confs-from-date
+                                            (lyskom-get-string obj))
+                             t))
+                         (date (and n (lyskom-create-time 0 0 0 (elt n 2)
+                                                          (elt n 1) (elt n 0)
+                                                          0 0 nil)))
+                         (conf (and n (lyskom-find-conf-by-date date))))
+                    (cond 
+
+                     ;; No date -- we want it all!
+                     ((null n) (cons 1 nil))
+
+                     ;; Date but no conf -- no confs to list!
+                     ((null conf) (cons last-conf-no date))
+
+                     ;; Date and conf -- list from this conf
+                     (t (cons (conf-stat->conf-no conf) date))))))
+         (conf-no (car var))
          (time-string (condition-case nil
-                          (and var (lyskom-format-time
-                                    'date-and-time (cdr var)))
+                          (and (cdr var) (lyskom-format-time
+                                          'date-and-time (cdr var)))
                         (error nil))))
 
     (if (null last-conf-no)
         (lyskom-format-insert 'no-support-in-server))
-    (let ((count (cons 0 (make-marker))))
-      (while (< conf-no last-conf-no)
-        (initiate-get-conf-stat 
-         'main
-         (lambda (conf filter count time-string)
-           (when (and conf (funcall filter conf))
-             (when (eq (car count) 0)
-               (lyskom-format-insert 'new-conferences-since 
-                                     time-string (lyskom-get-string obj)))
-             (rplaca count (1+ (car count)))
-             (lyskom-format-insert "%5#1m %#2c %#1M\n"
-                                   conf
-                                   (lyskom-list-conf-membership-char
-                                    (conf-stat->conf-no conf)))
-             (set-marker (cdr count) (point))))
-         conf-no filter count time-string)
-        (setq conf-no (1+ conf-no)))
-      (lyskom-wait-queue 'main)
+
+    ;; There's a serious bug here: we can't cancel!
+    ;; That *has* to be fixed.
+
+    (let ((count (cons 0 (make-marker)))
+          (calls nil))
+      (condition-case nil
+          (progn 
+            (while (< conf-no last-conf-no)
+              (setq calls 
+                    (cons
+                     (initiate-get-conf-stat 
+                      'main
+                      (lambda (conf filter count time-string)
+                        (when (and conf (funcall filter conf))
+                          (when (eq (car count) 0)
+                            (lyskom-format-insert 'new-conferences-since 
+                                                  time-string (lyskom-get-string obj)))
+                          (rplaca count (1+ (car count)))
+                          (lyskom-format-insert "%5#1m %#2c %#1M\n"
+                                                conf
+                                                (lyskom-list-conf-membership-char
+                                                 (conf-stat->conf-no conf)))
+                          (set-marker (cdr count) (point))))
+                      conf-no filter count time-string)
+                     calls))
+              (setq conf-no (1+ conf-no)))
+            (lyskom-wait-queue 'main))
+        (quit 
+         (lyskom-message (lyskom-get-string 'canceling-command))
+         (lyskom-cancel-calls calls)
+         (signal 'quit nil)))
       (when (marker-position (cdr count))
         (goto-char (cdr count)))
 

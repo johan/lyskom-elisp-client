@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.20 2003-04-06 20:23:14 byers Exp $
+;;;;; $Id: clienttypes.el,v 44.21 2004-02-12 21:07:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.20 2003-04-06 20:23:14 byers Exp $\n"))
+	      "$Id: clienttypes.el,v 44.21 2004-02-12 21:07:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -317,6 +317,21 @@ element will be the new first element."
 (defsubst lyskom-queue->last (queue)
   "Return the lastelement of QUEUE or nil if it is empty."
   (car-safe (cdr (cdr queue))))
+
+
+(defun lyskom-queue-remove-matching (queue pred)
+  "Remove all elements from QUEUE that satisfy PRED."
+  (let ((prev nil)
+        (ptr (car (cdr queue))))
+    (while ptr
+      (if (funcall pred (car ptr))
+        (progn (if prev
+                   (setcdr prev (cdr ptr))
+                 (setcar (cdr queue) (cdr ptr)))
+               (unless (cdr ptr)
+                 (setcdr (cdr queue) prev)))
+        (setq prev ptr))
+      (setq ptr (cdr ptr)))))
 
 
 (defsubst lyskom-queue-make-empty (queue)

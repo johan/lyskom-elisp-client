@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.40 2003-08-16 16:58:45 byers Exp $
+;;;;; $Id: flags.el,v 44.41 2004-02-12 21:07:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.40 2003-08-16 16:58:45 byers Exp $\n"))
+	      "$Id: flags.el,v 44.41 2004-02-12 21:07:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -198,9 +198,10 @@ settings and save them to your emacs init file."
 
 (defun lyskom-save-options-2 (text-no kombuf done-message error-message)
   (if text-no
-      (initiate-set-user-area 'options 'lyskom-save-options-3
-                              lyskom-pers-no text-no kombuf 
-                              done-message error-message text-no)
+      (progn (setq lyskom-current-user-area text-no)
+             (initiate-set-user-area 'options 'lyskom-save-options-3
+                                     lyskom-pers-no text-no kombuf 
+                                     done-message error-message text-no))
     (save-excursion
      (set-buffer kombuf)
      (lyskom-insert-string 'could-not-save-options)
@@ -250,95 +251,96 @@ non-nil, read settings in that buffer."
 Returns a list of variables that were ignored."
   (let ((ignored-user-area-vars nil))
     (condition-case nil
-        (if text                        ;+++ Other error handler
-            (let* ((lyskom-options-text (text->text-mass text))
-                   (pointers (lyskom-read-options-eval-get-holerith t))
-                   common-no elisp-no
-                   (rest lyskom-options-text)
-                   working
+        (when text                        ;+++ Other error handler
+          (let* ((lyskom-options-text (text->text-mass text))
+                 (pointers (lyskom-read-options-eval-get-holerith t))
+                 common-no elisp-no
+                 (rest lyskom-options-text)
+                 working
+                 (r 1))
+            (let* ((lyskom-options-text pointers)
+                   word
                    (r 1))
-              (let* ((lyskom-options-text pointers)
-                     word
-                     (r 1))
-                (while (> (length lyskom-options-text) 2)
-                  (setq word (lyskom-read-options-eval-get-holerith t))
-                  (cond
-                   ((lyskom-string= word "common")
-                    (setq common-no r))
-                   ((lyskom-string= word "elisp")
-                    (setq elisp-no r))
-                   (t
-                    ;; Build up lyskom-other-clients-user-areas so that it
-                    ;; contains a list of pairs: (name . number). (string, int).
-                    (setq lyskom-other-clients-user-areas
-                          (cons (cons word r) lyskom-other-clients-user-areas))))
-                  (++ r)))
-              (setq lyskom-other-clients-user-areas 
-                    (nreverse lyskom-other-clients-user-areas))
-              (setq lyskom-options-text rest)
               (while (> (length lyskom-options-text) 2)
-                (setq working (lyskom-read-options-eval-get-holerith t))
+                (setq word (lyskom-read-options-eval-get-holerith t))
                 (cond
-                 ;; Note that common-no may be nil here, so the comparison
-                 ;; cannot be performed with '=.
-                 ((equal r common-no)
-                  (let ((lyskom-options-text working)
-                        spec name value)
-                    (while (> (length lyskom-options-text) 2)
-                      (setq name (intern (lyskom-read-options-eval-get-holerith)))
-                      (setq value (lyskom-read-options-eval-get-holerith))
-                      (setq spec
-                            (cond ((lyskom-flag-global-variable-from-common name))
-                                  (t (let ((tmp (vector name
-                                                        (intern (format "lyskom-UNK-%S" name))
-                                                        nil)))
-                                       (setq lyskom-global-variables
-                                             (cons tmp lyskom-global-variables))
-                                       tmp))))
-
-                      (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2))
-                        (setq ignored-user-area-vars
-                              (cons (elt spec 1) ignored-user-area-vars))))))
-                 ;; Note that elisp-no may be nil here, so the comparison
-                 ;; cannot be performed with '=.
-                 ((equal r elisp-no)
-                  (let ((lyskom-options-text working)
-                        name value)
-                    (while (> (length lyskom-options-text) 2)
-                      (setq name (intern (lyskom-read-options-eval-get-holerith)))
-                      (setq value (lyskom-read-options-eval-get-holerith))
-                      (if (lyskom-maybe-set-var-from-string name value)
-                          (when (functionp (cdr (assq name lyskom-transition-variables)))
-                            (set name (funcall (cdr (assq name lyskom-transition-variables))
-                                               (symbol-value name))))
-                        (setq ignored-user-area-vars
-                              (cons name ignored-user-area-vars))))))
+                 ((lyskom-string= word "common")
+                  (setq common-no r))
+                 ((lyskom-string= word "elisp")
+                  (setq elisp-no r))
                  (t
-                  (let ((pos lyskom-other-clients-user-areas))
-                    (while (and pos
-                                (not (equal
-                                      (cdr (car pos)) ;The position or the string.
-                                      r)))
-                      (setq pos (cdr pos)))
-                    (if pos
-                        (setcdr (car pos) working))))) ;Insert the string
+                  ;; Build up lyskom-other-clients-user-areas so that it
+                  ;; contains a list of pairs: (name . number). (string, int).
+                  (setq lyskom-other-clients-user-areas
+                        (cons (cons word r) lyskom-other-clients-user-areas))))
+                (++ r)))
+            (setq lyskom-other-clients-user-areas 
+                  (nreverse lyskom-other-clients-user-areas))
+            (setq lyskom-options-text rest)
+            (while (> (length lyskom-options-text) 2)
+              (setq working (lyskom-read-options-eval-get-holerith t))
+              (cond
+               ;; Note that common-no may be nil here, so the comparison
+               ;; cannot be performed with '=.
+               ((equal r common-no)
+                (let ((lyskom-options-text working)
+                      spec name value)
+                  (while (> (length lyskom-options-text) 2)
+                    (setq name (intern (lyskom-read-options-eval-get-holerith)))
+                    (setq value (lyskom-read-options-eval-get-holerith))
+                    (setq spec
+                          (cond ((lyskom-flag-global-variable-from-common name))
+                                (t (let ((tmp (vector name
+                                                      (intern (format "lyskom-UNK-%S" name))
+                                                      nil)))
+                                     (setq lyskom-global-variables
+                                           (cons tmp lyskom-global-variables))
+                                     tmp))))
+
+                    (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2))
+                      (setq ignored-user-area-vars
+                            (cons (elt spec 1) ignored-user-area-vars))))))
+               ;; Note that elisp-no may be nil here, so the comparison
+               ;; cannot be performed with '=.
+               ((equal r elisp-no)
+                (let ((lyskom-options-text working)
+                      name value)
+                  (while (> (length lyskom-options-text) 2)
+                    (setq name (intern (lyskom-read-options-eval-get-holerith)))
+                    (setq value (lyskom-read-options-eval-get-holerith))
+                    (if (lyskom-maybe-set-var-from-string name value)
+                        (when (functionp (cdr (assq name lyskom-transition-variables)))
+                          (set name (funcall (cdr (assq name lyskom-transition-variables))
+                                             (symbol-value name))))
+                      (setq ignored-user-area-vars
+                            (cons name ignored-user-area-vars))))))
+               (t
+                (let ((pos lyskom-other-clients-user-areas))
+                  (while (and pos
+                              (not (equal
+                                    (cdr (car pos)) ;The position or the string.
+                                    r)))
+                    (setq pos (cdr pos)))
+                  (if pos
+                      (setcdr (car pos) working))))) ;Insert the string
 					;where the position
 					;was stored.
-                (++ r))
+              (++ r))
 
-              (mapcar 'lyskom-recompile-filter kom-permanent-filter-list)
-              (mapcar 'lyskom-recompile-filter kom-session-filter-list)
+            (mapcar 'lyskom-recompile-filter kom-permanent-filter-list)
+            (mapcar 'lyskom-recompile-filter kom-session-filter-list)
 
-              (setq lyskom-filter-list (append kom-permanent-filter-list
-                                               kom-session-filter-list))
-              (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
-              ;; Remove not found user-areas
-              (let ((pos lyskom-other-clients-user-areas))
-                (if pos
-                    (progn
-                      (while (stringp (cdr (car (cdr pos))))
-                        (setq pos (cdr pos)))
-                      (setcdr pos nil))))))
+            (setq lyskom-filter-list (append kom-permanent-filter-list
+                                             kom-session-filter-list))
+            (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
+            ;; Remove not found user-areas
+            (let ((pos lyskom-other-clients-user-areas))
+              (if pos
+                  (progn
+                    (while (stringp (cdr (car (cdr pos))))
+                      (setq pos (cdr pos)))
+                    (setcdr pos nil)))))
+          (setq lyskom-current-user-area (text->text-no text)))
       (error (lyskom-message "%s" (lyskom-get-string 'error-in-options-short))))
     (setq lyskom-options-done t)
     (setq lyskom-current-user-area (if text (text->text-no text) 0))

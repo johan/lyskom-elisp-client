@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.320 2004-01-28 23:26:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.321 2004-02-12 21:07:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.320 2004-01-28 23:26:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.321 2004-02-12 21:07:51 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2003,6 +2003,7 @@ written a presentation.%]
     (mark-confs-as-known . "Mark these %#2d %#1s as known? ")
     (no-new-conferences . "No new %#2s%#1?b%[ since %#1s%]%[%].\n")
     (new-conferences-since . "New %#2s%#1?b%[ since %#1s%]%[%]:\n")
+    (list-confs-from-date . "List %#1s created since what date (empty for everything)? ")
 
     (privs-wheel . "wheel")
     (privs-admin . "administrator")
@@ -2044,6 +2045,8 @@ Change privileges for %#1P (%#1p)...")
     (set-flg14-priv-q . "Activate unknown privilege 14? ")
     (set-flg15-priv-q . "Activate unknown privilege 15? ")
     (set-flg16-priv-q . "Activate unknown privilege 16? ")
+
+    (canceling-command . "Canceling command...")
     ))
 
 

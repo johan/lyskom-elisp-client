@@ -1,4 +1,70 @@
+2004-02-12  David Byers  <byers@lysator.liu.se>
+
+	Make kom-list-new-conferences quittable:
+	* commands2.el (lyskom-list-new-conferences): Handle C-g when
+	listing conferences or persons using the new lyskom-cancel-calls.
+
+	* internal.el (lyskom-cancel-calls): It works now.
+
+2004-02-11  David Byers  <byers@lysator.liu.se>
+
+	Improve ability to cancel calls:
+	* services.el (initiate-get-text): Add lyskom-ref-no to PARSED.
+	(initiate-get-text-stat): Ditto.
+	(initiate-get-pers-stat): Ditto.
+	(initiate-get-conf-stat): Ditto.
+	(initiate-get-uconf-stat): Ditto.
+	(initiate-get-static-session-info): Ditto.
+	(initiate-get-stats-description): Ditto.
+	(initiate-get-boottime-info): Ditto.
+
+	* internal.el (lyskom-apply-handler): Allow ref-no in PARSED.
+
+	* parse.el (lyskom-tr-call-to-parsed): Leave the ref-no in PARSED.
+
+	* internal.el (lyskom-cancel-calls): New function.
+
+	Prevent lyskom-ref-no from going negative:
+	* macros.el (lyskom-ref-no): New macro to get and increment
+	lyskom-ref-no.
+
+	* internal.el (lyskom-send-packet): Ensure that lyskom-ref-no
+	never goes negative.
+
+	Fix bug 1272:
+	* review.el (kom-review-converted): Don't bind
+	lyskom-format-special (why did we *ever* bind it here?)
+
+2004-02-09  David Byers  <byers@lysator.liu.se>
+
+	* clienttypes.el (lyskom-queue-remove-matching): New function.
+
+2004-02-07  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-read-date): Added optional parameter empty.
+
+	Speed up behavior after changing user area:
+	* async.el (lyskom-parse-async): Don't re-read settings if the new
+	user area is one we've already read (or just created).
+
+	* flags.el (lyskom-save-options-2): Set lyskom-current-user-area.
+	(lyskom-read-options-eval): Ditto.
+
+	Bug 1271 (and then some):
+	* commands2.el (kom-list-new-conferences): Accept prefix arg to
+	list from a specific date.
+	(kom-list-new-persons): Ditto.
+	(lyskom-list-new-conferences): Prompt for start date if the caller
+	requests it or the command has never been used before.
+
+2004-02-06  David Byers  <byers@lysator.liu.se>
+
+	* utilities.el (lyskom-find-conf-by-date): New function.
+
 2004-01-29  David Byers  <byers@lysator.liu.se>
+
+	* macros.el (blocking-do-multiple): Use modern backquote syntax to
+	make the code more readable.
 
 	* vars.el.in (lyskom-text-buttons): Improved performance of some
 	regexps in lyskom-text-buttons.
