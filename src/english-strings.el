@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.234 2002-09-14 22:31:27 byers Exp $
+;;;;; $Id: english-strings.el,v 44.235 2002-09-15 22:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.234 2002-09-14 22:31:27 byers Exp $"))
+              "$Id: english-strings.el,v 44.235 2002-09-15 22:08:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -273,6 +273,13 @@ Be ashamed of being You! You have a very good reason.\n\n")
     (delete-marked-by-you . "marked by you")
     (delete-marked-by-you-and-others . "marked by you and %#1?d%[someone else%]%[%#1d others%]")
     (delete-marked-by-several . "marked by %#1d user%#1?d%[%]%[s%]")
+    (delete-commented-text-help . "\
+The text you are about to remove has comments. If you remove it the 
+comments will lose their context, and this annoys and even angers
+many readers. You should consider moving it to another conference
+instead of removing it.")
+    (delete-commented-text . "The text has comments. Remove anyway? ")
+    (really-delete-commented-text . "Removing a commented text may annoy many readers. Remove anyway?")
     (deleting-text . "Removing text %#1:n...")
 
     (presentation-for-whom . "Which conference/user? ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.270 2002-09-14 22:31:28 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.271 2002-09-15 22:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.270 2002-09-14 22:31:28 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.271 2002-09-15 22:08:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -247,6 +247,13 @@ Guran vill helst sätta en giftpil i dig.\n\n")
     (delete-marked-by-you . "markerat av dig")
     (delete-marked-by-you-and-others . "markerad av dig och %#1?d%[någon annan%]%[%#1d andra%]")
     (delete-marked-by-several . "markerat av %#1d person%#1?d%[%]%[er%]")
+    (delete-commented-text-help . "\
+Inlägget du håller på att radera har kommentarer. Om du tar bort inlägget
+så kommer dessa kommentarer att förlora sitt sammanhang. Detta irriterar
+många läsare. Överväg att flytta inlägget till ett annat möte istället
+för att radera det.")
+    (delete-commented-text . "Inlägget har kommentarer. Radera ändå? ")
+    (really-delete-commented-text . "Att radera kommenterade inlägg irriterar många läsare. Radera ändå?")
     (deleting-text . "Radering av text %#1:n...")
 
     (presentation-for-whom . "Vilket möte/person? ")

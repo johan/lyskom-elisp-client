@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.155 2002-09-14 20:56:53 byers Exp $
+;;;;; $Id: commands1.el,v 44.156 2002-09-15 22:08:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.155 2002-09-14 20:56:53 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.156 2002-09-15 22:08:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -115,32 +115,38 @@
   "Delete a text. Argument: TEXT-NO"
   (interactive (list (lyskom-read-text-no-prefix-arg 'what-text-to-delete)))
   (if text-no
-      (let* ((do-delete t)
-             (text-stat (blocking-do 'get-text-stat text-no))
-             (num-marks (text-stat->no-of-marks text-stat))
+      (let* ((text-stat (blocking-do 'get-text-stat text-no))
+             (num-marks (and text-stat (text-stat->no-of-marks text-stat)))
+             (num-comments (and text-stat (length (lyskom-text-comments text-stat))))
              (is-marked-by-me (cache-text-is-marked text-no)))
-        (cond ((null text-stat) 
-               (lyskom-report-command-answer nil)
-               (setq do-delete nil))
 
-              ((> (text-stat->no-of-marks text-stat) 0)
-               (setq do-delete
-                     (lyskom-j-or-n-p 
-                      (lyskom-format 'delete-marked-text
-                                     (if (> num-marks 0)
-                                         (if is-marked-by-me
-                                             (if (= num-marks 1)
-                                                 (lyskom-get-string 'delete-marked-by-you)
-                                               (lyskom-format 'delete-marked-by-you-and-others
-                                                              (1- num-marks)))
-                                           (lyskom-format 'delete-marked-by-several
-                                                          num-marks))))))))
-        (when do-delete
-          (lyskom-format-insert 'deleting-text text-no)
-          (when (lyskom-report-command-answer 
-                 (blocking-do 'delete-text text-no))
-            (when is-marked-by-me
-              (lyskom-unmark-text text-no)))))
+        (if (null text-stat)
+            (lyskom-report-command-answer nil)
+          (when (and (or (eq 0 num-marks)
+                         (lyskom-j-or-n-p 
+                          (lyskom-format 'delete-marked-text
+                                         (if (> num-marks 0)
+                                             (if is-marked-by-me
+                                                 (if (= num-marks 1)
+                                                     (lyskom-get-string 'delete-marked-by-you)
+                                                   (lyskom-format 'delete-marked-by-you-and-others
+                                                                  (1- num-marks)))
+                                               (lyskom-format 'delete-marked-by-several
+                                                              num-marks))))))
+                     (or (eq 0 num-comments)
+                         (progn (lyskom-format-insert "%#1@%#2t\n" 
+                                                      '(face kom-warning-face)
+                                                      (lyskom-get-string 'delete-commented-text-help))
+                                (lyskom-beep t)
+                                (and (lyskom-j-or-n-p
+                                      (lyskom-get-string 'delete-commented-text))
+                                     (lyskom-j-or-n-p
+                                      (lyskom-get-string 'really-delete-commented-text))))))
+            (lyskom-format-insert 'deleting-text text-no)
+            (when (lyskom-report-command-answer 
+                   (blocking-do 'delete-text text-no))
+              (when is-marked-by-me
+                (lyskom-unmark-text text-no))))))
     (lyskom-insert 'confusion-what-to-delete)))
 
 
