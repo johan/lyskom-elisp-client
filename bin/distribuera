@@ -36,6 +36,7 @@ uuencode pub/lyskom.elc.gz |
 
 
 # From: Uwe Geuder < Uwe.Geuder@informatik.uni-stuttgart.de>
+# Bortkommenterad den 1 mars 1995 p} beg{ran.
 #
 # H{r hittade jag ett gammalt brev. Visst tar jag klientkoden g{rna {ven
 # i forts{ttningen. Jag tror att jag fick den komprimerad och uuencodad
@@ -45,22 +46,22 @@ uuencode pub/lyskom.elc.gz |
 # detta {r lite v{l diffust. Jag forts{tter senare...
 # suck, inget svar. Jag l{gger v{l in n}got.
 
-echo Skicka klienten till Uwe
-( cd ../src ; make lyskom.el )
-gzip < ../src/lyskom.el |
-uuencode lyskom.el.gz |
-	Mail -s "lyskom.el version $version" Uwe.Geuder@informatik.uni-stuttgart.de
-# H{r skickar vi info-filen.
-( cd ../doc ; make elisp-client )
-gzip < ../doc/elisp-client |
-uuencode elisp-client.gz |
-Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
-for fil in `cd ../doc ; echo elisp-client-?`
-do
-	gzip < ../doc/$fil |
-	uuencode ${fil}.gz |
-	Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
-done
+#echo Skicka klienten till Uwe
+#( cd ../src ; make lyskom.el )
+#gzip < ../src/lyskom.el |
+#uuencode lyskom.el.gz |
+#	Mail -s "lyskom.el version $version" Uwe.Geuder@informatik.uni-stuttgart.de
+## H{r skickar vi info-filen.
+#( cd ../doc ; make elisp-client )
+#gzip < ../doc/elisp-client |
+#uuencode elisp-client.gz |
+#Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
+#for fil in `cd ../doc ; echo elisp-client-?`
+#do
+#	gzip < ../doc/$fil |
+#	uuencode ${fil}.gz |
+#	Mail -s "infoiserad dokumentation till elisp-klienten $version" Uwe.Geuder@informatik.uni-stuttgart.de
+#done
 
 # Klaus Zeuge <sojge@Minsk.DoCS.UU.SE>
 # Message-Id: <9308312234.AA17309@Minsk.DoCS.UU.SE>
