@@ -1,0 +1,60 @@
+
+                       Nyheter i lyskom.el 0.43
+                       ========================
+
+Version 0.43 av elispklienten finns nu tillgänglig på följande URL.
+
+       <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+Filen heter lyskom-0.43.el.gz, och en kopia av den text du läser just
+nu finns under namnet NEWS-0.43.
+
+
+* Fitjurs och förbättringar
+
+** Klienten är återigen ganska kompatibel med lyskomd 1.6. 
+
+** Kommandoa "Flytta Text" kan användas för att flytta inlägg mellan
+   möten.
+
+** Om servern är lyskomd version 1.9 eller senare så använder klienten
+   nya anrop för att hämta information om inloggade sessioner. Detta
+   innebär att man kan se osynliga sessioner om man vill och att
+   sessioner som har varit inaktiva en viss tid inte visas i
+   vilkalistan (förutsatt att de sessionerna styrs från en klient som
+   talar om för servern när sessionen är aktiv.) Se variabeln
+   kom-idle-hide.
+
+** Status Session visar hur lång tid en session har varit inaktiv och
+   när den loggade in, förutsatt att servern har stöd för de
+   nödvändiga anropen (lyskomd 1.9.0 och senare.)
+
+** Långsamma kommandon fungerar bättre.
+
+
+
+* Bugfixar
+
+** M-e binds inte längre av elispklienten.
+
+** Hanteringen av prompten fungerar bättre.
+
+
+
+
+* Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Man kan inte filtrera anonyma inlägg eller inlägg av personer som
+   inte längre existerar. Den här buggen har låg prioritet.
+
+** Återse senaste och återse första kan ta väldigt lång tid om de
+   måste söka igenom många texter. Den kommer speciellt att ta lång
+   tid om man återser fler inlägg än en person har skrivit till ett
+   möte med många inlägg. Detta är egentligen inte en bug, men det är
+   lika bra att nämna det så ingen rapporterar det i onödan.
+
+** Om man går ur ett möte medan man prioriterar möten kan man inte
+   spara den nya prioriteringen. Denna bug kommer nog att fixas på
+   något vis såsmåningom. 
+
+
