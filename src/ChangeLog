@@ -1,3 +1,9 @@
+Wed Oct 16 17:54:19 1991  Per Cederqvist  (ceder at robert)
+
+	* view-text.el (lyskom-is-read) Better doc-string.
+
+	* lyskom-rest.el (lyskom-mark-as-read) Better doc-string.
+
 Tue Oct  8 17:06:05 1991  Linus Tolke Y  (linus at lysator)
 
 	* Distributed version 0.34.2		20:50
