@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.142 2002-09-08 15:18:41 byers Exp $
+;;;;; $Id: commands2.el,v 44.143 2002-09-14 22:31:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.142 2002-09-08 15:18:41 byers Exp $\n"))
+              "$Id: commands2.el,v 44.143 2002-09-14 22:31:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -306,11 +306,15 @@ otherwise: the conference is read with lyskom-completing-read."
                          ;; (described by MEMBERSHIP) in CONF-STAT.
                          (if (or (null membership))
                              (lyskom-insert-string 'secret-membership)
-                           (lyskom-insert 
-                            (format "%17s"
-                                    (lyskom-format-time
-                                     'date-and-time
-                                     (membership->last-time-read membership))))
+                           (lyskom-format-insert 
+                            "%#1@%-17#2s"
+                            (if (membership-type->passive
+                                 (member->membership-type member))
+                                '(face kom-dim-face)
+                              nil)
+                            (lyskom-format-time
+                             'date-and-time
+                             (membership->last-time-read membership)))
                            (let ((unread (- (+ (conf-stat->first-local-no
                                                 conf-stat)
                                                (conf-stat->no-of-texts conf-stat))
@@ -324,6 +328,10 @@ otherwise: the conference is read with lyskom-completing-read."
                                                      (format "%9d  " unread))
                                                    (member->pers-no member)
                                                    (lyskom-return-membership-type (member->membership-type member))
+                                                   (if (membership-type->passive
+                                                        (member->membership-type member))
+                                                       '(face kom-dim-face)
+                                                     nil)
                                                    )
                              (when (and (member->created-by member)
                                         (not (zerop (member->created-by member)))
@@ -457,13 +465,15 @@ author of that text will be shown."
         (let ((membership-list 
                (blocking-do 'get-membership
                             (conf-stat->conf-no conf-stat)))
-              (lyskom-count-var 0))
+              (lyskom-count-var 0)
+              (lyskom-passive-count-var 0))
 
           (if (null membership-list)
               (lyskom-format-insert 'not-allowed-see-confs conf-stat)
             (lyskom-format-insert 'is-member-of conf-stat)
             (lyskom-insert-string 'membership-list-header)
             (setq lyskom-count-var 0)
+            (setq lyskom-passive-count-var 0)
             (lyskom-traverse
              membership membership-list
              (let ((cs (cache-get-conf-stat
@@ -482,11 +492,15 @@ author of that text will be shown."
                (if (or (null member-conf-stat)
                        (null membership))
                    (lyskom-insert-string 'secret-membership)
-                 (lyskom-insert 
-                  (format "%17s"
-                          (lyskom-format-time
-                           'date-and-time
-                           (membership->last-time-read membership))))
+                 (lyskom-format-insert
+                  "%#1@%-17#2s"
+                  (if (membership-type->passive
+                       (membership->type membership))
+                      '(face kom-dim-face)
+                    nil)
+                  (lyskom-format-time
+                   'date-and-time
+                   (membership->last-time-read membership)))
                  (let ((unread (- (+ (conf-stat->first-local-no
                                       member-conf-stat)
                                      (conf-stat->no-of-texts
@@ -503,7 +517,12 @@ author of that text will be shown."
                         (lyskom-get-string 'is-supervisor-mark)
                       "  ")
                     member-conf-stat
-                    (lyskom-return-membership-type (membership->type membership))
+                    (lyskom-return-membership-type
+                     (membership->type membership))
+                    (if (membership-type->passive
+                         (membership->type membership))
+                        '(face kom-dim-face)
+                      nil)
                     )
                    (when (and (membership->created-by membership)
                               (not (zerop (membership->created-by membership)))
@@ -514,13 +533,16 @@ author of that text will be shown."
                                             'date-and-time
                                             (membership->created-at membership))
                                            (membership->created-by membership)))
-
-                   (setq lyskom-count-var (+ lyskom-count-var unread)))))))
+                   (if (membership-type->passive (membership->type membership))
+                       (setq lyskom-passive-count-var
+                             (+ lyskom-passive-count-var unread))
+                     (setq lyskom-count-var (+ lyskom-count-var unread))))))))
 
           ;; "Print the total number of unread texts for the person CONF-STAT."
           (lyskom-format-insert 'his-total-unread 
                                 conf-stat
-                                lyskom-count-var))))))
+                                lyskom-count-var
+                                lyskom-passive-count-var))))))
 
 
 
