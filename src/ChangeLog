@@ -1,3 +1,11 @@
+2002-04-18  Jonas Frid  <jonas.frid@softlab.ericsson.se>
+
+	* swedish-strings.el (lyskom-custom-strings): Bugfix in
+	kom-auto-list-faqs-tag. Missing '.'.
+
+	* option-edit.el (lyskom-custom-variables): Bugfix in
+	kom-auto-list-faqs and kom-auto-review-faqs. Missing parantheses.
+
 2002-04-17  Ulrik Haugen  <qha@lysator.liu.se>
 
 	Fix bug 464:
