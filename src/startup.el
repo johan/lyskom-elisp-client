@@ -1,9 +1,9 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.59 2001-11-21 00:02:27 jhs Exp $
-;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
+;;;;; $Id: startup.el,v 44.60 2002-02-24 20:23:28 joel Exp $
+;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
-;;;;; This file is part of the LysKOM server.
+;;;;; This file is part of the LysKOM Emacs LISP client.
 ;;;;; 
 ;;;;; LysKOM is free software; you can redistribute it and/or modify it
 ;;;;; under the terms of the GNU General Public License as published by 
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.59 2001-11-21 00:02:27 jhs Exp $\n"))
+	      "$Id: startup.el,v 44.60 2002-02-24 20:23:28 joel Exp $\n"))
 
 
 ;;; ================================================================
