@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.45 2000-09-09 11:59:27 byers Exp $
+;;;;; $Id: compatibility.el,v 44.46 2000-12-02 15:09:11 ceder Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.45 2000-09-09 11:59:27 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.46 2000-12-02 15:09:11 ceder Exp $\n"))
 
 
 ;;; ======================================================================
@@ -502,31 +502,6 @@ See `walk-windows' for the meaning of MINIBUF and FRAME."
 				  (setq windows (cons window windows)))))
 		  minibuf frame)
     windows))
-
-(lyskom-provide-function window-list (&optional frame minibuf window)
-  "Return a list of windows on FRAME, beginning with WINDOW.
-FRAME and WINDOW default to the selected ones.  
-Optional second arg MINIBUF t means count the minibuffer window
-even if not active.  If MINIBUF is neither t nor nil it means
-not to count the minibuffer even if it is active."
-  (setq window (or window (selected-window))
-	frame (or frame (selected-frame)))
-  (if (not (eq (window-frame window) frame))
-      (error "Window must be on frame."))
-  (let ((current-frame (selected-frame))
-	list)
-    (unwind-protect
-	(save-window-excursion
-	  (select-frame frame)
-	  (walk-windows
-	   (function (lambda (cur-window)
-		       (if (not (eq window cur-window))
-			   (setq list (cons cur-window list)))))
-	   minibuf)
-	  (setq list (cons window list)))
-      (select-frame current-frame))))
-
-
 
 (lyskom-provide-function 
  replace-in-string (str regexp newtext &optional literal)
