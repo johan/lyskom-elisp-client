@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.69 2000-09-01 14:13:18 byers Exp $
+;;;;; $Id: edit-text.el,v 44.70 2000-09-09 11:59:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.69 2000-09-01 14:13:18 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.70 2000-09-09 11:59:29 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1051,7 +1051,7 @@ given, prepend each line with your commenting prefix (or '>')."
 		(cond
 		 ((null current-prefix-arg)
 		  (string-to-int 
-		   (read-from-minibuffer 
+		   (lyskom-read-from-minibuffer 
 		    (format "%s" (lyskom-get-string 'which-text-include)))))
 		 ((prefix-numeric-value current-prefix-arg)))))
   (let ((buffer (current-buffer))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.8 1999-11-19 13:37:14 byers Exp $
+;;;;; $Id: ansaphone.el,v 44.9 2000-09-09 11:59:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -44,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.8 1999-11-19 13:37:14 byers Exp $\n"))
+	      "$Id: ansaphone.el,v 44.9 2000-09-09 11:59:19 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -58,7 +58,7 @@
   "Change the default automatic reply message."
   (interactive)
   (let ((message (or message
-                    (read-from-minibuffer 
+                    (lyskom-read-from-minibuffer 
                      (lyskom-get-string 'ansaphone-new-message)
                      (if (stringp kom-ansaphone-default-reply)
                           (cons kom-ansaphone-default-reply 0)))))

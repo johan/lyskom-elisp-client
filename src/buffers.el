@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.17 2000-09-03 02:56:31 qha Exp $
+;;;;; $Id: buffers.el,v 44.18 2000-09-09 11:59:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.17 2000-09-03 02:56:31 qha Exp $\n"))
+	      "$Id: buffers.el,v 44.18 2000-09-09 11:59:20 byers Exp $\n"))
 
 
 ;;;;
@@ -180,15 +180,15 @@ the children object"
         (setq buflist (cdr buflist))))))
 
 
-(add-hook 'kill-buffer-hook
-          'lyskom-buffer-hierarchy-kill-hook)
-(add-hook 'kill-buffer-hook
-	  '(lambda ()
-	     (when (eq major-mode 'lyskom-mode)
-	       (let ((lyskom-trim-buffer-delete-to
-		      (point-max)))
-		 (run-hooks 'lyskom-trim-buffer-hook))))
-	  nil t)
+(defun lyskom-buffer-kill-trim-hook ()
+  "When killing a buffer, run trimming hooks."
+  (when (eq major-mode 'lyskom-mode)
+    (let ((lyskom-trim-buffer-delete-to (point-max)))
+      (lyskom-ignore lyskom-trim-buffer-delete-to)
+      (run-hooks 'lyskom-trim-buffer-hook))))
+
+(add-hook 'kill-buffer-hook 'lyskom-buffer-hierarchy-kill-hook)
+(add-hook 'kill-buffer-hook 'lyskom-buffer-kill-trim-hook)
 (add-hook 'kill-buffer-query-functions
           'lyskom-buffer-hierarchy-query-kill-function)
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.15 2000-08-23 10:43:44 byers Exp $
+;;;;; $Id: filter.el,v 44.16 2000-09-09 11:59:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.15 2000-08-23 10:43:44 byers Exp $\n"))
+	      "$Id: filter.el,v 44.16 2000-09-09 11:59:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -459,8 +459,9 @@ Otherwise return nil."
 	      (if (null subject)
               (setq subject lyskom-current-subject))
 	      (setq subject 
-                (read-from-minibuffer (lyskom-get-string 'filter-subject)
-                                      subject))
+                (lyskom-read-from-minibuffer 
+		 (lyskom-get-string 'filter-subject)
+		 subject))
 	      (setq filter (cons (cons 'subject subject) filter))
 	      (setq conf (lyskom-read-conf-no
                       (lyskom-get-string 'filter-in-conf)
@@ -613,9 +614,9 @@ the current text"
 	    (if conf-stat
             (progn
               (setq text 
-                    (read-from-minibuffer (lyskom-get-string 
-                                           'filter-which-text)
-                                          (or text "")))
+                    (lyskom-read-from-minibuffer (lyskom-get-string 
+						  'filter-which-text)
+						 (or text "")))
               (setq filter (cons (cons 'text text) filter))
               (setq conf (lyskom-read-conf-no
                           (lyskom-get-string 'filter-in-conf)

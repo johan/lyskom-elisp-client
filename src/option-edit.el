@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.49 2000-09-01 14:13:22 byers Exp $
+;;;;; $Id: option-edit.el,v 44.50 2000-09-09 11:59:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.49 2000-09-01 14:13:22 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.50 2000-09-09 11:59:32 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1347,7 +1347,7 @@ customize buffer but do not save them to the server."
 ;;;
 
 (defun lyskom-widget-string-action (widget &optional event)
-  (let ((tmp (read-from-minibuffer 
+  (let ((tmp (lyskom-read-from-minibuffer 
               (format "%s: " (widget-get widget ':tag))
               (widget-value widget))))
     (widget-value-set widget tmp)

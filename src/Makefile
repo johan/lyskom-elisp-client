@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.68 2000-09-02 18:03:06 byers Exp $
+# $Id: Makefile,v 44.69 2000-09-09 11:59:19 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.68 2000-09-02 18:03:06 byers Exp $
+# $Id: Makefile,v 44.69 2000-09-09 11:59:19 byers Exp $
 #
 
 
@@ -36,7 +36,7 @@
 # makefile too!
 #
 
-CLIENTVERSION = 0.46
+CLIENTVERSION = 0.46.1-BETA-1
 DOCFILES=NEWS-0.46
 DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
@@ -44,6 +44,7 @@ REDHATCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 RPMROOT = /usr/src/redhat
 
 FTPDIR=/home/davby/www-pub
+REMOTEDIR=sanna.lysator.liu.se:/lysator/ftp/pub/lyskom/elisp-client
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
 LISPDIR = /usr/gnu/share/emacs/site-lisp
 LANGUAGES = swedish english
@@ -169,7 +170,7 @@ TAGS: $(HEADER) $(SOURCES)
 install: $(TARGET) $(TARGET-EL)
 	cp $(TARGET-EL) $(TARGET) $(LISPDIR)
 
-release: release-files release-cleanup release-move
+release: release-files release-move release-cleanup
 
 release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC)
 	mkdir lyskom-$(CLIENTVERSION)
@@ -196,11 +197,16 @@ release-cleanup:
 		  lyskom-$(CLIENTVERSION).zip \
 		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 
-release-move: release-files
+release-move: 
+	if [ ! -z "$(REMOTEDIR)" ] ; then \
+	    scp lyskom-$(CLIENTVERSION).tar.gz $(REMOTEDIR); \
+	    scp lyskom-$(CLIENTVERSION).zip $(REMOTEDIR); \
+	else \
+		echo "Kopierade inte release-filerna till remote-system." ; \
+	fi
 	if [ -d $(FTPDIR) ]; then \
 		mv lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR) ; \
 		mv lyskom-$(CLIENTVERSION).zip $(FTPDIR) ; \
-		mv $(TARGET-EL) $(FTPDIR)/lyskom-$(CLIENTVERSION).el ; \
 	else \
 		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
 	fi

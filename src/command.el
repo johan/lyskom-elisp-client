@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.34 2000-09-02 14:30:06 byers Exp $
+;;;;; $Id: command.el,v 44.35 2000-09-09 11:59:21 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.34 2000-09-02 14:30:06 byers Exp $\n"))
+	      "$Id: command.el,v 44.35 2000-09-09 11:59:21 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -201,6 +201,13 @@
      (fnc (call-interactively fnc))
      (t (kom-next-command)))) )
 
+(defvar lyskom-command-completion-map nil)
+(if lyskom-command-completion-map
+    nil
+  (setq lyskom-command-completion-map (make-sparse-keymap))
+  (define-key lyskom-command-completion-map (kbd "SPC")
+    'lyskom-command-complete-word))
+
 (defun lyskom-read-extended-command (&optional prefix-arg)
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
@@ -220,12 +227,19 @@
                    (lyskom-get-string 'extended-command))))
 
     (lyskom-with-lyskom-minibuffer
-     (setq name (lyskom-completing-read prompt
-                                        'lyskom-complete-command
-                                        (lambda (alt)
-                                          (lyskom-ok-command alt 
-                                                             lyskom-is-administrator))
-                                        t nil 'lyskom-command-history))
+     (set-keymap-parent lyskom-command-completion-map
+			minibuffer-local-must-match-map)
+     (let ((minibuffer-completion-table 'lyskom-complete-command)
+	   (minibuffer-completion-predicate (lambda (alt)
+					      (lyskom-ok-command alt 
+								 lyskom-is-administrator)))
+	   (minibuffer-completion-confirm nil))
+       (setq name (lyskom-read-from-minibuffer prompt
+					       nil
+					       lyskom-command-completion-map
+					       'lyskom-command-history
+					       nil
+					       t)))
      (lyskom-lookup-command-by-name name (lambda (alt)
                                            (lyskom-ok-command 
                                             alt lyskom-is-administrator))))))
@@ -240,8 +254,9 @@ transformed for matching."
         (mapcar (lambda (el) 
                   (vector (cdr el)
                           (car el)
-                          (lyskom-completing-strip-name 
-                           (lyskom-unicase (cdr el)))))
+                          (lyskom-completing-strip-command
+                           (lyskom-unicase (cdr el)))
+			  (lyskom-unicase (cdr el))))
                 (lyskom-get-strings lyskom-commands 'lyskom-command))))
 
 (defun lyskom-lookup-command-by-name (string &optional predicate)
@@ -250,7 +265,7 @@ transformed for matching."
 
 (defsubst lyskom-command-match-string-regexp (string)
   (concat 
-   "^"
+   "^\\s-*"
    (replace-in-string (regexp-quote
                        (lyskom-unicase
                         (lyskom-completing-strip-command string)))
@@ -262,32 +277,62 @@ transformed for matching."
 If optional DONT-STRIP-SPACES is non-nil, don't strip spaces at front
 and back of the string."
   (while (string-match "([^()]*)" string) ; Strip nested parens
-    (setq string (replace-match " " t t string)))
+    (setq string (replace-match "" t t string)))
   (while (string-match "\\s-\\s-+" string) ; Collapse spaces
     (setq string (replace-match " " t t string)))
   (while (string-match "([^()]*$" string) ; Strip incomplete parens at end
     (setq string (substring string 0 (match-beginning 0))))
   string)
 
+;;; FIXME HARDER: Completion of single SPC should 
+;;; be "" or possibly nil.
+
 (defun lyskom-complete-command (string predicate all)
   "Completion function for LysKOM commands."
+  (when (string-match "^\\s-+" string)
+    (setq string (substring string (match-end 0))))
   (let ((alternatives nil)
         (m-string (lyskom-command-match-string-regexp string))
+        (u-string (lyskom-unicase string))
         (exact nil))
     (lyskom-traverse el lyskom-command-alternatives
       (when (and (string-match m-string (elt el 2))
                  (or (null predicate) (funcall predicate el)))
         (setq alternatives (cons (if (eq all 'lyskom-lookup) el (elt el 0)) alternatives))
-        (if (eq (match-end 0) (length (elt el 2))) (setq exact el))))
+	(if (string-equal u-string (elt el 3)) (setq exact el))))
     (cond 
      ((eq all 'lyskom-lookup) (and exact (elt exact 1)))
      ((eq all 'lambda) exact)
      (all alternatives)
      ((null alternatives) nil)
      ((and (= (length alternatives) 1) exact) t)
-     (t (lyskom-maybe-recode-string
-	 (lyskom-complete-string alternatives))))))
+     (t (let ((tmp (lyskom-complete-string alternatives)))
+	  (lyskom-maybe-recode-string
+	   (if (string-match (concat (regexp-quote (lyskom-unicase tmp)) "\\s-") u-string)
+	       (concat tmp " ")
+	     tmp)))))))
 
+(defun lyskom-command-complete-word ()
+  (interactive)
+  (let ((completion (try-completion (buffer-string)
+				    minibuffer-completion-table
+				    minibuffer-completion-predicate)))
+    (cond ((null completion) (minibuffer-message " [No match]") nil)
+	  ((eq completion t) nil)
+	  (t (let* ((tmp (buffer-string)))
+	       (when (string-equal (lyskom-unicase completion)
+				   (lyskom-unicase tmp))
+		 (if (stringp (setq tmp (try-completion 
+					 (concat tmp " ")
+					 minibuffer-completion-table
+					 minibuffer-completion-predicate)))
+		     (setq completion tmp)))
+	       (if (string-equal (lyskom-unicase completion)
+				 (lyskom-unicase (buffer-string)))
+		   (progn (minibuffer-completion-help) nil)
+		 (erase-buffer)
+		 (insert completion)
+		 t))))))
 
 
 (defun lyskom-start-of-command (function &optional may-interrupt)

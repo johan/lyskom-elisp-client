@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.8 2000-08-23 10:43:43 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.9 2000-09-09 11:59:30 byers Exp $
 ;;;;; Copyright (C) 1994, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.8 2000-08-23 10:43:43 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.9 2000-09-09 11:59:30 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -529,7 +529,7 @@ If NEWLINE is non-nil, insert a newline after the header."
 			    lyskom-filter-predicate-list
 			    t)
                            nil t))
-    (setq argstring (read-from-minibuffer
+    (setq argstring (lyskom-read-from-minibuffer
                      (lyskom-format 'filter-edit-insert-arg what pred)))
     (setq what (cdr (assoc what rev-what)))
 

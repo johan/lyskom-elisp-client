@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.88 2000-08-29 16:15:03 byers Exp $
+;;;;; $Id: commands1.el,v 44.89 2000-09-09 11:59:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.88 2000-08-29 16:15:03 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.89 2000-09-09 11:59:23 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -348,16 +348,18 @@ Ask for the name of the person, the conference to add him/her to."
 (def-kom-command kom-change-priority (&optional conf)
   "Change the priority of a conference."
   (interactive)
-  
   (let* ((conf-stat (if conf (blocking-do 'get-conf-stat conf)
                       (lyskom-read-conf-stat 
                        (lyskom-get-string 'change-priority-for-q)
                        '(all) nil "" t)))
-         (mship (lyskom-get-membership (conf-stat->conf-no conf-stat) t)))
+         (mship (lyskom-get-membership (conf-stat->conf-no conf-stat) t))
+	 (kom-membership-default-priority nil))
     (blocking-do-multiple ((who (get-conf-stat lyskom-pers-no))
                            (pers-stat (get-pers-stat lyskom-pers-no)))
-      (cond ((null mship) 
-             (lyskom-format-insert 'not-member-of-conf conf))
+      (cond ((and (null mship) conf-stat)
+             (lyskom-format-insert 'not-member-of-conf conf-stat))
+	    ((null conf-stat)
+	     (lyskom-format-insert 'no-such-conf))
             (t (lyskom-add-member-answer
                 (lyskom-try-add-member conf-stat who pers-stat nil
                                        'change-priority-for t)
