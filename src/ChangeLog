@@ -1,3 +1,11 @@
+1999-12-02  David Byers  <davby@sen2.ida.liu.se>
+
+	* flags.el (lyskom-read-options-eval-get-holerith): Skip newlines
+	too.
+	(lyskom-read-options-eval): Surround everything with a catch-all
+	error handler or we won't be able to log in if the user area is
+	broken.
+
 1999-12-01  David Byers  <davby@ida.liu.se>
 
 	* compatibility.el (decode-coding-string, encode-coding-string):
