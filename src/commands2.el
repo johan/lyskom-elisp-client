@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.164 2003-04-06 20:23:14 byers Exp $
+;;;;; $Id: commands2.el,v 44.165 2003-05-09 22:02:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.164 2003-04-06 20:23:14 byers Exp $\n"))
+              "$Id: commands2.el,v 44.165 2003-05-09 22:02:30 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3314,6 +3314,39 @@ that this command could take a very long time to complete."
           ))
       (setq confs (cdr confs)))
     ))
+
+
+(def-kom-command kom-limit-import (conf-stat)
+  "Specify restrictions on importing e-mail. Note that such restrictions
+are advisory; clients may ignore them."
+  (interactive (list (lyskom-read-conf-stat "Begränsa import till vilket möte"
+                                            '(conf pers) nil nil t)))
+  (when conf-stat
+    (let* ((what (lyskom-a-or-b-or-c-p "Förbjud import av vad?"
+                                       '(abc-spam abc-everything)
+                                       'abc-spam))
+           (data (cond ((eq what 'abc-spam) "spam")
+                       ((eq what 'abc-everything) "all"))))
+      (when (or (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
+                                      lyskom-pers-no)
+                (lyskom-j-or-n-p "Du verkar inte vara organisatör för mötet. Försök ändå?"))
+        (when data
+          (lyskom-format-insert "Begränsar import av %#1s i %#2M..."
+                                (substring (lyskom-get-string what) 1)
+                                conf-stat)
+          (lyskom-report-command-answer
+           (blocking-do 'modify-conf-info
+                        (conf-stat->conf-no conf-stat)
+                        nil
+                        (list
+                         (lyskom-create-aux-item
+                          0 35 nil nil
+                          (lyskom-create-aux-item-flags nil nil nil nil 
+                                                        nil nil nil nil)
+                          0 data))))
+          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+
+
 
 ;;; ================================================================
 ;;; Temporary function for when we moved kom-extended-command from a

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.320 2003-04-25 22:24:37 qha Exp $
+;;;;; $Id: swedish-strings.el,v 44.321 2003-05-09 22:02:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.320 2003-04-25 22:24:37 qha Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.321 2003-05-09 22:02:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1944,7 +1944,13 @@ teckenkodning.
     (no-comment-to-to-unread . "Det finns inget kommenterat inlägg att markera som oläst.\n")
 
     (mx-refuse-import-spam . "Spam")
-    (mx-refuse-import-all . "Alla importade texter")
+    (mx-refuse-import-all . "Alla texter")
+    (abc-spam . "sSpam")
+    (abc-everything . "aAlla texter")
+    (limit-import-to-conf . "Begränsa import till vilket möte? ")
+    (limit-import-of-what . "Begränsa import av vad? ")
+    (limit-import-not-super . "Du verkar inte vara organisatör för mötet. Försök ändå? ")
+    (limiting-import . "Begränsar import av %#1s i %#2M...")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2173,6 +2179,7 @@ teckenkodning.
 
     (kom-join-all-conferences . "Bli medlem i alla möten")
     (kom-leave-all-conferences . "Utträd ur (nästan) alla möten")
+    (kom-limit-import         . "Begränsa import av texter")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -4369,8 +4376,8 @@ i servern. Annars sparas det i din .emacs.")
 
 (lyskom-language-strings local lyskom-error-texts sv
   '((error-0 . "Inget fel har inträffat")
-    (error-2 . "Ännu ej implementerat")
-    (error-3 . "Inte längre implementerat")
+    (error-2 . "Ännu ej implementerat i servern")
+    (error-3 . "Inte längre implementerat i servern")
     (error-4 . "Felaktigt lösenord")
     (error-5 . "Strängen för lång")
     (error-6 . "Du är inte inloggad")

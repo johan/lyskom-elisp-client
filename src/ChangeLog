@@ -1,3 +1,11 @@
+2003-05-09  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 868:
+	* commands2.el (kom-add-private-answer): New function.
+
+	Minor usability fix:
+	* english-strings.el,swedish-strings.el: Clarify error-2.
+
 2003-05-04  David Byers  <byers@lysator.liu.se>
 
 	Fix bug 1024:
