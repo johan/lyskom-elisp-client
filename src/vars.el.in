@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 38.13 1996-01-19 18:50:18 byers Exp $
+;;;;; $Id: vars.el.in,v 38.14 1996-02-01 09:37:22 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 38.13 1996-01-19 18:50:18 byers Exp $\n"))
+	      "$Id: vars.el.in,v 38.14 1996-02-01 09:37:22 byers Exp $\n"))
 
 
 
@@ -171,52 +171,129 @@ nonexistent) buffer in which the message is inserted.")
   "*Non-nil means pop up a buffer with personal messages as they arrive.
 kom-show-personal-messages-in-buffer decides which buffer to pop.")
 
-(defvar kom-ding-on-personal-messages t
-  "*Non-nil means ding as personal messages arrive.
-Non-nil and non-t means only ding when they really are personal.")
+(defvar kom-ding-on-priority-break 1
+  "*Non-nil means ding if a higher priority text or conference breaks in.
+A number means the number of times to ding. A string is an argument for the
+program named by kom-audio-player."
+
+(defvar kom-ding-on-common-messages 0
+  "*Non-nil means ding as common messages arrive. A number means the number of
+A number means the number of times to ding. A string is an argument for the
+program named by kom-audio-player.")
+
+(defvar kom-ding-on-group-messages 1
+  "*Non-nil means ding as group messages arrive. A number means the number of
+A number means the number of times to ding. A string is an argument for the
+program named by kom-audio-player.")
+
+(defvar kom-ding-on-personal-messages 2
+  "*Non-nil means ding as personal messages arrive. A number means the number
+A number means the number of times to ding. A string is an argument for the
+program named by kom-audio-player."
+
+(defvar kom-audio-player "audioplay"
+  "*Program to play audio files.")
 
 (defvar kom-send-message-to-last-sender t
   "*Who to send messages to.
 Non-nil means default recipient of messages is the sender of the last
 personal message received. If the last message was a group message,
 the default recipient will be the recipient of that message, unless
-this variable is 'always. Nil means default is everybody.")
+this variable is 'group. Nil means default is everybody.")
+
+(defvar lyskom-filter-outgoing-messages t
+  "t if outgoing remote-control messages and automatic replies are not
+to be displayed in the buffer.")
 
 (defvar kom-text-properties t
   "*Non-nil means to insert text properties in the Emacs buffer for
 various LysKOM elements.")
 
-(defvar kom-text-buttons
-  '(;; Ugly text number buttons. Has to come first.
-    ("\\([0-9][0-9][0-9][0-9][0-9]*\\)" ; Match
-     text				; Button type
-     nil				; Mouse 2 action
-     nil				; Mouse 2 arg
-     nil)				; Text props
+(defvar kom-use-button-hints t
+  "*Non-nil means use button hints for overriding default actions.")
 
-    ;; URL
-    ("\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|www\\|mailto\\|telnet\\):\\(//\\)?[^\t \012\"<>|\\]*[^\t \012\"<>|.,!(){}?'`]" 
-     nil
-     lyskom-button-follow-url
-     nil
-     (face kom-url-face mouse-face kom-highlight-face))
-    
-    ;; Let's be JySKom enhanced
-    ("<(m[|ö]te *\\([0-9]+\\)[^0-9]*)>"
-     conf nil nil nil)
-    ("<(text *\\([0-9]+\\)[^0-9]*)>"
-     text nil nil nil)
-    ("<(person *\\([0-9]+\\)[^0-9]*)>"
-     pers nil nil nil)
+(defvar lyskom-button-actions
+  '((text
+     text-text
+     lyskom-button-view-text
+     ((kom-view "Återse" . lyskom-button-view-text)
+      (kom-write-comment "Kommentera" . lyskom-button-comment-text)
+      (kom-private-answer "Personligt svar" . lyskom-button-private-comment-text)
+      (kom-mark-text "Markera" . lyskom-button-mark-text)
+      (kom-unmark-text "Avmarkera" . lyskom-button-unmark-text))
+     nil)
+    (conf 
+     conf-text
+     lyskom-button-view-conf-presentation
+     ((kom-view-presentation "Återse presentation" . 
+                             lyskom-button-view-conf-presentation)
+      (kom-status-conf "Visa status" . lyskom-button-view-conf-status)
+      (kom-go-to-conf "Gå till mötet" . lyskom-button-goto-conf))
+     ((kom-list-news . lyskom-button-goto-conf)))
+    (pers 
+     pers-text
+     lyskom-button-view-pers-presentation
+     ((kom-view-presentation "Återse presentation" . 
+                             lyskom-button-view-pers-presentation)
+      (kom-status-person "Visa status" . lyskom-button-view-pers-status)
+      (kom-send-letter "Skicka brev" . lyskom-button-mail))
+     nil)
+    (url 
+     url-text
+     lyskom-button-open-url
+     ((kom-open-url "Öppna" . lyskom-button-open-url)
+      (kom-copy-url "Kopiera" . lyskom-button-copy-url))
+     nil))
+
+"This variable defines valid button types in LysKOM. Each element is a
+list consisting of TYPE LABEL DEFAULT ACTIONS HINTS.
+TYPE is the button type the entry defines
+LABEL is a textual representation for the button type, used in menu titles. If
+it is a symbol, that symbol will be looked up using lyskom-get-string.
+DEFAULT is the default action to take on a click. It must be a function.
+ACTIONS are other possible actions. The format of this entry is described below.
+HINTS is a list of hints to override the default action. This is described below.
+
+The ACTIONS entry is used to construct a pop-up menu. It is a list consisting of
+lists with the format (COMMAND STRING . FUNCTION). COMMAND is used to distinguish
+the elements of the menu, STRING is the menu label and FUNCTION is the function to
+call when the menu item is selected.
+
+The HINTS entry is used to generate hints that the default action should be 
+overridden. It is a list containing elements (COMMAND . HINT) where COMMAND is
+as interactive LysKOM command and HINT is a function to call. When a button
+is generated while the command COMMAND is being executed, HINT is used as a hint
+for a new default action. The user has the option to ignore or used the hint.")
+
+
+(defvar lyskom-text-buttons
+  '(
+    ;; Text numbers
+    ("\\(\\<[0-9][0-9][0-9][0-9][0-9]*\\>\\)"       ; Match
+     text                           				; Button type
+     0                                              ; Portion that's a button
+     1                                              ; Portion that's the arg
+     nil                                            ; Face or nil (=default)
+     )
+
+    ;; URLs
+
+    ("\\(file://\\|ftp://\\|gopher://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\"<>|\\]*[^\t \012\"<>|.,!(){}?'`]" 
+     url 0 nil kom-url-face)
+
+    ;; JySKom enhancements
+
+    ("<(m[|ö]te *\\([0-9]+\\)[^0-9]*)>" conf 0 1 nil)
+    ("<(text *\\([0-9]+\\)[^0-9]*)>" text 0 1 nil)
+    ("<(person *\\([0-9]+\\)[^0-9]*)>" pers 0 1 nil)
     )
-
-  "*List of buttons to look for in texts.  Each element is a list of
-(REGEXP TYPE FUNCTION ARGS PROPS) where REGEXP is the regular
-expression to look for, TYPE is the type of button or nil, FUNCTION is
-the function to call (or nil for typed buttons) and PROPS is a list of
-text properties to add (or nil for typed buttons).
-
-Button types may be conf, text or pers.")
+  "List of buttons to install in the text mass of LysKOM objects. Each element is
+a list consisting of REGEXP TYPE BUTTON-MATCH BUTTON-ARG-MATCH FACE.
+REGEXP is the regexp to look for in the text.
+TYPE is the button type. Valid button types are defined in lyskom-button-actions
+BUTTON-MATCH is the number of the parenthesized expression that is the actual button.
+BUTTON-ARG-MATCH is the number of the expression to used as the button argument.
+FACE is the text face to apply to the button, or nil to use the default face.")
 
 
 (defvar kom-url-viewer-preferences '("emacs"
@@ -276,6 +353,8 @@ he gets a y-or-n-p question for all recipients.")
 
 (defconst lyskom-elisp-variables
   '(kom-ding-on-personal-messages
+    kom-ding-on-group-messages
+    kom-ding-on-common-messages
     kom-do-when-done
     kom-higher-priority-breaks
     kom-login-hook
@@ -289,6 +368,10 @@ he gets a y-or-n-p question for all recipients.")
     kom-show-where-and-what
     kom-who-buffer-size-when-displaying
     kom-write-texts-in-window
+    kom-remote-control
+    kom-remote-controllers
+    kom-ansaphone-on
+    kom-ansaphone-default-reply
     lyskom-fetch-map-nos
     lyskom-new-text-hook
     lyskom-prefetch-conf-tresh 
@@ -586,11 +669,26 @@ This is used by the command kom-busy-wait.")
 (defvar kom-quit-when-idle t
   "*Non-niil to automatically quit when LysKOM is full and the session is idle")
 
+(defvar kom-ansaphone-on nil
+  "t if automatic replies to personal messages are in effect.")
+
+
+(defvar kom-remote-control t
+  "*t if LysKOM may be remotely controlled.")
+
+(defvar kom-remote-controllers nil
+  "*Persons who may control LysKOM using messages.")
+
 (defvar kom-permanent-filter-list nil
   "*List of patterns to filter permanently")
 
 (defvar kom-session-filter-list nil
   "List of patterns to filter during this session")
+
+    kom-remote-control
+    kom-remote-controllers
+    kom-ansaphone-on
+    kom-ansaphone-default-reply
 
 (defvar lyskom-filter-list nil
   "List of patterns that are filtered.")
@@ -618,6 +716,9 @@ a string that holds the message.")
 (defvar lyskom-executing-command t
   "Non-nil means the client is executing a command.
 Most commands can't be interrupted by another command.")
+
+(defvar lyskom-current-command nil
+  "The command currently being executed.")
 
 (defvar kom-low-priority -1
   "*Priority that the current conference are set to when they are

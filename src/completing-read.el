@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 38.5 1996-01-17 11:50:51 davidk Exp $
+;;;;; $Id: completing-read.el,v 38.6 1996-02-01 09:36:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 38.5 1996-01-17 11:50:51 davidk Exp $\n"))
+	      "$Id: completing-read.el,v 38.6 1996-02-01 09:36:49 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -60,6 +60,7 @@
     (define-key map " " nil)
     map)
   "Keymap used for reading LysKOM names.")
+
 
 (defun lyskom-read-conf-no (prompt type &optional empty initial)
   "Returns the conf-no of a conf or person read by lyskom-read-conf-name.
@@ -345,3 +346,155 @@ parst matching ([^)]) in string and alist are disgarded."
 					  
 
 
+(defun lyskom-read-session-no (prompt &optional empty initial only-one)
+  "Returns a list of session numbers of a session by reading either 
+the number of the session or a name. 
+
+The question is prompted with PROMPT.
+If EMPTY is non-nil then the empty string is allowed (returns 0).
+INITIAL is the initial contents of the input field.
+If ONLY-ONE is non-nil only one session number will be returned."
+  (let (result data done)
+    (while (not done)
+      (setq data (lyskom-read-session-no-aux prompt t initial))
+      (cond ((and (string= data "") (not empty)))
+            ((string= data "") (setq done t result nil))
+            (t (setq result
+                     (lyskom-read-session-internal data 'logins 'session-no)
+                     done t))))
+    (if (and only-one (> (length result) 1))
+        (setq result
+              (lyskom-read-session-resolve-ambiguity result)))
+    result))
+             
+
+
+(defun lyskom-read-session-resolve-ambiguity (sessions)
+  (lyskom-insert "\n")
+  (lyskom-insert
+   (lyskom-return-who-info-line
+    "    "
+    (lyskom-get-string 'lyskom-name)
+    (lyskom-get-string 'is-in-conf)))
+  (lyskom-insert
+   (lyskom-return-who-info-line
+    "    "
+    (lyskom-get-string 'from-machine)
+    (lyskom-get-string 'is-doing)))
+  (lyskom-insert
+   (concat (make-string (- (lyskom-window-width) 2) ?-)
+           "\n"))
+  (let ((who-info
+         (mapcar (function
+                  (lambda (el)
+                    (let* ((info (blocking-do 'get-session-info el))
+                           (persconfstat
+                            (blocking-do 'get-conf-stat
+                                         (session-info->pers-no info)))
+                           (confconfstat
+                            (blocking-do 'get-conf-stat
+                                         (session-info->working-conf info))))
+                      (lyskom-insert
+                       (lyskom-return-who-info-line-as-state
+                        (format "%4d%s"
+                                (session-info->connection info)
+                                (if (eq (session-info->connection info)
+                                        lyskom-session-no)
+                                    "*" " "))
+                        (blocking-do 'get-conf-stat
+                                     (session-info->pers-no info))
+                        (if (conf-stat->name confconfstat)
+                            confconfstat
+                          (lyskom-get-string 'not-present-anywhere))))
+                      (lyskom-insert
+                       (lyskom-return-who-info-line-as-state
+                        "     "
+                        (lyskom-return-username info)
+                        (concat "("
+                                (session-info->doing info)
+                                ")")))
+                      (cons (number-to-string (session-info->connection info))
+                            info))))
+                 (sort sessions '<))))
+    (lyskom-insert (concat (make-string (- (lyskom-window-width) 2) ?-) "\n"))
+    (lyskom-insert (lyskom-format 'total-users (length who-info)))
+    (while (string= ""
+                    (setq result (completing-read
+                                  (lyskom-get-string 'resolve-session)
+                                  who-info
+                                  nil
+                                  t
+                                  (car (car who-info))
+                                  nil))))
+    (list (session-info->connection (cdr (assoc result who-info))))))
+    
+
+
+(defun lyskom-read-session-no-aux (prompt 
+                                   &optional mustmatch 
+                                   initial)
+  "Read a LysKOM name or session number, prompting with PROMPT.
+The third argument MUSTMATCH makes the function always return the conf-no and 
+never the read string.
+The fourth argument INITIAL is the initial contents of the input-buffer.
+
+Returns the name."
+  (let* ((completion-ignore-case t)
+	 ; When lyskom-read-conf-name-internal is called the current-buffer
+	 ; is the minibuffer and the buffer-local variable lyskom-proc is not
+	 ; correct. Then the variable lyskom-blocking-process must be set
+	 ; instead. It is not buffer-local but scopes the let.
+         (lyskom-blocking-process lyskom-proc)
+         (minibuffer-local-completion-map 
+          lyskom-minibuffer-local-completion-map)
+         (minibuffer-local-must-match-map 
+          lyskom-minibuffer-local-must-match-map))
+    (condition-case error
+        (completing-read prompt 
+                         'lyskom-read-session-internal
+                         'logins
+                         mustmatch
+                         initial
+                         'lyskom-name-hist)
+      (wrong-number-of-arguments ; This is for emacs 18.
+       (completing-read prompt 'lyskom-read-session-internal
+                        'logins mustmatch)))
+    ))
+
+
+(defun lyskom-read-session-internal (string predicate all)
+  (let* ((result nil)
+         (partial (lyskom-read-conf-name-internal string predicate all))
+         (who-list (if (or (null partial)
+                           (eq all 'session-no))
+                       (mapcar (function 
+                                (lambda (el)
+                                  (cons 
+                                   (number-to-string (who-info->connection el))
+                                   el)))
+                               (append (blocking-do 'who-is-on) nil))))
+         (result (cond
+                  ((and (null who-list)
+                        (not (eq 'session-no all))) nil)
+                  ((eq all nil)         ; try-completion
+                   (try-completion string who-list nil))
+                  ((eq all t)           ; all-completions
+                   (all-completions string who-list nil))
+                  ((eq all 'lambda)      ; exact match
+                   (and (assoc string who-list) t)))))
+    (cond ((eq all 'session-no)
+           (if partial
+               (let ((output nil)
+                     (list who-list)
+                     (conf-no (lyskom-read-conf-name-internal string
+                                                              predicate
+                                                              'conf-no)))
+                 (while list
+                   (if (eq conf-no (who-info->pers-no (cdr (car list))))
+                       (setq output (cons
+                                     (who-info->connection (cdr (car list)))
+                                     output)))
+                   (setq list (cdr list)))
+                 output)
+             result))
+           (t (or partial result)))))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.14 1996-01-21 17:54:35 davidk Exp $
+;;;;; $Id: commands1.el,v 38.15 1996-02-01 09:36:40 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.14 1996-01-21 17:54:35 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.15 1996-02-01 09:36:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -119,26 +119,29 @@
 ;;; Author: Inge Wallin
 
 
-(defun kom-review-presentation ()
+(defun kom-review-presentation (&optional who)
   "Review the presentation for a person or a conference."
   (interactive)
   (lyskom-start-of-command 'kom-review-presentation)
   (let ((end-of-command-taken-care-of))
     (unwind-protect
-	(let ((conf-stat (lyskom-read-conf-stat 
-			  (lyskom-get-string 'presentation-for-whom)
-			  'all)))
-	  (if (null conf-stat)
-	      (lyskom-insert-string 'somebody-deleted-that-conf)
-	    (lyskom-format-insert 'review-presentation-of
-				  conf-stat)
-	    (if (/= (conf-stat->presentation conf-stat) 0)
-		(lyskom-view-text (conf-stat->presentation conf-stat))
-	      (lyskom-format-insert 'has-no-presentation
-				    conf-stat))))
+        (let ((conf-stat 
+               (if who
+                   (blocking-do 'get-conf-stat who)
+                 (lyskom-read-conf-stat 
+                          (lyskom-get-string 'presentation-for-whom)
+                          'all))))
+          (if (null conf-stat)
+              (lyskom-insert-string 'somebody-deleted-that-conf)
+            (lyskom-format-insert 'review-presentation-of
+                                  conf-stat)
+            (if (/= (conf-stat->presentation conf-stat) 0)
+                (lyskom-view-text (conf-stat->presentation conf-stat))
+              (lyskom-format-insert 'has-no-presentation
+                                    conf-stat))))
       (if end-of-command-taken-care-of
-	  nil
-	(lyskom-end-of-command)))))
+          nil
+        (lyskom-end-of-command)))))
 
 
 
@@ -210,37 +213,39 @@ as TYPE. If no such misc-info, return NIL"
 ;;; Author: Inge Wallin
 ;;; Rewritten using read-conf-no by Linus Tolke (4=>1)
 
-(defun kom-send-letter ()
+(defun kom-send-letter (&optional pers-no)
   "Send a personal letter to a person or a conference."
   (interactive)
   (condition-case error
       (progn
-	(lyskom-start-of-command 'kom-send-letter)
-	(lyskom-tell-internat 'kom-tell-write-letter)
-	(let* ((tono (lyskom-read-conf-no (lyskom-get-string 'who-letter-to)
-					  'all))
-	       (conf-stat (blocking-do 'get-conf-stat tono)))
-	  (if (if (zerop (conf-stat->msg-of-day conf-stat))
-		  t
-		(progn
-		  (recenter 0)
-		  (lyskom-format-insert 'has-motd 
-					conf-stat)
-		  (lyskom-view-text (conf-stat->msg-of-day conf-stat))
-		  (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
-		      t
-		    (lyskom-end-of-command)
-		    nil)))
-	      (if (= tono lyskom-pers-no)
-		  (lyskom-edit-text lyskom-proc
-				    (lyskom-create-misc-list 'recpt tono)
-				    "" "")
-		(lyskom-edit-text lyskom-proc
-				  (lyskom-create-misc-list 'recpt tono
-							   'recpt lyskom-pers-no)
-				  "" "")))))
+        (lyskom-start-of-command 'kom-send-letter)
+        (lyskom-tell-internat 'kom-tell-write-letter)
+        (let* ((tono (or pers-no
+                         (lyskom-read-conf-no
+                          (lyskom-get-string 'who-letter-to)
+                          'all)))
+               (conf-stat (blocking-do 'get-conf-stat tono)))
+          (if (if (zerop (conf-stat->msg-of-day conf-stat))
+                  t
+                (progn
+                  (recenter 0)
+                  (lyskom-format-insert 'has-motd 
+                                        conf-stat)
+                  (lyskom-view-text (conf-stat->msg-of-day conf-stat))
+                  (if (lyskom-j-or-n-p (lyskom-get-string 'motd-persist-q))
+                      t
+                    (lyskom-end-of-command)
+                    nil)))
+              (if (= tono lyskom-pers-no)
+                  (lyskom-edit-text lyskom-proc
+                                    (lyskom-create-misc-list 'recpt tono)
+                                    "" "")
+                (lyskom-edit-text lyskom-proc
+                                  (lyskom-create-misc-list 'recpt tono
+                                                           'recpt lyskom-pers-no)
+                                  "" "")))))
     (quit (lyskom-end-of-command)
-	  (signal 'quit "Quitting in letter"))))
+          (signal 'quit "Quitting in letter"))))
 
 
 ;;; ================================================================
@@ -269,16 +274,17 @@ Ask for the name of the person, the conference to add him/her to."
 
 ;; Add self
 
-(def-kom-command kom-add-self ()
+(def-kom-command kom-add-self (&optional conf)
   "Add this person as a member of a conference."
   (interactive)
-  (let ((whereto (lyskom-read-conf-stat 
-		  (lyskom-get-string 'where-to-add-self)
-		  'all))
-	(who (blocking-do 'get-conf-stat lyskom-pers-no))
-	(pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
+  (let ((whereto (if conf (blocking-do 'get-conf-stat conf)
+                   (lyskom-read-conf-stat 
+                    (lyskom-get-string 'where-to-add-self)
+                    'all)))
+        (who (blocking-do 'get-conf-stat lyskom-pers-no))
+        (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
     (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat)
-			      whereto who)))
+                              whereto who)))
 
 
 
@@ -439,22 +445,23 @@ of the person."
 			  'all nil "")))
 
 
-(def-kom-command kom-sub-self ()
+(def-kom-command kom-sub-self (&optional conf)
   "Subtract this person as a member from a conference."
   (interactive)
   (lyskom-sub-member 
    (blocking-do 'get-conf-stat lyskom-pers-no)
-   (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
-			  'all nil 
-			  (let ((ccn 
-				 (if (or (zerop lyskom-current-conf))
-				     ""
-				   (conf-stat->name
-				    (blocking-do 'get-conf-stat
-						 lyskom-current-conf)))))
-			    (if ccn
-				(cons ccn 0)
-			      "")))))
+   (if conf (blocking-do 'get-conf-stat conf)
+     (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
+                            'all nil 
+                            (let ((ccn 
+                                   (if (or (zerop lyskom-current-conf))
+                                       ""
+                                     (conf-stat->name
+                                      (blocking-do 'get-conf-stat
+                                                   lyskom-current-conf)))))
+                              (if ccn
+                                  (cons ccn 0)
+                                ""))))))
 
 (defun lyskom-sub-member (pers conf)
   "Remove the person indicated by PERS as a member of CONF."
@@ -864,9 +871,14 @@ If optional argument is non-nil then dont ask for confirmation."
 	 (not (lyskom-ja-or-nej-p
 	       (lyskom-get-string 'quit-in-spite-of-unsent))))
     (lyskom-end-of-command))
-   ((or arg
-	(lyskom-ja-or-nej-p (lyskom-get-string 'really-quit))
-	)
+   ((or arg (lyskom-ja-or-nej-p (lyskom-get-string 'really-quit)))
+    (lyskom-quit))
+   (t (lyskom-end-of-command))))
+
+
+(defun lyskom-quit ()
+  "Quit a session. Kill process and buffer-local variables.
+Don't ask for confirmation."
     (initiate-logout 'main nil)
     (setq lyskom-sessions-with-unread
 	  (delq lyskom-proc lyskom-sessions-with-unread))
@@ -879,8 +891,6 @@ If optional argument is non-nil then dont ask for confirmation."
     (lyskom-insert-string 'session-ended)
     (lyskom-scroll)
     (run-hooks 'kom-quit-hook))
-   (t (lyskom-end-of-command))))
-
   
 
 ;;; ================================================================
@@ -993,15 +1003,17 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
 
 ;;; Author: ???
 
-(def-kom-command kom-go-to-conf ()
+(def-kom-command kom-go-to-conf (&optional conf-no)
   "Select a certain conference.
 The user is prompted for the name of the conference.
 If s/he was already reading a conference that conference will be put
 back on lyskom-to-do-list."
   (interactive)
-  (let ((conf (lyskom-read-conf-stat
-	       (lyskom-get-string 'go-to-conf-p)
-	       'all "")))
+  (let ((conf (if conf-no
+                  (blocking-do 'get-conf-stat conf-no)
+                (lyskom-read-conf-stat
+                 (lyskom-get-string 'go-to-conf-p)
+                 'all ""))))
     (lyskom-go-to-conf conf)))
 
 
@@ -1265,29 +1277,30 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 MARK:   A number that is used as the mark."
   (let ((text-no (cond ((integerp text-no-arg) text-no-arg)
-		       ((and text-no-arg
-			     (listp text-no-arg))
-			(car text-no-arg))
-		       (t lyskom-current-text))))
-    (setq text-no (lyskom-read-number prompt text-no))
+                       ((and text-no-arg
+                             (listp text-no-arg))
+                        (car text-no-arg))
+                       (t lyskom-current-text))))
+    (if prompt
+        (setq text-no (lyskom-read-number prompt text-no)))
     (if (not (eq mark 0))
-	(setq mark
-	      (or kom-default-mark
-		  (lyskom-read-num-range
-		   1 255 (lyskom-get-string 'what-mark) t))))
+        (setq mark
+              (or kom-default-mark
+                  (lyskom-read-num-range
+                   1 255 (lyskom-get-string 'what-mark) t))))
     (if (equal mark 0)
-	(lyskom-format-insert 'unmarking-textno 
-			      text-no)
+        (lyskom-format-insert 'unmarking-textno 
+                              text-no)
       (lyskom-format-insert 'marking-textno 
-			    text-no))
+                            text-no))
     
     (if (blocking-do 'mark-text text-no mark)
-	(progn
-	  (lyskom-insert-string 'done)	  
-	  (if (= mark 0)
-	      (cache-del-marked-text text-no)
-	    (cache-add-marked-text text-no mark)))
-      (lyskom-insert-string 'nope))	;+++ lyskom-errno?
+        (progn
+          (lyskom-insert-string 'done)	  
+          (if (= mark 0)
+              (cache-del-marked-text text-no)
+            (cache-add-marked-text text-no mark)))
+      (lyskom-insert-string 'nope))     ;+++ lyskom-errno?
     (cache-del-text-stat text-no)))
 
 
@@ -1529,7 +1542,9 @@ the window width."
 
 (defun lyskom-return-username (who-info)
   "Takes the username from the WHO-INFO and returns it on a better format."
-  (let* ((username (who-info->username who-info))
+  (let* ((username (if (eq 'SESSION-INFO who-info)
+                       (session-info->username who-info)
+                     (who-info->username who-info)))
 	 (type (or 
 		(string-match "\\([^%@.]+\\)%\\(.+\\)@\\([^%@.]+\\)" username)
 		(string-match "\\([^%@.]+\\)@\\([^%@.]+\\)" username))))

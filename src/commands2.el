@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.12 1996-01-21 17:54:40 davidk Exp $
+;;;;; $Id: commands2.el,v 38.13 1996-02-01 09:36:45 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.12 1996-01-21 17:54:40 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.13 1996-02-01 09:36:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -287,9 +287,9 @@ otherwise: the conference is read with lyskom-completing-read."
   "Prints status for a person."
   (interactive)
   (let ((pers-no
-	 (or pers-no
-	     (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
-				  'pers "")))
+         (or pers-no
+             (lyskom-read-conf-no (lyskom-get-string 'pers-for-status)
+                                  'pers "")))
 	conf-stat
 	pers-stat)
     (cache-del-conf-stat pers-no)
@@ -456,54 +456,57 @@ otherwise: the conference is read with lyskom-completing-read."
 ;;; Modified to use default recipient by David Byers
 
 
-(def-kom-command kom-send-message ()
+(def-kom-command kom-send-message (&optional who message)
   "Send a message to one of the users in KOM right now."
   (interactive)
   (lyskom-send-message 
-   (lyskom-read-conf-no
-    (format (lyskom-get-string 'who-to-send-message-to)
-	    (lyskom-get-string 'everybody))
-    'all t
-    ;; Initial string:
-    (cond
-     ((null kom-send-message-to-last-sender) nil)
-     ((and (not (eq kom-send-message-to-last-sender 'always))
-           lyskom-last-group-message-recipient)
-      (if (string-match "^19" emacs-version)
-          (cons lyskom-last-group-message-recipient 0)
-        lyskom-last-group-message-recipient))
-     (lyskom-last-personal-message-sender
-      (if (string-match "^19" emacs-version)
-          (cons lyskom-last-personal-message-sender 0)
-        lyskom-last-personal-message-sender))
-     (t "")))))
+   (or who
+       (lyskom-read-conf-no
+        (format (lyskom-get-string 'who-to-send-message-to)
+                (lyskom-get-string 'everybody))
+        'all t
+        ;; Initial string:
+        (cond
+         ((null kom-send-message-to-last-sender) nil)
+         ((and (eq kom-send-message-to-last-sender 'group)
+               lyskom-last-group-message-recipient)
+          (if (string-match "^19" emacs-version)
+              (cons lyskom-last-group-message-recipient 0)))
+         (lyskom-last-personal-message-sender
+          (if (string-match "^19" emacs-version)
+              (cons lyskom-last-personal-message-sender 0)
+            lyskom-last-personal-message-sender))
+         (t ""))))
+   message))
   
 
 (def-kom-command kom-send-alarm ()
   "Send a message to all of the users in KOM right now."
   (interactive)
-  (lyskom-send-message 0))
+  (lyskom-send-message 0 nil))
 
 
-(defun lyskom-send-message (pers-no)
+(defun lyskom-send-message (pers-no message)
   "Send a message to the person with the number CONF-NO.  CONF-NO == 0 
 means send the message to everybody."
-  (let* ((string (lyskom-read-string (lyskom-get-string 'message-prompt)))
-	 (reply (blocking-do 'send-message pers-no string))
-	 (to-conf-stat (if (zerop pers-no)
-			   nil
-			 (blocking-do 'get-conf-stat pers-no))))
+  (let* ((string (or message
+                     (lyskom-read-string (lyskom-get-string 'message-prompt))))
+         (reply (blocking-do 'send-message pers-no string))
+         (to-conf-stat (if (zerop pers-no)
+                           nil
+                         (blocking-do 'get-conf-stat pers-no))))
     (if reply
-	(lyskom-handle-as-personal-message
-	 (if to-conf-stat
-	     (lyskom-format 'message-sent-to-user
-			    string to-conf-stat)
-	   (lyskom-format 'message-sent-to-all string))
-	 lyskom-pers-no)
+        (lyskom-handle-as-personal-message
+         (if to-conf-stat
+             (lyskom-format 'message-sent-to-user
+                            string to-conf-stat)
+           (lyskom-format 'message-sent-to-all string))
+         lyskom-pers-no
+         lyskom-filter-outgoing-messages)
       (lyskom-format-insert-before-prompt 'message-nope 
-					  (or to-conf-stat
-					      (lyskom-get-string 'everybody))
-					  string)) ;+++ lyskom-errno
+                                          (or to-conf-stat
+                                              (lyskom-get-string 'everybody))
+                                          string)) ;+++ lyskom-errno
     ))
 
 
@@ -1161,10 +1164,14 @@ Use OLD-MOTD-TEXT as the default text if non-nil."
 (def-kom-command kom-force-logout ()
   "Force another user to log out."
   (interactive)
-  (let ((session (lyskom-read-number (lyskom-get-string 'who-to-throw-out))))
-    (lyskom-format-insert 'throwing-out session)
-    (lyskom-report-command-answer
-     (blocking-do 'disconnect session))))
+  (let ((session (car-safe (lyskom-read-session-no
+                            (lyskom-get-string 'who-to-throw-out)
+                            nil nil t))))
+    (if session
+        (progn
+          (lyskom-format-insert 'throwing-out session)
+          (lyskom-report-command-answer
+           (blocking-do 'disconnect session))))))
 
 
 ;;; ================================================================

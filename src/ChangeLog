@@ -1,3 +1,61 @@
+Thu Feb  1 10:30:54 1996  David Byers  <byers@lysator.liu.se>
+
+	* commands1.el, commands2.el: Some more interactive functions
+			accept optional arguments.
+
+	* async.el: Add optional arg to unconditionally inhibit beeps when
+			handling personal messages.
+
+	* lyskom-buttons.el: Bug fixes, changed mouse-3 menus.
+
+	* lyskom-rest.el: New function lyskom-beep. Only signal priority
+		break when kom-ding-on-priority-break is set.
+
+	* async.el: kom-ding-on-personal-messages replaced by three
+		    variables, kom-ding-on-personal-messages,
+		    kom-ding-on-group-messages,
+		    kom-ding-on-common-messages.
+	
+Mon Jan 29 17:23:36 1996  David Byers  <byers@lysator.liu.se>
+
+	* edit-text.el: Jump to buffer if there is a subject.
+
+	* lyskom-rest.el: New function lyskom-beep. New mouse-3 menus.
+
+	* async.el: kom-ding-on-personal-message replaced by three
+	  variables.
+
+	* lyskom-buttons.el: Rewritten
+
+	* commands*.el: Some more commands accept arguments
+	
+
+Mon Jan 22 17:27:59 1996  David Byers  <byers@lysator.liu.se>
+
+	* commands2.el: kom-throw-out-session: Use lyskom-read-session-no.
+
+	* completing-read.el: Added lyskom-read-session-no to read session
+	  numbers of logged-in users. 
+
+	* startup.el: lyskom-session-no is defined again.
+
+	* english-strings.el: Added strings.	
+
+	* swedish-strings.el: Fixed prioritize mode keymap. Added some
+	  strings. 
+
+	* ansaphone.el: New file. Answering machine.
+
+	* remote-control.el: New file. Remote control of session.
+
+	* messages.el: New file. Framework for handling personal
+	  messages. 
+
+	* async.el: Rewrote handling of personal messages to used a
+	  handler queue. See messages.el. Functions that print personal
+	  messages now accept time strings and know how to print very old
+	  messages. 
+
 Sun Jan 21 18:38:26 1996  David K}gedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-format-text-body): Lätt justering.

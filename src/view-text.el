@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 38.7 1996-01-21 17:55:14 davidk Exp $
+;;;;; $Id: view-text.el,v 38.8 1996-02-01 09:37:25 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 38.7 1996-01-21 17:55:14 davidk Exp $\n"))
+	      "$Id: view-text.el,v 38.8 1996-02-01 09:37:25 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -415,10 +415,12 @@ Args: TEXT-STAT of the text being read."
 	(let* ((author (blocking-do 'get-conf-stat
 				    (text-stat->author text-stat)))
 	       (type (misc-info->type misc))
-	       (tyname (if (null author)
-			   (lyskom-format 'person-does-not-exist
-					  (text-stat->author text-stat))
-			 author)))
+	       (tyname (cond ((eq 0 (text-stat->author text-stat))
+                          (lyskom-get-string 'person-is-anonymous))
+                         ((null author)
+                          (lyskom-format 'person-does-not-exist
+                                         (text-stat->author text-stat)))
+                         (t author))))
 
 	  (cond
 	   ((eq type 'COMM-TO)

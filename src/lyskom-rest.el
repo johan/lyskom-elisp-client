@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.20 1996-01-22 12:35:03 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.21 1996-02-01 09:37:03 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.20 1996-01-22 12:35:03 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.21 1996-02-01 09:37:03 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1197,9 +1197,9 @@ Args: FORMAT-STRING &rest ARGS"
 (defun lyskom-tweak-format-state (format-state) 
   (let ((dp (format-state->delayed-propl format-state)))
     (while dp
-      (add-text-properties (car dp)
+      (add-text-properties (car (car dp))
                            (length (format-state->result format-state))
-                           (cdr dp)
+                           (cdr (car dp))
                            (format-state->result format-state))
       (setq dp (cdr dp)))
     (set-format-state->delayed-propl format-state nil))
@@ -1217,29 +1217,55 @@ Args: FORMAT-STRING &rest ARGS"
   (if lyskom-format-experimental
       (cond
        ((and (string-match "\\`html:" text)
-	     (condition-case e (require 'w3) (error nil)))
-	(let ((tmpbuf (generate-new-buffer "lyskom-html")))
-	  (unwind-protect
-	      (save-excursion
-		(set-buffer tmpbuf)
-		(insert (substring text 5))
-		(w3-preview-this-buffer))
-	    (kill-buffer tmpbuf))))
+             (condition-case e (require 'w3) (error nil)))
+        (let ((tmpbuf (generate-new-buffer "lyskom-html")))
+          (unwind-protect
+              (save-excursion
+                (set-buffer tmpbuf)
+                (insert (substring text 5))
+                (w3-preview-this-buffer))
+            (kill-buffer tmpbuf))))
        ((and (fboundp 'format-decode-buffer)
-	     (string-match "\\`enriched:" text))
-	(let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
-	  (unwind-protect
-	      (save-excursion
-		(set-buffer tmpbuf)
-		(insert (substring text 9))
-		(format-decode-buffer 'text/enriched)
-		(substring (buffer-string) 0 -1)) ; Remove the \n
-	    (kill-buffer tmpbuf))))
+             (string-match "\\`enriched:" text))
+        (let ((tmpbuf (generate-new-buffer "lyskom-enriched")))
+          (unwind-protect
+              (save-excursion
+                (set-buffer tmpbuf)
+                (insert (substring text 9))
+                (format-decode-buffer 'text/enriched)
+                (substring (buffer-string) 0 -1)) ; Remove the \n
+            (kill-buffer tmpbuf))))
        (t
-	(lyskom-button-transform-text text)))
+        (lyskom-button-transform-text text)))
     (lyskom-button-transform-text text)))
     
-	    
+
+
+;;; ============================================================
+;;;                     Beeping and feeping
+;;;
+
+(defun lyskom-beep (arg)
+  "Beep. ARG is how to beep. 
+nil means don't beep.
+t means beep once.
+A number means beep that number of times (.1 second delay between beeps).
+A string means start the command kom-audio-player with the string as argument.
+A symbol other than t means call it as a function."
+  (cond ((null arg))
+        ((eq t arg) (ding t))
+        ((numberp arg) (while (> arg 0)
+                         (ding t)
+                         (sit-for 0.1)
+                         (setq arg (1- arg))))
+        ((stringp arg)
+         (start-process "audio"
+                        nil
+                        kom-audio-player
+                        arg))
+        ((symbolp arg)
+         (funcall arg))
+        (t (beep))))
 		  
 
 ;;; ================================================================
@@ -1343,44 +1369,45 @@ lyskom-is-waiting nil.
 	 This function checks if doing-default-command and first-time-around 
 	 are bound. The text entered in the buffer is chosen according to this"
   (if (and lyskom-is-waiting
-	   (listp lyskom-is-waiting))
+           (listp lyskom-is-waiting))
       (progn
-	(setq lyskom-is-waiting nil)
-	(lyskom-end-of-command)))
+        (setq lyskom-is-waiting nil)
+        (lyskom-end-of-command)))
   (if (and lyskom-executing-command (not may-interrupt))
       (lyskom-error "%s" (lyskom-get-string 'wait-for-prompt)))
   (if (not (and (boundp 'doing-default-command)
-		doing-default-command))
+                doing-default-command))
       (cond
        ((and (boundp 'first-time-around)
-	     first-time-around))
+             first-time-around))
        ((stringp function) (lyskom-insert function))
        ((and function (symbolp function))
-	(let ((name (lyskom-command-name function)))
-	  (if name (lyskom-insert name)))))
+        (let ((name (lyskom-command-name function)))
+          (if name (lyskom-insert name)))))
     (save-excursion
       (if (not lyskom-no-prompt)
-	  (let ((buffer-read-only nil))
-	    (goto-char (point-max))
-	    (delete-char (- (length lyskom-prompt-text))))))
+          (let ((buffer-read-only nil))
+            (goto-char (point-max))
+            (delete-char (- (length lyskom-prompt-text))))))
     (lyskom-insert lyskom-prompt-executing-default-command-text))
   (if (pos-visible-in-window-p (point-max))
       (save-excursion
-	(goto-char (point-max))
-	(lyskom-set-last-viewed)))
+        (goto-char (point-max))
+        (lyskom-set-last-viewed)))
   (setq lyskom-executing-command t)
+  (setq lyskom-current-command function)
   (lyskom-insert "\n")
   (if (and (eq (window-buffer (selected-window))
-	       (current-buffer))
-	   (= (point) (point-max)))	;Tell user something is
+               (current-buffer))
+           (= (point) (point-max)))     ;Tell user something is
       (progn
-	(beginning-of-line 0)		;about to happen.
-	(sit-for 0)))
-;  (lyskom-scroll)
-  (if kom-page-before-command		;Nice with dumb terminals.
+        (beginning-of-line 0)           ;about to happen.
+        (sit-for 0)))
+                                        ;  (lyskom-scroll)
+  (if kom-page-before-command           ;Nice with dumb terminals.
       (if (or (not (listp kom-page-before-command))
-	      (memq function kom-page-before-command))
-	  (recenter 0))))
+              (memq function kom-page-before-command))
+          (recenter 0))))
 
 
 (defun lyskom-end-of-command ()
@@ -1388,12 +1415,13 @@ lyskom-is-waiting nil.
   (message "")
   (let ((start 0))
     (while (and lyskom-to-be-printed-before-prompt
-		(lyskom-queue->first lyskom-to-be-printed-before-prompt))
+                (lyskom-queue->first lyskom-to-be-printed-before-prompt))
       (setq start (point-max))
       (lyskom-insert (car (lyskom-queue->first 
-			   lyskom-to-be-printed-before-prompt)))
+                           lyskom-to-be-printed-before-prompt)))
       (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt)))
   (setq lyskom-executing-command nil)
+  (setq lyskom-current-command nil)
   (setq lyskom-no-prompt t)
   (lyskom-scroll)
   (if (pos-visible-in-window-p (point-max) (selected-window))
@@ -1411,54 +1439,58 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
     (cond
      
      ((eq to-do 'next-pri-conf)
-      (lyskom-insert-string 'go-to-pri-conf-prompt)
-      (beep))
+      (lyskom-insert-string (lyskom-modify-prompt 'go-to-pri-conf-prompt))
+      (lyskom-beep kom-ding-on-priority-break))
 
      ((eq to-do 'next-pri-text)
-      (lyskom-insert-string 'read-pri-text-conf)
-      (beep))
+      (lyskom-insert-string (lyskom-modify-prompt 'read-pri-text-conf))
+      (lyskom-beep kom-ding-on-priority-break))
 
      ((eq to-do 'next-text)
       (lyskom-insert
-       (let ((read-info (read-list->first lyskom-reading-list)))
-	 (cond
-	  ((eq 'REVIEW (read-info->type read-info))
-	   (lyskom-get-string 'review-next-text-prompt))
-	  ((eq 'REVIEW-TREE (read-info->type read-info))
-	   (lyskom-get-string 'review-next-comment-prompt))
-	  ((eq 'REVIEW-MARK (read-info->type read-info))
-	   (lyskom-get-string 'review-next-marked-prompt))
-	  ((= lyskom-current-conf lyskom-pers-no)
-	   (lyskom-get-string 'read-next-letter-prompt))
-	  ((eq 'FOOTN-IN (read-info->type read-info))
-	   (lyskom-get-string 'read-next-footnote-prompt))
-	  ((eq 'COMM-IN (read-info->type read-info))
-	   (lyskom-get-string 'read-next-comment-prompt))
-	  (t (lyskom-get-string 'read-next-text-prompt))))))
+       (lyskom-modify-prompt
+        (let ((read-info (read-list->first lyskom-reading-list)))
+          (cond
+           ((eq 'REVIEW (read-info->type read-info))
+            (lyskom-get-string 'review-next-text-prompt))
+           ((eq 'REVIEW-TREE (read-info->type read-info))
+            (lyskom-get-string 'review-next-comment-prompt))
+           ((eq 'REVIEW-MARK (read-info->type read-info))
+            (lyskom-get-string 'review-next-marked-prompt))
+           ((= lyskom-current-conf lyskom-pers-no)
+            (lyskom-get-string 'read-next-letter-prompt))
+           ((eq 'FOOTN-IN (read-info->type read-info))
+            (lyskom-get-string 'read-next-footnote-prompt))
+           ((eq 'COMM-IN (read-info->type read-info))
+            (lyskom-get-string 'read-next-comment-prompt))
+           (t (lyskom-get-string 'read-next-text-prompt)))))))
 
      ((eq to-do 'next-conf)
       (lyskom-insert
-       (cond
-	((eq 'REVIEW-MARK 
-	     (read-info->type (read-list->first lyskom-to-do-list)))
-	 (lyskom-get-string 'go-to-conf-of-marked-prompt))
-	((/= lyskom-pers-no
-	     (conf-stat->conf-no
-	      (read-info->conf-stat (read-list->first
-				     lyskom-to-do-list))))
-	 (lyskom-get-string 'go-to-next-conf-prompt))
-	(t (lyskom-get-string 'go-to-your-mailbox-prompt)))))
+       (lyskom-modify-prompt
+        (cond
+         ((eq 'REVIEW-MARK 
+              (read-info->type (read-list->first lyskom-to-do-list)))
+          (lyskom-get-string 'go-to-conf-of-marked-prompt))
+         ((/= lyskom-pers-no
+              (conf-stat->conf-no
+               (read-info->conf-stat (read-list->first
+                                      lyskom-to-do-list))))
+          (lyskom-get-string 'go-to-next-conf-prompt))
+         (t (lyskom-get-string 'go-to-your-mailbox-prompt))))))
 
      ((eq to-do 'when-done)
       (if (not lyskom-is-writing)
 	  (lyskom-tell-server kom-mercial))
       (setq lyskom-is-waiting t)
-      (lyskom-insert (let ((command (lyskom-what-to-do-when-done t)))
-		       (cond			    
-			((lyskom-command-name command))
-			((and (stringp command)
-			      (lyskom-command-name (key-binding command))))
-			(t (lyskom-format 'the-command command))))))
+      (lyskom-insert
+       (lyskom-modify-prompt
+        (let ((command (lyskom-what-to-do-when-done t)))
+          (cond			    
+           ((lyskom-command-name command))
+           ((and (stringp command)
+                 (lyskom-command-name (key-binding command))))
+           (t (lyskom-format 'the-command command)))))))
 
      ((eq to-do 'unknown)		;Pending replies from server.
       (setq lyskom-no-prompt t))
@@ -1471,6 +1503,13 @@ Set lyskom-no-prompt otwherwise. Tell server what I am doing."
 
   (lyskom-set-mode-line))
 
+
+(defun lyskom-modify-prompt (s)
+  "Modify the LysKOM prompt to reflect the current state of LysKOM."
+  (if (symbolp s) (setq s (lyskom-get-string s)))
+  (if kom-ansaphone-on
+      (setq s (format (lyskom-get-string 'prompt-modifier-ansaphone) s)))
+  s)
 
 (defun lyskom-what-to-do ()
   "Check what is to be done. Return an atom as follows:
@@ -1535,18 +1574,18 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 (defun lyskom-prefetch-and-print-prompt ()
   "Prefetch info if needed. Print prompt if not already printed."
   (if (< (lyskom-known-texts)
-	 lyskom-prefetch-conf-tresh)
+         lyskom-prefetch-conf-tresh)
       (lyskom-prefetch-conf))
   (lyskom-prefetch-text)
   (if (and (listp lyskom-is-waiting)
-	   (eval lyskom-is-waiting))
+           (eval lyskom-is-waiting))
       (progn
-	(setq lyskom-is-waiting nil)
-	(beep)
-	(lyskom-end-of-command)
-	(if (read-list-isempty lyskom-reading-list)
-	    (kom-go-to-next-conf))
-	(kom-next-command)))
+        (setq lyskom-is-waiting nil)
+        (beep)
+        (lyskom-end-of-command)
+        (if (read-list-isempty lyskom-reading-list)
+            (kom-go-to-next-conf))
+        (kom-next-command)))
   (if lyskom-no-prompt
       (lyskom-print-prompt)))
 
