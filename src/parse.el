@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 44.4 1996-10-24 09:48:04 byers Exp $
+;;;;; $Id: parse.el,v 44.5 1996-11-12 22:32:38 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.4 1996-10-24 09:48:04 byers Exp $\n"))
+	      "$Id: parse.el,v 44.5 1996-11-12 22:32:38 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -192,19 +192,21 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
 (defun lyskom-parse-bitstring (default)
   "Parse a generic bit string"
   (let ((result nil)
-        (char (lyskom-parse-nonwhite-char)))
-    (while default
+        (char (lyskom-parse-nonwhite-char))
+	(continue t))
+    (while (and continue default)
       (cond ((= char ?0) (setq result (cons nil result)
-                                default (cdr default)
-                                char (lyskom-parse-char)))
+			       default (cdr default)
+			       char (lyskom-parse-char)))
 
             ((= char ?1) (setq result (cons t result)
-                                default (cdr default)
-                                char (lyskom-parse-char)))
+			       default (cdr default)
+			       char (lyskom-parse-char)))
             ((or (= char ?\ )
                  (= char ?\n))
-             (setq result (nconc (nreverse result) default))
-             (setq default nil))
+	     ;; This occurs when the received string is shorter than
+	     ;; expected.
+             (setq continue nil))
 
             (t (signal 'lyskom-protocol-error
                        (list 'lyskom-parse-bitstring char
@@ -212,10 +214,12 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
                              (buffer-string))))))
     (if (not (or (= char ?\ )
                  (= char ?\n)))
+	;; This occurs when the received string is longer than
+	;; expected.
         (progn
           (lyskom-parse-skip-rest-of-token)
           (nreverse result))
-      result)))
+      (nconc (nreverse result) (copy-sequence default)))))
 
 
 (defun lyskom-parse-time ()
