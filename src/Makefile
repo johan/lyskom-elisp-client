@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.111 2003-08-25 09:10:57 byers Exp $
+# $Id: Makefile,v 44.112 2004-06-09 11:06:09 qha Exp $
 
 # Useful targets:
 #
@@ -310,6 +310,11 @@ redhat-packages: $(PACKAGENAME)-src-$(CLIENTVERSION).tar.gz
 # distribution. (make DEBIANCLIENTVERSIONSUFFIX=qha1 debian-packages).
 DEBIANCLIENTVERSIONSUFFIX = 1
 
+# and when you're the only one who'll use the package and you're not
+# really the maintainer you might want to set this to something like
+# '-us -uc' and perhaps -rfakeroot aswell.
+DPKG_BUILDPACKAGE_OPTIONS = ''
+
 DEBIANCLIENTVERSION := $(subst -,.,$(CLIENTVERSION))
 
 debian-packages: $(RELEASE-BASE-SRC).buildstamp
@@ -317,7 +322,7 @@ debian-packages: $(RELEASE-BASE-SRC).buildstamp
 	$(RM) -rf $(RELEASE-BASE-SRC)/debian/CVS
 	sed '1s/(.*)/($(DEBIANCLIENTVERSION)-$(DEBIANCLIENTVERSIONSUFFIX))/' <debian/changelog >$(RELEASE-BASE-SRC)/debian/changelog
 	sed 's/@@CLIENTVERSION@@/$(CLIENTVERSION)/g' <debian/rules >$(RELEASE-BASE-SRC)/debian/rules
-	cd $(RELEASE-BASE-SRC) && dpkg-buildpackage
+	cd $(RELEASE-BASE-SRC) && dpkg-buildpackage $(DPKG_BUILDPACKAGE_OPTIONS)
 
 
 clean:

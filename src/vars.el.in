@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.292 2004-05-25 18:01:00 byers Exp $
+;;;;; $Id: vars.el.in,v 44.293 2004-06-09 11:06:09 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.292 2004-05-25 18:01:00 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.293 2004-06-09 11:06:09 qha Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2628,7 +2628,8 @@ Values other than those described are reserved for future use.")
     ("kom.cd.chalmers.se" . "CD-KOM")
     ("community.roxen.com" . "Roxen Community KOM")
     ("kom.ds.hj.se" . "DSKOM")
-    ("kom.sno.pp.se" . "SnoppKOM"))
+    ("kom.sno.pp.se" . "SnoppKOM")
+    ("myskom.kfib.org" . "MysKOM"))
   "**An alist mapping server names to shorter identification strings.
 
 Each value in this string should be of the form `(SERVER . NICKNAME)',
