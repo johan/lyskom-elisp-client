@@ -1,3 +1,5 @@
+* kom-quit-hook?
+
 * Byt ut alla who-info mot session-info |verallt i klienten.  Who-info
   skall bli obsolete!
 
