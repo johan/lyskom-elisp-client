@@ -1,3 +1,9 @@
+2005-01-19  Pontus Freyhult  <pont@soua.net>
+
+	* lyskom-rest.el (kom-save-text-body): Use coding system of text
+	for saving if available, or fall back to server default coding 
+	system if not.
+
 2005-01-18  Pontus Freyhult  <pont@soua.net>
 
 	* swedish-strings.el: Added compatibility key bindings for XEmacs
