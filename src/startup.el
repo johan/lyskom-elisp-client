@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 36.2 1993-05-05 03:14:11 linus Exp $
+;;;;; $Id: startup.el,v 36.3 1993-05-11 16:00:20 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 36.2 1993-05-05 03:14:11 linus Exp $\n"))
+	      "$Id: startup.el,v 36.3 1993-05-11 16:00:20 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -106,7 +106,7 @@ Optional arguments: HOST, USERNAME and PASSWORD."
 		(goto-char (point-max))
 		(insert "\n" (format "%s" proc) "-----> " output)))
 	  (cond
-	   ((string= output "LysKOM\n")
+	   ((string-match "^LysKOM\n" output)
 	    (lyskom-init-parse)
 	    (set-process-filter proc 'lyskom-filter)
 	    (set-process-sentinel proc 'lyskom-sentinel)
