@@ -1,3 +1,7 @@
+* kom-who bufferten avg|r sin bredd genom att titta p} bredden i den
+  screen som kom-bufferten {r i. Den borde titta p} bredden p} det
+  f|nster som den sj{lv finns i ist{llet.
+
 * Fotnot skall {ven hamna i extrakopiemottagarem|ten.
 
 * Alla (edit-mode, prioritize-mode) keymaps skall flyttas till *ish-strings.el
