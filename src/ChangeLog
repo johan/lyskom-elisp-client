@@ -1,3 +1,9 @@
+Sat May 22 23:00:27 1993  Linus Tolke Y  (linus@bodil)
+
+	* vars.el, swedish-strings.el (kom-tell-phrases-internal): Entered
+	  the default server texts in vars.el, the defvar:ed variable is
+	  in the language-dependant part.
+
 Fri May 21 17:34:38 1993  Linus Tolke Y  (linus@bodil)
 
 	* commands1.el (lyskom-mark-text): Cleaning cache of the text-stat.
