@@ -1,3 +1,45 @@
+1999-08-22  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Check for
+	duplicate recipients and no recipients.
+
+	* swedish-strings.el (lyskom-sv-edit-mode-map): Add binding for kom-edit-add-bcc.
+
+	* edit-text.el (lyskom-edit-find-misc): New function.
+	(lyskom-edit-move-recipients): Only add recipients when necessary.
+	Convert existing ones if possible. Add recipients after comment-to 
+	headers.
+
+	* utilities.el (lyskom-insert-in-list): New function.
+
+	* edit-text.el (lyskom-edit-do-add-recipient/copy): New function.
+	(lyskom-edit-add-recipient/copy): Removed string argument. Use
+	lyskom-edit-do-add-recipient/copy.
+
+	* english-strings.el: Change "note on the door" to "notice"
+	everywhere.
+
+	* edit-text.el (lyskom-edit-move-recipients): Use only
+	lyskom-edit-replace-headers to replace the headers.
+
+	* commands2.el (kom-next-unread-kom): New implementation.
+	(kom-previous-kom): New implementation.
+	(kom-next-kom): New implementation.
+	(lyskom-next-kom): New implementation replaces lyskom-next-kom and 
+	lyskom-previous-kom.
+
+	* komtypes.el (lyskom-member-list-find-member): Fixed bug in
+	lyskom-member-list-find-member when member list is empty.
+
+	* commands1.el (kom-send-letter): Remove string from quit
+	signalling.
+	(lyskom-comment-recipients): Same here.
+
+	* lyskom-rest.el (silent-read): Use read-char-exclusive. 
+	(j-or-n-p): Same here.
+	(lyskom-ja-or-nej-p): Remove string from quit signalling.
+	(lyskom-j-or-n-p): Same here.
+
 1999-08-21  David Byers  <davby@ida.liu.se>
 
 	* commands2.el (kom-add-private-answer): New function.

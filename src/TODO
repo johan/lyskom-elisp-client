@@ -7,9 +7,8 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
-Kommandon: begär bekräftelse, endast personliga kommentarer, inga
-kommentarer. Se inlägg 4089678.
-
+Man borde använda next-command-event med vänner i silent-read och
+j-or-n-p.
 
 lyskom-get-texts-to är buggig. Om man återser senaste N av vem som
 helst till ett möte och det inte finns N texter så buggar den ur. Den
@@ -71,9 +70,6 @@ bilder för.
 
 ** OSORTERADE
 
-    Creating-software sätts även vid anonyma inlägg, vilket är lite
-    för avslöjande. /davidk
-
     Om förbindelsen bryts så får man args out of range ibland.
     FIX BY: 0.46
 
@@ -87,7 +83,7 @@ bilder för.
     KOM-sessioner. Funktionen verkar vara lite för känslig för hur
     lyskom-buffer-list ser ut. Den borde nog göra något lite
     intelligentare när listan ser ut att ha tagit slut.
-    FIX BY: 0.46
+    FIX BY: 0.46        KLART
 
     Peter Enderborg hade en 118 tecken bred XEmacs 20.3 med scrollbar,
     och vilkalistan blev precis 1 tecken för bred. I Gnu Emacs 19.30
@@ -333,16 +329,16 @@ bilder för.
 ** EDIT-BUFFERTEN
 
     Defaultplaceringen av nya mottagare i editbufferten är fånig.
-    FIX BY: 0.46
+    FIX BY: 0.46            FIXAT. Sist istf först.
 
     Det borde gå att ändra mottagare till cc-mottagare genom att bara
     lägga till mottagaren igen som cc-mottagare. Motsvarande för bcc
     och så vidare.
-    FIX BY: 0.46
+    FIX BY: 0.46            FIXAT
 
     Borde kolla efter dublettmottagare innan man skickar in inlägget.
     Annars så får man ett tråkigt felmeddelande från servern.
-    FIX BY: 0.46
+    FIX BY: 0.46            FIXAT
 
     Kolla hur misslyckad inskickning hanteras. Vi borde ajtomagiskt
     ploppa upp edit-bufferten, alternativt ha ett kommando för att

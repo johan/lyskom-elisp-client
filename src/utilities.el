@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.31 1999-08-21 22:07:43 byers Exp $
+;;;;; $Id: utilities.el,v 44.32 1999-08-22 16:04:57 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.31 1999-08-21 22:07:43 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.32 1999-08-22 16:04:57 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -64,6 +64,33 @@
   (if (or (<= n 0) (not list))
       nil
     (cons (car list) (nfirst (1- n) (cdr list)))))
+
+(defun lyskom-rotate-list (list el)
+  "Destructively rotate LIST so EL becomes the first element.
+If EL occurs more than one, the first occurrence is used."
+  (let ((tail (memq el list)))
+    (if (or (null tail) (eq el (car list)))
+        list
+      (setcdr (nthcdr (- (length list) (length tail) 1) list) nil)
+      (setcdr (nthcdr (1- (length tail)) tail) list)
+      tail)))
+
+(defun lyskom-preceding-cons (list el)
+  "Return the cons cell of LIST preceding the first cons cell whose car is EL.
+Return nil if TAIL is the same as LIST or not a member of LIST."
+  (unless (or (eq (car list) el)
+              (not (memq el list)))
+    (nthcdr (- (length list) (length (memq el list)) 1) list)))
+
+(defun lyskom-insert-in-list (el list before)
+  "Destructively insert EL in LIST before element BEFORE.
+If BEFORE is not in the list, then insert EL at the end of the list."
+  (cond ((eq before (car list))
+         (cons el list))
+        (t (setcdr (nthcdr (- (length list)
+                              (length (memq before list)) 1) list)
+                   (cons el (memq before list)))
+           list)))
 
 ;;;
 ;;; +++ FIXME: If cl.el can be guaranteed, this is pointless.
