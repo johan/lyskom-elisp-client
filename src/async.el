@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.24 1999-10-09 16:54:39 byers Exp $
+;;;;; $Id: async.el,v 44.25 1999-10-11 15:43:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.24 1999-10-09 16:54:39 byers Exp $\n"))
+	      "$Id: async.el,v 44.25 1999-10-11 15:43:52 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -430,7 +430,7 @@ Args: SENDER: conf-stat for the person issuing the broadcast message or a
       RECIPIENT: 0 if this message is for everybody, otherwise the conf-stat
                  of the recipient.
       MESSAGE: A string containing the message.
-      WHEN: Optional time of arrival. Same format as (current-time-string)
+      WHEN: Optional time of arrival. A lyskom time structure.
       NOBEEP: True means don't beep. No matter what."
   (lyskom-insert-personal-message sender recipient message when nobeep)
   (setq lyskom-last-personal-message-sender 
@@ -452,8 +452,8 @@ Arguments: SENDER RECIPIENT MESSAGE.
 SENDER is a conf-stat (possibly nil) or a string.
 RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
 MESSAGE is a string containing the message.
-WHEN, if given, is the time when the message arrived. It must be of the same 
-format at (current-time-string)
+WHEN, if given, is the time when the message arrived. It must be a lyskom
+time structure.
 Non-nil NOBEEP means don't beep."
   (lyskom-handle-as-personal-message
    (lyskom-format-as-personal-message sender recipient message when nobeep)
@@ -469,17 +469,25 @@ Arguments: SENDER RECIPIENT MESSAGE.
 SENDER is a conf-stat (possibly nil) or a string.
 RECIPIENT is 0 if the message is public, otherwise the pers-no of the user.
 MESSAGE is a string containing the message.
-WHEN, if given, is the time when the message arrived. It must be of the same 
-format at (current-time-string)
+WHEN, if given, is the time when the message arrived. It must be a lyskom
+time structure.
 Non-nil NOBEEP means don't beep."
-  (let ((lyskom-last-text-format-flags nil))
-    (if (null when)
-        (setq when (current-time-string)))
+  (let ((lyskom-last-text-format-flags nil)
+        (now (lyskom-client-date)))
+    (when (null when) (setq when (lyskom-client-date)))
     (if (or kom-show-personal-message-date
-            (not (string= (substring when 0 10)
-                          (substring (current-time-string) 0 10))))
-        (setq when (substring when 4 19))
-      (setq when (substring when 11 19)))
+            (not (eq (time->mday when) (time->mday now)))
+            (not (eq (time->mon when) (time->mon now)))
+            (not (eq (time->year when) (time->year now))))
+        (setq when (lyskom-format 'time-yyyy-mm-dd-hh-mm
+                                  (time->year when)
+                                  (time->mon when)
+                                  (1+ (time->mday when))
+                                  (time->hour when)
+                                  (time->min when)))
+      (setq when (lyskom-format 'time-hh-mm
+                                (time->hour when)
+                                (time->min when))))
 
     (setq nobeep (or nobeep (and kom-ansaphone-on
                                  kom-silent-ansaphone)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.76 1999-10-11 13:01:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.77 1999-10-11 15:44:01 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.76 1999-10-11 13:01:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.77 1999-10-11 15:44:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -787,6 +787,7 @@ Annat se \\[describe-mode] ---")
 
     ;; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d-%02#2d-%02#3d  %02#4d:%02#5d ")
+    (time-hh-mm . "%02#1d:%02#2d")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "idag")
@@ -2091,8 +2092,10 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
 
     (turned-off      . "Avslaget            ")
     (number-of-times . "Några gånger")
+    (specific-spec . "Per mottager/avsändare")
     (sound-file . "Ljudfil")
     (selected-mark . "Markering")
+    (conf-or-person . "Person eller möte")
     (ask . "Fråga varje gång")
     (before . "Före texten")
     (after . "Efter texten")

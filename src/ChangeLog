@@ -1,5 +1,21 @@
 1999-10-11  David Byers  <davby@ida.liu.se>
 
+	Replaced all uses of current-time-string with lyskom-client-date
+	* async.el (lyskom-format-as-personal-message): Print localized
+	form of date in async messages.
+
+	* utilities.el (lyskom-client-date): New function.
+
+	* ansaphone.el (kom-toggle-auto-reply): Use
+	lyskom-client-date-string instead of current-time-string.
+	(lyskom-ansaphone-record-message): Same here.
+
+	* remote-control.el (lyskom-remote-set-message): Use
+	lyskom-client-date-string instead of current-time-string.
+	(lyskom-remote-handler): Same here.
+	(lyskom-remote-autoreply): Same here.
+	(lyskom-remote-list-messages-1): Same here.
+
 	* option-edit.el: Added several missing variables to widget
 	definitions and buffer format.
 

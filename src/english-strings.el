@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.61 1999-10-11 13:01:14 byers Exp $
+;;;;; $Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.61 1999-10-11 13:01:14 byers Exp $"))
+              "$Id: english-strings.el,v 44.62 1999-10-11 15:43:54 byers Exp $"))
 
 
 ;;; ================================================================
@@ -778,6 +778,7 @@ Help: \\[describe-mode] ---")
 
 ; used by lyskom-print-time
     (time-y-m-d-h-m . "%4#1d %02#3d/%02#2d  %02#4d:%02#5d ")
+    (time-hh-mm . "%02#1d:%02#2d")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "today")
