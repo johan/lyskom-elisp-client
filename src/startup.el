@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 43.5 1996-08-26 23:08:39 davidk Exp $
+;;;;; $Id: startup.el,v 43.6 1996-08-28 09:02:30 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 43.5 1996-08-26 23:08:39 davidk Exp $\n"))
+	      "$Id: startup.el,v 43.6 1996-08-28 09:02:30 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -99,7 +99,7 @@ See lyskom-mode for details."
 		       (setcar (cdr (cdr (cdr (cdr (cdr time)))))
 			       (- (car (cdr (cdr (cdr (cdr (cdr time))))))
 				  1900))
-		       (insert
+		       (lyskom-insert
 			(format (lyskom-get-string 'new-session-in-buffer)
 				(lyskom-format-time
 				 (apply 'lyskom-create-time time))))
