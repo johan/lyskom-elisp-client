@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.121 2000-08-31 12:29:57 byers Exp $
+;;;;; $Id: vars.el.in,v 44.122 2000-09-01 13:15:57 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.121 2000-08-31 12:29:57 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.122 2000-09-01 13:15:57 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1037,7 +1037,8 @@ at random and used. This element may be a string, function or list."
 
 (def-kom-var lyskom-command-alternatives nil
   "Possible command completions."
-  local)
+  local
+  minibuffer)
 
 (def-kom-var kom-trim-buffer-minimum 4096
   "*This number of bytes rounded to a whole line is the amount of text trimmed
@@ -2052,7 +2053,8 @@ an unknown person.")
 
 (def-kom-var lyskom-is-administrator nil
   "This variable is t if the user is in administrator mode and nil otherwise."
-  local)
+  local
+  minibuffer)
 
 (def-kom-var lyskom-last-personal-message-sender ""
   "Name of sender of last personal message received"

@@ -1,3 +1,31 @@
+2000-09-01  David Byers  <davby@ida.liu.se>
+
+	* command.el (lyskom-complete-command): Fix. We didn't handle
+	check for exact match properly. Fix unibyte incompatibility.
+	(lyskom-read-extended-command): Use lyskom-complete-command.
+	(lyskom-ok-command): Work the elements from
+	lyskom-command-alternatives.
+
+	* vars.el.in (lyskom-command-alternatives): Made a minibuffer
+	variable.
+	(lyskom-is-administrator): Same here.
+
+	* command.el (lyskom-ok-command): Rewrote to work with new
+	completion thingy.
+
+	Buttons and menus in slow mode:
+	* slow.el (kom-expand-slow-command-or-next-link): New command.
+	(kom-slow-click-or-yank): New command.
+	(kom-slow-button-press): New command.
+	(kom-slow-menu-button-press): New command.
+	(kom-expand-slow-command-or-next-link): New command.
+	(lyskom-slow-on-prompt-line): New function.
+
+2000-08-31  David Byers  <davby@ida.liu.se>
+
+	* slow.el (kom-slow-start-of-line): Do the right thing when not on
+	the last line of the buffer.
+
 2000-08-31  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-trim-buffer): Saves point and mark and

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.31 2000-08-31 12:29:42 byers Exp $
+;;;;; $Id: command.el,v 44.32 2000-09-01 13:15:49 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.31 2000-08-31 12:29:42 byers Exp $\n"))
+	      "$Id: command.el,v 44.32 2000-09-01 13:15:49 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -190,9 +190,8 @@
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
   (if administrator
-      (not (memq (cdr alternative) lyskom-admin-removed-commands))
-    (not (memq (cdr alternative) lyskom-noadmin-removed-commands))))
-
+      (not (memq (elt alternative 1) lyskom-admin-removed-commands))
+    (not (memq (elt alternative 1) lyskom-noadmin-removed-commands))))
 
 (defun kom-extended-command ()
   "Read a LysKOM function name and call the function."
@@ -206,45 +205,44 @@
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
-	 (alternatives (mapcar 
-			(lambda (pair)
-			  (cons 
-			   (cdr pair)
-			   (car pair)))
-			(lyskom-get-strings lyskom-commands
-					    'lyskom-command)))
+;;;         (alternatives (mapcar                               
+;;;                        (lambda (pair)                       
+;;;                          (cons                              
+;;;                           (cdr pair)                        
+;;;                           (car pair)))                      
+;;;                        (lyskom-get-strings lyskom-commands  
+;;;                                            'lyskom-command)))
 	 (name nil)
          (prefix-text
           (cond ((eq prefix-arg '-) "- ")
-                              ((equal prefix-arg '(4)) "C-u ")
-                              ((integerp prefix-arg) 
-                               (format "%d " prefix-arg))
-                              ((and (consp prefix-arg) 
-                                    (integerp (car prefix-arg)))
-                               (format "%d " (car prefix-arg)))
-                              (t nil)))
+                ((equal prefix-arg '(4)) "C-u ")
+                ((integerp prefix-arg) 
+                 (format "%d " prefix-arg))
+                ((and (consp prefix-arg) 
+                      (integerp (car prefix-arg)))
+                 (format "%d " (car prefix-arg)))
+                (t nil)))
          (prompt (if prefix-text
                      (concat prefix-text (lyskom-get-string 'extended-command))
                    (lyskom-get-string 'extended-command))))
 
     (lyskom-with-lyskom-minibuffer
      (setq name (lyskom-completing-read prompt
-                                        (lyskom-maybe-frob-completion-table
-                                         alternatives)
-                                        ;; lyskom-is-administrator is buffer-local and
-                                        ;; must be evalled before the call to 
-                                        ;; completing-read
-                                        ;; Yes, this is not beautiful
-                                        (list 'lambda '(alternative)	     
-                                              (list 'lyskom-ok-command 'alternative
-                                                    lyskom-is-administrator))
-                                        t nil 'lyskom-command-history)))
-    (cdr (lyskom-string-assoc name alternatives))))
+                                        'lyskom-complete-command
+                                        (lambda (alt)
+                                          (lyskom-ok-command alt 
+                                                             lyskom-is-administrator))
+                                        t nil 'lyskom-command-history))
+     (lyskom-lookup-command-by-name name (lambda (alt)
+                                           (lyskom-ok-command 
+                                            alt lyskom-is-administrator))))))
 
 
 (defun lyskom-update-command-completion ()
   "Build a list of alternatives for completion of LysKOM commands.
-FIXME: Do this only when changing the language or logging in."
+Each list element is a vector [NAME COMMAND CANONICAL]. NAME is the
+command name, COMMAND is the command and CANONICAL is the name 
+transformed for matching."
   (setq lyskom-command-alternatives
         (mapcar (lambda (el) 
                   (vector (cdr el)
@@ -260,19 +258,23 @@ FIXME: Do this only when changing the language or logging in."
 (defun lyskom-complete-command (string predicate all)
   "Completion function for LysKOM commands."
   (let ((alternatives nil)
-        (string (lyskom-completing-match-string-regexp string)))
+        (m-string (lyskom-completing-match-string-regexp string))
+        (exact nil))
     (lyskom-traverse el lyskom-command-alternatives
-      (when (and (string-match string (elt el 2))
+      (when (and (string-match m-string (elt el 2))
                  (or (null predicate) (funcall predicate el)))
-        (setq alternatives (cons (if (eq all 'lyskom-lookup) el (elt el 0))
-                                 alternatives))))
+        (setq alternatives (cons (if (eq all 'lyskom-lookup) el (elt el 0)) alternatives))
+        (if (eq (match-end 0) (length (elt el 2))) (setq exact t))))
     (cond 
      ((eq all 'lyskom-lookup) (elt (car alternatives) 1))
-     ((eq all 'lambda) (= (length alternatives) 1))
+     ((eq all 'lambda) (or (= (length alternatives) 1) exact))
      (all alternatives)
      ((null alternatives) nil)
-     ((eq (length alternatives) 1) t)
-     (t (lyskom-complete-string alternatives)))))
+     ((= (length alternatives) 1) 
+      (if (string-equal string (lyskom-maybe-recode-string (car alternatives)))
+	  t (lyskom-maybe-recode-string (car alternatives))))
+     (t (lyskom-maybe-recode-string
+	 (lyskom-complete-string alternatives))))))
 
 
 

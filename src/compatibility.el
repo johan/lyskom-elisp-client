@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.42 2000-08-23 10:43:39 byers Exp $
+;;;;; $Id: compatibility.el,v 44.43 2000-09-01 13:15:52 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.42 2000-08-23 10:43:39 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.43 2000-09-01 13:15:52 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -441,6 +441,10 @@ property and a property with the value nil."
 If the event did not occur over a window, or did not occur over text,
 then this returns nil.  Otherwise, it returns an index into the buffer
 visible in the event's window."
+  (car (cdr (event-start e))))
+
+(lyskom-provide-function event-closest-point (e)
+  "Return the character position closest to the mouse event EVENT."
   (car (cdr (event-start e))))
 
 (lyskom-provide-function event-glyph (e))
