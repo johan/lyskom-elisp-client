@@ -1,3 +1,14 @@
+Wed Jul 31 10:11:01 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* commands2.el (kom-sync-database): Tillåt inte operationen om
+ 	serverversionen är 1.8 eller äldre.
+
+Tue Jul 30 10:06:00 1996  David Byers  <davby@sen2.ida.liu.se>
+
+	* filter.el (kom-filter-text): Sätt point före initialt innehåll
+ 	när man frågar efter möte. (kom-filter-subject): Dito.
+ 	(kom-filter-author): Dito för både författare och möte.
+
 Mon Jul 29 11:14:55 1996  David Byers  <davby@sen2.ida.liu.se>
 
 	* swedish-strings.el,english-strings.el (lyskom-error-texts): Lade
