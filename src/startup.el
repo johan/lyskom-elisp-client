@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.46 2000-03-03 15:01:32 byers Exp $
+;;;;; $Id: startup.el,v 44.47 2000-05-23 12:06:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.46 2000-03-03 15:01:32 byers Exp $\n"))
+	      "$Id: startup.el,v 44.47 2000-05-23 12:06:46 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -257,6 +257,9 @@ See lyskom-mode for details."
 	      (lyskom-format-insert 
 	       'connection-done
 	       (version-info->software-version lyskom-server-version-info))
+
+	      ;; FIXME: Only do this if we have the required features!
+	      (setq lyskom-collate-table (blocking-do 'get-collate-table))
 	      (if (not (zerop (server-info->motd-of-lyskom
 			       lyskom-server-info)))
 		  (blocking-do-multiple ((text (get-text 
@@ -815,7 +818,8 @@ to see, set of call."
     (lyskom-setup-local-variables)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queues (make-vector 10 nil))
-    (setq lyskom-collate-table lyskom-default-collate-table)    (let ((i 0))
+    (setq lyskom-collate-table lyskom-default-collate-table)
+    (let ((i 0))
       (while (< i 10)
         (aset lyskom-output-queues i (lyskom-queue-create))
         (setq i (1+ i))))
