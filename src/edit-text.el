@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.19 1997-07-15 10:23:05 byers Exp $
+;;;;; $Id: edit-text.el,v 44.20 1997-07-17 10:33:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.19 1997-07-15 10:23:05 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.20 1997-07-17 10:33:40 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -100,7 +100,9 @@ Does lyskom-end-of-command."
     (setq lyskom-edit-handler handler)
     (setq lyskom-edit-handler-data data)
     (setq lyskom-edit-return-to-configuration config)
+    (buffer-disable-undo)
     (lyskom-edit-insert-miscs misc-list subject body)
+    (buffer-enable-undo)
     (goto-char (point-min))
     (re-search-forward (regexp-quote (lyskom-get-string
 				      'header-subject))

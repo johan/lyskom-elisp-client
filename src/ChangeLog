@@ -1,4 +1,35 @@
+Thu Jul 17 09:55:37 1997  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-dispatch-edit-text): Kasta undoinformation
+ 	före insättning av miscs.
+
+	* lyskom-rest.el (lyskom-next-command): Bugga inte om kommandot är
+ 	nil.
+	(lyskom-format-aux-help): Skriv ut kommandot nil också.
+	(lyskom-what-to-do-when-done): nil är inte ett giltigt kommando.
+	(lyskom-what-to-do-when-done): kom-display-time får man om man
+ 	inget annat har i listan.
+
+	* startup.el (lyskom): Fixade så www-proxy faktist fungerade.
+
+Wed Jul 16 11:05:21 1997  David Byers  <davby@ida.liu.se>
+
+	* startup.el (lyskom): Kunna köra genom www-proxy.
+
+	* buffers.el (lyskom-undisplay-buffer): Ändra inte
+ 	fönsterkonfigurationen bufferten inte är roten i hierarkin man
+ 	håller på döda.
+
+	* lyskom-rest.el (lyskom-filter): Sätt bara buffert till
+ 	old-buffer om den fortfarande är vid liv.
+
 Tue Jul 15 10:56:50 1997  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-format-format): Lägg till D,S och C i
+ 	regexpen.
+
+	* english-strings.el,swedish-strings.el (kom-tell-phrases): Använd
+ 	användarens kom-tell-phrases om den finns.
 
 	* vars.el.in (lyskom-line-start-chars): Sätt till nil.
 

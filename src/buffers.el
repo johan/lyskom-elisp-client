@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.5 1997-07-03 09:32:50 byers Exp $
+;;;;; $Id: buffers.el,v 44.6 1997-07-17 10:33:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.5 1997-07-03 09:32:50 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.6 1997-07-17 10:33:38 byers Exp $\n"))
 
 
 ;;;;
@@ -67,6 +67,9 @@ they are created.")
 
 (defvar lyskom-buffer-parent nil
   "Parent of buffer")
+
+(defvar lyskom-killing-hierarchy nil
+  "Non-nil while killing a buffer hierarchy.")
 
 (make-variable-buffer-local 'lyskom-buffer-parent)
 (lyskom-protect-variable 'lyskom-buffer-parent)
@@ -151,7 +154,9 @@ the children object"
 
 (defun lyskom-buffer-hierarchy-kill-hook ()
   "When killing a buffer, enure that its children also die"
-  (let ((kill-buffer-query-functions nil))
+  (let ((kill-buffer-query-functions nil)
+        (lyskom-killing-hierarchy (or lyskom-killing-hierarchy
+                                      (current-buffer))))
     (lyskom-set-buffer-parent (current-buffer) nil)
     (let ((buflist (lyskom-get-buffer-children (current-buffer))))
       (while buflist
@@ -196,6 +201,9 @@ categories")
   "The window dedicated to the current buffer"
   protected
   local)
+
+(defvar lyskom-undisplaying-hierarchy nil
+  "The top of the buffer hierarchy being undisplayed.")
 
 
 
@@ -464,6 +472,8 @@ buffer"
                               lyskom-dedicated-frame))
         (dedicated-window (and (boundp 'lyskom-dedicated-window)
                                        lyskom-dedicated-window))
+        (lyskom-undisplaying-hierarchy (or buffer
+                                           lyskom-undisplaying-hierarchy))
         (saved-window-configuration
          (and (boundp 'lyskom-saved-window-configuration)
               lyskom-saved-window-configuration)))
@@ -482,6 +492,11 @@ buffer"
                           (lyskom-get-buffer-window-list buffer nil t)))
         (delete-frame dedicated-frame)
         (setq dedicated-frame nil)))
+
+     ((and lyskom-killing-hierarchy
+           (not (eq lyskom-killing-hierarchy buffer))) nil)
+     ((and lyskom-undisplaying-hierarchy
+           (not (eq lyskom-undisplaying-hierarchy buffer))) nil)
 
      (dedicated-window
       (when (and (window-live-p dedicated-window)
