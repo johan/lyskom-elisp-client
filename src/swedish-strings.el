@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.5 1996-05-01 13:55:46 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.6 1996-05-02 16:20:51 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.5 1996-05-01 13:55:46 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.6 1996-05-02 16:20:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -331,11 +331,15 @@ du har l\344st klart allting. Kom tillbaks senare.
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
     (time-is . "Klockan \344r %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(enligt servern).")
 
-    (xmaseve . "\nJulafton! Har du öppnat dina julklappar än?")
+    (xmaseve . "\nJulafton! Har du \345ppnat dina julklappar \344n?")
     (xmasday . "Juldagen.")
     (newyearday . "Gott nytt %#1d!")
-    (newyearevelate . "Mindre än en timme kvar...")
-    (newyeareve . "Gott nytt år!")
+    (newyearevelate . "Mindre \344n en timme kvar...")
+    (newyeareve . "Gott nytt \345r!")
+    (cgdag . "Konungens födelsedag")
+    (sixjune . "Sveriges nationaldag och svenska flaggans dag")
+    (holdnose . "Håll för näsan...")
+
 
     (total-users . "    Sammanlagt %#1d anv\344ndare.\n")
     (who-to-add-q . "Vilket m\366te/person vill du addera som mottagare? ")
@@ -575,7 +579,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (already-sent . "Du har redan skickat denna text en g\345ng. S\344nd \344nd\345? ")
     (subject . "\304rende: ")
     (subject-prefix . "[\304\344\\{\\[]")
-    (enter-subject-idi . "Skriv ett ärende.")
+    (enter-subject-idi . "Skriv ett \344rende.")
     (which-text-include . "Vilken text skall vi inkludera? ")
     (added-recipient . "Mottagare som skall adderas: ")
     (added-carbon-copy . "Extra kopia till m\366te: ")
@@ -583,7 +587,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (still-want-to-add . "Vill du fortfarande addera m\366tet? ")
     (could-not-create-text . "\nTexten kunde ej skapas. Felet: %#2s.\n")
     (no-get-text . "Du fick inte h\344mta texten.")
-    (unknown-header . "Okänd information på raden")
+    (unknown-header . "Ok\344nd information p\345 raden")
 
     ; From view-text.el:
     (line . " /1 rad/ ")
@@ -603,7 +607,7 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (today-time-format-string . "%#6s %02#4d:%02#5d")
     (yesterday-time-format-string . "%#6s %02#4d:%02#5d")
     (today . "idag")
-    (yesterday . "igår")
+    (yesterday . "ig\345r")
 ; used by lyskom-return-time
     (time-yyyy-mm-dd-hh-mm . "%4#1d-%02#2d-%02#3d %02#4d:%02#5d")
     (no-such-text-no . "Det finns ingen s\345dan text. (%#1n)\n")
@@ -676,7 +680,7 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
 
     ; From prioritize.el:
 
-    (cant-move-nothing-nowhere . "Kan inte flytta ingenting någonstans.")
+    (cant-move-nothing-nowhere . "Kan inte flytta ingenting n\345gonstans.")
     (priority-prompt . "Ny prioritet: ")
     (beginning-of-list . "B\366rjan av listan")
     (end-of-list . "Slutet av listan")
@@ -688,7 +692,7 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
     (cannot-get-membership . "Kan ej h\344mta medlemsskap f\366r dig.")
     (cannot-get-pers-stat . "Kan ej h\344mta personstatus f\366r dig.")
     (prioritize-help .
-"u,n Flytta möte, SPC markera, p prioritera markerade, q avsluta, C-h m hjälp")
+"u,n Flytta m\345te, SPC markera, p prioritera markerade, q avsluta, C-h m hj\344lp")
     (your-priorities . " Prioritet  M\366tesnamn
 ----------------------------------------------------------------------------
 ")
@@ -710,7 +714,7 @@ Gruppmeddelande till %#3M fr\345n %#2P (%#4s):
     (could-not-set-user-area . "Kunde ej st\344lla om user-arean. Servern s\344ger felmeddelande: %#1d\n")
     (you-dont-exist . "Du finns inte.\n")
     (error-in-options . "Det fanns ett fel i en av dina variabler (%#1s)
-Det stod \"%#2s\" i user-arean. Den sätts till nil istället.
+Det stod \"%#2s\" i user-arean. Den s\344tts till nil ist\344llet.
 Skicka en bugrapport.\n")
 
     ; From elib-string.el:
@@ -783,6 +787,7 @@ Felmeddelande: %#1s**************************************************")
     (no-such-text . "Det finns inget s\345dant inl\344gg.\n")
     (no-such-text-m . "Det finns inget s\345dant inl\344gg.")
     (everybody . "alla")
+    (everything . "allt")
     (anybody . "vem som helst")
     (forward . "fram\345t")
     (backward . "bak\345t")
@@ -812,7 +817,7 @@ Felmeddelande: %#1s**************************************************")
     (filter-in-conf . "I vilket m\366te (Alla)? ")
     (filter-subject . "Filtrera vilket \344rende? ")
     (filter-which-text . "Filtrera inl\344gg som inneh\345ller: ")
-    (filter-author . "Filtrera vilken författare? ")
+    (filter-author . "Filtrera vilken f\345rfattare? ")
     (permanent . "(permanent)")
     (temporary . "(tillf\344llig)")
     (filter-edit-buffer-name . "*LysKOM Filter Edit*")
@@ -877,7 +882,7 @@ Text:
     (remote-unknown-error . "Ok\344nt fel")
 
     (remote-control-who . "Kontrollera vilken session? ")
-    (remote-control-autoreply . "Automatsvar på eller av? ")
+    (remote-control-autoreply . "Automatsvar p\345 eller av? ")
 
     (state-on . "p\345slaget")
     (state-off . "avslaget")
@@ -937,6 +942,7 @@ Text:
     (kom-find-root		"\305terse urinl\344gget")
     (kom-review-by-to           "\305terse senaste")
     (kom-review-first           "\305terse f\366rsta")
+    (kom-review-all             "\305terse alla")
     (kom-view-commented-text    "\305terse det kommenterade")
     (kom-view-previous-commented-text
      				"\305terse det f\366reg\345ende kommenterade")
@@ -1015,7 +1021,7 @@ Text:
   "The swascii-versions of lyskom-commands.")
 
 (defvar lyskom-onoff-table
-  '(("på" . on) ("av" . off))
+  '(("p\345" . on) ("av" . off))
   "A completion table for on and off selections.")
 
 (defvar lyskom-filter-predicate-list
@@ -1046,7 +1052,7 @@ Text:
 (defvar lyskom-swascii-filter-what nil
   "The swascii version of lyskom-filter-what")
 
-(defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|idag\\|igår\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ rad\\(er\\)?/ "
+(defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|idag\\|ig\345r\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ rad\\(er\\)?/ "
   "Regexp matching beginning of a text in lyskom buffer.
 Cf. paragraph-start.")
 
@@ -1189,13 +1195,15 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "}r" 'kom-find-root)
   (define-key lyskom-mode-map "}u" 'kom-find-root)
   (define-key lyskom-mode-map "}s" 'kom-review-by-to)
+  (define-key lyskom-mode-map "}A" 'kom-review-all)
   (define-key lyskom-mode-map "}f" 'kom-review-first)
-  (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "}l" 'kom-review-stack)
   (define-key lyskom-mode-map "}p" 'kom-review-presentation)
   (define-key lyskom-mode-map "}t" 'kom-find-root-review)
   (define-key lyskom-mode-map "}m" 'kom-review-marked-texts)
   (define-key lyskom-mode-map "}am" 'kom-review-all-marked-texts)
+  (define-key lyskom-mode-map "}a " 'kom-review-all)
+  (define-key lyskom-mode-map "B"  'kom-review-backward)
   (define-key lyskom-mode-map "sm" 'kom-status-conf)
   (define-key lyskom-mode-map "sp" 'kom-status-person)
 
@@ -1326,7 +1334,7 @@ Cf. paragraph-start.")
 ;;;; right.
 
 (defvar kom-ansaphone-default-reply 
-  "Jag l\344ser inte LysKOM just nu. Skicka gärna ett brev i stället."
+  "Jag l\344ser inte LysKOM just nu. Skicka g\344rna ett brev i st\344llet."
   "*Default message to send when the ansaphone is on.
 
 This variable is stored in the LysKOM server.")
@@ -1342,9 +1350,9 @@ This variable is stored in the LysKOM server.")
   '((text
      text-text
      lyskom-button-view-text
-     (("Återse texten" . lyskom-button-view-text)
-      ("Återse träd" . lyskom-button-review-tree)
-      ("Återse urinlägget" . lyskom-button-find-root)
+     (("\305terse texten" . lyskom-button-view-text)
+      ("\305terse tr\344d" . lyskom-button-review-tree)
+      ("\305terse urinl\344gget" . lyskom-button-find-root)
       ("Kommentera texten" . lyskom-button-comment-text)
       ("Personligt svar" . lyskom-button-private-comment-text)
       ("Markera texten" . lyskom-button-mark-text)
@@ -1356,11 +1364,11 @@ This variable is stored in the LysKOM server.")
      conf-text
      lyskom-button-view-conf-presentation
      (("Visa presentation" . lyskom-button-view-conf-presentation)
-      ("Visa mötesstatus" . lyskom-button-view-conf-status)
-      ("Gå till mötet" . lyskom-button-goto-conf)
+      ("Visa m\345tesstatus" . lyskom-button-view-conf-status)
+      ("G\345 till m\345tet" . lyskom-button-goto-conf)
       ("Skicka gruppmeddelande" . lyskom-button-send-message)
-      ("Bli medlem i mötet" . lyskom-button-add-self)
-      ("Utträd ur mötet" . lyskom-button-sub-self))
+      ("Bli medlem i m\345tet" . lyskom-button-add-self)
+      ("Uttr\344d ur m\345tet" . lyskom-button-sub-self))
      ((kom-list-news . lyskom-button-goto-conf)))
     (pers 
      pers-text
@@ -1369,12 +1377,12 @@ This variable is stored in the LysKOM server.")
                              lyskom-button-view-pers-presentation)
       ("Visa personstatus" . lyskom-button-view-pers-status)
       ("Skicka brev" . lyskom-button-mail)
-      ("Sänd meddelande" . lyskom-button-send-message))
+      ("S\344nd meddelande" . lyskom-button-send-message))
      nil)
     (url 
      url-text
      lyskom-button-open-url
-     (("Öppna" . lyskom-button-open-url)
+     (("\326ppna" . lyskom-button-open-url)
       ("Kopiera" . lyskom-button-copy-url))
      nil))
 
