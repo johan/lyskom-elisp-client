@@ -102,11 +102,6 @@
 ** The binding for kom-review-backward is now under the prefix for
    review commands.
 
-** kom-change-language now does not require a prefix argument to
-   change the key bindings as well as the language. The previous
-   behaviour of only affecting the text, and only in the current
-   session, is still available with a numeric prefix argument.
-
 
 
 * New commands
