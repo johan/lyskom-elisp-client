@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.5 1995-10-28 11:07:28 byers Exp $
+;;;;; $Id: commands2.el,v 38.6 1995-11-13 16:00:37 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.5 1995-10-28 11:07:28 byers Exp $\n"))
+	      "$Id: commands2.el,v 38.6 1995-11-13 16:00:37 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -517,9 +517,9 @@ means send the message to everybody."
 ;;; Author: Linus Tolke
 
 
-(defun kom-set-unread ()
+(defun kom-set-unread (&optional arg)
   "Set number of unread articles in current conference."
-  (interactive)
+  (interactive "P")
   (lyskom-start-of-command 'kom-set-unread)
   (unwind-protect
       (if (zerop lyskom-current-conf)
@@ -527,11 +527,15 @@ means send the message to everybody."
 	(let ((conf-stat (blocking-do 'get-conf-stat lyskom-current-conf)))
 	  (if (null conf-stat)			;+++ annan errorhantering
 	    (lyskom-insert "Error!\n")		;+++ Hrrrmmmmffff????
-	    (let* ((n (lyskom-read-num-range 
-		       0 (conf-stat->no-of-texts conf-stat)
-		       (lyskom-format 'only-last
-				      (conf-stat->no-of-texts conf-stat)
-				      (conf-stat->name conf-stat))))
+	    (let* ((narg (prefix-numeric-value arg))
+		   (n (if (and (<= 0 narg)
+			       (<= narg (conf-stat->no-of-texts conf-stat)))
+			  narg
+			(lyskom-read-num-range 
+			 0 (conf-stat->no-of-texts conf-stat)
+			 (lyskom-format 'only-last
+					(conf-stat->no-of-texts conf-stat)
+					(conf-stat->name conf-stat)))))
 		   (result (blocking-do 'set-unread
 					(conf-stat->conf-no conf-stat) n)))
 	      (if (null result)
@@ -1299,8 +1303,8 @@ current conference to another session."
   (interactive)
   (lyskom-start-of-command 'kom-show-user-area)
   (let ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
-    (lyskom-view-text 'main (pers-stat->user-area pers-stat)
-		      nil nil nil nil nil nil)
+    (lyskom-view-text (pers-stat->user-area pers-stat)
+		      nil nil nil nil nil)
     (lyskom-run 'main 'lyskom-end-of-command)))
 
 

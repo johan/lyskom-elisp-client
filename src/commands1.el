@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.7 1995-10-30 15:41:53 davidk Exp $
+;;;;; $Id: commands1.el,v 38.8 1995-11-13 16:00:33 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.7 1995-10-30 15:41:53 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.8 1995-11-13 16:00:33 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -153,7 +153,7 @@
 ;;;          ]terse det kommenterade - View commented text
 
 ;;; Author: Inge Wallin
-
+;;; Modified by: David K}gedal
 
 (defun kom-view-commented-text ()
   "View the commented text.
@@ -161,48 +161,47 @@ If the current text is comment to (footnote to) several text then the first
 text is shown and a REVIEW list is built to shown the other ones."
   (interactive)
   (lyskom-start-of-command 'kom-view-commented-text)
-  (if lyskom-current-text
-      (progn
-	(lyskom-tell-internat 'kom-tell-read)
-	(initiate-get-text-stat 'read 'lyskom-view-commented-text
-				lyskom-current-text))
-    (lyskom-insert-string 'have-to-read)
+  (unwind-protect
+      (if lyskom-current-text
+	  (progn
+	    (lyskom-tell-internat 'kom-tell-read)
+	    (lyskom-view-commented-text
+	     (blocking-do 'get-text-stat lyskom-current-text)))
+	(lyskom-insert-string 'have-to-read))
     (lyskom-end-of-command)))
 
 
 (defun lyskom-view-commented-text (text-stat)
   "Handles the return from the initiate-get-text-stat, displays and builds list."
-  (unwind-protect
-      (let* ((misc-info-list (and text-stat
-				  (text-stat->misc-info-list text-stat)))
-	     (misc-infos (and misc-info-list
-			      (append (lyskom-misc-infos-from-list 'COMM-TO
-								   misc-info-list)
-				      (lyskom-misc-infos-from-list 'FOOTN-TO
-								   misc-info-list))))
-	     (text-nos (and misc-infos
-			    (mapcar
-			     (function
-			      (lambda (misc-info)
-				(if (equal (misc-info->type misc-info)
-					   'COMM-TO)
-				    (misc-info->comm-to misc-info)
-				  (misc-info->footn-to misc-info))))
-			     misc-infos))))
-	(if text-nos
-	    (progn
-	      (lyskom-format-insert 'review-text-no 
-				    (car text-nos))
-	      (if (cdr text-nos)
-		  (read-list-enter-read-info
-		   (lyskom-create-read-info
-		    'REVIEW nil (lyskom-get-current-priority)
-		    (lyskom-create-text-list (cdr text-nos))
-		    lyskom-current-text)
-		   lyskom-reading-list t))
-	      (lyskom-view-text (car text-nos)))
-	  (lyskom-insert-string 'no-comment-to)))
-    (lyskom-end-of-command)))
+  (let* ((misc-info-list (and text-stat
+			      (text-stat->misc-info-list text-stat)))
+	 (misc-infos (and misc-info-list
+			  (append (lyskom-misc-infos-from-list
+				   'COMM-TO misc-info-list)
+				  (lyskom-misc-infos-from-list
+				   'FOOTN-TO misc-info-list))))
+	 (text-nos (and misc-infos
+			(mapcar
+			 (function
+			  (lambda (misc-info)
+			    (if (equal (misc-info->type misc-info)
+				       'COMM-TO)
+				(misc-info->comm-to misc-info)
+			      (misc-info->footn-to misc-info))))
+			 misc-infos))))
+    (if text-nos
+	(progn
+	  (lyskom-format-insert 'review-text-no 
+				(car text-nos))
+	  (if (cdr text-nos)
+	      (read-list-enter-read-info
+	       (lyskom-create-read-info
+		'REVIEW nil (lyskom-get-current-priority)
+		(lyskom-create-text-list (cdr text-nos))
+		lyskom-current-text)
+	       lyskom-reading-list t))
+	  (lyskom-view-text (car text-nos)))
+      (lyskom-insert-string 'no-comment-to))))
 
 
 (defun lyskom-misc-infos-from-list (type list)
@@ -1004,9 +1003,10 @@ TYPE is either 'pres or 'motd, depending on what should be changed."
   (interactive)
   (lyskom-start-of-command 'kom-unset-conf-motd)
   (unwind-protect
-      (let ((conf-stat (lyskom-read-conf-stat
-			(lyskom-get-string 'who-to-remove-motd-for)
-			'all 'empty)))
+      (let ((conf-stat (or (lyskom-read-conf-stat
+			    (lyskom-get-string 'who-to-remove-motd-for)
+			    'all 'empty)
+			   (blocking-do 'get-conf-stat lyskom-pers-no))))
 	(cond
 	 ((null conf-stat)
 	  (lyskom-insert-string 'cant-get-conf-stat))
