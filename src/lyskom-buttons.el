@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.43 2000-07-03 10:50:04 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.44 2000-07-05 10:14:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.43 2000-07-03 10:50:04 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.44 2000-07-05 10:14:34 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -166,7 +166,7 @@ If there is no active area, then do something else."
                (mapcar (function
                         (lambda (entry)
                           (vector (encode-coding-string
-                                   (car entry) 'iso-8859-1)
+                                   (lyskom-get-string (car entry)) 'iso-8859-1)
                                   (list (cdr entry)
                                         buf
                                         (if (listp arg)
@@ -179,7 +179,7 @@ If there is no active area, then do something else."
                    (mapcar (function (lambda (entry)
                                        (let ((tmp (copy-tree entry)))
                                          (setcar tmp (encode-coding-string 
-                                                      (car tmp)
+                                                      (lyskom-get-string (car tmp))
                                                       'iso-8859-1))
                                          (cons (` ((, (cdr entry)) 
                                                    (, buf)
@@ -197,15 +197,13 @@ If there is no active area, then do something else."
          (text  (get-text-property pos 'lyskom-button-text))
          (buf   (get-text-property pos 'lyskom-buffer))
          (data  (assq type lyskom-button-actions))
-         (title (if (get-text-property pos 'lyskom-button-menu-title)
-                    (apply 'lyskom-format
-                           (get-text-property pos 'lyskom-button-menu-title))
-                  (lyskom-format 
-                   (lyskom-get-string
-                    (or (intern-soft (concat (symbol-name type)
-                                             "-popup-title"))
-                        'generic-popup-title))
-                   text)))
+         (title (cond 
+                 ((get-text-property pos 'lyskom-button-menu-title)
+                  (apply 'lyskom-format 
+                         (get-text-property pos 'lyskom-button-menu-title)))
+                 ((elt data 1)
+                  (lyskom-format (lyskom-get-string (elt data 1)) text))
+                 (t (lyskom-format (lyskom-get-string 'generic-popup-title) text))))
          (actl  (or (and data (elt data 3)) nil)))
     (cond ((null data) (goto-char pos))
           ((null actl) (goto-char pos))

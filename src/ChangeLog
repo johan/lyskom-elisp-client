@@ -1,3 +1,15 @@
+2000-07-05  David Byers  <davby@ida.liu.se>
+
+	* vars.el.in (lyskom-button-actions): Moved definition of
+	lyskom-button-actions here. Removed all constant strings. Fixed
+	the title string symbols.
+
+	* english-strings.el (lyskom-message): Added lyskom-button-action
+	strings.
+
+	* swedish-strings.el (lyskom-message): Added lyskom-button-action
+	strings.
+
 2000-07-03  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el (lyskom-button-actions): Added button type
