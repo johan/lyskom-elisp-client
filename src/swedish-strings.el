@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.283 2002-12-31 00:22:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.284 2002-12-31 19:15:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.283 2002-12-31 00:22:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.284 2002-12-31 19:15:27 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -85,11 +85,14 @@
   (define-key lyskom-sv-edit-prefix (kbd "]")       'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-]")     'lyskom-sv-edit-review-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-}")     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix (kbd "C-å")     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix (kbd "C-Å")     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control aring)]     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control Aring)]     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control 229)]     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix [(control 197)]     'lyskom-sv-edit-review-prefix)
+  (define-key lyskom-sv-edit-prefix "\205"     'lyskom-sv-edit-review-prefix) ;For windows
 
-  (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-Å) 'lyskom-sv-edit-review-prefix)
-  (define-key lyskom-sv-edit-prefix (lyskom-keys 'C-å) 'lyskom-sv-edit-review-prefix)
-  (define-key lyskom-sv-edit-prefix [(control Å)] 'lyskom-sv-edit-review-prefix)
-  (define-key lyskom-sv-edit-prefix [(control å)] 'lyskom-sv-edit-review-prefix)
 
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
   (define-key lyskom-sv-edit-prefix (kbd "=")       'kom-menu-button-press)
@@ -2838,6 +2841,14 @@ teckenkodning.
     (default-namedays . "Namnsdagar för aktuellt språk")
     (specific-namedays . "Specifik namnlängd:")
 
+    (link-pattern-for . "Mönster för")
+    (all-conferences . "Alla mottagare")
+    (link-specific-rcpt . "Specifik mottagare")
+    (link-pattern . "Länkmönster")
+    (link-replace . "Länksubstitution")
+    (link-highlight-match . "Visa grupp")
+    (link-fold-case . "Versaler och gemener lika")
+
     ;;
     ;; Misc doc strings
     ;;
@@ -3778,6 +3789,22 @@ i servern. Annars sparas det i din .emacs.")
       \\& ersätts med den text som matchar regexpen
       \\N ersätts med den text som matchar (...)-uttryck N i regexpen
       \\\\ ersätts med en \\.")
+    (kom-text-links-doc . "\
+  Definition av textlänkar. Varje rad definierar en länk för inlägg i ett
+  visst möte. Alla förekomster av länkmönstret blir URL-länkar genom att
+  texten som länkmönstret matchar substitueras enligt länksubstitutionen.
+  Den text som faktist visas som länk i LysKOM-bufferten bestäms av 
+  inställningen \"Visa grupp\". Använd 0 för att visa hela den matchande
+  texten eller en siffta från 1 till 9 för att visa den N-te gruppen i
+  länkmönstret (använd 0 om du inte förstår vad som avses med detta). 
+  Om inställningen \"Versaler och gemener lika\" är på så räknas versaker
+  och gemener av samma bokstav som lika.
+
+  Länksubstitutionen kan innehålla följande specialtecken:
+
+      \\& ersätts med den text som matchar regexpen
+      \\N ersätts med den text som matchar (...)-uttryck N i regexpen
+      \\\\ ersätts med en \\.")
 
     ;;
     ;; Tags for variables
@@ -3957,6 +3984,7 @@ i servern. Annars sparas det i din .emacs.")
     (kom-max-overlays-tag . "Högsta antal färgmarkeringar:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Markera lästa inlägg lästa även i nya mottagare:")
     (kom-url-transformation-rules-tag . "Transformation av URLer:")
+    (kom-text-links-tag . "Textlänkar:")
     )
 )
 

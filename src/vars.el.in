@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.219 2002-12-31 00:58:34 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.220 2002-12-31 19:15:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.219 2002-12-31 00:58:34 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.220 2002-12-31 19:15:28 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -744,7 +744,9 @@ be sent."
 
 (def-kom-var kom-send-text-hook nil
   "*Hook that is called before sending a text. Hook functions return t to
-signal success and nil to prevent the text from being sent."
+signal success and nil to prevent the text from being sent. Note that this
+hook is called before the text headers are parsed, so it is possible that
+sending will be canceled or recipients altered after calling this hook."
   local-hook)
 
 (def-kom-var lyskom-send-text-hook nil

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.105 2002-09-18 20:48:32 byers Exp $
+;;;;; $Id: edit-text.el,v 44.106 2002-12-31 19:15:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.105 2002-09-18 20:48:32 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.106 2002-12-31 19:15:26 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -468,6 +468,15 @@ anonymously and take actions to avoid revealing the sender."
                   (message nil)
                   (aux-list nil))
 
+              ;;
+              ;; Run user hooks
+              ;; ####: ++++: FIXME: We should quit more graciously.
+
+              (if (and (not (run-hook-with-args-until-failure 'kom-send-text-hook))
+                       (not (run-hook-with-args-until-failure 'lyskom-send-text-hook)))
+                  (signal 'lyskom-edit-text-abort nil))
+
+
 	      (save-excursion
 		(setq headers (lyskom-edit-parse-headers)
 		      misc-list (apply 'lyskom-create-misc-list 
@@ -512,13 +521,6 @@ anonymously and take actions to avoid revealing the sender."
                 (rplacd misc-list (delq (rassq lyskom-pers-no (cdr misc-list))
                                         (cdr misc-list))))
 
-              ;;
-              ;; Run user hooks
-              ;; ####: ++++: FIXME: We should quit more graciously.
-
-              (if (and (not (run-hook-with-args-until-failure 'kom-send-text-hook))
-                       (not (run-hook-with-args-until-failure 'lyskom-send-text-hook)))
-                  (signal 'lyskom-edit-text-abort nil))
 
               ;;
               ;; Transform the message text

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.122 2002-12-16 22:59:15 byers Exp $
+;;;;; $Id: utilities.el,v 44.123 2002-12-31 19:15:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.122 2002-12-16 22:59:15 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.123 2002-12-31 19:15:28 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -776,8 +776,8 @@ its first argument and remaining list items appended to the argument list."
            ((eq compare-value t) ;; provided a default value for the prompt
             (let ((new-default (lyskom-evaluate-text-no-strategy
                                 what-text prompt default constraint)))
-              (when (and (lyskom-plusp new-default))
-                (setq default (or default new-default)))))
+              (when (lyskom-plusp new-default)
+                (setq default  new-default))))
 
            ((or (eq compare-value current-prefix-arg) ;; a text-no strategy
                 (and (functionp strategy-pred)

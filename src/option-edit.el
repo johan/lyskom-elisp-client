@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.83 2002-12-31 00:22:10 byers Exp $
+;;;;; $Id: option-edit.el,v 44.84 2002-12-31 19:15:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.83 2002-12-31 00:22:10 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.84 2002-12-31 19:15:27 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -226,6 +226,7 @@
     (urls bold centered)
     section
     "\n"
+    [kom-text-links]
     [kom-url-transformation-rules]
     [kom-url-viewer-preferences]
     [kom-windows-browser-command]
@@ -731,6 +732,17 @@ customize buffer but do not save them to the server."
     (kom-keyboard-menu-immediate-selection (noggle (yes no)))
     (kom-url-transformation-rules (repeat (cons ((string nil :tag url-transform-regexp)
                                                  (string nil :tag url-transform-newtext)))))
+    (kom-text-links (repeat (cons ((choice ((person nil :tag link-specific-rcpt :lyskom-predicate (pers conf))
+                                            (const (all-conferences t)))
+                                           :tag link-pattern-for
+                                           :format "%[%t%]: %v")
+                                   (repeat (list ((string nil :tag link-pattern :format "%[%t%]: %v\n")
+                                                  (string nil :tag link-replace :format "%[%t%]: %v\n")
+                                                  (number (0 9) :tag link-highlight-match :format "%[%t%]: %v\n")
+                                                  (toggle (yes no) :tag link-fold-case :format "%[%t%]: %v"))
+                                                 ) :indent 8 :tag "")
+                                   ))
+                            :indent 4))
 ))
 
 (defvar lyskom-widget-functions 
@@ -743,6 +755,7 @@ customize buffer but do not save them to the server."
     (const .  lyskom-item-widget)
     (repeat . lyskom-repeat-widget)
     (cons . lyskom-cons-widget)
+    (list . lyskom-list-widget)
     (nameday . lyskom-nameday-widget)
     (kbd-macro . lyskom-kbd-macro-widget)
     (url-viewer . lyskom-url-viewer-widget)
@@ -1173,6 +1186,14 @@ customize buffer but do not save them to the server."
          ':tag ""
          ':args (list (lyskom-widget-convert-specification (elt args 0))
                       (lyskom-widget-convert-specification (elt args 1))))
+   propl))
+
+(defun lyskom-list-widget (type &optional args propl)
+  (lyskom-build-simple-widget-spec
+   'list
+   (list ':format "%v\n"
+         ':tag ""
+         ':args (mapcar 'lyskom-widget-convert-specification args))
    propl))
 
 (defun lyskom-choice-widget (type &optional args propl)

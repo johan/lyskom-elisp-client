@@ -1,5 +1,23 @@
 2002-12-31  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 879:
+	* utilities.el (lyskom-read-text-no-prefix-arg): When new-default
+	is computed successfully, set default to new-default. I *think*
+	that's the right thing to do...
+
+	Fix bug 817:
+	* vars.el.in (kom-send-text-hook): Updated docstring.
+
+	* edit-text.el (lyskom-edit-send): Run kom-send-text-hook before
+	doing anything else so it can manipulate headers.
+
+	More work on text links:
+	* option-edit.el (lyskom-custom-variables): Added kom-text-links.
+	(lyskom-customize-buffer-format): Ditto.
+	(lyskom-widget-functions): Added `list' widget type.
+	(lyskom-list-widget): New function.
+
+	Bugs in kom-list-summary:
 	* commands2.el (lyskom-list-summary): Copy the list of texts we're
 	reviewing so we can delete stuff from it.
 
