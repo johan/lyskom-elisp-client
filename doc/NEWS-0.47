@@ -59,6 +59,10 @@
 *** Klienten tittar på omgivningsvariablerna KOMLANGUAGE och LANG (i
     den ordningen) för att bestämma defaultspråk.
 
+*** Första gången man loggar in så sätts språket globalt
+    (tangenmappningar och allt) baserat på kom-default-language. Vid
+    efterföljande inloggningar så sker detta inte.
+
 *** Defaultspråk har ändrats från svenska till engelska.
 
 
