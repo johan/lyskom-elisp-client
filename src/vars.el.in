@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.170 2002-04-09 23:07:57 byers Exp $
+;;;;; $Id: vars.el.in,v 44.171 2002-04-10 19:23:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.170 2002-04-09 23:07:57 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.171 2002-04-10 19:23:24 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (fboundp 'multibyte-string-p)
@@ -1129,29 +1129,33 @@ Each element is a cons cell consisting of the name of the month
 \(a symbol) and the number of the month (1-12). Each month may
 appear more than once"
   local
-  inherited)
-(put 'lyskom-month-names 'lyskom-language-force t)
+  inherited
+  language-force)
 
 (def-kom-var lyskom-onoff-table nil
   "A completion table for on and off selections."
-  local)
+  local
+  language-force)
 
 (def-kom-var lyskom-language-codes nil
   "A list of ISO 639 language codes"
-  local)
-(put 'lyskom-language-codes 'lyskom-language-force t)
+  local
+  language-force)
 
 (def-kom-var lyskom-filter-predicate-list nil
       "A list of legal filter comparison predicates."
-      local)
+      local
+      language-force)
 
 (def-kom-var lyskom-filter-what nil
       "A list of legal filter conditions and their textual representation."
-      local)
+      local
+      language-force)
 
 (def-kom-var lyskom-filter-actions nil
       "A list of legal filter actions an their textual representation."
-      local)
+      local
+      language-force)
 
 (def-kom-var lyskom-filter-edit-map nil
   "Keymap for LysKOM filter edit."
@@ -1163,11 +1167,13 @@ appear more than once"
 
 (def-kom-var lyskom-prioritize-header-lines nil
   "Number of lines in the header of the prioritization buffer."
-  local)
+  local
+  language-force)
 
 (def-kom-var lyskom-prioritize-header nil
   "Header for the reprioritization buffer."
-  inherited)
+  inherited
+  language-force)
 
 (def-kom-var kom-ansaphone-default-reply nil
   "*Default message to send when the ansaphone is on."
@@ -1725,6 +1731,7 @@ is a list of vectors, where each vector specifies an item.
     kom-filter-author
     kom-filter-subject
     kom-filter-text
+    kom-filter-recipient
     kom-super-jump
     kom-filter-edit
     kom-list-filters

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.19 2002-02-24 20:23:27 joel Exp $
+;;;;; $Id: komtypes.el,v 44.20 2002-04-10 19:23:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.19 2002-02-24 20:23:27 joel Exp $\n"))
+	      "$Id: komtypes.el,v 44.20 2002-04-10 19:23:24 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -731,15 +731,16 @@ Both vectors should be of the same length."
 
 (defun text->decoded-text-mass (text text-stat)
   "Get the text mass of a text after decoding according to its content type"
-  (let* ((str (text->text-mass text))
-         (item (lyskom-get-aux-item
-                (text-stat->aux-items text-stat) 1))
-         (content-type (and (car item)
-                            (lyskom-mime-decode-content-type
-                             (aux-item->data (car item))))))
-    (if (cdr content-type)
-        (lyskom-mime-decode-string str (cdr content-type))
-      str)))
+  (save-match-data 
+    (let* ((str (text->text-mass text))
+           (item (lyskom-get-aux-item
+                  (text-stat->aux-items text-stat) 1))
+           (content-type (and (car item)
+                              (lyskom-mime-decode-content-type
+                               (aux-item->data (car item))))))
+      (if (cdr content-type)
+          (lyskom-mime-decode-string str (cdr content-type))
+        str))))
 
 				   
 

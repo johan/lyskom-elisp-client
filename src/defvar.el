@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.13 2002-04-09 23:07:57 byers Exp $
+;;;;; $Id: defvar.el,v 44.14 2002-04-10 19:23:23 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.13 2002-04-09 23:07:57 byers Exp $\n"
+  "$Id: defvar.el,v 44.14 2002-04-10 19:23:23 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -130,14 +130,15 @@ A string        Used as the documentation string for the variable
 A symbol        A predefined property of the variable
 A list          A widget specification for the variable
 
-Predefined properties are the following
+Predefined (and tested) properties are the following
 server          Save the variable in the elisp block. Implies local.
 local           Make the variable buffer-local.
 inherited       The variable is inherited from parent buffer. Implies protected
 protected       The variable is marked as permanent local. Implies local.
 minibuffer      Inherit the variable as a local variable in the minibuffer.
 server-hook     A hook stored in the server.
-local-hook      A hook variable that is made local in LysKOM buffers."
+local-hook      A hook variable that is made local in LysKOM buffers.
+language-force  A language-variable whose value is to be forced."
           
     (let ((inherited nil)
           (protected nil)
@@ -149,6 +150,7 @@ local-hook      A hook variable that is made local in LysKOM buffers."
           (local-hook-doc nil)
           (local-var-doc nil)
           (server-doc nil)
+          (language-force nil)
           (arglist args))
       (while arglist
         (cond ((stringp (car arglist)) (setq doc-string (car arglist)))
@@ -216,6 +218,10 @@ local-hook      A hook variable that is made local in LysKOM buffers."
                             (` ((add-to-list 'lyskom-minibuffer-variables
                                              (quote (, name)))))))
 
+                     ((eq (car arglist) 'language-force)
+                      (setq language-force
+                            `((put ',name 'lyskom-language-force t))))
+
                      (t (error "LysKOM: Unknown variable property: %S"
                                (car arglist)))))
               (t (error "LysKOM: Strange variable argument type: %S" 
@@ -255,6 +261,7 @@ it using setq or defvar.")))
                                  buffer-local
                                  minibuffer
                                  widget-spec
+                                 language-force
                                  )))))))
 
 

@@ -1,8 +1,62 @@
 2002-04-10  David Byers  <david.byers@swipnet.se>
 
+	We can usually have FAQs on persons too:
+	* commands1.el (kom-change-conf-faq): Can apply to persons too. 
+
+	* commands2.el (kom-add-faq): Can apply to persons too.
+	(kom-del-faq): Same here.
+	(kom-review-faq): Same here.
+
+	Print subject line of FAQ when showing a list of FAQs in status
+	conf and review presentation:
+	* commands1.el (lyskom-insert-deferred-comment-like-aux-2): Print
+	subject line of FAQ.
+	(lyskom-insert-deferred-comment-like-aux): Split into two
+	functions (this one and
+	lyskom-insert-deferred-comment-like-aux-2).
+	(lyskom-insert-comment-like-aux): Print subject line of FAQ.
+	(lyskom-print-comment-like-aux): Get text mass when not doing
+	deferred printing.
+
+	* aux-items.el (lyskom-status-print-faq-text): Print the subject
+	of each FAQ.
+
+	* komtypes.el (text->decoded-text-mass): Do save-match-data so we
+	don't clobber match data.
+
+	Fix bug 408:
+	* commands2.el (kom-change-conf-type): Removed redunant argument
+	from change-type-prompt.
+	(kom-status-conf): Removed redundant argument from status-record.
+	(kom-status-person): Removed redundant argument from
+	pers-status-record.
+	(kom-change-conf-type): Place nope or done string after the
+	prompt.
+
+	Fix that some strings are not changed when language changes:
+	* vars.el.in (lyskom-month-names): Set language-force.
+	(lyskom-onoff-table): Same.
+	(lyskom-language-codes): Same.
+	(lyskom-filter-predicate-list): Same.
+	(lyskom-filter-what): Same.
+	(lyskom-filter-actions): Same.
+	(lyskom-prioritize-header-lines): Same.
+	(lyskom-prioritize-header): Same.
+
+	* defvar.el (def-kom-var): Added property language-force.
+
+	Fix problem where personal answer to own texts have no subject:
+	* commands1.el (lyskom-private-answer): Don't delete subject when
+	doing personal reply to my own texts.
+
+	New filter command:
+	* filter.el (kom-filter-recipient): Nytt kommando.
+
+	Update aliases:
 	* vars.el.in (kom-server-aliases): Changed sno.pp.se to
 	kom.sno.pp.se.
 
+	Completion on kom-sub-comment and kom-sub-footnote:
 	* commands1.el (kom-add-footnote): Read prefix arg here and not in
 	lyskom-add-sub-footnote.
 	(kom-sub-footnote): Same here.
@@ -19,6 +73,7 @@
 
 2002-04-09  David Byers  <david.byers@swipnet.se>
 
+	Completion on kom-sub-comment and kom-sub-footnote:
 	* commands1.el (lyskom-add-sub-footnote): Show text number we are
 	removing from or adding to in the prompt (important when using
 	prefix args to this command).
