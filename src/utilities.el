@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.130 2003-03-13 21:11:53 byers Exp $
+;;;;; $Id: utilities.el,v 44.131 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.130 2003-03-13 21:11:53 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.131 2003-03-16 14:03:01 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1315,6 +1315,7 @@ Cannot be called from a callback."
           ((eq viewer-no (conf-stat->supervisor conf-stat)) t)
           ((lyskom-is-member (conf-stat->supervisor conf-stat) viewer-no) t)
           (t nil))))
+
 
 (defun lyskom-is-member (conf-no pers-no &optional queue)
   "Return the membership in CONF-NO of PERS-NO

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faces.el,v 44.4 2003-01-06 11:18:26 byers Exp $
+;;;;; $Id: faces.el,v 44.5 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: faces.el,v 44.4 2003-01-06 11:18:26 byers Exp $\n"))
+	      "$Id: faces.el,v 44.5 2003-03-16 14:03:01 byers Exp $\n"))
 
 
 
@@ -93,6 +93,24 @@
   "*Face used for most \"clickable\" areas.
 The value should be either a symbol naming a face or nil.
 The default value is kom-face--default--active-face.
+
+This is a LysKOM face variable."
+  server
+  inherited)
+
+(def-kom-var kom-active-strikethrough-face 'kom-face--default--active-strikethrough-face
+  "*Face used for some \"clickable\" areas.
+The value should be either a symbol naming a face or nil.
+The default value is kom-face--default--active-strikethrough-face.
+
+This is a LysKOM face variable."
+  server
+  inherited)
+
+(def-kom-var kom-active-highlight-face 'kom-face--default--active-highlight-face
+  "*Face used for some \"clickable\" areas.
+The value should be either a symbol naming a face or nil.
+The default value is kom-face--default--active-highlight-face.
 
 This is a LysKOM face variable."
   server
@@ -429,6 +447,36 @@ Do not alter this face unless you know what you're doing."
   :group 'lyskom-faces
   )
 
+(defface kom-face--default--active-strikethrough-face
+  '((((background light))
+     (:foreground "blue4"
+      :strike-through t)
+     )
+    (((background dark))
+     (:foreground "lightblue"
+      :strike-through t)
+     )
+    )
+  "Face suitable for some \"clickable\" areas.
+Do not alter this face unless you know what you're doing."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--default--active-highlight-face
+  '((((background light))
+     (:foreground "blue4"
+      :weight bold)
+     )
+    (((background dark))
+     (:foreground "lightblue"
+      :weight bold)
+     )
+    )
+  "Face suitable for some \"clickable\" areas.
+Do not alter this face unless you know what you're doing."
+  :group 'lyskom-faces
+  )
+
 
 (defface kom-face--default--url-face
   '((((background light))
@@ -590,6 +638,35 @@ Do not change this face unless you know what you're doing."
      )
     )
   "Face suitable for most \"clickable\" areas."
+  :group 'lyskom-faces
+  )
+
+
+(defface kom-face--user-defined--active-strikethrough-face
+  '((((background light))
+     (:foreground "blue4"
+      :strike-through t)
+     )
+    (((background dark))
+     (:foreground "lightblue"
+      :strike-through t)
+     )
+    )
+  "Face suitable for some \"clickable\" areas."
+  :group 'lyskom-faces
+  )
+
+(defface kom-face--user-defined--active-highlight-face
+  '((((background light))
+     (:foreground "blue4"
+      :weight bold)
+     )
+    (((background dark))
+     (:foreground "lightblue"
+      :weight bold)
+     )
+    )
+  "Face suitable for some \"clickable\" areas."
   :group 'lyskom-faces
   )
 
@@ -769,6 +846,11 @@ Do not change this face unless you know what you're doing."
                                  kom-face--user-defined--async-text-body-face))
     (kom-async-dashed-lines-face . (kom-face--default--async-dashed-lines-face
                                     kom-face--user-defined--async-dashed-lines-face))
+    (kom-active-highlight-face . (kom-face--default--active-highlight-face
+                                  kom-face--user-defined--active-highlight-face))
+    (kom-active-strikethrough-face . (kom-face--default--active-strikethrough-face
+                                      kom-face--user-defined--active-strikethrough-face))
+
     )
   "Alist of predefined faces suitable for each face variable.
 Used for customization and nothing else."

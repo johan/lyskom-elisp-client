@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.82 2003-03-13 21:11:52 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.83 2003-03-16 14:03:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.82 2003-03-13 21:11:52 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.83 2003-03-16 14:03:01 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -466,13 +466,15 @@ kom-next- and -previous-link won't notice the button"
                        (t -1)))
          (numarg (cond ((numberp arg) arg)
                        ((stringp arg) (string-to-number arg))
+                       ((lyskom-conf-stat-p arg) (conf-stat->conf-no arg))
+                       ((lyskom-uconf-stat-p arg) (uconf-stat->conf-no arg))
+                       ((lyskom-pers-stat-p arg) (pers-stat->pers-no arg))
                        (t nil)))
          (data (assq type lyskom-button-actions))
          (hints (and data (elt data 4)))
          (the-hint (lyskom-get-button-hint hints))
          (props 
-          (cond ((and (memq type '(conf pers))
-                      numarg)
+          (cond ((and (memq type '(conf pers)) numarg)
                  (list 'face 
                        (or face
                            (or 
@@ -489,6 +491,13 @@ kom-next- and -previous-link won't notice the button"
                                     ((and (symbolp (car el))
                                           (boundp (car el))
                                           (eq numarg (symbol-value (car el))))
+                                     (lyskom-traverse-break
+                                      (cond ((facep (cdr el)) (cdr el))
+                                            ((and (symbolp (cdr el))
+                                                  (boundp (cdr el)))
+                                             (symbol-value (cdr el))))))
+                                    ((and (functionp (car el))
+                                          (funcall (car el) arg))
                                      (lyskom-traverse-break
                                       (cond ((facep (cdr el)) (cdr el))
                                             ((and (symbolp (cdr el))
@@ -540,9 +549,9 @@ kom-next- and -previous-link won't notice the button"
 		(cons 'lyskom-button-hint
 		      (cons the-hint props))
 	      props))))
-      
-        
-           
+
+
+
 
 (defun lyskom-default-button (type arg &optional menu-title)
   "Generate a button of type TYPE from data in ARG. ARG can be almost any
@@ -557,45 +566,49 @@ up."
 		(cond ((lyskom-conf-stat-p arg)
 		       (if (conf-type->letterbox (conf-stat->conf-type arg))
 			   (setq type 'pers))
-		       (setq xarg (conf-stat->conf-no arg)
+		       (setq xarg arg
 			     text (conf-stat->name arg)))
                       ((lyskom-uconf-stat-p arg)
 		       (if (conf-type->letterbox (uconf-stat->conf-type arg))
 			   (setq type 'pers))
-		       (setq xarg (uconf-stat->conf-no arg)
+		       (setq xarg arg
 			     text (uconf-stat->name arg)))
 		      ((numberp arg)
-                       (if (setq xarg (cache-get-conf-stat arg))
+                       (if (setq xarg (cache-get-uconf-stat arg))
                            (progn
                              (if (conf-type->letterbox
-                                  (conf-stat->conf-type xarg))
+                                  (uconf-stat->conf-type xarg))
                                  (setq type 'pers))
-                             (setq text (conf-stat->name xarg))
-                             (setq xarg (conf-stat->conf-no xarg)))
-                         (setq text ""
-                               xarg arg)))
+                             (setq text (uconf-stat->name xarg))
+                             (setq xarg arg))
+                         (setq text "" xarg arg)))
 		      (t (setq text "" xarg 0))))
+
 	       ((eq type 'pers)
 		(cond ((lyskom-conf-stat-p arg)
-		       (setq xarg (conf-stat->conf-no arg)
+		       (setq xarg arg
 			     text (conf-stat->name arg)))
                       ((lyskom-uconf-stat-p arg)
-		       (setq xarg (uconf-stat->conf-no arg)
+		       (setq xarg arg
 			     text (uconf-stat->name arg)))
 		      ((lyskom-pers-stat-p arg)
-		       (setq xarg (pers-stat->pers-no arg)
-			     text 
-                             (or (conf-stat->name
-                                  (cache-get-conf-stat
-                                   (pers-stat->pers-no arg)))
-                                 "")))
+		       (setq xarg arg
+			     text (or (conf-stat->name
+                                       (cache-get-conf-stat
+                                        (pers-stat->pers-no arg)))
+                                      "")))
 		      ((numberp arg) 
-                       (setq text
-                             (or (conf-stat->name
-                                  (cache-get-conf-stat arg))
-                                 "")
-                             xarg arg))
+                       (if (setq xarg (cache-get-uconf-stat arg))
+                           (progn
+                             (if (conf-type->letterbox
+                                  (uconf-stat->conf-type xarg))
+                                 (setq type 'pers))
+                             (setq text (uconf-stat->name xarg))
+                             (setq xarg arg))
+                         (setq text "" xarg arg)))
+
 		      (t (setq text "" xarg 0))))
+
 	       ((eq type 'text)
 		(cond ((stringp arg) (setq xarg (string-to-number arg)
 					   text arg))
@@ -605,6 +618,7 @@ up."
 		       (setq xarg (text-stat->text-no arg)
 			     text (number-to-string (text-stat->text-no arg))))
 		      (t (setq xarg 0 text ""))))
+
 	       ((eq type 'url)
                 (setq face kom-url-face)
 		(cond ((stringp arg) (setq xarg nil text arg))
@@ -1316,3 +1330,54 @@ depending on the value of `kom-lynx-terminal'."
            
 (defun lyskom-button-apply (buf arg text)
   (apply (car arg) (cdr arg)))
+
+
+;;; ================================================================
+;;; Functions to put in kom-highlight-conferences
+
+(defun lyskom-highlight-function-get-conf-stat (arg)
+  "Try to translate ARG to a conf-stat without making server calls.
+
+ARG may be a conf-stat, pers-stat, uconf-stat, integer or string."
+  (cond ((lyskom-pers-stat-p arg)
+         (cache-get-conf-stat (pers-stat->pers-no arg)))
+        ((lyskom-uconf-stat-p arg)
+         (cache-get-conf-stat (uconf-stat->conf-no arg)))
+        ((numberp arg)
+         (cache-get-conf-stat arg))
+        ((stringp arg)
+         (cache-get-conf-stat (string-to-int arg)))
+        ((lyskom-conf-stat-p arg) arg)
+        (t nil)))
+
+
+(defun lyskom-highlight-i-am-supervisor (arg)
+  "Returns non-nil if lyskom-pers-no is the supervisor of ARG.
+
+ARG interpreted by `lyskom-highlight-function-get-conf-stat'.
+
+This function never makes server calls, so if the information required
+to answer accurately is not cached, this function will return an incorrect
+result (nil instead of t)."
+  (let ((marshal nil)
+        (conf-stat (lyskom-highlight-function-get-conf-stat arg)))
+    (when conf-stat
+      (let ((conf (conf-stat->supervisor conf-stat))
+            (result nil))
+        (while (and (not (memq conf marshal)) conf (not result))
+          (setq marshal (cons conf marshal))
+          (if (lyskom-try-get-membership conf t)
+              (setq result t)
+            (setq conf (conf-stat->supervisor (cache-get-conf-stat conf)))))
+        result))))
+
+(defun lyskom-highlight-has-no-presentation (arg)
+  "Returns non-nil if lyskom-pers-no is the supervisor of CONF-STAT.
+
+ARG is interpreted by `lyskom-highlight-function-get-conf-stat'.
+
+This function never makes server calls, so if the information required
+to answer accurately is not cached, this function will return an incorrect
+result (nil instead of t)."
+  (eq 0 (conf-stat->presentation
+         (lyskom-highlight-function-get-conf-stat arg))))

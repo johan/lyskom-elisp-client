@@ -1,5 +1,30 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 983:
+	* vars.el.in (kom-highlight-conferences): Added highlighting of no
+	presentation and supervised conferences to the default.
+
+	* faces.el (kom-active-strikethrough-face): New face.
+	(kom-active-highlight-face): New face.
+	(kom-face--default--active-strikethrough-face): New face.
+	(kom-face--default--active-highlight-face): New face.
+	(kom-face--user-defined--active-strikethrough-face): New face.
+	(kom-face--user-defined--active-highlight-face): New face.
+
+	* lyskom-buttons.el (lyskom-highlight-has-no-presentation): New
+	function.
+	(lyskom-highlight-i-am-supervisor): New function.
+	(lyskom-highlight-function-get-conf-stat): New function.
+
+	* option-edit.el (lyskom-face-widget): Handle explicit list of
+	faces.
+
+	* lyskom-buttons.el (lyskom-default-button): Pass
+	conf-stat/uconf-stat/whatever to lyskom-default-button. Use
+	uconf-stat instead of conf-stat when looking in the cache.
+	(lyskom-generate-button): Support functions in
+	kom-highlight-conferences.
+
 	Fixed bug 984:
 	* commands1.el (lyskom-get-marked-texts): New function.
 	(lyskom-review-marked-texts): Use it.
