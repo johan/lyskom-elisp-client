@@ -1,3 +1,9 @@
+2004-12-06  Pontus Freyhult  <pont@soua.net>
+
+	Bugfix: Handle case when started from buffer with no local keymap
+	* menus.el (lyskom-define-menu-gnu): Only call 
+	lyskom-menu-guess-shortcuts if we (current-local-map) is non-nil.
+
 2004-12-04  Pontus Freyhult  <pont@soua.net>
 
 	Bugfix: Do not leak password from session started in LysKOM buffer.
