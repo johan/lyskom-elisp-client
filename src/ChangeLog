@@ -1,3 +1,8 @@
+2002-07-01  David Kågedal  <david@lysator.liu.se>
+
+	* compatibility.el (lyskom-color-values): Negated the condition
+	under which this is defined.
+
 2002-06-29  David Byers  <david.byers@swipnet.se>
 
 	* compatibility.el: Added declarations to avoid warnings about
