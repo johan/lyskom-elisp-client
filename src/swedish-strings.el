@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.356 2003-12-10 22:26:59 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.357 2003-12-11 22:39:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.356 2003-12-10 22:26:59 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.357 2003-12-11 22:39:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1247,7 +1247,9 @@ Du bör sätta den till ett bättre värde.\n")
 
     (re-edit-text-prompt . "Redigera texten som inte kunde skapas")
     (go-to-pri-conf-prompt . "Gå till nästa prioriterade möte")
+    (go-to-pri-mailbox-prompt . "Gå till prioriterad brevlåda")
     (read-pri-text-conf . "Läsa nästa prioriterade text")
+    (read-pri-letter-prompt . "Läsa nästa prioriterade brev")
     (review-next-text-prompt . "Återse nästa text")
     (review-next-comment-prompt . "Återse nästa kommentar")
     (review-next-marked-prompt . "Återse nästa markerade")

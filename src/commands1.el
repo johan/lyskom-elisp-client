@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.206 2003-12-05 00:04:20 byers Exp $
+;;;;; $Id: commands1.el,v 44.207 2003-12-11 22:39:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.206 2003-12-05 00:04:20 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.207 2003-12-11 22:39:00 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -617,7 +617,7 @@ the priority of several memberships, use `kom-prioritize' instead."
             (t (lyskom-add-member-answer
                 (lyskom-try-add-member conf-stat who pers-stat nil
                                        'change-priority-for t)
-                conf-stat who))))))
+                conf-stat who nil (membership->type mship)))))))
 
 
 ;;; NOTE: This function is also called from lyskom-go-to-conf-handler
@@ -3177,11 +3177,11 @@ prefix argument \(C-u -), list all sessions."
 		((string-match "\\s-*(build [^)]*)" version)
 		 (replace-in-string version "\\s-*(build [^)]*)" ""))
 		(t version)))
-	 (name (concat client " " uversion))
+	 (name (concat (or client "") (if uversion " " "") (or uversion "")))
 	 (el (assoc name (collector->value collect))))
       (if el
 	  (progn (aset (cdr el) 0 (1+ (aref (cdr el) 0)))
-		 (unless (lyskom-string-member version (aref (cdr el) 1))
+		 (unless (lyskom-string-member (or version "") (aref (cdr el) 1))
 		   (aset (cdr el) 1 (cons version (aref (cdr el) 1)))))
 	(set-collector->value collect (cons (cons name (vector 1 (list version)))
 					    (collector->value collect))))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.223 2003-12-10 22:26:58 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.224 2003-12-11 22:39:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.223 2003-12-10 22:26:58 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.224 2003-12-11 22:39:01 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2974,7 +2974,14 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
         (cond
 
          ((eq to-do 'next-pri-conf)
-          (setq prompt 'go-to-pri-conf-prompt)
+          (setq prompt
+                (cond ((eq lyskom-pers-no
+                           (conf-stat->conf-no
+                            (read-info->conf-stat (read-list->first
+                                                   lyskom-to-do-list))))
+                       'go-to-pri-mailbox-prompt)
+                      (t 'go-to-pri-conf-prompt)))
+
           (or (eq lyskom-current-prompt prompt)
               (lyskom-beep kom-ding-on-priority-break)))
 
@@ -2998,7 +3005,14 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
                        lyskom-server-name)))))
 
          ((eq to-do 'next-pri-text)
-          (setq prompt 'read-pri-text-conf)
+          (setq prompt
+                (cond ((eq (conf-stat->conf-no
+                            (read-info->conf-stat (read-list->first
+                                                   lyskom-to-do-list)))
+                           lyskom-pers-no)
+                       'read-pri-letter-prompt)
+                      (t 'read-pri-text-conf)))
+
           (or (eq lyskom-current-prompt prompt)
               (lyskom-beep kom-ding-on-priority-break)))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.315 2003-12-10 22:26:58 byers Exp $
+;;;;; $Id: english-strings.el,v 44.316 2003-12-11 22:39:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.315 2003-12-10 22:26:58 byers Exp $"))
+              "$Id: english-strings.el,v 44.316 2003-12-11 22:39:01 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1214,7 +1214,9 @@ You should set it to a better value.\n")
     (text-buffer-missing . "The text buffer no longer exists.\n")
     (re-edit-text-prompt . "Edit the text that couldn't be created")
     (go-to-pri-conf-prompt . "Go to next prioritized conference")
+    (go-to-pri-mailbox-prompt . "Gå to prioritized mailbox")
     (read-pri-text-conf . "Read next prioritized text")
+    (read-pri-letter-prompt . "Read next prioritized letter")
     (review-next-text-prompt . "Review next text")
     (review-next-comment-prompt . "Review next comment")
     (review-next-marked-prompt . "Review next marked text")
