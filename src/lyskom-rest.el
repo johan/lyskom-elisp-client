@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 40.9 1996-04-27 01:08:36 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 40.10 1996-04-27 20:15:43 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 40.9 1996-04-27 01:08:36 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 40.10 1996-04-27 20:15:43 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1468,6 +1468,9 @@ The name of the file is read using the minibuffer and the default is kom-text."
 		 (file-name-directory lyskom-saved-file-name)
 		 lyskom-saved-file-name
 		 nil)))
+      (if (file-directory-p name)
+	  (setq name (concat (file-name-as-directory name)
+			     (file-name-nondirectory lyskom-saved-file-name))))
       (append-to-file p1 p2
 		      (expand-file-name name))
       (setq lyskom-saved-file-name name))))
