@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.304 2003-08-24 22:05:34 byers Exp $
+;;;;; $Id: english-strings.el,v 44.305 2003-08-25 19:47:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.304 2003-08-24 22:05:34 byers Exp $"))
+              "$Id: english-strings.el,v 44.305 2003-08-25 19:47:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -4414,6 +4414,12 @@ up menus.")
     (error-52 . "Feature disabled in the server")
     (error-53 . "Unable to send message")
     (error-54 . "Invalid membership type")
+    (error-55 . "Invalid range")
+    (error-56 . "Invalidrange list")
+    (error-57 . "Undefined measurement")
+    (error-58 . "Priority denied")
+    (error-59 . "Weight denied")
+    (error-60 . "Zero weight")
 
     (error--1 . "You are not a member of any recipient")
 ))

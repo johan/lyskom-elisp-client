@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.344 2003-08-24 22:05:34 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.345 2003-08-25 19:47:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.344 2003-08-24 22:05:34 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.345 2003-08-25 19:47:08 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -4532,6 +4532,12 @@ ta fram menyer.")
     (error-52 . "Funktionen avstängd i servern")
     (error-53 . "Mottagaren var kanske inte inloggad")
     (error-54 . "Otillåten typ på medlemskap")
+    (error-55 . "Ogiltigt intervall")
+    (error-56 . "Ogiltig kombination av intervall")
+    (error-57 . "Odefinierad mätning")
+    (error-58 . "Otillåten prioritet")
+    (error-59 . "Otillåten viktning")
+    (error-60 . "Viktning noll ej giltig")
 
     (error--1 . "Du är inte medlem i något mottagarmöte")
 ))
