@@ -1,3 +1,28 @@
+2000-08-14  David Byers  <davby@ida.liu.se>
+
+	* services.el (lyskom-server-call): Return the ref-no of the call
+	just made.
+
+	* commands1.el (kom-list-created-conferences): Attempt to cancel
+	calls still in the pipe before quitting.
+
+	* services.el (lyskom-cancel-call): New function.
+
+	* clienttypes.el (lyskom-queue-set-data): New function.
+
+	* compatibility.el (nil): Set lyskom-server-coding-system
+	according to the value of enable-multibyte-characters in Gnu Emacs
+	to make stuff work better in multibyte-disabled Gnu Emacsen.
+
+	* commands1.el (kom-list-conferences): Wait for membership to be
+	read.
+	(kom-list-created-conferences): Wait for membership to be read.
+	(lyskom-list-conf-membership-char): New function to print
+	membership char in name lists.
+	(lyskom-list-created-conferences-2): Use it.
+	(lyskom-list-conf-print): Use it.
+	(kom-list-created-conferences): Make it possible to quit with C-g.
+
 Fri Aug 11 17:34:39 2000  David Byers  <davby@sen2.ida.liu.se>
 
 	* Release av 0.46-BETA-L

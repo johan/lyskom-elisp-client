@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.98 2000-08-11 15:00:52 byers Exp $
+;;;;; $Id: english-strings.el,v 44.99 2000-08-14 15:56:29 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.98 2000-08-11 15:00:52 byers Exp $"))
+              "$Id: english-strings.el,v 44.99 2000-08-14 15:56:29 byers Exp $"))
 
 
 ;;; ================================================================
@@ -332,14 +332,16 @@ and you have finished reading. Please come back later.
     (no-matching-anys . "No persons or conferences match \"%#1s\".\n")
     (no-confs-exist . "There are no conferences in the database.\n")
     (no-pers-confs-exist . "There are no persons or conferences in the database.\n")
-    (list-confs-created-by . "List conferences created by: ")
-    (list-pers-confs-created-by . "List persons and conferences created by: ")
+    (list-confs-created-by . "List conferences administered by: ")
+    (listing-confs-created-by . "Listing conferences administered by %#1P\n")
+    (list-pers-confs-created-by . "List persons and conferences administered by: ")
     (getting-all-confs . "Retrieving a list of all conferences from the server...")
     (getting-all-pers-confs . "Retrieving a list of all persons and conferences from the server...")
     (getting-all-confs-done . "Retrieving a list of all conferences from the server...done")
     (getting-all-pers-confs-done . "Retrieving a list of all persons and conferences from the server...done")
-    (finding-created-confs . "Finding created persons and conferences (%#1d av %#2d klart)")
-    (finding-created-pers-confs . "Finding created persons and conferences (%#1d av %#2d klart)")
+    (finding-created-confs . "Finding administered conferences (%#1d av %#2d done)")
+    (finding-created-pers-confs . "Finding administered persons and conferences (%#1d av %#2d done)")
+    (no-created-confs . "%#1P is not creator, supervisor or super conference for any conference.\n")
 
     (name-to-be-changed . "Name to change: ")
     (no-such-conf-or-pers . "The conference or user doesn't exist.\n")
@@ -1519,7 +1521,7 @@ You must become an active member of the conference to enter it.\n")
     (kom-go-to-conf           . "Go (to) conference")
     (kom-go-to-next-conf      . "(Go to) next conference")
     (kom-jump                 . "Skip (all) comments")
-    (kom-list-created-conferences     . "List created conferences") 
+    (kom-list-created-conferences     . "List administered conferences") 
     (kom-list-conferences     . "List conferences") 
     (kom-list-persons         . "List users")
     (kom-list-news            . "List news")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.39 2000-05-24 16:55:03 byers Exp $
+;;;;; $Id: compatibility.el,v 44.40 2000-08-14 15:56:27 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.39 2000-05-24 16:55:03 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.40 2000-08-14 15:56:27 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -317,6 +317,12 @@ string to search in."
 (lyskom-provide-function string-make-unibyte (str) str)
 (lyskom-provide-function string-make-multibyte (str) str)
 (lyskom-provide-function multibyte-string-p (str) nil)
+
+(lyskom-xemacs-or-gnu nil
+                      (and (null enable-multibyte-characters)
+                           (setq-default lyskom-server-coding-system 'raw-text)
+                           (setq lyskom-server-coding-system 'raw-text)))
+
 
 ;;; Decode buggy versions of encode-coding-string and decode-coding-string
 ;;; such as those provided by APEL (part of TM and often included in XEmacs)

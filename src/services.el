@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.27 2000-01-06 12:47:14 byers Exp $
+;;;;; $Id: services.el,v 44.28 2000-08-14 15:56:31 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.27 2000-01-06 12:47:14 byers Exp $\n"))
+	      "$Id: services.el,v 44.28 2000-08-14 15:56:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -81,8 +81,9 @@
 from being called in the wrong buffer."
   (` (let ((initiate-something-saved-buffer (current-buffer)))
        (unwind-protect
-           (progn (or lyskom-output-queues (set-buffer lyskom-buffer))
-                  (,@ body))
+           (prog2 (or lyskom-output-queues (set-buffer lyskom-buffer))
+               lyskom-ref-no
+             (,@ body))
          (set-buffer initiate-something-saved-buffer)))))
 
 (put 'lyskom-server-call 'lisp-indent-function 0)
@@ -1375,6 +1376,34 @@ or get-text-stat."
 (defun lyskom-blocking-do-multiple-1 (&rest data)
   (setq lyskom-multiple-blocking-return data
 	lyskom-ok-to-send-new-calls nil))
+
+(defun lyskom-cancel-call (queue-name ref-nos)
+  "Attempt to cancel calls in queue QUEUE-NAME with ref-no in REF-NOS. 
+There is no guarantee that the call will be canceled. In particular, if
+the call is not on QUEUE-NAME or has been sent to the server, it will
+probably not be canceled."
+  (let ((found nil))
+
+    ;; Delete the call from the pending queue
+
+    (let* ((queue (cdr (assq queue-name lyskom-call-data)))
+           (calls (and queue (lyskom-queue->all-entries (kom-queue->pending queue)))))
+      (when queue
+        (lyskom-queue-make-empty (kom-queue->pending queue))
+        (lyskom-traverse el calls
+          (if (memq (elt el 1) ref-nos)
+              (setq found t)
+            (lyskom-queue-enter (kom-queue->pending queue) el)))))
+    
+    ;; Delete the call from the output queue
+
+    (let* ((queue (aref lyskom-output-queues (lyskom-queue-priority queue-name))))
+      (when (and queue found)
+        (let ((calls (lyskom-queue->all-entries queue)))
+          (lyskom-queue-make-empty queue)
+          (lyskom-traverse el calls
+            (unless (memq (car el) ref-nos)
+              (lyskom-queue-enter queue el))))))))
 
 (put 'blocking-do-multiple 'edebug-form-spec '(sexp body))
 
