@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.9 1996-01-13 06:50:29 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.10 1996-02-01 09:36:52 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.9 1996-01-13 06:50:29 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.10 1996-02-01 09:36:52 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -127,6 +127,8 @@ Does lyskom-end-of-command."
 			       "\\)")
 		       (point-max)
 		       'end)
+    (if (not (looking-at "\\s-*$"))
+        (goto-char (point-max)))
     (lyskom-message "%s" (lyskom-get-string 'press-C-c-C-c)))
   (set-buffer (process-buffer lyskom-proc))
   )

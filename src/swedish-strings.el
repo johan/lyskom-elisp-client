@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.11 1996-01-21 17:55:10 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.12 1996-02-01 09:37:18 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.11 1996-01-21 17:55:10 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.12 1996-02-01 09:37:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -692,6 +692,7 @@ Gruppmeddelande till %#3s fr\345n %#2s (%#4s):
 
     (save-on-file-q . "Spara inl\344gg p\345 fil: (%#1s) ")
     (wait-for-prompt . "V\344nta p\345 prompten!")
+    (prompt-modifier-ansaphone . "[%s]")
     (go-to-pri-conf-prompt . "G\345 till n\344sta prioriterade m\366te")
     (read-pri-text-conf . "L\344sa n\344sta prioriterade text")
     (review-next-text-prompt . "\305terse n\344sta text")
@@ -741,9 +742,12 @@ Felmeddelande: %#1s**************************************************")
     (wait . "V\344nta ett tag...\n")
     (comment . "Kommentar")
     (footnote . "Fotnot")
+
 ;;;+++ not used?
     (by . " av %#1s")
     (text-created .  "Text nummer %#1n \344r skapad.\n")
+
+    (resolve-session . "Ange vilken session: ")
 
     (starting-program . "Startar %#1s...")
     (super-jump . "Filtrerar \344rende \"%#1r\" i m\366te \"%#2M\"\n")
@@ -785,6 +789,54 @@ Felmeddelande: %#1s**************************************************")
     (no-filters . "Inga filter har definierats.\n")
     (view-filters-header . "\nAktiva filter:\n\n")
     (view-filters-footer . "")
+
+    (ansaphone-new-message . "Nytt automatsvar: ")
+    (ansaphone-message . "Svarsmeddelande:
+----------------------------------------------------------------------
+%#1s
+----------------------------------------------------------------------
+")
+    (ansaphone-state . "Automatsvar \344r nu %#1s.")
+    (ansaphone-state-r . "Automatsvar \344r nu %#1s.\n")
+    (ansaphone-messages-gone . "Sparade meddelanden raderade.")
+    (ansaphone-no-messages . "Inga meddelanden.\n")
+    (ansaphone-message-list-start . "Sparade meddelanden:\n\n")
+    (ansaphone-message-list-end . "\n\n")
+    (ansaphone-message-header . "Automatiskt svar (satt %#1s):\n")
+
+    (remote-erase-messages . "Fj\344rrstyrning (%#1P %#2s): Sparade meddelanden raderade\n")
+    (remote-set-message . "Fj\344rrstyrning (%#1P %#2s): Svarsmeddelande:
+----------------------------------------------------------------------
+%#3s
+----------------------------------------------------------------------
+")
+    (remote-set-ansaphone . "Fj\344rrstyrning (%#1P %#2s): Automatsvar \344r nu %#3s\n")
+    (remote-list-messages . "Fj\344rrstyrning (%#1P %#2s): Meddelanden listade\n")
+    (remote-quit . "Fj\344rrstyrning(%#1P %#2s): Avsluta\n")
+
+    (illegal-remote . 
+"Otill\345ten fj\344rrstyrning:
+Tid: %#1s
+Fr\345n: %#2P <%#2p>
+Till: %#3P <%#3p>
+Text: 
+%#4t")
+    (illegal-remote-reply . "Fj\344rrstyrning inte accepterad: %#1s") 
+    (remote-not-in-list . "Otill\345ten person")
+    (remote-bad-command . "Felaktigt kommando")
+    (remote-unknown-error . "Ok\344nt fel")
+
+    (remote-control-who . "Kontrollera vilken session? ")
+    (remote-control-autoreply . "Automatsvar på eller av? ")
+
+    (state-on . "p\345slaget")
+    (state-off . "avslaget")
+
+    (text-popup-title . "Inl\344gg %#1s")
+    (conf-popup-title . "M\366te %#1s")
+    (pers-popup-title . "Person %#1s")
+    (url-popup-title  . "URL %#1s")
+    (generic-popup-title . "%#1s")
     )
   "Assoc list containing pairs of atoms and strings")
 
@@ -890,11 +942,26 @@ Felmeddelande: %#1s**************************************************")
     (kom-list-filters   "Lista filter")
     (kom-show-user-area "Visa user-arean")
     (kom-change-conf-type "\304ndra m\366testyp")
+
+    (kom-change-auto-reply "\304ndra svarsmeddelande")
+    (kom-toggle-auto-reply "Automatsvar")
+    (kom-list-messages     "Lista meddelanden")
+    (kom-erase-messages    "Radera meddelanden")
+
+    (kom-remote-autoreply  "Fj\344rrkontrollera automatsvar")
+    (kom-remote-set-message "Fj\344rrkontrollera \344ndra svarsmeddelande")
+    (kom-remote-list-messages "Fj\344rrkontrollera lista meddelanden")
+    (kom-remote-erase-messages "Fj\344rrkontrollera radera meddelanden")
+    (kom-remote-quit "Fj\344rrkontrollera avsluta")
     )
   "A list of LysKOM-commands that the extended parser understands.")
 
 (defvar lyskom-swascii-commands nil
   "The swascii-versions of lyskom-commands.")
+
+(defvar lyskom-onoff-table
+  '(("på" . on) ("av" . off))
+  "A completion table for on and off selections.")
 
 (defvar lyskom-filter-predicate-list
       '(("=" . nil) ("!=" . t))
@@ -973,6 +1040,7 @@ Cf. paragraph-start.")
 	(define-key lyskom-mode-map [?l ?\344] 'kom-list-summary)
 	(define-key lyskom-mode-map [?l ?\304] 'kom-list-summary)
 	(define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
+    (define-key lyskom-mode-map [down-mouse-3] 'kom-mouse-3)
     (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
     (define-key lyskom-mode-map "\M-f" 'kom-next-link)
     (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
@@ -1042,6 +1110,7 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "V"  'kom-busy-wait)
   (define-key lyskom-mode-map "{p" 'kom-change-presentation)
   (define-key lyskom-mode-map "{f" 'kom-filter-edit)
+  (define-key lyskom-mode-map "{m" 'kom-change-auto-reply)
   (define-key lyskom-mode-map "} " 'kom-view)
   (define-key lyskom-mode-map "}0" 'kom-initial-digit-view)
   (define-key lyskom-mode-map "}1" 'kom-initial-digit-view)
@@ -1143,7 +1212,46 @@ Cf. paragraph-start.")
   (define-key lyskom-prioritize-mode-map "u"     'kom-prioritize-move-up)
   (define-key lyskom-prioritize-mode-map "n"     'kom-prioritize-move-down)
 )
+
+
+;;; (defvar lyskom-prioritize-mode-map nil
+;;;  "Keymap used in lyskom-prioritize-mode.")
+;;;
+;;;(if lyskom-prioritize-mode-map 
+;;;    nil
+;;;  (setq lyskom-prioritize-mode-map (make-keymap))
+;;;  (suppress-keymap lyskom-prioritize-mode-map)
+;;;  (define-key lyskom-prioritize-mode-map [mouse-2] 'kom-mouse-2)
+;;;  (define-key lyskom-prioritize-mode-map [down] 'kom-prioritize-next-line)
+;;;  (define-key lyskom-prioritize-mode-map "\C-n" 'kom-prioritize-next-line)
+;;;  (define-key lyskom-prioritize-mode-map [up] 'kom-prioritize-previous-line)
+;;;  (define-key lyskom-prioritize-mode-map "\C-p" 'kom-prioritize-previous-line)
+;;;  (define-key lyskom-prioritize-mode-map [M-up] 'kom-prioritize-move-up)
+;;;  (define-key lyskom-prioritize-mode-map [M-down] 'kom-prioritize-move-down)
+;;;  (define-key lyskom-prioritize-mode-map "\M-p" 'kom-prioritize-move-up)
+;;;  (define-key lyskom-prioritize-mode-map "\M-n" 'kom-prioritize-move-down)
+;;;  (define-key lyskom-prioritize-mode-map "u" 'kom-prioritize-move-up)
+;;;  (define-key lyskom-prioritize-mode-map "d" 'kom-prioritize-move-down)
+;;;  (define-key lyskom-prioritize-mode-map "\M-<" 'kom-prioritize-beginning)
+;;;  (define-key lyskom-prioritize-mode-map "\M->" 'kom-prioritize-end)
+;;;  (define-key lyskom-prioritize-mode-map "r" 'kom-prioritize-reprioritize)
+;;;  (define-key lyskom-prioritize-mode-map "g" 'kom-prioritize-goto-priority)
+;;;  (define-key lyskom-prioritize-mode-map "s" 'kom-prioritize-set-priority)
+;;;  (define-key lyskom-prioritize-mode-map "q" 'kom-prioritize-quit)
+;;;  (define-key lyskom-prioritize-mode-map "\C-x\C-x" 'exchange-point-and-mark)
+;;;  (define-key lyskom-prioritize-mode-map [C-SPC] 'set-mark-command)
+;;;  (define-key lyskom-prioritize-mode-map "*" 'kom-prioritize-mark))
+
   
+;;;; ============================================================
+;;;; The default Ansaphone message goes here. The more complex 
+;;;; message specification probably should too, but it's not here
+;;;; yet. People who know how to use it are smart enough to do it
+;;;; right.
+
+(defvar kom-ansaphone-default-reply 
+  "Jag l\344ser inte LysKOM just nu. Skicka gärna ett brev i stället."
+  "*Default message to send when the ansaphone is on.")
         
 
 ;;;; ================================================================
@@ -1188,7 +1296,6 @@ Cf. paragraph-start.")
 The variable kom-mercial defaults to kom-tell-wait.
 Users are encouraged to change this dictionary for fun.")
 
-
 ;; Placed here because this must NOT be evaluated before 
 ;; kom-tell-phrases is defined:
 
@@ -1196,6 +1303,8 @@ Users are encouraged to change this dictionary for fun.")
   "*When the user has seen all texts and has reached the view-time prompt,
 this string is used as the argument to lyskom-tell-server.
 Users are encouraged to use their best sense of humor.")
+
+;;;
 
 
 (defconst lyskom-error-texts
