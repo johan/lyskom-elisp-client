@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 41.14 1996-07-25 06:53:19 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 41.15 1996-07-27 11:40:00 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 41.14 1996-07-25 06:53:19 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 41.15 1996-07-27 11:40:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -952,6 +952,7 @@ Text:
 %#5s %#7s %#4M
 K\366r %#6D fr\345n %#3s\n")
     (status-for-session . "Sessionsstatus f\366r vilken person? ")
+    (unknown-doing-what . "Existerar")
     (doing-where-conn . "i")
     (doing-nowhere-conn . "men är")
     )

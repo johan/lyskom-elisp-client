@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 41.10 1996-07-25 16:04:23 byers Exp $
+;;;;; $Id: startup.el,v 41.11 1996-07-27 11:39:55 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 41.10 1996-07-25 16:04:23 byers Exp $\n"))
+	      "$Id: startup.el,v 41.11 1996-07-27 11:39:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -228,7 +228,7 @@ variable documentation for lyskom-server-feautres"
                      lyskom-default-user-name)
                 ;; This is nil if we can't find a unique match.
                 (setq lyskom-pers-no
-                      (conf-stat->conf-no
+                      (conf-z-info->conf-no
                        (lyskom-lookup-conf-by-name lyskom-default-user-name
                                                    '(pers)))))
             (if lyskom-pers-no
@@ -237,7 +237,7 @@ variable documentation for lyskom-server-feautres"
                            (lyskom-get-string 'what-is-your-name)
                            '(pers none) t "" t)))
                 (setq lyskom-pers-no
-                      (or (conf-stat->conf-no 
+                      (or (conf-z-info->conf-no 
                            (lyskom-lookup-conf-by-name name '(pers)))
                           (lyskom-create-new-person name)))))
             ;; Now lyskom-pers-no contains a number of a person.

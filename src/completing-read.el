@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 41.6 1996-07-25 16:04:03 byers Exp $
+;;;;; $Id: completing-read.el,v 41.7 1996-07-27 11:39:30 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 41.6 1996-07-25 16:04:03 byers Exp $\n"))
+       "$Id: completing-read.el,v 41.7 1996-07-27 11:39:30 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -65,16 +65,25 @@
     (setq lyskom-completing-who-info-cache
           (listify-vector (blocking-do 'who-is-on)))))
 
-(defun lyskom-completing-lookup-name (string)
-  "Look up STRING as a name. Same as \(blocking-do 'lookup-name ...\)
+(defun lyskom-completing-cache-completion (string data)
+  (let* ((downs (downcase string))
+         (tmp (assoc downs lyskom-completing-lookup-name-cache)))
+    (if (null tmp)
+        (setq lyskom-completing-lookup-name-cache
+              (cons (cons downs data) lyskom-completing-lookup-name-cache)))
+    string))
+
+(defun lyskom-completing-lookup-z-name (string want-conf want-pers)
+  "Look up STRING as a name. Same as \(blocking-do 'lookup-z-name ...\)
 but first checks a cache."
-  (let ((tmp (assoc string lyskom-completing-lookup-name-cache)))
+  (let* ((downs (downcase string))
+         (tmp (assoc downs lyskom-completing-lookup-name-cache)))
     (if tmp
         (cdr tmp)
       (progn
-        (setq tmp (blocking-do 'lookup-name string))
+        (setq tmp (blocking-do 'lookup-z-name string want-conf want-pers))
         (setq lyskom-completing-lookup-name-cache
-              (cons (cons string tmp)
+              (cons (cons downs tmp)
                     lyskom-completing-lookup-name-cache))
         tmp))))
 
@@ -105,30 +114,31 @@ but first checks a cache."
 return its number or zero if nothing was matched.
 
 See lyskom-read-conf for a description of the parameters."
-  (let ((conf-stat (lyskom-read-conf prompt type empty initial mustmatch)))
-    (cond ((null conf-stat) 0)
-          ((stringp conf-stat) 0)
-          (t (conf-stat->conf-no conf-stat)))))
+  (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
+    (cond ((null conf-z-info) 0)
+          ((stringp conf-z-info) 0)
+          (t (conf-z-info->conf-no conf-z-info)))))
 
 (defun lyskom-read-conf-stat (prompt type &optional empty initial mustmatch)
   "Read a conference name from the minibuffer with completion and
 return its conf-stat or nil if nothing was matched.
 
 See lyskom-read-conf for a description of the parameters."
-  (let ((conf-stat (lyskom-read-conf prompt type empty initial mustmatch)))
-    (cond ((null conf-stat) nil)
-          ((stringp conf-stat) nil)
-          (t conf-stat))))
+  (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
+    (cond ((null conf-z-info) nil)
+          ((stringp conf-z-info) nil)
+          (t (blocking-do 'get-conf-stat 
+                          (conf-z-info->conf-no conf-z-info))))))
 
 (defun lyskom-read-conf-name (prompt type &optional empty initial mustmatch)
   "Read a conference name from the minibuffer with completion and
 return its name.
 
 See lyskom-read-conf for a description of the parameters."
-  (let ((conf-stat (lyskom-read-conf prompt type empty initial mustmatch)))
-    (cond ((null conf-stat) "")
-          ((stringp conf-stat) conf-stat)
-          (t (conf-stat->name conf-stat)))))
+  (let ((conf-z-info (lyskom-read-conf prompt type empty initial mustmatch)))
+    (cond ((null conf-z-info) "")
+          ((stringp conf-z-info) conf-z-info)
+          (t (conf-z-info->name conf-z-info)))))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
@@ -147,7 +157,7 @@ INITIAL   initial contents of the minibuffer
 MUSTMATCH if non-nil, the user must enter a valid name.
 
 The return value may be one of
-A conf-stat: The conf-stat associated with the name entered,
+A conf-z-info: The conf-z-info associated with the name entered,
 nil:         Nothing was entered, or
 A string:    A name that matched nothing in the database."
 
@@ -218,7 +228,7 @@ from person and conference number specifications."
               cs)))))
 
 (defun lyskom-lookup-conf-by-name (string predicate)
-  "Return the conf-stat associated with STRING that also satisfies
+  "Return the conf-z-info associated with STRING that also satisfies
 PREDICATE or nil if no name matches. See lyskom-read-conf-internal for
 a documentation of PREDICATE."
   (let ((lyskom-blocking-process (or lyskom-blocking-process
@@ -259,11 +269,11 @@ function work as a name-to-conf-stat translator."
 
     (let* ((login-list (and (memq 'login predicate)
                             (lyskom-read-conf-get-logins)))
-           (x-list (lyskom-completing-lookup-name string))
-           (candidate-list (and x-list
-                                (listify-vector (conf-list->conf-nos x-list))))
-           (candidate-type-list 
-            (and x-list (listify-vector (conf-list->conf-types x-list))))
+           (x-list (lyskom-completing-lookup-z-name string 
+                                                    1 1))
+           (candidate-list 
+            (and x-list
+                 (listify-vector (conf-z-info-list->conf-z-infos x-list))))
            (lyskom-read-conf-internal-result-list nil)
            (result-list nil))
 
@@ -274,49 +284,31 @@ function work as a name-to-conf-stat translator."
       ;;  candidate-list contains a list of conf-nos, with the
       ;;  corresponding conf-types in candidate-type-list.
       ;;
-      ;;  Now set result-list to the conf-stats that fulfill the
+      ;;  Now set result-list to the conf-z-infos that fulfill the
       ;;  predicate, fetching the conf-stats asynchronously.
       ;;
 
-      (save-excursion
-        (set-buffer (process-buffer lyskom-blocking-process))
-        (while candidate-list
-          (if (lyskom-read-conf-internal-verify-type (car candidate-list)
-                                                     (car candidate-type-list)
-                                                     predicate
-                                                     login-list
-                                                     x-list)
-              (initiate-get-conf-stat 
-               'complete
-               (function (lambda (x)
-                           (if (boundp 'lyskom-read-conf-internal-result-list)
-                               (setq lyskom-read-conf-internal-result-list
-                                     (cons 
-                                      x 
-                                      lyskom-read-conf-internal-result-list)))))
-               (car candidate-list)))
-          (setq candidate-list (cdr candidate-list)
-                candidate-type-list (cdr candidate-type-list)))
+      (lyskom-traverse el candidate-list
+        (if (lyskom-read-conf-internal-verify-type (conf-z-info->conf-no el)
+                                                   (conf-z-info->conf-type el)
+                                                   predicate
+                                                   login-list
+                                                   candidate-list)
+            (setq result-list (cons el result-list))))
       
-        ;;
-        ;;  Wait for the conf-stats to arrive
-        ;;
-
-        (lyskom-wait-queue 'complete))
-      (setq result-list lyskom-read-conf-internal-result-list)
 
       ;;
-      ;;  Now the matching conf-stats are in result-list
+      ;;  Now the matching conf-z-infos are in result-list
       ;;
 
       (cond 
        ((eq all 'lyskom-lookup)
-        (let ((names (mapcar 'conf-stat->name 
+        (let ((names (mapcar 'conf-z-info->name 
                              result-list))
               (specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list)))
+                                                          candidate-list)))
 
           (cond ((= (length result-list) 1)
                  (car result-list))
@@ -329,14 +321,14 @@ function work as a name-to-conf-stat translator."
                 (specials (lyskom-read-conf-lookup-specials string
                                                             predicate
                                                             login-list
-                                                            x-list))
+                                                            candidate-list))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
                 ((lyskom-read-conf-internal-verify-type nil
                                                         nil
                                                         predicate
                                                         login-list
-                                                        x-list)
+                                                        candidate-list)
                  string))))
      
        ;;
@@ -349,7 +341,7 @@ function work as a name-to-conf-stat translator."
         (let ((specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list)))
+                                                          candidate-list)))
           (cond ((= (length result-list) 1) t)
                 (result-list nil)
                 ((= (length specials) 1) t)
@@ -360,7 +352,7 @@ function work as a name-to-conf-stat translator."
                                                           nil
                                                           predicate
                                                           login-list
-                                                          x-list)))))
+                                                          candidate-list)))))
 
 
        ;;
@@ -373,11 +365,11 @@ function work as a name-to-conf-stat translator."
        ;;
           
        (all
-        (let ((names (mapcar 'conf-stat->name result-list))
+        (let ((names (mapcar 'conf-z-info->name result-list))
               (specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list)))
+                                                          candidate-list)))
           (cond (specials (append specials names))
                 (names names)
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
@@ -386,7 +378,7 @@ function work as a name-to-conf-stat translator."
                                                         nil
                                                         predicate
                                                         login-list
-                                                        x-list)
+                                                        candidate-list)
                  (list string))
                 (t nil))))
 
@@ -401,7 +393,7 @@ function work as a name-to-conf-stat translator."
         (let ((specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list)))
+                                                          candidate-list)))
           (cond (specials specials)
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
@@ -409,7 +401,7 @@ function work as a name-to-conf-stat translator."
                                                         nil
                                                         predicate
                                                         login-list
-                                                        x-list)
+                                                        candidate-list)
                  (list string))
                 (t nil))))
 
@@ -421,11 +413,11 @@ function work as a name-to-conf-stat translator."
        ;;
 
        (t
-        (let ((name-list (mapcar 'conf-stat->name result-list))
+        (let ((name-list (mapcar 'conf-z-info->name result-list))
               (specials (lyskom-read-conf-expand-specials string
                                                           predicate
                                                           login-list
-                                                          x-list))
+                                                          candidate-list))
               (found nil))
           (if specials (setq name-list (nconc specials name-list)))
 
@@ -433,12 +425,15 @@ function work as a name-to-conf-stat translator."
                 ((= (length name-list) 1) (car name-list))
                 ((string-match (lyskom-get-string 'person-or-conf-no-regexp)
                                string) nil)
-                (t (or (lyskom-complete-string name-list)
-                       (and (lyskom-read-conf-internal-verify-type nil
-                                                                   nil
-                                                                   predicate
-                                                                   login-list
-                                                                   x-list)
+                (t (or (lyskom-completing-cache-completion
+                        (lyskom-complete-string name-list)
+                        x-list)
+                       (and (lyskom-read-conf-internal-verify-type 
+                             nil
+                             nil
+                             predicate
+                             login-list
+                             candidate-list)
                             (list string))))))))))))
 
 
@@ -471,7 +466,7 @@ function work as a name-to-conf-stat translator."
            (memq conf-no logins))
       (and (memq 'none predicate) 
            (and (null conf-no)
-                (null (conf-list->conf-nos x-list))))))
+                (null x-list)))))
 
 
 (defun lyskom-complete-string (string-list)
@@ -918,10 +913,7 @@ Returns the name."
                       (num (string-to-number string))
                       (conf-no 
                        (if (= 0 num)  ; Dont lookup unless necessary
-                           (conf-stat->conf-no 
-                            (lyskom-read-conf-internal string
-                                                       predicate
-                                                       'lyskom-lookup)))))
+                           (conf-z-info->conf-no partial))))
                  (while list
                    (if (or (eq conf-no (who-info->pers-no (cdr (car list))))
 			   (eq num (who-info->connection (cdr (car list)))))

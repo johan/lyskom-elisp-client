@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: komtypes.el,v 41.2 1996-06-12 07:55:41 byers Exp $
+;;;;; $Id: komtypes.el,v 41.3 1996-07-27 11:39:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 41.2 1996-06-12 07:55:41 byers Exp $\n"))
+	      "$Id: komtypes.el,v 41.3 1996-07-27 11:39:39 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1551,6 +1551,33 @@ The MAPS must be consecutive. No gaps or overlaps are currently allowed."
   "Return t if OBJECT is a text-list."
   (eq (car-safe object) 'TEXT-LIST))
 
+
+;;; ================================================================
+;;;                         version-info
+
+
+;;; Constructor:
+
+(defsubst lyskom-create-version-info (protocol-version
+                                      server-software
+                                      software-version)
+  "Create a version-info from all parameters."
+  (cons 'VERSION-INFO
+        (vector protocol-version server-software software-version)))
+
+;;; Selectors:
+
+(defsubst version-info->protocol-version (version-info)
+  "Get protocol version from version-info."
+  (elt (cdr version-info) 0))
+
+(defsubst version-info->server-software (version-info)
+  "Get server software name from version-info."
+  (elt (cdr version-info) 1))
+
+(defsubst version-info->software-version (version-info)
+  "Get server software version from version-info."
+  (elt (cdr version-info) 2))
 
 				   
 ;;; ================================================================
