@@ -1,3 +1,8 @@
+2002-06-01  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* Makefile (DOCFILES): include NEWS for 0.47 instead of 0.46.
+	(EXTRA-SRCVERBATIM): include help-compile.el, help.en, help.sv.
+
 2002-05-29  David Byers  <david.byers@swipnet.se>
 
         * NEWS-0.47: Updated to this point in history in preparation for
@@ -19,7 +24,7 @@
 
 	* help-compile.el (lyskom-help-parse-string): Fixed search for end
 	tag so it doesn't cause a stack overflow in the 20.7 regexp
-	mathcher.
+	matcher.
 
 2002-05-27  David Byers  <david.byers@swipnet.se>
 
@@ -85,7 +90,7 @@
 
 	* edit-text.el (lyskom-edit-send-check-recipients): Misplaced
 	paren caused two loops to be nested when they shouldn't have been.
-	Use lyskom-delete-duplicates to eliminaate duplicate authors.
+	Use lyskom-delete-duplicates to eliminate duplicate authors.
 
 2002-05-25  Per Cederqvist  <ceder@ceder.dyndns.org>
 

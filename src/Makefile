@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.90 2002-05-27 00:28:28 byers Exp $
+# $Id: Makefile,v 44.91 2002-05-31 22:58:03 qha Exp $
 
 # Useful targets:
 #
@@ -47,7 +47,7 @@ EMACS = xemacs
 LANGUAGES = english swedish
 
 # These files are included in all distribution archives.
-DOCFILES = ../doc/NEWS-0.46 ../doc/NEWS-0.46.1
+DOCFILES = ../doc/NEWS-0.47
 
 # Default target.
 TARGET = lyskom.elc
@@ -115,6 +115,7 @@ EXTRA-SRCDIST = \
 	distribution-Makefile.in
 EXTRA-SRCVERBATIM = \
 	envcheck.el lpath.el autoconf.el \
+	help-compile.el	help.en help.sv \
 	$(DOCFILES)
 
 # Included in the non-source distribution archives.

@@ -27,7 +27,7 @@ binary-indep: build
 	dh_installdirs
 
 	$(MAKE) lyskom-@@CLIENTVERSION@@.el
-	cp lpath.el debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/
+	cp lpath.el help-compile.el help.en help.sv debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/
 	gzip -c lyskom-@@CLIENTVERSION@@.el > debian/tmp/usr/share/emacs/site-lisp/lyskom-elisp-client/lyskom.el.gz
 
 	install -m 644 debian/50lyskom-elisp-client.el debian/tmp/etc/emacs/site-start.d
