@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.52 1999-06-10 13:54:10 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.53 1999-06-11 12:21:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.52 1999-06-10 13:54:10 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.53 1999-06-11 12:21:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -70,6 +70,7 @@
   (define-prefix-command 'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-mode-map (kbd "C-c")   'lyskom-sv-edit-prefix)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click-or-yank)
+  (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-sv-edit-mode-map (kbd (lyskom-keys 'button3up))     'kom-mouse-null)
   (define-key lyskom-sv-edit-prefix (kbd "C-x")     'lyskom-sv-edit-aux-prefix)
@@ -104,9 +105,9 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-i SPC") 'kom-edit-insert-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-a")     'lyskom-sv-edit-add-prefix)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-m") 'kom-edit-add-recipient)
-  (define-key lyskom-sv-edit-prefix (kbd "C-a RET") 'kom-edit-add-recipient)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a <RET>") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-j") 'kom-edit-add-recipient)
-  (define-key lyskom-sv-edit-prefix (kbd "C-a LFD") 'kom-edit-add-recipient)
+  (define-key lyskom-sv-edit-prefix (kbd "C-a <LFD>") 'kom-edit-add-recipient)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-k") 'kom-edit-add-comment)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-e") 'kom-edit-add-copy)
   (define-key lyskom-sv-edit-prefix (kbd "C-a C-f") 'kom-edit-move-text)
@@ -1197,7 +1198,7 @@ Innehåll:    \"%#9s\"
     (conference . "Möte")
     (text . "Inlägg")
 
-    (xref-type . "Vad vill du referera till (text, möte eller person)? ")
+    (xref-type . "Vad vill du referera till (inlägg, möte eller person)? ")
     (which-text-to-xref . "Lägg till referens till text nummer: ")
     (which-text-to-xref-err . "Hittar inte texten. Lägg till referens till text nummer: ")
     (which-pers-to-xref . "Lägg till referens till person: ")
@@ -1599,6 +1600,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map (kbd "å") 'lyskom-sv-review-prefix)
 
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd "*")     'kom-button-press)
@@ -1627,11 +1629,11 @@ Innehåll:    \"%#9s\"
 
   (define-key lyskom-sv-mode-map (kbd "e")   'kom-set-unread)
   (define-key lyskom-sv-mode-map (kbd "a")   'kom-extended-command)
-  (define-key lyskom-sv-mode-map (kbd "SPC") 'kom-next-command)
-  (define-key lyskom-sv-mode-map (kbd "LFD") 'kom-page-next-command)
+  (define-key lyskom-sv-mode-map (kbd "<SPC>") 'kom-next-command)
+  (define-key lyskom-sv-mode-map (kbd "<RET>") 'kom-line-next-command)
+  (define-key lyskom-sv-mode-map (kbd "<LFD>") 'kom-page-next-command)
   (define-key lyskom-sv-mode-map (kbd "C-j") 'kom-page-next-command)
   (define-key lyskom-sv-mode-map (kbd "j")   'kom-page-next-command)
-  (define-key lyskom-sv-mode-map (kbd "RET") 'kom-line-next-command)
   (define-key lyskom-sv-mode-map (kbd "C-m") 'kom-line-next-command)
 
   (define-key lyskom-sv-mode-map (kbd "?")   'describe-mode)
@@ -1726,7 +1728,7 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map (kbd "s [") 'kom-send-message)
 
   (define-key lyskom-sv-mode-map (kbd "r r") 'kom-fast-reply)
-  (define-key lyskom-sv-mode-map (kbd "r h") 'kom-fast-agree)
+  (define-key lyskom-sv-mode-map (kbd "r h") 'kom-agree)
   
   ;; Running in buffer
 
@@ -1735,6 +1737,8 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-mode-map (kbd "s t") 'kom-save-text)
 
   (define-key lyskom-sv-mode-map (kbd "C-?") 'scroll-down)
+  (define-key lyskom-sv-mode-map (kbd "<DEL>") 'scroll-down)
+  (define-key lyskom-sv-mode-map (kbd "<BS>") 'scroll-down)
 )
 
 
@@ -1793,6 +1797,7 @@ Innehåll:    \"%#9s\"
   (setq lyskom-sv-prioritize-mode-map (make-keymap))
   (suppress-keymap lyskom-sv-prioritize-mode-map)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
+  (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3)) 'kom-popup-menu)
   (define-key lyskom-sv-prioritize-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-prioritize-mode-map (kbd "*") 'kom-button-press)
@@ -1857,10 +1862,10 @@ Innehåll:    \"%#9s\"
   (define-key lyskom-sv-customize-map (kbd "M-TAB") 'widget-backward)
   (define-key lyskom-sv-customize-map (kbd "C-i") 'widget-forward)
   (define-key lyskom-sv-customize-map (kbd "M-C-i") 'widget-backward)
-  (define-key lyskom-sv-customize-map (kbd "RET") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "C-m") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
-  (define-key lyskom-sv-customize-map (kbd "LFD") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2up)) 'widget-button-click)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'lyskom-widget-click)
   (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.35 1999-02-11 16:27:26 byers Exp $
+;;;;; $Id: edit-text.el,v 44.36 1999-06-11 12:21:28 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.35 1999-02-11 16:27:26 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.36 1999-06-11 12:21:28 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -212,7 +212,7 @@ footn-to	-> Fotnot till text %d."
              (lambda (item)
                (let ((data (lyskom-aux-item-definition-call
                             item '(edit-insert print)
-                            item nil lyskom-pers-no)))
+                            item lyskom-pers-no)))
                  (when data
                    (lyskom-princ
                     (concat (lyskom-get-string 'aux-item-prefix) data "\n")

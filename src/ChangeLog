@@ -1,5 +1,10 @@
 1999-06-11  David Byers  <davby@ida.liu.se>
 
+	* edit-text.el (lyskom-edit-insert-miscs): Fix parameter list for
+	lyskom-aux-item-definition-call (edit-insert print).
+
+	* swedish-strings.el (lyskom-message): Fix wording in xref-type.
+
 	* compatibility.el (kbd): Redefine kbd if it seems to be
 	misbehaving.
 

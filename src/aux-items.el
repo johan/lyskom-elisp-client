@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.6 1999-06-10 13:35:59 byers Exp $
+;;;;; $Id: aux-items.el,v 44.7 1999-06-11 12:21:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.6 1999-06-10 13:35:59 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.7 1999-06-11 12:21:25 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -200,8 +200,8 @@
      "\n"
      (lyskom-format
       'aux-item-info
-      (aux-item->tag item)
       (aux-item->aux-no item)
+      (aux-item->tag item)
       (if def
           (lyskom-aux-item-definition->name def)
         "unknown")
