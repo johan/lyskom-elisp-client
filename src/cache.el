@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.4 1991-12-18 03:35:19 linus Exp $
+;;;;; $Id: cache.el,v 35.5 1992-03-12 03:31:57 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.4 1991-12-18 03:35:19 linus Exp $\n"))
+	      "$Id: cache.el,v 35.5 1992-03-12 03:31:57 linus Exp $\n"))
 
 
 
@@ -227,13 +227,15 @@ otherwise return nil"
 ARG: session-info"
   (if (null session-info)
       nil				;+++ Annan felhantering
-    (lyskom-collect 'who-buffer)
+    (lyskom-halt 'who-buffer)
+    (lyskom-collect 'who-buffer-2)
     (initiate-get-conf-stat
-     'who-buffer nil (session-info->pers-no session-info))
+     'who-buffer-2 nil (session-info->pers-no session-info))
     (initiate-get-conf-stat 
-     'who-buffer nil (session-info->working-conf session-info))
-    (lyskom-use 'who-buffer 'lyskom-set-session-info
-		session-info)))
+     'who-buffer-2 nil (session-info->working-conf session-info))
+    (lyskom-use 'who-buffer-2 'lyskom-set-session-info
+		session-info)
+    (lyskom-run 'who-buffer-2 'lyskom-resume 'who-buffer)))
 
 
 (defun cache-del-who-info (session-no)
