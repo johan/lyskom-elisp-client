@@ -3,6 +3,8 @@ Att göra i elisp-klienten
 
 Buggar
 
+    Endast gör fel ibland.
+
     Completion-koden är ivägen när man vill skapa nya personer. [Nåja,
     inte så mycket. Det är bara att man inte får skapa namn som är
     prefix till existerande namn]
@@ -10,31 +12,22 @@ Buggar
     Om man läser ett inlägg som har en fotnot (t ex 1449843) och vill
     spara det på fil, så blir det bara fotnoten som sparas.  Man vill
     nog spara minst själva huvudinlägget, och nog också fotnoterna
-    samtidigt.  Dvs när jag läst 1449843 och 1449847 dykt upp
-    automatiskt och väljer "Spara text (på fil)" så vill jag spara
-    båda dessa inläggen.
-
-    Jag har satt kom-show-footnotes-immediately till nil. Det verkar
-    som man inte får läsa fotnötter först då, t ex fick jag läsa
-    1443562 (en vanlig kommentar) och trädet under det innan jag fig
-    läsa 1443602 (en fotnot till 1443554. Det är inte första gången
-    det händer.
+    samtidigt.
 
     Om ett namn som fylls i i efterhand gör att raden blir för lång,
-    så scrollar klienten ibland trots att den inte borde.
+    så scrollar klienten ibland trots att den inte borde. [Troligen
+    fixat]
 
     sentinelmeddelanden i ikoniferade frames buggar. Prova att kasta
     ut en session i ett ikonifierat fönster. Eller kanske till och med
     bara i en gömd buffert. (HEISENBUG?)
 
-    text 1306568
+    text 1306568 [omöjligt att spåra]
 
     kom-review-tree på en text med fotnoter visar fotnoterna på en
     gång. Är det en bug?
 
-    Fotnoter som visas på en gång filtreras inte.
-
-    Det har hänt att call-info har blivit nil i lyskom-parse-error.
+    Fotnoter som visas på en gång filtreras inte. [verkar fixat]
 
     lyskom-add-membership gör membership-listan sorterad, vilket inte
     prefetch-koden är gjord för. Alltså borde det kunna bli problem
@@ -46,14 +39,9 @@ Buggar
 
 Allmänna förbättringar
 
-    Återse igen (kom-review-last-normally-read) borde kanske använda
-    buffertlokala variabler för vilket inlägg som är det senaste man
-    har läst, så man kan återse det senaste i det KOM man är i.
+    Inför en membership-cache.
 
     Skriv inte ut stora fonoter på en gång.
-
-    Definiera faces när man startar klienten istället för när den
-    laddas.
 
     Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
     ett inläggs eget nummer, alltså det som står precis innan datumet
@@ -82,6 +70,19 @@ Allmänna förbättringar
 
 
 Fixade saker
+
+    Jag har satt kom-show-footnotes-immediately till nil. Det verkar
+    som man inte får läsa fotnötter först då, t ex fick jag läsa
+    1443562 (en vanlig kommentar) och trädet under det innan jag fig
+    läsa 1443602 (en fotnot till 1443554. Det är inte första gången
+    det händer.
+
+    Återse igen (kom-review-last-normally-read) borde kanske använda
+    buffertlokala variabler för vilket inlägg som är det senaste man
+    har läst, så man kan återse det senaste i det KOM man är i.
+
+    Definiera faces när man startar klienten istället för när den
+    laddas.
 
     Completion bryr sig inte om MUSTMATCH-parametern. (FIXAT)
 
