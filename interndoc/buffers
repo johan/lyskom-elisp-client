@@ -1,0 +1,187 @@
+                       LYSKOM BUFFER MANAGEMENT
+                             David Byers
+
+
+
+    This file describes the functions used for managing buffers.
+    Anyone who creates buffers needs to know this. All developers
+    should.
+
+
+    The elisp client uses special functions for managing buffers,
+    implemented in buffers.el. These should (almost) always be used in
+    place of standard Emacs functions for buffer management.
+
+    The LysKOM functions implement a buffer hierarchy, so that every
+    buffer except the root buffer (the LysKOM session) has a parent
+    buffer and zero or more children. When a parent buffer is killed,
+    all children are also killed, unless the parent or one of the
+    children has a kill-buffer-query-function that prohibits killing
+    the buffer.
+
+    The code is divided into a low-level, a mid-level part and a
+    high-level part. You should not have to call low-level functions
+    directly and rarely (if ever) call mid-level code.
+
+
+    OVERVIEW
+
+    The client organized buffers in a tree structure. The root buffer
+    is the session buffer. It's children are the edit buffers,
+    prioritization buffers, customization buffers, and other buffers
+    popped up by the client. These in turn may have children. For
+    example, the edit buffer can create a buffer to view the commented 
+    text.
+
+    Variables can be inherited automatically from buffer parent to
+    buffer child when a new buffer is created. Inherited variables are 
+    buffer local, and their initial values are copied from the parent
+    buffer. To define an inherited variable, use def-kom-var (see the
+    "variables" file).
+
+    When a buffer is displayed (lyskom-display-buffer), how it is
+    displayed is specified by a variable (kom-write-texts-in-window is
+    an example of such a variable). When buffers are undisplayed
+    (lyskom-undisplay-buffer) or killed, the undisplay code tries to
+    restore windows and frames appropriately (a frame popped up for
+    the buffer is deleted if it is only displaying that buffer; the
+    window configuration in a frame is restored if a window was
+    created and so forth).
+
+    Every LysKOM buffer must belong to a category. Currently the
+    following categories are used. Make up new ones as needed:
+
+        view-commented          For viewing commented texts.
+        list-membership         For listing memberships.
+        write-texts             For writing texts.
+        prioritize              For prioritizing memberships.
+        customize               For customizing the client.
+       *lyskom-enriched         Don't know.
+       *lyskom-text             For reformatting texts.
+       *temp                    Temporary buffer.
+
+    An asterisk means that buffers of this type are never displayed.
+    They are for internal use.
+
+    When creating a buffer (lyskom-get-buffer-create) you specify the
+    category and name of the buffer. You can also specify if there can 
+    be only one buffer of that particular category. If a buffer of the 
+    requested category already exists and is a child of the current
+    LysKOM session, that buffer is renamed, cleared and has all local
+    variables killed, so it looks like a new buffer.
+
+    Unique buffers are used for prioritization, customization and a
+    few other things. UTSL if you need to know exactly what (look for
+    lyskom-get-buffer-create).
+
+    Note that there can be several buffers of the same category, even
+    if the unique flag is used, as long as they belong to different
+    sessions. For example, you can have three prioritization buffers
+    as long as they belong to three different sessions.
+
+
+    Typically, creating a buffer will look something like this:
+
+        (let ((buffer (lyskom-get-buffer-create 'hello-world
+                                                "*Hello World*" t)))
+           (save-excursion
+              (set-buffer buffer)
+              (lyskom-format-insert "%#1P sez Hello World!"
+                                    lyskom-pers-no)
+              (lyskom-display-buffer buffer)))
+
+    This code creates a buffer of category hello-world, inserts a
+    string in it and then displays it. Ther will be only one
+    hello-world buffer per LysKOM session (provided all calls to
+    lyskom-get-buffer-create with category hello-world specify the
+    unique flag).
+
+
+    The following high-level functions are defined:
+
+
+    lyskom-generate-new-buffer
+
+    Like generate-new-buffer, but does MULE-ish things to the name if
+    required. IIRC this was necessary when the buffer name was a
+    multibyte string but multibyte support had been turned off.
+
+
+    lyskom-get-buffer-create
+
+    Get or create a buffer. Similar in spirit to get-buffer-create,
+    but makes the new buffer a child of the current buffer, inherits
+    variables, records the buffer internally and reuses old buffers of 
+    the specified category if requested. This is what you want to use
+    to create almost all of your buffers, and certainly all buffers
+    the user will interact with.
+
+    lyskom-display-buffer
+
+    Displays a buffer. If the buffer is a LysKOM buffer the variable
+    kom-CATEGORY-in-window (where CATEGORY is the buffer's category)
+    specifies how to display the buffer. Read the docstring for
+    details. This is what you want to use to display all buffers.
+
+
+    lyskom-undisplay-buffer
+
+    Undisplays a buffer. Agan, kom-CATEGORY-in-window controls how the
+    buffer is undisplayed. This function takes care of restoring
+    window configurations, frames and things like that when removing a
+    buffer from display. lyskom-undisplay-buffer is called
+    automatically when a buffer is killed (unless you mess up
+    kill-buffer-hooks).
+
+
+    lyskom-buffers-of-category
+
+    Return a list of all buffers of a particular category. This is
+    useful if you want to switch to a buffer of a particular category
+    but don't want to clear it, or if you want to iterate over, say,
+    all write-texts buffers.
+        
+
+
+
+    LOW-LEVEL FUNCTIONS
+
+    The low-level part handles attaching buffers to each other and
+    killing buffers. You should never have to call these functions
+    directly. These functions are independent of LysKOM.
+
+    The low-level functions are:
+
+        lyskom-set-buffer-parent
+        lyskom-remove-buffer-child
+        lyskom-add-buffer-child
+        lyskom-get-buffer-parent
+        lyskom-get-buffer-children
+        lyskom-buffer-root-ancestor
+        lyskom-map-buffer-children
+        lyskom-buffer-hierarchy-query-kill-function
+        lyskom-buffer-hierarchy-kill-hook
+
+    The low-level code depends on kill-buffer-query-functions and
+    kill-buffer-hooks. If you modify these, make sure you do *not*
+    remove the functions added by these low-level functions.
+
+
+    MID-LEVEL FUNCTIONS
+
+    The mid-level functions handle LysKOM buffer categories. The code
+    is fairly independent of the elisp client itself. You should not
+    have to call these functions directly since they are called for
+    you when you create or remove buffers.
+
+    The mid-level functions are:
+
+        lyskom-clean-up-buffer-category
+        lyskom-set-buffers-of-category
+        lyskom-add-buffer-of-category
+        lyskom-fix-buffer-name
+        lyskom-update-inherited-variables
+        lyskom-undisplay-buffer-hook
+        lyskom-set-partial-window-configuration
+        lyskom-quit-query
+
