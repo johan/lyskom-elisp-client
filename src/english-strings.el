@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.269 2003-03-16 17:34:44 byers Exp $
+;;;;; $Id: english-strings.el,v 44.270 2003-03-16 17:52:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.269 2003-03-16 17:34:44 byers Exp $"))
+              "$Id: english-strings.el,v 44.270 2003-03-16 17:52:35 byers Exp $"))
 
 
 ;;; ================================================================
@@ -447,6 +447,7 @@ and you have finished reading. Please come back later.
 
     (where-on-list-q . "Placement in your list? (0-%#1d) ")
     (member-in-conf . "Joining to %#1M%#2?b%[ %#2s%]%[%]...")
+    (member-in-conf-with-low-priority . "%#1M has lower priority than your session priority, and will not be shown.\n")
     (member-in-conf-with-unread-date . "with unread from %#2s %#3d, %#1d")
     (member-in-conf-with-unread . "unread %#1d unread")
     (add-member-in . "Adding %#1P as a member of %#2M...")
