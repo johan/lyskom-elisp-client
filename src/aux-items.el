@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.4 1998-06-02 12:14:11 byers Exp $
+;;;;; $Id: aux-items.el,v 44.5 1998-06-14 14:15:36 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.4 1998-06-02 12:14:11 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.5 1998-06-14 14:15:36 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -368,8 +368,32 @@
 
 (defun lyskom-print-xface (item &optional obj)
   (lyskom-xemacs-or-gnu
-   nil ;;; +++ FIXME: Do the right thing
+   (lyskom-maybe-add-face-to-string item
+                                    (make-string 0 ?X))
    nil))
+
+(defun lyskom-maybe-add-face-to-string (item string)
+  (lyskom-xemacs-or-gnu
+   (if (null item)
+       string
+     (unless (find-face 'kom-xface)
+       (make-face 'kom-xface))
+     (let* ((data (make-string 0 ?X))
+            (h (concat "X-Face: " (aux-item->data item)))
+            (g (intern h lyskom-xface-cache))
+            (e (make-extent 0 0 data)))
+       (if (boundp g)
+           (setq g (symbol-value g))
+         (set g (make-glyph
+                 (list 'global (cons '(tty) [nothing]))
+                 (list 'global (cons '(win) 
+                                     (vector 'xface ':data h)))))
+         (setq g (symbol-value g))
+         (set-glyph-face g 'kom-xface))
+       (set-extent-begin-glyph e g)
+       data))
+   string))
+
 
 (defun lyskom-print-alternate-name (item &optional obj)
   (concat "Alternate: " (aux-item->data item) " "

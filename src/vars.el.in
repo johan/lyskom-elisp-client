@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 44.52 1998-06-02 12:15:31 byers Exp $
+;;;;; $Id: vars.el.in,v 44.53 1998-06-14 14:16:15 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.52 1998-06-02 12:15:31 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.53 1998-06-14 14:16:15 byers Exp $\n"))
 
 (provide 'lyskom)
 
@@ -540,7 +540,8 @@ A number means wrap articles shorter than the number (in bytes)."
 
 
 (def-kom-var lyskom-url-protocol-regexp
-  "\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|mailto\\|telnet\\):")
+  "\\(file\\|ftp\\|gopher\\|http\\|https\\|news\\|wais\\|mailto\\|telnet\\):"
+  "Regexp to match the protocol part of a URL.")
 
 (def-kom-var lyskom-text-buttons
   '(
@@ -1763,7 +1764,8 @@ an unknown person.")
   "If non-nil the user area will not be read on login."
   local)
 
-(def-kom-var lyskom-allow-missing-subject nil)
+(def-kom-var lyskom-allow-missing-subject nil
+             "If non-nil allow texts without subjects.")
 
 (def-kom-var lyskom-show-comments t
   "This should always be set to t.")    ;+++SOJGE
@@ -1807,6 +1809,8 @@ texts that is to be sent to the server.")
 (def-kom-var lyskom-last-text-format-flags nil
   "List of flags specifying how the last text was reformatted. This variable
 should be dynamically bound whenever it needs to be used.")
+
+(defvar lyskom-xface-cache (make-vector 29 0))
 
 
 ;;; ======================================================================
@@ -2004,6 +2008,7 @@ to be bold with yellow text on a red background."
 (defvar lyskom-expression-history nil)
 (defvar lyskom-message-history nil)
 (defvar lyskom-language-history nil)
+(defvar lyskom-fast-reply-history nil)
 
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.4 1998-06-02 12:14:49 byers Exp $
+;;;;; $Id: komtypes.el,v 44.5 1998-06-14 14:15:47 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.4 1998-06-02 12:14:49 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.5 1998-06-14 14:15:47 byers Exp $\n"))
 
 ;;; ================================================================
 ;;;                            conf-no-list
@@ -1225,15 +1225,26 @@ FOOTN-TO or FOOTN-IN."
 
 ;;; Constructor:
 
+(def-komtype member-list members)
+
+(def-komtype member conf-no created-by created-at membership-type)
+
+(def-komtype membership-type invitation passive secret rsv1 
+  rsv2 rsv3 rsv4 rsv5)
+
 (defsubst lyskom-create-membership (last-time-read
 				 conf-no
 				 priority
 				 last-text-read
-				 read-texts)
+				 read-texts
+                                 created-by
+                                 created-at
+                                 type)
   "Create a membership from all parameters."
   (cons
    'MEMBERSHIP
    (vector last-time-read conf-no priority last-text-read read-texts 
+           created-by created-at type
 	   )))
 
 
@@ -1259,6 +1270,19 @@ FOOTN-TO or FOOTN-IN."
   "Get read-texts from membership."
   (elt (cdr membership) 4))
 
+(defsubst membership->created-by (membership)
+  "Get created-by from membership"
+  (elt (cdr membership) 5))
+
+(defsubst membership->created-at (membership)
+  "Get created-by from membership"
+  (elt (cdr membership) 6))
+
+(defsubst membership->type (membership)
+  "Get type from membership"
+  (elt (cdr membership) 7))
+
+
 
 ;;; Modifiers:
 
@@ -1281,6 +1305,18 @@ FOOTN-TO or FOOTN-IN."
 (defsubst set-membership->read-texts (membership newval)
   "Set read-texts in membership to NEWVAL."
   (aset (cdr membership) 4 newval))
+
+(defsubst set-membership->created-by (membership newval)
+  "Set created-by in membership to NEWVAL."
+  (aset (cdr membership) 5 newval))
+
+(defsubst set-membership->created-at (membership newval)
+  "Set type in membership to NEWVAL."
+  (aset (cdr membership) 6 newval))
+
+(defsubst set-membership->type (membership newval)
+  "Set type in membership to NEWVAL."
+  (aset (cdr membership) 7 newval))
 
 
 ;;; Predicate:

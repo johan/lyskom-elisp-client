@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.30 1998-06-02 12:15:19 byers Exp $
+;;;;; $Id: startup.el,v 44.31 1998-06-14 14:16:02 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.30 1998-06-02 12:15:19 byers Exp $\n"))
+	      "$Id: startup.el,v 44.31 1998-06-14 14:16:02 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -123,12 +123,7 @@ See lyskom-mode for details."
 		     (set-buffer buffer)
                      (setq reused-buffer t)
 		     (goto-char (point-max))
-		     (let ((time (decode-time (current-time))))
-		       (setcar (cdr (cdr (cdr (cdr time))))
-			       (1- (car (cdr (cdr (cdr (cdr time)))))))
-		       (setcar (cdr (cdr (cdr (cdr (cdr time)))))
-			       (- (car (cdr (cdr (cdr (cdr (cdr time))))))
-				  1900))
+		     (let ((time (lyskom-current-time)))
 		       (lyskom-insert
 			(format (lyskom-get-string 'new-session-in-buffer)
 				(lyskom-format-time
@@ -440,7 +435,11 @@ CONNECT %s:%d HTTP/1.0\r\n\
 			  (if lyskom-is-new-user
 			      (blocking-do 'add-member
 					   (server-info->conf-pres-conf lyskom-server-info)
-					   new-me 100 1))
+					   new-me
+                                           100 
+                                           1
+                                           (lyskom-create-membership-type
+                                            nil nil nil nil nil nil nil nil)))
 			  (setq login-successful t))
 		      (lyskom-insert-string 'wrong-password)
 		      (setq new-me nil))
