@@ -9,7 +9,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 35.2 1991-09-01 16:24:45 linus Exp $\n"))
+	      "$Id: commands1.el,v 35.3 1991-09-08 20:02:09 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -1634,23 +1634,23 @@ If optional arg TEXT-NO is present then jump all comments to that text instead."
 
 
 (defun lyskom-jump (text-stat mark-as-read)
-  "Mark this text TEXT-STAT as read then find the comments to the text and if 
-MARK-AS-READ is non-nil then mark them as read. 
-Then repeat recursively on all comments."
+  "Jump past TEXT-STAT and all comments to it.
+Remove TEXT-STAT from all internal tables in the client.
+If MARK-AS-READ is non-nil, also mark TEXT-STAT and all comments (and
+footnotes) to it as read in the server."
   (cond
    (text-stat				;+++ annan errorhantering.
+    ;; Should check that we are a member of at least one of
+    ;; the recipients, and stop otherwise.
     (if mark-as-read
-	(progn
-	  (lyskom-mark-as-read text-stat)
-	  (lyskom-is-read (text-stat->text-no text-stat))))
+	  (lyskom-mark-as-read text-stat))
+    (lyskom-is-read (text-stat->text-no text-stat))))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
 		     (cond
 		      ((or (eq (misc-info->type misc) 'COMM-IN)
 			   (eq (misc-info->type misc) 'FOOTN-IN))
 		       (initiate-get-text-stat 'main
-					       (if (or mark-as-read
-						       follow-comments)
-						   'lyskom-jump)
+					       'lyskom-jump
 					       (if (eq (misc-info->type misc)
 						       'COMM-IN)
 						   (misc-info->comm-in misc)

@@ -1,3 +1,8 @@
+Sun Sep  8 21:51:41 1991  Per Cederqvist  (ceder at robin)
+
+	* commands1.el (lyskom-jump): Stabiliserat. Nu g|rs n}got vettigt
+	  n{r mark-as-read {r nil.
+
 Thu Sep  5 15:55:30 1991  Linus Tolke Y  (linus at lysator)
 
 	* lyskom-rest.el, vars.el, swedish-strings.el (kom-save-text): Nu
