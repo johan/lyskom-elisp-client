@@ -24,10 +24,12 @@
          8: [queuelen-8]  [queuenames-8]
          9: [queuelen-9]  [queuenames-9]
 
-  call: [in-call]")
+  call: [in-call]
+        [apo] [blocking-do]")
 
 (defvar lyskom-prof-buffer nil)
 (defvar lyskom-prof-fields nil)
+(defvar lyskom-prof-frame nil)
 
 (defun fields-new (string)
   (let ((fields nil))
@@ -171,12 +173,12 @@ most lyskom-max-pending-calls are sent to the server at the same time."
 
 
 (defun lyskom-prof-set-queue-priority (queue-name priority)
-  (let ((oldpri (get queue-name 'lyskom-queue-priority)))
-    (when oldpri
-      (aset queue-names oldpri (delq queue-name (aref queue-names oldpri)))
-      (fields-replace lyskom-prof-fields
-		      (intern (concat "queuenames-" (int-to-string oldpri)))
-		      (mapconcat 'symbol-name (aref queue-names oldpri) ","))))
+  (let* ((oldpri (get queue-name 'lyskom-queue-priority))
+	 (noldpri (or oldpri 0)))
+    (aset queue-names noldpri (delq queue-name (aref queue-names noldpri)))
+    (fields-replace lyskom-prof-fields
+		    (intern (concat "queuenames-" (int-to-string noldpri)))
+		    (mapconcat 'symbol-name (aref queue-names noldpri) ",")))
   (aset queue-names priority (cons queue-name (aref queue-names priority)))
   (fields-replace lyskom-prof-fields
 		  (intern (concat "queuenames-" (int-to-string priority)))
@@ -214,6 +216,23 @@ most lyskom-max-pending-calls are sent to the server at the same time."
   (sit-for 0))
 
 
+(defadvice blocking-do (around stat activate)
+  (fields-replace lyskom-prof-fields 'blocking-do
+		  (concat "blocking-do " (symbol-name command)))
+  (sit-for 0)
+  ad-do-it
+  (fields-replace lyskom-prof-fields 'blocking-do "")
+  (sit-for 0))
+
+
+(defadvice lyskom-accept-process-output (around stat activate)
+  (fields-replace lyskom-prof-fields 'apo "apo")
+  (sit-for 0)
+  ad-do-it
+  (fields-replace lyskom-prof-fields 'apo "   ")
+  (sit-for 0.1))
+
+
 ;; Initialazation
 
 
@@ -226,12 +245,14 @@ most lyskom-max-pending-calls are sent to the server at the same time."
   (setq lyskom-prof-fields (fields-new lyskom-prof-template))
   (if window-system
       (progn
-	(select-frame (make-frame '((height . 22))))
-	(display-buffer lyskom-prof-buffer))
+	(when (not (frame-live-p lyskom-prof-frame))
+	  (setq lyskom-prof-frame (make-frame '((height . 25)))))
+	(select-frame lyskom-prof-frame)
+	(display-buffer lyskom-prof-buffer)
+	(goto-char 0))
     (let ((w (selected-window)))
       (split-window nil 8)
       (set-window-buffer w lyskom-prof-buffer)
       (select-window w))))
 
 (lyskom-prof-init)
-
