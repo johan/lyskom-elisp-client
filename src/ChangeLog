@@ -1,3 +1,24 @@
+2000-06-05  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use zerop
+	on something that might be a symbol
+
+	* review.el (kom-review-comments): Fixed nesting error that caused
+	this command not to work at all.
+
+2000-06-04  David Byers  <davby@ida.liu.se>
+
+ 	Experimantal special handling of attachments:
+	* view-text.el (lyskom-insert-deferred-header-comm): Use
+	lyskom-get-text-attachments.
+	(lyskom-follow-comments): Same here.
+	(lyskom-insert-deferred-header-comm): Same here.
+	(lyskom-insert-header-comm): Same here.
+	(lyskom-skip-attachments): New function.
+	(lyskom-get-text-attachments): New function.
+	(lyskom-follow-comments): Skip and mark attachments as read (if
+	requested).
+
 2000-06-04  Per Cederqvist  <ceder@moria>
 
 	* edit-text.el (lyskom-edit-send-check-recipients): The code that
@@ -6,6 +27,21 @@
 	one author.  Fix.
 
 2000-06-02  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-follow-comments): Don't follow attachments
+	unless kom-follow-attachments is set.
+
+	* vars.el.in (kom-follow-attachments): New variable.
+
+	* view-text.el (lyskom-view-text): Removed SOJGE code.
+	(lyskom-follow-comments): Removed SOJGE code. Get mx-attachments
+	from text. 
+	(lyskom-view-text-handle-saved-comments): Removed SOJGE code.
+
+	* vars.el.in (kom-w3-simplify-body): Removed SOJGE code
+	(kom-no-comments-to-motd, lyskom-show-comments)
+
+	* startup.el (kom-start-anew): Removed SOJGE code.
 
 	* lyskom-rest.el (kom-save-text): Use lyskom-saved-file to save
 	the most recently specified file name.

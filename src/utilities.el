@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.61 2000-06-02 13:51:19 byers Exp $
+;;;;; $Id: utilities.el,v 44.62 2000-06-05 11:04:24 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.61 2000-06-02 13:51:19 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.62 2000-06-05 11:04:24 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -525,7 +525,7 @@ last-written means use the text most recently written. The symbol
 last-seen-written means use the text in lyskom-last-seen-written. 
 A number means use that text as the default."
   (let ((default (cond ((or (null default) 
-                            (zerop default))
+                            (eq 0 default))
                         (lyskom-default-value 'lyskom-current-text))
                        ((numberp default) default)
                        ((eq default 'last-written)

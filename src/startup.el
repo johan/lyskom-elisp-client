@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.48 2000-05-24 16:55:03 byers Exp $
+;;;;; $Id: startup.el,v 44.49 2000-06-05 11:04:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.48 2000-05-24 16:55:03 byers Exp $\n"))
+	      "$Id: startup.el,v 44.49 2000-06-05 11:04:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -526,9 +526,7 @@ See lyskom-mode for details."
                  (/= (conf-stat->msg-of-day conf-stat) 0))
             (progn
               (lyskom-insert-string 'you-have-motd)
-              (let ((lyskom-show-comments ; +++SOJGE
-                     (not kom-no-comments-to-motd)))
-                (lyskom-view-text (conf-stat->msg-of-day conf-stat)))))
+              (lyskom-view-text (conf-stat->msg-of-day conf-stat))))
         (if (and conf-stat
                  (zerop (conf-stat->presentation conf-stat))
                  (not (zerop (conf-stat->no-of-texts conf-stat))))
