@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.71 2000-08-29 16:15:15 byers Exp $
+;;;;; $Id: utilities.el,v 44.72 2000-08-30 09:49:45 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.71 2000-08-29 16:15:15 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.72 2000-08-30 09:49:45 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -328,7 +328,8 @@ is non-nil."
   (cond (enable-multibyte-characters table)
 	(copy (mapcar (lambda (el)
 			(cons (lyskom-maybe-recode-string (car el))
-			      (cdr el)))))
+			      (cdr el)))
+                      table))
 	(t (lyskom-traverse el table
 		(setcar el (lyskom-maybe-recode-string (car el))))
 	   table)))
