@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.229 2002-08-15 17:14:46 qha Exp $
+;;;;; $Id: english-strings.el,v 44.230 2002-09-07 21:35:22 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.229 2002-08-15 17:14:46 qha Exp $"))
+              "$Id: english-strings.el,v 44.230 2002-09-07 21:35:22 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -379,6 +379,8 @@ and you have finished reading. Please come back later.
     (search-for-pers . "Enter search key (RETURN for all users): ")
     (search-for-conf . "Enter search key (RETURN for all conferences): ")
     (search-re . "Enter search regexp: ")
+    (include-persons . "Search among persons? ")
+    (include-conferences . "Search among conferences? ")
 
     (no-matching-confs . "No conferences match \"%#1s\".\n")
     (no-matching-perss . "No persons match \"%#1s\".\n")
@@ -550,6 +552,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (no-recipients . "Unable to post text. No recipients were specified.")
 
     (matching-regexp . "Conferences/users matching `%#1s'\n")
+    (matching-regexp-perss . "Users matching `%#1s'\n")
+    (matching-regexp-confs . "Conferences matching `%#1s'\n")
 
     (who-is-active-all . "Showing all sessions.\n")
     (who-is-active-last-minutes . "Showing all sessions active the last %#1d minutes.\n")

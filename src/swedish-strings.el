@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.265 2002-08-28 08:13:46 unicorn Exp $
+;;;;; $Id: swedish-strings.el,v 44.266 2002-09-07 21:35:21 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.265 2002-08-28 08:13:46 unicorn Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.266 2002-09-07 21:35:21 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -349,6 +349,9 @@ du har läst klart allting. Kom tillbaks senare.
     (search-for-pers . "Ange sökvillkor (RETURN för alla personer): ")
     (search-for-conf . "Ange sökvillkor (RETURN för alla möten): ")
     (search-re . "Ange sökuttryck (reguljärt uttryck): ")
+    (include-persons . "Sök bland personer? ")
+    (include-conferences . "Sök bland möten? ")
+
     (no-matching-confs . "Inga möten uppfyller sökvillkoret \"%#1s\".\n")
     (no-matching-perss . "Inga personer uppfyller sökvillkoret \"%#1s\".\n")
     (no-matching-anys . "Inga personer eller möten uppfyller uttrycket \"%#1s\".\n")
@@ -541,6 +544,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (add-recipient-p . "Addera mottagare %#2?b%[ %#2M för att nå%]%[%] %#1P? ")
     (matching-regexp . "Möten/personer som matchar '%#1s'\n")
+    (matching-regexp-perss . "Personer som matchar '%#1s'\n")
+    (matching-regexp-confs . "Möten som matchar '%#1s'\n")
 
     (who-is-active-all . "Visar alla sessioner.\n")
     (who-is-active-last-minutes . "Visar alla sessioner som har varit aktiva de senaste %#1d minuterna.\n")
