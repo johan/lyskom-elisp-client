@@ -1,5 +1,13 @@
 2005-01-12  David Byers  <byers@lysator.liu.se>
 
+	* check-strings.el (lcs-check-strings): If environment variable
+	LYSKOM_CHECK_IDENTICAL is set, check for strings identical in two
+	languages (many are expected, so this is off by default).
+
+	* english-strings.el: Found four swedish strings. Fixed.
+
+	* NEWS-0.48: Updated to here.
+
 	* swedish-strings.el (lyskom-sv-mode-map): Added M-c for
 	kom-toggle-cache-prefix.
 

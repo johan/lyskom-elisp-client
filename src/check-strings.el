@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: check-strings.el,v 44.26 2004-01-01 22:31:29 byers Exp $
+;;;;; $Id: check-strings.el,v 44.27 2005-01-12 19:12:20 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;
@@ -168,7 +168,25 @@ STRINGS is a list of (language . string)."
   (let ((format-list 'uninitialized)
 	(first-str nil)
 	(first-lang nil)
-	(langs (mapcar 'car lyskom-languages)))
+	(langs (mapcar 'car lyskom-languages))
+        (a-str strings))
+
+    (when (getenv "LYSKOM_CHECK_IDENTICAL")
+      (while a-str
+        (let ((b-str (cdr a-str)))
+          (while b-str
+            (when (and (memq (car (car a-str)) langs)
+                       (memq (car (car b-str)) langs)
+                       (equal (cdr (car a-str)) (cdr (car b-str)))
+                       (not (equal (cdr (car a-str)) "")))
+              (lcs-message nil "(%s:%s) Identical languages: %s, %s (%s)"
+                           category name 
+                           (car (car a-str)) 
+                           (car (car b-str))
+                           (replace-in-string (cdr (car a-str)) "\n" " " t)))
+            (setq b-str (cdr b-str))))
+        (setq a-str (cdr a-str))))
+
     (while strings
       (let* ((lang (car (car strings)))
 	     (str (cdr (car strings)))
@@ -184,12 +202,8 @@ STRINGS is a list of (language . string)."
                    (lcs-ignore-ending-mismatch category name first-lang lang)
                    (lcs-message nil "(%s:%s) Ending mismatch\n    %S\n    %S"
                                category name first-str str))))
-	  (setq format-list flist
-		first-str str
-                first-lang lang))
-
-	(setq strings (cdr strings)
-	      langs (delq lang langs))))
+	  (setq format-list flist first-str str first-lang lang))
+	(setq strings (cdr strings) langs (delq lang langs))))
 
     (mapcar (lambda (el)
               (setq langs (delq el langs)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.350 2005-01-12 18:15:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.351 2005-01-12 19:12:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.350 2005-01-12 18:15:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.351 2005-01-12 19:12:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -366,8 +366,8 @@ and you have finished reading. Please come back later.
     (setting-conf-pres . "Setting presentation of %#1M to text %#2n...")
     (setting-conf-motd . "Setting notice for %#1M to text %#2n...")
 
-    (who-to-remove-pres-for . "Vilket möte/person vill du ta bort presentationen från: ")
-    (removing-pres-for-conf . "Tar bort presentation (text %#2n) från %#1M...")
+    (who-to-remove-pres-for . "Remove presentation from whom: ")
+    (removing-pres-for-conf . "Removing presentation (text %#2n) from %#1M...")
 
     (cant-get-conf-stat . "Cannot get the status of that conference.\n")
     (go-to-conf-p . "Go to conference: ")
@@ -1675,7 +1675,7 @@ If you decline the invitation you will not be a member of the conference.
     (accept-invitation . "Do you want to accept the invitation now? ")
     (enter-passive . "You are a passive member of %#1M.
 You must become an active member of the conference to enter it.\n")
-    (convert-passive . "Vill du bli aktiv medlem i %#1M? ")
+    (convert-passive . "Do you want to become an active member of %#1M? ")
     (bug-secret-mship . "You are a secret member of %#1M\n")
 
     (invitation-mt-type . "invited")
@@ -3133,7 +3133,7 @@ Select whether to execute command or keyboard macro.")
     (last-recipient-recpt . "The last person I sent a message to")
 
     (viewer-program . "Web browser")
-    (no-viewer            . "(ingenting valt)")
+    (no-viewer            . "(none selected)")
     (default-viewer       . "Browse-URL (all)")
     (netscape-viewer . "Netscape/Mozilla (all)")
     (windows-viewer       . "Windows default or Netscape/Mozilla (all)")
