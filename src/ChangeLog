@@ -1,5 +1,8 @@
 2005-02-14  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 1511:
+	* commands1.el (lyskom-combine-username): Downcase hostnames.
+
 	Fixed bug 1520:
 	* lyskom-buttons.el (lyskom-button-menu): Pass filter to functions
 	that build menus.

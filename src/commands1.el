@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.223 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands1.el,v 44.224 2005-02-14 21:35:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.223 2005-01-12 11:42:13 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: commands1.el,v 44.224 2005-02-14 21:35:58 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3240,9 +3240,10 @@ prefix argument \(C-u -), list all sessions."
 (defun lyskom-combine-username (username identname hostname)
   "Return a description of from where a user is logged in."
   ;; Ignore ident info for now
+  (setq hostname (downcase hostname))
   (if (string-match "\\(.*\\)%\\(.*\\)" username)
       (let ((user (substring username (match-beginning 1) (match-end 1)))
-	    (uhost (substring username (match-beginning 2) (match-end 2))))
+	    (uhost (downcase (substring username (match-beginning 2) (match-end 2)))))
 	(if (lyskom-string= uhost hostname)
 	    (concat user "@" hostname)
 	  (concat username "@" hostname)))
