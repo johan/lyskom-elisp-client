@@ -5,3 +5,5 @@ commands.xml
 variables.xml
 manual.ps
 *.xml.inc
+dummy.xml
+editcmd.ent

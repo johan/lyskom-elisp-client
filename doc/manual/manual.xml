@@ -8,6 +8,8 @@
   %fnc;   <!-- LysKOM functions -->
   %var;   <!-- LysKOM variables -->
   %chp;   <!-- Book chapters -->
+
+  <!ENTITY editcmd.ent SYSTEM "editcmd.ent">
 ]>
 
 <book>
