@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 36.2 1993-05-27 13:21:12 linus Exp $
+# $Id: Makefile,v 36.3 1993-05-27 15:22:43 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 36.2 1993-05-27 13:21:12 linus Exp $
+# $Id: Makefile,v 36.3 1993-05-27 15:22:43 linus Exp $
 # $Log: Makefile,v $
-# Revision 36.2  1993-05-27 13:21:12  linus
+# Revision 36.3  1993-05-27 15:22:43  linus
+# install in local/var/elisp
+#
+# Revision 36.2  1993/05/27  13:21:12  linus
 # obel18 => diag19
 #
 # Revision 36.1  1993/04/26  19:35:11  linus
@@ -184,7 +187,7 @@ doc:
 install: installnodoc installdoc
 
 installnodoc: lyskom.elc lyskom.el
-	cp lyskom.elc /usr/local/lib/elisp/lyskom.elc
+	cp lyskom.elc /usr/local/var/elisp/lyskom.elc
 	cp lyskom.elc $(SWEDISH-ALFA-VERSION)
 #	rcp lyskom.elc nanny:/usr/local/lib/elisp/lyskom.elc
 	(VER=`grep "lyskom-clientversion " vars.el | \
