@@ -27,7 +27,7 @@ version=`grep "lyskom-clientversion " ../src/vars.el | \
 
 echo Skickar brev till ceder.
 ( cd ../src ; make lyskom.elc-compatibility )
-gawk '{ sub("\"kom.lysator.liu.se\"", "\"diag22.ida.liu.se\""); 
+gawk '{ sub("\"kom.lysator.liu.se\"", "\"med3.ida.liu.se\""); 
 	print;
       }' < ../src/lyskom.elc-compatibility |
 gzip |
