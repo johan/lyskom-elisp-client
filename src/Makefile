@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.8 1991-09-16 20:33:44 linus Exp $
+# $Id: Makefile,v 35.9 1991-09-26 14:02:16 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,9 +22,12 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 35.8 1991-09-16 20:33:44 linus Exp $
+# $Id: Makefile,v 35.9 1991-09-26 14:02:16 linus Exp $
 # $Log: Makefile,v $
-# Revision 35.8  1991-09-16 20:33:44  linus
+# Revision 35.9  1991-09-26 14:02:16  linus
+# Install in the correct directory on the ftp-area.
+#
+# Revision 35.8  1991/09/16  20:33:44  linus
 # r{tt namn p} todo filen i wc.
 #
 # Revision 35.7  1991/09/16  19:59:28  linus
@@ -127,17 +130,17 @@ install: lyskom.elc lyskom.el doc
 	 sed -n 's/^.*defconst.*lyskom-clientversion[^"]*"\([^"]*\)".*$$/\1/p'`;\
 	 cp lyskom.elc lyskom-$${VER}.elc;\
 	 compress lyskom-$${VER}.elc;\
-	 mv lyskom-$${VER}.elc.Z /usr/local/ftp/pub/lyskom/;\
+	 mv lyskom-$${VER}.elc.Z /usr/local/ftp/pub/lyskom/elisp-client;\
 	 cp lyskom.el lyskom-$${VER}.el;\
 	 compress lyskom-$${VER}.el;\
-	 cp lyskom-$${VER}.el.Z /usr/local/ftp/pub/lyskom/;\
+	 cp lyskom-$${VER}.el.Z /usr/local/ftp/pub/lyskom/elisp-client;\
 	 mv lyskom-$${VER}.el.Z ../old-versions/;\
 	 cp ../doc/elisp-client ../doc/elisp-client.txt .;\
 	 compress elisp-client elisp-client.txt;\
 	 mv elisp-client.Z \
-		/usr/local/ftp/pub/lyskom/elisp-client-$${VER}.info.Z; \
+		/usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.info.Z; \
 	 mv elisp-client.txt.Z \
-	     /usr/local/ftp/pub/lyskom/elisp-client-$${VER}.txt.Z; \
+	     /usr/local/ftp/pub/lyskom/elisp-client/elisp-client-$${VER}.txt.Z; \
 	 cp ../doc/elisp-client /usr/gnu/emacs/info; \
 	)
 
