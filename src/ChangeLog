@@ -1,3 +1,8 @@
+Tue Oct  8 03:55:40 1996  David Kågedal  <kg@infovav.se>
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Ny funktion.
+	(lyskom-mouse-3): Använd en keymap som meny.
+
 Tue Oct  8 02:10:10 1996  Niels Möller  <nisse@lysator.liu.se>
 
 	* menus.el : Ny fil. Menyer i lyskom-mode. 
