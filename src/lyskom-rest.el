@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.42 1997-08-08 14:46:32 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.43 1997-08-12 12:58:09 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.42 1997-08-08 14:46:32 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.43 1997-08-12 12:58:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1512,7 +1512,7 @@ in lyskom-messages."
               (backward-char 1)
               (delete-horizontal-space))
           (error nil)))
-      (fill-region start (match-beginning 0) nil t))))
+      (fill-region start end justify nosqueeze to-eop))))
 
 (defun lyskom-fill-message (text)
   "Try to reformat a message."
