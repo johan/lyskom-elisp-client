@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.83 2003-03-16 14:03:01 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.84 2003-03-16 19:49:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.83 2003-03-16 14:03:01 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.84 2003-03-16 19:49:00 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1359,17 +1359,8 @@ ARG interpreted by `lyskom-highlight-function-get-conf-stat'.
 This function never makes server calls, so if the information required
 to answer accurately is not cached, this function will return an incorrect
 result (nil instead of t)."
-  (let ((marshal nil)
-        (conf-stat (lyskom-highlight-function-get-conf-stat arg)))
-    (when conf-stat
-      (let ((conf (conf-stat->supervisor conf-stat))
-            (result nil))
-        (while (and (not (memq conf marshal)) conf (not result))
-          (setq marshal (cons conf marshal))
-          (if (lyskom-try-get-membership conf t)
-              (setq result t)
-            (setq conf (conf-stat->supervisor (cache-get-conf-stat conf)))))
-        result))))
+  (let ((conf-stat (lyskom-highlight-function-get-conf-stat arg)))
+    (lyskom-i-am-supervisor conf-stat nil)))
 
 (defun lyskom-highlight-has-no-presentation (arg)
   "Returns non-nil if lyskom-pers-no is the supervisor of CONF-STAT.

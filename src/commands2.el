@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.159 2003-03-16 15:57:26 byers Exp $
+;;;;; $Id: commands2.el,v 44.160 2003-03-16 19:48:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.159 2003-03-16 15:57:26 byers Exp $\n"))
+              "$Id: commands2.el,v 44.160 2003-03-16 19:48:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3113,6 +3113,146 @@ Note that this is advisory only; clients may ignore your redirection."
        (aux-item-permission . kom-redirect-comments-e48))))
   )
 
+
+;;; ================================================================
+;;; Kamikaze functions!
+
+(def-kom-command kom-join-all-conferences ()
+  "Join all conferences.
+
+You want to be really careful doing this. It will take a while and
+is probably not what you really want to do." 
+  (interactive)
+  (let* ((conf-nos (lyskom-get-all-conferences t))
+         (confirm-each (or (lyskom-j-or-n-p 'confirm-each-join)
+                           (not (lyskom-j-or-n-p 
+                                 (lyskom-format 'no-confirm-each-sure
+                                                (length conf-nos))))))
+         (no-of-unread (lyskom-read-num-range-or-date 
+                        0 
+                        lyskom-max-int
+                        (lyskom-format 'initial-unread)
+                        nil
+                        t
+                        nil))
+         (kom-membership-default-priority
+          (lyskom-read-num-range 0 255 
+                                 (lyskom-get-string 'priority-q)
+                                 nil nil)))
+    (while conf-nos
+      (unless (or (lyskom-get-membership (car conf-nos) t)
+                  (and confirm-each
+                       (not (lyskom-j-or-n-p (lyskom-format 'confirm-join 
+                                                            (car conf-nos))))))
+        (lyskom-add-member-by-no (car conf-nos) lyskom-pers-no no-of-unread))
+      (setq conf-nos (cdr conf-nos)))))
+
+
+
+(def-kom-command kom-leave-all-conferences ()
+  "Leave all conferences.
+
+This command will ignore certain conferences. It will not leave your
+letterbox, secret or closed conferences without confirmation. Note
+that this command could take a very long time to complete."
+  (interactive)
+  (let* ((auto-regular nil)
+         (auto-secret nil)
+         (auto-closed nil)
+         (confs nil))
+    (lyskom-message (lyskom-get-string 'getting-all-confs))
+    (let* ((xlist (lyskom-get-all-conferences))
+           (count (length xlist))
+           (index 0))
+      (setq confs (delq nil
+                        (mapcar (lambda (conf-no)
+                                  (setq index (1+ index))
+                                  (lyskom-message
+                                   (lyskom-format 'getting-all-confs-progress index count))
+                                  (when (or (lyskom-try-get-membership conf-no t)
+                                            (lyskom-is-member conf-no lyskom-pers-no))
+                                    conf-no))
+                                xlist)))
+      (lyskom-message (lyskom-get-string 'getting-all-confs-done)))
+
+    (while confs
+      (let* ((conf (car confs))
+             (conf-stat (blocking-do 'get-conf-stat conf))
+             (conf-type (conf-stat->conf-type conf-stat))
+             (unsubscribe nil))
+        (setq lyskom-last-viewed (point-max))
+        (lyskom-format-insert 'unsubscribe-to-2
+                              conf-stat
+                              (lyskom-conf-type-marker conf-stat))
+        (when (cond 
+               ;; Won't auto-unsub letterbox
+               ((= (conf-stat->conf-no conf-stat) lyskom-pers-no)
+                (lyskom-insert (lyskom-get-string
+                                'unsub-all-skipping-letterbox))
+                nil)
+
+               ;; Won't unsub if we are supervisor
+               ((lyskom-i-am-supervisor conf-stat t)
+                (lyskom-insert-string 'unsub-all-skipping-supervised)
+                nil)
+
+               ;; Check secret conferences
+               ((conf-type->secret conf-type)
+                (if auto-secret
+                    t
+                  (let ((ans (lyskom-a-or-b-or-c-p (lyskom-format 'unsub-secret-conf-q conf-stat)
+                                                   '(abc-yes abc-no unsub-all-secret)
+                                                   'abc-no)))
+                    (cond ((eq ans 'abc-no)
+                           (lyskom-insert-string 'cancelled) nil)
+                          ((eq ans 'abc-yes) t)
+                          ((eq ans 'unsub-all-secret)
+                           (setq auto-secret t)
+                           t)))))
+
+               ;; Skip closed only if doit is 
+               ((conf-type->rd_prot conf-type)
+                (if auto-closed
+                    t
+                  (let ((ans (lyskom-a-or-b-or-c-p (lyskom-format 'unsub-closed-conf-q conf-stat)
+                                                   '(abc-yes abc-no unsub-all-closed)
+                                                   'abc-no)))
+                    (cond ((eq ans 'abc-no) 
+                           (lyskom-insert-string 'cancelled) nil)
+                          ((eq ans 'abc-yes) t)
+                          ((eq ans 'unsub-all-closed)
+                           (setq auto-closed t)
+                           t)))))
+
+               ;; Regular conference
+               (t 
+                (if auto-regular
+                    t
+                  (let ((ans (lyskom-a-or-b-or-c-p (lyskom-format 'unsub-open-conf-q conf-stat)
+                                                   '(abc-yes abc-no unsub-all-open)
+                                                   'abc-no)))
+                    (cond ((eq ans 'abc-no) 
+                           (lyskom-insert-string 'cancelled) nil)
+                          ((eq ans 'abc-yes) t)
+                          ((eq ans 'unsub-all-open)
+                           (setq auto-regular t)
+                           t))))))
+
+
+          ;; How's that for a really long condition? Lots of
+          ;; cool side effects and user interactions. Don't
+          ;; you just love functional programming?
+
+          ;; Now we've either printed a message or we've
+          ;; decided to unsubscribe.
+
+          (lyskom-sub-member (blocking-do 'get-conf-stat lyskom-pers-no)
+                             conf-stat
+                             t)
+
+          ))
+      (setq confs (cdr confs)))
+    ))
 
 ;;; ================================================================
 ;;; Temporary function for when we moved kom-extended-command from a

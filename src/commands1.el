@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.174 2003-03-16 17:52:35 byers Exp $
+;;;;; $Id: commands1.el,v 44.175 2003-03-16 19:48:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.174 2003-03-16 17:52:35 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.175 2003-03-16 19:48:59 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -641,15 +641,16 @@ the priority of several memberships, use `kom-prioritize' instead."
 ;;; NOTE: This function is also called from lyskom-go-to-conf-handler
 ;;;       and from lyskom-create-conf-handler.
 
-(defun lyskom-add-member-by-no (conf-no pers-no &optional thendo &rest data)
+(defun lyskom-add-member-by-no (conf-no pers-no &optional no-of-unread thendo &rest data)
   "Fetch info to be able to add a person to a conf.
 Get the conf-stat CONF-NO for the conference and the conf-stat and pers-stat 
 for person PERS-NO and send them into lyskom-try-add-member."
   (blocking-do-multiple ((whereto (get-conf-stat conf-no))
                          (who (get-conf-stat pers-no))
                          (pers-stat (get-pers-stat pers-no)))
-    (let ((result (lyskom-try-add-member whereto who pers-stat nil nil t)))
-      (lyskom-add-member-answer result whereto who)
+    (let ((result (lyskom-try-add-member whereto who pers-stat 
+                                         nil nil t nil no-of-unread)))
+      (lyskom-add-member-answer result whereto who no-of-unread)
       (if thendo
           (apply thendo data))
       (car result))))
@@ -915,7 +916,7 @@ See `kom-unsubscribe-makes-passive'."
                                   (cons ccn 0)
                                 "")) t))))
 
-(defun lyskom-sub-member (pers conf)
+(defun lyskom-sub-member (pers conf &optional have-message)
   "Remove the person indicated by PERS as a member of CONF."
   (let* ((reply nil)
          (self (= (conf-stat->conf-no pers) lyskom-pers-no))
@@ -931,7 +932,8 @@ See `kom-unsubscribe-makes-passive'."
 	  ((null conf) (lyskom-insert-string 'error-fetching-conf))
           (passivate 
            (lyskom-prefetch-cancel-prefetch-map (conf-stat->conf-no conf))
-           (lyskom-format-insert 'unsubscribe-to conf)
+           (unless have-message
+             (lyskom-format-insert 'unsubscribe-to conf))
            (set-membership-type->passive (membership->type mship) t)
            (setq reply (blocking-do 'set-membership-type
                                     (conf-stat->conf-no pers)
@@ -1028,7 +1030,9 @@ probably a general Q&A conference where you can ask."
 				    (lyskom-default-button 'conf conf-stat)
 				  nil)))
 	(lyskom-scroll)
-	(lyskom-add-member-by-no conf-no lyskom-pers-no
+	(lyskom-add-member-by-no conf-no 
+                                 lyskom-pers-no
+                                 nil
 				 (if secret
 				     nil ; Don't write a presentation
 				   'lyskom-create-conf-handler-2)
