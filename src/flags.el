@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.34 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: flags.el,v 44.35 2003-06-01 19:01:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.34 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: flags.el,v 44.35 2003-06-01 19:01:46 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -369,6 +369,37 @@ Returns a list of variables that were ignored."
         (condition-case nil
             (decode-coding-string name coding)
           (error name))))))
+
+(defun lyskom-get-holerith (string &optional no-coding)
+  "Get the first holerith string in STRING.
+If optional NO-CODING is set, assume the string has internal coding."
+  (let ((coding (if no-coding 'raw-text lyskom-server-coding-system)))
+
+    ;; Strip initial whitespace
+
+    (when (string-match "^\\(\\s-\\|[\n\r]\\)+" string)
+      (setq string (substring string (match-end 0))))
+
+    ;; Read the explicit coding, if any
+
+    (when (string-match "^[0-9]+C" string)
+      (let ((len (string-to-int string)))
+        (setq coding (intern
+                      (substring string 
+                                 (match-end 0)
+                                 (+ (match-end 0) len))))
+        (setq string (substring string (+ (match-end 0) len)))))
+
+    ;; Read the string
+
+    (let ((len (string-to-int string))
+          (start (progn (string-match "[0-9]+H" string)
+                        (match-end 0))))
+      (let ((name (substring string start (+ start len))))
+        (setq string (substring string (+ start len)))
+        (condition-case nil
+            (cons (decode-coding-string name coding) string)
+          (error (cons name string)))))))
 
 (defun lyskom-maybe-set-var-from-string (var string)
   "This is a wrapper around lyskom-set-var-from-string that does nothing
