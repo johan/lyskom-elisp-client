@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: completing-read.el,v 35.3 1991-11-27 22:24:06 ceder Exp $
+;;;;; $Id: completing-read.el,v 35.4 1992-06-15 22:38:13 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: completing-read.el,v 35.3 1991-11-27 22:24:06 ceder Exp $\n"))
+	      "$Id: completing-read.el,v 35.4 1992-06-15 22:38:13 linus Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -289,7 +289,9 @@ When C-G is pressed then lyskom-end-of-command is evaled."
 	(and completion-buffer
 	     (get-buffer-window completion-buffer)))
   (use-local-map lyskom-completing-map)
-  (setq unread-command-char last-command-char))
+  (if (fboundp 'map-keymap)		;Special for lucid-emacs.
+      (setq unread-command-event last-command-event)
+    (setq unread-command-char last-command-char)))
 
 
 (defun lyskom-complete-and-edit (conf-stats what
@@ -407,9 +409,16 @@ parst matching ([^)]) in string and alist are disgarded."
 
 (if lyskom-initial-completing-map
     nil
-  (let ((i (length (setq lyskom-initial-completing-map (make-keymap)))))
-    (while (>= (setq i (1- i)) 0)
-      (aset lyskom-initial-completing-map i 'lyskom-hack-minibuf)))
+  (setq lyskom-initial-completing-map (make-keymap))
+  (if (fboundp 'map-keymap)		;lucid-emacs' way of doing things.
+      (map-keymap 
+       (function (lambda (keydesc binding)
+		   (define-key lyskom-initial-completing-map keydesc 
+		     'lyskom-hack-minibuf)))
+       global-map)
+    (let ((i (length lyskom-initial-completing-map)))
+      (while (>= (setq i (1- i)) 0)
+	(aset lyskom-initial-completing-map i 'lyskom-hack-minibuf))))
   (define-key lyskom-initial-completing-map "\C-g" 'lyskom-complete-quit))
    
 
