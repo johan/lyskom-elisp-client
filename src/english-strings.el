@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.140 2001-05-30 13:02:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.141 2001-07-11 19:25:32 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.140 2001-05-30 13:02:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.141 2001-07-11 19:25:32 byers Exp $"))
 
 
 ;;; ================================================================
@@ -525,7 +525,9 @@ Read all about it at http://www.lysator.liu.se/history/")
     (no-unread-lyskom . "There is no active LysKOM session with unread texts.")
 
     (who-is-on-in-what-conference . "Who in which conference: ")
+    (who-is-active-in-what-conference . "Who present in which conference: ")
     (who-is-active-and-member . "Only members in %#1M are shown.\n")
+    (who-is-active-and-present . "Only members present in %#1M are shown.\n")
 
     ;; Used for kom-is-person-member-of-conference:
     (pers-to-check-mship-for . "Whose membership do you want to check? ") ;-)
@@ -1626,6 +1628,8 @@ You must become an active member of the conference to enter it.\n")
     (kom-who-is-on            . "Who is on") 
     (kom-who-is-on-in-conference
                               . "Who is on in conference")
+    (kom-who-is-present-in-conference
+                              . "Who is present in conference")
     (kom-who-am-i             . "Where (am) i")
     (kom-list-clients	      . "List clients")
     (kom-busy-wait            . "Wait (for news)")
@@ -1995,6 +1999,7 @@ You must become an active member of the conference to enter it.\n")
   (define-key lyskom-en-mode-map (kbd "l a") 'kom-list-summary)
   (define-key lyskom-en-mode-map (kbd "l f") 'kom-list-filters)
   (define-key lyskom-en-mode-map (kbd "l w") 'kom-who-is-on-in-conference)
+  (define-key lyskom-en-mode-map (kbd "l p") 'kom-who-is-present-in-conference)
   (define-key lyskom-en-mode-map (kbd "S")  'kom-add-self)
   (define-key lyskom-en-mode-map (kbd "M")  'kom-mark-text)
   (define-key lyskom-en-mode-map (kbd "U")  'kom-unmark-text)

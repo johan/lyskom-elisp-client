@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.137 2001-05-24 12:02:35 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.138 2001-07-11 19:25:34 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.137 2001-05-24 12:02:35 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.138 2001-07-11 19:25:34 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3571,10 +3571,10 @@ One parameter - the prompt string."
          (define-key lyskom-modeline-keymap [mode-line mouse-3] 'kom-modeline-select-unread-kom))))
 
 
+(defvar icon-title-format)
 (defvar frame-icon-title-format)
 (if lyskom-is-loaded
     nil
-
   (setq-default lyskom-collate-table lyskom-default-collate-table)
   ;; We should set lyskom-char-classes to
   ;;     (lyskom-compute-char-classes lyskom-collate-table))
@@ -3598,6 +3598,10 @@ One parameter - the prompt string."
                                      frame-title-format
                                      'lyskom-unread-title-format)))
 
+  (if (boundp 'icon-title-format)
+      (setq icon-title-format (list ""
+                                    icon-title-format
+                                    'lyskom-unread-title-format)))  
   (if (boundp 'frame-icon-title-format)
       (setq frame-icon-title-format (list ""
                                           frame-icon-title-format
