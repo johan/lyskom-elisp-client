@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 38.21 1996-03-12 02:17:50 davidk Exp $
+;;;;; $Id: commands2.el,v 38.22 1996-03-13 13:44:34 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 38.21 1996-03-12 02:17:50 davidk Exp $\n"))
+	      "$Id: commands2.el,v 38.22 1996-03-13 13:44:34 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -505,9 +505,10 @@ otherwise: the conference is read with lyskom-completing-read."
   (lyskom-send-message 0 message))
 
 
-(defun lyskom-send-message (pers-no message)
-  "Send a message to the person with the number CONF-NO.  CONF-NO == 0 
-means send the message to everybody."
+(defun lyskom-send-message (pers-no message &optional dontshow)
+  "Send a message to the person with the number PERS-NO.  PERS-NO == 0
+means send the message to everybody. MESSAGE is the message to
+send. If DONTSHOW is non-nil, don't display the sent message."
   (let* ((string (or message
                      (lyskom-read-string (lyskom-get-string 'message-prompt))))
          (reply (blocking-do 'send-message pers-no string))
@@ -515,13 +516,14 @@ means send the message to everybody."
                            nil
                          (blocking-do 'get-conf-stat pers-no))))
     (if reply
-        (lyskom-handle-as-personal-message
-         (if to-conf-stat
-             (lyskom-format 'message-sent-to-user
-                            string to-conf-stat)
-           (lyskom-format 'message-sent-to-all string))
-         lyskom-pers-no
-         lyskom-filter-outgoing-messages)
+	(if (not dontshow)
+	    (lyskom-handle-as-personal-message
+	     (if to-conf-stat
+		 (lyskom-format 'message-sent-to-user
+				string to-conf-stat)
+	       (lyskom-format 'message-sent-to-all string))
+	     lyskom-pers-no
+	     lyskom-filter-outgoing-messages))
       (lyskom-format-insert-before-prompt 'message-nope 
                                           (or to-conf-stat
                                               (lyskom-get-string 'everybody))

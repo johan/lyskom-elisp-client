@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.21 1996-03-12 02:18:12 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 38.22 1996-03-13 13:44:55 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.21 1996-03-12 02:18:12 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.22 1996-03-13 13:44:55 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1011,8 +1011,7 @@ Text:
 (defvar lyskom-swascii-filter-what nil
   "The swascii version of lyskom-filter-what")
 
-(defvar lyskom-text-start "
-[0-9]+ 199[0-9]-[0-1][0-9]-[0-3][0-9] +[0-2][0-9]:[0-5][0-9]  /[0-9]+ rad\\(er\\)?/ "
+(defvar lyskom-text-start "[0-9]+ +\\(199[0-9]-[0-1][0-9]-[0-3][0-9]\\|idag\\|igår\\) +[0-2][0-9]:[0-5][0-9] +/[0-9]+ rad\\(er\\)?/ "
   "Regexp matching beginning of a text in lyskom buffer.
 Cf. paragraph-start.")
 
