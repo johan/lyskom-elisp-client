@@ -1,3 +1,22 @@
+2003-01-15  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in: YES! YES! YES! FINALLY DONE (FOR NOW)! All user
+	variables (well at least nearly all) are documented! God, this was
+	boring work.
+
+	* vars.el.in (kom-low-priority): Removed this variable. It is
+	unused.
+
+2003-01-14  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in: More documentation updates.
+	Evidently the insanity won't end today.
+
+2003-01-13  David Byers  <david.byers@swipnet.se>
+
+	* vars.el.in: More documentation
+	updates. Will the insanity never end?
+
 2003-01-12  David Byers  <david.byers@swipnet.se>
 
 	* option-edit.el (lyskom-custom-variables): Changed
