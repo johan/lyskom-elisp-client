@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: cache.el,v 35.2 1991-09-15 10:06:40 linus Exp $
+;;;;; $Id: cache.el,v 35.3 1991-11-12 22:44:03 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 35.2 1991-09-15 10:06:40 linus Exp $\n"))
+	      "$Id: cache.el,v 35.3 1991-11-12 22:44:03 linus Exp $\n"))
 
 
 
@@ -197,9 +197,6 @@ otherwise return nil"
 (defun cache-set-who-info-list (who-info-arr)
   "Sets the cache of who-info items."
   (setq lyskom-who-info-cache (list 'WHO-INFO-LIST))
-;+++ Detta {r fel:
-;  (setq lyskom-session-no (who-info->connection
-;			   (elt who-info-arr 0)))
   (lyskom-save-excursion
    (set-buffer lyskom-who-info-buffer)
    (erase-buffer))
@@ -212,13 +209,15 @@ otherwise return nil"
 
 (defun cache-add-who-info (who-info)
   "Adds another entry to the lyskom-who-info-cache. Updating the buffer."
-  (lyskom-collect 'who-buffer)
-  (initiate-get-conf-stat
-   'who-buffer nil (who-info->pers-no who-info))
-  (initiate-get-conf-stat 
-   'who-buffer nil (who-info->working-conf who-info))
-  (lyskom-use 'who-buffer 'lyskom-set-who-info-buffer-2
-	      who-info))
+  (if lyskom-who-info-buffer-is-on
+      (progn
+	(lyskom-collect 'who-buffer)
+	(initiate-get-conf-stat
+	 'who-buffer nil (who-info->pers-no who-info))
+	(initiate-get-conf-stat 
+	 'who-buffer nil (who-info->working-conf who-info))
+	(lyskom-use 'who-buffer 'lyskom-set-who-info-buffer-2
+		    who-info))))
 
 
 (defun cache-add-session-info (session-info)
@@ -237,18 +236,19 @@ ARG: session-info"
 
 (defun cache-del-who-info (session-no)
   "Delete the session SESSION-NO from the lyskom-who-info-cache. Updating buffer."
-  (let ((where (cache-assoc session-no lyskom-who-info-cache)))
-    (if where
-	(progn
-	  (lyskom-save-excursion
-	   (set-buffer lyskom-who-info-buffer)
-	   (delete-region (marker-position
-			   (who-buffer-info->start-marker where))
-			  (marker-position
-			   (who-buffer-info->end-marker where))))
-	  (set-marker (who-buffer-info->start-marker where) nil)
-	  (set-marker (who-buffer-info->end-marker where) nil)
-	  (cache-del session-no 'lyskom-who-info-cache)))))
+  (if lyskom-who-info-buffer-is-on
+      (let ((where (cache-assoc session-no lyskom-who-info-cache)))
+	(if where
+	    (progn
+	      (lyskom-save-excursion
+	       (set-buffer lyskom-who-info-buffer)
+	       (delete-region (marker-position
+			       (who-buffer-info->start-marker where))
+			      (marker-position
+			       (who-buffer-info->end-marker where))))
+	      (set-marker (who-buffer-info->start-marker where) nil)
+	      (set-marker (who-buffer-info->end-marker where) nil)
+	      (cache-del session-no 'lyskom-who-info-cache))))))
 
 
 (defun lyskom-set-who-info-buffer-2 (pers-conf-stat conf-conf-stat who-info)
