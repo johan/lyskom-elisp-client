@@ -6,8 +6,6 @@
 
 * Fotnot skall {ven hamna i extrakopiemottagarem|ten.
 
-* Alla (edit-mode, prioritize-mode) keymaps skall flyttas till *ish-strings.el
-
 * klienten skall fr}ga efter en presentation.
 
 * flags.el: string-to-int sm{ller.
