@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.16 1997-03-11 13:48:51 byers Exp $
+;;;;; $Id: english-strings.el,v 44.17 1997-06-29 14:19:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.16 1997-03-11 13:48:51 byers Exp $"))
+              "$Id: english-strings.el,v 44.17 1997-06-29 14:19:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2054,6 +2054,12 @@ On since %#8s%#9s")
 (lyskom-language-var kom-ansaphone-default-reply en 
   "I am not reading LysKOM right not. Please write a letter instead.")
         
+;;;; ============================================================
+;;;; Other language-dependent variables
+;;;;
+
+(lyskom-language-var kom-ispell-dictionary sv
+  "english")
 
 ;;;; ============================================================
 ;;;; Text buttom menuse go here. This will probably be moved back

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: flags.el,v 44.4 1997-02-07 18:07:42 byers Exp $
+;;;;; $Id: flags.el,v 44.5 1997-06-29 14:19:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.4 1997-02-07 18:07:42 byers Exp $\n"))
+	      "$Id: flags.el,v 44.5 1997-06-29 14:19:50 byers Exp $\n"))
 
 
 ;;; Author: Linus Tolke
@@ -127,34 +127,35 @@
     ;lets do it.
     ;lyskom-global-variables is a list of variables in the common block.
     ;lyskom-elisp-variables is a list of varibles in the elisp block.
-    (let ((buf lyskom-buffer)
-	  (optbuf (current-buffer))
-	  (common-block 
-	   (concat
-	    (mapconcat (function
-			(lambda (var)
-			  (lyskom-format-objects
-			   (substring (symbol-name var) 4) 
-			   (if (symbol-value var) "1" "0"))))
-		       lyskom-global-boolean-variables
-		       "\n")
-	    "\n"
-	    (mapconcat (function
-			(lambda (var)
-			  (lyskom-format-objects
-			   (substring (symbol-name var) 4) 
-			   (prin1-to-string (symbol-value var)))))
-		       lyskom-global-non-boolean-variables
-		       "\n")
-	    ))
-	  (elisp-block
-	   (mapconcat (function
-		       (lambda (var)
-			 (lyskom-format-objects (symbol-name var) 
-						(prin1-to-string
-						 (symbol-value var)))))
-		      lyskom-elisp-variables
-		      "\n")))
+    (let* ((buf lyskom-buffer)
+           (optbuf (current-buffer))
+           (print-readably t)
+           (common-block 
+            (concat
+             (mapconcat (function
+                         (lambda (var)
+                           (lyskom-format-objects
+                            (substring (symbol-name var) 4) 
+                            (if (symbol-value var) "1" "0"))))
+                        lyskom-global-boolean-variables
+                        "\n")
+             "\n"
+             (mapconcat (function
+                         (lambda (var)
+                           (lyskom-format-objects
+                            (substring (symbol-name var) 4) 
+                            (prin1-to-string (symbol-value var)))))
+                        lyskom-global-non-boolean-variables
+                        "\n")
+             ))
+           (elisp-block
+            (mapconcat (function
+                        (lambda (var)
+                          (lyskom-format-objects (symbol-name var) 
+                                                 (prin1-to-string
+                                                  (symbol-value var)))))
+                       lyskom-elisp-variables
+                       "\n")))
       (set-buffer buf)
       (lyskom-start-of-command (lyskom-get-string 'saving-settings) t)
       (lyskom-insert-string 'hang-on)
@@ -217,32 +218,33 @@ If successful then set the buffer not-modified. Else print a warning."
 ;;;  Messages are given in the minibuffer
 
 (defun lyskom-save-options (kombuf start-message done-message error-message)
-  (let ((common-block 
-         (concat
+  (let* ((print-readably t)
+         (common-block 
+          (concat
+           (mapconcat (function
+                       (lambda (var)
+                         (lyskom-format-objects
+                          (substring (symbol-name var) 4) 
+                          (if (symbol-value var) "1" "0"))))
+                      lyskom-global-boolean-variables
+                      "\n")
+           "\n"
+           (mapconcat (function
+                       (lambda (var)
+                         (lyskom-format-objects
+                          (substring (symbol-name var) 4) 
+                          (prin1-to-string (symbol-value var)))))
+                      lyskom-global-non-boolean-variables
+                      "\n")
+           ))
+         (elisp-block
           (mapconcat (function
                       (lambda (var)
-                        (lyskom-format-objects
-                         (substring (symbol-name var) 4) 
-                         (if (symbol-value var) "1" "0"))))
-                     lyskom-global-boolean-variables
-                     "\n")
-          "\n"
-          (mapconcat (function
-                      (lambda (var)
-                        (lyskom-format-objects
-                         (substring (symbol-name var) 4) 
-                         (prin1-to-string (symbol-value var)))))
-                     lyskom-global-non-boolean-variables
-                     "\n")
-          ))
-        (elisp-block
-         (mapconcat (function
-                     (lambda (var)
-                       (lyskom-format-objects (symbol-name var) 
-                                              (prin1-to-string
-                                               (symbol-value var)))))
-                    lyskom-elisp-variables
-                    "\n")))
+                        (lyskom-format-objects (symbol-name var) 
+                                               (prin1-to-string
+                                                (symbol-value var)))))
+                     lyskom-elisp-variables
+                     "\n")))
     (save-excursion
       (set-buffer kombuf)
       (lyskom-message "%s" start-message)

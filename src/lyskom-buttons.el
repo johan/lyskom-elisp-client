@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-buttons.el,v 44.8 1997-05-14 11:12:40 petli Exp $
+;;;;; $Id: lyskom-buttons.el,v 44.9 1997-06-29 14:19:52 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -105,19 +105,36 @@ on such functions see the documentation for lyskom-add-button-action."
   (interactive)
   (lyskom-button-press (point)))
 
-(defun kom-button-click (click)
+(defun kom-button-click (event)
   "Execute the default action of the active area under the mouse."
   (interactive "@e")
-  (let ((start (event-point click)))
-    (lyskom-button-press start)))
+  (let* ((pos (event-point event))
+         (glyph (event-glyph event))
+         (widget (and pos 
+                      (or (and glyph (glyph-property glyph 'widget))
+                          (widget-at pos))))
+         (parent (and widget (widget-get widget ':parent)))
+         (href (or (and widget (widget-get widget 'href))
+                   (and parent (widget-get parent 'href)))))
+    (cond (href (w3-widget-button-click event))
+          (t (lyskom-button-press pos)))))
+
 
 (defun kom-popup-menu (event)
   "Pop up a menu of actions to be taken at the active area under the mouse."
   (interactive "@e")
-  (let ((pos (event-point event)))
-        (if (and pos (get-text-property pos 'lyskom-button-type))
-            (lyskom-button-menu pos event)
-          (lyskom-background-menu pos event))))
+  (let* ((pos (event-point event))
+         (glyph (event-glyph event))
+         (widget (and pos 
+                      (or (and glyph (glyph-property glyph 'widget))
+                          (widget-at pos))))
+         (parent (and widget (widget-get widget ':parent)))
+         (href (or (and widget (widget-get widget 'href))
+                   (and parent (widget-get parent 'href)))))
+    (cond (href (w3-popup-menu event))
+          ((and pos (get-text-property pos 'lyskom-button-type))
+           (lyskom-button-menu pos event))
+          (t (lyskom-background-menu pos event)))))
   
 (defun kom-mouse-null (event)
   "Do nothing."
@@ -206,6 +223,20 @@ on such functions see the documentation for lyskom-add-button-action."
                       text)))))
                       
 
+(defun lyskom-fix-pseudo-url (url)
+  (save-match-data
+    (if (not (string-match lyskom-url-protocol-regexp url))
+        (cond ((string-match "^www\\." url) 
+               (concat "http://" url))
+              ((string-match "^ftp\\." url) 
+               (concat "ftp://" url))
+              ((string-match "^gopher\\." url) 
+               (concat "gopher://" url))
+              ((string-match "^wais\\." url)
+               (concat "wais://" url))
+              (t (concat "http://" url)))
+      url)))
+
 
 (defun lyskom-button-transform-text (text)
   "Add text properties to the string TEXT according to the definition of
@@ -240,6 +271,15 @@ lyskom-text-buttons. Returns the modified string."
                                         nil
                                         (lyskom-button-get-text el text)
                                         (lyskom-button-get-face el)))
+
+               ((eq (elt el 1) 'pseudo-url)
+                (let ((url (lyskom-fix-pseudo-url
+                            (lyskom-button-get-text el text))))
+                  (lyskom-generate-button 'url
+                                          nil
+                                          url
+                                          (lyskom-button-get-face el))))
+
                ((eq (elt el 1) 'email)
                 (lyskom-generate-button 'email
                                         nil
@@ -565,11 +605,11 @@ This is a LysKOM button action."
 (defun lyskom-button-open-url (buf arg text)
   "In the LysKOM buffer BUF, ignore ARG and open TEXT as an URL.
 This is a LysKOM button action."
-  (let* ((url (replace-in-string text "\\s-+" ""))
+  (let* ((url (lyskom-fix-pseudo-url (replace-in-string text "\\s-+" "")))
          protocol
          url-manager)
-    (string-match ":" url)
-    (setq protocol (substring url 0 (match-beginning 0)))
+    (string-match lyskom-url-protocol-regexp url)
+    (setq protocol (match-string 1 url))
     (setq url-manager (lyskom-get-url-manager protocol))
     (if (null url-manager)
         (lyskom-error "Can't find URL viewer"))

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: buffers.el,v 44.3 1997-03-11 13:48:39 byers Exp $
+;;;;; $Id: buffers.el,v 44.4 1997-06-29 14:19:20 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.3 1997-03-11 13:48:39 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.4 1997-06-29 14:19:20 byers Exp $\n"))
 
 
 ;;;;
@@ -506,7 +506,7 @@ of point mark and window-start in all windows."
             (mapcar (function
                      (lambda (b)
                        (set-buffer b)
-                       (list b (point) (mark))))
+                       (list b (point) (mark t))))
                     (buffer-list)))
       (walk-windows (function
                      (lambda (w)

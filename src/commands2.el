@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 44.9 1997-03-08 02:55:40 davidk Exp $
+;;;;; $Id: commands2.el,v 44.10 1997-06-29 14:19:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.9 1997-03-08 02:55:40 davidk Exp $\n"))
+	      "$Id: commands2.el,v 44.10 1997-06-29 14:19:33 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -498,25 +498,31 @@ otherwise: the conference is read with lyskom-completing-read."
 (defvar lyskom-message-string)
 
 
+(defun lyskom-send-message-minibuffer-setup-hook ()
+  (unwind-protect
+      (run-hooks 'lyskom-send-message-setup-hook)
+    (remove-hook 'minibuffer-setup-hook 
+                 'lyskom-send-message-minibuffer-setup-hook)))
+
+(defun lyskom-send-message-minibuffer-exit-hook ()
+  (unwind-protect
+      (run-hooks 'lyskom-send-message-exit-hook)
+    (remove-hook 'minibuffer-exit-hook
+                 'lyskom-send-message-minibuffer-exit-hook)))
+
 (defun lyskom-send-message (pers-no
                             message &optional dontshow)
   "Send a message to the person with the number PERS-NO.  PERS-NO == 0
 means send the message to everybody. MESSAGE is the message to
 send. If DONTSHOW is non-nil, don't display the sent message."
-  (let* ((minibuffer-setup-hook minibuffer-setup-hook)
-         (minibuffer-exit-hook minibuffer-exit-hook)
-         (lyskom-message-string nil)
+  (let* ((lyskom-message-string nil)
          (reply nil)
          (lyskom-message-recipient nil))
 
     (add-hook 'minibuffer-setup-hook
-              (function
-               (lambda () (run-hooks
-                           'lyskom-send-message-setup-hook))))
+              'lyskom-send-message-minibuffer-setup-hook)
     (add-hook 'minibuffer-exit-hook
-              (function 
-               (lambda () (run-hooks 
-                           'lyskom-send-message-exit-hook))))
+              'lyskom-send-message-minibuffer-exit-hook)
     (setq lyskom-message-string 
           (or message
               (lyskom-read-string (lyskom-get-string 'message-prompt))))
@@ -571,11 +577,15 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                
 (defun lyskom-send-message-resize-minibuffer ()
   "Temporarily turn on resizing of minibuffer"
-  (if (not resize-minibuffer-mode)
-      (progn
-        (resize-minibuffer-mode 0)
-        (add-hook 'lyskom-send-message-exit-hook
-                  'lyskom-send-message-turn-off-resize-on-exit))))
+  (let ((tmp nil))
+    (if (not resize-minibuffer-mode)
+        (progn
+          (if (not (memq 'resize-minibuffer-setup minibuffer-setup-hook))
+              (setq tmp t))
+          (resize-minibuffer-mode 0)
+          (if tmp (resize-minibuffer-setup))
+          (add-hook 'lyskom-send-message-exit-hook
+                    'lyskom-send-message-turn-off-resize-on-exit)))))
 
 
 (defun lyskom-send-message-auto-fill ()
