@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: distribution-Makefile,v 44.13 2000-08-31 12:29:43 byers Exp $
+# $Id: distribution-Makefile,v 44.14 2000-09-02 14:23:11 byers Exp $
 # Copyright (C) 1997  Lysator Academic Computer Association.
 #
 
@@ -17,8 +17,8 @@ EMACS=emacs
 # INFODIR is where documentation goes (if there is any)
 # ======================================================================
 
-LISPDIR=/usr/gnu/share/emacs/site-lisp
-INFODIR=/usr/gnu/info
+LISPDIR=/usr/local/share/emacs/site-lisp
+INFODIR=/usr/local/info
 
 
 # ======================================================================

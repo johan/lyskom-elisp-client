@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.32 2000-09-01 13:15:49 byers Exp $
+;;;;; $Id: command.el,v 44.33 2000-09-02 14:23:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.32 2000-09-01 13:15:49 byers Exp $\n"))
+	      "$Id: command.el,v 44.33 2000-09-02 14:23:10 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -255,24 +255,28 @@ transformed for matching."
   "Look up the command that corresponds to a certain string."
   (lyskom-complete-command string predicate 'lyskom-lookup))
 
+(defsubst lyskom-command-match-string-regexp (string)
+  (concat "^"
+          (replace-in-string (regexp-quote (lyskom-unicase (lyskom-completing-strip-name string t)))
+                             "\\s-+" "\\\\S-*\\\\s-+")
+          "\\s-*"))
+
 (defun lyskom-complete-command (string predicate all)
   "Completion function for LysKOM commands."
   (let ((alternatives nil)
-        (m-string (lyskom-completing-match-string-regexp string))
+        (m-string (lyskom-command-match-string-regexp string))
         (exact nil))
     (lyskom-traverse el lyskom-command-alternatives
       (when (and (string-match m-string (elt el 2))
                  (or (null predicate) (funcall predicate el)))
         (setq alternatives (cons (if (eq all 'lyskom-lookup) el (elt el 0)) alternatives))
-        (if (eq (match-end 0) (length (elt el 2))) (setq exact t))))
+        (if (eq (match-end 0) (length (elt el 2))) (setq exact el))))
     (cond 
-     ((eq all 'lyskom-lookup) (elt (car alternatives) 1))
-     ((eq all 'lambda) (or (= (length alternatives) 1) exact))
+     ((eq all 'lyskom-lookup) (and exact (elt exact 1)))
+     ((eq all 'lambda) exact)
      (all alternatives)
      ((null alternatives) nil)
-     ((= (length alternatives) 1) 
-      (if (string-equal string (lyskom-maybe-recode-string (car alternatives)))
-	  t (lyskom-maybe-recode-string (car alternatives))))
+     ((and (= (length alternatives) 1) exact) t)
      (t (lyskom-maybe-recode-string
 	 (lyskom-complete-string alternatives))))))
 

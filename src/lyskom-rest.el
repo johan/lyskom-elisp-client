@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.121 2000-09-02 13:23:00 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.122 2000-09-02 14:23:13 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.121 2000-09-02 13:23:00 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.122 2000-09-02 14:23:13 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -3606,7 +3606,7 @@ One parameter - the prompt string."
            (function
             (lambda (x)
               (aset tmp (char-to-int x) t)))
-           (lyskom-maybe-recode-string lyskom-line-start-chars-string 'iso-8859-1))
+           (lyskom-maybe-recode-string lyskom-line-start-chars-string 'iso-8859-1 t))
           tmp))
 
 
