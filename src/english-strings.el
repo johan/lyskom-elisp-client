@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.189 2002-04-13 16:15:12 byers Exp $
+;;;;; $Id: english-strings.el,v 44.190 2002-04-13 21:07:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.189 2002-04-13 16:15:12 byers Exp $"))
+              "$Id: english-strings.el,v 44.190 2002-04-13 21:07:59 byers Exp $"))
 
 
 ;;; ================================================================
@@ -600,7 +600,8 @@ Read all about it at http://www.lysator.liu.se/history/")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
-    (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m>\n")
+    (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
+    (status-read-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
 
     (Everybody . "Everyone")
     (show-members-list-also-q . "List members? ")
@@ -1117,6 +1118,7 @@ You should set it to a better value.\n")
     (review-next-text-prompt . "Review next text")
     (review-next-comment-prompt . "Review next comment")
     (review-next-marked-prompt . "Review next marked text")
+    (review-next-faq-prompt . "Review next FAQ")
     (read-next-letter-prompt . "Read next letter")
     (read-next-footnote-prompt . "Read next footnote")
     (read-next-comment-prompt . "Read next comment")
@@ -1125,6 +1127,7 @@ You should set it to a better value.\n")
     (go-to-conf-of-marked-prompt . "Resume reviewing marked")
     (go-to-conf-of-review-tree-prompt . "Resume reviewing comments")
     (go-to-conf-of-review-prompt . "Resume reviewing texts")
+    (go-to-conf-of-review-faq-prompt . "Resume reviewing FAQs")
     (go-to-next-conf-prompt . "Go to next conference")
     (go-to-your-mailbox-prompt . "Go to your mailbox")
     (next-pri-session-prompt . "Go to prioritized LysKOM \"%#1s\"")
@@ -1401,7 +1404,7 @@ On since %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ in text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ in text %#1n %#5s %#3sby %#2P %#4s")
-    (there-are-server-faqs . "There %#1?d%[is%]%[are%] %#1d (%#1d not marked as read) FAQ%#1?d%[%]%[s%] for this server:\n")
+    (there-are-faqs . "You have %#1?d%[is%]%[are%] %#1d unread FAQ%#1?d%[%]%[s%] for %#2?b%[%#1M%]%[the server%]::\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
@@ -1667,6 +1670,14 @@ Number of sessions:  %21#1d (total)
     (server-status-last-text  . "Youngest existing text:    %15#1n\n")
     (server-status-has-motd . "\nThe server has a notice:\n")
     (server-status-time . "Serverns tid:                   %#1s\n")
+
+    (mship-type-invitation-q . "Membership invitation? ")
+    (mship-type-passive-q . "Passive membership? ")
+    (mship-type-secret-q . "Secret membership? ")
+    (recommend-which-conf . "Which conference do you want to recommend? ")
+    (recommend-set-priority-q . "Recommend a priority? ")
+    (recommend-set-mship-type-q . "Recommend a membership type? ")
+    (recommending-conf . "Recommending %#1M%#2?b%[ (priority %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
     ))
 
 
@@ -1866,6 +1877,7 @@ Number of sessions:  %21#1d (total)
     (kom-del-server-faq       . "Remove server FAQ")
     (kom-review-server-faq    . "Review server FAQ")
     (kom-change-server-faq    . "Change server FAQ")
+    (kom-recommend-conference . "Recommend cnoference")
     ))
 
 (lyskom-language-var lyskom-language-codes en
@@ -3416,8 +3428,11 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   as read. Otherwise, the review commands will leave your reading history
   untouched, as usual.")
     (kom-auto-review-faqs-doc . "\
-  If this is turned on, server FAQs that are not marked as read will be
-  reviewed automatically when you log on.")
+  If this is turned on, FAQs that are not marked as read will be reviewed
+  automatically when you log on or go to a conference with a new FAQ.")
+    (kom-auto-list-faqs-doc . "\
+  If this is turned on, new FAQs will be listed automatically when you
+  log on or go to a conference with a new FAQ.")
 
 
     ;;
@@ -3584,7 +3599,8 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-print-seconds-in-time-strings-tag . "Include seconds in time strings:")
     (kom-review-uses-cache-tag . "Review commands use cached texts:")
     (kom-review-marks-texts-as-read-tag . "Review commands mark texts as read:")
-    (kom-auto-review-faqs-tag . "Review FAQs when logging on:")
+    (kom-auto-review-faqs-tag . "Review new FAQs automatically:")
+    (kom-auto-list-faqs-tag . "List new FAQs automatically:")
     )
 )
 

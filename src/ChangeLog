@@ -1,5 +1,33 @@
 2002-04-13  David Byers  <david.byers@swipnet.se>
 
+	New FAQ support:
+	* faqs.el: New file contains all FAQ-related stuff.
+	(lyskom-register-read-faq): New function.
+	(lyskom-update-read-faqs): New function.
+	(lyskom-do-review-faq): New function.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Support ?z format code.
+
+	* commands2.el (lyskom-list-summary): Support REVIEW-FAQ.
+
+	* lyskom-rest.el (kom-view-next-text): Add support for REVIEW-FAQ.
+	(lyskom-update-prompt): Ditto.
+	(lyskom-what-to-do): Ditto.
+
+	* aux-items.el: Added read-action that records all read FAQs.
+
+	* commands1.el: Moved all FAQ-related commands to faqs.el.
+
+	* commands2.el: Moved all FAQ-related commands to faqs.el.
+
+	* lyskom-rest.el (lyskom-read-num-range): Handle prompt which is a
+	symbol and not a string.
+
+	Initial support for conference recommendataions:
+	* commands2.el (kom-recommend-conference): New command.
+
+	* utilities.el (lyskom-read-membership-type): New function.
+
 	Fix language consistency:
 	* english-strings.el: Changed "article" to "text" in a bunch of
 	strings.
@@ -243,6 +271,11 @@
 
 	* distribution-configure.in: Corrected help text for
 	--with-default-language.
+
+2002-03-24  Joel Rosdahl  <joel@lysator.liu.se>
+	* Release of 0.46.2-BETA-2 (approximately: there was originally no
+	ChangeLog entry for this release). This entry was added after the
+	fact by David Byers.
 
 2002-03-23  Joel Rosdahl  <joel@lysator.liu.se>
 

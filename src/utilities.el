@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.95 2002-04-13 16:15:13 byers Exp $
+;;;;; $Id: utilities.el,v 44.96 2002-04-13 21:08:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.95 2002-04-13 16:15:13 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.96 2002-04-13 21:08:01 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1392,3 +1392,21 @@ in the 20th century")
 
     (list year month day)
     ))
+
+
+;;; ================================================================
+;;; Read membership types
+
+(defun lyskom-read-membership-type ()
+  "Interactively read a membership type"
+  (let ((invitation (lyskom-j-or-n-p 'mship-type-invitation-q))
+        (passive (lyskom-j-or-n-p 'mship-type-passive-q))
+        (secret (lyskom-j-or-n-p 'mship-type-secret-q)))
+    (lyskom-create-membership-type invitation
+                                   passive
+                                   secret
+                                   nil
+                                   nil
+                                   nil
+                                   nil
+                                   nil)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.222 2002-04-13 16:15:13 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.223 2002-04-13 21:08:01 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.222 2002-04-13 16:15:13 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.223 2002-04-13 21:08:01 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -581,7 +581,8 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
-    (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m>\n")
+    (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
+    (status-read-aux-item . "Läst FAQ:                  %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
 
     (Everybody . "Alla")
     (show-members-list-also-q . "Vill du se medlemslistan också? ")
@@ -1116,6 +1117,7 @@ Du bör sätta den till ett bättre värde.\n")
     (review-next-text-prompt . "Återse nästa text")
     (review-next-comment-prompt . "Återse nästa kommentar")
     (review-next-marked-prompt . "Återse nästa markerade")
+    (review-next-faq-prompt . "Återse nästa FAQ")
     (read-next-letter-prompt . "Läsa nästa brev")
     (read-next-footnote-prompt . "Läsa nästa fotnot")
     (read-next-comment-prompt . "Läsa nästa kommentar")
@@ -1124,6 +1126,7 @@ Du bör sätta den till ett bättre värde.\n")
     (go-to-conf-of-marked-prompt . "Återuppta återse markerade")
     (go-to-conf-of-review-tree-prompt . "Återuppta återse kommentarer")
     (go-to-conf-of-review-prompt . "Återuppta återse")
+    (go-to-conf-of-review-faq-prompt . "Återuppta återse FAQ")
     (go-to-next-conf-prompt . "Gå till nästa möte")
     (go-to-your-mailbox-prompt . "Gå till din brevlåda")
     (next-pri-session-prompt . "Gå till prioriterat LysKOM \"%#1s\"")
@@ -1400,7 +1403,7 @@ Uppkopplad sedan %#8s%#9s")
 %]%[%]%#4s")
     (faq-in-text . "FAQ i text %#1n %#3s%#4s")
     (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
-    (there-are-server-faqs . "Det finns %#1d (%#1d ej läsmarkerad%#1?d%[%]%[e%]) FAQ%#1?d%[%]%[er%] för denna server:\n")
+    (there-are-faqs . "Du har %#1d olästa%#1?d%[%]%[%] FAQ%#1?d%[%]%[er%] till %#2?b%[%#1M%]%[servern%]:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
@@ -1667,6 +1670,14 @@ Antal sessioner:     %21#1d (totalt)
     (server-status-last-text  . "Yngsta befintliga text:    %15#1n\n")
     (server-status-has-motd . "\nServern har en lapp på dörren:\n")
     (server-status-time . "Serverns tid:                   %#1s\n")
+
+    (mship-type-invitation-q . "Inbjudan till medlemskap? ")
+    (mship-type-passive-q . "Passivt medlemskap? ")
+    (mship-type-secret-q . "Hemligt medlemskap? ")
+    (recommend-which-conf . "Vilket möte vill du rekommendera? ")
+    (recommend-set-priority-q . "Rekommendera prioritet? ")
+    (recommend-set-mship-type-q . "Rekommendera mötestyp? ")
+    (recommending-conf . "Rekommenderar %#1M%#2?b%[ (prioritet %#2d)%]%[%]%#3?b%[ %#3s%]%[%]...")
 ))
 
 (lyskom-language-var lyskom-month-names sv
@@ -1866,6 +1877,7 @@ Antal sessioner:     %21#1d (totalt)
     (kom-del-server-faq       . "Ta bort server-FAQ")
     (kom-review-server-faq    . "Återse server-FAQ")
     (kom-change-server-faq    . "Ändra server-FAQ")
+    (kom-recommend-conference . "Rekommendera möte")
     ))
 
 (lyskom-language-strings lyskom-help-strings sv
@@ -3865,8 +3877,11 @@ i servern. Annars sparas det i din .emacs.")
   läsmarkera de inlägg som visas. I annat fall lämnar återsekommandona
   din läshistorik orörd, precis som vanligt.")
     (kom-auto-review-faqs-doc . "\
-  Om detta är påslaget så kommer server-FAQer som inte är läsmarkerade
-  att återses automatiskt när du loggar in.")
+  Om detta är påslaget så kommer olästa FAQer som inte att återses
+  automatiskt när du loggar in eller går till ett möte med en oläst FAQ.")
+    (kom-auto-list-faqs-doc . "\
+  Om detta är påslaget så kommer olästa FAQer att listas automatiskt när
+  du loggar in eller går till ett möte med en oläst FAQ.")
 
 
     ;;
@@ -4033,7 +4048,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-print-seconds-in-time-strings-tag . "Inkludera sekunder i tidsangivelser:")
     (kom-review-uses-cache-tag . "Återsekommandon använder sparade inlägg:")
     (kom-review-marks-texts-as-read-tag . "Återsekommandon läsmarkerar visade texter:")
-    (kom-auto-review-faqs-tag . "Visa FAQer vid inloggning:")
+    (kom-auto-review-faqs-tag . "Visa nya FAQer automatiskt:")
+    (kom-auto-list-faqs-tag "Lista nya FAQer automatiskt:")
     )
 )
 
