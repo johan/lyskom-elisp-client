@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.114 2000-08-17 17:26:16 byers Exp $
+;;;;; $Id: vars.el.in,v 44.115 2000-08-21 12:29:23 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.114 2000-08-17 17:26:16 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.115 2000-08-21 12:29:23 byers Exp $\n"))
 
 (defvar lyskom-mule-compiled
   (eval-when-compile (and (boundp 'enable-multibyte-characters)
@@ -727,7 +727,7 @@ conference and person buttons are not expected.")
 
     ;; Email
 
-    ("[^()<>@,;:\"\\\\\000- ]+@[^\000- <>;,.'\"!:?) \t\012\014]+\\(\\.[^\000- <>;,.'\"!:?)]+\\)+"
+    ("\\(\\b\\|^\\)[^()<>@,;:\"\\\\\000- ]+@[^\000- <>;,.'\"!:?) \t\012\014]+\\(\\.[^\000- <>;,.'\"!:?)]+\\)+"
      email 0 0 kom-url-face)
 
     ;; URLs
@@ -1136,7 +1136,7 @@ at random and used. This element may be a string, function or list."
      ((lyskom-button-goto-info-node-action . lyskom-button-goto-info-node))
      nil)
     (email
-     generig-popup-title
+     generic-popup-title
      lyskom-button-open-email
      ((lyskom-button-open-email-action . lyskom-button-open-email)
       (lyskom-button-copy-email-action . lyskom-button-copy-email))
