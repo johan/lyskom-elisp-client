@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.216 2002-12-13 22:37:32 byers Exp $
+;;;;; $Id: vars.el.in,v 44.217 2002-12-16 19:59:46 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.216 2002-12-13 22:37:32 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.217 2002-12-16 19:59:46 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -123,6 +123,15 @@ if the variable is in kom-dont-read-saved-variables."
 
 
 ;;; User flags
+
+(def-kom-var kom-my-bugzilla "bugzilla.lysator.liu.se"
+  "*Location of bugzilla.
+Either the base URL of bugzilla (e.g. `http://bugzilla.example.com/') or
+the hostname where bugzilla is located (e.g. `bugzilla.example.com'), if
+bugzilla is located in the root of the server.
+
+Values other than a string are reserved for future use."
+  server)
 
 (defconst kom-old-farts-text-prompt-strategy
   '((kom-comment-previous . ((t   . lyskom-get-previous-text)
@@ -1042,12 +1051,17 @@ conference and person buttons are not expected.")
 
     ;; JySKom enhancements
 
-    ("<(?m[|ö]te[ \t\n]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
+    ("<(?m[|ö]te[ \t\n\r]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
      conf 0 1 nil)
-    ("<(?text[ \t\n]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
+    ("<(?text[ \t\n\r]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
      text 0 1 nil)
-    ("<(?person[ \t\n]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
+    ("<(?person[ \t\n\r]*\\([0-9]+\\)\\([^0-9>]?\\|[^0-9>][^>]*\\))?>"
      pers 0 1 nil)
+
+    ;; Bugs
+
+    ("\\<bugg?[ \t\n\r]+\\([0-9]+\\)"
+     bugzilla 0 1 kom-url-face)
 
     ;; Info node reference
 
@@ -1547,6 +1561,11 @@ appear more than once"
      generic-popup-title
      lyskom-button-goto-info-node
      ((lyskom-button-goto-info-node-action . lyskom-button-goto-info-node))
+     nil)
+    (bugzilla
+     generic-popup-title
+     lyskom-button-show-bugzilla-bug
+     ((lyskom-show-button-bugzilla-bug-action . lyskom-button-show-bugzilla-bug))
      nil)
     (email
      generic-popup-title
