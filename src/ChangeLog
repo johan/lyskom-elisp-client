@@ -1,3 +1,7 @@
+2001-04-21  Joel Rosdahl  <joel@rosdahl.net>
+
+	* ($(TARGET-EL)): Always update build date in vars.el.
+
 2001-04-01  Joel Rosdahl  <joel@rosdahl.net>
 
 	* swedish-strings.el (lyskom-message): Added hint about a second
