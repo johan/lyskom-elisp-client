@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.254 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.255 2005-03-07 19:03:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.254 2005-02-24 08:47:04 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.255 2005-03-07 19:03:12 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2777,12 +2777,8 @@ A list of pairs means OPTARG will be used as a key to look up the real
 
 (defun lyskom-face-default-p (f1)
   "Return t if f1 is undefined or the default face."
-  (lyskom-xemacs-or-gnu (or (not (lyskom-find-face f1))
-                            (face-equal (lyskom-find-face f1)
-                                        (lyskom-find-face 'default)))
-                        (or (not (facep f1))
-                            (face-equal f1 'default))))
-
+  (not (and (lyskom-find-face f1)
+            (face-differs-from-default-p f1))))
 
 ;;;; ================================================================
 ;;;;                         Running in buffer 

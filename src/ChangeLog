@@ -1,3 +1,8 @@
+2005-03-07  David Byers  <byers@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-face-default-p): New implementation since
+	face-equal didn't really do the job.
+
 2005-03-02  Pontus Freyhult  <pont@soua.net>
 
         Bugfix: Revert didn't work properly
@@ -10,14 +15,13 @@
 	Added filter-edit-footer.
 
 	* filter-edit.el (kom-filter-edit): Output filter-edit-footer.
-	
+
 2005-02-25  Pontus Freyhult  <pont@soua.net>
 
 	* swedish-strings.el, english-string.el (lyskom-custom-strings): 
 	Fixed spelling of Gopher in emacs-w3-viewer.
-	
+
 	Fix bug 297:
-	
 	* vars.el.in (kom-netscape-command): Added Firefox and Opera to 
 	variable description.
 	(kom-netscape-variant): Dito.
@@ -44,7 +48,7 @@
 	* englist-strings.el, swedish-strings.el (local): Added 
 	closed-connection-other-buf, session-lost-beep and 
 	session-lost-all-buffers.
-	
+
 	* lyskom-rest.el (lyskom-sentinel): Do notification in other buffers
 	if desired.
 
