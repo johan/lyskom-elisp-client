@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.258 2003-01-12 22:30:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.259 2003-03-03 08:45:07 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.258 2003-01-12 22:30:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.259 2003-03-03 08:45:07 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -585,7 +585,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     
     (conf-for-status . "Get status of which conference? ")
     (no-such-conf . "The conference doesn't exist.\n")
-    (status-record . "Status of conference %#1M (%#1m) %#2s\n\n")
+    (status-record . "Status of conference %#1M (%#1m)%#2s\n\n")
     (change-type-prompt . "Change conference type for %#1M (%#1m) (%#2s)...")
     (Mailbox . "Mailbox")
     (Protected . "Protected")

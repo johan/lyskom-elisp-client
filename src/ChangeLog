@@ -1,3 +1,18 @@
+2003-03-03  Per Cederqvist  <ceder@ceder.dyndns.org>
+
+	Print the conference type when entering a conference.
+
+	* swedish-strings.el (status-record): Removed a space.
+
+	* english-strings.el (status-record): Removed a space.
+
+	* lyskom-rest.el (lyskom-enter-conf-print-unread): Fixed broken
+	indentation.  Print the type of the conference.
+
+	* commands2.el (lyskom-conf-status-marker): New function,
+	extracted from kom-status-conf.
+	(kom-status-conf): Simplified by using lyskom-conf-status-marker.
+
 2003-02-13  Per Cederqvist  <ceder@ingate.com>
 
 	Fix kom-postpone, which has been broken a while.
