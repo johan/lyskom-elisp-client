@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 35.16 1991-10-28 22:31:21 linus Exp $
+;;;;; $Id: swedish-strings.el,v 35.17 1991-11-02 18:05:50 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.16 1991-10-28 22:31:21 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.17 1991-11-02 18:05:50 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -260,6 +260,7 @@ Lyskom-sessionen är avslutad.
     (from-machine . "Kör från")
     (is-doing . "Gör")
     (text-to-add-recipient . "Vilket inlägg vill du addera mottagare till")
+    (text-to-add-copy . "Vilket inlägg vill du addera en extra kopia till")
     (text-to-delete-recipient . "Vilket inlägg vill du subtrahera mottagare från")
     (text-to-add-comment-to . "Vilket inlägg vill du addera en kommentar till")
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från")
@@ -295,9 +296,11 @@ Lyskom-sessionen är avslutad.
     (time-is . "Klockan är %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(enligt servern).\n")
     (total-users . "    Sammanlagt %#1d användare.\n")
     (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
+    (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
     (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
 
     (adding-name-as-recipient . "Adderar %#1s som mottagare till text %#2d...")
+    (adding-name-as-copy . "Adderar %#1s som kopiemottagare till text %#2d...")
     (remove-name-as-recipient .
      "Subtraherar %#1s som mottagare från text %#2d...")
     (text-to-add-q . "Vilket inlägg vill du addera som kommentar? ")
@@ -692,6 +695,7 @@ Felmeddelande: %#1s**************************************************")
     (kom-review-marked-texts    "Återse markerade")
     (kom-review-all-marked-texts "Återse alla markerade")
     (kom-add-recipient          "Addera mottagare")
+    (kom-add-copy		"Addera extra kopiemottagare")
     (kom-sub-recipient          "Subtrahera mottagare")
     (kom-add-comment		"Addera kommentar")
     (kom-sub-comment		"Subtrahera kommentar")
