@@ -1,3 +1,7 @@
+2004-05-03  David Byers  <byers@lysator.liu.se>
+
+	* NEWS-0.48: Updated to here.
+
 2004-05-02  David Byers  <byers@lysator.liu.se>
 
 	* utilities.el (lyskom-eq-dash): New function.
