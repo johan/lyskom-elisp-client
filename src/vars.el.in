@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.277 2003-11-17 22:25:34 byers Exp $
+;;;;; $Id: vars.el.in,v 44.278 2003-12-07 16:38:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.277 2003-11-17 22:25:34 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.278 2003-12-07 16:38:51 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -406,6 +406,8 @@ the priority among links that match the same text is undefined."
     (kom-filter-subject (filter-in-conf))
     (kom-filter-recipient (filter-recipient))
     (kom-filter-text (filter-in-conf))
+    (kom-change-conf-type (what-conf-to-change))
+    (kom-change-privileges (what-pers-privs-to-change))
 
     (t (t (default . (lyskom-default-conference-at-point
                       lyskom-default-conference-current))))
@@ -3332,6 +3334,7 @@ Users are encouraged to use their best sense of humor."
     kom-list-server-faqs
     kom-list-new-conferences
     kom-list-new-persons
+    kom-change-privileges
     ))
 
 ;;; ================================================================
@@ -4268,7 +4271,8 @@ the value of  kom-tell-phrases for fun.")
     kom-add-server-faq 
     kom-del-server-faq
     kom-change-server-faq
-    kom-recommend-conference))
+    kom-recommend-conference
+    kom-change-privileges))
 
 
 ;;; ================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.196 2003-12-05 00:04:20 byers Exp $
+;;;;; $Id: commands2.el,v 44.197 2003-12-07 16:38:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.196 2003-12-05 00:04:20 byers Exp $\n"))
+              "$Id: commands2.el,v 44.197 2003-12-07 16:38:50 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -454,6 +454,12 @@ This command accepts text number prefix arguments \(see
                              'date-and-time
                              (conf-stat->last-written conf-stat)))
 
+      (let* ((a (lyskom-format 'pers-has-privileges ""))
+             (b (concat "\n" (make-string (lyskom-string-width a) ?\ ))))
+        (lyskom-format-insert 'pers-has-privileges
+                              (lyskom-privilege-string (pers-stat->privileges pers-stat)
+                                                       'pers-has-privileges-2
+                                                       b)))
       (let ((superconf (conf-stat->super-conf conf-stat)))
         (lyskom-format-insert 'superconf
                               superconf
@@ -2111,9 +2117,8 @@ See `kom-become-anonymous' for information on anonymous mode."
 Using this command you can set all flags of a conference, with
 the exception of the letterbox flag (which cannot be modified)."
   (interactive)
-  (let* ((uconf-stat (lyskom-read-uconf-stat
-                      (lyskom-get-string 'what-conf-to-change)
-                      '(conf pers) nil "" t))
+  (let* ((uconf-stat (lyskom-read-uconf-stat 'what-conf-to-change
+                                             '(conf pers) nil "" t))
          (type (uconf-stat->conf-type uconf-stat))
          (box (conf-type->letterbox type))
          (ori (conf-type->original type))
@@ -2162,6 +2167,7 @@ the exception of the letterbox flag (which cannot be modified)."
           (progn (lyskom-insert-string 'nope)
                  (lyskom-insert-error))
         (lyskom-insert-string 'done)))))
+
 
 
 ;;; ============================================================
@@ -3595,6 +3601,56 @@ was given."
                                       nil
                                       nil
                                       nil)))))))
+
+
+
+
+(def-kom-command kom-change-privileges (&optional set-all)
+  "Change privileges for a user.
+Using this command you can change all privileges for a user."
+  (interactive "P")
+  (let* ((uconf-stat (lyskom-read-uconf-stat 'what-pers-privs-to-change
+                                             '(pers) nil "" t))
+         (pers-stat (blocking-do 'get-pers-stat
+                                 (uconf-stat->conf-no uconf-stat)))
+         (privs (pers-stat->privileges pers-stat)))
+
+    (lyskom-format-insert
+     'change-pers-privs-prompt
+     uconf-stat
+     (lyskom-privilege-string privs nil "\n    "))
+
+    (let* ((wheel (lyskom-j-or-n-p (lyskom-get-string 'set-wheel-priv-q)))
+           (admin (lyskom-j-or-n-p (lyskom-get-string 'set-admin-priv-q)))
+           (statistic (lyskom-j-or-n-p (lyskom-get-string 'set-statistic-priv-q)))
+           (create-pers (lyskom-j-or-n-p (lyskom-get-string 'set-create-pers-priv-q)))
+           (create-conf (lyskom-j-or-n-p (lyskom-get-string 'set-create-conf-priv-q)))
+           (change-name (lyskom-j-or-n-p (lyskom-get-string 'set-change-name-priv-q)))
+           (flg7 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg7-priv-q)) (privs->flg7 privs)))
+           (flg8 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg8-priv-q)) (privs->flg8 privs)))
+           (flg9 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg9-priv-q)) (privs->flg9 privs)))
+           (flg10 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg10-priv-q)) (privs->flg10 privs)))
+           (flg11 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg11-priv-q)) (privs->flg11 privs)))
+           (flg12 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg12-priv-q)) (privs->flg12 privs)))
+           (flg13 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg13-priv-q)) (privs->flg13 privs)))
+           (flg14 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg14-priv-q)) (privs->flg14 privs)))
+           (flg15 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg15-priv-q)) (privs->flg15 privs)))
+           (flg16 (if set-all (lyskom-j-or-n-p (lyskom-get-string 'set-flg16-priv-q)) (privs->flg16 privs)))
+           (new-privs (lyskom-create-privs wheel admin statistic create-pers 
+                                           create-conf change-name flg7 flg8
+                                           flg9 flg10 flg11 flg12
+                                           flg13 flg14 flg15 flg16)))
+
+      (if (not (blocking-do 
+                'set-priv-bits
+                (pers-stat->pers-no pers-stat)
+                new-privs))
+          (progn (lyskom-insert-string 'nope)
+                 (lyskom-insert-error))
+        (when (setq pers-stat 
+                    (cache-get-pers-stat (pers-stat->pers-no pers-stat)))
+          (set-pers-stat->privileges pers-stat new-privs))
+        (lyskom-insert-string 'done)))))
 
 
 

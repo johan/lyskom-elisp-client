@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.354 2003-12-05 00:04:22 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.355 2003-12-07 16:38:51 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.354 2003-12-05 00:04:22 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.355 2003-12-07 16:38:51 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -646,9 +646,10 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (keep-commented . "Minsta livslängd för kommenterade inlägg: %#1d dag%#1?d%[%]%[ar%]\n")
     (lowest-local-no ."Lägsta existerande lokala nummer: %8#1d\n")
     (highest-local-no . "Högsta existerande lokala nummer: %8#1d\n")
-    (last-text-time . 
-		    "Tid för senaste inlägg: %18#1s (står det i din cache)\n")
+    (last-text-time . "Tid för senaste inlägg: %18#1s (står det i din cache)\n")
     (no-of-motd . "Lapp på dörren i text nummer: %12#1n\n")
+    (pers-has-privileges .  "Rättigheter: %#1s\n")
+    (pers-has-privileges-2 .  "%28#1s")
     (superconf-is-no-name . "Supermöte:       %25#1m %#3s(%#2M)\n")
     (permitted-submitters-no-name . "Tillåtna författare:%22#1m %#3s(%#2M)\n")
     (supervisor-is-no-name . "Organisatör:     %25#1p %#3s(%#2P)\n")
@@ -2027,6 +2028,47 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (mark-confs-as-known . "Markera dessa  %#2d %#1s som kända? ")
     (no-new-conferences . "Inga nya %#2s%#1?b%[ sedan %#1s%]%[%].\n")
     (new-conferences-since . "Nya %#2s%#1?b%[ sedan %#1s%]%[%]:\n")
+
+    (privs-wheel . "operatör")
+    (privs-admin . "administratör")
+    (privs-statistic . "statistik")
+    (privs-create-conf . "skapa möten")
+    (privs-create-pers . "skapa personer")
+    (privs-change-name . "ändra namn")
+    (privs-flg7 . "okänd (7)")
+    (privs-flg8 . "okänd (8)")
+    (privs-flg9 . "okänd (9)")
+    (privs-flg10 . "okänd (10)")
+    (privs-flg11 . "okänd (11)")
+    (privs-flg12 . "okänd (12)")
+    (privs-flg13 . "okänd (13)")
+    (privs-flg14 . "okänd (14)")
+    (privs-flg15 . "okänd (15)")
+    (privs-flg16 . "okänd (16)")
+    (lyskom-no-privileges . "inga rättigheter")
+
+    (what-pers-privs-to-change . "Vems rättigheter vill du ändra? ")
+    (change-pers-privs-prompt . "\
+Nuvarande rättigheter för %#1P (%#1p):
+    %#2s
+Ändra rättigheter för %#1P (%#1p)...")
+
+    (set-wheel-priv-q . "Aktivera operatörsrättigheter? ")
+    (set-admin-priv-q . "Aktivera administratörsrättigheter? ")
+    (set-statistic-priv-q . "Aktivera statistikrättigheter? ")
+    (set-create-conf-priv-q . "Aktivera rätt att skapa möten? ")
+    (set-create-pers-priv-q . "Aktivera rätt att skapa personer? ")
+    (set-change-name-priv-q . "Aktivera rätt att ändra namn? ")
+    (set-flg7-priv-q . "Aktivera okänd rättighet 7? ")
+    (set-flg8-priv-q . "Aktivera okänd rättighet 8? ")
+    (set-flg9-priv-q . "Aktivera okänd rättighet 9? ")
+    (set-flg10-priv-q . "Aktivera okänd rättighet 10? ")
+    (set-flg11-priv-q . "Aktivera okänd rättighet 11? ")
+    (set-flg12-priv-q . "Aktivera okänd rättighet 12? ")
+    (set-flg13-priv-q . "Aktivera okänd rättighet 13? ")
+    (set-flg14-priv-q . "Aktivera okänd rättighet 14? ")
+    (set-flg15-priv-q . "Aktivera okänd rättighet 15? ")
+    (set-flg16-priv-q . "Aktivera okänd rättighet 16? ")
 ))
 
 (lyskom-language-var local lyskom-month-names sv
@@ -2261,6 +2303,7 @@ att upprepas då och då tills du har skrivit en presentation.%]
     (kom-list-server-faqs     . "Lista server-FAQ")
     (kom-list-new-conferences . "Lista nya möten")
     (kom-list-new-persons     . "Lista nya personer")
+    (kom-change-privileges    . "Ändra rättigheter")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
