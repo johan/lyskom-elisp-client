@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.41 1999-11-21 17:59:22 byers Exp $
+# $Id: Makefile,v 44.42 1999-11-21 21:51:49 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.41 1999-11-21 17:59:22 byers Exp $
+# $Id: Makefile,v 44.42 1999-11-21 21:51:49 byers Exp $
 #
 
 
@@ -129,16 +129,14 @@ header.el: $(HEADER)
 fast: $(HEADER-ELC) $(SOURCES-ELC)
 	cat $(HEADER-ELC) $(SOURCES-ELC) > $(TARGET)
 
-lyskom.el: $(HEADER) $(SOURCES)
-	cat $(HEADER) $(SOURCES) > lyskom.el
+$(TARGET-EL): $(HEADER) $(SOURCES)
+	cat $(HEADER) $(SOURCES) > $(TARGET-EL)
 
-$(TARGET): lyskom.el
-	cp lyskom.el $(TARGET-EL)
+$(TARGET): $(TARGET-EL)
 	$(EMACS-BATCH) -l ./lpath.el -f batch-byte-compile $(TARGET-EL)
-	rm $(TARGET-EL)
 
-check: lyskom.el
-	$(EMACS-BATCH) -l ./lpath.el -l ./lyskom.el  -l ./check-strings.el \
+check: $(TARGET-EL)
+	$(EMACS-BATCH) -l ./lpath.el -l ./$(TARGET-EL)  -l ./check-strings.el \
 			-f lyskom-check-strings
 
 .PHONY: verbose
@@ -148,23 +146,23 @@ verbose: verbose-el $(TARGET)
 
 verbose-el: $(HEADER) $(SOURCES)
 	@echo "Building lyskom.el"
-	@echo "" > lyskom.el
+	@echo "" > $(TARGET-EL)
 	@for i in $(HEADER) $(SOURCES) ; do \
 		echo '(eval-when-compile (message "Compiling %s" "'$$i'"))' \
-			>> lyskom.el ;\
-		cat $$i >> lyskom.el ; \
+			>> $(TARGET-EL) ;\
+		cat $$i >> $(TARGET-EL) ; \
 	done 
 
 
 TAGS: $(HEADER) $(SOURCES)
 	etags $(HEADER) $(SOURCES)
 
-install: $(TARGET) lyskom.el
-	cp lyskom.el $(TARGET) $(LISPDIR)
+install: $(TARGET) $(TARGET-EL)
+	cp $(TARGET-EL) $(TARGET) $(LISPDIR)
 
 release: release-files release-cleanup release-move
 
-release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) lyskom.el
+release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) $(TARGET-EL)
 	mkdir lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
@@ -183,7 +181,7 @@ release-cleanup:
 release-move: release-files
 	if [ -d $(FTPDIR) ]; then \
 		mv lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR) ; \
-		mv lyskom.el $(FTPDIR)/lyskom-$(CLIENTVERSION).el ; \
+		mv $(TARGET-EL) $(FTPDIR)/lyskom-$(CLIENTVERSION).el ; \
 	else \
 		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
 	fi
@@ -199,7 +197,7 @@ debian-build: release-files
 	cd lyskom-elisp-client-$(DEBIANCLIENTVERSION) && dpkg-buildpackage
 
 clean:
-	$(RM) *.el.gz *.elc.gz lyskom.el english-lyskom.el
+	$(RM) *.el.gz *.elc.gz $(TARGET-EL)
 	$(RM) -rf lyskom-$(CLIENTVERSION) \
 		  lyskom-$(CLIENTVERSION).tar \
 		  lyskom-$(CLIENTVERSION).tar.gz \
