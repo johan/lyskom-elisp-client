@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 38.11 1996-02-02 04:59:57 davidk Exp $
+;;;;; $Id: async.el,v 38.12 1996-02-17 05:41:29 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 38.11 1996-02-02 04:59:57 davidk Exp $\n"))
+	      "$Id: async.el,v 38.12 1996-02-17 05:41:29 davidk Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -205,7 +205,8 @@ this function shall be with current-buffer the BUFFER."
 					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-format-insert-before-prompt 'has-entered-r conf-stat))))
+    (lyskom-format-insert-before-prompt 'has-entered-r conf-stat
+					'(face kom-presence-face)))))
 
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)
@@ -217,7 +218,8 @@ this function shall be with current-buffer the BUFFER."
 					(conf-stat->name conf-stat)))))
   (cond
    (kom-presence-messages-in-buffer
-    (lyskom-format-insert-before-prompt 'has-left-r conf-stat))))
+    (lyskom-format-insert-before-prompt 'has-left-r conf-stat
+					'(face kom-presence-face)))))
 
 
 (defun lyskom-show-changed-person (personconfstat conf-num doing)
@@ -252,7 +254,8 @@ this function shall be with current-buffer the BUFFER."
 
 (defun lyskom-is-in-minibuffer ()
   "Returns non-nil if I am using the minibuffer for some reading."
-  (not (zerop (minibuffer-depth))))
+  (or lyskom-inhibit-minibuffer-messages
+      (not (zerop (minibuffer-depth)))))
 
 
 (defun lyskom-show-personal-message (sender recipient message 
@@ -313,7 +316,11 @@ Non-nil NOBEEP means don't beep."
         (setq when (substring when 4 19))
       (setq when (substring when 11 19)))
 
-    (cond ((eq recipient 0)             ; Public message
+    (cond ((or (null recipient)		; Have been seen to be nil when
+                                        ; listing recorded
+                                        ; messages. Should it be?
+                                        ; /davidk
+	       (eq recipient 0))	; Public message
            (lyskom-beep (if (not nobeep) kom-ding-on-common-messages 0))
            (lyskom-format 'message-broadcast
                           (cond

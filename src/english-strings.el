@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.13 1996-02-05 11:46:45 byers Exp $
+;;;;; $Id: english-strings.el,v 38.14 1996-02-17 05:41:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.13 1996-02-05 11:46:45 byers Exp $"))
+	      "$Id: english-strings.el,v 38.14 1996-02-17 05:41:51 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -157,7 +157,7 @@ Email-address:\n\nOther:\t")
     (retrying-tcp . "Retrying.")
 
     ; From parse.el:
-    ; No entries.
+    (protocol-error . "protocol error: %s")
 
     ; From services.el:
     (interrupted . "Interrupted\n")
@@ -436,6 +436,11 @@ The message you were sending to %#1s was:
     (Subject . "  Subject")
     (could-not-read . "You couldn't read the article (%#1d).\n")
     (multiple-choice . "There are several alternatives.")
+
+    (what-mark-to-list . "List which mark: ")
+    (you-have-marks . "You have %#1s texts marked with %#2s.\n")
+    (you-have-marks-all . "You have %#1s marked texts.\n")
+
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or recieving bug-reports should change these:
 
     ; Only people fixing bugs or recieving bugg-reports should change these:
@@ -833,6 +838,7 @@ Text:
     (kom-list-persons           "List users")
     (kom-list-news              "List news")
     (kom-membership             "List subscriptions")
+    (kom-list-marks		"List marks")
     (kom-postpone               "Postpone reading")
     (kom-set-session-priority	"Set reading level")
     (kom-prioritize             "Prioritize conferences")
@@ -1359,53 +1365,3 @@ Users are encouraged to use their best sense of humor.")
 (defun kom-list-files ()
   (interactive)
   (list-directory "/ftp@ftp.lysator.liu.se:/open"))
-
-(defmacro lyskom-make-face (name &rest body)
-  (` (if (memq (, name) (face-list))
-	 nil
-       (,@ body))))
-
-
-(if (and (eq window-system 'x)
-	 (x-display-color-p))
-    (progn
-      (lyskom-make-face 'kom-active-face
-			(copy-face 'default 'kom-active-face)
-			(set-face-foreground 'kom-active-face "blue4"))
-      (lyskom-make-face 'kom-url-face
-			(copy-face 'default 'kom-url-face)
-			(set-face-foreground 'kom-url-face "BlueViolet"))
-      (lyskom-make-face 'kom-me-face
-			(copy-face 'bold 'kom-me-face)
-			(set-face-foreground 'kom-me-face "yellow")
-			(set-face-background 'kom-me-face "black"))
-      (lyskom-make-face 'kom-highlight-face
-			(copy-face 'highlight 'kom-highlight-face)
-			(set-face-foreground 'kom-highlight-face 
-					     "midnight blue"))
-      (lyskom-make-face 'kom-text-face
-			(copy-face 'default 'kom-text-face))
-      (lyskom-make-face 'kom-subject-face
-			(copy-face 'kom-text-face 'kom-subject-face)
-			(set-face-foreground 'kom-subject-face
-					     "dark green"))
-      (lyskom-make-face 'kom-text-no-face
-			(copy-face 'kom-text-face 'kom-text-no-face)))
-  (progn
-    (lyskom-make-face 'kom-active-face
-		      (copy-face 'underline 'kom-active-face))
-    (lyskom-make-face 'kom-url-face
-		      (copy-face 'kom-active-face 'kom-url-face))
-    (lyskom-make-face 'kom-me-face
-		      (copy-face 'highlight 'kom-me-face))
-    (lyskom-make-face 'kom-highlight-face
-		      (copy-face 'highlight 'kom-highlight-face))
-    (lyskom-make-face 'kom-subject-face
-		      (copy-face 'default 'kom-subject-face))
-    (lyskom-make-face 'kom-text-face
-		      (copy-face 'default 'kom-subject-face))
-    (lyskom-make-face 'kom-text-no-face
-		      (copy-face 'default 'kom-subject-face))))
-
-
-

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: macros.el,v 38.3 1996-01-21 17:54:56 davidk Exp $
+;;;;; $Id: macros.el,v 38.4 1996-02-17 05:42:05 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 ;;;; be compiled.
 ;;;;
 
-(defconst lyskom-clientversion-long "$Id: macros.el,v 38.3 1996-01-21 17:54:56 davidk Exp $\n"
+(defconst lyskom-clientversion-long "$Id: macros.el,v 38.4 1996-02-17 05:42:05 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -135,6 +135,25 @@ Value returned is always nil."
   "Decrement the variable VAR and return the value."
   (list 'setq var (list '1- var)))
 
+(defmacro when (expr body)
+  "Execute BODY if EXPR evaluates to non-nil"
+  (list 'if expr (cons 'progn body)))
+
+(put 'when lisp-indent-function 1)
+(put 'when 'edebug-form-spec t)
+
+(defsubst listify-vector (vector)
+  "Turn VECTOR into a list"
+  (append vector nil))
+
+(defun reverse-assoc (key cache)
+  "Same as assoc, but searches on last element in a list"
+  (reverse (assoc key (mapcar (function reverse) cache))))
+
+(defun skip-first-zeros (list)
+  (while (and list (zerop (car list)))
+    (setq list (cdr list)))
+  list)
 
 ;; Multiple blocking read from server
 
@@ -183,6 +202,7 @@ All the forms in BIND-LIST are evaluated before and symbols are bound."
 
 (put 'blocking-do-multiple 'edebug-form-spec
      '(sexp body))
+
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

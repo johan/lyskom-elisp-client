@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.7 1996-02-02 05:00:39 davidk Exp $
+;;;;; $Id: parse.el,v 38.8 1996-02-17 05:42:10 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.7 1996-02-02 05:00:39 davidk Exp $\n"))
+	      "$Id: parse.el,v 38.8 1996-02-17 05:42:10 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -822,24 +822,21 @@ functions and variables that are connected with the lyskom-buffer."
 	(setq lyskom-string-bytes-missing 0)
 	(while (not (zerop (1- (point-max)))) ;Parse while replies.
 	  (let* ((lyskom-parse-pos 1)
-		 (key (lyskom-parse-nonwhite-char))
-		 (normal-exit nil))
-	    (unwind-protect
-		(progn
-		  (let ((inhibit-quit nil))
-		    (cond
-		     ((eq key ?=)	;The call succeeded.
-		      (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
-		     ((eq key ?%)	;The call was not successful.
-		      (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
-		     ((eq key ?:)	;An asynchronous message.
-		      (lyskom-parse-async (lyskom-parse-num) lyskom-buffer))))
-		  (setq normal-exit t))
-	    ;; In case the command changes buffer.
-	    ;; One reply is now parsed. Check if there is yet
-	    ;; another reply to parse.
-	      (if normal-exit
-		  (delete-region (point-min) lyskom-parse-pos)))
+		 (key (lyskom-parse-nonwhite-char)))
+	    (condition-case err
+		(let ((inhibit-quit nil))
+		  (cond
+		   ((eq key ?=)		;The call succeeded.
+		    (lyskom-parse-success (lyskom-parse-num) lyskom-buffer))
+		   ((eq key ?%)		;The call was not successful.
+		    (lyskom-parse-error (lyskom-parse-num) lyskom-buffer))
+		   ((eq key ?:)		;An asynchronous message.
+		    (lyskom-parse-async (lyskom-parse-num) lyskom-buffer)))
+		  (delete-region (point-min) lyskom-parse-pos))
+	      ;; One reply is now parsed.
+	      (lyskom-protocol-error
+	       (delete-region (point-min) (1+ lyskom-parse-pos))
+	       (signal 'lyskom-protocol-error err)))
 	    (goto-char (point-min))
 	    (while (looking-at "[ \t\n\r]")
 	      (delete-char 1))
