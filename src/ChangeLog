@@ -1,3 +1,46 @@
+2004-07-15  David Byers  <byers@lysator.liu.se>
+
+	* startup.el (lyskom-refetch): Prefetch membership *after*
+	prefetching unread confs. This should let us get started reading
+	just a little quicker.
+
+	* prefetch.el (lyskom-prefetch-read-texts-handler): If we get here
+	and already have a cached membership, then replace its read-texts
+	field since the membership we have may come from a call where we
+	didn't ask for read texts.
+
+2004-07-13  David Byers  <byers@lysator.liu.se>
+
+	* mship-edit.el (lp--update-buffer): Call lp--remove-from-list
+	with the correct parameters.
+
+	Removed obsolete backwards compatibility setting:
+	* vars.el.in (kom-default-session-priority): Changed default
+	session priority to zero. By now everyone who used the old
+	convention of priority zero meaning passive memberships should
+	have saved their settings at least once, so they'll still have one
+	as the default. New users shouldn't be burdened (or confused) by
+	old baggage.
+
+	Clean up XEmacs compile:
+	* prefetch.el (lyskom-prefetch-one-item): Eliminate compiler
+	warnings from XEmacs.
+
+	* avltree.el (lyskom-elib-avl-enter-balance1): Eliminate compiler
+	warnings from XEmacs.
+
+	* utilities.el (lyskom-list-text-summary): Eliminate compiler
+	warnings from XEmacs.
+
+	Fix membership cache related bug:
+	* startup.el (kom-start-anew): Call lyskom-init-membership here
+	since a valid cache structure may be needed before we get to
+	lyskom-refetch.
+
+	Extend status information:
+	* commands2.el (kom-is-person-member-of-conference): Show
+	membership priority.
+
 2004-07-12  David Byers  <byers@lysator.liu.se>
 
 	Make kom-handle-membership work again:

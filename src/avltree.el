@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: avltree.el,v 1.1 2004-07-11 23:01:53 byers Exp $
+;;;;; $Id: avltree.el,v 1.2 2004-07-15 17:13:03 byers Exp $
 ;;;;; Copyright (C) 2004  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,9 +36,9 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: avltree.el,v 1.1 2004-07-11 23:01:53 byers Exp $\n"))
+	      "$Id: avltree.el,v 1.2 2004-07-15 17:13:03 byers Exp $\n"))
 
-;;;; $Id: avltree.el,v 1.1 2004-07-11 23:01:53 byers Exp $
+;;;; $Id: avltree.el,v 1.2 2004-07-15 17:13:03 byers Exp $
 ;;;; This file implements balanced binary trees, AVL-trees.
 
 ;; Copyright (C) 1991-1995 Free Software Foundation
@@ -325,8 +325,7 @@
   (let* ((br (lyskom-elib-node-branch node branch))
 	 p1
 	 p2
-	 b2 
-	 result)
+	 b2)
     (cond
      ((< (lyskom-elib-avl-node-balance br) 0)
       (lyskom-elib-avl-node-set-balance br 0)

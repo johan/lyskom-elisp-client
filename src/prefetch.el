@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.31 2004-07-12 13:14:00 byers Exp $
+;;;;; $Id: prefetch.el,v 44.32 2004-07-15 17:13:03 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.31 2004-07-12 13:14:00 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.32 2004-07-15 17:13:03 byers Exp $\n"))
 
 (def-kom-var lyskom-prefetch-queue nil
   "A queue where all prefetch requests are entered."
@@ -167,7 +167,7 @@ prefetched the prefetch is not done."
                                                   ,pers-no
                                                   ,conf-no
                                                   t
-                                                  0
+                                                  ,lyskom-max-int
                                                   ,conf-no))
   (lyskom-continue-prefetch))
 
@@ -236,8 +236,7 @@ process is started. Used to keep prefetch going."
 (defun lyskom-prefetch-one-item ()
   "Get the first element of the prefetch data structure and fetch it.
 Return t if an element was prefetched, otherwise return nil."
-  (let* ((result nil)
-         (item (lyskom-queue-delete-first lyskom-prefetch-queue)))
+  (let ((item (lyskom-queue-delete-first lyskom-prefetch-queue)))
     (cond ((null item) nil)
           ((functionp (car item)) (apply (car item) (cdr item)) t)
           (t (signal 'lyskom-internal-error
@@ -310,12 +309,16 @@ Then prefetch all info (texttree) of comments."
   (-- lyskom-pending-prefetch)
   (lyskom-stop-prefetch)
   (when membership
-    (unless (lyskom-try-get-membership (membership->conf-no membership) t)
-      (lyskom-add-memberships-to-membership (list membership)))
-    (when (and (lyskom-visible-membership membership)
-               (lyskom-prefetch-map (membership->conf-no membership)
-                                    membership))))
-  (lyskom-start-prefetch))
+    (let ((old-mship (lyskom-try-get-membership
+                      (membership->conf-no membership) t)))
+      (if old-mship
+          (set-membership->read-texts old-mship
+                                      (membership->read-texts membership))
+        (lyskom-add-memberships-to-membership (list membership)))
+      (when (and (lyskom-visible-membership membership)
+                 (lyskom-prefetch-map (membership->conf-no membership)
+                                      membership))))
+    (lyskom-start-prefetch)))
 
 
 (defun lyskom-prefetch-membership-handler (memberships pers-no)
