@@ -1,3 +1,8 @@
+1999-10-25  David Kagedal  <davidk@lysator.liu.se>
+
+	* option-edit.el (lyskom-custom-variables): Reversed logic for
+	kom-reading-puts-comments-in-pointers-last.
+
 1999-10-25  David Byers  <davby@ida.liu.se>
 
 	* vars.el.in (lyskom-backtrace-list): New variable.
