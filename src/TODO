@@ -7,12 +7,9 @@ Att göra i elisp-klienten
             listan, glöm inte att ta bort det från listan!
 
 
-Oops. Vi visar creating-software som en tom rad i headern för texten.
+
 Se tiden borde kunna visa veckonummer. 
 
-
-Om man går med i ett möte man är passiv i så borde man inte få frågan
-om prioritet etc.
 
 Kolla strängar där noll är passivt medlemskap.
 

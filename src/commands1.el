@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.48 1999-06-29 14:21:10 byers Exp $
+;;;;; $Id: commands1.el,v 44.49 1999-08-14 19:16:07 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.48 1999-06-29 14:21:10 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.49 1999-08-14 19:16:07 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -338,14 +338,44 @@ Ask for the name of the person, the conference to add him/her to."
 (def-kom-command kom-add-self (&optional conf)
   "Add this person as a member of a conference."
   (interactive)
-  (let ((whereto (if conf (blocking-do 'get-conf-stat conf)
-                   (lyskom-read-conf-stat 
-                    (lyskom-get-string 'where-to-add-self)
-                    '(all) nil "" t)))
-        (who (blocking-do 'get-conf-stat lyskom-pers-no))
-        (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no)))
-    (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat nil)
-                              whereto who)))
+  (let* ((whereto (if conf (blocking-do 'get-conf-stat conf)
+                    (lyskom-read-conf-stat 
+                     (lyskom-get-string 'where-to-add-self)
+                     '(all) nil "" t)))
+         (who (blocking-do 'get-conf-stat lyskom-pers-no))
+         (pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
+         (mship (lyskom-get-membership (conf-stat->conf-no whereto) t)))
+  
+    ;; Fake kom-membership-default-priority if this is a passive membership
+    ;; This will suppress the normal "which priority" question. Ugly hack.
+
+    (let ((kom-membership-default-priority
+           (if (and mship (membership-type->passive (membership->type mship)))
+               (membership->priority mship)
+             kom-membership-default-priority)))
+      (lyskom-add-member-answer (lyskom-try-add-member whereto who pers-stat nil)
+                                whereto who))))
+
+
+(def-kom-command kom-change-priority (&optional conf)
+  "Change the priority of a conference."
+  (interactive)
+  
+  (let* ((conf-stat (if conf (blocking-do 'get-conf-stat conf)
+                      (lyskom-read-conf-stat 
+                       (lyskom-get-string 'change-priority-for-q)
+                       '(all) nil "" t)))
+         (mship (lyskom-get-membership (conf-stat->conf-no conf-stat) t)))
+    (blocking-do-multiple ((who (get-conf-stat lyskom-pers-no))
+                           (pers-stat (get-pers-stat lyskom-pers-no)))
+      (cond ((null mship) 
+             (lyskom-format-insert 'not-member-of-conf conf))
+            (t (lyskom-add-member-answer
+                (lyskom-try-add-member conf-stat who pers-stat nil
+                                       'change-priority-for)
+                conf-stat who))))))
+                                                           
+                                     
 
 
 
@@ -366,13 +396,18 @@ for person PERS-NO and send them into lyskom-try-add-member."
       result)))
 
 
-(defun lyskom-try-add-member (conf-conf-stat pers-conf-stat 
-                                             pers-stat membership-type)
+(defun lyskom-try-add-member (conf-conf-stat 
+                              pers-conf-stat 
+                              pers-stat
+                              membership-type
+                              &optional message-string)
   "Add a member to a conference.
 Args: CONF-CONF-STAT PERS-CONF-STAT PERS-STAT
 CONF-CONF-STAT: the conf-stat of the conference the person is being added to
 PERS-CONF-STAT: the conf-stat of the person being added.
 PERS-STAT: the pers-stat of the person being added.
+
+Optional MESSAGE-STRING is the message to print before making server call.
 
 Returns t if it was possible, otherwise nil."
   (if (or (null conf-conf-stat)
@@ -410,13 +445,17 @@ Returns t if it was possible, otherwise nil."
               (lyskom-create-membership-type nil nil nil nil
                                              nil nil nil nil)))
 
-      (if (= (conf-stat->conf-no pers-conf-stat)
-	     lyskom-pers-no)
-	  (lyskom-format-insert 'member-in-conf
-				conf-conf-stat)
-	(lyskom-format-insert 'add-member-in
-			      pers-conf-stat
-			      conf-conf-stat))
+      (if message-string
+          (lyskom-format-insert message-string
+                                pers-conf-stat
+                                conf-conf-stat)
+        (if (= (conf-stat->conf-no pers-conf-stat)
+               lyskom-pers-no)
+            (lyskom-format-insert 'member-in-conf
+                                  conf-conf-stat)
+          (lyskom-format-insert 'add-member-in
+                                pers-conf-stat
+                                conf-conf-stat)))
       (lyskom-ignoring-async (18 lyskom-pers-no
                                  (conf-stat->conf-no conf-conf-stat))
         (blocking-do 'add-member 
@@ -678,7 +717,7 @@ This does lyskom-end-of-command"
   "Write a comment to a text.
 If optional arg TEXT-NO is present write a comment to that text instead."
   (interactive (list 
-		(lyskom-read-text-no-prefix-arg 'what-comment-to)))
+		(lyskom-read-text-no-prefix-arg 'what-comment-no)))
   (lyskom-start-of-command (concat 
 			    (lyskom-command-name 'kom-write-comment)
 			    (if text-no 
@@ -1657,7 +1696,6 @@ If MARK-NO is nil, review all marked texts."
 		 (time->sec  time)
 		 (elt (lyskom-get-string 'weekdays)
 		      (time->wday time))))
-
 
 (def-kom-command kom-display-time ()
   "Ask server about time and date."

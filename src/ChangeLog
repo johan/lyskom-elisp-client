@@ -1,3 +1,20 @@
+1999-08-13  David Byers  <davby@ida.liu.se>
+
+	* commands1.el (lyskom-try-add-member): Added optional message
+	string. 
+	(kom-change-priority): New user-level command.
+	(kom-add-self): Don't ask about priority when reentering a
+	conference we are passive members of.
+
+	* vars.el.in (lyskom-err-stat): New variable.
+
+	* parse.el (lyskom-parse-error): Set lyskom-err-stat from parsed
+	error.
+
+	* view-text.el (lyskom-follow-comments): Enter REVIEW-TREE into
+	both lyskom-reading-list and lyskom-to-do-list using
+	lyskom-review-enter-read-info.
+
 1999-08-09  David Byers  <davby@ida.liu.se>
 
 	* edit-text.el (lyskom-create-text-handler): Changed name of

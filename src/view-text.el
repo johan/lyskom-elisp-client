@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.22 1999-06-29 14:21:23 byers Exp $
+;;;;; $Id: view-text.el,v 44.23 1999-08-14 19:16:17 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.22 1999-06-29 14:21:23 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.23 1999-08-14 19:16:17 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -294,12 +294,19 @@ lyskom-reading-list."
 		       (not (lyskom-text-read-p text-stat))))
 	      (setq comments (cons no comments)))))
       (if comments
-	  (read-list-enter-read-info
-	   (lyskom-create-read-info (if review-tree 'REVIEW-TREE 'COMM-IN)
-				    conf-stat priority
-				    (lyskom-create-text-list comments)
-				    (text-stat->text-no text-stat))
-	   lyskom-reading-list t))
+          (if review-tree
+              (lyskom-review-enter-read-info
+               (lyskom-create-read-info 'REVIEW-TREE
+                                        conf-stat priority
+                                        (lyskom-create-text-list comments)
+                                        (text-stat->text-no text-stat)) t)
+            (read-list-enter-read-info
+             (lyskom-create-read-info 'COMM-IN
+                                      conf-stat priority
+                                      (lyskom-create-text-list comments)
+                                      (text-stat->text-no text-stat))
+             lyskom-reading-list t)))
+
       ;; Find the footnotes that we should read and enter them into
       ;; the read-list. A slight trick is to increase the priority so
       ;; that they will be read first.
