@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.123 2000-07-05 10:14:36 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.124 2000-07-28 12:15:50 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.123 2000-07-05 10:14:36 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.124 2000-07-28 12:15:50 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3153,6 +3153,15 @@ i servern. Annars sparas det i din .emacs.")
     (kom-saved-file-name-doc . "\
   Anger vilken fil som inlägg skall arkiveras till. Klienten kommer ändå
   att fråga, men detta blir det förifyllda svaret.")
+    (kom-follow-attachments-doc . "\
+  Anger om bilagor till importerade brev skall läsas som kommentarer. 
+  Om detta är avstängt så läsmarkeras bilagor automatiskt, utan att
+  man läser dem.")
+    (kom-show-unread-in-frame-title-doc . "\
+  Om detta är påslaget så visas \"(Olästa)\" i titelraden för de
+  fönster vars valda buffert hör till en LysKOM-session med olästa. 
+  Det är inte säkert att titelraden ändras om fönstret inte är öppet.")
+
 
     ;;
     ;; Tags for variables
@@ -3304,6 +3313,8 @@ i servern. Annars sparas det i din .emacs.")
     (kom-keep-alive-interval-tag . "Intervall för håll förbindelsen igång")
     (kom-prompt-for-text-no-tag . "Kommandon som skall fråga efter textnummer")
     (kom-saved-file-name-tag . "Fil att arkivera inlägg i")
+    (kom-follow-attachments-tag . "Läs importerade bilagor som vanligt")
+    (kom-show-unread-in-frame-title-tag . "Visa olästamarkering i titelraden")
     )
 )
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.95 2000-07-24 09:36:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.96 2000-07-28 12:15:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.95 2000-07-24 09:36:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.96 2000-07-28 12:15:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -283,16 +283,9 @@ Send a letter to  %#2P to apply for membership.\n")
     (secret-members-allowed . "Are secret members permitted? ")
     (what-comment-no . "Comment text number: ")
     (what-footnote-no . "Footnote text number: ")
-    (confusion-what-to-reply-to . "I can't figure out which text you want to write a fast reply to.\n")
-    (confusion-what-to-agree-to . "I can't figure out which text you want to agree with.\n")
-    (confusion-what-to-comment . "I can't figure out which text you want to comment.\n")
-    (confusion-what-to-footnote . "I can't figure out to which text you want to write a footnote to.\n")
     (what-private-no . "Private reply to text number: ")
 
-    (confusion-who-to-reply-to . "I can't figure out which text you want to write a private reply to.\n")
-    (confusion-what-to-answer-to . "I can't figure out which text you want to write a reply to.\n")
     (quit-in-spite-of-unsent . "You have an unsent text. Do you really want to quit? ")
-    (confusion-what-to-view . "I can't figure out which text you want to view.\n")
     (really-quit . "Do you really want to quit LysKOM? ")
     (session-ended . "
 --------------------------------------------
@@ -367,7 +360,7 @@ and you have finished reading. Please come back later.
     (text-to-add-copy . "Add recipient of carbon copy of which text:")
     (text-to-add-bcc . "Add recipient of blind carbon copy of which text:")
     (text-to-delete-recipient . "Remove recipient from which text:")
-    (text-to-move . "Which text do you want to move: ")
+    (text-to-move . "Which text do you want to move:")
     (text-to-add-comment-to . "Add comment to which text:")
     (text-to-delete-comment-from . "Remove comment from which text:")
     (text-to-add-footnote-to . "Add footnote to which text:")
@@ -999,7 +992,10 @@ You should set it to a better value.\n")
     (several-unread . "%#1M - %#2d unread texts\n")
     (enter-conf . "%#1M\n")
 
-    (save-on-file-q . "Archive text on file: (%#1s) ")
+    (save-one-on-file-q . "Save copy of text %#1n in file: ")
+    (save-many-on-file-q . "Save copies of %#1d texts in file: ")
+    (saving-one-on-file . "Saving copy of text %#1n in %#2s.\n")
+    (saving-many-on-file . "Saving %#1d texts in %#2s.\n")
     (save-text-to-file-q . "Save body of text %#1n in which file: ")
     (save-text-confirm . "File %#1s exists. Overwrite? ")
     (saving-text . "Saving text %#1n as %#2s...")
@@ -1409,6 +1405,43 @@ You must become an active member of the conference to enter it.\n")
     (review-noconversion-q . "Review which text unconverted?")
     (review-commented-q . "Review the commented for which text?")
 
+    (review-tree-q . "Review all comments recursively for which text?")
+    (find-root-q . "Review original text for text?")
+    (find-root-review-q . "Review tree of which text?")
+    (review-comments-q . "Review all comments to which text?")
+
+    (confusion-who-to-reply-to . "I can't figure out which text you want to write a private reply to.\n")
+    (confusion-what-to-answer-to . "I can't figure out which text you want to write a reply to.\n")
+    (confusion-what-to-view . "I can't figure out which text you want to view.\n")
+
+    (confusion-what-to-reply-to . "I can't figure out which text you want to write a fast reply to.\n")
+    (confusion-what-to-agree-to . "I can't figure out which text you want to agree with.\n")
+    (confusion-what-to-request-confirmation . "I can't figure out which text you want read confirmations for.\n")
+    (confusion-what-to-comment . "I can't figure out which text you want to comment.\n")
+    (confusion-what-to-footnote . "I can't figure out to which text you want to write a footnote to.\n")
+
+    (confusion-what-to-delete . "I can't figure out which text you want to delete.\n")
+    (confusion-what-to-add-sub-recipient . "I can't figure out which text you want to %#1s.\n")
+    (add-rcpt-action-name . "add a recipient to")
+    (add-copy-action-name . "add a carbon copy recipient to")
+    (add-bcc-action-name . "add a blid carbon copy recipient to")
+    (sub-action-name . "remove a recipient from")
+    (move-action-name . "move")
+
+    (confusion-what-to-add-comment-to . "I can't figure out which text you want to add a comment to.\n")
+    (confusion-what-to-sub-comment-from . "I can't figure out which text you want to remove a comment from.\n")
+    (confusion-what-to-add-footnote-to . "I can't figure out which text you want to add a footnote to.\n")
+    (confusion-what-to-sub-footnote-from . "I can't figure out which text you want to remove a footnote from.\n")
+    
+    (confusion-what-to-mark . "I can't figure out which text you want to mark.\n")
+    (confusion-what-to-unmark . "I can't figure out which text you want to unmark.\n")
+    (confusion-what-to-save . "I can't figure out which text you want to save.\n")
+
+    (confusion-what-to-review-mail-headers . "I can't figure out which text's mail headers you want to see.\n")
+    (confusion-what-to-find-root . "I can't figure out which text's root you want to see.\n")
+    (confusion-what-to-find-root-review . "I can't figure out which tree you want to review.\n")
+
+    ;; Button actions
 
     (lyskom-button-view-text-action . "View text")
     (lyskom-button-review-noconversion-action . "Review unconverted")
@@ -3062,6 +3095,23 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
   network connection to the LysKOM server active. If your network connection
   shuts down after a period of inactivity, set this to approximately half
   that period and use the command `Keep connection alive'.")
+    (kom-prompt-for-text-no-doc . "\
+  These commands will always prompt for text numbers, unless one is
+  specified via a prefix argument. Commands that are not listed will
+  assume a suitable default and only prompt if the prefix argument is
+  zero.")
+    (kom-saved-file-name-doc . "\
+  Specifies the default file to archive texts in. The client will always
+  prompt for the file name, using this as the default.")
+    (kom-follow-attachments-doc . "\
+  Specifiec whether to read imported e-mail attachments as regular
+  comments. When off, imported attachments are marked as read when the
+  e-mail they are attached to is read.")
+    (kom-show-unread-in-frame-title-doc . "\
+  When this is on, the indicator \"(Unread)\" is shown in the title
+  bar of all windows whose active buffer belongs to a LysKOM session
+  with unread texts. The title bar may not be updated unless the
+  window is open.")
 
     ;;
     ;; Tags for variables
@@ -3211,6 +3261,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-server-priority-breaks-tag . "Prompt to go to next LysKOM")
     (kom-complete-numbers-before-names-tag . "Read conference numbers before names")
     (kom-keep-alive-interval-tag . "Keep connection alive interval")
+    (kom-prompt-for-text-no-tag . "Commands that prompt for text numbers")
+    (kom-saved-file-name-tag . "File to archive texts in")
+    (kom-follow-attachments-tag . "Read imported attachments as texts")
+    (kom-show-unread-in-frame-title-tag . "Show unread indicator in title bar")
     )
 )
 
