@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 35.5 1991-09-15 10:06:52 linus Exp $
+;;;;; $Id: async.el,v 35.6 1991-09-28 19:34:38 ceder Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 35.5 1991-09-15 10:06:52 linus Exp $\n"))
+	      "$Id: async.el,v 35.6 1991-09-28 19:34:38 ceder Exp $\n"))
 
 
 (defun lyskom-parse-async (tokens buffer)
@@ -169,22 +169,10 @@ this function shall be with current-buffer the BUFFER."
 	    (message (lyskom-parse-string)))
 	(lyskom-save-excursion
 	 (set-buffer buffer)
-	 (cond
-	  ((string= message "info")
-	   (initiate-send-message 'follow nil sender 
-				  (format "emacs-version %s\n%s%s"
-					  emacs-version
-					  (save-excursion
-					    (goto-char (point-min))
-					    (forward-line 3)
-					    (buffer-substring (point-min)
-							      (point)))
-					  "")))
-	  (t
-	   (initiate-get-conf-stat 'follow
-				   'lyskom-show-personal-message sender
-				   recipient
-				   message))))))
+	 (initiate-get-conf-stat 'follow
+				 'lyskom-show-personal-message sender
+				 recipient
+				 message))))
 
      ((eq msg-no 13)			; New logout
       (let ((pers-no (lyskom-parse-num))
