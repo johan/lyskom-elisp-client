@@ -1,3 +1,10 @@
+2001-06-05  Johan Sundström  <jhs@lysator.liu.se>
+
+	* swedish-strings.el (lyskom-message): Changed all references to
+ 	"för kännedom" to "dold kopia", a somewhat improved translation.
+
+	* edit-text.el (lyskom-edit-insert-miscs): Ditto.
+
 2001-05-30  David Byers  <davby@ida.liu.se>
 
 	* view-text.el (lyskom-insert-header-comm): Correct content type
