@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.263 2003-08-17 15:33:20 byers Exp $
+;;;;; $Id: vars.el.in,v 44.264 2003-08-20 21:28:30 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.263 2003-08-17 15:33:20 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.264 2003-08-20 21:28:30 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -364,7 +364,71 @@ the priority among links that match the same text is undefined."
 
   "Strategy for the initial value for conference defaults.
 
-The meaning and format of this variable will probably change in the future.")
+Each element in this list identifies an Emacs och LysKOM command, and
+defines the initial values for queries it makes for conference names.
+
+Each element has the following format:
+
+    \(COMMAND . \(\(PROMPT-1 . \(\(default . \(INITIAL-VALUES\\)\\)
+                             \(filter  . \(EXCLUDED-CONFS\)\)
+                             \(save    . \(SAVE-GROUPS\)\)\)\)
+                \(PROMPT-2 . \(\(default . \(INITIAL-VALUES\)\)
+                             \(filter  . \(EXCLUDED-CONFS\)\)
+                             \(save    . \(SAVE-GROUPS\)\)\)\)
+                ...\)\)
+
+COMMAND is the name of a LysKOM or Emacs command. PROMPT-1 and
+PROMPT-2 \(there can be any number of prompts liste in a single
+command\) are symbols representing the prompt. These are defined
+in lyskom-messages in swedish-strings.el and english-strings.el. 
+
+INITIAL-VALUES are functions to call to generate a list of possible
+initial values for the prompt. These functions must return lists of
+conference numbers. EXCLUDED-CONFS are functions that are called to
+eliminate possible initial values. These must take a single argument,
+an uconf-stat, and should return the uconf-stat itself if it is a
+valid candidate for the initial value, or nil if it is not. Finally,
+SAVE-GROUPS are symbols under which the value the user inputs will be
+saved.
+
+As a special case, a list in INITIAL-VALUES is interpreted as a
+function with arguments. The first element in the list is applied to
+the remaining elements.
+
+If `t' is used for COMMAND, it indicates the default to use when no
+COMMAND listed matches the current command. If `t' is used for PROMPT,
+it indicates defaults, filters and save groups to use when no other
+PROMPT matches.
+
+
+Some useful functions for INITIAL-VALUES are:
+
+lyskom-default-conference-at-point returns the conference shown where
+point is. If point is on a conference name, that name will be used as
+the initial value.
+
+lyskom-default-conference-current returns the current conference.
+
+lyskom-default-conference-self returns the logged-in person.
+
+lyskom-default-conference-last-author returns the author of the most
+recently read text.
+
+lyskom-default-conference-saved returns saved input. This must be
+specified as a list in INITAL-VALUES, where the argument (second
+element of the list) is the symbol under which the input was saved,
+from \(SAVE-GROUPS\) in one or more commands.
+
+
+Some useful functions for EXCLUDE-CONFS are:
+
+lyskom-default-conference-not-self excludes the logged-in person.
+
+lyskom-default-conference-not-current excludes the current conference.
+
+
+The format of this variable may change in the future.
+")
 
 
 (defconst kom-old-farts-text-prompt-strategy
