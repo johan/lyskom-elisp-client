@@ -1,3 +1,8 @@
+Mon Apr 29 09:24:16 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * review-new.el (lyskom-get-texts-by): Fixade så inte information om
+    hemliga texter returneras.
+
 Mon Apr 29 02:26:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-format-aux-help): Hantera möte 0 för sig.
@@ -16,6 +21,11 @@ Sat Apr 27 02:48:51 1996  David Kågedal  <davidk@lysator.liu.se>
 	* lyskom-rest.el (kom-save-text): Tillåt directorynamn.
 
 	* startup.el (kom-start-anew): Töm completion-cachen.
+
+Thu Apr 25 14:04:26 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * prioritize.el (kom-prioritize-set-priority): Sätt mark när man
+    trycker "p".
 
 Fri Apr 26 00:01:14 1996  David Kågedal  <davidk@lysator.liu.se>
 
@@ -56,6 +66,40 @@ Thu Apr 25 01:42:29 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-header-comm): Dito.
 
+Wed Apr 24 17:49:29 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * review.el (lyskom-get-texts-by-and-to): Fixade bug som gjorde att
+    man kunde missa de allra första texterna i ett möte om man återsåg
+    senaste.
+
+Tue Apr 23 00:47:17 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-start-of-command): Anta att
+	lyskom-first-time-around är definierad.
+
+Tue Apr 23 11:26:57 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * startup.el (kom-start-anew): Rensa completing-read-cachen innan
+    försök att konvertera det inmatade användarnamnet.
+
+    * english-strings.el (lyskom-button-actions): Lade till hints för
+    sista inläggsnumret som skrivs ut.
+
+    * swedish-strings.el (lyskom-button-actions): Lade till hints för
+    sista inläggsnumret som skrivs ut.
+
+    * vars.el.in (kom-inhibit-typeahead): Lade till kom-inhibit-typeahead.
+
+    * lyskom-rest.el (lyskom-end-of-command): Återimplementerade
+    bortkastning av typeahead.
+
+    * view-text.el (lyskom-print-text): Lade till sättning av
+    lyskom-current-function och lyskom-current-function-phase.
+
+    * lyskom-buttons.el (lyskom-get-button-hint): Ny funktion.
+    (lyskom-generate-button): Använd lyskom-get-button-hint för att hitta
+    hinten.
+
 Wed Apr 24 03:44:31 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-header-comm): Delade upp den så att
@@ -86,7 +130,7 @@ Mon Apr 22 05:57:27 1996  David Kågedal  <davidk@lysator.liu.se>
 	bara den färdiga strängen.
 	(lyskom-format-insert-before-prompt,lyskom-format-insert),
 	(lyskom-format): Justerade därefter.
-	
+
 Wed Apr 17 17:32:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* parse.el (lyskom-parse-error): Gör så att en bug inte blir så
@@ -102,10 +146,27 @@ Sun Apr 14 23:44:45 1996  David Kågedal  <davidk@lysator.liu.se>
 	* view-text.el (lyskom-follow-comments): Felaktiga parametrar i
 	ett anrop till lyskom-view-text.
 
+Wed Apr 10 10:16:20 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * prioritize.el (kom-prioritize): En numera avrättad bug gjorde att
+    medlemskapslistan blev reverserad.
+
+Mon Apr  8 18:42:12 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * prioritize.el: Skrev om från scratch.
+
+Sat Apr  6 18:13:25 1996  David Byers  <davby@sen2.ida.liu.se>
+
+    * lyskom-rest.el (lyskom-insert): Fixade lyskom-insert så den ger
+    rätt beteende om kom-continuous-scrolling inte är satt.
+
 Thu Apr  4 10:36:06 1996  David Byers  <davby@sen2.ida.liu.se>
 
     * lyskom-rest.el (lyskom-insert): Gör lyskom-scroll i lyskom-insert
-    bara om kom-continuous-scrolling är satt.
+    bara om kom-continuous-scrolling är satt. (lyskom-start-of-command):
+    Tilldela nil till lyskom-is-waiting varje gång ett nytt kommando
+    startas. (lyskom-print-prompt): Tog bort tilldelningar av
+    lyskom-is-waiting.
 
     * vars.el.in (kom-continuous-scrolling): Ny variabel.
     (lyskom-elisp-variables): Lade till kom-continuous-scrolling.

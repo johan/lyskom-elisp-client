@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 40.6 1996-04-27 20:15:26 davidk Exp $
+;;;;; $Id: commands1.el,v 40.7 1996-04-29 11:58:45 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 40.6 1996-04-27 20:15:26 davidk Exp $\n"))
+	      "$Id: commands1.el,v 40.7 1996-04-29 11:58:45 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1378,6 +1378,14 @@ If MARK-NO == 0, review all marked texts."
 ;;; ================================================================
 ;;;               (Se) Tiden - display time and date.
 
+(defconst lyskom-times 
+  '(((nil 12 24 nil nil nil) . xmaseve)
+    ((nil 12 25 nil nil nil) . xmasday)
+    ((nil  1  1 nil nil nil) . newyearday)
+    ((nil 12 31  11 nil nil) . newyearevelate)
+    ((nil 12 31 nil nil nil) . newyeareve)))
+
+
 
 (def-kom-command kom-display-time ()
   "Ask server about time and date."
@@ -1390,14 +1398,42 @@ If MARK-NO == 0, review all marked texts."
 			  (time->hour time)
 			  (time->min  time)
 			  (time->sec  time)
-					; Kult:
+              ;; Kult:
 			  (if (and (= (time->hour time)
 				      (+ (/ (time->sec time) 10)
 					 (* (% (time->sec time) 10) 10)))
 				   (= (/ (time->min time) 10)
 				      (% (time->min time) 10)))
 			      (lyskom-get-string 'palindrome)
-			    ""))))
+			    ""))
+              ;; Mera kult
+    (mapcar (function 
+             (lambda (el)
+               (let ((x (car el))
+                     (y (cdr el)))
+                 (if (and (or (null (elt x 0))
+                              (= (+ (time->year time) 1900) (elt x 0)))
+                          (or (null (elt x 1))
+                              (= (1+ (time->mon time)) (elt x 1)))
+                          (or (null (elt x 2))
+                              (= (time->mday time) (elt x 2)))
+                          (or (null (elt x 3))
+                              (= (time->hour time) (elt x 3)))
+                          (or (null (elt x 4))
+                              (= (time->min time) (elt x 4)))
+                          (or (null (elt x 5))
+                              (= (time->sec time) (elt x 5))))
+                     (progn
+                       (lyskom-insert " ")
+                       (lyskom-format-insert (cdr el)
+                                             (+ (time->year time) 1900)
+                                             (1+ (time->mon  time))
+                                             (time->mday time)
+                                             (time->hour time)
+                                             (time->min  time)
+                                             (time->sec  time)))))))
+            lyskom-times))
+  (lyskom-insert "\n"))
 
 
 ;;; ================================================================

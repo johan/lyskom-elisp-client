@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: view-text.el,v 40.5 1996-04-27 01:08:49 davidk Exp $
+;;;;; $Id: view-text.el,v 40.6 1996-04-29 11:59:39 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 40.5 1996-04-27 01:08:49 davidk Exp $\n"))
+	      "$Id: view-text.el,v 40.6 1996-04-29 11:59:39 byers Exp $\n"))
 
 
 (defun lyskom-view-text (text-no &optional mark-as-read
@@ -335,50 +335,54 @@ recipients to it that the user is a member in."
 Print an error message if TEXT-STAT or TEXT is nil.
 Mark the text as read if (and only if) MARK-AS-READ is non-nil.
 Args: TEXT-STAT TEXT MARK-AS-READ TEXT-NO."
-  (cond
+  (let ((lyskom-current-function 'lyskom-print-text))
+    (cond
      ((or (null text)
-	  (null text-stat))
+          (null text-stat))
       (lyskom-format-insert 'no-such-text-no text-no)
       (setq lyskom-previous-text lyskom-current-text)
       (setq lyskom-current-text text-no))
-   (t
+     (t
       (let* ((str (text->text-mass text))
-	     s1 s2 t1 t2 body)
-	(cond
-	 ((string-match "\n" str)
-	    (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
-	    (setq body (substring str (match-end 0)))
-	    (lyskom-insert-string 'head-Subject)
-	    (setq s1 (point-max))
-	    (lyskom-format-insert "%#1r\n" 
-				  (copy-sequence lyskom-current-subject))
-	    (setq s2 (point-max))
-	    (if kom-dashed-lines
-		(lyskom-insert 
-		 "------------------------------------------------------------\n")
-	      (lyskom-insert "\n"))
-	    (setq t1 (point-max))
-	    (lyskom-format-insert "%#1t" body)
-	    (setq t2 (point-max)))
-	 (t				;No \n found. Don't print header.
-	  (setq s1 (point-max))
-	  (lyskom-format-insert "%#1t" str)
-	  (setq s2 (point-max))
-	  (setq t1 (point-max)
-		t2 (point-max))
-	  (setq lyskom-current-subject "")))
-	(if (lyskom-text-p (cache-get-text (text->text-no text)))
-	    (cache-del-text (text->text-no text)))
-	(sit-for 0)
-	(lyskom-format-insert 
-			(if kom-dashed-lines
-			    "\n(%#1n) -----------------------------------\n"
-			  "\n(%#1n)\n")
-			(text->text-no text))
-	(if mark-as-read
-	    (lyskom-mark-as-read text-stat))
-	(setq lyskom-previous-text lyskom-current-text)
-	(setq lyskom-current-text (text-stat->text-no text-stat))))))
+             s1 s2 t1 t2 body)
+        (cond
+         ((string-match "\n" str)
+          (setq lyskom-current-subject (substring str 0 (match-beginning 0)))
+          (setq body (substring str (match-end 0)))
+          (lyskom-insert-string 'head-Subject)
+          (setq s1 (point-max))
+          (let ((lyskom-current-function-phase 'subject))
+            (lyskom-format-insert "%#1r\n" 
+                                  (copy-sequence lyskom-current-subject)))
+          (setq s2 (point-max))
+          (if kom-dashed-lines
+              (lyskom-insert 
+               "------------------------------------------------------------\n")
+            (lyskom-insert "\n"))
+          (setq t1 (point-max))
+          (let ((lyskom-current-function-phase 'body))
+            (lyskom-format-insert "%#1t" body))
+          (setq t2 (point-max)))
+         (t                             ;No \n found. Don't print header.
+          (setq s1 (point-max))
+          (lyskom-format-insert "%#1t" str)
+          (setq s2 (point-max))
+          (setq t1 (point-max)
+                t2 (point-max))
+          (setq lyskom-current-subject "")))
+        (if (lyskom-text-p (cache-get-text (text->text-no text)))
+            (cache-del-text (text->text-no text)))
+        (sit-for 0)
+        (let ((lyskom-current-function-phase 'footer))
+          (lyskom-format-insert 
+           (if kom-dashed-lines
+               "\n(%#1n) -----------------------------------\n"
+             "\n(%#1n)\n")
+           (text->text-no text)))
+        (if mark-as-read
+            (lyskom-mark-as-read text-stat))
+        (setq lyskom-previous-text lyskom-current-text)
+        (setq lyskom-current-text (text-stat->text-no text-stat)))))))
 
 
 (defun lyskom-mark-as-read (text-stat)
