@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.36 1999-10-14 10:39:45 byers Exp $
+;;;;; $Id: utilities.el,v 44.37 1999-10-14 11:11:55 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.36 1999-10-14 10:39:45 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.37 1999-10-14 11:11:55 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -462,6 +462,11 @@ under XEmacs."
       (set-face-background face color)
     (error nil)))
 
+(defun lyskom-copy-face (old new)
+  (lyskom-xemacs-or-gnu (copy-face old new nil nil nil 'remove-all)
+                        (copy-face old new)))
+
+
 
 (defun lyskom-set-face-scheme (scheme)
   "Set the LysKOM color and face scheme to SCHEME. Valid schemes are listed
@@ -474,7 +479,7 @@ in lyskom-face-schemes."
       (mapcar 
        (function
         (lambda (spec)
-          (copy-face (or (elt spec 1) 'default) (elt spec 0))
+          (lyskom-copy-face (or (elt spec 1) 'default) (elt spec 0))
           (if (elt spec 2)
               (lyskom-set-face-foreground (elt spec 0) (elt spec 2)))
           (if (elt spec 3)

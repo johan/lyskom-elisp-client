@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $
+;;;;; $Id: compatibility.el,v 44.24 1999-10-14 11:11:53 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.24 1999-10-14 11:11:53 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -294,6 +294,13 @@ With optional argument N, returns Nth-to-last link (default 1)."
 	  (if (< n m) (nthcdr (- m n) x) x)))
     (while (consp (cdr x)) (setq x (cdr x)))
     x))
+
+;;; ================================================================
+;;; Faces
+
+(lyskom-provide-function reset-face (face &optional locale tag-set exact-p)
+  )
+
 
 ;;; ======================================================================
 ;;; Event stuff
