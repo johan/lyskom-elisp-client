@@ -1,3 +1,8 @@
+Tue Aug 27 00:51:35 1996  David Kågedal  <kg@infovav.se>
+
+	* startup.el (lyskom): Använd prefix-argumentet som startvärde på
+ 	lyskom-session-priority.
+
 Sat Aug 24 23:54:55 1996  Per Cederqvist  <ceder@lysator.liu.se>
 
 	* flags.el (lyskom-read-options-eval): Use equal instead of = so
