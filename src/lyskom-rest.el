@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 41.19 1996-08-01 21:01:39 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 41.20 1996-08-01 23:45:32 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 41.19 1996-08-01 21:01:39 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 41.20 1996-08-01 23:45:32 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -220,6 +220,7 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
   (interactive)
   (if (pos-visible-in-window-p (point-max))
       (progn
+	(goto-char (point-max))
 	(recenter 0)
 	(lyskom-next-command))
     (recenter 0)
@@ -712,7 +713,7 @@ kom-emacs-knows-iso-8859-1."
 (defun lyskom-insert-before-prompt (string)
   "Insert STRING just before the prompt of if no prompt then just buffers.
 If prompt on screen then do the scroll if necessary.
-The strings buffered are printed before the prompt by lyskom-print-prompt."
+The strings buffered are printed before the prompt by lyskom-update-prompt."
   ;;
   ;; This is the policy for moving point:
   ;;
@@ -734,13 +735,15 @@ The strings buffered are printed before the prompt by lyskom-print-prompt."
     (lyskom-queue-enter lyskom-to-be-printed-before-prompt 
                         (list string)))
    (t
-    (save-excursion
+    ;; For some reaseon save-excursion doesn't work as expected
+    (let ((oldpoint (point-marker)))
       (goto-char (point-max))
       (beginning-of-line)
       (let ((inhibit-read-only t))
 	(insert (if kom-emacs-knows-iso-8859-1
 		    string
-		  (iso-8859-1-to-swascii string)))))
+		  (iso-8859-1-to-swascii string))))
+      (goto-char oldpoint))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window
 	       (not (pos-visible-in-window-p (point) window)))
@@ -1518,8 +1521,8 @@ chosen according to this"
         (let ((name (lyskom-command-name function)))
           (if name (lyskom-insert name)))))
     (save-excursion
-      (if (not lyskom-no-prompt)
-          (let ((buffer-read-only nil))
+      (if lyskom-current-prompt
+          (let ((inhibit-read-only t))
             (goto-char (point-max))
             (delete-char (- (length lyskom-prompt-text))))))
     (lyskom-insert lyskom-prompt-executing-default-command-text))
@@ -1559,7 +1562,7 @@ chosen according to this"
       (lyskom-queue-delete-first lyskom-to-be-printed-before-prompt)))
   (setq lyskom-executing-command nil)
   (setq lyskom-current-command nil)
-  (setq lyskom-no-prompt t)
+  (setq lyskom-current-prompt nil)
   (lyskom-scroll)
   (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
   (if (pos-visible-in-window-p (point-max) (selected-window))
@@ -1570,78 +1573,97 @@ chosen according to this"
       (discard-input)))
 
 
-(defun lyskom-print-prompt ()
+(defun lyskom-update-prompt ()
   "Print prompt if the client knows which command will be default.
-Set lyskom-no-prompt otwherwise. Tell server what I am doing."
-  (setq lyskom-no-prompt nil)
-  (let ((to-do (lyskom-what-to-do)))
+Set lyskom-current-prompt accordingly. Tell server what I am doing."
+  (let ((to-do (lyskom-what-to-do))
+	(new-prompt nil))
     (setq lyskom-command-to-do to-do)
     (cond
      
      ((eq to-do 'next-pri-conf)
-      (lyskom-insert-string (lyskom-modify-prompt 'go-to-pri-conf-prompt))
-      (lyskom-beep kom-ding-on-priority-break))
+      (setq prompt 'go-to-pri-conf-prompt)
+      (or (eq lyskom-current-prompt prompt)
+	  (lyskom-beep kom-ding-on-priority-break)))
 
      ((eq to-do 'next-pri-text)
-      (lyskom-insert-string (lyskom-modify-prompt 'read-pri-text-conf))
-      (lyskom-beep kom-ding-on-priority-break))
+      (setq prompt 'read-pri-text-conf)
+      (or (eq lyskom-current-prompt prompt)
+	  (lyskom-beep kom-ding-on-priority-break)))
 
      ((eq to-do 'next-text)
-      (lyskom-insert
-       (lyskom-modify-prompt
-        (let ((read-info (read-list->first lyskom-reading-list)))
-          (cond
-           ((eq 'REVIEW (read-info->type read-info))
-            (lyskom-get-string 'review-next-text-prompt))
-           ((eq 'REVIEW-TREE (read-info->type read-info))
-            (lyskom-get-string 'review-next-comment-prompt))
-           ((eq 'REVIEW-MARK (read-info->type read-info))
-            (lyskom-get-string 'review-next-marked-prompt))
-	   ;; The following is not really correct. The text to be read
-	   ;; might be in another conference.
-           ((= lyskom-current-conf lyskom-pers-no)
-            (lyskom-get-string 'read-next-letter-prompt))
-           ((eq 'FOOTN-IN (read-info->type read-info))
-            (lyskom-get-string 'read-next-footnote-prompt))
-           ((eq 'COMM-IN (read-info->type read-info))
-            (lyskom-get-string 'read-next-comment-prompt))
-           (t (lyskom-get-string 'read-next-text-prompt)))))))
+      (setq prompt
+	    (let ((read-info (read-list->first lyskom-reading-list)))
+	      (cond
+	       ((eq 'REVIEW (read-info->type read-info))
+	        'review-next-text-prompt)
+	       ((eq 'REVIEW-TREE (read-info->type read-info))
+		'review-next-comment-prompt)
+	       ((eq 'REVIEW-MARK (read-info->type read-info))
+		'review-next-marked-prompt)
+	       ;; The following is not really correct. The text to be
+	       ;; read might be in another conference.
+	       ((= lyskom-current-conf lyskom-pers-no)
+		'read-next-letter-prompt)
+	       ((eq 'FOOTN-IN (read-info->type read-info))
+		'read-next-footnote-prompt)
+	       ((eq 'COMM-IN (read-info->type read-info))
+		'read-next-comment-prompt)
+	       (t
+		'read-next-text-prompt)))))
 
      ((eq to-do 'next-conf)
-      (lyskom-insert
-       (lyskom-modify-prompt
-        (cond
-         ((eq 'REVIEW-MARK 
-              (read-info->type (read-list->first lyskom-to-do-list)))
-          (lyskom-get-string 'go-to-conf-of-marked-prompt))
-         ((/= lyskom-pers-no
-              (conf-stat->conf-no
-               (read-info->conf-stat (read-list->first
-                                      lyskom-to-do-list))))
-          (lyskom-get-string 'go-to-next-conf-prompt))
-         (t (lyskom-get-string 'go-to-your-mailbox-prompt))))))
-
+      (setq prompt
+	    (cond
+	     ((eq 'REVIEW-MARK 
+		  (read-info->type (read-list->first lyskom-to-do-list)))
+	      'go-to-conf-of-marked-prompt)
+	     ((/= lyskom-pers-no
+		  (conf-stat->conf-no
+		   (read-info->conf-stat (read-list->first
+					  lyskom-to-do-list))))
+	      'go-to-next-conf-prompt)
+	     (t
+	      'go-to-your-mailbox-prompt))))
+    
      ((eq to-do 'when-done)
       (if (not lyskom-is-writing)
-          (lyskom-tell-server kom-mercial))
-      (lyskom-insert
-       (lyskom-modify-prompt
-        (let ((command (lyskom-what-to-do-when-done t)))
-          (cond			    
-           ((lyskom-command-name command))
-           ((and (stringp command)
-                 (lyskom-command-name (key-binding command))))
-           (t (lyskom-format 'the-command command)))))))
-
+	  (lyskom-tell-server kom-mercial))
+      (setq prompt
+	    (let ((command (lyskom-what-to-do-when-done t)))
+	      (cond			    
+	       ((lyskom-command-name command))
+	       ((and (stringp command)
+		     (lyskom-command-name (key-binding command))))
+	       (t (lyskom-format 'the-command command))))))
+     
      ((eq to-do 'unknown)		;Pending replies from server.
-      (setq lyskom-no-prompt t))
+      (setq prompt nil))
+     
+     (t (signal 'lyskom-internal-error '(lyskom-update-prompt))))
 
-     (t (signal 'lyskom-internal-error '(lyskom-print-prompt)))))
-
-  (if lyskom-no-prompt
-      nil
-    (lyskom-insert lyskom-prompt-text))
-
+    (if (not (equal prompt lyskom-current-prompt))
+	(progn
+	  (if lyskom-current-prompt
+	      ;; Replace the prompt
+	      (let ((inhibit-read-only t))
+		(save-excursion
+		  (goto-char (point-max))
+		  (beginning-of-line)
+		  (delete-region (point) (point-max)))))
+	  ;; Insert the new prompt
+	  (lyskom-insert-string
+	   (lyskom-modify-prompt
+	    (cond
+	     ((null prompt) "")
+	     ((symbolp prompt) (lyskom-get-string prompt))
+	     (t prompt))))
+	  
+	  ;; Insert " - "
+	  (if prompt
+	      (lyskom-insert lyskom-prompt-text))
+	  
+	  (setq lyskom-current-prompt prompt))))
   (lyskom-set-mode-line))
 
 
@@ -1739,8 +1761,7 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
         ;;    (kom-go-to-next-conf))
         ;;(kom-next-command)
 	))
-  (if lyskom-no-prompt
-      (lyskom-print-prompt)))
+  (lyskom-update-prompt))
 
 
 (defun lyskom-known-texts ()
