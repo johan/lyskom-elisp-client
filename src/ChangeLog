@@ -1,9 +1,39 @@
+2002-06-13  David Byers  <david.byers@swipnet.se>
+
+	Hopefully did the right thing to Debian packages wrt bug 575:
+	* debian/rules: Removed references to help-compile.el and the help
+	files since they are now included in lyskom.el.
+
+	* debian/emacsen-common-install: Same here.
+
+	Fix bug 575:
+	* help-sv.xml, help-en.xml: Renamed to swedish-help.xml and
+	english-help.xml to facilitate language selection when building
+	lyskom.el.
+
+	* Makefile: Removed help-compile.el from all old targets.
+	(EXTRA-SRCVERBATIM): Removed help files and help-compile.el since
+	they are now included in lyskom.el.
+
+	* lyskom-rest.el (lyskom-format-aux-help): Moved parens so that
+	error handing for %d is correct again.
+
 2002-06-12  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* Makefile (EXTRA-SRCVERBATIM): name the help files by their
 	actual names after renaming.
 
 2002-06-12  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 575:
+	* Makefile (%-hep.el): New target to convert help XML files to
+	elisp files.
+
+	* help-compile.el (lyskom-help-parse-buffer): New function
+	extracted from lyskom-help-parse-help-file.
+	(lyskom-help-parse-help-file): Use it.
+	(lyskom-help-compile-to-el): New function to compile a help XML to
+	an elisp file. This is required to fix build issues.
 
 	Fix bug 573:
 	* lyskom-rest.el: (lyskom-format-aux-help): Support formatting

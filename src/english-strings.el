@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.216 2002-06-12 21:21:51 byers Exp $
+;;;;; $Id: english-strings.el,v 44.217 2002-06-12 22:27:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.216 2002-06-12 21:21:51 byers Exp $"))
+              "$Id: english-strings.el,v 44.217 2002-06-12 22:27:38 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3899,7 +3899,6 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
 (lyskom-language-var global lyskom-unread-title-format en
   (lyskom-make-lyskom-unread-title-format))
 
-(defvar lyskom-en-help-data (lyskom-help-compile en))
 (lyskom-language-var local lyskom-help-data en lyskom-en-help-data)
 
 

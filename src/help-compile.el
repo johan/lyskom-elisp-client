@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help-compile.el,v 44.3 2002-06-06 22:39:14 byers Exp $
+;;;;; $Id: help-compile.el,v 44.4 2002-06-12 22:27:38 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -287,12 +287,15 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
       (set-buffer buffer)
       (erase-buffer)
       (insert-file-contents filename)
-      (lyskom-help-replace-regexp "[\r\n]" "")
-      (lyskom-help-replace-regexp "<!--[^>]*-->" "")
-      (lyskom-help-replace-regexp "\\s-+" " ")
-      (let ((parse (lyskom-help-parse-string (buffer-string)
-                                             '(toplevel nil nil (help)))))
-        parse))))
+      (lyskom-help-parse-buffer))))
+
+(defun lyskom-help-parse-buffer ()
+  (lyskom-help-replace-regexp "[\r\n]" "")
+  (lyskom-help-replace-regexp "<!--[^>]*-->" "")
+  (lyskom-help-replace-regexp "\\s-+" " ")
+  (let ((parse (lyskom-help-parse-string (buffer-string)
+                                         '(toplevel nil nil (help)))))
+    parse))
 
 (defun lyskom-help-parse-extract (parse tag)
   (let ((result nil))
@@ -310,4 +313,21 @@ CONTAINING-SYNTAX is the syntax specification for the containing tag."
             (lyskom-help-data-get-data
              (car (lyskom-help-parse-help-file (format "help-%s.xml" language))))
             'section)))
+
+(defvar lyskom-help-language-mapping '((sv . "swedish") (en . "english")))
+
+(defun lyskom-help-compile-to-el ()
+  (let* ((parse (lyskom-help-parse-buffer))
+         (result (lyskom-help-parse-extract (lyskom-help-data-get-data (car parse)) 'section))
+         (language-code (intern (lyskom-help-data-get-attr 'language (car parse))))
+         (language (cdr (assq language-code lyskom-help-language-mapping)))
+         (sym (intern (format "lyskom-%S-help-data" language-code))))
+    (if (null language)
+        (error "Unknown language code `%S'" language-code))
+    (set-buffer (get-buffer-create "*LysKOM Help Output*"))
+    (erase-buffer)
+    (let ((standard-output (current-buffer)))
+      (print `(defvar ,sym ',result))
+      (write-file (format "%s-help.el" language)))))
+
 
