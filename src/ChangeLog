@@ -1,5 +1,9 @@
 2003-08-14  David Byers  <byers@lysator.liu.se>
 
+	* completing-read.el (lyskom-read-conf): Cancel magic in
+	minibuffer-exit-hook to avoid triggering bugs in Gnu Emacs 20.7
+	(and probably all earlier versions).
+
 	Update NEWS file:
 	* NEWS-0.48: Updated to here.
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.296 2003-08-14 14:16:55 byers Exp $
+;;;;; $Id: english-strings.el,v 44.297 2003-08-14 20:50:47 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.296 2003-08-14 14:16:55 byers Exp $"))
+              "$Id: english-strings.el,v 44.297 2003-08-14 20:50:47 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1782,9 +1782,9 @@ Number of sessions:  %21#1d (total)
                      %21#6d not logged on/secret/zombies\n")
     (server-status-first-text . "Oldest existing text:       %14#1n\n")
     (server-status-last-text  . "Youngest existing text:     %14#1n%#2?b%[ (%#2n at start)%]%[%]\n")
-    (server-status-texts .      "Number of texts:            %14#1d (%#2s, %#3d at start)\n")
-    (server-status-confs .      "Number of conferences:      %14#1d (%#2s, %#3d at start)\n")
-    (server-status-pers .       "Number of persons:          %14#1d (%#2s, %#3d at start)\n")
+    (server-status-texts .      "Number of texts:            %14#1d (%#2s now, %#3d at start)\n")
+    (server-status-confs .      "Number of conferences:      %14#1d (%#2s now, %#3d at start)\n")
+    (server-status-pers .       "Number of persons:          %14#1d (%#2s now, %#3d at start)\n")
     (server-status-has-motd . "\nThe server has a notice:\n")
     (server-status-time .      "Current server time:            %#1s\n")
     (server-status-boot-time . "Server start time:              %#1s\n")
