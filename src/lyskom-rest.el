@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 36.3 1993-05-05 03:13:23 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 36.4 1993-05-21 15:43:44 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 36.3 1993-05-05 03:13:23 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 36.4 1993-05-21 15:43:44 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1523,7 +1523,7 @@ then a newline is printed after the name instead."
 (defun lyskom-filter (proc output)
   "Receive replies from LysKOM server."
   (sit-for 0)
-  (let ((inhibit-quit t)		;inhibit-quit is automatically set
+  (let (; (inhibit-quit t)		;inhibit-quit is automatically set
 					;to t in version 18.57, but not in
 					;all older versions of emacs.
 	(old-match-data (match-data))
@@ -1707,8 +1707,37 @@ One parameter - the prompt string."
   (reverse (assoc key (mapcar (function reverse) cache))))
 
 
+;;; Validation of kom-tell-phrases
+;;;
+;;; Author: Roger Mikael Adolfsson
+
+(defun lyskom-missing-fields (alist blist)
+  "Returns the list of fields from ALIST that are missing in BLIST."
+  (let (caralist clist (alist (copy-alist alist)))
+    (while alist
+      (setq caralist (car (car alist)))
+      (if (assq caralist blist)
+	  nil
+	(setq clist (cons caralist clist)))
+      (setq alist (cdr alist)))
+    clist))
+
+(defun lyskom-tell-phrases-validate ()
+  "Attempts to validate the value of kom-tell-phrases
+from the value of kom-tell-phrases-internal."
+  (interactive)
+  (let (invalid)
+    (cond ((setq invalid (lyskom-missing-fields kom-tell-phrases-internal
+						kom-tell-phrases))
+	   (error "%s must be in kom-tell-phrases" invalid))
+	  ((setq invalid (lyskom-missing-fields kom-tell-phrases
+						kom-tell-phrases-internal))
+	   (error "%s should not be in kom-tell-phrases" invalid)))))
+
+
 (run-hooks 'lyskom-init-hook)
 
+(lyskom-tell-phrases-validate)
 
 (setq lyskom-swascii-commands
       (mapcar 
