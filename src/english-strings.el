@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.3 1995-10-24 14:38:02 byers Exp $
+;;;;; $Id: english-strings.el,v 38.4 1995-10-28 11:07:42 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.3 1995-10-24 14:38:02 byers Exp $"))
+	      "$Id: english-strings.el,v 38.4 1995-10-28 11:07:42 byers Exp $"))
 
 
 ;;; ================================================================
@@ -171,6 +171,7 @@ Email-address:\n\nOther:\t")
 
 
     (what-conf-to-delete . "Conference/user to delete: ")
+    (what-conf-to-change . "Conference to modify: ")
     (confirm-delete-pers-or-conf . "Really delete %#1s %#2s? ")
     (the-pers . "the user")
     (the-conf . "the conference")
@@ -235,6 +236,11 @@ Send a letter to  %#2s to apply for membership.")
   LysKOM session finished
   You are now disconnected from the server
 --------------------------------------------\n")
+    (session-auto-ended . "
+============================================================
+Disconnecting from LysKOM since all connections are in use
+and you have finished reading. Please come back later.
+============================================================\n\n")
     (what-to-change-pres-you . "Change presentation of who/what (yourself): ")
     (who-to-put-motd-for . "Post note on the door of who/what (yourself): ")
 
@@ -432,7 +438,7 @@ The message you were sending to %#1s was:
     (buggrepport-compilestart . "Creating bug report...")
     (buggrepport-compileend . "Creating bug report...done")
     (buggreport-description . "This is what I was doing:
-(Fill in your comments below)\n================\n\n
+\(Fill in your comments below\)\n================\n\n
 ================
 In the information below are the 100 most recently pressed keys from
 your emacs. If you recently logged on, you password may be contained in
@@ -564,6 +570,7 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (name-has-changed-to-name-r . "%#1s has changed name to %#2s\n")
     (you-changed-name-to . "You have now changed your name to %#1s.\n")
     (database-sync . "Synching database.")
+
     (lyskom-is-full . "\
 ===========================================================
 Message from the LysKOM-system: Somebody tried to connect,
@@ -678,6 +685,7 @@ Group message to %#3s from %#2s (%#4s):
 
     (person-does-not-exist . "User %#1d (does not exist).")
     (conf-does-not-exist . "Conference %#1d (does not exist).")
+    (person-is-anonymous . "Anonymous user")
 
     (process-signal . "Signal from the process.")
     (closed-connection . "
@@ -844,6 +852,7 @@ Error message: %#1s**************************************************")
     (kom-filter-text            "Filter contents")
     (kom-list-filters           "List filters")
     (kom-show-user-area         "Show user area")
+    (kom-change-conference-type "Change conference type")
     )
   "A list of LysKOM-commands recognized by the extended parser.")
 
@@ -903,6 +912,9 @@ Cf. paragraph-start.")
   (define-key lyskom-mode-map "s" 'lyskom-S-prefix)
 
   (define-key lyskom-mode-map [mouse-2] 'kom-mouse-2)
+  (define-key lyskom-mode-map "*" 'kom-key-mouse-2)
+  (define-key lyskom-mode-map "\M-f" 'kom-next-link)
+  (define-key lyskom-mode-map "\M-b" 'kom-previous-link)
 
   ; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-mode-map "A?" 'lyskom-help)
@@ -1286,7 +1298,8 @@ Users are encouraged to use their best sense of humor.")
 			(copy-face 'default 'kom-text-face))
       (lyskom-make-face 'kom-subject-face
 			(copy-face 'kom-text-face 'kom-subject-face)
-			(set-face-foreground 'kom-subject-face "dark green"))
+			(set-face-foreground 'kom-subject-face
+					     "dark green"))
       (lyskom-make-face 'kom-text-no-face
 			(copy-face 'kom-text-face 'kom-text-no-face)))
   (progn

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands1.el,v 38.4 1995-10-25 09:22:31 davidk Exp $
+;;;;; $Id: commands1.el,v 38.5 1995-10-28 11:07:19 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 38.4 1995-10-25 09:22:31 davidk Exp $\n"))
+	      "$Id: commands1.el,v 38.5 1995-10-28 11:07:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -446,109 +446,78 @@ Also adds to lyskom-to-do-list."
 ;;;     Uttr{d - Subtract yourself as a member from a conference
 ;;;     Uteslut medlem - Subtract somebody else as a member
 
-;;; Author: Inge Wallin
+;;; Author: David Byers
+;;; Based on code by Inge Wallin
 
 
 ;; Subtract another person
 
 (defun kom-sub-member ()
-  "Subtract a person as a member from a conference. Ask for
-the name of the person."
+  "Subtract a person as a member from a conference. Ask for the name
+of the person."
   (interactive)
   (lyskom-start-of-command 'kom-sub-member)
-  (lyskom-completing-read 'main 'lyskom-sub-member
-			  (lyskom-get-string 'who-to-exclude)
-			  'person nil ""))
+  (lyskom-sub-member
+   (lyskom-read-conf-stat (lyskom-get-string 'who-to-exclude) 'pers nil "")
+   (lyskom-read-conf-stat (lyskom-get-string 'where-from-exclude) 
+'all nil "")))
 
-
-(defun lyskom-sub-member (pers-no)
-  "Ask which conference the person should be subtracted from."
-  (lyskom-completing-read 'main 'lyskom-sub-member-2
-			  (lyskom-get-string 'where-from-exclude)
-			  nil nil ""
-			  pers-no))
-
-
-;; Subtract self
 
 (defun kom-sub-self ()
   "Subtract this person as a member from a conference."
   (interactive)
   (lyskom-start-of-command 'kom-sub-self)
-  (lyskom-completing-read 'main 'lyskom-sub-member-2
-			  (lyskom-get-string 'leave-what-conf)
-			  nil nil 
-			  (let ((ccn (if (zerop lyskom-current-conf)
-					 ""
-				       (conf-stat->name
-					(blocking-do 'get-conf-stat 
-						     lyskom-current-conf)))))
-			    (or ccn ""))
-			  lyskom-pers-no))
+  (lyskom-sub-member 
+   (blocking-do 'get-conf-stat lyskom-pers-no)
+   (lyskom-read-conf-stat (lyskom-get-string 'leave-what-conf)
+			  'all nil 
+			   (let ((ccn 
+				  (if (or (zerop lyskom-current-conf))
+				      ""
+				    (conf-stat->name
+				     (blocking-do 'get-conf-stat
+						  lyskom-current-conf)))))
+			     (or ccn "")))))
 
+(defun lyskom-sub-member (pers conf)
+  "Remove the person indicated by PERS as a member of CONF."
+  (let ((reply nil)
+	(self (= (conf-stat->conf-no pers) lyskom-pers-no)))
+    (cond ((null pers) (lyskom-insert-string 'error-fetching-person))
+	  ((null conf) (lyskom-insert-string 'error-fetching-conf))
+	  (t
+	   (if self
+	       (lyskom-format-insert 'unsubscribe-to conf)
+	     (lyskom-format-insert 'exclude-from pers conf))
 
-(defun lyskom-sub-member-2 (conf-no pers-no)
-  "Get the conf-stat for both the person and the conference and
-send them into lyskom-sub-member-3"
-  (lyskom-collect 'main)
-  (initiate-get-conf-stat 'main nil conf-no)
-  (initiate-get-conf-stat 'main nil pers-no)
-  (lyskom-use 'main 'lyskom-sub-member-3))
+	   (setq reply (blocking-do 'sub-member
+				    (conf-stat->conf-no conf)
+				    (conf-stat->conf-no pers)))
+	   (if self
+	       (lyskom-set-membership (blocking-do 'get-membership
+						   lyskom-pers-no)))
+	   (if (not reply)
+	       (lyskom-format-insert 'unsubscribe-failed
+				     (if self
+					 (lyskom-get-string 'You)
+				       (conf-stat->conf-name pers))
+				     (conf-stat->conf-name conf))
+	     (lyskom-insert-string 'done)
+	     (if (and self
+		      (= (conf-stat->conf-no conf)
+			 lyskom-current-conf))
+		 (progn 
+		   (set-read-list-empty lyskom-reading-list)
+		   (setq lyskom-current-conf 0)))
+	     (if self
+		 (setq lyskom-last-conf-received 
+		       (1- lyskom-last-conf-received)))
+	     (read-list-delete-read-info (conf-stat->conf-no conf)
+					 lyskom-to-do-list)))))
+  (lyskom-end-of-command))
+	   
 
-
-(defun lyskom-sub-member-3 (conf-conf-stat pers-conf-stat)
-  "Does the deletion of a person from a conf if all needed info could be fetched.
-If either the person or the confs conf-stat could not be fetched it tells the
-user so instead."
-  (cond ((null pers-conf-stat)
-	 (lyskom-insert-string 'error-fetching-person)
-	 (lyskom-end-of-command))
-	((null conf-conf-stat)
-	 (lyskom-insert-string 'error-fetching-conf)
-	 (lyskom-end-of-command))
-	(t
-	 (if (= (conf-stat->conf-no pers-conf-stat)
-		lyskom-pers-no)
-	     (lyskom-format-insert 'unsubscribe-to
-				   conf-conf-stat)
-	   (lyskom-format-insert 'exclude-from
-				 pers-conf-stat
-				 conf-conf-stat)
-	   (initiate-sub-member 'main 'lyskom-sub-member-answer
-				(conf-stat->conf-no conf-conf-stat) 
-				(conf-stat->conf-no pers-conf-stat)
-				conf-conf-stat pers-conf-stat)
-	   (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
-	       (initiate-get-membership 'main 'lyskom-set-membership
-					(conf-stat->conf-no
-					 pers-conf-stat)))))))
-
-
-(defun lyskom-sub-member-answer (answer conf-conf-stat pers-conf-stat)
-  "Handles the answer after the unsubscribe call to the server."
-  (if (not answer)
-      (lyskom-format-insert
-       'unsubscribe-failed
-       (if (= (conf-stat->conf-no pers-conf-stat) lyskom-pers-no)
-	   (lyskom-get-string 'You)
-	 pers-conf-stat)
-       conf-conf-stat)
-    (lyskom-insert-string 'done)
-    (if (and (= (conf-stat->conf-no pers-conf-stat)
-		lyskom-pers-no)
-	     (= (conf-stat->conf-no conf-conf-stat)
-		lyskom-current-conf))
-	(progn
-	  (set-read-list-empty lyskom-reading-list)
-	  (setq lyskom-current-conf 0)))
-    (if (= (conf-stat->conf-no pers-conf-stat)
-	   lyskom-pers-no)
-	(setq lyskom-last-conf-received (1- lyskom-last-conf-received)))
-    (read-list-delete-read-info (conf-stat->conf-no conf-conf-stat)
-				lyskom-to-do-list))
-  (lyskom-run 'main 'lyskom-end-of-command))
-
-
+	 
 
 ;;; ================================================================
 ;;;                 Skapa m|te - Create a conference
@@ -1715,119 +1684,121 @@ footnotes) to it as read in the server."
 ;;;                 Addera mottagare - Add recipient
 ;;;             Subtrahera mottagare - Subtract recipient
 
-;;; Author: Inge Wallin
+;;; Author: David Byers
+;;; Based on code by Inge Wallin
 
 
 (defun kom-add-recipient (text-no-arg)
-  "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil, 
+  "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil,
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-recipient)
-  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-last-added-rcpt
-			  text-no-arg 
-			  (lyskom-get-string 'text-to-add-recipient)
-			  t))
+  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-rcpt)))
+    (lyskom-add-sub-recipient text-no-arg
+			      (lyskom-get-string 'text-to-add-recipient)
+			      'add-rcpt
+			      conf)))
 
 (defun kom-add-copy (text-no-arg)
-  "Add a recipient to a text. If the argument TEXT-NO-ARG is non-nil, 
+  "Add a cc recipient to a text. If the argument TEXT-NO-ARG is non-nil,
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-copy)
-  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-last-added-ccrcpt
-			  text-no-arg (lyskom-get-string 'text-to-add-copy)
-			  'copy))
-
+  (let ((conf (blocking-do 'get-conf-stat lyskom-last-added-ccrcpt)))
+    (lyskom-add-sub-recipient text-no-arg
+			      (lyskom-get-string 'text-to-add-copy)
+			      'add-copy
+			      conf)))
 
 (defun kom-sub-recipient (text-no-arg)
   "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil, 
 the user has used a prefix command argument."
   (interactive "P")
   (lyskom-start-of-command 'kom-sub-recipient)
-  (initiate-get-conf-stat 'main 'lyskom-add-sub-rcpt lyskom-current-conf
-			  text-no-arg 
-			  (lyskom-get-string 'text-to-delete-recipient)
-			  nil))
+  (let ((conf (blocking-do 'get-conf-stat lyskom-current-conf)))
+    (lyskom-add-sub-recipient text-no-arg
+			      (lyskom-get-string 'text-to-delete-recipient)
+			      'sub
+			      conf)))
 
-(defun lyskom-add-sub-rcpt (conf text-no-arg prompt do-add)
-  "Second part of the add/subtract recipient. Fixes default."
-  (if conf				;+++ annan felhantering
-      (lyskom-add-sub-recipient text-no-arg prompt do-add 
-				(conf-stat->name conf))
-    (lyskom-add-sub-recipient text-no-arg prompt do-add)))
+(defun lyskom-add-sub-recipient (text-no-arg
+				 prompt
+				 action
+				 conf)
+  (let ((text-no (lyskom-read-number prompt 
+				     (or text-no-arg lyskom-current-text)))
+	(conf-to-add-to (lyskom-read-conf-stat
+			 (lyskom-get-string
+			  (cond ((eq action 'add-rcpt) 'who-to-add-q)
+				((eq action 'add-copy) 'who-to-add-copy-q)
+				((eq action 'sub) 'who-to-sub-q)
+				(t (lyskom-error "internal error"))))
+			 'all
+			 nil
+			 (if conf (conf-stat->name conf) "")))
+	(result nil))
+    (setq result
+	  (cond ((eq action 'add-rcpt)
+		 (lyskom-format-insert 'adding-name-as-recipient 
+				       conf-to-add-to
+				       text-no)
+		 (blocking-do 'add-recipient
+			      text-no 
+			      (conf-stat->conf-no conf-to-add-to)
+			      'recpt)
+		 (setq lyskom-last-added-rcpt
+		       (conf-stat->conf-no conf-to-add-to)))
+
+		((eq action 'add-copy)
+		 (lyskom-format-insert 'adding-name-as-copy
+				       conf-to-add-to
+				       text-no)
+		 (blocking-do 'add-recipient
+			      text-no
+			      (conf-stat->conf-no conf-to-add-to)
+			      'cc-recpt)
+		 (setq lyskom-last-added-ccrcpt
+		       (conf-stat->conf-no conf-to-add-to)))
+
+		((eq action 'sub)
+		 (lyskom-format-insert 'remove-name-as-recipient
+				       (conf-stat->conf-no conf-to-add-to)
+				       text-no)
+		 (blocking-do 'sub-recipient
+			      text-no
+			      (conf-stat->conf-no conf-to-add-to)))
+			      
+		
+		(t (lyskom-error "internal error"))))
+    (cache-del-text-stat text-no)
+    (lyskom-handle-command-answer result)))
 
 
-(defun lyskom-add-sub-recipient (text-no-arg prompt do-add &optional default)
-  "Get the number of the text that is to be added or subtracted a recipient
-to/from 
-Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
-PROMPT: A string that is used when prompting for a number.
-DO-ADD: NIL if a recipient should be subtracted.
-        Otherwise a recipient is added
-DEFAULT: The default conference to be prompted for."
-  (let ((text-no (cond ((null text-no-arg) lyskom-current-text)
-		       (t text-no-arg))))
-    (setq text-no (lyskom-read-number prompt text-no))
-    (lyskom-completing-read-conf-stat
-     'main 'lyskom-add-sub-recipient-2
-     (cond
-      ((eq do-add 'copy)
-       (lyskom-get-string 'who-to-add-copy-q))
-      (do-add (lyskom-get-string 'who-to-add-q))
-      (t (lyskom-get-string 'who-to-sub-q)))
-     nil nil (or default "") text-no do-add)))
 
-
-(defun lyskom-add-sub-recipient-2 (conf-stat text-no do-add)
-  "Tell what we do and do the call to the server."
-  (if do-add
-      (progn
-	(lyskom-format-insert (if (eq do-add 'copy)
-				  'adding-name-as-copy
-				'adding-name-as-recipient)
-			      conf-stat
-			      text-no)
-	(initiate-add-recipient 
-	 'main 'lyskom-handle-command-answer
-	 text-no (conf-stat->conf-no conf-stat) (if (eq do-add 'copy)
-						    'cc-recpt
-						  'recpt))
-	(if (eq do-add 'copy) 
-	    (setq lyskom-last-added-ccrcpt (conf-stat->conf-no conf-stat))
-	  (setq lyskom-last-added-rcpt (conf-stat->conf-no conf-stat))))
-    (lyskom-format-insert 'remove-name-as-recipient
-			  conf-stat
-			  text-no)
-    (initiate-sub-recipient 
-     'main 'lyskom-handle-command-answer
-     text-no (conf-stat->conf-no conf-stat)))
-  (cache-del-text-stat text-no))
 
 
 ;;; ================================================================
 ;;;                 Addera kommentar - Add comment
 ;;;             Subtrahera kommentar - Subtract comment
 
-;;; Author: Lars Willf|r
+;;; Author: David Byers
+;;; Heavily based on code by Lars Willf|r
 
 (defun kom-add-comment (text-no-arg)
-  "Add a text as a comment to a text. If the argument TEXT-NO-ARG is non-nil,
-the user has used a prefix command argument."
+  "Add a text as a comment to another text."
   (interactive "P")
   (lyskom-start-of-command 'kom-add-comment)
-  (lyskom-add-sub-comment text-no-arg 
+  (lyskom-add-sub-comment text-no-arg
 			  (lyskom-get-string 'text-to-add-comment-to)
 			  t))
 
-
 (defun kom-sub-comment (text-no-arg)
-  "Subtract a recipient from a text. If the argument TEXT-NO-ARG is non-nil,
-the user has used a prefix command argument."
+  "Remove a comment from a text."
   (interactive "P")
   (lyskom-start-of-command 'kom-sub-comment)
   (lyskom-add-sub-comment text-no-arg
 			  (lyskom-get-string 'text-to-delete-comment-from)
 			  nil))
-
 
 (defun lyskom-add-sub-comment (text-no-arg prompt do-add)
   "Get the number of the text that is going to have a comment added to it or
@@ -1836,37 +1807,25 @@ Arguments: TEXT-NO-ARG: an argument as it is gotten from (interactive P)
 PROMPT: A string that is used when prompting for a number.
 DO-ADD: NIL if a comment should be subtracted.
         Otherwise a comment is added"
-  (let ((text-no (if (null text-no-arg)
-		     lyskom-current-text
-		   text-no-arg))
-	(comment-text-no))
-    (setq text-no (lyskom-read-number prompt text-no))
-    (setq comment-text-no
-	  (lyskom-read-number
-	   (if do-add
-	       (lyskom-get-string 'text-to-add-q)
-	     (lyskom-get-string 'text-to-remove-q))
-	   (if (= text-no lyskom-current-text)
-	       nil
-	     lyskom-current-text)))
-     (if do-add
-	 (lyskom-format-insert 'add-comment-to
-			       comment-text-no
-			       text-no)
-       (lyskom-format-insert 'sub-comment-to 
-			     comment-text-no
-			     text-no)
-    (if do-add
-	(initiate-add-comment 'main
-			      'lyskom-handle-command-answer
-			      comment-text-no
-			      text-no)
-      (initiate-sub-comment 'main
-			    'lyskom-handle-command-answer
-			    comment-text-no
-			    text-no))
+  (let* ((text-no (lyskom-read-number prompt
+				     (or text-no-arg lyskom-current-text)))
+	(comment-text-no  (lyskom-read-number
+			   (lyskom-get-string
+			    (if do-add 'text-to-add-q 'text-to-remove-q))
+			   (if (eq text-no lyskom-current-text)
+			       nil
+			     lyskom-current-text))))
+    (lyskom-format-insert (if do-add 'add-comment-to 'sub-comment-to)
+			  comment-text-no
+			  text-no)
     (cache-del-text-stat text-no)
-    (cache-del-text-stat comment-text-no))))
+    (cache-del-text-stat comment-text-no)
+    (lyskom-handle-command-answer 
+     (blocking-do (if do-add 'add-comment 'sub-comment)
+		  comment-text-no
+		  text-no))))
+    
+
 
 
 ;;; ================================================================

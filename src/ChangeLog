@@ -11,6 +11,32 @@ Sat Oct 28 08:27:02 1995  David K}gedal  <davidk@lysator.liu.se>
 	* lyskom-rest.el (lyskom-mode-name-from-host): Anv{nd
 	   lyskom-server-aliases.
 
+Fri Oct 27 15:45:01 1995  David Byers  <byers@lysator.liu.se>
+
+	* Earlier changes (I forgot to add to the ChangeLog)
+	  lyskom-rest.el: New lyskom-format
+	  swedish-strings.el: New format strings
+	  english-strings.el: New format strings
+	  filter.el: Filters now byte-compiled functions
+	  async.el: Handle group messages
+
+	* async.el: skrev och tog bort (tills vidare) autologout
+	  swedish-strings.el: Lade till anonym person, nya bindningar
+	  english-strings.el:_ Lade till anonym person, nya bindningar
+	  commands1.el: Uteslut, Utträd, Addera/Ta bort kommentar,
+			mottagare
+          commands2.el: Visa user-arean, kom-buffer->lyskom-buffer, Ändra
+			mötestyp. 
+	  edit-text.el: kom-edit-send-anonymously
+	  filter-edit.el: kom-buffer->lyskom-buffer, deklarera en variabel
+	  filter.el: Handle text with no recipients
+	  lyskom-buttons.el: kom-buffer->lyskom-buffer, fix bug with boundp   
+	  lyskom-rest.el: Handle anonymous person in print routines
+	  services.el: initiate-create-anonymous-text
+	  vars.el.in: Add kom-quit-when-idle
+	  view-text.el: Handle anonymous person
+	  startup.el: kom-buffer->lyskom-buffer
+	
 Fri Oct 27 03:36:58 1995  David K}gedal  <davidk@lysator.liu.se>
 
 	* view-text.el (lyskom-print-text): Bugfix för enradare utan \n

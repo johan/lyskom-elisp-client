@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.7 1995-10-28 07:36:31 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 38.8 1995-10-28 11:07:56 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.7 1995-10-28 07:36:31 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.8 1995-10-28 11:07:56 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1061,7 +1061,9 @@ Args: FORMAT-STRING &rest ARGS"
                          (progn
                            (setq colon-flag t)
                            (lyskom-format (if (= format-letter ?P)
-                                              'person-does-not-exist
+					      (if (eq arg 0)
+						  'person-is-anonymous
+						'person-does-not-exist)
                                             'conference-does-not-exist)
                                           arg))
                        (setq arg tmp)
@@ -1912,12 +1914,15 @@ then a newline is printed after the name instead."
   (if format
       (cond
        ((null conf-stat)
-	(lyskom-insert (lyskom-fix-str format
-				       (if (not is-person)
-					   (lyskom-format 'conference-does-not-exist
-							  conf-no)
-					 (lyskom-format 'person-does-not-exist
-							conf-no)))))
+	(lyskom-insert
+	 (lyskom-fix-str format
+			 (if (not is-person)
+			     (lyskom-format 'conference-does-not-exist
+					    conf-no)
+			   (if (eq conf-no 0)
+			       (lyskom-format 'person-is-anonymous)
+			     (lyskom-format 'person-does-not-exist
+					    conf-no))))))
        (t (lyskom-insert (lyskom-fix-str format
 					 (conf-stat->name conf-stat)))))
     (cond
@@ -1925,8 +1930,10 @@ then a newline is printed after the name instead."
       (lyskom-insert (if (not is-person)
 			 (lyskom-format 'conference-does-not-exist
 					conf-no)
-		       (lyskom-format 'person-does-not-exist
-				      conf-no)))
+		       (if (eq conf-no 0)
+			   (lyskom-format 'person-is-anonymous)
+			 (lyskom-format 'person-does-not-exist
+					conf-no))))
       (lyskom-insert "\n"))
      (t (lyskom-print-name conf-stat)))))
 

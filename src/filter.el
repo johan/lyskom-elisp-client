@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: filter.el,v 38.2 1995-10-23 11:55:39 byers Exp $
+;;;;; $Id: filter.el,v 38.3 1995-10-28 11:07:49 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -182,36 +182,41 @@ Returns nil if no such attribute is present."
       (lyskom-use 'filter 'lyskom-filter-text-p-3 text-stat))))
     
 (defun lyskom-filter-text-p-3 (author text &rest data)
-  (let (subject recipient-list text-stat)
-    
-    ;;
-    ;; Extract the subject
-    ;;
-
-    (cond ((string-match "\n" (text->text-mass text))
-           (setq subject 
-                 (substring (text->text-mass text) 0 (match-beginning 0))))
-          (t (setq subject "")))
-
-    ;;
-    ;; Extract the text-stat
-    ;; Shorten the list (quick'n'dirty)
-    ;;
-
-    (setq text-stat (elt data (- (length data) 1)))
-    (rplacd (nthcdr (- (length data) 2) data) nil)
-
-    ;;
-    ;; Do the checking
-    ;;
-
-    (setq lyskom-filter-hack
-          (lyskom-check-filter-list text-stat
-                                    author
-                                    data
-                                    subject
-                                    (text->text-mass text)
-                                    lyskom-filter-list))))
+  (if (or (null text)
+	  (null author))
+      nil
+    (let (subject recipient-list text-stat)
+      
+      ;;
+      ;; Extract the subject
+      ;;
+      
+      (cond ((string-match "\n" (text->text-mass text))
+	     (setq subject 
+		   (substring (text->text-mass text) 0 (match-beginning 0))))
+	    (t (setq subject "")))
+      
+      ;;
+      ;; Extract the text-stat
+      ;; Shorten the list (quick'n'dirty)
+      ;;
+      
+      (setq text-stat (elt data (- (length data) 1)))
+      (if (= (length data) 1)
+	  (setq data nil)
+	(rplacd (nthcdr (- (length data) 2) data) nil))
+      
+      ;;
+      ;; Do the checking
+      ;;
+      
+      (setq lyskom-filter-hack
+	    (lyskom-check-filter-list text-stat
+				      author
+				      data
+				      subject
+				      (text->text-mass text)
+				      lyskom-filter-list)))))
 
 (defun lyskom-check-filter-list (text-stat
                                  author

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 38.5 1995-10-25 09:30:14 davidk Exp $
+;;;;; $Id: edit-text.el,v 38.6 1995-10-28 11:07:36 byers Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 38.5 1995-10-25 09:30:14 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 38.6 1995-10-28 11:07:36 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -332,9 +332,18 @@ Entry to this mode runs lyskom-edit-mode-hook."
 ;;;   Functions bound to keyboard seqences in lyskom-edit-mode
 ;;;
 
+(defun kom-edit-send-anonymous ()
+  "Send the text anonymously to the server."
+  (interactive)
+  (lyskom-edit-send 'initiate-create-anonymous-text))
 
 (defun kom-edit-send ()
   "Send the text to the server."
+  (interactive)
+  (lyskom-edit-send 'initiate-create-text))
+
+(defun lyskom-edit-send (send-function)
+  "Send the text to the server by calling SEND-FUNCTION."
   (interactive)
   (if (or (string= mode-name lyskom-edit-mode-name)
 	  (j-or-n-p (lyskom-get-string 'already-sent)))
@@ -352,7 +361,7 @@ Entry to this mode runs lyskom-edit-mode-hook."
 	    (setq lyskom-dont-change-prompt t)
 	    (setq lyskom-is-writing nil)
 	    (lyskom-tell-internat 'kom-tell-send)
-	    (initiate-create-text 'sending 'lyskom-create-text-handler
+	    (funcall send-function 'sending 'lyskom-create-text-handler
 				  (concat subject "\n" message) misc-list
 				  buffer)))
 	(if kom-dont-restore-window-after-editing

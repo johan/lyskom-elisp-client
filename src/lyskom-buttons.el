@@ -1,22 +1,89 @@
-;;; =================================================================
-;;; LysKOM buttons
-;;; Author: David Byers
-;;; Text property mouse-2-action is executed with point and
-;;; text property mouse-2-arg as arguments when called by
-;;; kom-mouse-2
-;;;
+;;;;;
+;;;;; $Id: lyskom-buttons.el,v 38.2 1995-10-28 11:07:52 byers Exp $
+;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
+;;;;;
+;;;;; This file is part of the LysKOM server.
+;;;;; 
+;;;;; LysKOM is free software; you can redistribute it and/or modify it
+;;;;; under the terms of the GNU General Public License as published by 
+;;;;; the Free Software Foundation; either version 1, or (at your option) 
+;;;;; any later version.
+;;;;; 
+;;;;; LysKOM is distributed in the hope that it will be useful, but WITHOUT
+;;;;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;;;;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+;;;;; for more details.
+;;;;; 
+;;;;; You should have received a copy of the GNU General Public License
+;;;;; along with LysKOM; see the file COPYING.  If not, write to
+;;;;; Lysator, c/o ISY, Linkoping University, S-581 83 Linkoping, SWEDEN,
+;;;;; or the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+;;;;; MA 02139, USA.
+;;;;;
+;;;;; Please mail bug reports to bug-lyskom@lysator.liu.se. 
+;;;;;
+;;;; ================================================================
+;;;; ================================================================
+;;;;
+;;;; File: lyskom-buttons.el
+;;;; Author: David Byers
+;;;;
+;;;; Text property mouse-2-action is executed with point and
+;;;; text property mouse-2-arg as arguments when called by
+;;;; kom-mouse-2
+;;;;
+
+(defun kom-previous-link (num)
+  (interactive "p")
+  (while (> num 0)
+    (let ((where (previous-single-property-change (point) 'mouse-2-action)))
+      (if where
+          (progn
+            (if (not (get-text-property where 'mouse-2-action))
+                (setq where (previous-single-property-change where
+                                                             'mouse-2-action)))
+            (if where
+                (goto-char where)
+              (goto-char (point-min))
+              (setq num 1)))))
+    (setq num (1- num))))
+
+(defun kom-next-link (num)
+  (interactive "p")
+  (while (> num 0)
+    (let ((where (next-single-property-change (point) 'mouse-2-action)))
+      (if where
+          (progn
+            (if (not (get-text-property where 'mouse-2-action))
+                (setq where (next-single-property-change where
+                                                         'mouse-2-action)))
+            (if where
+                (goto-char where)
+              (goto-char (point-max))
+              (setq num 1)))))
+    (setq num (1- num))))
+
+
+(defun kom-key-mouse-2 ()
+  (interactive)
+  (lyskom-mouse-2 (point) (selected-window)))
 
 (defun kom-mouse-2 (click)
   (interactive "e")
-  (let* ((start (event-start click))
-         (window (car start))
-         (pos (car (cdr start)))
-         (action nil)
+  (let ((start (event-start click)))
+    (lyskom-mouse-2 (car (cdr start)) (car start))))
+
+
+(defun lyskom-mouse-2 (pos window)
+  (let* ((action nil)
          (arg nil))
     (select-window window)
     (goto-char pos)
     (if (setq action (get-text-property pos 'mouse-2-action))
         (funcall action pos (get-text-property pos 'mouse-2-arg)))))
+
+
+
 
 
 (defun lyskom-button-transform-text (text)
@@ -53,10 +120,11 @@
 
 (defun lyskom-default-button (type arg)
   (cond ((eq type 'conf) 
-	 (let ((persno (if (boundp 'kom-buffer)
-			   (save-excursion (set-buffer kom-buffer)
+	 (let ((persno (if (and (boundp 'lyskom-buffer)
+				lyskom-buffer)
+			   (save-excursion (set-buffer lyskom-buffer)
 					   lyskom-pers-no)
-			 (if (boundp lyskom-pers-no)
+			 (if (boundp 'lyskom-pers-no)
 			     lyskom-pers-no
 			   0))))
 	   (list 'face 
@@ -67,8 +135,9 @@
 		 'mouse-2-action 'lyskom-button-view-pres
 		 'mouse-2-arg 
 		 (cons (if (stringp arg) (string-to-int arg) arg)
-		       (if (boundp 'kom-buffer)
-			   kom-buffer
+		       (if (and (boundp 'lyskom-buffer)
+				lyskom-buffer)
+			   lyskom-buffer
 			 (current-buffer)))
 		 'mouse-face 'kom-highlight-face)))
 	((eq type 'text) (list 'mouse-face 'kom-highlight-face
@@ -78,15 +147,17 @@
 				(if (stringp arg)
 				    (string-to-int arg)
 				  arg)
-				     (if (boundp 'kom-buffer)
-					 kom-buffer
+				     (if (and (boundp 'lyskom-buffer)
+					      lyskom-buffer)
+					 lyskom-buffer
 				       (current-buffer)))
 			       'face 'kom-active-face))
 	((eq type 'pers) 
-	 (let ((persno (if (boundp 'kom-buffer)
-			   (save-excursion (set-buffer kom-buffer)
+	 (let ((persno (if (and (boundp 'lyskom-buffer)
+				lyskom-buffer)
+			   (save-excursion (set-buffer lyskom-buffer)
 					   lyskom-pers-no)
-			 (if (boundp lyskom-pers-no)
+			 (if (boundp 'lyskom-pers-no)
 			     lyskom-pers-no
 			   0))))
 	   (list 'face 
@@ -97,8 +168,9 @@
 		 'mouse-2-action 'lyskom-button-view-pres
 		 'mouse-2-arg 
 		 (cons arg 
-		       (if (boundp 'kom-buffer)
-			   kom-buffer
+		       (if (and (boundp 'lyskom-buffer)
+				lyskom-buffer)
+			   lyskom-buffer
 			 (current-buffer)))
 		 'mouse-face 'kom-highlight-face)))))
 
