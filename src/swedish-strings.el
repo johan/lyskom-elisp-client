@@ -12,7 +12,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 35.5 1991-09-09 14:39:14 willfor Exp $\n"))
+	      "$Id: swedish-strings.el,v 35.6 1991-09-09 14:55:28 willfor Exp $\n"))
 
 
 (defvar lyskom-header-separator "--- Skriv texten nedanför denna rad ---"
@@ -433,7 +433,6 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
     (has-entered-r . "Nu har %#1s gått in i LysKOM.\n")
     (has-left . "Nu har %#1s gått ur LysKOM.")
     (has-left-r . "Nu har %#1s gått ur LysKOM.\n")
-    (broadcast-from . "Allmänt meddelande från %#1s:\n\n%#2s\n")
     (unknown . "okänd")
 
     (message-broadcast . "Allmänt meddelande från %#1s (%#3s):\n\n%#2s\n")
