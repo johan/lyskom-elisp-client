@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.25 1997-09-21 11:42:58 byers Exp $
+;;;;; $Id: edit-text.el,v 44.26 1997-09-21 15:55:25 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.25 1997-09-21 11:42:58 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.26 1997-09-21 15:55:25 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -518,7 +518,8 @@ so it's not as clean as it ought to be."
 	      (save-excursion
                 (let ((full-message
                        (cond ((and lyskom-allow-missing-subject
-                                   (null subject)
+                                   (or (null subject)
+                                       (string= subject ""))
                                    (not (string-match ".*\n" message)))
                               message)
                              (t (concat (or subject "") "\n" message)))))
