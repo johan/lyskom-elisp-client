@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.39 1999-07-14 07:34:49 davidk Exp $
+;;;;; $Id: edit-text.el,v 44.40 1999-08-09 15:15:22 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.39 1999-07-14 07:34:49 davidk Exp $\n"))
+	      "$Id: edit-text.el,v 44.40 1999-08-09 15:15:22 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -465,7 +465,7 @@ so it's not as clean as it ought to be."
 (defun kom-edit-send-anonymous ()
   "Send the text anonymously to the server."
   (interactive)
-  (lyskom-edit-send 'initiate-create-anonymous-text))
+  (lyskom-edit-send 'initiate-create-anonymous-text nil))
 
 (defun kom-edit-send ()
   "Send the text to the server."
@@ -475,8 +475,10 @@ so it's not as clean as it ought to be."
        (lyskom-edit-send 'initiate-create-anonymous-text t)
      (lyskom-edit-send 'initiate-create-text nil)))
 
-(defun lyskom-edit-send (send-function &optional never-mark-as-read)
-  "Send the text to the server by calling SEND-FUNCTION."
+(defun lyskom-edit-send (send-function &optional is-anonymous)
+  "Send the text to the server by calling SEND-FUNCTION.
+If optional IS-ANONYMOUS is non-nil, assume that the text is being submitted
+anonymously and take actions to avoid revealing the sender."
   (condition-case err
       (if (or (not lyskom-edit-text-sent) ;++MINOR checked mode-name against lyskom-edit-mode-name
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
@@ -553,7 +555,7 @@ so it's not as clean as it ought to be."
 		(set-buffer lyskom-buffer)
 		;; Don't change the prompt if we won't see our own text
 		(if (and kom-created-texts-are-read
-                         (not never-mark-as-read))
+                         (not is-anonymous))
 		    (setq lyskom-dont-change-prompt t))
 		(setq lyskom-is-writing nil)
 		(lyskom-tell-internat 'kom-tell-send)
@@ -562,17 +564,16 @@ so it's not as clean as it ought to be."
                          'lyskom-create-text-handler
                          full-message
                          misc-list
-			 ;; Wait a minute, this should not be done on
-			 ;; anonymous articles.
-                         (cons (lyskom-create-aux-item
-				0 15 0 0
-				(lyskom-create-aux-item-flags
-				 nil nil nil nil nil nil nil nil)
-				0 (concat "lyskom.el "
-					  lyskom-clientversion))
-			       aux-list)
+                         (unless is-anonymous
+                           (cons (lyskom-create-aux-item
+                                  0 15 0 0
+                                  (lyskom-create-aux-item-flags
+                                   nil nil nil nil nil nil nil nil)
+                                  0 (concat "lyskom.el "
+                                            lyskom-clientversion))
+                                 aux-list))
                          buffer
-                         never-mark-as-read))))
+                         is-anonymous))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -1460,7 +1461,7 @@ Point must be located on the line where the subject is."
 
 
 (defun lyskom-create-text-handler (text-no edit-buffer 
-                                           &optional never-mark-as-read)
+                                           &optional is-anonymous)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)
   (message "")
@@ -1480,11 +1481,12 @@ Point must be located on the line where the subject is."
     (lyskom-insert-before-prompt
      (lyskom-format 'text-created  text-no))
 
-    ;; Immediately mark the text as read if kom-created-texts-are-read is set.
+    ;; Immediately mark the text as read if kom-created-texts-are-read is set
+    ;; and we are not sending the text anonymously.
     
     (cond
      ((and kom-created-texts-are-read
-           (not never-mark-as-read))
+           (not is-anonymous))
       (lyskom-is-read text-no)
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)

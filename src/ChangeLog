@@ -1,3 +1,15 @@
+1999-08-09  David Byers  <davby@ida.liu.se>
+
+	* edit-text.el (lyskom-create-text-handler): Changed name of
+ 	parameter never-mark-as-read to is-anonymous.
+	(lyskom-edit-send): Ditto and don't set creating-software if
+ 	sending anonymously.
+
+	* vars.el.in (kom-show-creating-software): New variable.
+
+	* aux-items.el (lyskom-print-creating-software): Show creating
+	software only when kom-show-creating-software is non-nil.
+
 1999-07-14  David Kågedal  <davidk@lysator.liu.se>
 
 	* aux-items.el (lyskom-print-creating-software): Typo fix.
