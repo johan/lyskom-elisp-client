@@ -24,10 +24,34 @@ bort ur den h{r filen.
 1. Saker som skall fixas innan n{sta release (0.34):
 ================================================================
 
-* lyskom-end-of-command-hook.
+* Fixa loginsekvensen s} den tittar p} r{tt variabler.
+?????
 
-* Status person borde ge tiden f|r skapandet.  Samma f|r status m|te
-  om det g}r.
+* H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
+  conf-stat eller membership vilka delar av mappen f|r m|tet som vi
+  har h{mtat och vilka delar vi saknar.  Det inneb{r ocks} att lista
+  nyheter kommer att bli lite os{krare och mer komplicerad.
+Linus: R{cker inte ceders uppdelning av anropen?
+
+* Nya kommandon:
+  \verg} i (till?) administrat|rsmod.	- klart
+  Skapa person?
+  St{nga servern			- klart.
+  [ndra l|senord f|r andra (adm.)	- klart.
+  S{tta lyskom-message-of-the-day	- klart.
+  Ta bort lyskom-message-of-the-day	- klart.
+  Ge adm.r{ttigheter }t n}gon annan.
+  Tvinga n}gon att logga ut.  		- klart.
+  S{tt till}tna f|rfattare.
+
+* Dokumentera alla {ndringar.
+
+
+================================================================
+0.35
+================================================================
+
+* lyskom-end-of-command-hook.
 
 * Status person/m|te borde h{mta nya confstatar, eller hellre: Det
   borde finnas ett asynkront meddelande som s{ger att ett m|te/person
@@ -44,41 +68,18 @@ bort ur den h{r filen.
 
 * Stoppa in fotnoter direkt n{r ett inl{gg visas. (allm{n beg{ran)
 
-* Fixa loginsekvensen s} den tittar p} r{tt variabler.
-
 * Snabbare g} till m|te.
-
-* H{mta mappar i mindre bitar.  Detta inneb{r att vi m}ste lagra i en
-  conf-stat eller membership vilka delar av mappen f|r m|tet som vi
-  har h{mtat och vilka delar vi saknar.  Det inneb{r ocks} att lista
-  nyheter kommer att bli lite os{krare och mer komplicerad.
 
 * Aldrig kasta ut alla memberships.
 
 * N{r man g}r till ett m|te d{r man inte har n}gra ol{sta h{mtas nog
   hela mappen igen. Detta {r mindre bra.
 
-* Nya kommandon:
-  \verg} i (till?) administrat|rsmod.	- klart
-  Skapa person?
-  St{nga servern			- klart.
-  [ndra l|senord f|r andra (adm.)	- klart.
-  S{tta lyskom-message-of-the-day	- klart.
-  Ta bort lyskom-message-of-the-day	- klart.
-  Ge adm.r{ttigheter }t n}gon annan.
-  Tvinga n}gon att logga ut.  		- klart.
-  S{tt till}tna f|rfattare.
-
 * Kasta ut allt som har med who-info att g|ra och ers{tt det med
   session-info. Kolla ocks} s} att servern aldrig skickar n}gra
   who-info. 
 
-* Dokumentera alla {ndringar.
 
-
-================================================================
-0.35
-================================================================
 
 * cookie-mode skall anv{ndas till:
   - who-bufferten (mycket kompletteringar h{r och det blir l{tt med
