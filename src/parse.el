@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.57 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: parse.el,v 44.58 2004-02-29 18:02:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.57 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: parse.el,v 44.58 2004-02-29 18:02:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -676,7 +676,7 @@ than 0. Args: ITEMS-TO-PARSE PRE-FETCHED. Returns -1 if ITEMS-TO-PARSE is
      (lyskom-parse-time)                ;added-at
      (lyskom-parse-membership-type))))
 
-(defun lyskom-parse-membership ()
+(defun lyskom-parse-membership-10 ()
   "Parse a membership."
     (lyskom-create-membership
      (lyskom-parse-num)                 ;position
@@ -1136,9 +1136,9 @@ Args: TEXT-NO. Value: text-stat."
   "Parse a membership-list. Returns a vector."
    (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership-11))
 
-(defun lyskom-parse-membership-list ()
+(defun lyskom-parse-membership-list-10 ()
   "Parse a membership-list. Returns a vector."
-   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership))
+   (lyskom-parse-vector (lyskom-parse-num) 'lyskom-parse-membership-10))
 
 (defun lyskom-parse-membership-list-old ()
   "Parse a membership-list. Returns a vector."

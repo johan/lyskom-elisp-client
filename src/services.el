@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.46 2004-02-21 22:34:14 byers Exp $
+;;;;; $Id: services.el,v 44.47 2004-02-29 18:02:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.46 2004-02-21 22:34:14 byers Exp $\n"))
+	      "$Id: services.el,v 44.47 2004-02-29 18:02:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -210,7 +210,7 @@ Args: KOM-QUEUE HANDLER PERS-NO CONF-NO &rest DATA"
                                                       max-ranges)))
           ((lyskom-have-call 98)
            (lyskom-call kom-queue lyskom-ref-no handler data 
-                        'lyskom-parse-membership)
+                        'lyskom-parse-membership-10)
            (lyskom-send-packet kom-queue
                                (lyskom-format-objects 98 pers-no conf-no)))
           (t
@@ -694,12 +694,12 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
                                    1 lyskom-max-int)))
           ((lyskom-have-call 99)
            (lyskom-call kom-queue lyskom-ref-no handler data
-                        'lyskom-parse-membership-list-old)
+                        'lyskom-parse-membership-list-10)
            (lyskom-send-packet 
             kom-queue 
             (lyskom-format-objects 99 pers-no 0 lyskom-max-int 1)))
           (t (lyskom-call kom-queue lyskom-ref-no handler data
-                          'lyskom-parse-membership-list)
+                          'lyskom-parse-membership-list-old)
              (lyskom-send-packet 
               kom-queue 
               (lyskom-format-objects 46 pers-no 0 lyskom-max-int 1))))))
@@ -719,7 +719,7 @@ Args: KOM-QUEUE HANDLER PERS-NO FIRST-IN-LIST LENGHT &rest DATA."
                                    0 0)))
           ((lyskom-have-call 99)
            (lyskom-call kom-queue lyskom-ref-no handler data
-                        'lyskom-parse-membership-list)
+                        'lyskom-parse-membership-list-10)
            (lyskom-send-packet 
             kom-queue 
             (lyskom-format-objects 99 pers-no first length 0)))
