@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.18 2000-09-09 11:59:20 byers Exp $
+;;;;; $Id: buffers.el,v 44.19 2000-11-18 23:14:56 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.18 2000-09-09 11:59:20 byers Exp $\n"))
+	      "$Id: buffers.el,v 44.19 2000-11-18 23:14:56 ceder Exp $\n"))
 
 
 ;;;;
@@ -618,11 +618,10 @@ buffer"
       (when (and (window-live-p dedicated-window)
                  (eq (get-buffer buffer)
                      (window-buffer dedicated-window)))
-        (cond ((null (delq dedicated-window
-                           (window-list (window-frame dedicated-window))))
-               (bury-buffer buffer))
-              (t (delete-window dedicated-window)))
-          (setq dedicated-window nil))
+	(if (eq dedicated-window (next-window dedicated-window))
+	    (bury-buffer buffer)
+	    (delete-window dedicated-window))
+	(setq dedicated-window nil))
       (when saved-window-configuration
         (lyskom-set-partial-window-configuration
          saved-window-configuration)))

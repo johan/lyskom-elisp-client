@@ -1,3 +1,9 @@
+2000-11-19  Per Starbäck (commit by Per Cederqvist  <ceder@moria>)
+
+	* buffers.el (lyskom-undisplay-buffer): Don't use window-list,
+	since it takes different arguments under Emacs 21 and other
+	emacsen.
+
 2000-11-18  Joel Rosdahl  <joel@rosdahl.net>
 
 	* lyskom-elisp-client.spec: Changed file names in %install
