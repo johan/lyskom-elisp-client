@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: header.el,v 44.5 2002-04-28 11:50:35 byers Exp $
+;;;;; $Id: header.el,v 44.6 2003-04-21 16:15:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -119,3 +119,7 @@ load path, but I am unable to find this package. LysKOM cannot
 run with your version of read-kbd-macro.
 ")
                  (error "Unable to run or compile due to obsolete definition of read-kbd-macro.")))))))
+
+
+(eval-and-compile 
+  (defvar lyskom-debug-compile (getenv "LYSKOM_DEBUG_COMPILE")))

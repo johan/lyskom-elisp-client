@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.87 2003-04-20 11:50:55 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.88 2003-04-21 16:15:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.87 2003-04-20 11:50:55 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.88 2003-04-21 16:15:17 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1356,17 +1356,18 @@ depending on the value of `kom-lynx-terminal'."
 (defun lyskom-highlight-function-get-conf-stat (arg)
   "Try to translate ARG to a conf-stat without making server calls.
 
-ARG may be a conf-stat, pers-stat, uconf-stat, integer or string."
-  (cond ((lyskom-pers-stat-p arg)
-         (cache-get-conf-stat (pers-stat->pers-no arg)))
-        ((lyskom-uconf-stat-p arg)
-         (cache-get-conf-stat (uconf-stat->conf-no arg)))
-        ((numberp arg)
-         (cache-get-conf-stat arg))
-        ((stringp arg)
-         (cache-get-conf-stat (string-to-int arg)))
-        ((lyskom-conf-stat-p arg) arg)
-        (t nil)))
+ARG may be a conf-stat, pers-stat, uconf-stat, conf-z-info, integer or string."
+  (if (lyskom-conf-stat-p arg)
+      arg
+    (let* ((conf-no (cond ((lyskom-pers-stat-p arg) (pers-stat->pers-no arg))
+                          ((lyskom-uconf-stat-p arg) (uconf-stat->conf-no arg))
+                          ((numberp arg) arg)
+                          ((lyskom-conf-z-info-p arg) (conf-z-info->conf-no arg))
+                          ((stringp arg) (string-to-int arg)))))
+      (when conf-no
+        (cond ((cache-get-conf-stat conf-no))
+              (conf-no (initiate-get-conf-stat 'background nil conf-no)
+                       nil))))))
 
 
 (defun lyskom-highlight-i-am-supervisor (arg)

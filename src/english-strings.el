@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.280 2003-04-07 05:24:44 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.281 2003-04-21 16:15:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.280 2003-04-07 05:24:44 jhs Exp $"))
+              "$Id: english-strings.el,v 44.281 2003-04-21 16:15:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -649,6 +649,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item . "Unknown auxiliary information: %11#1s%#3s (created by %#2M)\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
+    (conf-mx-refuse-import . "Refuse import of:                        %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Read FAQ:                  %15#2n for %#1?z%[%#1M <%#1m>%]%[the server%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Rejected recommendation for:             %#1M %#2s\n")
@@ -1838,6 +1839,7 @@ giving the command \"Save options\".\n\n")
     (aux-mx-list-name-name . "Mailing list name")
     (aux-send-comments-to-name . "Send comments to")
     (aux-world-readable-name . "World-readable")
+    (aux-mx-refuse-import . "Refuse text import")
     (aux-elisp-client-read-faq-name . "Read FAQ")
     (aux-elisp-client-rejected-invitation-name . "Rejected invitation")
 
@@ -1905,6 +1907,9 @@ environment to one that uses \"%#2s\" to encode text.
     (cant-mark-text-unread . "Couldn't mark %#1n as unread (%#2s)\n")
     (confusion-what-to-mark-unread . "I can't figure out what text you want to mark as unread.\n")
     (no-comment-to-to-unread . "There is no commented text to mark as unread.\n")
+
+    (mx-refuse-import-spam . "Spam")
+    (mx-refuse-import-all . "All imported texts")
     ))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.318 2003-04-07 05:24:44 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.319 2003-04-21 16:15:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.318 2003-04-07 05:24:44 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.319 2003-04-21 16:15:18 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -648,6 +648,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
+    (conf-mx-refuse-import . "Vägra import av:                         %#1s %#2s\n")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
     (status-read-faq-aux-item . "Läst FAQ:                 %15#2n för %#1?z%[%#1M <%#1m>%]%[servern%] %#3s\n")
     (status-rejected-recommendation-aux-item . "Avvisad mötesrekommendation:            %#1M %#2s\n")
@@ -1873,6 +1874,7 @@ ge kommandot \"Spara inställningar\".\n\n")
     (aux-mx-list-name-name . "E-maillistnamn")
     (aux-send-comments-to-name . "Sänd kommentarer till")
     (aux-world-readable-name . "Läsbart utan inloggning")
+    (aux-mx-refuse-import . "Vägra inläggsimport")
     (aux-elisp-client-read-faq-name . "Läst FAQ")
     (aux-elisp-client-rejected-invitation-name . "Avvisad inbjudan")
 
@@ -1939,6 +1941,9 @@ teckenkodning.
     (cant-mark-text-unread . "Kunde inte markera inlägg %#1n som oläst (%#2s)\n")
     (confusion-what-to-mark-unread . "Jag förstår inte vilken text du vill markera oläst.\n")
     (no-comment-to-to-unread . "Det finns inget kommenterat inlägg att markera som oläst.\n")
+
+    (mx-refuse-import-spam . "Spam")
+    (mx-refuse-import-all . "Alla importade texter")
     ))
 
 (lyskom-language-var local lyskom-month-names sv
