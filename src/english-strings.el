@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.244 2002-12-13 22:16:03 byers Exp $
+;;;;; $Id: english-strings.el,v 44.245 2002-12-16 19:59:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.244 2002-12-13 22:16:03 byers Exp $"))
+              "$Id: english-strings.el,v 44.245 2002-12-16 19:59:45 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1693,6 +1693,7 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-open-url-action . "Open")
     (lyskom-button-copy-url-action . "Copy")
     (lyskom-button-goto-info-node-action . "Open")
+    (lyskom-button-show-bugzilla-bug-action . "Show in bugzilla")
     (lyskom-button-open-email-action . "Send mail")
     (lyskom-button-copy-email-action . "Copy")
     (lyskom-button-info-aux-action . "Information")
@@ -3683,6 +3684,10 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
       \\& means substitute original matched text,
       \\N means substitute match for (...) number N,
       \\\\ means insert one \\.")
+    (kom-my-bugzilla-doc . "\
+  The elisp client attempts to locate references to bugs in bugzilla. This
+  setting specifies where the bugzilla server is located. The value must be
+  the base URL of the bugzilla server \(e.g. `http://bugzilla.example.com/'\).")
 
 
     ;;
@@ -3863,6 +3868,7 @@ be saved in the server. Otherwise it will be saved in your .emacs.")
     (kom-max-overlays-tag . "Maximum number of overlays:")
     (kom-mark-read-texts-as-read-in-new-recipient-tag . "Mark read texts read when added to new recipients:")
     (kom-url-transformation-rules-tag . "Transformation of URLs:")
+    (kom-my-bugzilla-tag . "Location of bugzilla:")
     )
 )
 

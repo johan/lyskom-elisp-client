@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.76 2002-12-09 20:36:35 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.77 2002-12-16 19:59:45 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.76 2002-12-09 20:36:35 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.77 2002-12-16 19:59:45 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -360,6 +360,12 @@ lyskom-text-buttons. Returns the modified string."
 
  	       ((eq (elt el 1) 'info-node)
  		(lyskom-generate-button 'info-node
+ 					(lyskom-button-get-arg el text)
+ 					(lyskom-button-get-text el text)
+ 					(lyskom-button-get-face el)))
+
+ 	       ((eq (elt el 1) 'bugzilla)
+ 		(lyskom-generate-button 'bugzilla
  					(lyskom-button-get-arg el text)
  					(lyskom-button-get-text el text)
  					(lyskom-button-get-face el)))
@@ -792,6 +798,20 @@ This is a LysKOM button action."
   (if (fboundp 'compose-mail)
       (compose-mail text)
     (mail nil text)))
+
+(defun lyskom-button-show-bugzilla-bug (buf arg text)
+  (let ((case-fold-search t)
+        (url ""))
+    (unless (string-match "^http" kom-my-bugzilla)
+      (setq url "http://"))
+    (setq url (concat url kom-my-bugzilla))
+    (unless (string-match "/$" url)
+      (setq url (concat url "/")))
+    (setq url (concat url "show_bug.cgi?id=" arg))
+    (lyskom-button-open-url buf
+                            nil
+                            url)))
+
 
 (defun lyskom-button-copy-url (but arg text)
   "In the LysKOM buffer BUF, ignore ARG and copy TEXT to the kill ring.

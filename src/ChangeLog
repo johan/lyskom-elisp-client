@@ -1,3 +1,14 @@
+2002-12-16  David Byers  <david.byers@swipnet.se>
+
+	Fix bug 305:
+	* lyskom-buttons.el (lyskom-button-transform-text): Added support
+	for bugzilla links.
+	(lyskom-button-show-bugzilla-bug): New function.
+
+	* vars.el.in (kom-my-bugzilla): New variable.
+	(lyskom-text-buttons): Added bugzilla links.
+	(lyskom-button-actions): Added bugzilla links.
+
 2002-12-13  David Byers  <david.byers@swipnet.se>
 
 	Bug 915:
