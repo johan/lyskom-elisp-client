@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: services.el,v 35.2 1991-09-15 10:04:49 linus Exp $
+;;;;; $Id: services.el,v 35.3 1992-07-26 23:35:58 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 35.2 1991-09-15 10:04:49 linus Exp $\n"))
+	      "$Id: services.el,v 35.3 1992-07-26 23:35:58 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -487,6 +487,17 @@ Args: KOM-QUEUE HANDLER PERS-NO &rest DATA."
   (lyskom-send-packet kom-queue (lyskom-format-objects 46 pers-no
 						0 lyskom-max-int ;all confs.
 						1))) ;want read texts.
+
+
+(defun initiate-get-part-of-membership (kom-queue handler pers-no first length
+						  &rest data)
+  "Get membership-list for PERS-NO from server.
+Args: KOM-QUEUE HANDLER PERS-NO FIRST-IN-LIST LENGHT &rest DATA."
+  (lyskom-call kom-queue lyskom-ref-no handler data
+	       'lyskom-parse-membership-list)
+  (lyskom-send-packet kom-queue (lyskom-format-objects 46 pers-no
+						first length ;all confs.
+						1)))
 
 
 (defun initiate-get-created-texts (kom-queue handler pers-no first-local
