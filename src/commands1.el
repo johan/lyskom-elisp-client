@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.69 2000-05-23 12:06:38 byers Exp $
+;;;;; $Id: commands1.el,v 44.70 2000-05-26 10:49:41 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.69 2000-05-23 12:06:38 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.70 2000-05-26 10:49:41 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -208,17 +208,17 @@ optional arg TEXT-NO is present review the text that text commented instead."
 
 
 (def-kom-command kom-view-previous-commented-text ()
- "View the text the previous text commented.
+  "View the text the previous text commented.
 If the previously viewed text is a comment to (footnote to) several
 texts then the first text is shown and a REVIEW list is built to show
 the other ones."
-	      (interactive)
-	      (if lyskom-previous-text
-		  (progn
-		    (lyskom-tell-internat 'kom-tell-read)
-		    (lyskom-view-commented-text
-		     (blocking-do 'get-text-stat lyskom-previous-text)))
-		(lyskom-insert-string 'confusion-what-to-view)))
+  (interactive)
+  (if lyskom-previous-text
+      (progn
+        (lyskom-tell-internat 'kom-tell-read)
+        (lyskom-view-commented-text
+         (blocking-do 'get-text-stat lyskom-previous-text)))
+    (lyskom-insert-string 'confusion-what-to-view)))
 
 (defun lyskom-view-commented-text (text-stat)
   "Handles the return from the initiate-get-text-stat, displays and builds list."

@@ -1,3 +1,14 @@
+2000-05-26  David Byers  <davby@ida.liu.se>
+
+	* command.el (lyskom-fix-interactive-decl): New function puts a
+	let around evaluated arguments to interactive that binds
+	lyskom-executing-command to the current command.
+	(def-kom-command): Use it.
+	(def-kom-emacs-command): Use it.
+	(def-kom-command): Sanity check and attempt repair when missing
+	docstring or interactive declaration.
+	(def-kom-emacs-command): Same here.
+
 2000-05-24  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-default-collate-table): Removed \201s added 
