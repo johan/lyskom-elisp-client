@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.304 2003-03-16 14:03:01 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.305 2003-03-16 14:29:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.304 2003-03-16 14:03:01 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.305 2003-03-16 14:29:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -744,6 +744,7 @@ Meddelandet du försökte sända till %#1M var:
     (Lines . "Rader")
     (Author . "Författare")
     (Subject . "Ärende")
+    (Comments . "Ko")
     (mark-type . "Typ")
     (could-not-read . "Du fick inte läsa denna text (%#1n).\n")
     (multiple-choice . "Flera alternativ finns.")

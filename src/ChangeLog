@@ -1,5 +1,13 @@
 2003-03-16  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 946:
+	* commands2.el (lyskom-print-summary-line): Can print the number
+	of comments to a text.
+	(lyskom-construct-summary-format-string): Support
+	number-of-comments column.
+	(lyskom-list-summary): Include number-of-comments column.
+	(lyskom-do-list-summary): Same here.
+
 	Fix bug 983:
 	* vars.el.in (kom-highlight-conferences): Added highlighting of no
 	presentation and supervised conferences to the default.
