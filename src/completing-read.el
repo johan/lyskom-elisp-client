@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.50 2003-08-24 22:05:34 byers Exp $
+;;;;; $Id: completing-read.el,v 44.51 2003-08-25 14:08:02 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,11 +36,9 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.50 2003-08-24 22:05:34 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.51 2003-08-25 14:08:02 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
-(defvar lyskom-read-conf-saved-inputs nil)
-
 
 
 ;;; ============================================================
@@ -214,8 +212,11 @@ See lyskom-read-conf for a description of the parameters."
 
 
 (defun lyskom-default-conference-saved (sym &rest args)
-  (and (cdr (assq (car sym) lyskom-read-conf-saved-inputs))
-       (list (conf-z-info->conf-no (cdr (assq (car sym) lyskom-read-conf-saved-inputs))))))
+  (save-excursion
+    (when lyskom-buffer (set-buffer lyskom-buffer))
+    (and (cdr (assq (car sym) lyskom-read-conf-saved-inputs))
+         (list (conf-z-info->conf-no 
+                (cdr (assq (car sym) lyskom-read-conf-saved-inputs)))))))
 
 (defun lyskom-default-conference-not-self (uc &rest args)
   (not (eq (uconf-stat->conf-no uc) lyskom-pers-no)))
@@ -234,12 +235,15 @@ See lyskom-read-conf for a description of the parameters."
          (prompt-spec (cdr (assq prompt spec-1)))
          (cmd-spec (cdr (assq t spec-1))))
     (lyskom-debug-forms
-     (unless spec-1 (lyskom-format-insert-before-prompt 
-                     "%[%#2@%#1s%]\n"
-                     (format "Warning: no strategy for %S/%S"
-                             (or lyskom-current-command this-command)
-                             prompt)
-                     `(face ,kom-warning-face))))
+     (unless spec-1 
+       (save-excursion
+         (when lyskom-buffer (set-buffer lyskom-buffer))
+         (lyskom-format-insert-before-prompt 
+          "%[%#2@%#1s%]\n"
+          (format "Warning: no strategy for %S/%S"
+                  (or lyskom-current-command this-command)
+                  prompt)
+          `(face ,kom-warning-face)))))
     (list (or (assq 'default prompt-spec)
               (assq 'default cmd-spec)
               (assq 'default default-spec))
@@ -282,12 +286,14 @@ See lyskom-read-conf for a description of the parameters."
 
 (defun lyskom-read-conf-save-input (prompt input)
   "Save INPUT as input for the current completing read command."
-  (lyskom-traverse sym (cdr (assq 'save (lyskom-get-initial-conf-strategy prompt)))
-    (if (assq sym lyskom-read-conf-saved-inputs)
-        (setcdr (assq sym lyskom-read-conf-saved-inputs) input)
-      (setq lyskom-read-conf-saved-inputs 
-            (cons (cons sym input) lyskom-read-conf-saved-inputs))
-    )))
+  (save-excursion
+    (when lyskom-buffer (set-buffer lyskom-buffer))
+    (lyskom-traverse sym (cdr (assq 'save (lyskom-get-initial-conf-strategy prompt)))
+      (if (assq sym lyskom-read-conf-saved-inputs)
+          (setcdr (assq sym lyskom-read-conf-saved-inputs) input)
+        (setq lyskom-read-conf-saved-inputs 
+              (cons (cons sym input) lyskom-read-conf-saved-inputs))
+        ))))
 
 (defun lyskom-read-conf (prompt type &optional empty initial mustmatch)
   "Completing read a conference or person from the minibuffer. 
@@ -324,53 +330,59 @@ A conf-z-info: The conf-z-info associated with the name entered,
 nil:         Nothing was entered, or
 A string:    A name that matched nothing in the database."
 
-  (lyskom-completing-clear-cache)
-  (setq initial
-        (cond ((integerp initial)
-               (uconf-stat->name (blocking-do 'get-uconf-stat initial)))
-              ((stringp initial) initial)
-              ((lyskom-conf-stat-p initial)
-               (conf-stat->name initial))
-              ((lyskom-uconf-stat-p initial)
-               (uconf-stat->name initial))
-              ((lyskom-conf-z-info-p initial)
-               (conf-z-info->name initial))
-              ((consp initial) initial)
-              ((lyskom-read-conf-guess-initial prompt type))
-              (t nil)))
+  ;; We bind lyskom-current-command here so that changes to
+  ;; this-command will not confuse our guesses for the initial value
+  ;; (particularly at the end of this function, where we sometimes
+  ;; save the value the user entered).
 
-  (let* ((completion-ignore-case t)
-         (minibuffer-local-completion-map 
-          lyskom-minibuffer-local-completion-map)
-         (minibuffer-local-must-match-map 
-          lyskom-minibuffer-local-must-match-map)
-         (read-string nil)
-         (old-prompt prompt)
-         (result nil)
-         (keep-going t))
+  (let ((lyskom-current-command (or lyskom-current-command this-command)))
+    (lyskom-completing-clear-cache)
+    (setq initial
+          (cond ((integerp initial)
+                 (uconf-stat->name (blocking-do 'get-uconf-stat initial)))
+                ((stringp initial) initial)
+                ((lyskom-conf-stat-p initial)
+                 (conf-stat->name initial))
+                ((lyskom-uconf-stat-p initial)
+                 (uconf-stat->name initial))
+                ((lyskom-conf-z-info-p initial)
+                 (conf-z-info->name initial))
+                ((consp initial) initial)
+                ((lyskom-read-conf-guess-initial prompt type))
+                (t nil)))
 
-    (setq prompt (cond ((stringp prompt) prompt)
-                       ((symbolp prompt) (lyskom-get-string prompt))
-                       ((listp prompt) (apply 'lyskom-format prompt))
-                       (t (lyskom-get-string 'conf-prompt))))
+    (let* ((completion-ignore-case t)
+           (minibuffer-local-completion-map 
+            lyskom-minibuffer-local-completion-map)
+           (minibuffer-local-must-match-map 
+            lyskom-minibuffer-local-must-match-map)
+           (read-string nil)
+           (old-prompt prompt)
+           (result nil)
+           (keep-going t))
 
-    (while keep-going
-      (setq read-string (lyskom-completing-read prompt
-                                                'lyskom-read-conf-internal
-                                                type
-                                                mustmatch
-                                                (if (listp initial)
-                                                    initial
-                                                  (cons initial 0))
-                                                'lyskom-name-hist))
-      (setq result
-            (cond ((null read-string) nil)
-                  ((string= "" read-string) nil)
-                  (t (lyskom-lookup-conf-by-name read-string type))))
-      (setq keep-going (and (not empty)
-                            (null result))))
-    (lyskom-read-conf-save-input old-prompt result)
-    result))
+      (setq prompt (cond ((stringp prompt) prompt)
+                         ((symbolp prompt) (lyskom-get-string prompt))
+                         ((listp prompt) (apply 'lyskom-format prompt))
+                         (t (lyskom-get-string 'conf-prompt))))
+
+      (while keep-going
+        (setq read-string (lyskom-completing-read prompt
+                                                  'lyskom-read-conf-internal
+                                                  type
+                                                  mustmatch
+                                                  (if (listp initial)
+                                                      initial
+                                                    (cons initial 0))
+                                                  'lyskom-name-hist))
+        (setq result
+              (cond ((null read-string) nil)
+                    ((string= "" read-string) nil)
+                    (t (lyskom-lookup-conf-by-name read-string type))))
+        (setq keep-going (and (not empty)
+                              (null result))))
+      (lyskom-read-conf-save-input old-prompt result)
+      result)))
 
 
 (defun lyskom-read-conf-get-logins ()
