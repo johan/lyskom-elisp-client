@@ -1,3 +1,23 @@
+2000-06-10  Johan Sundström  <jhs@lysator.liu.se>
+
+	* vars.el.in (lyskom-add-sub-recipients-hook): New hook.
+
+	* commands1.el (lyskom-add-recipient): New macro.
+	(kom-add-recipient): Standard prefix-arguments. Uses above macro.
+	(lyskom-sub-recipient): New macro.
+	(kom-sub-recipient): Standard prefix-arguments. Uses above macro.
+	(lyskom-add-copy): New macro.
+	(kom-add-copy): Standard prefix-arguments. Uses above macro.
+	(lyskom-add-bcc): New macro.
+	(kom-add-bcc): Standard prefix-arguments. Uses above macro.
+	(kom-move-text): Standard prefix-arguments.
+	(lyskom-annoying-verify-add-rcpt): New function.
+	(lyskom-add-sub-recipient): Arguments changed. Runs the hook
+	lyskom-add-sub-recipients-hook, which may alter the new variables
+	lyskom-add-sub-recipient-action,
+	lyskom-add-sub-recipient-source-conf and/or
+	lyskom-add-sub-recipient-target-conf.
+
 2000-06-06  Joel Rosdahl  <joel@lysator.liu.se>
 
 	* commands1.el (lyskom-comment-recipients): Don't send footnotes
@@ -6,7 +26,7 @@
 	* commands1.el (lyskom-comment-recipients): Fixed a bug that
  	sometimes prevented the author's mailbox from being added as
  	recipient when it should.
-	
+
 2000-06-05  David Byers  <davby@ida.liu.se>
 
 	* utilities.el (lyskom-read-text-no-prefix-arg): Don't use zerop
