@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 38.8 1995-10-28 11:07:56 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 38.9 1995-10-29 06:41:51 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 38.8 1995-10-28 11:07:56 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 38.9 1995-10-29 06:41:51 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1409,6 +1409,7 @@ list."
 			      (lyskom-command-name (key-binding command))))
 			(t (lyskom-format 'the-command command))))))
 
+     ;; Should this happen in 0.39? I don't think so. /dk
      ((eq to-do 'unknown)		;Pending replies from server.
       (setq lyskom-no-prompt t))
 
@@ -2135,6 +2136,10 @@ One parameter - the prompt string."
   "Same as assoc, but searches on last element in a list"
   (reverse (assoc key (mapcar (function reverse) cache))))
 
+(defun skip-first-zeros (list)
+  (while (and list (zerop (car list)))
+    (setq list (cdr list)))
+  list)
 
 ;;; This really is a strange thing to do but...
 ;;
@@ -2180,6 +2185,7 @@ from the value of kom-tell-phrases-internal."
 (or (memq 'lyskom-unread-mode-line global-mode-string)
     (nconc global-mode-string (list 'lyskom-unread-mode-line)))
 (setq lyskom-unread-mode-line
+
       (list (list 'lyskom-sessions-with-unread 
 		  (let ((str (lyskom-get-string 'mode-line-unread)))
 		    (if kom-emacs-knows-iso-8859-1
