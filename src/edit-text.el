@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.5 1996-10-24 09:47:45 byers Exp $
+;;;;; $Id: edit-text.el,v 44.6 1996-10-27 15:54:45 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.5 1996-10-24 09:47:45 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.6 1996-10-27 15:54:45 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -308,8 +308,8 @@ Entry to this mode runs lyskom-edit-mode-hook."
   (setq major-mode 'lyskom-edit-mode)
   (setq mode-name lyskom-edit-mode-name)
   ;; (setq buffer-offer-save t)
-  (use-local-map (overlay-map lyskom-edit-mode-mode-map
-			      lyskom-edit-mode-map))
+  (use-local-map (append lyskom-edit-mode-map
+			 (cdr lyskom-edit-mode-mode-map)))
   (auto-save-mode 1)
   (auto-fill-mode 1)
   (make-local-variable 'paragraph-start)
@@ -909,8 +909,8 @@ buffer and edit buffers."
                          (processp lyskom-proc)
                          lyskom-proc)
                     (signal 'lyskom-internal-error
-                            "lyskom-count-down-edits called from "
-                            (current-buffer)))))
+                            (list "lyskom-count-down-edits called from "
+				  (current-buffer))))))
       (set-buffer (process-buffer proc))
       (while (and lyskom-list-of-edit-buffers
                   (not (memq (car lyskom-list-of-edit-buffers) (buffer-list))))
