@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.6 1996-10-02 14:42:27 davidk Exp $
+;;;;; $Id: lyskom-rest.el,v 44.7 1996-10-02 16:59:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -76,7 +76,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.6 1996-10-02 14:42:27 davidk Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.7 1996-10-02 16:59:01 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2001,19 +2001,41 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 ;; 		      res)))))
 ;;     res))
 
+;; (defun lyskom-list-unread (map membership)
+;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
+;; The list consists of text-nos."
+;;   (let ((read (membership->read-texts membership))
+;; 	   (first (map->first-local map))
+;; 	   (i (length (map->text-nos map)))
+;; 	   (the-map (map->text-nos map)))
+;;     (while (> i 0)
+;; 	 (-- i)
+;; 	 ;; The server always send the read texts in sorted order. This
+;; 	 ;; means that we can use binary search to look for read texts.
+;; 	 (when (lyskom-vmemq  (+ i first) read)
+;; 	   (aset the-map i 0)))
+;;     (delq 0 (listify-vector the-map))))
+
+;; (defun lyskom-list-unread (map membership)
+;;   "Args: MAP MEMBERSHIP. Return a list of unread texts.
+;; The list consists of text-nos."
+;;   (let ((the-map (map->text-nos map)))
+;;     (delq 0 (listify-vector the-map))))
+
 (defun lyskom-list-unread (map membership)
   "Args: MAP MEMBERSHIP. Return a list of unread texts.
 The list consists of text-nos."
-  (let ((last-read (membership->last-text-read membership))
-	(read (membership->read-texts membership))
+  (let ((read (membership->read-texts membership))
 	(first (map->first-local map))
 	(i (length (map->text-nos map)))
 	(the-map (map->text-nos map)))
-    (while (> i 0)
-      (-- i)
-      (when (or (<= (+ first i) last-read)
-		(lyskom-vmemq  (+ i first) read))
-	(aset the-map i 0)))
+    (when (not (null read))
+      (while (> i 0)
+	(-- i)
+	;; The server always send the read texts in sorted order. This
+	;; means that we can use binary search to look for read texts.
+	(when (lyskom-binsearch  (+ i first) read)
+	  (aset the-map i 0))))
     (delq 0 (listify-vector the-map))))
 
 
@@ -2113,6 +2135,29 @@ The list consists of text-nos."
       (if (eq elt (aref vector i))
 	  (setq found t)))
     found))
+
+      
+(defun lyskom-binsearch (num vector &optional first last+1)
+  "Return the index if NUM is a member of (present in) VECTOR.
+VECTOR has to be sorted with regard to <."
+  (lyskom-binsearch-internal num vector
+			     (or first 0)
+			     (or last+1 (length vector))))
+
+(defun lyskom-binsearch-internal (num vector first last+1)
+  "Return the index if ELT is a member of the sorted vector VECTOR."
+  (let* ((split (/ (+ first last+1) 2))
+	 (splitval (aref vector split)))
+    (cond
+     ;; This means that first = last+1 - 1, ie only one element.
+     ((= split first) (if (= num splitval) split nil))
+     ;; This is not really necesary, but it _might_ speed it up..
+     ((= num splitval) split)
+     ;; Search the left subtree
+     ((< num splitval)
+      (lyskom-binsearch-internal num vector first split))
+     ;; Search the left subtree
+     (t (lyskom-binsearch-internal num vector split last+1)))))
 
       
 (defun lyskom-read-num-range (low high &optional prompt show-range default)
