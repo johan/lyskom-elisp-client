@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 38.6 1995-10-28 11:08:11 byers Exp $
+;;;;; $Id: swedish-strings.el,v 38.7 1995-10-28 11:41:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 38.6 1995-10-28 11:08:11 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 38.7 1995-10-28 11:41:32 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -118,7 +118,7 @@ Annat se \\[describe-mode] ---")
     ; From komtypes.el: nil
     ; From clienttypes.el: nil
     ; From startup.el:
-    (server-q . "Lyskom-server? (%#1s) ")
+    (server-q . "LysKOM-server? (%#1s) ")
     (try-connect . "LysKOM elisp-klient version %#1s.\nF\366rs\366ker koppla upp mot %#2s.\n")
     (protocoll-error . "Protocol error. Servers says: %#1s")
     (connection-done . "Uppkopplingen klar. Serverns versionsnummer \344r %#1s.\n\n")
@@ -256,7 +256,7 @@ du har l\344st klart allting. Kom tillbaks senare.
     (what-to-change-pres-you . "Vilket m\366te/person vill du \344ndra presentationen f\366r (dig sj\344lv): ")
     (who-to-put-motd-for . "Vilket m\366te/person vill du s\344tta lapp p\345 d\366rr f\366r (dig sj\344lv): ")
 
-    (cant-get-conf-stat . "Kan ej h\344mta m\366tesstatus f\366r m\366tet.")
+    (cant-get-conf-stat . "Kan ej h\344mta m\366tesstatus f\366r m\366tet.\n")
     (go-to-conf-p . "G\345 till m\366te: ")
     (want-become-member . "Vill du bli medlem? ")
     (no-ok . "Nehej.\n")
