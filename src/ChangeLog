@@ -1,3 +1,8 @@
+Mon Aug  5 02:16:04 1996  David Kågedal  <davidk@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-update-prompt): Testa
+ 	lyskom-dont-change-prompt.
+
 Fri Aug  2 00:00:23 1996  David Kågedal  <davidk@lysator.liu.se>
 
 	* services.el (initiate-user-active): Ny funktion.
