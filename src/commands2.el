@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 35.6 1991-10-28 22:31:25 linus Exp $
+;;;;; $Id: commands2.el,v 35.7 1991-11-08 13:16:02 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 35.6 1991-10-28 22:31:25 linus Exp $\n"))
+	      "$Id: commands2.el,v 35.7 1991-11-08 13:16:02 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -959,7 +959,7 @@ Format is 23:29 if the text is written today. Otherwise 04-01."
 	  (and (boundp symbol)
 	       (string-match "^\\(kom-\\|lyskom-\\)" (symbol-name symbol))
 	       (not (string-match "-cache$\\|^kom-dict$\\|^lyskom-strings$\
-\\|-map$\\|^lyskom-commands$"
+\\|-map$\\|^lyskom-commands$\\|^lyskom-swascii"
 				  (symbol-name symbol)))
 	       (progn
 		 (terpri)

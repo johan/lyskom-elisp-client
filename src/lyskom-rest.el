@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 35.14 1991-10-25 19:37:44 linus Exp $
+;;;;; $Id: lyskom-rest.el,v 35.15 1991-11-08 13:15:49 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 35.14 1991-10-25 19:37:44 linus Exp $\n"))
+	      "$Id: lyskom-rest.el,v 35.15 1991-11-08 13:15:49 linus Exp $\n"))
 
 
 ;;;; ================================================================
@@ -161,7 +161,10 @@ Related variables are kom-tell-phrases and lyskom-commands.")
 
 (defun lyskom-command-name (command)
   "Get the command name for the command COMMAND"
-  (car (cdr (assoc command lyskom-commands))))
+  (car (cdr (assoc command 
+		   (if kom-emacs-knows-iso-8859-1
+		       lyskom-commands
+		     lyskom-swascii-commands)))))
 
 
 (defun kom-extended-command ()
@@ -169,11 +172,15 @@ Related variables are kom-tell-phrases and lyskom-commands.")
   (interactive)
   (let* ((completion-ignore-case t)
 	 (alternatives (mapcar (function reverse)
-			       lyskom-commands))
+			       (if kom-emacs-knows-iso-8859-1
+				   lyskom-commands
+				 lyskom-swascii-commands)))
 	 (name (completing-read (lyskom-get-string 'extended-command)
 				alternatives nil t nil))
 	 (fnc (reverse-assoc (car (all-completions name alternatives)) 
-			     lyskom-commands)))
+			     (if kom-emacs-knows-iso-8859-1
+				 lyskom-commands
+			       lyskom-swascii-commands))))
     (cond
      (fnc (call-interactively (car fnc)))
      (t (kom-next-command)))))
@@ -1689,15 +1696,13 @@ One parameter - the prompt string."
 (run-hooks 'lyskom-init-hook)
 
 
-(if kom-emacs-knows-iso-8859-1
-    nil
-  (setq lyskom-commands
-	(mapcar 
-	 (function (lambda (pair)
-		     (list (car pair) (iso-8859-1-to-swascii (car (cdr pair))))))
-	 lyskom-commands))
-  (setq lyskom-header-separator 
-	(iso-8859-1-to-swascii lyskom-header-separator))
-  (setq lyskom-header-subject
-	(iso-8859-1-to-swascii lyskom-header-subject)))
+(setq lyskom-swascii-commands
+      (mapcar 
+       (function (lambda (pair)
+		   (list (car pair) (iso-8859-1-to-swascii (car (cdr pair))))))
+       lyskom-commands))
+(setq lyskom-swascii-header-separator 
+      (iso-8859-1-to-swascii lyskom-header-separator))
+(setq lyskom-swascii-header-subject
+      (iso-8859-1-to-swascii lyskom-header-subject))
 
