@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.173 2003-08-04 07:49:30 byers Exp $
+;;;;; $Id: commands2.el,v 44.174 2003-08-04 17:01:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.173 2003-08-04 07:49:30 byers Exp $\n"))
+              "$Id: commands2.el,v 44.174 2003-08-04 17:01:58 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3118,10 +3118,36 @@ properly in the client."
                                                          "s"))))
           (lyskom-insert "\n")
           (lyskom-traverse item (server-stats->values stats)
-            (lyskom-format-insert fmt (car item))
-            (lyskom-traverse val (cdr item)
-              (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
-            (lyskom-format-insert "\n"))))
+            (let ((start (point))
+                  (inhibit-read-only t))
+              (lyskom-format-insert fmt (car item))
+              (lyskom-traverse val (cdr item)
+                (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
+              (lyskom-format-insert "\n")
+              (add-text-properties start (point) `(face ,kom-mark-face)))
+
+            (lyskom-format-insert fmt "")
+            (lyskom-insert " ")
+            (let ((index 0))
+              (lyskom-traverse val (cdr item)
+                (if (eq (elt (server-stats->when stats) index) 0)
+                    (lyskom-insert "          ")
+                  (lyskom-format-insert " %=8.2.7#1f+"
+                                        (stats->ascent-rate val)))
+                (setq index (1+ index))))
+            (lyskom-format-insert "\n")
+
+            (lyskom-format-insert fmt "")
+            (lyskom-insert " ")
+            (let ((index 0))
+              (lyskom-traverse val (cdr item)
+                (if (eq (elt (server-stats->when stats) index) 0)
+                    (lyskom-insert "          ")
+                  (lyskom-format-insert " %=8.2.7#1f-"
+                                        (stats->descent-rate val)))
+                (setq index (1+ index))))
+            (lyskom-format-insert "\n")
+            )))
 
 
       ;; ----------------------------------------
