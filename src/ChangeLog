@@ -1,5 +1,12 @@
 2002-05-29  David Byers  <david.byers@swipnet.se>
 
+        * NEWS-0.47: Updated to this point in history in preparation for
+	next BETA release.
+
+	* user-hooks.el (kom-list-summary-hook-conf-list): Added * to
+	front of docstring.
+	(kom-read-last-text-hook-conf-list): Same.
+
 	Fix bug 503:
 	* commands2.el (kom-apropos): New function.
 	(lyskom-apropos-insert): New function.

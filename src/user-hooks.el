@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: user-hooks.el,v 44.1 2002-05-07 20:12:13 byers Exp $
+;;;;; $Id: user-hooks.el,v 44.2 2002-05-29 20:58:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,17 +34,17 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: user-hooks.el,v 44.1 2002-05-07 20:12:13 byers Exp $\n"))
+	      "$Id: user-hooks.el,v 44.2 2002-05-29 20:58:58 byers Exp $\n"))
 
 (def-kom-var kom-list-summary-hook-conf-list nil
-  "This variable controls the behavior of kom-list-summary-hook.
+  "*This variable controls the behavior of kom-list-summary-hook.
 When kom-list-summary-hook is used in kom-after-change-conf-hook, 
 this variable specifies which conferences to automatically to list
 summary for. It is a list of conference numbers"
   server)
 
 (def-kom-var kom-read-last-text-hook-conf-list nil
-  "This variable controls the behavior of kom-read-last-text-hook.
+  "*This variable controls the behavior of kom-read-last-text-hook.
 When kom-read-last-text-hook is used in kom-change-conf-hook, 
 this variable specifies which conferences the hook applies to. Each
 element is either a conference number of a cons cell consisting of
@@ -62,8 +62,7 @@ conference CONF-NO."
 (defun kom-list-summary-hook (from-conf to-conf)
   "Automatically list text summary when entering a conference. This
 function can be added to kom-after-change-conf-hook. Which conferences to
-list subjects in is controlled by
-kom-list-summary-hook-conf-list"
+list subjects in is controlled by kom-list-summary-hook-conf-list"
   (when (or (eq kom-list-summary-hook-conf-list t)
             (memq to-conf kom-list-summary-hook-conf-list))
     (lyskom-list-summary to-conf)))
