@@ -25,6 +25,10 @@
 
 * Features och förbättringar
 
+** Variabeln kom-mark-read-texts-as-read-in-new-recipient är satt till
+   t (default är nil) så kommer inlägg som adderas till nya möten inte
+   att läsmarkeras automatiskt (bug 832).
+
 ** Om servern har en lapp på dörren så visas den tydligare än
    tidigare. Klientens defaultinställningar används vid visningen
    eftersom den görs före inloggning (bug 522).
@@ -55,6 +59,15 @@
    minibufferten så får man se FAQ för servern (bug 767).
 
 ** Fler kommandon i menyerna (bug 727, patch från Per Starbäck).
+
+** Skönsvärdet för kom-created-texts-are-read är numera nil så att nya
+   användare får se sina egna inlägg.
+
+** Elispklienten gör vissa grundläggande kontroller av Emacs
+   konfiguration när den startar. Detta går att styra med variabeln
+   kom-check-configuration-on-startup. Denna inställning finns för
+   närvarande inte tillgänglig via Inställningar (för) LysKOM och kan
+   komma att ändras eller tas bort i framtiden.
 
 
 
