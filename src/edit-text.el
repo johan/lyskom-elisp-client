@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.58 2000-02-08 13:09:09 byers Exp $
+;;;;; $Id: edit-text.el,v 44.59 2000-04-29 07:41:11 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.58 2000-02-08 13:09:09 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.59 2000-04-29 07:41:11 jhs Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1004,9 +1004,15 @@ Cannot be called from a callback."
 
 
 (defun kom-edit-insert-commented ()
-  "Insert the commented text with '>' first on each line"
+  "Insert the commented text with '>' first on each line."
   (interactive)
   (lyskom-edit-get-commented 'lyskom-edit-insert-commented))
+
+
+(defun kom-edit-insert-buglist ()
+  "Insert the commented buglist, Roxen Internet Software style."
+  (interactive)
+  (lyskom-edit-get-commented 'lyskom-edit-insert-buglist))
 
 
 (defun kom-edit-insert-digit-text ()
@@ -1016,7 +1022,7 @@ Cannot be called from a callback."
 
 
 (defun kom-edit-insert-text (no)
-  "Insert the text number NO with '>' first on each line"
+  "Insert the text number NO with '>' first on each line."
   (interactive (list
 		(cond
 		 ((null current-prefix-arg)
@@ -1728,6 +1734,48 @@ The text is inserted in the buffer with '>' first on each line."
             (insert (or (lyskom-default-value 'kom-cite-string) 62))
             (forward-line -1)
             )))
+    (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
+
+
+;;; ========================================================================
+;;;   Treat the commented text as a Roxen Internet Software-style buglist,
+;;;   handling the removal of finished subjects, last-message changes et c
+
+;;; Author: Johan Sundström
+
+(defun lyskom-edit-insert-buglist (text text-stat editing-buffer window)
+  "Handles the TEXT and TEXT-STAT from the return of the call of the text.
+The commented text is inserted in the buffer in the Roxen Internet Software
+buglist style, automating the removal of finished subjects and change-marks."
+  (if (and text text-stat)
+      (let ((str (text->decoded-text-mass text text-stat)))
+        (set-buffer editing-buffer)
+        (and (not (bolp))
+             (insert "\n"))
+        (and (not (eolp))
+             (open-line 1))
+        (let* ((pb (point))
+               (as (string-match "\n" str))
+               (te (substring str (1+ as))))
+          (insert te)
+          (while (re-search-backward "^[ \t]*[!*X][ \t(]*\\[" nil t)
+            (replace-regexp "^\\([ \t]*\\)[!*X]\\([ \t(]*\\[\\)" "\\1 \\2"))
+	  (goto-char pb)
+          (while (re-search-forward "^[ \t([]*\\[[^\\/ ]\\]" nil t)
+	    (beginning-of-line)
+	    (let* ((df (point))
+		   (dt (re-search-forward "^\\([^ \t][^ \t]\\|[ \t([]*\\[[\\/ ]\\]\\)" 
+					  nil t)))
+	      (if dt
+		  (progn
+		    (goto-char dt)
+		    (beginning-of-line)
+		    (if (thing-at-point-looking-at "^[^ \t]")
+			(progn
+			  (beginning-of-line)
+			  (forward-char -1))))
+		(goto-char (point-max)))
+	      (delete-region df (point))))))
     (lyskom-message "%s" (lyskom-get-string 'no-get-text))))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.109 2000-04-29 06:03:20 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.110 2000-04-29 07:41:13 jhs Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.109 2000-04-29 06:03:20 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.110 2000-04-29 07:41:13 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -96,6 +96,7 @@
   (define-key lyskom-sv-edit-prefix (kbd "C-i ?")   'lyskom-help)
   (define-key lyskom-sv-edit-prefix (kbd "C-i C-k") 'kom-edit-insert-commented)
   (define-key lyskom-sv-edit-prefix (kbd "C-y")     'kom-edit-insert-commented)
+  (define-key lyskom-sv-edit-prefix (kbd "C-b")     'kom-edit-insert-buglist)
   (define-key lyskom-sv-edit-prefix (kbd "C-i 1")   'kom-edit-insert-digit-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-i 2")   'kom-edit-insert-digit-text)
   (define-key lyskom-sv-edit-prefix (kbd "C-i 3")   'kom-edit-insert-digit-text)
@@ -1728,6 +1729,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (kom-edit-add-copy . "Addera extra kopiemottagare")
     (kom-edit-show-commented . "Återse det kommenterade")
     (kom-edit-insert-commented . "Citera det kommenterade")
+    (kom-edit-insert-buglist . "Klistra in kommenterad buglista")
     (kom-edit-add-bcc . "Addera för kännedom")
     (kom-edit-add-cross-reference . "Addera korsreferens")
     (kom-edit-add-no-comments . "Begär inga kommentarer")
