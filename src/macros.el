@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.18 1999-06-10 13:36:15 byers Exp $
+;;;;; $Id: macros.el,v 44.19 1999-06-10 13:49:46 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.18 1999-06-10 13:36:15 byers Exp $\n"))
+	      "$Id: macros.el,v 44.19 1999-06-10 13:49:46 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -50,7 +50,7 @@
 ;;; Defining keys
 ;;;
 
-(or (fbound 'kbd)
+(or (fboundp 'kbd)
     (defmacro kbd (keys)
       "Convert KEYS to the internal Emacs key representation.
 KEYS should be a string in the format used for saving keyboard macros
