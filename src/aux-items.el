@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.18 1999-12-02 22:29:38 byers Exp $
+;;;;; $Id: aux-items.el,v 44.19 2000-02-17 17:01:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.18 1999-12-02 22:29:38 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.19 2000-02-17 17:01:38 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -147,7 +147,8 @@ return non-nil if the item is to be included in the list."
 (defun lyskom-aux-item-output-data (item)
   (lyskom-aux-item-try-call item 
                             'encode-data
-                            (aux-item->data item)))
+                            (aux-item->data item)
+			    item))
 
 
 ;;; ======================================================================
@@ -162,7 +163,7 @@ return non-nil if the item is to be included in the list."
   (text-print-when . footer)
   (parse . nil)
   (parse-data . lyskom-aux-item-decode-data)
-  (output-data . lyskom-aux-item-encode-data)
+  (encode-data . lyskom-aux-item-encode-data)
   (text-print . lyskom-print-fast-reply)
   (info . lyskom-aux-item-info))
 
@@ -171,7 +172,7 @@ return non-nil if the item is to be included in the list."
   (text-print-when . comment)
   (parse . lyskom-parse-cross-reference)
   (parse-data . lyskom-aux-item-decode-data)
-  (output-data . lyskom-aux-item-encode-data)
+  (encode-data . lyskom-aux-item-encode-data)
   (text-print . lyskom-print-cross-reference)
   (edit-insert . lyskom-edit-insert-cross-reference)
   (info  . lyskom-aux-item-info))
@@ -214,7 +215,7 @@ return non-nil if the item is to be included in the list."
 (def-aux-item alternate-name 10
   (text-print-when . header)
   (text-print . lyskom-print-alternate-name)
-  (output-data . lyskom-aux-item-encode-data)
+  (encode-data . lyskom-aux-item-encode-data)
   (parse-data . lyskom-aux-item-decode-data)
   (info  . lyskom-aux-item-info))
 
@@ -235,7 +236,7 @@ return non-nil if the item is to be included in the list."
   (info . lyskom-aux-item-info)
   (text-print-when . header)
   (parse-data . lyskom-aux-item-decode-data)
-  (output-data . lyskom-aux-item-encode-data)
+  (encode-data . lyskom-aux-item-encode-data)
   (text-print . lyskom-print-creating-software))
 
 (def-aux-item mx-author 16

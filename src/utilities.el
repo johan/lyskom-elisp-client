@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.49 2000-02-16 15:10:58 byers Exp $
+;;;;; $Id: utilities.el,v 44.50 2000-02-17 17:01:44 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.49 2000-02-16 15:10:58 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.50 2000-02-17 17:01:44 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -558,8 +558,12 @@ If optional APPEND is non-nil, add at the end of HOOK."
 ;;;
 
 (defun lyskom-princ (string &optional stream)
-  "Similar to princ but will only print a string. Does not lose text properties
-under XEmacs."
+  "Output the printed representation of STRING, any Lisp STRING.
+No quoting characters are used; no delimiters are printed around
+the contents of strings. Text properties are retained.
+
+Output stream is STREAM, or value of standard-output, and must be a
+buffer or a marker. Function or minibuffer streams are not supported."
   (let ((old-point nil)
         (start-point nil)
         (old-buffer (current-buffer)))
@@ -570,7 +574,14 @@ under XEmacs."
                  (setq old-point (point))
                  (set-buffer (marker-buffer stream))
                  (goto-char stream)
-                 (setq start-point (point))))
+                 (setq start-point (point)))
+                ((null stream)
+                 (cond ((bufferp standard-output) (set-buffer standard-output))
+                       ((markerp standard-output) 
+                        (setq old-point (point))
+                        (set-buffer (marker-buffer standard-output))
+                        (goto-char standard-output)
+                        (setq start-point (point))))))
 
           (insert string))
       (cond ((markerp stream) 
