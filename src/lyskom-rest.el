@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.24 1997-02-12 13:46:05 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.25 1997-02-13 11:36:11 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.24 1997-02-12 13:46:05 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.25 1997-02-13 11:36:11 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -476,9 +476,7 @@ according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
   (initiate-pepsi 'main nil (conf-stat->conf-no conf-stat))
   (setq lyskom-current-conf (conf-stat->conf-no conf-stat))
-  (let ((num-unread (length (text-list->texts
-			     (read-info->text-list
-			      read-info)))))
+  (let ((num-unread (text-list->length (read-info->text-list read-info))))
     (lyskom-format-insert (if (not kom-print-number-of-unread-on-entrance)
 			      'enter-conf
 			    (if (= num-unread 1)
@@ -537,9 +535,8 @@ CONF can be a a conf-stat or a string."
 	    (while read-info-list
 	      (if (read-info->conf-stat (car read-info-list))
 		  (progn
-		    (setq len (length (text-list->texts 
-				       (read-info->text-list 
-					(car read-info-list)))))
+		    (setq len (text-list->length
+			       (read-info->text-list (car read-info-list))))
 		    (if (= (conf-stat->conf-no conf)
 			   (conf-stat->conf-no 
 			    (read-info->conf-stat (car read-info-list))))
@@ -1699,10 +1696,8 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
 	       (eq type 'REVIEW-MARK)))
 	 (> (read-info->priority (read-list->first lyskom-to-do-list))
 	    (read-info->priority (read-list->first lyskom-reading-list))))
-    (if (> (length 
-	    (text-list->texts 
-	     (read-info->text-list
-	      (read-list->first lyskom-to-do-list))))
+    (if (> (text-list->length (read-info->text-list
+			       (read-list->first lyskom-to-do-list)))
 	   1)
        'next-pri-conf
       'next-pri-text))
