@@ -1,5 +1,8 @@
 Mon Jul 27 01:14:24 1992  Linus Tolke Y  (linus@lysator)
 
+	* flags.el (lyskom-options-done): New variable to tell if we have
+	  already read the user-area.
+
 	* clienttypes.el (lyskom-stack-isempty): New function.
 	  (lyskom-queue-enter): Replaced docstring.
 
