@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 44.14 1997-02-07 18:08:14 byers Exp $
+;;;;; $Id: startup.el,v 44.15 1997-02-12 13:46:10 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.14 1997-02-07 18:08:14 byers Exp $\n"))
+	      "$Id: startup.el,v 44.15 1997-02-12 13:46:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -616,7 +616,7 @@ to see, set of call."
                           lyskom-unparsed-marker
                           lyskom-server-info
                           lyskom-server-name)
-      (kill-all-local-variables)
+      (kill-all-local-variables))
     (lyskom-setup-local-variables)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
     (setq lyskom-output-queues (make-vector 10 nil))
@@ -626,7 +626,7 @@ to see, set of call."
         (setq i (1+ i))))
     (setq lyskom-pending-calls nil)
     (lyskom-set-mode-line
-     (lyskom-get-string 'not-present-anywhere))))
+     (lyskom-get-string 'not-present-anywhere)))
 
 
 
