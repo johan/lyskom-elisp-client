@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.78 2001-01-01 23:44:12 qha Exp $
+;;;;; $Id: utilities.el,v 44.79 2001-01-03 22:03:03 qha Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.78 2001-01-01 23:44:12 qha Exp $\n"))
+	      "$Id: utilities.el,v 44.79 2001-01-03 22:03:03 qha Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -1178,7 +1178,7 @@ If WANT-TYPES is non-nil then the result is an assoc list where the
 car of each element is the recipient number and the cdr is the type."
   (let ((result nil))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
-      (when (member (misc-info->type misc) '(RECPT CC-RECPT BCC-RECPT))
+      (when (memq (misc-info->type misc) lyskom-recpt-types-list)
         (if want-types
             (setq result (cons (cons (misc-info->recipient-no misc)
                                      (misc-info->type misc))

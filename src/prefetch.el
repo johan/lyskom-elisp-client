@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.21 2001-01-01 23:44:10 qha Exp $
+;;;;; $Id: prefetch.el,v 44.22 2001-01-03 22:03:01 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.21 2001-01-01 23:44:10 qha Exp $\n"))
+	      "$Id: prefetch.el,v 44.22 2001-01-03 22:03:01 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -640,7 +640,7 @@ Put the requests on QUEUE."
    (text-stat->misc-info-list text-stat)
    (let ((type (misc-info->type misc)))
      (cond
-      ((member type '(RECPT BCC-RECPT CC-RECPT))
+      ((memq type '(RECPT BCC-RECPT CC-RECPT))
        (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
       ((eq type 'COMM-IN)
        (lyskom-prefetch-textauth (misc-info->comm-in misc) queue))
@@ -670,7 +670,7 @@ Put the requests on QUEUE."
      (text-stat->misc-info-list text-stat)
      (let ((type (misc-info->type misc)))
        (cond
-	((member type '(RECPT BCC-RECPT CC-RECPT))
+	((memq type '(RECPT BCC-RECPT CC-RECPT))
 	 (lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
 	((eq type 'COMM-IN)
 	 (lyskom-prefetch-texttree (misc-info->comm-in misc) queue t))
@@ -804,7 +804,7 @@ Put the requests on QUEUE."
       (text-stat->misc-info-list text-stat)
     (let ((type (misc-info->type misc)))
       (cond
-       ((member type '(RECPT BCC-RECPT CC-RECPT))
+       ((memq type '(RECPT BCC-RECPT CC-RECPT))
 	(lyskom-prefetch-conf (misc-info->recipient-no misc) queue))
        ((eq type 'COMM-IN)
 	(lyskom-prefetch-textauth (misc-info->comm-in misc) queue))

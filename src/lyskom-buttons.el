@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.52 2001-01-01 23:44:06 qha Exp $
+;;;; $Id: lyskom-buttons.el,v 44.53 2001-01-03 22:02:56 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.52 2001-01-01 23:44:06 qha Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.53 2001-01-03 22:02:56 qha Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -421,7 +421,7 @@ information."
          (hints (and data (elt data 4)))
          (the-hint (lyskom-get-button-hint hints))
          (props 
-          (cond ((and (member type '(conf pers))
+          (cond ((and (memq type '(conf pers))
                       numarg)
                  (list 'face 
                        (or face
@@ -868,7 +868,7 @@ This is a LysKOM button action."
 (defun lyskom-view-url-windows (url manager)
   "View the URL URL in Microsoft Windows. MANGER is the URL manager.
 Fall back on Netscape if not running in Microsoft Windows."
-  (cond ((member window-system '(win32 mswindows w32))
+  (cond ((memq window-system '(win32 mswindows w32))
          (let ((programs '("start"
                            "explorer"
                            "C:\\Program Files\\Netscape\\Communicator\\Program\\netscape.exe"
@@ -896,7 +896,7 @@ that, starts a new one."
   (setq url (replace-in-string url "," "%2C"))
   (setq url (replace-in-string url "(" "%28"))
   (setq url (replace-in-string url ")" "%29"))
-  (let* ((url-string (if (member window-system '(win32 mswindows w32))
+  (let* ((url-string (if (memq window-system '(win32 mswindows w32))
                          (list url)
                        (list "-remote"
                              (format "openUrl(%s)" url))))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.35 2001-01-01 23:44:10 qha Exp $
+;;;;; $Id: parse.el,v 44.36 2001-01-03 22:03:01 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.35 2001-01-01 23:44:10 qha Exp $\n"))
+	      "$Id: parse.el,v 44.36 2001-01-03 22:03:01 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -284,7 +284,7 @@ Signal lyskom-parse-incomplete if there is no nonwhite char to parse."
             (t (lyskom-protocol-error 'lyskom-parse-bitstring
                                       "Expected bool or space, got %S"
                                       char))))
-    (if (not (member char '(?\  ?\n)))
+    (if (not (memq char '(?\  ?\n)))
 	;; This occurs when the received string is longer than
 	;; expected.
         (progn

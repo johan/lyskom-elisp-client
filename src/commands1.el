@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.96 2001-01-01 23:43:57 qha Exp $
+;;;;; $Id: commands1.el,v 44.97 2001-01-03 22:02:48 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.96 2001-01-01 23:43:57 qha Exp $\n"))
+	      "$Id: commands1.el,v 44.97 2001-01-03 22:02:48 qha Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1209,7 +1209,7 @@ Don't ask for confirmation."
   (let* ((info (car misc-list))
 	 (type (misc-info->type info)))
     (cond ((null misc-list) '())
-	  ((member type '(RECPT CC-RECPT BCC-RECPT))
+	  ((memq type lyskom-recpt-types-list)
 	   (append (list (intern (downcase (symbol-name type)))
 			 (misc-info->recipient-no info))
 		   (lyskom-get-recipients-from-misc-list
@@ -1599,7 +1599,7 @@ Those that you are not a member in will be marked with an asterisk."
     (lyskom-message (lyskom-format (if arg 'finding-created-pers-confs 'finding-created-confs)
                                    (elt counter 1)
                                    (elt counter 2)))
-    (when (and cs (member pers-no (list (conf-stat->creator cs)
+    (when (and cs (memq pers-no (list (conf-stat->creator cs)
 					(conf-stat->supervisor cs)
 					(conf-stat->super-conf cs))))
       (aset counter 3 (1+ (elt counter 3)))
@@ -3173,7 +3173,7 @@ footnotes) to it as read in the server."
 	misc
 	(text-stat->misc-info-list text-stat)
       (cond
-       ((and (member (misc-info->type misc) '(COMM-IN FOOTN-IN))
+       ((and (memq (misc-info->type misc) lyskom-comment-types-list)
 	     (> (if (eq (misc-info->type misc)
 			'COMM-IN)
 		    (misc-info->comm-in misc)

@@ -1,3 +1,14 @@
+2001-01-02  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* All files changed when I replaced
+	(or (eq foo 'a) (eq foo 'b) ...) with (member foo '(a b ...)):
+	Replaced member with memq which compares with `eq', and
+	substituted lyskom-comment-types-list & c. where apropriate.
+
+	* vars.el.in (lyskom-comment-types-list): Added constant.
+	(lyskom-recpt-types-list): Ditto.
+	(lyskom-review-types-list): Ditto.
+
 2000-12-31  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* view-text.el (lyskom-view-text): Replaced

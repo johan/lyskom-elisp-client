@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: clienttypes.el,v 44.11 2001-01-01 23:43:56 qha Exp $
+;;;;; $Id: clienttypes.el,v 44.12 2001-01-03 22:02:46 qha Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: clienttypes.el,v 44.11 2001-01-01 23:43:56 qha Exp $\n"))
+	      "$Id: clienttypes.el,v 44.12 2001-01-03 22:02:46 qha Exp $\n"))
 
 
 ;;; ================================================================
@@ -254,7 +254,7 @@ TEXT-NO may be nil, in which case only empty read-infos on RLIST are removed."
 	  (cond
 	   ((let ((type (read-info->type (car curr)))) 
 					; Don't change REVIEW et c.
-	      (member type '(REVIEW REVIEW-TREE REVIEW-MARK))))
+	      (memq type lyskom-review-types-list)))
 	   (t				; Do change all other entries.
 	    (let ((tl  (read-info->text-list (car curr))))
 	      (text-list->delq tl text-no)))))
