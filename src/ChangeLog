@@ -1,3 +1,8 @@
+Wed Jan 22 00:22:02 1992  Inge Wallin  (inge at lysator)
+
+	* clienttypes.el (read-list-enter-read-info): Rewritten it into an
+	  iterative function instead of a recursive one.
+
 Mon Jan 13 21:35:29 1992  Per Cederqvist  (ceder at robin)
 
 	* commands1.el (lyskom-comment-recipients): Catch quits via a
