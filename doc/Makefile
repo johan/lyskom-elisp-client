@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 43.2 1996-08-14 04:15:14 davidk Exp $
+# $Id: Makefile,v 43.3 1996-08-14 13:49:16 byers Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -23,7 +23,10 @@
 # Please mail bug reports to bug-lyskom@lysator.liu.se.
 #
 # $Log: Makefile,v $
-# Revision 43.2  1996-08-14 04:15:14  davidk
+# Revision 43.3  1996-08-14 13:49:16  byers
+# Nya filer för dokumentationsdatabasen, lite upptadering i dokumentationen
+#
+# Revision 43.2  1996/08/14 04:15:14  davidk
 # Bytte versionsnummer till 0.43.
 #
 # Revision 43.1  1996/08/07 20:00:46  davidk
@@ -102,6 +105,12 @@ $(INDEXES): indexes
 elisp-client.dvi: $(INDEXES)
 	@echo pass 3
 	tex elisp-client.texinfo
+
+lyskom-variables.data: lyskom-commands.data
+
+lyskom-commands.data: ../src/lyskom.el
+	emacs -batch -l makedoc.el -f lyskom-update-documentation
+
 
 .PHONY: install
 install: elisp-client elisp-client.txt

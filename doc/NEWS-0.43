@@ -17,6 +17,21 @@ nu finns under namnet NEWS-0.43.
 ** Kommandoa "Flytta Text" kan användas för att flytta inlägg mellan
    möten.
 
+** Hooken lyskom-send-message-hook anropas precis innan personliga,
+   allmänna eller gruppmeddelanden sänds. Se dokumentationen för
+   hooken för en utförligare beskrivning av vad den kan göra. Per
+   default innehåller den lyskom-send-message-trim-newlines, som tar
+   bort tomrader i slutet av meddelandet och frågar om man verkligen
+   vill skicka tomma meddelanden.
+
+** Hooken lyskom-send-message-setup-hook anropas innan man börjar
+   skriva in ett meddelande när man gör "Sända meddelande", och
+   hooken lyskom-send-message-exit-hook anropas när man går ur
+   minibufferten. Det finns två funktioner,
+   lyskom-send-message-resize-minibuffer och
+   lyskom-send-message-auto-fill som kan vara intressanta att stoppa
+   in i den förstnämnda hooken.
+
 ** Om servern är lyskomd version 1.9 eller senare så använder klienten
    nya anrop för att hämta information om inloggade sessioner. Detta
    innebär att man kan se osynliga sessioner om man vill och att
@@ -48,16 +63,22 @@ nu finns under namnet NEWS-0.43.
 
 ** M-e binds inte längre av elispklienten.
 
-** Hanteringen av prompten fungerar bättre.
+** Hanteringen av prompten fungerar bättre, men inte perfekt.
 
-** Den försöker inte göra (recenter -1) i fel buffert.
+** Vid läsning av namn från minibufferten så skall inte texten raderas
+   om man anger ett namn som inte finns.
 
-** Klienten försöker inte lägga till Anonym peson som mottagare till
+** Klienten försöker inte göra (recenter -1) i fel buffert.
+
+** Klienten försöker inte lägga till Anonym person som mottagare till
    inlägg.
 
 
-
 * Välkända buggar som inte behöver rapporteras igen (och igen (och igen))
+
+** Prompten försvinner om man skickar in ett inlägg och hinner trycka
+   space innan man får meddelande om att den nya texten har skapats.
+   Denna bug kommer nog att fixas såsmåningom.
 
 ** Man kan inte filtrera anonyma inlägg eller inlägg av personer som
    inte längre existerar. Den här buggen har låg prioritet.
@@ -72,4 +93,8 @@ nu finns under namnet NEWS-0.43.
    spara den nya prioriteringen. Denna bug kommer nog att fixas på
    något vis såsmåningom. 
 
-
+** Elispklienten fungerar inte under XEmacs eller Emacs 18. Frivilliga
+   att anpassa klienten får gärna anmäla sitt intresse till
+   davidk@lysator.liu.se eller byers@lysator.liu.se eller skicka brev
+   till Elispklientutvecklarnas interna möte i LysKOM på
+   kom.lysator.liu.se
