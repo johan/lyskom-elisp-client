@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.49 1999-02-18 16:29:48 petli Exp $
+;;;;; $Id: swedish-strings.el,v 44.50 1999-05-05 14:38:39 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.49 1999-02-18 16:29:48 petli Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.50 1999-05-05 14:38:39 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -301,6 +301,8 @@ du har läst klart allting. Kom tillbaks senare.
     (name-to-be-changed . "Ange det namn som skall ändras: ")
     (no-such-conf-or-pers . "Mötet eller personen finns ej.\n")
     (new-name . "Nytt namn: ")
+    (new-paren . "Ny parentes: ")
+    (no-paren-in-name . "Namnet innehåller ingen parentes.\n")
     (who-to-change-supervisor-for . "Vem vill du ändra organisatör för? ")
     (new-supervisor . "Ny organisatör: ")
     (text-to-mark . "Vilket inlägg vill du markera? ")
@@ -1274,6 +1276,7 @@ Innehåll:    \"%#9s\"
     (kom-write-text	      . "Skriva ett inlägg")
     (kom-send-letter	      . "Skicka brev")
     (kom-change-name	      . "Ändra namn")
+    (kom-change-parenthesis   . "Ändra parentes")
     (kom-change-password      . "Ändra lösenord")
     (kom-change-supervisor    . "Ändra organisatör")
     (kom-change-presentation  . "Ändra presentation")
