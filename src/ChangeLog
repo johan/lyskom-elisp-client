@@ -1,5 +1,8 @@
 2003-08-24  David Byers  <byers@lysator.liu.se>
 
+	* commands1.el (kom-create-conf): Ask about keep-commented when
+	creating conference.
+
 	* NEWS-0.48: Updated to here.
 
 	Support setting keep-commented:
