@@ -1,5 +1,8 @@
 2003-01-01  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 921:
+	* commands1.el (kom-jump): Use lyskom-read-text-no-prefix-arg.
+
 	Fix bug 291:
 	* vars.el.in (lyskom-language): Added to minibuffer variables or
 	lyskom-get-string will fail in predicate functions used in
