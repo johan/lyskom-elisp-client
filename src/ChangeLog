@@ -1,3 +1,14 @@
+2003-08-14  David Byers  <byers@lysator.liu.se>
+
+	Fix bug 1080:
+	* commands2.el (kom-status-server): Use point-max, not point, to
+	figure out where insertion starts and ends (lyskom-insert always
+	inserts at point-max but does not always move point).
+
+	Fix bug 1081:
+	* lyskom-rest.el (lyskom-format-aux): Set pad-length to nil when
+	no pad-length is specified.
+
 2003-08-13  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* vars.el.in (kom-default-language): Updated the variable

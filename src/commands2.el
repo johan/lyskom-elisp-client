@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.175 2003-08-13 20:54:13 qha Exp $
+;;;;; $Id: commands2.el,v 44.176 2003-08-14 08:24:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.175 2003-08-13 20:54:13 qha Exp $\n"))
+              "$Id: commands2.el,v 44.176 2003-08-14 08:24:35 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3118,13 +3118,13 @@ properly in the client."
                                                          "s"))))
           (lyskom-insert "\n")
           (lyskom-traverse item (server-stats->values stats)
-            (let ((start (point))
+            (let ((start (point-max))
                   (inhibit-read-only t))
               (lyskom-format-insert fmt (car item))
               (lyskom-traverse val (cdr item)
                 (lyskom-format-insert "  %=8.2.7#1f" (stats->average val)))
               (lyskom-format-insert "\n")
-              (add-text-properties start (point) `(face ,kom-mark-face)))
+              (add-text-properties start (point-max) `(face ,kom-mark-face)))
 
             (lyskom-format-insert fmt "")
             (lyskom-insert " ")
