@@ -6,14 +6,6 @@ Att göra i elisp-klienten
 * INTRESSANTA SAKER
 
 
-ALLA SOM ANVÄNDER LYSKOM-READ-TEXT-NO-PREFIX-ARG MÅSTE VARA BEREDDA PÅ
-ATT RESULTATET ÄR NIL, VILKET DET BLIR OM MAN INTE HAR EN PROMPT MEN
-HAR DEFAULTVÄRDE PÅ TEXTNUMRET!
-
-Kontrollera alla användningar av (lyskom-insert 'have-to-read). En del
-borde vara egna strängar.
-
-
 Använd lyskom-read-text-no-prefix arg i alla funktioner där det är
 meningsfullt. Följande är relevanta:
 
@@ -65,10 +57,6 @@ meningsfullt. Följande är relevanta:
 Bestäm vettig default och om kommandot skall fråga efter nummer eller
 bara anta default om man inte ger prefixargument.
 
-
-Det vore trevligt om "Arkivera inlägg (till fil)" fanns i kontextmenyn
-för inläggsnummer också, samt om man kunde ställa in en defaultpath
-till funktionen, helst också per KOM.
 
 ** Blockera eller klara av att man ger kommandon i
    kom-handle-membership medan bufferten håller på att uppdateras.

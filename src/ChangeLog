@@ -1,5 +1,24 @@
 2000-06-02  David Byers  <davby@ida.liu.se>
 
+	* lyskom-rest.el (kom-save-text): Use lyskom-saved-file to save
+	the most recently specified file name.
+
+	* lyskom-buttons.el (lyskom-button-save-text): New function.
+
+	* lyskom-rest.el (kom-save-text): Accept list of texts to save as
+	argument.
+
+	* swedish-strings.el: Lade till arkivera i kontextmenyn för
+	inläggsnummer. 
+
+	* vars.el.in (kom-saved-file-name): New variable replaces
+	lyskom-saved-file.
+
+	* lyskom-rest.el (kom-save-text): Put the default file in the
+	minibuffer. Do not display the default file in the prompt. More
+	informative prompt (show number of texts if saving many or text
+	number if saving one). Expand file name.
+
 	* review.el (kom-find-root): Better error message.
 	(kom-find-root-review): Better error message.
 
