@@ -1,4 +1,5 @@
 <!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
+
 <!ENTITY genindex.sgm SYSTEM "genindex.sgm">
 ]>
 <!-- ?stylesheet href="/local/sgml/style/dsssl/ldp.dsl" type="text/dsssl" -->
@@ -1843,11 +1844,11 @@
       <title>Uppskjuta läsning - e</title>
 
       <para>
-        <indexterm id="kom-set-unread-1">
+        <indexterm id="kom-postpone-1">
           <primary>Läsning</primary>
           <secondary>Uppskjuta läsning</secondary>
         </indexterm>
-        <indexterm id="kom-set-unread-2">
+        <indexterm id="kom-postpone-2">
           <primary>Uppskjuta läsning</primary>
         </indexterm>
         Ibland händer det att man får massor av olästa texter i ett
@@ -1877,6 +1878,9 @@
       </comment>
     </sect2>
 
+      <sect2>
+        <title>Unfinished stuff</title>
+      <para>
     Läsa inlägg
       Vanlig läsning
       Endast läsa senaste
@@ -1884,7 +1888,8 @@
       Återse
       Filtrering
       Markering
-
+      </para>
+        </sect2>
   </sect1>
   
   <sect1>
@@ -2047,8 +2052,8 @@ upp fel. Det tycker jag är en vettig avvägning eftersom URLer som
 avslutas med underliga tecken inte är så vanliga.
 
 Om man vill vara garanterad att ens URL inte tolkas fel så måste man
-märka upp den enligt appendixet i RFC 1738 <URL:http://www.cis.ohio
--state.edu/cgi-bin/rfc/rfc1738.html>. Då kan man till och med bryta
+märka upp den enligt appendixet i RFC 1738 &lt;URL:http://www.cis.ohio
+-state.edu/cgi-bin/rfc/rfc1738.html&gt;. Då kan man till och med bryta
 URLen över flera rader.
 (8744374) /David Byers/-----------------------------
 
@@ -2056,6 +2061,6 @@ URLen över flera rader.
   </para>  
 </chapter>
 
-&genindex.sgm;
+<!--&genindex.sgm;-->
 
 </book>

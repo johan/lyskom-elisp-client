@@ -1,5 +1,12 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
-<!DOCTYPE book SYSTEM "manual.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                      "docbook/dtd/xml/4.2/docbookx.dtd" [
+  <!ENTITY % fnc SYSTEM "fnc.ent">
+  <!ENTITY % var SYSTEM "var.ent">
+
+  %fnc;   <!-- LysKOM functions -->
+  %var;   <!-- LysKOM variables -->
+]>
 
 <book lang="en">
   <chapter>
@@ -188,7 +195,7 @@
           for manipulating server FAQs; these can only be used by
           users with administrative rights to the LysKOM server.
         </para>
-
+        
         <para>
           There are a number of settings that affect FAQs.
           &var:kom-auto-list-faqs; controls automatic listing of FAQs

@@ -1,88 +1,548 @@
+                       News for lyskom.el 0.48
+                       =======================
 
-* New features
+    Version 0.48 contains a number of major changes and enhancements.
+    It is available from the following addresses:
 
-** Changes to key bindings
+      <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>
+      <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
 
-*** A large number of key bindings have been changed in the english
-    version of the client. These changes make the bindings slightly
-    more consistent and open up keys for future use.
+    The file is named lyskom-0.48.tar.gz, and a copy of this texts is
+    available under the name NEWS-0.48 in the tar archive. There is
+    also a zip file available at the same location for people using
+    systems that do not understand tar files.
 
-*** The key `a' is now a prefix for add comments (bug 834).
+    If you find a bug in the LysKOM elisp client, please report it in
+    our bugzilla at <URL:http://bugzilla.lysator.liu.se/> (product
+    name lyskom-elisp-client). If you are unable to use bugzilla,
+    please use M-x kom-bug-report. Note that reports filed using this
+    method may inadvertently get lost. Reports submitted to bugzilla
+    never get lost, no matter how much we would like that to happen to
+    some of them.
 
-*** The sequence `s u' is now a prefix for subtract commands (bug
-    834).
-
-*** The binding for kom-review-backward is now under the prefix for
-    review commands (bug 834).
+    Everybody is encouraged to upgrade to version 0.48.
 
 
-** Typefaces and colors
 
-   The code for handling faces has been completely overhauled. The
-   concept of face schemes has been removed. Instead, there is a
-   variable for each face role that contains the face to use in that
-   role. This makes it possible to have different faces in differnt
-   buffers, makes it easier to define custom faces and to customize
-   face use.
+* Performance enhancements
 
-   Faces can now be selected in the settings buffer.
+** On sufficiently new LysKOM servers (those supporting protocol
+   version 10), performance enumerating unread texts has been
+   dramatically improved. Joining i}m only takes a few minutes now (if
+   you don't know what i}m is, suffice to say that there will probably
+   be over 90000 texts in the conference by the time you read this).
 
-   This fixes bugs 486, 498, and 499.
+** There are other major performance enhancements when reading
+   conferences with very many unread texts that you may never notice.
+   The relative performance change is huge, but if it only takes a
+   millisecond to begin with...
 
-** When running against a 2.1.0 server or later, settings made in one
-   session will be copied to other sessions with the same user.
 
-** kom-set-unread now accepts a date as well as a number of texts (bug
-   291).
+
+* New system for handling fonts and faces
+
+** The system for handling fonts and faces has been completely
+   rewritten. If you have customized fonts and faces you will have to
+   do it all over again. That's the bad news. The good news is that
+   it's dead easy.
+
+** Ther is a variable for each face role (e.g. kom-active-face,
+   kom-first-line-face etc.). This variable should be set to the
+   specific face to use. Since the variable is buffer-local you can
+   have different faces in different sessions and it is far easier to
+   define custom faces and to customize face use.
+
+** The concept of face schemes is gone.
+
+** Faces can now be selected in the customize buffer.
+
+** Faces can now be modified using customize-face.
+
+
+
+* New system for controlling highlighting of conference names
+
+** Previously there have been a number of special cases for
+   highlighting conference names with special faces. The lists
+   kom-morons, kom-friends and others are examples of this.
+
+   All such highlighting is now controlled using the new variable
+   kom-highlight-conferences. The default value mimics the behavior of
+   version 0.47.1 with a few additions.
+
+** By default, conferences without presentations are shown struck
+   through. Just to remind you who has and who hasn't told everyone
+   else who they are :-)  This may take a while to kick in since the
+   code is written to not make server calls (which may be necessary
+   determine presentation statis). Also, a person may have written a
+   presentation recently even if the name is shown struck through.
+
+** By default, conferences you supervise are shown in bold. This may
+   take a little while to kick in as the code is written to not make
+   server calls (which may be necessary to determins supervisor
+   status). Changes to supervisor status will not be immediately
+   visible.
+
+
+
+* Changes to key bindings
+
+** A large number of key bindings have been changed in the english
+   version of the client. These changes make the bindings slightly
+   more consistent and open up keys for future use. As annoying as
+   this is now, it will be good in the long run.
+
+** The key `a' is now a prefix for add comments.
+
+** The sequence `s u' is now a prefix for subtract commands.
+
+** The binding for kom-review-backward is now under the prefix for
+   review commands.
+
+
+
+* New commands
+
+** kom-list-faqs: List all FAQs for a conference.
+
+   Swedish name: Lista FAQ [l q]
+   English name: List FAQs [l q]
+
+
+** kom-list-server-faqs: List all FAQs for the server.
+
+   Swedish name: Lista server-FAQ [l Q]
+   English name: List server-FAQs [l Q]
+
+
+** kom-list-new-conferences: List conferences created since the last
+   time this command was given.
+
+   Swedish name: Lista nya möten
+   English name: List new conferences
+
+
+** kom-list-new-persons: List persons created since the last time this
+   command was given.
+
+   Swedish name: Lista nya personer
+   English name: List new users
+
+
+** kom-limit-import: Specify restrictions on importing e-mail. Note
+   that such restrictions are advisory; clients may ignore them.
+
+   Swedish name: Begränsa import av texter
+   English name: Limit imported texts
+
+
+** kom-will-person-read-text: Check if a particular person is a member
+   of any recipient of a text. If a prefix argument is given, that
+   text will be checked. This command accepts text number prefix
+   arguments (see `lyskom-read-text-no-prefix-arg').
+
+   Swedish name: Kontrollera (om person kommer att) läsa (inlägg)
+   English name: Check (if person will) read (text)
+
+
+** kom-join-all-conferences: Join all conferences. You want to be
+   really careful doing this. It will take a while and is probably not
+   what you really want to do.
+
+   Swedish name: Bli medlem i alla möten
+   English name: Join all conferences
+
+
+** kom-leave-all-conferences: Leave all conferences. This command will
+   ignore certain conferences. It will not leave your letterbox,
+   secret or closed conferences without confirmation. Note that this
+   command could take a very long time to complete.
+
+   Swedish name: Utträd ur (nästan) alla möten
+   English name: Leave (almost) all conferences
+
+
+** kom-unread-all-marked-texts: Mark all texts you have marked,
+   regardless of mark, as unread.
+
+   Swedish name: Oläsmarkera alla markerade [o a m]
+   English name: Unread all markeed (texts) [u a m]
+
+
+** kom-unread-marked-texts: Mark all texts you have marked with a
+   particular mark as unread.
+
+   Swedish name: Oläsmarkera markerade [o m]
+   English name: Unread marked (texts) [u m]
+
+
+** kom-unread-faq: Marks the FAQs for a particular conference as
+   unread.
+
+   Swedish name: Oläsmarkera FAQ [o q]
+   English name: Unread FAQ [u q]
+
+
+** kom-unread-server-faq: Mark the FAQs for the server as unread.
+
+   Swedish name: Oläsmarkera server-FAQ [o Q]
+   English name: Unread server FAQ [o q]
+
+
+** kom-unread-presentation: Marks the presentation for a person or a
+   conference as unread. If you give a prefix argument it is treated
+   as a text number prefix argument, and this command unreads the
+   presentation of the author of that text.
+
+   Swedish name: Oläsmarkera presentation [o p]
+   English name: Unread presentation [u p]
+
+
+** kom-unread-all: Mark all articles written by a particular author to
+   a particular conference as unread. This can also be accomplished by
+   using `kom-unread-by-to' and specifying zero texts.
+
+   Swedish name: Oläsmarkera alla [o a SPC, o A]
+   English name: Unread all [u a SPC, u A]
+
+
+** kom-unread-first: Mark the first N articles written by a particular
+   author to some conference as unread. With no author specified,
+   review texts by all authors. With zero texts specified, review all
+   text. With no conference specified, review texts to all
+   conferences. With a negative number of texts, review the last N
+   texts instead of the first (you can use `kom-unread-by-to' instead.
+
+   Swedish name: Oläsmarkera första [o f]
+   English name: Unread first [u f]
+
+
+** kom-unread-last-normally-read: Marks the N texts most recently read
+   using normal commands unread. After marking a number of texts
+   unread, this will mark the N texts read prior to that.
+
+   Swedish name: Oläsmarkera igen [o i]
+   English name: Unread again [u g]
+
+
+** kom-unread-tree: Recursively mark all comments to the selected text
+   as unread. This command accepts text number prefix arguments.
+
+   Swedish name: Oläsmarkera alla kommentarer rekursivt [o a r]
+   English name: Unread all comments recursively [u a r]
+
+
+** kom-unread-comments: Mark all comments to the selected text text as
+   unread. This command only marks one level of comments as unread. To
+   mark the entire comment tree unread, use `kom-unread-tree' instead.
+   This command accepts text number prefix arguments.
+
+   Swedish name: Oläsmarkera alla kommentarer [o a k]
+   English name: Unread all comments [u a c]
+
+
+** kom-unread-root: Finds the root text of the tree containing the
+   selected text and marks it as unread. This command accepts text
+   number prefix arguments.
+
+   Swedish name: Oläsmarkera urinlägget [o u]
+   English name: Unread original (text) [u o]
+
+
+** kom-unread-root-review: Finds the root of the comment tree
+   containing the selected texts and then recursively marks all its
+   comments as unread. For texts with a single root, this is
+   equivalent to doing `kom-find-root' followed by `kom-unread-tree'.
+   This command accepts text number prefix arguments.
+
+   Swedish name: Oläsmarkera träd [o t]
+   English name: Unread tree [u t]
+
+
+** kom-unread-previous-commented-text: Marks the texts that the
+   selected text is a comment to as unread. Without a prefix argument
+   this will display the text that the next-to-last text in the buffer
+   is a comment to. With a prefix argument this command is identical
+   to `kom-unread-commented-text'. This command accepts text number
+   prefix arguments.
+
+   Swedish name: Oläsmarkera det föregående kommenterade [o K]
+   English name: Unread (the) previously commented (text) [u C]
+
+
+** kom-unread-commented-text: MArkes the texts that the selected text
+   is a comment to as unread. This command accepts text number prefix
+   arguments.
+
+   Swedish name: Oläsmarkera det kommenterade [o k]
+   English name: Unread (the) commented (text) [u c]
+
+
+** kom-unread-more: Mark more articles unread using the same critera
+   as the last mark unread performed with `kom-unread-by-to'.
+
+   Swedish name: Oläsmarkera fler inlägg [o y]
+   English name: Unread more [u M]
+
+
+** kom-unread-by-to: Mark the last N articles written by a particular
+   author to some conference as unread. With no author specified,
+   review texts by all authors. With zero texts specified, review all
+   text. With no conference specified, review texts to all
+   conferences. With a negative number of texts, review the last N
+   texts instead of the first (you can use `kom-unread-first'
+   instead).
+
+   Swedish name: Oläsmarkera senaste [o s]
+   English name: Unread last [u l]
+
+
+** kom-mark-unread: MAke a single text unread. This command is
+   functional only on servers that support making text unread.
+
+   Swedish name: Oläsmarkera inlägg [o SPC, o INLÄGGSNUMMER]
+   English name: Unread text [u SPC, u TEXT-NUMBER]
+
+
+** kom-review-converted: Displays the selected text with all
+   conversions enabled, even if some or all of them have are disabled
+   by current settings. This command accepts text number prefix
+   arguments.
+
+   Swedish name: Återse konverterat [å v]
+   English name: Review converted [r v]
+
+
+** kom-change-message-flag: Control reception of group messages
+   (requires a server that supports this feature).
+
+   Swedish name: Ändra meddelandeflagga
+   English name: Change message flag
+
+
+** kom-copy-options: Copy settings from one LysKOM session to another.
+   This is useful if you have configured on session to your liking and
+   want ths settings to be used on other servers as well.
+
+   This command will save settings to the LysKOM server, but will not
+   save anything to your Emacs init file. Use `kom-customize' to edit
+   settings and save them to your emacs init file.
+
+   Swedish name: Kopiera inställningar
+   English name: Copy options
+
+
+
+* New settings
+
+  Full details of all these variables are available in the variable
+  documentation (C-h v). They can all be set using kom-customize
+  (Customize LysKOM / Inställningar (för) LysKOM).
+
+** kom-netscape-variant: Netscape-specific options. With this variable
+   it is possible to request that URLs are opened in new windows or
+   new tabs. These options may not work with all versions of Netscape
+   or Mozilla, or on all operating systems.
+
+** kom-show-sync-messages: controls display of database saving
+   message.
+
+** kom-highlight-conferences: how to highlight conference an person
+   names. This variable replaces kom-friends and kom-morons, and
+   controls all aspects of highlighting conference names.
+
+** kom-text-links: patterns to look for in text and convert to links
+   to URLs.
+
+** kom-url-transformation-rules: an alist specifying transformations
+   to be applied to URLs.
+
+** kom-server-aliases: an alist mapping server names to shorter
+   identification strings. This variable is now a user-controlled
+   variable and is not set in the client source code. It is possible
+   to set it in site and user init files. 
+
+   See `kom-builtin-server-aliases' for more information.
+
+** kom-builtin-server-aliases: an alist mapping server names to
+   shorter identification strings. This variable is used instead of
+   kom-server-aliases in the client source code.
+
+** kom-auto-confirm-new-conferences: automatic confirmation in
+   kom-list-new-conferences and kom-list-new-persons.
+
+
+* Changed settings
+
+** kom-server-aliases no longer contains the built-in list of servers.
+   This means that users can set this variable before loading the
+   client, without losing the built-in list of servers. The built-in
+   list of servers is now in kom-builtin-server-aliases.
+
+** kom-extended-status-information accepts a wider range of values to
+   provide more fine-grained control over the status display.
+
+** The variable kom-pop-personal-messages can now take a non-t,
+   non-nil value, which means don't pop up the frame if it is
+   iconified.
+
+** It is possible to select any number of nameday lists for display,
+   not just one.
+
+
+
+
+
+* Other new major features 
+
+** Reception of group messages can be controlled separately of the
+   passive/active status of a membership. This requires a server that
+   supports this feature (e.g. lyskomd 2.1.0 or later).
+
+** kom-set-unread now accepts a date as well as a number of texts. It
+   is now possible to set unread from a specific date and forwards,
+   not just a specific number.
+
+** The listing displayed by kom-list-summary now shows the comment
+   structure, changes of topic and number of direct comments to each
+   text.
 
 ** The client can transform URLs according to user-defined rules
    before sending them to the web browser. Rules are stored in 
    kom-url-transformation-rules and can be set in the settings
-   buffer (bug 923).
-
-** There are multiple user-selectable lists of namedays. The variable
-   kom-show-namedays can now indicate which list to use. Use the
-   settings buffer to select a list (bug 924).
-
-** The variable kom-server-aliases no longer contains the builtin
-   server list; those are in kom-builtin-server-aliases instead. Users
-   may now modify kom-server-aliases to add server aliases without
-   affecting the builtin list (bug 915).
-
-** Copy settings/Kopiera inställningar copies settings from one
-   session to another (bug 753).
+   buffer. This allows the client to do things like transform links to
+   Aftonbladet stories to the commercial-free version, or change
+   links to NYT stories to no-registration-required links.
 
 ** It is possible to specify patterns used to generate clickable links
    in texts. Patterns can be specified on a per-conference or on a
-   global bases in the settings buffer.
+   global bases in the settings buffer. This allows users to do things
+   like create links to trading sites from stock names or link to
+   different bugzilla databases on a per-conference basis.
 
-** List summary/Lista ärenden now lists texts in comment order with
-   indentation to indicate comment level.
+** Language settings are now handled according to the protocol
+   specification. The client now stors the language settings in the
+   common block of the user area, where it can be accessed by any
+   client. It is also possible to configure a list of languages. The
+   first available language on the list will be selected.
 
-** kom-write-text asks for a recipient by default (bug 823).
+** When connected to a version 2.1.0 or later LysKOM server (assuming
+   lyskomd and not another implementation), settings made in one
+   session are copied to all other sessions belonging to the same
+   user.
 
-** kom-write-letter only accepts letterboxes as initial recipients.
+** When reading a conference name, the client will usually enter an
+   initial value in the minibuffer. This client examines the
+   conference name point is on, the current conference and the current
+   person in order, and selects the first conference that is likely to
+   be acceptable as input.
+
+   The initial value is erased automatically if any character is
+   chanded without first moving the cursor (this also allowing editing
+   of the initial value).
+
+   Some commands use a different strategy for picking the initial
+   value. It is likely that this feature will evolve over the next few
+   versions of the client, possibly becoming fully configurable in the
+   future.
+
+** The client will periodically post a reminder about writing a
+   presentation. The frequency of this reminder will increase with
+   increased activity. If you want to disable it, you will have to
+   read the source code to find out how.
+
+** The variable kom-extended-status-information can take new values.
+   This variable controls the display of extended statis information
+   in kom-status-server and kom-status-conference. The variable is
+   fully configurable from kom-customize.
+
+** kom-status-server now shows boot-time and run-time statistics for
+   the server, if the server supports this feature (e.g. lyskomd 2.1.0
+   and later). Complete run-time-statistics are shown if the variable
+   kom-extended-status-information is set appropriately.
 
 
-* Minor improvements
+
+
+
+
+
+
+** When viewing the FAQ for a conference for the first time, follow
+   comments to it as if reading a regular text.
+
+** When viewing a user-area, it is formatted for readability, provided
+   the content type is set correctly.
+
+** Mode-specific help is available in the customize buffer since it
+   now uses its own major mode.
+
+** Texts and letters are the same now. There are still two commands,
+   and there are no plans to change this, but they do exactly the same
+   thing.
+
+** When accepting invitations, prompt for a new priority.
+
+** When joining a conference it is possible to set the initial number
+   of unread.
+
+** There are multiple user-selectable lists of namedays. The variable
+   kom-show-namedays can now indicate which list to use. Use the
+   settings buffer to select a list (bug 924, bug 952).
+
+** kom-write-text asks for a recipient by default.
+
+** When listing owned conferences, show the number of days texts are
+   retained.
+
+** kom-is-person-member-of-conference now shows the number of unread
+   texts the person has.
+
+** Improved diagnostic messages.
+
+** Explain the single-character legends in kom-list-conferences.
+
+** When creating a conference, the client prompts for number of days
+   texts should be retained.
+
+** The conference type is shown when entering a conference.
+
+** Variable names are included in the customize buffer.
 
 ** The prompt timestamp format obeys standard options, and can now
-   include seconds (bug XXX).
+   include seconds.
 
-** Lucia is indicated in lyskom-times (bug 928).
+** Lucia is indicated in lyskom-times.
 
 ** When running a command that reads text numbers, and the prefix
    argument indicates the parent of a text (typically when the user
    hits C-u before the command), and there are multiple parents,
-   provide completion when asking which one to use (bug 701).
+   provide completion when asking which one to use.
 
 ** kom-super-jump is smarter about selecting recipients. The order is
    now current conference first, the first recipient of the text that
    the user is a member of, then similar for CC and BCC recipients.
    Finally the first recipient, CC or BCC recipient is chosen if the
-   user is not a member of any recipients (bug 677).
+   user is not a member of any recipients.
+
+
+
 
 * Bug fixes
+
+** Passive memberships are shown separately in kom-status-person.
+
+** The default text number for kom-sub-comment and kom-sub-footnote is
+   chosen more carefully.
+
+** The separator in the edit buffer cannot be deleted.
+
+** The administrator status is reset when logging in.
+
+** It is possible to write comments to anonymous texts.
+
+** Bindings for swedish characters work in more versions of Emacs (bug
+   914).
 
 ** kom-compare-texts does not signal an error if one of the texts is
    unreadable.
@@ -114,3 +574,30 @@
 ** When scrolling, position point far enough to the left that
    automatic horizontal scrolling in Gnu Emacs doesn't take place (bug
    831).
+
+** When writing a text to a conference one is not a member of,
+   comment redirection is respected (bug 962, 963).
+
+** Handle the default key (t) in list arguments to beeping.
+
+** Fxied smoe speling erorrs and tpyos.
+
+** Language-dependent variables are now set correctly in the first
+   session.
+
+** The session priority is obeyed even for new memberships.
+
+** kom-view-previous-commented-text has the correct default text
+   again.
+
+** Support 8 and 9 digit text numbers.
+
+** Correct time in prompt timestamps.
+
+** Copying timestamps works again.
+
+** Filters work on texts without authors.
+
+** The regular expression for URLs is more RFC compliant.
+
+
