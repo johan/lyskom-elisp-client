@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: parse.el,v 38.8 1996-02-17 05:42:10 davidk Exp $
+;;;;; $Id: parse.el,v 38.9 1996-02-18 05:51:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 38.8 1996-02-17 05:42:10 davidk Exp $\n"))
+	      "$Id: parse.el,v 38.9 1996-02-18 05:51:32 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -804,15 +804,16 @@ lyskom-parse-success, lyskom-parse-error and lyskom-parse-async calls
 functions and variables that are connected with the lyskom-buffer."
   (let ((lyskom-buffer (current-buffer))
 	(match-data (match-data)))
-    (if (and mode-line-process
-	     (not (equal mode-line-process '(": %s"))))
-	(progn
-	  (setq mode-line-process '(": %s"))
-	  (if (and (not (lyskom-is-in-minibuffer))
-		   kom-presence-messages)
-	      (message ""))
-	  (set-buffer-modified-p (buffer-modified-p))
-	  (sit-for 0)))
+;;    I wonder what happens if I remove this? /davidk
+;;    (if (and mode-line-process
+;;	     (not (equal mode-line-process '(": %s"))))
+;;	(progn
+;;	  (setq mode-line-process '(": %s"))
+;;	  (if (and (not (lyskom-is-in-minibuffer))
+;;		   kom-presence-messages)
+;;	      (message ""))
+;;	  (set-buffer-modified-p (buffer-modified-p))
+;;	  (sit-for 0)))
     (lyskom-save-excursion
       (set-buffer lyskom-unparsed-buffer)
       (if (and (> lyskom-string-bytes-missing 0)

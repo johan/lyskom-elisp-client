@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 38.15 1996-02-17 15:36:16 byers Exp $
+;;;;; $Id: english-strings.el,v 38.16 1996-02-18 05:51:23 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: english-strings.el,v 38.15 1996-02-17 15:36:16 byers Exp $"))
+	      "$Id: english-strings.el,v 38.16 1996-02-18 05:51:23 davidk Exp $"))
 
 
 ;;; ================================================================
@@ -620,6 +620,11 @@ Group message to %#3M from %#2P (%#4s):
 ----------------------------------------------------------------
 ")    (text-is-created . "Article %#1d has been created!")
 
+    ; Used in mode-line-process
+    (mode-line-waiting . ": waiting")
+    (mode-line-working . ": working")
+    (mode-line-saving . ": saving")
+    (mode-line-down . ": down")
 
     ; From completing-read.el:
 
