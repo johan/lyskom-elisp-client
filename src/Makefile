@@ -1,5 +1,5 @@
 # -*- Makefile -*-
-# $Id: Makefile,v 44.38 1999-11-17 13:00:47 byers Exp $
+# $Id: Makefile,v 44.39 1999-11-18 19:57:23 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -22,7 +22,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.38 1999-11-17 13:00:47 byers Exp $
+# $Id: Makefile,v 44.39 1999-11-18 19:57:23 joel Exp $
 #
 
 
@@ -38,6 +38,7 @@
 
 CLIENTVERSION = 0.46-BETA-C
 DOCFILES=NEWS-0.46
+DEBIANCLIENTVERSION = $(shell echo $(CLIENTVERSION) | tr - .)
 
 FTPDIR=/home/davby/www-pub
 #FTPDIR = /usr/ftp/pub/lyskom/elisp-client
@@ -155,7 +156,9 @@ TAGS: $(HEADER) $(SOURCES)
 install: lyskom.elc lyskom.el
 	cp lyskom.el lyskom.elc $(LISPDIR)
 
-release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) lyskom.el
+release: release-files release-cleanup release-move
+
+release-files: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) lyskom.el
 	mkdir lyskom-$(CLIENTVERSION)
 	cp $(HEADER) $(SOURCES) $(MISC) lyskom-$(CLIENTVERSION)
 	for i in $(DISTFILES) ; do \
@@ -167,17 +170,36 @@ release: $(HEADER) $(SOURCES) $(DISTSRC) $(MISC) lyskom.el
 	chmod -R u+rw,g+r,o+r lyskom-$(CLIENTVERSION)
 	tar cvf lyskom-$(CLIENTVERSION).tar lyskom-$(CLIENTVERSION)
 	gzip -9 lyskom-$(CLIENTVERSION).tar
-	cp lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR)
-	rm -rf lyskom-$(CLIENTVERSION)
-	rm -rf lyskom-$(CLIENTVERSION).tar.gz
-	mv lyskom.el $(FTPDIR)/lyskom-$(CLIENTVERSION).el
+
+release-cleanup:
+	$(RM) -rf lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
+
+release-move: release-files
+	if [ -d $(FTPDIR) ]; then \
+		mv lyskom-$(CLIENTVERSION).tar.gz $(FTPDIR) ; \
+		mv lyskom.el $(FTPDIR)/lyskom-$(CLIENTVERSION).el ; \
+	else \
+		echo "Flyttade inte release-filerna till $(FTPDIR)." ; \
+	fi
+
+debian-package: release-files debian-build release-cleanup
+
+debian-build: release-files
+	cp -R debian lyskom-$(CLIENTVERSION)
+	$(RM) -rf lyskom-$(CLIENTVERSION)/debian/CVS
+	perl -pi -e 's/\((.+)\)/($(DEBIANCLIENTVERSION)-1)/ if (1..1)' lyskom-$(CLIENTVERSION)/debian/changelog
+	mv lyskom-$(CLIENTVERSION) lyskom-elisp-client-$(DEBIANCLIENTVERSION)
+	cp lyskom-$(CLIENTVERSION).tar.gz lyskom-elisp-client_$(DEBIANCLIENTVERSION).orig.tar.gz
+	cd lyskom-elisp-client-$(DEBIANCLIENTVERSION) && dpkg-buildpackage
 
 clean:
 	$(RM) *.el.gz *.elc.gz lyskom.el english-lyskom.el
 	$(RM) -rf lyskom-$(CLIENTVERSION) \
 		  lyskom-$(CLIENTVERSION).tar \
-		  lyskom-$(CLIENTVERSION).tar.gz
+		  lyskom-$(CLIENTVERSION).tar.gz \
+		  lyskom-elisp-client-$(DEBIANCLIENTVERSION)
 	$(RM) *~ *.elc $(GENERIC-CLEAN)
+	$(RM) -r build-stamp lyskom-elisp-client*
 
 distclean: clean
 	$(RM) $(GENERIC-DIST-CLEAN) vars.el
