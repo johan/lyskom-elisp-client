@@ -1,4 +1,11 @@
+Mon Aug 23 13:03:27 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Released 0.46-BETA-6
+
 1999-08-23  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el: Changed all "article" to "text". Synched
+	with Swedish strings.
 
 	* startup.el: Set the process coding system of the network stream
 	to iso-8859-1 to avoid stupidities like Gnu Emacs sending its

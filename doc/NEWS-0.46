@@ -27,6 +27,9 @@ för projektet så att det fortsätter att utvecklas.
 
 * Fitjurs, förbättringar och andra förändringar
 
+** Nytt kommando "Ändra prioritet" för att ändra prioritet på ett
+   visst möte. Det går som förut att göra med "Bli medlem" också.
+
 ** Det går mycket fortare att logga in än tidigare, speciellt om man
    är med i många möten och bara har olästa i en liten del av dem.
    Klienten belastar även servern i mycket mindre utsträckning
