@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 36.3 1993-04-28 22:43:30 linus Exp $
+;;;;; $Id: swedish-strings.el,v 36.4 1993-05-11 13:16:24 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 36.3 1993-04-28 22:43:30 linus Exp $\n"))
+	      "$Id: swedish-strings.el,v 36.4 1993-05-11 13:16:24 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -947,8 +947,7 @@ Cf. paragraph-start.")
     (kom-tell-change-supervisor "Ändrar organisat\366r f\366r n\345got.")
     )
   "These texts are used as arguments to lyskom-tell-server.
-The variable kom-mercial defaults to kom-tell-wait.
-Users are encouraged to change this dictionary for fun.")
+The variable kom-mercial defaults to kom-tell-wait.")
 
 
 ;; Placed here because this must NOT be evaluated before 
