@@ -1,7 +1,12 @@
+2005-01-18  Pontus Freyhult  <pont@soua.net>
+
+	* swedish-strings.el: Added compatibility key bindings for XEmacs
+	21.4 in UTF-8 mode (on tty).
+
 2005-01-16  Pontus Freyhult  <pont@soua.net>
 
 	* swedish-strings.el: Added compatibility key bindings to make GNU
-	Emacs 21 in UTF-8 mode work correctly.
+	Emacs 21 in UTF-8 mode (on tty) work correctly.
 
 2005-01-12  Ulrik Haugen  <qha@lysator.liu.se>
 

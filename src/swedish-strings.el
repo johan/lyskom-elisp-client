@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.395 2005-01-16 10:40:08 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.396 2005-01-18 07:46:51 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.395 2005-01-16 10:40:08 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.396 2005-01-18 07:46:51 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -111,7 +111,11 @@
   (lyskom-try-define-key lyskom-sv-edit-prefix [3909]    'lyskom-sv-edit-review-prefix)
   (lyskom-try-define-key lyskom-sv-edit-prefix [3941]    'lyskom-sv-edit-review-prefix)
   (lyskom-try-define-key lyskom-sv-edit-prefix [195 165] 'lyskom-sv-edit-review-prefix)
-  (lyskom-try-define-key lyskom-sv-edit-prefix [195 133] 'lyskom-sv-edit-review-prefix)
+  (lyskom-try-define-key lyskom-sv-edit-prefix [195 165] 'lyskom-sv-edit-review-prefix)
+  (lyskom-try-define-key lyskom-sv-edit-prefix [(Ã)]     (let ((k (make-sparse-keymap)))
+							   (define-key k (vector (intern "\205")) 'lyskom-sv-edit-review-prefix)
+							   (define-key k [¥] 'lyskom-sv-edit-review-prefix)
+							   k))
 
   (define-key lyskom-sv-edit-prefix (kbd "?")       'lyskom-help)
   (define-key lyskom-sv-edit-prefix (kbd "*")       'kom-button-press)
@@ -2732,6 +2736,14 @@ Nuvarande rättigheter för %#1P (%#1p):
   (lyskom-try-define-key lyskom-sv-mode-map [195 165] 'lyskom-sv-review-prefix)
   (lyskom-try-define-key lyskom-sv-mode-map [195 133] 'lyskom-sv-review-prefix)
 
+  ; XEmacs 21.4 UTF-8 on terminal compatibility
+  (lyskom-try-define-key lyskom-sv-mode-map [(Ã)]      (let ((k (make-sparse-keymap)))
+                                                           (define-key k (vector (intern "\205")) 'lyskom-sv-review-prefix)
+                                                           (define-key k [¥] 'lyskom-sv-review-prefix)
+                                                           (define-key k (vector (intern "\204")) 'lyskom-sv-change-prefix)
+                                                           (define-key k [(¤)] 'lyskom-sv-change-prefix)
+							   k))
+
   (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
   (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
 
@@ -2824,6 +2836,10 @@ Nuvarande rättigheter för %#1P (%#1p):
   (lyskom-try-define-key lyskom-sv-list-prefix [3940]    'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [195 164] 'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix [195 132] 'kom-list-summary)
+  (lyskom-try-define-key lyskom-sv-list-prefix [(Ã)]        (let ((k (make-sparse-keymap)))
+                                                           (define-key k (vector (intern "\204")) 'kom-list-summary)
+                                                           (define-key k [¤] 'kom-list-summary)
+							   k))
 
   (define-key lyskom-sv-filter-get-prefix (kbd "u") 'kom-get-appreciation)
   (define-key lyskom-sv-filter-get-prefix (kbd "s") 'kom-get-abuse)
@@ -2849,7 +2865,10 @@ Nuvarande rättigheter för %#1P (%#1p):
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [3940]       'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [195 164]    'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix [195 132]    'kom-filter-subject)
-
+  (lyskom-try-define-key lyskom-sv-filter-get-prefix [(Ã)]        (let ((k (make-sparse-keymap)))
+                                                           (define-key k (vector (intern "\204")) 'kom-filter-subject)
+                                                           (define-key k [¤] 'kom-filter-subject)
+							   k))
 
   (define-key lyskom-sv-who-prefix (kbd "i") 'kom-who-is-on)
   (define-key lyskom-sv-who-prefix (kbd "m") 'kom-who-is-on-in-conference)
@@ -2958,6 +2977,10 @@ Nuvarande rättigheter för %#1P (%#1p):
   (lyskom-try-define-key lyskom-sv-S-prefix [3940]       'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [195 164]    'kom-send-message)
   (lyskom-try-define-key lyskom-sv-S-prefix [195 132]    'kom-send-message)
+  (lyskom-try-define-key lyskom-sv-S-prefix [(Ã)]        (let ((k (make-sparse-keymap)))
+                                                           (define-key k (vector (intern "\204")) 'kom-send-message)
+                                                           (define-key k [¤] 'kom-send-message)
+							   k))
 
   (define-key lyskom-sv-A-prefix (kbd "m") 'kom-add-recipient)
   (define-key lyskom-sv-A-prefix (kbd "e") 'kom-add-copy)
