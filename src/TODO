@@ -5,6 +5,10 @@ Att göra i elisp-klienten
 
 * INTRESSANTA SAKER
 
+Det vore trevligt om "Arkivera inlägg (till fil)" fanns i kontextmenyn
+för inläggsnummer också, samt om man kunde ställa in en defaultpath
+till funktionen, helst också per KOM.
+
 ** Blockera eller klara av att man ger kommandon i bufferten medan den
    håller på att uppdateras.
 
@@ -103,7 +107,10 @@ Att göra i elisp-klienten
 
 
 
-
+När man gör status för ett tomt möte så är lägsta lokala nummer högre
+än det högsta. Snygga till utskriften till exempel genom att skriva
+att mötet är tomt.  Det skall synas skillnad på möten som alltid har
+varit tomma och sådana som har haft inlägg som har garbats.
 
 
 initiate-get-membership skulle kunna fylla i positionen för

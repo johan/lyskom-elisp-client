@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.30 2000-03-26 13:30:48 byers Exp $
+;;;;; $Id: async.el,v 44.31 2000-05-04 11:56:33 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.30 2000-03-26 13:30:48 byers Exp $\n"))
+	      "$Id: async.el,v 44.31 2000-05-04 11:56:33 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -249,7 +249,21 @@ this function shall be with current-buffer the BUFFER."
          (set-buffer buffer)
           (cache-del-conf-stat conf-no)
           (cache-del-text-stat text-no)
-         ;; FIXME: Code here.
+          ;; FIXME: Code here.
+          ;; FIXME: This implementation sucks. There is no need to
+          ;; FIXME:   remove the text from the cache. Just modify it.
+          ;; FIXME: If we cache maps somewhere, we'll want to remove
+          ;; FIXME:   the text from the appropriate map.
+          ;; FIXME: If we want to get *really* picky, and the user is
+          ;; FIXME:   doing a review texts to conference, and this text
+          ;; FIXME:   has been found, remove this text from those
+          ;; FIXME:   lists too (probably not worth the effort).
+          ;; FIXME: The text should be removed from the reading lists
+          ;; FIXME:   if it is there because we are reading the conf
+          ;; FIXME:   that is being removed. Take care not to lose
+          ;; FIXME:   any comments to it though...
+          ;; FIXME: The unread counter for the conference should be
+          ;; FIXME:   decreased like it is in async-deleted-text (i hope).
           (lyskom-ignore misc-type)
          )))
 

@@ -1,3 +1,8 @@
+2000-05-01  David Byers  <davby@ida.liu.se>
+
+	* async.el (lyskom-parse-async): Expanded comment for
+	async-deleted-recipient.
+
 2000-05-01  Johan Sundtström  <jhs@lysator.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-buglist): Bugfixed, somewhat
