@@ -34,14 +34,14 @@ bort ur den h{r filen.
 Linus: R{cker inte ceders uppdelning av anropen?
 
 * Nya kommandon:
-  \verg} i (till?) administrat|rsmod.	- klart
+  \verg} i (till?) administrat|rsmod.	- klart *
   Skapa person?
-  St{nga servern			- klart.
-  [ndra l|senord f|r andra (adm.)	- klart.
-  S{tta lyskom-message-of-the-day	- klart.
-  Ta bort lyskom-message-of-the-day	- klart.
+  St{ng av servern			- klart.*
+  [ndra l|senord f|r andra (adm.)	- klart.*
+  S{tta lyskom-message-of-the-day	- klart.*
+  Ta bort lyskom-message-of-the-day	- klart.*
   Ge adm.r{ttigheter }t n}gon annan.
-  Tvinga n}gon att logga ut.  		- klart.
+  Kasta ut en session	  		- klart.*
   S{tt till}tna f|rfattare.
 
 * Dokumentera alla {ndringar.
