@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 43.4 1996-08-10 11:56:17 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 43.5 1996-08-14 04:18:48 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -74,7 +74,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 43.4 1996-08-10 11:56:17 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 43.5 1996-08-14 04:18:48 davidk Exp $\n"))
 
 
 ;;;; ================================================================
@@ -201,7 +201,11 @@ If the optional argument REFETCH is non-nil, `lyskom-refetch' is called."
   (lyskom-init-parse lyskom-buffer)
   (setq lyskom-call-data nil)
   (setq lyskom-pending-calls nil)
-  (setq lyskom-output-queue (lyskom-queue-create))
+  (setq lyskom-output-queues (make-vector 10 nil))
+  (let ((i 0))
+    (while (< i 10)
+      (aset lyskom-output-queues i (lyskom-queue-create))
+      (++ i)))
   (setq lyskom-number-of-pending-calls 0)
   (setq lyskom-is-parsing nil)
   (if refetch (lyskom-refetch))
@@ -2002,9 +2006,9 @@ lyskom-fetched-texts are not fetched."
     (if (memq (car list) lyskom-fetched-texts)
 	nil				;already fetched (but maybe not yet
 					;received).
-      (initiate-get-text-stat 'background 'lyskom-prefetch-comment-stats
+      (initiate-get-text-stat 'prefetch 'lyskom-prefetch-comment-stats
 			      (car list))
-      (initiate-get-text 'background nil (car list))
+      (initiate-get-text 'prefetch nil (car list))
       (setq lyskom-fetched-texts (cons (car list) lyskom-fetched-texts)))
     (setq list (cdr list))
     (-- n-texts))
@@ -2015,20 +2019,20 @@ lyskom-fetched-texts are not fetched."
   (let ((misc (text-stat->misc-info-list text-stat)))
     (while misc
       (cond ((eq 'COMM-IN (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'background nil
+	     (initiate-get-text-stat 'prefetch nil
 				     (misc-info->comm-in (car misc))))
 	    ((eq 'FOOTN-IN (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'background nil
+	     (initiate-get-text-stat 'prefetch nil
 				     (misc-info->footn-in (car misc))))
 	    ((eq 'COMM-TO (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'background nil
+	     (initiate-get-text-stat 'prefetch nil
 				     (misc-info->comm-to (car misc))))
 	    ((eq 'FOOTN-TO (misc-info->type (car misc)))
-	     (initiate-get-text-stat 'background nil
+	     (initiate-get-text-stat 'prefetch nil
 				     (misc-info->footn-to (car misc))))
 	    ((or (eq 'RCPT (misc-info->type (car misc)))
 		 (eq 'CC-RCPT (misc-info->type (car misc))))
-	     (initiate-get-conf-stat 'background nil
+	     (initiate-get-conf-stat 'prefetch nil
 				     (misc-info->recipient-no (car misc))))
 	    (t nil))
       (setq misc (cdr misc)))))
@@ -2578,6 +2582,18 @@ from the value of kom-tell-phrases-internal."
        (function (lambda (pair)
 		   (cons (car pair) (iso-8859-1-to-swascii (cdr pair)))))
        lyskom-filter-what))
+
+
+;; Setup the queue priorities
+(lyskom-set-queue-priority 'blocking 9)
+(lyskom-set-queue-priority 'main 9)
+(lyskom-set-queue-priority 'sending 9)
+(lyskom-set-queue-priority 'follow 9)
+(lyskom-set-queue-priority 'deferred 6)
+(lyskom-set-queue-priority 'background 6)
+(lyskom-set-queue-priority 'modeline 6)
+(lyskom-set-queue-priority 'async 3)
+(lyskom-set-queue-priority 'prefetch 0)
 
 (setq lyskom-emacs19-p (string-match "^19" emacs-version))
 

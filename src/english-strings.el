@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 43.6 1996-08-12 14:46:45 davidk Exp $
+;;;;; $Id: english-strings.el,v 43.7 1996-08-14 04:18:44 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 43.6 1996-08-12 14:46:45 davidk Exp $"))
+              "$Id: english-strings.el,v 43.7 1996-08-14 04:18:44 davidk Exp $"))
 
 
 
@@ -154,6 +154,9 @@ Email-address:\n\nOther:\t")
     (presentation-help . "You are writing your presentation.\n")
     (not-present-anywhere . "Not in any conference.")
     (in-secret-conference . "Secret conference (%#1d).")
+    (start-new-session-same-server
+     . "You are already connected to that server. Do you want a new session? ")
+    (new-session-in-buffer . "\n\n---- New session at %s ----\n\n")
 
 
 
@@ -375,7 +378,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (matching-regexp . "Conferences/users matching `%#1s'\n")
 
     (who-is-active-all . "Showing all sessions.\n")
-    (who-is-active-last-minnutes . "Showing all sessions active tha last %#1d minutes.\n")
+    (who-is-active-last-minutes . "Showing all sessions active tha last %#1d minutes.\n")
     (showing-invisibles . "Showing invisible sessions.\n")
     (null-who-info . "No one (active) is logged in.\n")
 

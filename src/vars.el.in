@@ -1,5 +1,5 @@
 ;;;;; -*- emacs-lisp -*-
-;;;;; $Id: vars.el.in,v 43.2 1996-08-10 11:56:41 byers Exp $
+;;;;; $Id: vars.el.in,v 43.3 1996-08-14 04:19:01 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: vars.el.in,v 43.2 1996-08-10 11:56:41 byers Exp $\n"
+  "$Id: vars.el.in,v 43.3 1996-08-14 04:19:01 davidk Exp $\n"
   "Version for every file in the client.")
 
 
@@ -804,8 +804,11 @@ Each element on the list has the format
 REF-NO	   unique number assigned by lyskom-send-packet.
 KOM-QUEUE is a kom-queue. (See lyskom-call-data).")
 
-(defvar lyskom-output-queue nil
+(defvar lyskom-output-queues nil
   "Pending output to the server.
+This is a vector of ten elements, each of which is a kom-queue. calls from
+queues with a higher index (priority) are always sent first.
+
 At most lyskom-max-pending-calls calls are sent at once.")
 
 (defvar lyskom-max-pending-calls 20

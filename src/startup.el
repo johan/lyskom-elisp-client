@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: startup.el,v 43.1 1996-08-10 11:56:29 byers Exp $
+;;;;; $Id: startup.el,v 43.2 1996-08-14 04:18:56 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 43.1 1996-08-10 11:56:29 byers Exp $\n"))
+	      "$Id: startup.el,v 43.2 1996-08-14 04:18:56 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -76,77 +76,99 @@ See lyskom-mode for details."
        (t
 	(setq host (substring host 0 (match-beginning 0)))))))
 
-    (let* ((buffer (generate-new-buffer host))
-	   (name (buffer-name buffer))
+    (let* ((buffer (get-buffer host))
+	   (name nil)
 	   (proc nil))
-      (unwind-protect
-	  (progn
-	    (setq proc (open-network-stream name buffer host port))
-	    (switch-to-buffer buffer)
-	    (lyskom-mode)		;Clearing lyskom-default...
-	    (setq lyskom-buffer buffer)
-	    (setq lyskom-default-user-name username)
-	    (setq lyskom-default-password password)
-	    (setq lyskom-server-name host)
-	    (setq lyskom-proc proc)
-	    (lyskom-setup-faces)
-	    (lyskom-insert
-	     (lyskom-format 'try-connect lyskom-clientversion host))
-	    (set-process-filter proc 'lyskom-connect-filter)
-	    (lyskom-process-send-string proc
-					(concat "A"
-						(lyskom-format-objects
-						 (concat (user-login-name)
-							 "%" (system-name)))))
-	    (while (eq 'lyskom-connect-filter (process-filter proc))
-	      (accept-process-output proc))
-	    ;; Now we have got the correct response.
-	    (set-process-sentinel proc 'lyskom-sentinel)
+      (if (and buffer
+	       (lyskom-buffer-p buffer)
+	       (not (j-or-n-p (lyskom-get-string
+			       'start-new-session-same-server))))
+	  (switch-to-buffer buffer)
+	(unwind-protect
+	    (progn
+	      (cond (buffer
+		     (set-buffer buffer)
+		     (goto-char (point-max))
+		     (let ((time (decode-time (current-time))))
+		       (setcar (cdr (cdr (cdr (cdr time))))
+			       (1- (car (cdr (cdr (cdr (cdr time)))))))
+		       (setcar (cdr (cdr (cdr (cdr (cdr time)))))
+			       (- (car (cdr (cdr (cdr (cdr (cdr time))))))
+				  1900))
+		       (insert
+			(format (lyskom-get-string 'new-session-in-buffer)
+				(lyskom-format-time
+				 (apply 'lyskom-create-time time))))
+		       (setq name (buffer-name buffer))))
+		    (t
+		     (setq buffer (generate-new-buffer host))
+		     (setq name (buffer-name buffer))))
+	      (setq proc (open-network-stream name buffer host port))
+	      (switch-to-buffer buffer)
+	      (lyskom-mode)		;Clearing lyskom-default...
+	      (setq lyskom-buffer buffer)
+	      (setq lyskom-default-user-name username)
+	      (setq lyskom-default-password password)
+	      (setq lyskom-server-name host)
+	      (setq lyskom-proc proc)
+	      (lyskom-setup-faces)
+	      (lyskom-insert
+	       (lyskom-format 'try-connect lyskom-clientversion host))
+	      (set-process-filter proc 'lyskom-connect-filter)
+	      (lyskom-process-send-string proc
+					  (concat "A"
+						  (lyskom-format-objects
+						   (concat (user-login-name)
+							   "%" (system-name)))))
+	      (while (eq 'lyskom-connect-filter (process-filter proc))
+		(accept-process-output proc))
+	      ;; Now we have got the correct response.
+	      (set-process-sentinel proc 'lyskom-sentinel)
 
-	    (save-excursion
-	      (lyskom-init-parse buffer))
+	      (save-excursion
+		(lyskom-init-parse buffer))
 
-	    ;; Tell the server who we are
-	    (initiate-set-client-version 'background nil
-					 "lyskom.el" lyskom-clientversion)
+	      ;; Tell the server who we are
+	      (initiate-set-client-version 'background nil
+					   "lyskom.el" lyskom-clientversion)
 
-	    (setq lyskom-server-info (blocking-do 'get-server-info))
-            (setq lyskom-server-version
-                  (list (/ (server-info->version lyskom-server-info) 10000)
-                        (/ (% (server-info->version lyskom-server-info) 10000)
-                           100)
-                        (% (server-info->version lyskom-server-info) 100)))
-            (lyskom-setup-client-for-server-version)
-	    (lyskom-format-insert 
-	     'connection-done
-	     (if (zerop (elt lyskom-server-version 2))
-		 (format "%d.%d"
-                         (elt lyskom-server-version 0)
-                         (elt lyskom-server-version 1))
-	       (format "%d.%d.%d"
+	      (setq lyskom-server-info (blocking-do 'get-server-info))
+	      (setq lyskom-server-version
+		    (list (/ (server-info->version lyskom-server-info) 10000)
+			  (/ (% (server-info->version lyskom-server-info) 10000)
+			     100)
+			  (% (server-info->version lyskom-server-info) 100)))
+	      (lyskom-setup-client-for-server-version)
+	      (lyskom-format-insert 
+	       'connection-done
+	       (if (zerop (elt lyskom-server-version 2))
+		   (format "%d.%d"
+			   (elt lyskom-server-version 0)
+			   (elt lyskom-server-version 1))
+		 (format "%d.%d.%d"
                          (elt lyskom-server-version 0)
                          (elt lyskom-server-version 1)
                          (elt lyskom-server-version 2))))
-            (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
-		(let ((text (blocking-do 'get-text 
-					 (server-info->motd-of-lyskom
-					  lyskom-server-info))))
-		  (lyskom-insert 
-		   (if text
-		       (text->text-mass text)
-		     (lyskom-get-string 'lyskom-motd-was-garbed)))
-                  (lyskom-insert "\n")))
-	    ;; Can't use lyskom-end-of-command here.
-	    (setq lyskom-executing-command nil) 
-	    ;; Log in
-	    (kom-start-anew t)
-	    (setq lyskom-buffer-list (cons lyskom-buffer lyskom-buffer-list))
-	    (setq init-done t))
-	;; Something went wrong. Lets cleanup everything. :->
-	(if init-done
-	    nil
-	  (if proc (delete-process proc))
-	  (kill-buffer buffer))))))
+	      (if (not (zerop (server-info->motd-of-lyskom lyskom-server-info)))
+		  (let ((text (blocking-do 'get-text 
+					   (server-info->motd-of-lyskom
+					    lyskom-server-info))))
+		    (lyskom-insert 
+		     (if text
+			 (text->text-mass text)
+		       (lyskom-get-string 'lyskom-motd-was-garbed)))
+		    (lyskom-insert "\n")))
+	      ;; Can't use lyskom-end-of-command here.
+	      (setq lyskom-executing-command nil) 
+	      ;; Log in
+	      (kom-start-anew t)
+	      (setq lyskom-buffer-list (cons lyskom-buffer lyskom-buffer-list))
+	      (setq init-done t))
+	  ;; Something went wrong. Lets cleanup everything. :->
+	  (if init-done
+	      nil
+	    (if proc (delete-process proc))
+	    (kill-buffer buffer)))))))
 
 
 (defun lyskom-setup-client-check-version (spec version)
@@ -575,6 +597,7 @@ to see, set of call."
     (make-local-variable 'kom-friends)
     (make-local-variable 'kom-permanent-filter-list)
     (make-local-variable 'kom-session-filter-list)
+    (make-local-variable 'lyskom-accept-async-flag)
     (make-local-variable 'lyskom-blocking-return)
     (make-local-variable 'lyskom-buffer)
     (make-local-variable 'lyskom-command-to-do)
@@ -586,11 +609,13 @@ to see, set of call."
     (make-local-variable 'lyskom-default-password)
     (make-local-variable 'lyskom-default-user-name)
     (make-local-variable 'lyskom-do-when-done)
+    (make-local-variable 'lyskom-dynamic-session-info-flag)
     (make-local-variable 'lyskom-dont-change-prompt)
     (make-local-variable 'lyskom-errno)
     (make-local-variable 'lyskom-executing-command)
     (make-local-variable 'lyskom-fetched-texts)
     (make-local-variable 'lyskom-filter-list)
+    (make-local-variable 'lyskom-idle-time-flag)
     (make-local-variable 'lyskom-is-administrator)
     (make-local-variable 'lyskom-is-parsing)
     (make-local-variable 'lyskom-is-waiting)
@@ -602,6 +627,7 @@ to see, set of call."
     (make-local-variable 'lyskom-last-personal-message-sender)
     (make-local-variable 'lyskom-last-viewed)
     (make-local-variable 'lyskom-list-of-edit-buffers)
+    (make-local-variable 'lyskom-long-conf-types-flag)
     (make-local-variable 'lyskom-marked-text-cache)
     (make-local-variable 'lyskom-membership)
     (make-local-variable 'lyskom-membership-is-read)
@@ -610,7 +636,7 @@ to see, set of call."
     (make-local-variable 'lyskom-number-of-pending-calls)
     (make-local-variable 'lyskom-options-done)
     (make-local-variable 'lyskom-other-clients-user-areas)
-    (make-local-variable 'lyskom-output-queue)
+    (make-local-variable 'lyskom-output-queues)
     (make-local-variable 'lyskom-pending-calls)
     (make-local-variable 'lyskom-pers-cache)
     (make-local-variable 'lyskom-pers-no)
@@ -629,7 +655,6 @@ to see, set of call."
     (make-local-variable 'lyskom-set-last-read-flag)
     (make-local-variable 'lyskom-uconf-stats-flag)
     (make-local-variable 'lyskom-z-lookup-flag)
-    (make-local-variable 'lyskom-accept-async-flag)
     (make-local-variable 'lyskom-session-no)
     (make-local-variable 'lyskom-session-priority)
     (make-local-variable 'lyskom-text-cache)
@@ -654,7 +679,11 @@ to see, set of call."
     (setq lyskom-server-info server-info)
     (setq lyskom-server-name server-name)
     (setq lyskom-do-when-done (cons kom-do-when-done kom-do-when-done))
-    (setq lyskom-output-queue (lyskom-queue-create))
+    (setq lyskom-output-queues (make-vector 10 nil))
+    (let ((i 0))
+      (while (< i 10)
+	(aset lyskom-output-queues i (lyskom-queue-create))
+	(++ i)))
     (setq lyskom-list-of-edit-buffers nil)
     (setq lyskom-pending-calls nil)
     (lyskom-set-mode-line (lyskom-get-string 'not-present-anywhere))))

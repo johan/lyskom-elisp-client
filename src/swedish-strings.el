@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 43.8 1996-08-12 14:46:48 davidk Exp $
+;;;;; $Id: swedish-strings.el,v 43.9 1996-08-14 04:18:58 davidk Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 43.8 1996-08-12 14:46:48 davidk Exp $\n"))
+	      "$Id: swedish-strings.el,v 43.9 1996-08-14 04:18:58 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -159,7 +159,9 @@ Email-adress:\n\nAnnat:\t")
     (presentation-help . "Du skriver just  nu din presentation.\n")
     (not-present-anywhere . "Ej n\344rvarande i n\345got m\366te.")
     (in-secret-conference . "Hemligt m\366te (%#1d).")
-
+    (start-new-session-same-server
+     . "Du k\366r redan mot den servern. Vill du starta en ny session? ")
+    (new-session-in-buffer . "\n\n---- Ny session startad %s ----\n\n")
 
 
     ; From internal.el:
