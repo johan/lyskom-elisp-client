@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.313 2003-04-05 18:14:25 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.314 2003-04-05 19:26:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.313 2003-04-05 18:14:25 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.314 2003-04-05 19:26:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1907,8 +1907,8 @@ teckenkodning.
 
 ")
 
-    (has-nameday-1 . "%#1s har namnsdag i dag.")
-    (has-nameday-2 . "%#1s och %#2s har namnsdag i dag.")
+    (has-nameday-1 . "%#1s har namnsdag i dag%#2?b%[ (%#2s)%]%[%].")
+    (has-nameday-2 . "%#1s och %#2s har namnsdag i dag%#3?b%[ (%#3s)%]%[%].")
 
     (invalid-date-entry . "Ogiltigt datum")
     (number-out-of-range . "Otillåtet tal")
@@ -2991,7 +2991,8 @@ teckenkodning.
     (url-transform-newtext . " Till:")
 
     (default-namedays . "Namnsdagar för aktuellt språk")
-    (specific-namedays . "Specifik namnlängd:")
+    (specific-namedays . "Specifik namnlängd")
+    (several-name-lists . "Flera namnlängder")
 
     (link-pattern-for . "Mönster för")
     (all-conferences . "Alla mottagare")

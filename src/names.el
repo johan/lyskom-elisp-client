@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: names.el,v 44.4 2003-01-05 21:37:07 byers Exp $
+;;;;; $Id: names.el,v 44.5 2003-04-05 19:26:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.4 2003-01-05 21:37:07 byers Exp $\n"))
+	      "$Id: names.el,v 44.5 2003-04-05 19:26:12 byers Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -59,23 +59,33 @@ DATA is nameday data"
 (defun lyskom-nameday (&optional now)
   (cond ((eq kom-show-namedays t) (lyskom-nameday-2 lyskom-language now))
         ((symbolp kom-show-namedays) (lyskom-nameday-2 kom-show-namedays now))
+        ((listp kom-show-namedays)
+         (mapconcat (lambda (x) (lyskom-nameday-2 x now t))
+                    kom-show-namedays  "\n"))
         (t nil)))
 
-(defun lyskom-nameday-2 (sym now)
+(defun lyskom-nameday-2 (sym now &optional show-list-name)
   (let* ((time (or now (lyskom-current-server-time)))
          (data (cdr (assq sym lyskom-namedays)))
          (alist (and data (nameday-data->data data)))
          (mlist (cdr (assq (time->mon time) alist)))
          (dlist (cdr (assq (time->mday time) mlist))))
-    (cond ((null dlist) nil)
-          ((eq 1 (length dlist))
-           (lyskom-format 'has-nameday-1 (car dlist)))
-          ((eq 2 (length dlist))
-           (lyskom-format 'has-nameday-2
-                          (elt dlist 0) (elt dlist 1)))
-          (t (lyskom-format 'has-nameday-2
-                            (mapconcat 'identity (lyskom-butlast dlist 1) ", ")
-                            (elt dlist (1- (length dlist))))))))
+    (if data
+        (cond ((null dlist) nil)
+              ((eq 1 (length dlist))
+               (lyskom-format 'has-nameday-1 
+                              (car dlist)
+                              (and show-list-name (nameday-data->name data))))
+              ((eq 2 (length dlist))
+               (lyskom-format 'has-nameday-2
+                              (elt dlist 0)
+                              (elt dlist 1)
+                              (and show-list-name (nameday-data->name data))))
+              (t (lyskom-format 'has-nameday-2
+                                (mapconcat 'identity (lyskom-butlast dlist 1) ", ")
+                                (elt dlist (1- (length dlist)))
+                                (and show-list-name (nameday-data->name data)))))
+      "")))
 
 
 

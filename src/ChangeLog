@@ -1,5 +1,12 @@
 2003-04-05  David Byers  <david.byers@swipnet.se>
 
+	Fix bug 950:
+	* names.el (lyskom-nameday): Allow a list of nameday lists.
+	(lyskom-nameday-2): Added parameter show-list-name.
+
+	* option-edit.el (lyskom-custom-variables): Support lists for
+	kom-show-namedays.
+
 	Fix bug 1003:
 	* lyskom-rest.el (lyskom-beep): Handle conf-stat and uconf-stat
 	type optargs, or kom-ding-on-group-messages and stuff won't work.
