@@ -1,3 +1,13 @@
+Tue May 11 16:47:38 1993  Linus Tolke Y  (linus@bodil)
+
+	* startup.el (lyskom-connect-filter): When emacs is collecting
+	  longer initial package from the server we hang. Fixed using a
+	  match. I the emacs splits the initial package or splits the
+	  following packages there could still be a problem.
+
+	* commands2.el (lyskom-status-pers-4): The old conf-stats are
+	  thrown out before refetching them.
+
 Sat May  8 19:48:00 1993  Linus Tolke Y  (linus@bodil)
 
 	* swedish-strings.el, english-strings.el (kom-tell-phrases): The

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: commands2.el,v 36.3 1993-05-05 03:11:24 linus Exp $
+;;;;; $Id: commands2.el,v 36.4 1993-05-11 16:00:11 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 36.3 1993-05-05 03:11:24 linus Exp $\n"))
+	      "$Id: commands2.el,v 36.4 1993-05-11 16:00:11 linus Exp $\n"))
 
 
 ;;; ================================================================
@@ -429,6 +429,11 @@ Args: MEMBERSHIP-LIST CONF-STAT."
     (setq lyskom-count-var 0)
     (lyskom-traverse
      membership membership-list
+     (let ((cs (cache-get-conf-stat (membership->conf-no membership))))
+       (and cs
+	    (lyskom-time-greater (membership->last-time-read membership)
+				 (conf-stat->last-written conf-stat))
+	    (cache-del-conf-stat (membership->conf-no membership))))
      (initiate-get-conf-stat 'main 'lyskom-status-pers-5 
 			     (membership->conf-no membership)
 			     membership conf-stat)))
