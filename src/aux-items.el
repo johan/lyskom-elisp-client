@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.15 1999-08-21 22:07:35 byers Exp $
+;;;;; $Id: aux-items.el,v 44.16 1999-10-09 16:13:18 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.15 1999-08-21 22:07:35 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.16 1999-10-09 16:13:18 byers Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-defvar "defvar.el")
@@ -106,6 +106,13 @@ return non-nil if the item is to be included in the list."
         (setq result (cons (car item-list) result)))
       (setq item-list (cdr item-list)))
     (nreverse result)))
+
+                                        
+(defun lyskom-get-aux-item (item-list tag)
+  "Return all aux-items in ITEM-LIST with tag TAG."
+  (lyskom-match-aux-items item-list
+                          (lambda (el) (eq (aux-item->tag el) tag))))
+
 
 (defun lyskom-aux-item-terminating-button (item obj)
   (if obj

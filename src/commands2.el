@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.45 1999-08-25 07:17:37 byers Exp $
+;;;;; $Id: commands2.el,v 44.46 1999-10-09 16:13:19 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands2.el,v 44.45 1999-08-25 07:17:37 byers Exp $\n"))
+	      "$Id: commands2.el,v 44.46 1999-10-09 16:13:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2248,3 +2248,17 @@ Return-value: 'no-session if there is no suitable session to switch to
                                    (lyskom-create-aux-item-flags
                                     nil nil nil nil nil nil nil nil) 0 ""))))
                    (cache-del-text-stat text-no)))))))
+
+(def-kom-command kom-review-mail-headers (&optional text-no)
+  "Review the mail headers of an imported message"
+  (interactive (list (lyskom-read-text-no-prefix-arg
+                      'review-mail-headers-to-what t)))
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+         (headers (and text-stat (lyskom-get-aux-item (text-stat->aux-items text-stat) 24))))
+    (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
+          ((null headers) (lyskom-format-insert 'no-mail-headers text-no))
+          (t (lyskom-format-insert 'mail-headers-for text-no)
+             (mapcar (lambda (el) 
+                       (lyskom-insert (aux-item->data el))
+                       (lyskom-insert "\n"))
+                     headers)))))

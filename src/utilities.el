@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.32 1999-08-22 16:04:57 byers Exp $
+;;;;; $Id: utilities.el,v 44.33 1999-10-09 16:13:29 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.32 1999-08-22 16:04:57 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.33 1999-10-09 16:13:29 byers Exp $\n"))
 
 ;;;
 ;;; Need Per Abrahamsens widget and custom packages There should be a
@@ -91,6 +91,15 @@ If BEFORE is not in the list, then insert EL at the end of the list."
                               (length (memq before list)) 1) list)
                    (cons el (memq before list)))
            list)))
+
+(defun lyskom-move-in-list (el list pos)
+  "Destructively move EL within LIST so it appears at position POS."
+  (when (memq el list)
+    (setq list (delq el list))
+    (cond ((eq 0 pos) (setq list (cons el list)))
+          (t (setcdr (nthcdr (1- pos) list)
+                     (cons el (nthcdr pos list))))))
+  list)
 
 ;;;
 ;;; +++ FIXME: If cl.el can be guaranteed, this is pointless.
