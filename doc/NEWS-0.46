@@ -597,6 +597,9 @@
     för att spara raderade bitar till fil. Filnamnet är hårdkodat till
     ~/<buffer>-history där <buffer> är LysKOM-buffertens namn.
 
+*** Kommandot Lista klienter visar en sammanställning av hur många
+    instanser av varje klient som körs.
+
 
 ** Tilläggsinformation
 
