@@ -1,3 +1,25 @@
+2002-02-09  Per Cederqvist  <ceder@lysator.liu.se>
+
+	New command: "Compare two texts".
+
+	* vars.el.in (lyskom-commands): Added kom-compare-texts.
+
+	* swedish-strings.el (lyskom-message): Added diff-what-text-new
+	and diff-what-text-old.
+	(lyskom-command): Added kom-compare-texts.
+	(lyskom-help-strings): Added kom-compare-texts.
+
+	* english-strings.el (lyskom-message): Added diff-what-text-new
+	and diff-what-text-old.
+	(lyskom-command): Added kom-compare-texts.
+
+	* commands2.el (kom-compare-texts): New command.
+
+	* commands1.el (lyskom-text-stat-commented-texts): New function.
+	(lyskom-view-commented-text): Extract the computation of the
+	commented texts to lyskom-text-stat-commented-texts, so that it
+	can be reused by kom-compare-texts.
+
 2002-02-04  Johan Sundström  <jhs@lysator.liu.se>
 
 	* view-text.el

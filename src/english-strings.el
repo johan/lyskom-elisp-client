@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.163 2002-01-30 08:10:24 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.164 2002-02-09 20:31:23 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -41,7 +41,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.163 2002-01-30 08:10:24 jhs Exp $"))
+              "$Id: english-strings.el,v 44.164 2002-02-09 20:31:23 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -698,6 +698,8 @@ The message you were sending to %#1M was:
 
     (does-not-exist . "Unknown command.") ; Only people fixing bugs or receiving bug reports should change these:
     (summary-line . "%=-8#1n%#2s%4#3d  %[%#4@%#5:P%]  %[%#6@%#7r%]\n")
+    (diff-what-text-old . "Old text to compare: ")
+    (diff-what-text-new . "New text to compare: ")
 
     ; Only people fixing bugs or receiving bug reports should change these:
     (buggreport-compilestart . "Creating bug report...")
@@ -1786,7 +1788,10 @@ You must become an active member of the conference to enter it.\n")
     (kom-add-no-comments      . "Prevent comments")
     (kom-add-private-answer   . "Request private reply")
     (kom-add-request-confirm  . "Request confirmation of reading")
+
     (kom-review-mail-headers  . "Review mail headers")
+
+    (kom-compare-texts        . "Compare two texts")
 
     (kom-become-anonymous     . "Become anonymous")
     (kom-become-nonanonymous  . "Become non-anonymous (come forth into the light)")

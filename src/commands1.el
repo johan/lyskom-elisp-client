@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.124 2002-01-13 16:18:29 davidk Exp $
+;;;;; $Id: commands1.el,v 44.125 2002-02-09 20:31:24 ceder Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.124 2002-01-13 16:18:29 davidk Exp $\n"))
+	      "$Id: commands1.el,v 44.125 2002-02-09 20:31:24 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -302,24 +302,30 @@ the other ones."
           (blocking-do 'get-text-stat lyskom-previous-text)))
         (t (lyskom-insert-string 'confusion-what-to-view))))
 
-(defun lyskom-view-commented-text (text-stat)
-  "Handles the return from the initiate-get-text-stat, displays and builds list."
+
+(defun lyskom-text-stat-commented-texts (text-stat)
+  "Return a list of the text-nos that TEXT-STAT is a comment or footnote to."
   (let* ((misc-info-list (and text-stat
                               (text-stat->misc-info-list text-stat)))
          (misc-infos (and misc-info-list
                           (append (lyskom-misc-infos-from-list
                                    'COMM-TO misc-info-list)
                                   (lyskom-misc-infos-from-list
-                                   'FOOTN-TO misc-info-list))))
-         (text-nos (and misc-infos
-                        (mapcar
-                         (function
-                          (lambda (misc-info)
-                            (if (equal (misc-info->type misc-info)
-                                       'COMM-TO)
-                                (misc-info->comm-to misc-info)
-                              (misc-info->footn-to misc-info))))
-                         misc-infos))))
+                                   'FOOTN-TO misc-info-list)))))
+    (and misc-infos
+	 (mapcar
+	  (function
+	   (lambda (misc-info)
+	     (if (equal (misc-info->type misc-info)
+			'COMM-TO)
+		 (misc-info->comm-to misc-info)
+	       (misc-info->footn-to misc-info))))
+	  misc-infos))))
+
+
+(defun lyskom-view-commented-text (text-stat)
+  "Handles the return from the initiate-get-text-stat, displays and builds list."
+  (let ((text-nos (lyskom-text-stat-commented-texts text-stat)))
     (if text-nos
         (progn
           (lyskom-format-insert 'review-text-no 
