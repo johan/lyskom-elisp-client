@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 40.6 1996-05-02 16:20:51 byers Exp $
+;;;;; $Id: swedish-strings.el,v 40.7 1996-05-02 17:12:32 davidk Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 40.6 1996-05-02 16:20:51 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 40.7 1996-05-02 17:12:32 davidk Exp $\n"))
 
 
 ;;; ================================================================
@@ -329,7 +329,11 @@ du har l\344st klart allting. Kom tillbaks senare.
     (no-marked-texts . "Du har inga markerade inl\344gg.\n")
     (no-marked-texts-mark . 
      "Du har inga markerade inl\344gg med markeringen %#1d.\n")
-    (time-is . "Klockan \344r %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d %#7s(enligt servern).")
+
+    (weekdays . ["söndag" "måndag" "tisdag" "onsdag" "torsdag"
+		 "fredag" "lördag" "söndag"])
+    (time-is . "Det är %#1s %#2s(enligt servern).")
+    (time-format-exact . "%#7s %4#1d-%02#2d-%02#3d %02#4d:%02#5d:%02#6d")
 
     (xmaseve . "\nJulafton! Har du \345ppnat dina julklappar \344n?")
     (xmasday . "Juldagen.")
@@ -618,13 +622,12 @@ M\344rk kuvertet \"LysKOM buggrapport f\366r elispklienten\".\n\n")
     (send-at . "    S\344nt:     %#1s\n")
     (sent-by . "    S\344nt av %#1P\n")
     (recieved-at . "    Mottaget: %#1s\n")
-;; +++ unused?
-    (written-by . "av %#1P")
-;;; +++
-    (comment-to-text-by . "Kommentar till text %#1n av %#2P\n")
-    (footnote-to-text-by . "Fotnot till text %#1n av %#2P\n")
-    (comment-in-text-by . "Kommentar i text %#1n av %#2P\n")
-    (footnote-in-text-by . "Fotnot i text %#1n av %#2P\n")
+
+    (comment-to-text . "Kommentar till text %#1n")
+    (footnote-to-text . "Fotnot till text %#1n")
+    (comment-in-text . "Kommentar i text %#1n")
+    (footnote-in-text . "Fotnot i text %#1n")
+    (written-by . " av %#1P\n")
 
     ; From async.el:
 

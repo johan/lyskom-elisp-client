@@ -31,7 +31,13 @@ Buggar
     prefetch-koden är gjord för. Alltså borde det kunna bli problem
     att gå med i möten om man ger dem fel prioritet.
 
+    Om man försöker logga in med en förkortning som matchar flera namn
+    tror klienten att man inte finns.
+
 Allmänna förbättringar
+
+    Att försöka återse inlägg i någon annans brevlåda tar bara en
+    massa tid och gör ingen nytta.
 
     Inläggsnumren borde vara mer kontextkänsliga.  Om man klickar på
     ett inläggs eget nummer, alltså det som står precis innan datumet
@@ -52,7 +58,7 @@ Allmänna förbättringar
     Det skulle vara bra om skönsvärde för att skriva fotnot vore den
     senaste text man själv skrev, inte den senaste man läste.
 
-    Å K - Återse den text som den föregående texten kommenterade
+    Klickbara kommandon.
 
     Återinför Olästa
 
