@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.309 2003-03-16 19:49:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.310 2003-03-16 19:59:22 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.309 2003-03-16 19:49:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.310 2003-03-16 19:59:22 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -290,6 +290,7 @@ för att radera det.")
     (cancelled . "avbrutet.\n")
     (nope . "det gick inte.\n")
     (add-already-member . "%#1P är redan medlem i %#2M.\n")
+    (you-already-member . "Du är redan medlem i %#1M.\n")
 
     (cant-find-supervisor . "Hittar inte organisatören för %#1M.\n")
     (is-read-protected-contact-supervisor . "%#1M är slutet.
