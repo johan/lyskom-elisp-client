@@ -2,8 +2,16 @@
 ;; TO DO
 ;; see tmp.el
 ;;
+;; When showing hidden entries they are not put in the right position
+;; in the buffer. lp--set-entry-visible needs to goto-char to the right
+;; place in the buffer.
+;;
 ;; Maybe move setting the membership priority to 
 ;; lyskom-change-membership-priority. 
+;;
+;; We get into all kinds of trouble if we hide all entries. In particular
+;; check all users of lp--get-last-visible-entry and 
+;; lp--get-next-visible-entry.
 ;;
 ;; -------------------------------------------------------------------------
 ;; When prioritizing an entry we need to sort the read lists to put
@@ -78,6 +86,7 @@
 (require 'advice)
 
 ;;; Code:
+
 (def-komtype lp--entry
   start-marker                          ; Where the entry is in the buffer
   end-marker                            ; Where it ends in the buffer
@@ -85,54 +94,35 @@
   membership                            ; The membership
   selected                              ; Selected or not
   state                                 ; Expanded display or not
-  invisible                             ; Non-nil when invisible
-  extents                               ; Alist of extents of this entry
+  visible                               ; Non-nil when visible
+  extents                               ; Alist of extents/overlays
   )
 
-(defvar lp--last-format-string nil)
+(defvar lp--last-format-string nil
+  "The cached format string for entries. 
+Use lp--compute-format-string when you need the format string. Do not
+access this variable directly.")
 (defvar lp--last-window-width -1)
 
 ;;; Local variables in the prioritize buffer
+;;; There should be no reason to use these at all. There are functional
+;;; abstractions that let you access their contents.
 
 (defvar lp--entry-list nil)
 (defvar lp--list-start-marker nil)
 (defvar lp--list-end-marker nil)
 (defvar lp--selected-entry-list nil)
 
+
 ;;; ============================================================
-;;; Stuff
-
-(defun lp--entry-set-background (entry color)
-  "Use extents or overlays to set the background of ENTRY to COLOR."
-  (if (null color)
-      (let* ((extent (assq 'color (lp--entry->extents entry))))
-        (when extent
-          (lyskom-xemacs-or-gnu
-           (delete-extent (cdr extent))
-           (delete-overlay (cdr extent)))
-          (set-lp--entry->extents entry 
-                                  (delq extent (lp--entry->extents entry)))))
-
-    (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
-           (facename (intern (format "lyskom-%s-background" color)))
-           (face (or (find-face facename) (lyskom-make-face facename t))))
-      (unless extent
-        (lyskom-xemacs-or-gnu
-         (setq extent (make-extent (lp--entry->start-marker entry)
-                                   (lp--entry->end-marker entry)))
-         (setq extent (make-overlay (lp--entry->start-marker entry)
-                                    (lp--entry->end-marker entry) nil t)))
-        (set-lp--entry->extents entry (cons (cons 'color extent)
-                                            (lp--entry->extents entry))))
-      (set-face-background face color)
-      (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
-                                   (set-extent-property extent 'start-open t)
-                                   (set-extent-property extent 'priority 1000)
-                                   (set-extent-property extent 'face face))
-                            (progn (overlay-put extent 'priority 1000)
-                                   (overlay-put extent 'face face))))))
+;;; Utility functions and really basic stuff
 
 (defun lp--entry-update-extents (entry)
+  "Update the start and end positions for extents of ENTRY.
+Update the start and end positions of all extents or overlays listed
+in the extent list of ENTRY to match the start and end markers. If the
+start or end markers point nowhere, detatch the extents. If overlays
+are used, set the start and end positions to zero."
   (let ((extents (lp--entry->extents entry)))
     (while extents
       (lyskom-xemacs-or-gnu 
@@ -146,9 +136,6 @@
                             (or (lp--entry->end-marker entry) 0))))
       (setq extents (cdr extents)))))
 
-
-;;; ============================================================
-;;; Utility functions
 
 (defun lyskom-change-membership-priority (conf-no new-priority)
   "Change the priority of memberhip for CONF-NO to NEW-POSITION.
@@ -193,6 +180,37 @@ This function does not tell the server about the change."
 
 ;;; ============================================================
 ;; Entry drawing
+
+(defun lp--entry-set-background (entry color)
+  "Use extents or overlays to set the background of ENTRY to COLOR."
+  (if (null color)
+      (let* ((extent (assq 'color (lp--entry->extents entry))))
+        (when extent
+          (lyskom-xemacs-or-gnu
+           (delete-extent (cdr extent))
+           (delete-overlay (cdr extent)))
+          (set-lp--entry->extents entry 
+                                  (delq extent (lp--entry->extents entry)))))
+
+    (let* ((extent (cdr (assq 'color (lp--entry->extents entry))))
+           (facename (intern (format "lyskom-%s-background" color)))
+           (face (or (find-face facename) (lyskom-make-face facename t))))
+      (unless extent
+        (lyskom-xemacs-or-gnu
+         (setq extent (make-extent (lp--entry->start-marker entry)
+                                   (lp--entry->end-marker entry)))
+         (setq extent (make-overlay (lp--entry->start-marker entry)
+                                    (lp--entry->end-marker entry) nil t)))
+        (set-lp--entry->extents entry (cons (cons 'color extent)
+                                            (lp--entry->extents entry))))
+      (set-face-background face color)
+      (lyskom-xemacs-or-gnu (progn (set-extent-property extent 'end-open t)
+                                   (set-extent-property extent 'start-open t)
+                                   (set-extent-property extent 'priority 1000)
+                                   (set-extent-property extent 'face face))
+                            (progn (overlay-put extent 'priority 1000)
+                                   (overlay-put extent 'face face))))))
+
 
 (defmacro lp--save-excursion (&rest body)
   "Evecute BODY and restore the current location of point.
@@ -386,9 +404,11 @@ The start and end markers of the entry are adjusted"
 (defun lp--redraw-entry (entry)
   "Redraw the entry ENTRY."
   (lp--save-excursion
-   (goto-char (lp--entry->start-marker entry))
-   (lp--erase-entry entry)
-   (lp--print-entry entry)))
+   (when (lp--entry->start-marker entry)
+     (goto-char (lp--entry->start-marker entry))
+     (lp--erase-entry entry))
+   (when (lp--entry->visible entry)
+     (lp--print-entry entry))))
 
 (defun lp--perform-in-all-buffers (fn &rest args)
   "Perform FN in all prioritization buffers. ARGS are arguments for FN.
@@ -491,9 +511,13 @@ entry priority"
     result))
   
 
-(defun lp--get-last-entry ()
-  "Return the last entry in the list."
-  (lp--get-entry (1- (length (lp--all-entries)))))
+(defun lp--get-last-visible-entry ()
+  "Return the last visible entry in the list."
+  (let* ((pos (1- (length (lp--all-entries))))
+         (entry (lp--get-entry pos)))
+    (while (and entry (not (lp--entry->visible entry)))
+      (setq pos (1- pos)))
+    entry))
 
 (defun lp--get-entry (pos)
   "Return the entry at position POS in the list."
@@ -527,7 +551,7 @@ entry priority"
     (error "Position out of range: %d" to))
   (lp--erase-entry entry)
   (lp--set-entry-list (lp--remove-from-list entry (lp--all-entries)))
-  (let ((cur (lp--get-entry to)))
+  (let ((cur (lp--get-entry (lp--next-visible-entry to))))
     (if cur
         (goto-char (lp--entry->start-marker cur))
       (goto-char lp--list-end-marker))
@@ -585,7 +609,7 @@ entry priority"
                                    mship
                                    nil
                                    'normal
-                                   nil
+                                   t
                                    nil)))
                       (when pos
                         (save-excursion
@@ -792,7 +816,7 @@ Forces a mode line update"
   "Set the selection value of all entries in ENTRY-LIST to STATE."
   (mapcar (lambda (entry)
             (when entry
-              (if state
+              (if (and state (lp--entry->visible entry))
                   (add-to-list 'lp--selected-entry-list entry)
                 (setq lp--selected-entry-list
                       (delq entry lp--selected-entry-list)))
@@ -809,6 +833,27 @@ Forces a mode line update"
   (lp--do-select-entries (lp--all-selected-entries) nil)
   (lp--do-select-entries entry-list t)
   (lp--update-mode-line))
+
+;;; ============================================================
+;;; Hiding and unhiding entries
+;;; FIXME: This doesn't work yet
+
+(defun lp--entry-set-visible (entry-list state)
+  "Set the visibility of all entries in ENTRY-LIST to STATE."
+  (when (null state)
+    (lp--select-entries entry-list nil))
+  (mapcar (lambda (entry) 
+            (unless (eq (lp--entry->visible entry) state)
+              (let ((pos (lp--get-entry 
+                          (lp--next-visible-entry
+                           (lp--entry-position entry)))))
+                (if pos
+                    (goto-char (lp--entry->start-marker pos))
+                  (goto-char lp--list-end-marker))
+              (set-lp--entry->visible entry state)
+              (lp--redraw-entry entry))))
+          entry-list))
+
 
 
 ;;; ------------------------------------------------------------
@@ -843,6 +888,37 @@ Forces a mode line update"
                              (membership->priority mship)
                              (membership->position mship)
                              (membership->type mship))))))
+
+
+;;; ============================================================
+;;; Support
+
+(defun lp--next-visible-entry (pos)
+  "Return the position of the first visible entry following POS."
+  (let ((max (length (lp--all-entries)))
+        (result nil))
+  (while (and (< pos max) (null result))
+    (if (lp--entry->visible (lp--get-entry pos))
+        (setq result pos
+              pos max)
+      (setq pos (1+ pos))))
+  (or result max)))
+  
+
+(defun lp--calculate-distance (pos delta)
+  "Return one more than the number of entries between POS and POS+DELTA.
+This includes visible and invisible entries. The sign of the
+returned value has the same sign as DELTA."
+  (let ((step (signum delta))
+        (num (abs delta))
+        (result 0))
+    (while (> num 0)
+      (setq pos (+ step pos))
+      (setq result (1+ result))
+      (let ((entry (lp--get-entry pos)))
+        (cond ((null entry) (setq result (1+ result) num 0))
+              ((lp--entry->visible (lp--get-entry pos)) (setq num (1- num))))))
+    (* result step)))
 
 
 ;;; ------------------------------------------------------------
@@ -1025,7 +1101,8 @@ possible in the list."
   (lp--save-excursion
    (let* ((cur (lp--entry-at (point)))
           (pos (and cur (lp--entry-position cur)))
-          (prev (and cur (> pos 0) (lp--get-entry (1- pos)))))
+          (place (and cur (> pos 0) (+ pos (lp--calculate-distance pos -1))))
+          (prev (and place (lp--get-entry place))))
      (cond ((null cur) (error "Not on an entry"))
            ((null prev) (error "Beginning of list"))
            (t (if (/= (lp--entry->priority cur)
@@ -1033,9 +1110,11 @@ possible in the list."
                   (progn
                     (lp--set-entry-pri-and-pos cur
                                                (lp--entry->priority prev)
-                                               nil)
+                                               (if (= pos (1+ place))
+                                                   nil
+                                                 (1+ place)))
                     (lp--redraw-entry cur))
-                (lp--set-entry-pri-and-pos cur nil (1- pos))))))))
+                (lp--set-entry-pri-and-pos cur nil place)))))))
 
 (defun lp--move-down ()
   "Move the current entry up down notch."
@@ -1043,7 +1122,8 @@ possible in the list."
   (lp--save-excursion
    (let* ((cur (lp--entry-at (point)))
           (pos (and cur (lp--entry-position cur)))
-          (prev (and cur (lp--get-entry (1+ pos)))))
+          (place (and cur (+ pos (lp--calculate-distance pos 1))))
+          (prev (and place (lp--get-entry place))))
      (cond ((null cur) (error "Not on an entry"))
            ((null prev) (error "End of list"))
            (t (if (/= (lp--entry->priority cur)
@@ -1051,9 +1131,11 @@ possible in the list."
                   (progn
                     (lp--set-entry-pri-and-pos cur
                                                (lp--entry->priority prev)
-                                               nil)
+                                               (if (= pos (1- place))
+                                                   nil
+                                                 (1- place)))
                     (lp--redraw-entry cur))
-                (lp--set-entry-pri-and-pos cur nil (1+ pos))))))))
+                (lp--set-entry-pri-and-pos cur nil place)))))))
 
 
 
@@ -1068,14 +1150,21 @@ possible in the list."
          (progn (beginning-of-line)
                 (forward-char lp--saved-column)))))
 
+;;; FIXME: Deal with invisible entries
+
 (defun lp--previous-entry (count)
   "Move the cursor up COUNT lines.
 The cursor will always move to the start of the target entry."
   (interactive "p")
   (let* ((entry (lp--entry-at (point)))
-         (pos (cond ((and (null entry) (< (point) (lp--entry->start-marker (lp--get-entry 0))))
+         (pos (cond ((and (null entry) (< (point)
+                                          (lp--entry->start-marker 
+                                            (lp--get-entry
+                                             (lp--next-visible-entry 0)))))
                      0)
-                    ((and (null entry) (> (point) (lp--entry->end-marker (lp--get-last-entry))))
+                    ((and (null entry) (> (point) 
+                                          (lp--entry->end-marker 
+                                           (lp--get-last-visible-entry))))
                      (1- (length (lp--all-entries))))
                     (t (max 0 (- (lp--entry-position entry) count))))))
     (condition-case nil
@@ -1087,9 +1176,14 @@ The cursor will always move to the start of the target entry."
 The cursor will always move to the start of the target entry."
   (interactive "p")
   (let* ((entry (lp--entry-at (point)))
-         (pos (cond ((and (null entry) (< (point) (lp--entry->start-marker (lp--get-entry 0))))
+         (pos (cond ((and (null entry) (< (point) 
+                                          (lp--entry->start-marker 
+                                           (lp--get-entry
+                                            (lp--next-visible-entry 0)))))
                      0)
-                    ((and (null entry) (> (point) (lp--entry->end-marker (lp--get-last-entry))))
+                    ((and (null entry) (> (point) 
+                                          (lp--entry->end-marker 
+                                           (lp--get-last-visible-entry))))
                      (1- (length (lp--all-entries))))
                     (t (min (1- (length (lp--all-entries)))
                             (+ (lp--entry-position entry) count))))))
@@ -1101,7 +1195,8 @@ The cursor will always move to the start of the target entry."
   "Move point to the first entry in the membership list."
   (interactive)
   (condition-case nil
-      (goto-char (lp--entry->start-marker (lp--get-entry 0)))
+      (goto-char (lp--entry->start-marker 
+                  (lp--get-entry (lp--next-visible-entry 0))))
     (error nil)))
 
 (defun lp--last-entry ()
@@ -1109,7 +1204,7 @@ The cursor will always move to the start of the target entry."
   (interactive)
   (condition-case nil
       (goto-char
-       (lp--entry->start-marker (lp--get-last-entry)))
+       (lp--entry->start-marker (lp--get-last-visible-entry)))
     (error nil)))
 
 (defun lp--goto-priority (priority)
@@ -1165,14 +1260,16 @@ entry with an adjacent priority."
     (funcall fn)
     (when (and (boundp 'lyskom-buffer-category)
                lyskom-buffer-category 'prioritize)
-      (cond ((> (point) (lp--entry->end-marker (lp--get-last-entry)))
-             (goto-char (lp--entry->end-marker (lp--get-last-entry)))
+      (cond ((> (point) (lp--entry->end-marker (lp--get-last-visible-entry)))
+             (goto-char (lp--entry->end-marker (lp--get-last-visible-entry)))
              (when (> (current-column) cur)
                (beginning-of-line)
                (forward-char cur)))
 
-            ((< (point) (lp--entry->start-marker (lp--get-entry 0)))
-             (goto-char (lp--entry->start-marker (lp--get-entry 0)))
+            ((< (point) (lp--entry->start-marker
+                         (lp--get-entry (lp--next-visible-entry 0))))
+             (goto-char (lp--entry->start-marker 
+                         (lp--get-entry (lp--next-visible-entry 0))))
              (end-of-line)
              (when (> (current-column) cur)
                (beginning-of-line)
@@ -1339,7 +1436,7 @@ Medlemskap för %#1M på %#2s
                                                 mship
                                                 nil
                                                 'normal
-                                                nil
+                                                t
                                                 nil)))
             (lp--print-entry entry)
             (setq entry-list (cons entry entry-list))))
@@ -1356,9 +1453,20 @@ Medlemskap för %#1M på %#2s
         ))))
 
 
+(defun lp--hide-entry ()
+  (interactive)
+  (let ((entry (lp--entry-at (point))))
+    (lp--entry-set-visible (list entry) nil)))
+
+(defun lp--show-all ()
+  (interactive)
+  (lp--entry-set-visible (lp--all-entries) t))
+
 (provide 'mship-edit)
 
 ;;; mship-edit.el ends here
 ;;; Local Variables:
 ;;; eval: (put 'lp--save-excursion 'edebug-form-spec t)
 ;;; end:
+
+
