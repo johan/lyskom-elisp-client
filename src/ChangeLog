@@ -1,3 +1,8 @@
+1999-06-11  David Byers  <davby@ida.liu.se>
+
+	* compatibility.el (kbd): Redefine kbd if it seems to be
+	misbehaving.
+
 1999-01-16  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (j-or-n-p): Don't compare character to int. It's

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.17 1999-06-11 08:54:50 byers Exp $
+;;;;; $Id: compatibility.el,v 44.18 1999-06-11 09:27:36 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.17 1999-06-11 08:54:50 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.18 1999-06-11 09:27:36 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -64,7 +64,6 @@ LysKOM"))
   (` (eval-and-compile
        (if (not (, predicate))
            (progn (,@ forms))))))
-
 
 (defmacro lyskom-compatibility-definition (predicate definition)
   "If PREDICATE is nil, evaluate DEFINITION at compile and run time.
@@ -140,15 +139,27 @@ of the lyskom-provide-* functions instead."
 ;;; ======================================================================
 ;;; Defining keys
 ;;;
+;;; Lots of Emacsen have buggy definitions of kbd (or no definition at all)
+;;; Although it's crufty to redefine a function from subr.el, I will do so
+;;; if it appears to be misbehaving. Don't like it? Tough!
+;;;
 
-(lyskom-provide-macro kbd (keys)
-  "Convert KEYS to the internal Emacs key representation.
+(lyskom-compatibility-definition
+
+    (condition-case error
+        (or (equal (kbd (identity "<down-mouse-2>"))
+                   [down-mouse-2])
+            (error "Bad definition of kbd"))
+      (error nil))
+
+    (defmacro kbd (keys)
+      "Convert KEYS to the internal Emacs key representation.
 KEYS should be a string in the format used for saving keyboard macros
 \(see `insert-kbd-macro')."
-  (if (or (stringp keys)
-	  (vectorp keys))
-      (read-kbd-macro keys)
-    `(read-kbd-macro ,keys)))
+      (if (or (stringp keys)
+              (vectorp keys))
+          (read-kbd-macro keys)
+        `(read-kbd-macro ,keys))))
 
 
 ;;; ======================================================================
