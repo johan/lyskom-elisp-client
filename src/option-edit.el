@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.37 2000-02-16 15:10:48 byers Exp $
+;;;;; $Id: option-edit.el,v 44.38 2000-02-25 23:47:38 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.37 2000-02-16 15:10:48 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.38 2000-02-25 23:47:38 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -827,27 +827,42 @@ customize buffer but do not save them to the server."
    propl))
 
 (defun lyskom-ispell-dictionary-widget (type &optional args propl)
-  (require 'ispell)
-  (lyskom-build-simple-widget-spec 
-   'menu-choice
-   (list ':format "%[%t%] %v"
-         ':case-fold nil
-         ':args
-         (cons (list 'item
-                     ':tag "ispell-dictionary"
-                     ':format "%t"
-                     ':value nil)
-               (delq nil
-                     (mapcar 
-                      (function
-                       (lambda (x)
-                         (and (car x)
-                              (list 'item
-                                    ':tag (car x)
-                                    ':format "%t"
-                                    ':value (car x)))))
-                      ispell-dictionary-alist))))
-   propl))
+  (let ((tmp-dictionary-alist nil))
+    (condition-case nil 
+        (require 'ispell)
+      (setq tmp-dictionary-alist ispell-dictionary-alist)
+      (error (if (null ispell-dictionary-alist)
+                 (setq tmp-dictionary-alist '("american" "brasiliano"
+                                              "british" "castellano"
+                                              "castellano8" "czech" 
+                                              "dansk" "deutsch"
+                                              "deutsch8" "english" 
+                                              "esperanto" "esperanto-tex"
+                                              "francais7" "francais" 
+                                              "francais-tex" "nederlands"
+                                              "nederlands8" "norsk"
+                                              "norsk7-tex" "polish"
+                                              "russian" "svenska")))))
+    (lyskom-build-simple-widget-spec 
+     'menu-choice
+     (list ':format "%[%t%] %v"
+           ':case-fold nil
+           ':args
+           (cons (list 'item
+                       ':tag "ispell-dictionary"
+                       ':format "%t"
+                       ':value nil)
+                 (delq nil
+                       (mapcar 
+                        (function
+                         (lambda (x)
+                           (and (car x)
+                                (list 'item
+                                      ':tag (car x)
+                                      ':format "%t"
+                                      ':value (car x)))))
+                        tmp-dictionary-alist))))
+     propl)))
 
 (defun lyskom-url-viewer-widget (type &optional args propl)
   (lyskom-build-simple-widget-spec
@@ -864,6 +879,10 @@ customize buffer but do not save them to the server."
                      ':tag (lyskom-custom-string 'default-viewer)
                      ':format "%t"
                      ':value "default")
+               (list 'item
+                     ':tag (lyskom-custom-string 'windows-viewer)
+                     ':format "%t"
+                     ':value "windows")
                (list 'item
                      ':tag (lyskom-custom-string 'netscape-viewer)
                      ':format "%t"

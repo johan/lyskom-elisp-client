@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.103 2000-02-21 22:12:18 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.104 2000-02-25 23:47:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.103 2000-02-21 22:12:18 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.104 2000-02-25 23:47:40 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2200,6 +2200,7 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (no-viewer            . "(ingenting valt)")
     (default-viewer       . "Browse-URL (alla)")
     (netscape-viewer      . "Netscape Navigator (alla)")
+    (windows-viewer       . "Windows standard eller Netscape (alla)")
     (emacs-w3-viewer      . "Emacs W3-mode (HTTP, Goper, FTP)")
     (emacs-general-viewer . "Emacs (FTP, Telnet, Mail)")
     (emacs-dired-viewer   . "Emacs Dired (FTP)")

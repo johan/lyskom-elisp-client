@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.36 2000-02-21 22:12:16 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.37 2000-02-25 23:47:37 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.36 2000-02-21 22:12:16 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.37 2000-02-25 23:47:37 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -819,6 +819,30 @@ This is a LysKOM button action."
 		(match-beginning 1)))
       (lyskom-error "Bad URL"))
   (mail nil (substring url (match-beginning 1) (match-end 1))))
+
+
+(defun lyskom-view-url-windows (url manager)
+  "View the URL URL in Microsoft Windows. MANGER is the URL manager.
+Fall back on Netscape if not running in Microsoft Windows."
+  (cond ((or (eq window-system 'win32)
+             (eq window-system 'mswindows)
+             (eq window-system 'w32))
+         (let ((programs '("start"
+                           "explorer"
+                           "C:\\Program Files\\Netscape\\Communicator\\Program\\netscape.exe"
+                           "C:\\Program Files\\Netscape\\Navigator\\Program\\netscape.exe")))
+           (while programs
+             (condition-case nil
+                 (progn
+                   (start-process (car programs) 
+                                  nil
+                                  (car programs)
+                                  url)
+                   (lyskom-url-manager-starting manager)
+                   (setq programs nil))
+               (error (setq programs (cdr programs)))))))
+                                
+        (t (lyskom-view-url-netscape url manager))))
 
 
 (defun lyskom-view-url-netscape (url manager)
