@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: reading.el,v 44.9 1999-09-28 12:57:53 byers Exp $
+;;;;; $Id: reading.el,v 44.10 1999-10-09 16:54:40 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: reading.el,v 44.9 1999-09-28 12:57:53 byers Exp $\n"))
+	      "$Id: reading.el,v 44.10 1999-10-09 16:54:40 byers Exp $\n"))
 
 
 (defun lyskom-enter-map-in-to-do-list (map conf-stat membership)
@@ -69,7 +69,7 @@ also means modifying the lyskom-reading-list. The zero text-nos are skipped."
       (set-membership->position (car mship) num)
       (setq num (1+ num) mship (cdr mship)))
   ;; FIXME: If something changed, tell the server.
-  (lyskom-sort-to-do-list)))
+    (lyskom-sort-to-do-list)))
 
 (defun lyskom-add-memberships-to-membership (memberships)
   "Adds a newly fetched MEMBERSHIP-PART to the list in lyskom-membership.

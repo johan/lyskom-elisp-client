@@ -1,3 +1,18 @@
+Sat Oct  9 18:54:16 1999  David Byers  <davby@sen2.ida.liu.se>
+
+	* Release av 0.46-BETA-8
+
+1999-10-07  David Byers  <davby@ida.liu.se>
+
+	* async.el (lyskom-format-as-personal-message): Show date if
+	kom-show-personal-message-date is non-nil.
+
+	* vars.el.in (kom-show-personal-message-date): New variable.
+
+1999-09-28  David Byers  <davby@ida.liu.se>
+
+	* compatibility.el (last): Added compatibility definition.
+
 1999-10-09  David Byers  <davby@ida.liu.se>
 
 	* swedish-strings.el (lyskom-command): Updated translation of mail 

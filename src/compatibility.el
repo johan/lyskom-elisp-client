@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.22 1999-08-23 09:51:42 byers Exp $
+;;;;; $Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $
 ;;;;; Copyright (C) 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.22 1999-08-23 09:51:42 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.23 1999-10-09 16:54:40 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -269,7 +269,7 @@ string to search in."
 
 
 ;;; ============================================================
-;;; Character stuff
+;;; Basic stuff
 
 (lyskom-provide-function char-to-int (c) c)
 
@@ -281,6 +281,19 @@ string to search in."
 
 (lyskom-provide-function set-process-coding-system (proc &optional encoding decoding)
   )
+
+(lyskom-provide-function last (x &optional n)
+  "Returns the last link in the list LIST.
+With optional argument N, returns the Nth-to-last link (default 1)."
+  "Returns the last link in the list LIST.
+With optional argument N, returns Nth-to-last link (default 1)."
+  (if n
+      (let ((m 0) (p x))
+	(while (consp p) (setq m (1+ m)) (setq p (cdr p)))
+	(if (<= n 0) p
+	  (if (< n m) (nthcdr (- m n) x) x)))
+    (while (consp (cdr x)) (setq x (cdr x)))
+    x))
 
 ;;; ======================================================================
 ;;; Event stuff
