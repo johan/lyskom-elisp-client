@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.29 1997-06-29 14:19:55 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.30 1997-07-02 11:12:28 petli Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.29 1997-06-29 14:19:55 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.30 1997-07-02 11:12:28 petli Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1811,8 +1811,8 @@ If optional argument NOCHANGE is non-nil then the list wont be altered."
 
 
 (defun lyskom-wait-for-membership ()
-  "If the full membership hase been read do nothing. Else give a message and
-wait for it to be prefetched."
+  "Give a message and wait for it to be prefetched.
+If the full membership hase been read do nothing."
   (let ((total (pers-stat->no-of-confs (blocking-do 'get-pers-stat
 						    lyskom-pers-no))))
     (while (not (lyskom-membership-is-read))
@@ -1820,7 +1820,7 @@ wait for it to be prefetched."
 		      lyskom-membership-is-read
 		      total)
       (sit-for 0)
-      (lyskom-accept-process-output))))
+      (accept-process-output lyskom-proc 1))))
 
 
 (defun lyskom-prefetch-all-confs ()
@@ -2135,7 +2135,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 ;  (sit-for 0)				; Why? [Doesn't work in XEmacs 19.14]
 ;  (setq lyskom-apo-timeout-log
 ;        (cons lyskom-apo-timeout lyskom-apo-timeout-log))
-  (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
+;  (lyskom-reset-apo-timeout)            ; Reset accept-process-output timeout
   (let ((old-match-data (match-data))
 	;; lyskom-filter-old-buffer is also changed when starting to edit
 	;; in function lyskom-edit-text.
