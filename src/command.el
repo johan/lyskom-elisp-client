@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.39 2000-10-10 13:04:39 byers Exp $
+;;;;; $Id: command.el,v 44.40 2000-11-18 12:19:45 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.39 2000-10-10 13:04:39 byers Exp $\n"))
+	      "$Id: command.el,v 44.40 2000-11-18 12:19:45 joel Exp $\n"))
 
 ;;; (eval-when-compile
 ;;;   (require 'lyskom-vars "vars")
@@ -190,8 +190,8 @@
 (defun lyskom-ok-command (alternative administrator)
   "Returns non-nil if it is ok to do such a command right now."
   (if administrator
-      (not (memq (elt alternative 1) lyskom-admin-removed-commands))
-    (not (memq (elt alternative 1) lyskom-noadmin-removed-commands))))
+      (not (memq (cdr alternative) lyskom-admin-removed-commands))
+    (not (memq (cdr alternative) lyskom-noadmin-removed-commands))))
 
 (defun kom-extended-command ()
   "Read a LysKOM function name and call the function."
@@ -201,21 +201,18 @@
      (fnc (call-interactively fnc))
      (t (kom-next-command)))) )
 
-(defvar lyskom-command-completion-map nil)
-(if lyskom-command-completion-map
-    nil
-  (setq lyskom-command-completion-map (make-sparse-keymap))
-  (define-key lyskom-command-completion-map (kbd "SPC")
-    'lyskom-command-complete-word))
-
-(defvar last-exact-completion)
-
 (defun lyskom-read-extended-command (&optional prefix-arg)
   "Reads and returns a command"
   (let* ((completion-ignore-case t)
 	 (minibuffer-setup-hook minibuffer-setup-hook)
+	 (alternatives (mapcar 
+			(lambda (pair)
+			  (cons 
+			   (cdr pair)
+			   (car pair)))
+			(lyskom-get-strings lyskom-commands
+					    'lyskom-command)))
 	 (name nil)
-         (last-exact-completion nil)
          (prefix-text
           (cond ((eq prefix-arg '-) "- ")
                 ((equal prefix-arg '(4)) "C-u ")
@@ -230,22 +227,18 @@
                    (lyskom-get-string 'extended-command))))
 
     (lyskom-with-lyskom-minibuffer
-     (set-keymap-parent lyskom-command-completion-map
-			minibuffer-local-must-match-map)
-     (let ((minibuffer-completion-table 'lyskom-complete-command)
-	   (minibuffer-completion-predicate (lambda (alt)
-					      (lyskom-ok-command alt 
-								 lyskom-is-administrator)))
-	   (minibuffer-completion-confirm nil))
-       (setq name (lyskom-read-from-minibuffer prompt
-					       nil
-					       lyskom-command-completion-map
-					       nil
-					       'lyskom-command-history
-					       t)))
-     (lyskom-lookup-command-by-name name (lambda (alt)
-                                           (lyskom-ok-command 
-                                            alt lyskom-is-administrator))))))
+     (setq name (lyskom-completing-read prompt
+                                        (lyskom-maybe-frob-completion-table
+                                         alternatives)
+                                        ;; lyskom-is-administrator is buffer-local and
+                                        ;; must be evalled before the call to 
+                                        ;; completing-read
+                                        ;; Yes, this is not beautiful
+                                        (list 'lambda '(alternative)	     
+                                              (list 'lyskom-ok-command 'alternative
+                                                    lyskom-is-administrator))
+                                        t nil 'lyskom-command-history)))
+    (cdr (lyskom-string-assoc name alternatives))))
 
 
 (defun lyskom-update-command-completion ()

@@ -1,3 +1,9 @@
+2000-11-18  Joel Rosdahl  <joel@rosdahl.net>
+
+	* command.el (lyskom-read-extended-command): Revived the
+	minibuffer completion code from 0.46-BETA-P.
+	(lyskom-ok-command): Ditto.
+
 2000-11-18  Per Starbäck (commit by Per Cederqvist  <ceder@moria>)
 
 	* commands2.el (kom-status-person): Use mod instead of %, since
