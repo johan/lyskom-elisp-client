@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 35.8 1993-05-27 13:20:07 linus Exp $
+# $Id: Makefile,v 35.9 1993-12-14 02:10:32 linus Exp $
 # Copyright (C) 1991  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -24,23 +24,38 @@
 #
 # If you edit this, make sure it works afterwards also. /Linus
 
-RM = rm
-GENERIC-CLEAN = core
+RM = rm -f
 
-elisp-client: elisp-client.latexinfo
-	emacs -batch -l /usr/local/var/elisp/latexinfo-mode \
-	-l /usr/local/var/elisp/latexinfo \
-	-f batch-latexinfo-format `pwd`/$?
+elisp-client: elisp-client.texinfo
+	makeinfo elisp-client.texinfo
 
 elisp-client.txt: elisp-client
 	emacs -batch -l `pwd`/info-nuke -f batch-info-nuke `pwd`/$?
 
-elisp-client.dvi: elisp-client.latexinfo
-	latex elisp-client.latexinfo
-	texinfo elisp-client.??
-	latex elisp-client.latexinfo
+INDEXES = elisp-client.fns elisp-client.kys elisp-client.vrs
 
-clean:
-	$(RM) $(GENERIC-CLEAN) elisp-client elisp-client.txt
-	$(RM) *.aux *.dvi *.fn *.ky *.log *.pg *.tp *.vr
-	$(RM) *.bbl *.blg *.fns *.idx *.ilg *.ind *.kys *.pgs *.tps *.vrs
+indexes: elisp-client.texinfo
+	@echo pass 1
+	rm -f indexes
+	tex elisp-client.texinfo
+	mv elisp-client.dvi indexes
+
+$(INDEXES): indexes
+	@echo pass 2 indexes
+	touch $(INDEXES)
+	emacs -batch -l ./texindex.el -f batch-texindex elisp-client.cp elisp-client.fn elisp-client.ky elisp-client.pg elisp-client.tp elisp-client.vr
+
+elisp-client.dvi: $(INDEXES)
+	@echo pass 3
+	tex elisp-client.texinfo
+
+smallclean:
+	$(RM) *.fns *.kys *.pgs *.tps *.vrs *.cps indexes
+
+clean: smallclean
+	$(RM) elisp-client elisp-client.txt
+	$(RM) *.aux *.dvi 
+	$(RM) *.fn  *.ky  *.pg  *.tp  *.vr  *.cp
+	$(RM) *.toc
+	$(RM) *.bbl *.blg *.idx *.ilg *.ind *.log
+	$(RM) core *~
