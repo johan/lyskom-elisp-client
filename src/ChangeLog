@@ -1,5 +1,9 @@
 Mon Jul 27 01:14:24 1992  Linus Tolke Y  (linus@lysator)
 
+	* services.el (initiate-get-part-of-membership): New functions
+	  that makes it possible not to retrieve the whole membership
+	  always.
+
 	* flags.el (lyskom-options-done): New variable to tell if we have
 	  already read the user-area.
 

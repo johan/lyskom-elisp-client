@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.24 1992-07-19 10:10:27 linus Exp $
+;;;;; $Id: vars.el,v 35.25 1992-07-26 23:36:35 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.24 1992-07-19 10:10:27 linus Exp $\n"))
+	      "$Id: vars.el,v 35.25 1992-07-26 23:36:35 linus Exp $\n"))
 
 
 
@@ -373,6 +373,14 @@ conf-stats from server.")
 (defvar lyskom-fetch-map-nos 50
   "*Number of text-nos lyskom will fetch when fetching maps.
 +++ This is not yet used everywhere.")
+
+(defvar lyskom-fetch-membership-length 6
+  "*Number of entries in the membership-list that is fetched at a time.
+This should be optimized depending on how often you read lyskom and
+the activity in the first groups in you membership list.
+
+Best performance is achieved if you, when logging in, always have an unread
+article in one of the first lyskom-fetch-membership-length conferences.")
 
 (defvar lyskom-last-conf-fetched -1
   "Last conf asked about. Number on the list lyskom-membership.")
