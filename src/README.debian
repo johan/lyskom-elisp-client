@@ -1,21 +1,14 @@
 How to make a Debian package of the LysKOM elisp client
 -------------------------------------------------------
 
-Suppose you have an archive with elisp-client sources called
-lyskom-0.46.tar.gz in the directory /foo.  Do something like this to
-build the package:
+Make a new changelog entry in
+<elisp-client-module>/src/debian/changelog.  Then run
 
-% cd /foo
-% tar xvzf lyskom-0.46.tar.gz
-% mv lyskom-0.46 lyskom-elisp-client-0.46
-% mv lyskom-0.46.tar.gz lyskom-elisp-client_0.46.orig.tar.gz
-% cd lyskom-elisp-client-0.46
-% cp -R <path to elisp-client CVS module>/src/debian .
+  make debian-package
 
-Edit debian/changelog to make sure the first line contains the correct
-version (0.46-1 in this case).  Finally:
+as root (or use fakeroot(1) or sudo(1) or ...).
 
-% fakeroot debian/rules binary                  # or whatever
+If all went well, lyskom-elisp-client* files have been created in
+<elisp-client-module>/src.
 
-If all went well, ../lyskom-elisp-client_VERSION_all.deb has been
-created.
+        /Joel

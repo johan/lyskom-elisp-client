@@ -1,3 +1,9 @@
+1999-11-19  Joel Rosdahl  <joel@lysator.liu.se>
+
+	* README.debian: New build instructions.
+
+	* ../Makefile: Build debian-package.
+	
 1999-11-19  David Byers  <davby@sen2.ida.liu.se>
 
 	* lyskom-rest.el (lyskom-filter): Explicitly insert unibyte string

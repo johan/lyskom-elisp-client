@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 44.0 1996-08-30 14:40:31 davidk Exp $
+# $Id: Makefile,v 44.1 1999-11-19 22:15:14 joel Exp $
 # Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 #
 # This file is part of the LysKOM server.
@@ -47,3 +47,6 @@ clean:
 
 distclean: clean
 	( cd src; ${MAKE} distclean )
+
+debian-package:
+	( cd src; $(MAKE) debian-package )
