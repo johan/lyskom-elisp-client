@@ -1,5 +1,22 @@
 2003-07-27  David Byers  <byers@lysator.liu.se>
 
+	Fix bug 747:
+	* commands2.el (lyskom-status-pers-list-one-membership): New
+	function.
+	(kom-status-person): Use it.
+
+	Fix bug 709:
+	* faqs.el (kom-list-faqs): New command.
+	(kom-list-server-faqs): New command.
+	(lyskom-do-list-faqs): New function.
+
+	* lyskom-rest.el (lyskom-next-property-bounds): New function.
+	(lyskom-do-special-inserts): Use it. Added end parameter.
+	(lyskom-do-insert): Pass end parameter.
+
+	* lyskom-buttons.el (lyskom-button-transform-text): Do links from
+	kom-text-buttons after the hard-coded stuff.
+
 	Fix bug 761:
 	* startup.el (kom-start-anew): Set lyskom-is-administrator to nil
 	after logging on.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.205 2003-07-27 14:17:24 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.206 2003-07-27 20:40:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.205 2003-07-27 14:17:24 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.206 2003-07-27 20:40:41 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1095,21 +1095,24 @@ The position lyskom-last-viewed will always remain visible."
           )))))
 
 
-;;;
-;;; Thanks to the stupid danish fool who wrote the widget package, we
-;;; have to do it this way, because w3 uses widgets, and because
-;;; widgets use overlays, and because overlays aren't copied between
-;;; buffers. If the idiot danish flaming asshole had used text
-;;; properties or something equally sensible instead, we could have
-;;; managed without this shit.
-;;;
-;;; (Me, upset? Why would you think *that*?)
-;;;
+(defun lyskom-next-property-bounds (from to sym)
+  "Sort of like next-text-property-bounds, but limited at the front and
+back, and works even if from has the property."
+  (let ((result (cond ((get-text-property from sym)
+                       (cons from (next-single-property-change from sym)))
+                      ((next-single-property-change from sym)
+                       (let ((start (next-single-property-change from sym)))
+                         (cons start (next-single-property-change start sym)))))))
+    (when result
+      (cond ((null (cdr result)) (setcdr result (or to (point-max))))
+            ((and from (< (car result) from)) (setcar result from))
+            ((and to (> (cdr result) to)) (setcar result to)))) 
+    result))
 
-(defun lyskom-do-special-inserts (start sym)
+
+(defun lyskom-do-special-inserts (start end sym)
   (condition-case var
-      (let ((bounds (next-text-property-bounds 1 (max (point-min) (1- start))
-                                               sym))
+      (let ((bounds (lyskom-next-property-bounds start end sym))
             (next (make-marker))
             (fn nil))
         (while bounds
@@ -1133,8 +1136,8 @@ The position lyskom-last-viewed will always remain visible."
 (defun lyskom-do-insert (string)
   (let ((start (point)))
     (insert string)
-    (lyskom-do-special-inserts start 'lyskom-overlay)
-    (lyskom-do-special-inserts start 'special-insert)
+    (lyskom-do-special-inserts start (point) 'lyskom-overlay)
+    (lyskom-do-special-inserts start (point) 'special-insert)
 ))
 
 

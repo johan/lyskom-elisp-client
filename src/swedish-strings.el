@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.327 2003-07-27 14:17:25 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.328 2003-07-27 20:40:41 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.327 2003-07-27 14:17:25 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.328 2003-07-27 20:40:41 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1533,6 +1533,7 @@ Uppkopplad sedan %#8s%#9s")
     (faq-in-text-by . "FAQ i text %#1n %#5s %#3sav %#2P %#4s")
     (server-has-new-faq . "\nDet finns %#1d ny%#1?d%[%]%[a%] FAQ till servern.\n")
     (unread-faqs-header . "\nOläst%#1?d%[%]%[a%] FAQ till %#2?b%[%#2M%]%[servern%]:\n")
+    (all-faqs-header . "Alla FAQ till %#1?b%[%#1M%]%[servern%]:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
@@ -2192,6 +2193,8 @@ teckenkodning.
     (kom-leave-all-conferences . "Utträd ur (nästan) alla möten")
     (kom-limit-import         . "Begränsa import av texter")
     (kom-change-message-flag  . "Ändra mottagning (av) gruppmeddelanden")
+    (kom-list-faqs            . "Lista FAQ")
+    (kom-list-server-faqs     . "Lista server-FAQ")
     ))
 
 (lyskom-language-var local lyskom-language-codes sv
@@ -2539,6 +2542,10 @@ teckenkodning.
   (define-key lyskom-sv-list-prefix (kbd "r") 'kom-list-re)
   (define-key lyskom-sv-list-prefix (kbd "s") 'kom-membership)
   (define-key lyskom-sv-list-prefix (kbd "f") 'kom-list-filters)
+  (define-key lyskom-sv-list-prefix (kbd "q") 'kom-list-faqs)
+  (define-key lyskom-sv-list-prefix (kbd "Q") 'kom-list-server-faqs)
+  
+
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "ä") 'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "{") 'kom-list-summary)
   (lyskom-try-define-key lyskom-sv-list-prefix (kbd "[") 'kom-list-summary)
