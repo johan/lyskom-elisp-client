@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.48 2001-01-28 21:16:11 joel Exp $
+;;;;; $Id: view-text.el,v 44.49 2001-02-25 16:26:58 joel Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.48 2001-01-28 21:16:11 joel Exp $\n"))
+	      "$Id: view-text.el,v 44.49 2001-02-25 16:26:58 joel Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -320,12 +320,13 @@ Note that this function must not be called asynchronously."
                          (other-fast-replies nil))
                      (lyskom-traverse-aux aux (text-stat->aux-items text-stat)
                       (when (eq (aux-item->tag aux) 2)
-                        (if (eq (text-stat->author text-stat)
-                                (aux-item->creator aux))
-                            (setq author-fast-replies
-                                  (cons aux author-fast-replies))
-                          (setq other-fast-replies
-                                (cons aux other-fast-replies)))))
+                        (if (or (eq lyskom-current-command 'kom-review-noconversion)
+                                (not (eq (text-stat->author text-stat)
+                                         (aux-item->creator aux))))
+                            (setq other-fast-replies
+                                  (cons aux other-fast-replies))
+                          (setq author-fast-replies
+                                (cons aux author-fast-replies)))))
                      (when author-fast-replies
                        (lyskom-insert
                         (concat
