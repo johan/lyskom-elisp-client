@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: vars.el,v 35.10 1991-10-23 18:04:00 linus Exp $
+;;;;; $Id: vars.el,v 35.11 1991-10-25 15:23:13 linus Exp $
 ;;;;; Copyright (C) 1991  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el,v 35.10 1991-10-23 18:04:00 linus Exp $\n"))
+	      "$Id: vars.el,v 35.11 1991-10-25 15:23:13 linus Exp $\n"))
 
 
 
@@ -126,32 +126,9 @@ command			\"Kommandot:\" name of function or definition of
 			lambda expression
 keyboard macro		\"Kommandot:\" keyboard macro definition.")
 
-(defvar kom-page-before-command '(
-				  kom-list-conferences 
-				  kom-list-persons	
-				  kom-list-news             
-				  kom-membership	
-				  kom-status-person	
-				  kom-status-conf	
-				  kom-list-summary	
-				  kom-view		
-				  kom-find-root-review
-				  kom-review-comments
-				  kom-review-tree	
-				  kom-review-next           
-				  kom-find-root	
-				  kom-review-by-to          
-				  kom-view-commented-text   
-				  kom-review-stack          
-				  kom-review-presentation   
-				  kom-view-next-text	
-				  kom-who-is-on	
-				  kom-get-appreciation      
-				  kom-get-abuse             
-				  kom-review-marked-texts   
-				  kom-review-all-marked-texts
-				  kom-busy-wait)
-  "*This is a list of all functions before which the screen is cleared.")
+(defvar kom-page-before-command nil
+  "*This is a list of all commands before which the screen is cleared.
+If it isn't a list and isn't nil the screen is cleared before all commands.")
 
 (defvar kom-membership-default-priority 100
   "*Default priority when joining a new conference.

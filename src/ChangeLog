@@ -1,3 +1,7 @@
+Fri Oct 25 16:22:03 1991  Linus Tolke Y  (linus at lysator)
+
+	* vars.el (kom-page-before-command): Default nil.
+
 Wed Oct 23 19:04:14 1991  Linus Tolke Y  (linus at ruben)
 
 	* commands2.el: (lyskom-status-conf-4): If 0 unread leave that
