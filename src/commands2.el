@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.184 2003-08-17 13:21:32 byers Exp $
+;;;;; $Id: commands2.el,v 44.185 2003-08-24 14:34:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.184 2003-08-17 13:21:32 byers Exp $\n"))
+              "$Id: commands2.el,v 44.185 2003-08-24 14:34:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -237,6 +237,8 @@ otherwise: the conference is read with lyskom-completing-read."
                                  'anon-texts-not-permitted))) 
         (lyskom-format-insert 'garb-nice
                               (conf-stat->garb-nice conf-stat))
+        (lyskom-format-insert 'keep-commented
+                              (conf-stat->keep-commented conf-stat))
         (lyskom-format-insert 'lowest-local-no
                               (conf-stat->first-local-no conf-stat))
         (lyskom-format-insert 'highest-local-no
@@ -1485,6 +1487,28 @@ than the garbage collection time of all its recipients."
         (if (not (blocking-do 'set-garb-nice
                               (conf-stat->conf-no conf-stat) 
                               garb-nice))
+            (lyskom-insert-string 'nope) ;+++lyskom-errno
+          (lyskom-insert-string 'done)
+          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+
+(def-kom-command kom-set-keep-commented ()
+  "Set the minimum number of days a commented text is kept in conference
+after the most recent comment was written. Texts in a conference will
+eventually be deleted automatically \(this process is called garbage
+collection). This can only happen when a text is older than the
+garbage collection time of all its recipients."
+  (interactive)
+  (let ((conf-stat (lyskom-read-conf-stat 'conf-to-set-keep-commented-q
+                                          '(all) nil nil t)))
+    (if (not conf-stat)
+        (lyskom-insert-string 'somebody-deleted-that-conf)
+      (let ((keep-commented (lyskom-read-number 'new-keep-commented-q)))
+        (lyskom-format-insert 'keep-commented-for-is
+                              conf-stat
+                              keep-commented)
+        (if (not (blocking-do 'set-keep-commented
+                              (conf-stat->conf-no conf-stat) 
+                              keep-commented))
             (lyskom-insert-string 'nope) ;+++lyskom-errno
           (lyskom-insert-string 'done)
           (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
