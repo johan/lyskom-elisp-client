@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.48 1997-09-26 10:07:47 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.49 1997-09-26 12:26:03 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -79,7 +79,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.48 1997-09-26 10:07:47 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.49 1997-09-26 12:26:03 byers Exp $\n"))
 
 (lyskom-external-function find-face)
 
@@ -1505,7 +1505,8 @@ in lyskom-messages."
 
 (defsubst lyskom-fill-message-colon-line ()
   "Return non-nil if the current line starts with a colon-like thing."
-  (looking-at "\\S-+\\s-*:"))
+  (save-match-data
+    (looking-at "\\S-+\\s-*:")))
 
 
 
