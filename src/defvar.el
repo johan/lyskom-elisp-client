@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: defvar.el,v 44.2 1997-02-12 13:46:01 byers Exp $
+;;;;; $Id: defvar.el,v 44.3 1997-03-11 13:48:45 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -33,7 +33,7 @@
 
 
 (defconst lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.2 1997-02-12 13:46:01 byers Exp $\n"
+  "$Id: defvar.el,v 44.3 1997-03-11 13:48:45 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -157,10 +157,15 @@ local-hook      A hook variable that is made local in LysKOM buffers."
               ((symbolp (car arglist))
                (cond ((eq (car arglist) 'server)
                       (setq elisp-block
-                            (` ((add-to-list 'lyskom-elisp-variables
-                                             (quote (, name)))
-                                (add-to-list 'lyskom-local-variables
-                                             (quote (, name)))))))
+                            (` ((if (and (not (memq (quote (, name))
+                                                      lyskom-global-boolean-variables))
+                                           (not (memq (quote (, name))
+                                                      lyskom-global-non-boolean-variables)))
+                                    (progn
+                                      (add-to-list 'lyskom-elisp-variables
+                                                   (quote (, name)))
+                                      (add-to-list 'lyskom-local-variables
+                                                   (quote (, name)))))))))
 
                      ((eq (car arglist) 'server-hook)
                       (setq elisp-block

@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.15 1997-02-07 18:07:35 byers Exp $
+;;;;; $Id: english-strings.el,v 44.16 1997-03-11 13:48:51 byers Exp $
 ;;;;; Copyright (C) 1991, 1996  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM server.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.15 1997-02-07 18:07:35 byers Exp $"))
+              "$Id: english-strings.el,v 44.16 1997-03-11 13:48:51 byers Exp $"))
 
 
 ;;; ================================================================
@@ -395,6 +395,10 @@ Read all about it at http://www.lysator.liu.se/history/")
     (add-recipient-p . "Add recipient %#1P? ")
     (checking-rcpt . "Checking recipients...")
     (checking-rcpt-done . "Checking recipients...done")
+    (checking-comments . "Checking commented articles...")
+    (checking-comments-done . "Checking commented articles...done")
+    (please-check-commented-texts . "Review the commented text and its comments.")
+    (have-unread-comment . "Send despite unread comments to text %#1n? ")
 
     (matching-regexp . "Conferences/users matching `%#1s'\n")
 
