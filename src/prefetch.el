@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: prefetch.el,v 44.32 2004-07-15 17:13:03 byers Exp $
+;;;;; $Id: prefetch.el,v 44.33 2005-10-26 08:54:28 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: prefetch.el,v 44.32 2004-07-15 17:13:03 byers Exp $\n"))
+	      "$Id: prefetch.el,v 44.33 2005-10-26 08:54:28 _cvs_pont_lyskomelisp Exp $\n"))
 
 (def-kom-var lyskom-prefetch-queue nil
   "A queue where all prefetch requests are entered."
@@ -51,6 +51,7 @@
   "Set up the prefetch system"
   (setq lyskom-prefetch-queue (lyskom-queue-create))
   (setq lyskom-pending-prefetch 0)
+  (setq lyskom-inhibit-prefetch nil)
   (setq lyskom-membership-is-read 0))
 
 (defun lyskom-reset-prefetch ()
