@@ -1,5 +1,9 @@
 2006-02-16  Johan Sundström  <jhs@lysator.liu.se>
 
+	* vars.el.in (lyskom-default-conference-strategy): Made
+	kom-filter-author, kom-moronify and kom-befriend use the new
+	lyskom-default-conference-author-of-text-at-point strategy.
+
 	* commands2.el (kom-moronify, kom-befriend): New commands to add
 	persons to `kom-morons' and `kom-friends' right in the kom buffer.
 

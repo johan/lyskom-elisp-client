@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.317 2006-02-16 15:13:08 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.318 2006-02-16 15:25:44 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.317 2006-02-16 15:13:08 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.318 2006-02-16 15:25:44 jhs Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -271,6 +271,7 @@ the priority among links that match the same text is undefined."
 
     (kom-filter-author (filter-author
                         (default . (lyskom-default-conference-at-point
+				    lyskom-default-conference-author-of-text-at-point
                                     lyskom-default-conference-last-author))
                         (filter . (lyskom-default-conference-not-self)))
                        (filter-in-conf
@@ -369,10 +370,12 @@ the priority among links that match the same text is undefined."
 
     (kom-moronify (moronify-whom
 		   (default . (lyskom-default-conference-at-point
+			       lyskom-default-conference-author-of-text-at-point
 			       lyskom-default-conference-last-author))))
 
     (kom-befriend (befriend-whom
 		   (default . (lyskom-default-conference-at-point
+			       lyskom-default-conference-author-of-text-at-point
 			       lyskom-default-conference-last-author))))
 
     (kom-send-alarm (who-to-send-message-to
