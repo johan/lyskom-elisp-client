@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.217 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands2.el,v 44.218 2006-02-16 15:13:07 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.217 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
+              "$Id: commands2.el,v 44.218 2006-02-16 15:13:07 jhs Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -517,6 +517,30 @@ This command accepts text number prefix arguments \(see
                    lyskom-last-personal-message-sender
                  nil)))))
     (and tmp (list tmp))))
+
+(def-kom-command kom-moronify (&optional whom)
+  "Add person to `kom-morons' list."
+  (interactive)
+  (let ((moron (or whom
+		   (lyskom-read-conf-no 'moronify-whom '(pers) nil nil t))))
+    (when (not (memq moron kom-morons))
+      (setq kom-morons (cons moron kom-morons))
+      (lyskom-save-options (current-buffer)
+			   (lyskom-get-string 'moronify-saving)
+			   (lyskom-get-string 'moronify-saving-done)
+			   (lyskom-get-string 'moronify-saving-error)))))
+
+(def-kom-command kom-befriend (&optional whom)
+  "Add person to `kom-friends' list."
+  (interactive)
+  (let ((friend (or whom
+		    (lyskom-read-conf-no 'befriend-whom '(pers) nil nil t))))
+    (when (not (memq friend kom-friends))
+      (setq kom-friends (cons friend kom-friends))
+      (lyskom-save-options (current-buffer)
+			   (lyskom-get-string 'befriend-saving)
+			   (lyskom-get-string 'befriend-saving-done)
+			   (lyskom-get-string 'befriend-saving-error)))))
 
 (def-kom-command kom-send-message (&optional who message)
   "Send a message to another user or all members of a conference.

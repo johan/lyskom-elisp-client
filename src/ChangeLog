@@ -1,3 +1,20 @@
+2006-02-16  Johan Sundström  <jhs@lysator.liu.se>
+
+	* commands2.el (kom-moronify, kom-befriend): New commands to add
+	persons to `kom-morons' and `kom-friends' right in the kom buffer.
+
+	* vars.el.in (lyskom-default-conference-strategy): Associated
+	default strategies.
+	(lyskom-button-actions): ...and button actions for persons.
+
+	* completing-read.el
+	(lyskom-default-conference-author-of-text-at-point): New strategy
+	helper function. Should be used with kom-filter-author as well,
+	but I leave that for a separate commit, to make good change sets.
+
+	* english-strings.el, swedish-strings.el (lyskom-message):
+	Associated texts. Naming of these things could probably improve.
+
 2005-10-26  Pontus Freyhult  <pont@soua.net>
 
 	* prefetch.el (lyskom-setup-prefetch): Set lyskom-inhibit-prefetch to

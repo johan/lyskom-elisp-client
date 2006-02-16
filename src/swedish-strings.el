@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.401 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.402 2006-02-16 15:13:08 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.401 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.402 2006-02-16 15:13:08 jhs Exp $\n"))
 
 
 ;;; ================================================================
@@ -754,6 +754,14 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Adderad %#1s av %#2P\n")
     (is-supervisor-mark . "O ")
+    (moronify-saving . "Sparar ändringen...")
+    (moronify-saving-done . "Sparar ändringen...klart")
+    (moronify-saving-error . "Kunde inte spara ändringen!")
+    (befriend-saving . "Sparar ändringen...")
+    (befriend-saving-done . "Sparar ändringen...klart")
+    (befriend-saving-error . "Kunde inte spara ändringen!")
+    (moronify-whom . "Lägg vem på minuslistan? ")
+    (befriend-whom . "Lägg vem på pluslistan? ")
     (who-to-send-message-to . "Vem vill du skicka meddelandet till? (%#1s) ")
     (send-empty-message-p . "Meddelandet är tomt. Vill du ändå skicka det? ")
     (his-total-unread . "\n%#1M har totalt %#2d olästa (plus %#3d i passiva medlemskap).\n")
@@ -1866,6 +1874,8 @@ Du måste bli aktiv medlem för att gå till mötet.\n")
     (lyskom-button-view-session-status-action . "Visa sessionsstatus")
     (lyskom-button-mail-action . "Skicka brev")
     (lyskom-button-send-message-action . "Sänd meddelande")
+    (lyskom-button-moronify-action . "Lägg på idiot/knäppskalle-listan")
+    (lyskom-button-befriend-action . "Lägg på vänner/bekanta-listan")
     (lyskom-button-open-url-action . "Öppna")
     (lyskom-button-copy-url-action . "Kopiera")
     (lyskom-button-goto-info-node-action . "Öppna")
@@ -2215,6 +2225,8 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-help                 . "Hjälp")
     (kom-slow-mode            . "Långsamma kommandon")
     (kom-quick-mode           . "Snabba kommandon")
+    (kom-moronify             . "Lägg på idiot/knäppskalle-listan")
+    (kom-befriend             . "Lägg på vänner/bekanta-listan")
     (kom-send-message         . "Sända meddelande")
     (kom-send-alarm           . "Skicka alarmmeddelande")
     (kom-create-conf	      . "Skapa möte")

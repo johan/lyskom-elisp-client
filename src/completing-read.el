@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.52 2003-08-25 17:36:39 byers Exp $
+;;;;; $Id: completing-read.el,v 44.53 2006-02-16 15:13:07 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.52 2003-08-25 17:36:39 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.53 2006-02-16 15:13:07 jhs Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -202,6 +202,11 @@ See lyskom-read-conf for a description of the parameters."
   (and (lyskom-get-last-read-text)
        (list (text-stat->author
               (blocking-do 'get-text-stat (lyskom-get-last-read-text))))))
+
+(defun lyskom-default-conference-author-of-text-at-point (&rest args)
+  (let ((text (lyskom-text-at-point)))
+    (and text 
+	 (list (text-stat->author (blocking-do 'get-text-stat text))))))
 
 (defun lyskom-default-conference-restriction (predicate &rest args)
   (and (assq 'restrict predicate)

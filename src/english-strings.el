@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.357 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.358 2006-02-16 15:13:07 jhs Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.357 2005-03-02 07:55:40 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.358 2006-02-16 15:13:07 jhs Exp $"))
 
 
 ;;; ================================================================
@@ -743,6 +743,14 @@ Read all about it at http://www.lysator.liu.se/history/")
     (pers-membership-line . "%#5@%#1s%#2s%#3M %#4s\n")
     (pers-membership-line-2 . "                             Added %#1s by %#2P\n")
     (is-supervisor-mark . "O ")
+    (moronify-saving . "Saving change...")
+    (moronify-saving-done . "Saving change...done")
+    (moronify-saving-error . "Couldn't save change!")
+    (befriend-saving . "Saving change...")
+    (befriend-saving-done . "Saving change...done")
+    (befriend-saving-error . "Couldn't save change!")
+    (moronify-whom . "Add whom to morons list? ")
+    (befriend-whom . "Add whom to friends list? ")
     (who-to-send-message-to . "Send message to whom? (%#1s) ")
     (send-empty-message-p . "The message is empty. Send it anyway? ")
     (his-total-unread . "\n%#1M has %#2d unread texts (plus %#3d in passive memberships).\n")
@@ -1817,6 +1825,8 @@ You must become an active member of the conference to enter it.\n")
     (lyskom-button-view-session-status-action . "View session status")
     (lyskom-button-mail-action . "Send letter")
     (lyskom-button-send-message-action . "Send personal message")
+    (lyskom-button-moronify-action . "Add to morons list")
+    (lyskom-button-befriend-action . "Add to friend list")
     (lyskom-button-open-url-action . "Open")
     (lyskom-button-copy-url-action . "Copy")
     (lyskom-button-goto-info-node-action . "Open")
@@ -2173,6 +2183,8 @@ Change privileges for %#1P (%#1p)...")
     (kom-help                 . "Help")
     (kom-slow-mode            . "Long commands")
     (kom-quick-mode           . "Short commands")
+    (kom-moronify             . "Add to morons list")
+    (kom-befriend             . "Add to friend list")
     (kom-send-message         . "Send message")
     (kom-send-alarm           . "Send alarm")
     (kom-create-conf          . "Create conference")
@@ -3227,7 +3239,7 @@ Select whether to execute command or keyboard macro.")
 
     (morons . "Morons and other \"special\" people")
     (friends . "Friends and other special people")
-    (me . "Mig, myself and I")
+    (me . "Me, myself and I")
     (i-am-supervisor . "Conferences i supervise")
     (has-no-presentation . "Conferences without presentations")
     (highlight-conferences . "Conferences:")
