@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.63 2005-01-12 18:15:32 byers Exp $
+;;;;; $Id: review.el,v 44.64 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.63 2005-01-12 18:15:32 byers Exp $\n"))
+	      "$Id: review.el,v 44.64 2006-03-31 11:48:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -65,6 +65,7 @@
 (def-kom-var lyskom-last-review-saved-result-size 0 local)
 (def-kom-var lyskom-last-review-saved-smallest nil local)
 (def-kom-var lyskom-last-review-saved-largest nil local)
+(def-kom-var lyskom-last-review-comments nil local)
 (def-kom-var lyskom-have-review nil local)
 
 (def-kom-var lyskom-last-unread-by nil local)
@@ -345,7 +346,7 @@ all review-related functions."
     (setq lyskom-last-review-saved-result-size 0)
     (setq lyskom-last-review-saved-smallest nil)
     (setq lyskom-last-review-saved-largest nil)
-    (setq lyskom-have-review t)
+    (setq lyskom-have-review 'lyskom-review-by-to)
 
     (condition-case arg
         (let ((list (lyskom-get-texts-by-to by to count)))
@@ -1543,47 +1544,75 @@ all review-related functions."
          (unless kom-review-uses-cache
            (cache-del-text-stat text-no))
          (lyskom-review-comments
-          (blocking-do 'get-text-stat text-no)))
+          (list (blocking-do 'get-text-stat text-no))))
         (t (lyskom-insert-string 'read-text-first))))
 
+(def-kom-command kom-review-more-comments ()
+  "Review all comments to texts recently viewed with `kom-review-comments'. 
+This command only reviews one level of comments. To see the entire comment
+tree, use `kom-review-tree' instead.
 
-(defun lyskom-review-comments (text-stat)
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-as-read' for information on settings that affect
+all review-related functions."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-review)
+  (cond
+   (lyskom-last-review-comments
+    (unless kom-review-uses-cache
+      (mapcar 'cache-del-text-stat lyskom-last-review-comments))
+    (lyskom-review-comments
+     (let ((collector (make-collector)))
+       (mapcar (lambda (text-no)
+                 (initiate-get-text-stat 'main
+                                         'collector-push
+                                         text-no
+                                         collector))
+               lyskom-last-review-comments)
+       (lyskom-wait-queue 'main)
+       (delq nil (nreverse (collector->value collector))))))
+   (t (lyskom-insert-string 'no-review-done))))
+
+
+(defun lyskom-review-comments (text-stat-list)
   "Handles the return from the initiate-get-text-stat, displays and builds list."
-  (let* ((misc-info-list (and text-stat
-			      (text-stat->misc-info-list text-stat)))
-	 (misc-infos (and misc-info-list
-			  (append (lyskom-misc-infos-from-list 
-				   'FOOTN-IN misc-info-list)
-				  (lyskom-misc-infos-from-list 
-				   'COMM-IN misc-info-list))))
-	 (all-text-nos (and misc-infos
-			(mapcar
-			 (function
-			  (lambda (misc-info)
-			    (if (equal (misc-info->type misc-info)
-				       'COMM-IN)
-				(misc-info->comm-in misc-info)
-			      (misc-info->footn-in misc-info))))
-			 misc-infos)))
-         text-nos)
-    ;; Only try to review texts that we can read.
-    (while all-text-nos
-      (unless kom-review-uses-cache
-        (cache-del-text-stat (car all-text-nos)))
-      (if (blocking-do 'get-text-stat (car all-text-nos))
-          (setq text-nos (cons (car all-text-nos) text-nos)))
-      (setq all-text-nos (cdr all-text-nos)))
-    (setq text-nos (nreverse text-nos))
+  (let ((text-nos nil))
+    (lyskom-traverse text-stat text-stat-list
+      (let* ((misc-info-list (and text-stat
+                                  (text-stat->misc-info-list text-stat)))
+             (misc-infos (and misc-info-list
+                              (append (lyskom-misc-infos-from-list 
+                                       'FOOTN-IN misc-info-list)
+                                      (lyskom-misc-infos-from-list 
+                                       'COMM-IN misc-info-list))))
+             (all-text-nos (and misc-infos
+                                (mapcar
+                                 (function
+                                  (lambda (misc-info)
+                                    (if (equal (misc-info->type misc-info)
+                                               'COMM-IN)
+                                        (misc-info->comm-in misc-info)
+                                      (misc-info->footn-in misc-info))))
+                                 misc-infos))))
+        ;; Only try to review texts that we can read.
+        (while all-text-nos
+          (unless kom-review-uses-cache
+            (cache-del-text-stat (car all-text-nos)))
+          (if (blocking-do 'get-text-stat (car all-text-nos))
+              (setq text-nos (cons (car all-text-nos) text-nos)))
+          (setq all-text-nos (cdr all-text-nos)))))
 
+    (setq text-nos (nreverse text-nos))
     (if text-nos
 	(progn
 	  (lyskom-format-insert 'review-text-no (car text-nos))
-	  (if (cdr text-nos)
-              (lyskom-review-enter-read-info
-               (lyskom-create-read-info
-                'REVIEW nil (lyskom-review-get-priority)
-                (lyskom-create-text-list (cdr text-nos))
-                lyskom-current-text) t))
+	  (when (cdr text-nos)
+            (lyskom-review-enter-read-info
+             (lyskom-create-read-info
+              'REVIEW nil (lyskom-review-get-priority)
+              (lyskom-create-text-list (cdr text-nos))
+              lyskom-current-text) t))
+          (setq lyskom-last-review-comments text-nos)
           ;; Don't check the no-cache thing here since we already
           ;; did earlier. We may end up slightly out of sync with
           ;; the server, but not so anyone will really notice.

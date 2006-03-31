@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.11 2004-11-11 07:14:59 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: mime.el,v 44.12 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.11 2004-11-11 07:14:59 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: mime.el,v 44.12 2006-03-31 11:48:17 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
   '(((ascii)						. us-ascii)
@@ -78,10 +78,12 @@
 
 (defun lyskom-mime-string-charset (data)
   (let* ((cs (lyskom-find-charset-string data))
+         (the-cs (and (eq (length cs) 1) (car cs)))
          (tmp lyskom-charset-alist)
          (best-guess (let ((system nil))
                        (while (and tmp cs)
-                         (if (lyskom-subset-p cs (car (car tmp)))
+                         (if (or (lyskom-subset-p cs (car (car tmp)))
+                                 (eq the-cs (cdr (car tmp))))
                              (setq system (cdr (car tmp)) tmp nil)
                            (setq tmp (cdr tmp))))
                        system)))
@@ -117,26 +119,85 @@
         (lyskom-decode-coding-string data coding-system)
       data)))
 
+(defvar lyskom-mime-type-regexp)
+(defvar lyskom-mime-parameter-regexp)
+(defvar lyskom-mime-wrap-regexp)
+(defvar lyskom-mime-comment-regexp)
+(defconst lyskom-mime-parameter-name-match 1)
+(defconst lyskom-mime-parameter-value-match 2)
+
+(let* ((whitespace "[\000-\040]*")
+       (tspecials "][()<>@,;:\\\"/?=\000-\040")
+       (qstring "\"\\([^\"\\]\\|\\\\[\000-\377]\\)*\"")
+       (notspecials (format "[^%s]+" tspecials))
+       (comment-base "\\((\\([^()]*%s\\)*[^()]*)\\)"))
+
+  (setq lyskom-mime-parameter-regexp 
+        (concat whitespace ";" whitespace
+                "\\(" notspecials "\\)"
+                whitespace "=" whitespace
+                "\\(" notspecials
+                "\\|" qstring
+                "\\)"
+                "[^;]*"))
+  (setq lyskom-mime-type-regexp
+        (concat whitespace "\\(" notspecials "/" notspecials "\\)"))
+  (setq lyskom-mime-wrap-regexp (concat "\\\\\\r?\n" whitespace))
+
+  ;; We cheat with comments, and only allow limited nesting
+  (setq lyskom-mime-comment-regexp comment-base)
+  (let ((nesting 2))
+    (while (> nesting 0)
+      (setq lyskom-mime-comment-regexp
+            (format lyskom-mime-comment-regexp comment-base))
+      (setq nesting (1- nesting))))
+      (setq lyskom-mime-comment-regexp
+            (concat whitespace
+                    (format lyskom-mime-comment-regexp "")
+                    whitespace))
+  )
+
+
+;;; Parse content-type header according to RFC2045, with some
+;;; exceptions. We do not allow comments everywhere, which is
+;;; wrong, but I don't care. We do allow comments in many
+;;; places, and hopefully those places people will use.
+
 (defun lyskom-mime-decode-content-type (data)
   (let ((content-type nil)
         (params nil)
         (start 0))
 
-  (when (string-match "^[^;]*" data)
-    (setq content-type (match-string 0 data))
-    (setq start (match-end 0)))
+    (when (and (string-match lyskom-mime-comment-regexp data start)
+               (eq (match-beginning 0) start))
+      (setq start (match-end 0)))
+    (when (string-match lyskom-mime-type-regexp data)
+      (setq content-type (downcase (match-string 1 data)))
+      (setq start (match-end 1)))
 
-  (while (string-match ";\\s *\\([^=;]*\\)\\(=\\([^;]*\\)\\)" data start)
-    (let ((param-name (intern (match-string 1 data)))
-          (param-value (match-string 3 data)))
-      (when (and (memq param-name '(charset format))
-                 param-value)
-        (setq param-value (intern param-value)))
+    (when (and (string-match lyskom-mime-comment-regexp data start)
+               (eq (match-beginning 0) start))
+      (setq start (match-end 0)))
+    (while (string-match lyskom-mime-parameter-regexp data start)
+      (let ((param-name (intern (downcase (match-string lyskom-mime-parameter-name-match data))))
+            (param-value (downcase (match-string lyskom-mime-parameter-value-match data))))
+        (setq start (match-end 0))
 
-      (setq params (cons (cons param-name (or param-value t)) params)))
-    (setq start (match-end 0)))
+        (when (string-match "^\"[\000-\377]*\"$" param-value)
+          (setq param-value (substring param-value 1 -1)))
+        (setq param-value (replace-in-string param-value
+                                             lyskom-mime-wrap-regexp ""))
+        (when (and (memq param-name '(charset format)) param-value)
+          (setq param-value (intern param-value)))
 
-  (cons content-type params)))
+        (when (and (string-match lyskom-mime-comment-regexp data start)
+                   (eq (match-beginning 0) start))
+          (setq start (match-end 0)))
+
+        (setq params (cons (cons param-name (or param-value t)) params)))
+      )
+
+    (cons content-type params)))
 
 
 (provide 'lyskom-mime)

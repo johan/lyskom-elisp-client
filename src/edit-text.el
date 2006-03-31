@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.120 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: edit-text.el,v 44.121 2006-03-31 11:48:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.120 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: edit-text.el,v 44.121 2006-03-31 11:48:16 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -435,6 +435,11 @@ so it's not as clean as it ought to be."
 ;;;   Functions bound to keyboard seqences in lyskom-edit-mode
 ;;;
 
+(defvar lyskom-edit-aux-list)
+(defvar lyskom-edit-misc-list)
+(defvar lyskom-edit-subject)
+(defvar lyskom-edit-text)
+
 (defun kom-edit-send-anonymous ()
   "Send the text anonymously to the server. Be aware that although the text 
 will be truly anonymous, it is easy to slip up in such a way that the author
@@ -525,11 +530,16 @@ anonymously and take actions to avoid revealing the sender."
               ;; Transform the message text
               ;;
 
-	      (setq message
-                    (if (fboundp lyskom-send-text-transform-function)
-                        (funcall lyskom-send-text-transform-function
-                                 (lyskom-edit-extract-text))
-                      (lyskom-edit-extract-text)))
+              (let ((lyskom-edit-aux-list aux-list)
+                    (lyskom-edit-misc-list misc-list)
+                    (lyskom-edit-subject subject)
+                    (lyskom-edit-text (lyskom-edit-extract-text)))
+                (run-hook-with-args-until-success
+                 'lyskom-send-text-transform-hook)
+                (setq aux-list lyskom-edit-aux-list)
+                (setq misc-list lyskom-edit-misc-list)
+                (setq subject lyskom-edit-subject)
+                (setq message lyskom-edit-text))
 
 	      (save-excursion
                 (let* ((full-message
@@ -634,7 +644,7 @@ anonymously and take actions to avoid revealing the sender."
     ;;
 
     (lyskom-edit-text-abort
-     (apply 'lyskom-message (cdr-safe err)))
+     (and (cdr err) (apply 'lyskom-message (cdr err))))
     (lyskom-no-subject
      (lyskom-beep kom-ding-on-no-subject)
      (if (cdr-safe (cdr-safe err))
@@ -1034,33 +1044,52 @@ Cannot be called from a callback."
 
 
 ;;UNUSED: lyskom-send-enriched
-(defun lyskom-send-enriched (message)
-  (condition-case err
-      (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
-                                           "lyskom-enriched" 
-                                           t)))
-        (unwind-protect
-            (save-excursion
-              (set-buffer buf)
-              (insert message)
-              (goto-char (point-min))
-              (format-encode-buffer 'text/enriched)
-              (goto-char (point-min))
-              (search-forward "\n\n")
-              (if (and (not (lyskom-string= (buffer-substring (point)
-                                                              (point-max)) message))
-                       (save-excursion
-                         (set-buffer lyskom-buffer)
-                         (lyskom-j-or-n-p 
-                          (lyskom-get-string 'send-formatted))))
-                  (concat "enriched:\n" (buffer-string))
-                message))
-          (kill-buffer buf)))
-    (error (if (lyskom-j-or-n-p
-                (lyskom-format (lyskom-get-string 'transform-error)
-                               (error-message-string err)))
-               message
-             (signal 'lyskom-edit-text-abort nil)))))
+(defun lyskom-send-enriched ()
+  (let ((content-type (lyskom-get-aux-item lyskom-edit-aux-list 1)))
+    (when (or (null content-type)
+              (and (= (length content-type) 1)
+                   (string-match "^text/enriched" (aux-item->data (car content-type)))))
+      (condition-case err
+          (let ((buf (lyskom-get-buffer-create 'lyskom-enriched 
+                                               "lyskom-enriched" 
+                                               t)))
+            (unwind-protect
+                (save-excursion
+                  (set-buffer buf)
+                  (insert lyskom-edit-text)
+                  (goto-char (point-min))
+                  (format-encode-buffer 'text/enriched)
+                  (goto-char (point-min))
+                  (search-forward "\n\n")
+                  (when (and (not (lyskom-string= 
+                                   (replace-in-string (buffer-substring (point) (point-max))
+                                                      "<<" "<" t)
+                                   lyskom-edit-text))
+                             (save-excursion
+                               (set-buffer lyskom-buffer)
+                               (lyskom-j-or-n-p 
+                                (lyskom-get-string 'send-formatted))))
+                    (setq lyskom-edit-text (buffer-substring (point) (point-max)))
+                    (unless content-type
+                      (setq lyskom-edit-aux-list 
+                            (cons (lyskom-create-aux-item 0 1 nil nil
+                                                          (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
+                                                          0
+                                                          "text/enriched")
+                                  lyskom-edit-aux-list)))
+                    (setq lyskom-edit-aux-list
+                          (cons (lyskom-create-aux-item 0 10002 nil nil
+                                                        (lyskom-create-aux-item-flags nil nil nil nil nil nil nil nil)
+                                                        0
+                                                        (buffer-substring (point-min) (point)))
+                                lyskom-edit-aux-list)))
+                  'stop-transforming-texts)
+              (kill-buffer buf)))
+        (error (if (lyskom-j-or-n-p
+                    (lyskom-format (lyskom-get-string 'transform-error)
+                                   (error-message-string err)))
+                   nil
+                 (signal 'lyskom-edit-text-abort nil)))))))
 
 
 

@@ -1,5 +1,10 @@
 <!-- -*-mode: xml-*- -->
 <help language="sv">
+  <section id="commands" prompt="Snabbkommandon">
+    <p>Snabbommandon:</p>
+    <keymap />
+  </section>
+
   <section id="language-help" prompt="">
     <h2>Language Settings</h2>
 

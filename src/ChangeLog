@@ -1,3 +1,76 @@
+2006-03-31  David Byers  <davby@ida.liu.se>
+
+	* menus.el (lyskom-menu-template): Added kom-review-more-comments
+	to menu.
+
+	Fix bug 1510:
+	* vars.el.in (lyskom-commands): Added kom-review-mode-comments.
+
+	* swedish-strings.el,english-strings.el
+	(lyskom-sv-mode-map,lyskom-en-mode-map): Added
+	kom-review-more-comments.
+
+	* review.el (lyskom-review-by-to): Set lyskom-have-review to
+	indicate what kind of review.
+	(lyskom-last-review-comments): New variable.
+	(lyskom-review-comments): Set lyskom-last-review-comments.
+	(lyskom-review-comments): Handle a list of text-stats as the input
+	to this function.
+	(kom-review-more-comments): New command.
+
+	Fix bug 1535:
+	* commands1.el (lyskom-write-text): Added add-self parameter.
+	(kom-send-letter): Always add sender as recipient.
+
+	Fix bug 1589:
+	* mime.el (lyskom-mime-string-charset): Handle server coding
+	system in found charset.
+
+	* compatibility.el (find-charset-string): Default to server
+	coding-system or latin-1 if server coding system is unknown.
+
+	Fix bug 1602:
+	* mime.el (lyskom-mime-decode-content-type): Correctly match the
+	type and subtype fields of content types. Downcase all values.
+
+	Fix bug 1391:
+	* commands2.el (lyskom-help): Handle printing top-level keymap.
+
+	* help.el (lyskom-help-format-keymap): New function.
+
+	* help-english.xml,help-swedish.xml: Added keyboard commands
+	section.
+
+	* help-compile.el (lyskom-help-syntax): Added keymap directive.
+
+	Probably fix bug 1570:
+	* compatibility.el (lyskom-map-keymap): Do not attempt to car or
+	cdr non-conses when mapping over keymap.
+
+2006-03-30  David Byers  <davby@ida.liu.se>
+
+	Update handling of text/enriched:
+	* lyskom-rest.el (lyskom-format-enriched): Handle new-style
+	enriched text, with headers in a special aux-item.
+
+	* edit-text.el (lyskom-edit-send): Handle aborted sending without
+	error message.
+
+	* aux-items.el (elisp-client-enriched-headers): Added aux-item
+	definition. 
+
+	* edit-text.el (lyskom-edit-send): Replaced
+	lyskom-send-text-transform-function with more general
+	lyskom-send-text-transform-hook, which allows multiple
+	transformations and changes to more than just the text.
+
+	* vars.el.in (lyskom-send-text-transform-hook): Ditto.
+
+2005-03-22  David Byers  <davby@ida.liu.se>
+
+	* english-strings.el (lyskom-custom-strings): Fxied speling erorr
+	in me.
+
 2006-02-16  Johan Sundström  <jhs@lysator.liu.se>
 
 	* vars.el.in (lyskom-default-conference-strategy): Made
@@ -30,11 +103,11 @@
 	* perf.el (fields-new): Dispose of marker when done.
 
 	* help.el (lyskom-help-format-p): Dito.
-	
+
 	* lyskom-rest.el (lyskom-do-special-inserts): Dito.
 	(lyskom-insert-before-prompt): Dito.
 	(lyskom-render-html-region): Dito.
-	
+
 	* commands2.el (lyskom-list-new-conferences): Dispose of marker when
 	we're done with it.
 
@@ -43,7 +116,7 @@
 	(lyskom-edit-add-recipient/copy): Dito.
 	(lyskom-edit-insert-aux-item): Added FIXME about marker.
 	(lyskom-edit-replace-headers): Dispose of markers when done.
-	
+
 2005-03-08  David Byers  <byers@lysator.liu.se>
 
 	* compatibility.el (lyskom-encode-coding-string): Renamed

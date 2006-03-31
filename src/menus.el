@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.39 2005-02-15 16:32:49 byers Exp $
+;;;;; $Id: menus.el,v 44.40 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.39 2005-02-15 16:32:49 byers Exp $\n"))
+	      "$Id: menus.el,v 44.40 2006-03-31 11:48:17 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -64,6 +64,7 @@
                   (item kom-find-root)
                   (item kom-view-commented-text)
                   (item kom-review-comments)
+                  (item kom-review-more-comments)
 		  (item kom-review-cross-references)
                   (item kom-review-tree)
                   (item kom-find-root-review)
@@ -244,6 +245,9 @@
                   (item kom-change-password)
                   (item kom-redirect-comments)
                   (item kom-change-privileges)))
+           (hline)
+           (item kom-befriend)
+           (item kom-moronify)
            (hline)
            (item kom-who-am-i)))
 

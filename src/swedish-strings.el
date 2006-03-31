@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.402 2006-02-16 15:13:08 jhs Exp $
+;;;;; $Id: swedish-strings.el,v 44.403 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.402 2006-02-16 15:13:08 jhs Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.403 2006-03-31 11:48:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2258,6 +2258,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-view		      . "Återse inlägg")
     (kom-find-root-review     . "Återse träd")
     (kom-review-comments      . "Återse alla kommentarer")
+    (kom-review-more-comments . "Återse fler kommentarer")
     (kom-review-tree	      . "Återse alla kommentarer rekursivt")
     (kom-review-clear         . "Återse hoppa")
     (kom-review-last-normally-read
@@ -2952,6 +2953,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-review-prefix (kbd "K") 'kom-view-previous-commented-text)
   (define-key lyskom-sv-review-prefix (kbd "a ?") 'lyskom-help)
   (define-key lyskom-sv-review-prefix (kbd "a k") 'kom-review-comments)
+  (define-key lyskom-sv-review-prefix (kbd "a y") 'kom-review-more-comments)
   (define-key lyskom-sv-review-prefix (kbd "a r") 'kom-review-tree)
   (define-key lyskom-sv-review-prefix (kbd "a x") 'kom-review-cross-references)
   (define-key lyskom-sv-review-prefix (kbd "h") 'kom-review-clear)

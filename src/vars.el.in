@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.318 2006-02-16 15:25:44 jhs Exp $
+;;;;; $Id: vars.el.in,v 44.319 2006-03-31 11:48:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.318 2006-02-16 15:25:44 jhs Exp $\n"))
+	      "$Id: vars.el.in,v 44.319 2006-03-31 11:48:18 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -2394,7 +2394,7 @@ conference and person buttons are not expected.")
     ("\\b\\(www\\|ftp\\|home\\)\\.[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      pseudo-url 0 nil kom-url-face)
 
-    ("\\(file://\\|ftp://\\|gopher://\\|rtsp://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
+    ("\\(google:\\|file://\\|ftp://\\|gopher://\\|rtsp://\\|http://\\|https://\\|news:\\|wais://\\|mailto:\\|telnet:\\)[^\t \012\014\"<>|\\]*[^][\t \012\014\"<>|.,!(){}?'`:;]" 
      url 0 nil kom-url-face)
 
     ("<URL:\\([^<>]+\\)>"
@@ -2481,7 +2481,7 @@ additional settings that affect opening URLs."
                                  "Browse-URL"
                                  lyskom-view-url-browse-url)
                                 ("w3" 
-                                 "\\(http\\|gopher\\|ftp\\)"
+                                 "\\(google\\|http\\|gopher\\|ftp\\)"
                                  "Emacs W3" 
                                  lyskom-view-url-w3)
                                 ("windows"
@@ -3676,6 +3676,8 @@ Users are encouraged to use their best sense of humor."
     kom-list-new-conferences
     kom-list-new-persons
     kom-change-privileges
+
+    kom-review-more-comments
     ))
 
 ;;; ================================================================
@@ -4503,10 +4505,16 @@ Values other than those listed are reserved for future use."
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")
 
-(def-kom-var lyskom-send-text-transform-function nil
-  "Function to call to transform text before sending it to the server.
-The function should accept a single argument and return the transformed
-texts that is to be sent to the server.")
+(def-kom-var lyskom-send-text-transform-hook nil
+  "Functions to call to transform text before sending it to the server.
+
+When each function is run, lyskom-edit-text is bound to the text mass,
+lyskom-edit-subject is bound to the subject, lyskom-edit-aux-list is
+bound to the list of aux-items, and lyskom-edit-misc-list is bound to
+the list of misc items. Functions may change these variables.
+
+The first function to return a non-nil value will be the last function
+to run.")
 
 (def-kom-var lyskom-slow-mode nil
   "Non-nil when in slow mode."

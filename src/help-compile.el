@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help-compile.el,v 44.5 2003-12-10 22:26:58 byers Exp $
+;;;;; $Id: help-compile.el,v 44.6 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -75,7 +75,7 @@ Value returned is always nil."
 
 (defvar lyskom-help-syntax
   '((help (language) nil (section) lyskom-help-parse-process-finish)
-    (section (id prompt) nil (p list h1 h2 h3 inline refer) lyskom-help-parse-process-section)
+    (section (id prompt) nil (p list h1 h2 h3 inline refer keymap) lyskom-help-parse-process-section)
     (h1 nil nil (cref TEXT) nil)
     (h2 nil nil (cref TEXT) nil)
     (h3 nil nil (cref TEXT) nil)
@@ -84,6 +84,7 @@ Value returned is always nil."
     (i nil nil (cref TEXT) nil)
     (list nil (header) (item) nil)
     (item nil nil (refer b i cref TEXT) nil)
+    (keymap nil nil nil)
     (inline (id) nil nil lyskom-help-parse-process-section-ref)
     (refer (id) nil nil lyskom-help-parse-process-section-ref)
     (cref (id) nil nil lyskom-help-parse-process-command-ref)

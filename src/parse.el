@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.59 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: parse.el,v 44.60 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.59 2004-06-26 13:32:32 byers Exp $\n"))
+	      "$Id: parse.el,v 44.60 2006-03-31 11:48:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -378,7 +378,11 @@ Each element is parsed by PARSER, a function that takes no arguments."
    ((lyskom-char-p ?*) (lyskom-expect-char ?*))
    (t (lyskom-expect-char ?{)
       (prog1
-	  (lyskom-fill-vector (make-vector len nil) parser)
+          (let ((res nil))
+            (while (> len 0)
+              (setq res (cons (funcall parser) res) len (1- len)))
+            (apply 'vector (nreverse res)))
+;        (lyskom-fill-vector (make-vector len nil) parser)
 	(lyskom-expect-char ?})))))
 
 (defun lyskom-parse-list (len parser)

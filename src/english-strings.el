@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.358 2006-02-16 15:13:07 jhs Exp $
+;;;;; $Id: english-strings.el,v 44.359 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.358 2006-02-16 15:13:07 jhs Exp $"))
+              "$Id: english-strings.el,v 44.359 2006-03-31 11:48:17 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2217,6 +2217,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-view                 . "Review text")
     (kom-find-root-review     . "Review tree")
     (kom-review-comments      . "Review all comments")
+    (kom-review-more-comments . "Review more comments")
     (kom-review-tree          . "Review all comments recursively")
     (kom-review-clear         . "Review and skip")
     (kom-review-last-normally-read
@@ -2820,6 +2821,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-review-prefix (kbd "C") 'kom-view-previous-commented-text)
   (define-key lyskom-en-review-prefix (kbd "a ?") 'lyskom-help)
   (define-key lyskom-en-review-prefix (kbd "a c") 'kom-review-comments)
+  (define-key lyskom-en-review-prefix (kbd "a M") 'kom-review-more-comments)
   (define-key lyskom-en-review-prefix (kbd "a r") 'kom-review-tree)
   (define-key lyskom-en-review-prefix (kbd "a x") 'kom-review-cross-references)
   (define-key lyskom-en-review-prefix (kbd "j") 'kom-review-clear)

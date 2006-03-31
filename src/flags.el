@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.42 2004-02-29 15:12:49 byers Exp $
+;;;;; $Id: flags.el,v 44.43 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.42 2004-02-29 15:12:49 byers Exp $\n"))
+	      "$Id: flags.el,v 44.43 2006-03-31 11:48:17 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -146,6 +146,8 @@ settings and save them to your emacs init file."
                            (data (lyskom-encode-coding-string 
                                   (lyskom-flag-value-to-string var)
                                   (or lyskom-server-coding-system 'raw-text))))
+                       (when (lyskom-multibyte-string-p data)
+                         (lyskom-format-insert-before-prompt "Errors encoding %#1s\n" name))
                        (format "%dH%s %dH%s" 
                                (lyskom-string-bytes name) name
                                (lyskom-string-bytes data) data)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.224 2005-02-14 21:35:58 byers Exp $
+;;;;; $Id: commands1.el,v 44.225 2006-03-31 11:48:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.224 2005-02-14 21:35:58 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.225 2006-03-31 11:48:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -498,7 +498,7 @@ comment; `kom-confirm-multiple-recipients' affects how multiple
 recipients are handled."
   (interactive)
   (lyskom-tell-internat 'kom-tell-write-letter)
-  (lyskom-write-text pers-no 'who-letter-to))
+  (lyskom-write-text pers-no 'who-letter-to t))
 
 
 ;;; ================================================================
@@ -1768,7 +1768,7 @@ recipients are handled."
   (lyskom-tell-internat 'kom-tell-write-text)
   (lyskom-write-text arg 'who-send-text-to))
 
-(defun lyskom-write-text (arg prompt)
+(defun lyskom-write-text (arg prompt &optional add-self)
   "Start writing a new text."
   (lyskom-nag-about-presentation)
   (let* ((tono (cond ((and arg (listp arg)
@@ -1796,7 +1796,8 @@ recipients are handled."
                               (lyskom-create-misc-list 'RECPT tono)
                               "" "")
           (lyskom-edit-text lyskom-proc
-                            (if (lyskom-get-membership tono)
+                            (if (and (lyskom-get-membership tono)
+                                     (not add-self))
                                 (lyskom-create-misc-list 'RECPT tono)
                               (lyskom-create-misc-list 
                                'RECPT tono

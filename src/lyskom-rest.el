@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.256 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: lyskom-rest.el,v 44.257 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.256 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.257 2006-03-31 11:48:17 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2271,7 +2271,12 @@ in lyskom-messages."
       (unwind-protect
           (save-excursion
             (set-buffer tmpbuf)
-            (insert (substring text 10))
+            (if (lyskom-get-aux-item (text-stat->aux-items text-stat) 10002)
+                (insert (aux-item->data (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 10002))))
+              (insert "Content-Type: text/enriched\n\n"))
+            (if (lyskom-get-aux-item (text-stat->aux-items text-stat) 1)
+                (insert text)
+              (insert (substring text 10)))
             (format-decode-buffer)
             (lyskom-signal-reformatted-text 'reformat-enriched)
             (lyskom-button-transform-text (buffer-string) text-stat)

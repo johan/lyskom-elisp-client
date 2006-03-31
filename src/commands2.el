@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.218 2006-02-16 15:13:07 jhs Exp $
+;;;;; $Id: commands2.el,v 44.219 2006-03-31 11:48:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.218 2006-02-16 15:13:07 jhs Exp $\n"))
+              "$Id: commands2.el,v 44.219 2006-03-31 11:48:16 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1168,7 +1168,7 @@ will be prompted for the mark."
 ;;; Author: Linus Tolke
 
 
-(defun lyskom-help ()
+(defun lyskom-help (&optional only-kom)
   "Prints a short list of alternatives when you don't know what you can do."
   (interactive)
   (let* ((tohere (cond
@@ -1187,38 +1187,53 @@ will be prompted for the mark."
                   ((and (symbolp binding)
                         (fboundp binding))
                    (symbol-function binding))
-                  (t binding)))
+                  (t (if (eq binding lyskom-mode-map)
+                         (keymap-parent binding)
+                       binding))))
          (keylis (lyskom-help-get-keylist keymap))
-         (text (format "\n%s: \n%s\n"
-                       (mapconcat 'single-key-description tohere " ")
-                       (mapconcat
-                        (function
-                         (lambda (arg)
-                           (format "%s - %s" 
-                                   (if (fboundp 'key-description)
-                                       (if (not (vectorp (car arg)))
-                                           (key-description (vector (car arg)))
-                                         (key-description (car arg)))
-                                     (cond ((symbolp (car arg))
-                                            (format "%s" (car arg)))
-                                           ((lyskom-characterp (car arg))
-                                            (format "%c" (car arg)))
-                                           (t (format "%S" (car arg)))))
-                                   (or (lyskom-command-name (cdr arg))
-                                       (and (keymapp (cdr arg))
-                                            (lyskom-get-string
-                                             'multiple-choice))
-                                       (cdr arg)))))
-                        keylis
-                        "\n")))
+         (keydes (mapconcat 'single-key-description tohere " "))
+         (text (lyskom-format
+                (if (string= keydes "")
+                    "\n%#2s\n"
+                  "\n%#1s:\n%#2s\n")
+                keydes
+                (mapconcat
+                 'identity
+                 (delq nil (mapcar
+                            (lambda (arg)
+                              (if (or (null (cdr arg)) 
+                                      (eq (cdr arg) 'undefined)
+                                      (and only-kom
+                                           (not (or (lyskom-command-name (cdr arg))
+                                                    (keymapp (cdr arg))))))
+                                  nil
+                                (format "%s - %s" 
+                                        (if (fboundp 'key-description)
+                                            (if (not (vectorp (car arg)))
+                                                (key-description (vector (car arg)))
+                                              (key-description (car arg)))
+                                          (cond ((symbolp (car arg))
+                                                 (format "%s" (car arg)))
+                                                ((lyskom-characterp (car arg))
+                                                 (format "%c" (car arg)))
+                                                (t (format "%S" (car arg)))))
+                                        (or (lyskom-command-name (cdr arg))
+                                            (and (keymapp (cdr arg))
+                                                 (lyskom-get-string
+                                                  'multiple-choice))
+                                            (cdr arg)))))
+                            keylis))
+                 "\n")))
          ;; next-char
          )
-    (if (eq major-mode 'lyskom-mode)
-        (progn
-          (lyskom-insert text)
-          (lyskom-end-of-command))
-      (with-output-to-temp-buffer "*Help*"
-        (princ text)))))
+    (when (interactive-p)
+      (if (eq major-mode 'lyskom-mode)
+          (progn
+            (lyskom-insert text)
+            (lyskom-end-of-command))
+        (with-output-to-temp-buffer "*Help*"
+          (princ text))))
+    text))
 
 
 (defun lyskom-help-get-keylist (keymap)

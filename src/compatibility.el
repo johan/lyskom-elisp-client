@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.75 2005-03-08 14:55:56 byers Exp $
+;;;;; $Id: compatibility.el,v 44.76 2006-03-31 11:48:16 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.75 2005-03-08 14:55:56 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.76 2006-03-31 11:48:16 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -164,7 +164,7 @@ KEYS should be a string in the format used for saving keyboard macros
                    (setq r (1+ r))))
                 ((char-table-p el)
                  (map-char-table fn el))
-                (t (funcall fn (car el) (cdr el)))))))))
+                ((consp el) (funcall fn (car el) (cdr el)))))))))
 
 
 ;; set-keymap-parent also comes from XEmacs
@@ -225,7 +225,8 @@ KEYS should be a string in the format used for saving keyboard macros
 (lyskom-function-alias find-coding-systems-for-charsets (cs) nil)
 (lyskom-function-alias coding-system-get (cs prop) nil)
 (lyskom-function-alias char-width (c) 1)
-(lyskom-function-alias find-charset-string (str) '(ascii))
+(lyskom-function-alias find-charset-string (str) (list (or (lyskom-default-value-safe 'lyskom-server-coding-system)
+                                                           'ascii)))
 (lyskom-function-alias string-as-unibyte (str) str)
 (lyskom-function-alias string-make-unibyte (str) str)
 (lyskom-function-alias string-make-multibyte (str) str)

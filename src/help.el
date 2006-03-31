@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.8 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: help.el,v 44.9 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.8 2005-03-17 07:49:53 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: help.el,v 44.9 2006-03-31 11:48:17 byers Exp $\n"))
 
 
 
@@ -87,6 +87,7 @@
     (i  . lyskom-help-format-i)
     (list . lyskom-help-format-list)
     (item . lyskom-help-format-item)
+    (keymap . lyskom-help-format-keymap)
     (inline . lyskom-help-format-inline)
     (refer . lyskom-help-format-refer)
     (cref . lyskom-help-format-cref)
@@ -159,6 +160,10 @@
   (lyskom-insert "  * ")
   (lyskom-do-help-format (lyskom-help-data-get-data data))
   (lyskom-insert "\n"))
+
+(defun lyskom-help-format-keymap (data)
+  (let ((this-command-keys nil))
+    (lyskom-insert (lyskom-help t))))
 
 (defun lyskom-help-format-refer (data)
   (let* ((id (intern (lyskom-help-data-get-attr 'id data)))

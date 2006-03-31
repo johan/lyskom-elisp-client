@@ -1,5 +1,10 @@
 <!-- -*-mode: xml-*- -->
 <help language="en">
+  <section id="commands" prompt="Keyboard commands">
+    <p>Keyboard commands:</p>
+    <keymap />
+  </section>
+
   <section id="language-help" prompt="">
     <h2>Language Settings</h2>
 

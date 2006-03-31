@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.101 2005-02-14 18:59:09 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.102 2006-03-31 11:48:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.101 2005-02-14 18:59:09 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.102 2006-03-31 11:48:17 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -305,6 +305,9 @@ If there is no active area, then do something else."
 
 (defun lyskom-fix-pseudo-url (url)
   (save-match-data
+    (when (string-match "^google:/*" url)
+      (setq url (concat "http://www.google.com/search?q="
+                        (substring url (match-end 0)))))
     (if (not (string-match lyskom-url-protocol-regexp url))
         (cond ((string-match "^www\\." url) 
                (concat "http://" url))
