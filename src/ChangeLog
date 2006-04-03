@@ -1,3 +1,10 @@
+2006-04-03  David Byers  <davby@ida.liu.se>
+
+	* lyskom-buttons.el (lyskom-button-befriend): New function
+	(i guess jhs forgot to check it in).
+	(lyskom-button-moronify): New function (i guess jhs forgot to
+	check it in).
+
 2006-03-31  David Byers  <davby@ida.liu.se>
 
 	* menus.el (lyskom-menu-template): Added kom-review-more-comments

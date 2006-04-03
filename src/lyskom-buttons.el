@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.102 2006-03-31 11:48:17 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.103 2006-04-03 15:08:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.102 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.103 2006-04-03 15:08:15 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -881,6 +881,24 @@ This is a LysKOM button action."
         (t (pop-to-buffer buf)
            (goto-char (point-max))
            (kom-status-person arg))))
+
+(defun lyskom-button-befriend (buf arg text)
+  "In the LysKOM buffer BUF, befriend person ARG.
+Last argument TEXT is ignored.
+This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (goto-char (point-max))
+           (kom-befriend arg))))
+
+(defun lyskom-button-moronify (buf arg text)
+  "In the LysKOM buffer BUF, befriend person ARG.
+Last argument TEXT is ignored.
+This is a LysKOM button action."
+  (cond ((not (integerp arg)) nil)
+        (t (pop-to-buffer buf)
+           (goto-char (point-max))
+           (kom-moronify arg))))
 
 (defun lyskom-button-mail (buf arg text)
   "In the LysKOM buffer BUF, send mail to the conference ARG.
