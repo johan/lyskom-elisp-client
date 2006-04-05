@@ -1,3 +1,24 @@
+2006-04-05  David Byers  <davby@ida.liu.se>
+
+	Re-implement line breaking heuristics:
+	* lyskom-rest.el (lyskom-fill-disqualifying-regexp): Broken out
+	from lyskom-fill-message to make regexp easier to understand.
+	(lyskom-fill-message-next-line): New macro.
+	(lyskom-fill-message-return): New macro.
+	(lyskom-maybe-fill-region): New macro.
+	(lyskom-fill-inline-text-regexp): New regexp to prevent concating
+	it every time a line was examined, and to make it handle inlined
+	texts with the wrong language.
+	(lyskom-fill-message): New implementation.
+	(lyskom-fill-next-paragraph): Guts of new lyskom-fill-message.
+	(lyskom-fill-scan-quoted-paragraph): New function.
+	(lyskom-fill-scan-empty-lines): New function.
+
+	Fix bug 766:
+	* swedish-strings.el,english-strings.el (lyskom-custom-strings):
+	Adjusted kom-autowrap-doc.
+
+
 2006-04-03  David Byers  <davby@ida.liu.se>
 
 	* lyskom-buttons.el (lyskom-button-befriend): New function

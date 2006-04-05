@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.403 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.404 2006-04-05 14:32:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.403 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.404 2006-04-05 14:32:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3823,10 +3823,10 @@ ta fram menyer.")
 
     (kom-autowrap-doc . "\
   Om detta är påslaget så kommer LysKOM att försöka bryta om raderna i
-  stycken vars rader egentligen är längre än skärmen är bred. Stycken
-  som verkar vara förformatterade av författaren bryts dock aldrig om.
-  Det går att ange en maximal längd i tecken på inlägg som får brytas
-  om (vilket kan vara användbart för att undvika mycket långa inlägg).")
+  stycken vars rader är för långa. Stycken som verkar vara
+  förformatterade av författaren bryts dock aldrig om. Det går att ange
+  en maximal längd i tecken på inlägg som får brytas om (vilket kan vara
+  användbart för att undvika mycket långa inlägg).")
 
     (kom-autowrap-timeout-doc . "\
   Denna inställning begränsar hur lång tid automatisk ombrytning av

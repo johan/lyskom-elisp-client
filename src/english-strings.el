@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.359 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: english-strings.el,v 44.360 2006-04-05 14:32:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.359 2006-03-31 11:48:17 byers Exp $"))
+              "$Id: english-strings.el,v 44.360 2006-04-05 14:32:11 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3644,11 +3644,12 @@ up menus.")
   Most people have this turned on.")
 
     (kom-autowrap-doc . "\
-  With this setting turned on, LysKOM will attempt to fill any paragraphs
-  containing lines that are wider than the screen. Paragraphs that appear
-  to have been preformatted by the author are exempted from this treatment.
-  If set to a number, only texts shorter than this number (in characters)
-  will be filled. This may be useful to avoid filling very long texts.")
+  With this setting turned on, LysKOM will attempt to fill any
+  paragraphs containing lines that too long. Paragraphs that appear to
+  have been preformatted by the author are exempted from this treatment.
+  If set to a number, only texts shorter than this number (in
+  characters) will be filled. This may be useful to avoid filling very
+  long texts.")
 
     (kom-autowrap-timeout-doc . "\
   This setting controls the maximum number of seconds the client may
