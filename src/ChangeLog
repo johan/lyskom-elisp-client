@@ -1,3 +1,9 @@
+2006-04-24  Per Cederqvist  <ceder@ingate.com>
+
+	Fixed typo in docstring.
+	* vars.el.in (kom-tell-phrases): Fixed spelling error in docstring
+	that tried to refer to lyskom-tell-phrases-validation-keyword-list.
+
 2006-04-05  David Byers  <davby@ida.liu.se>
 
 	Re-implement line breaking heuristics:
@@ -6160,7 +6166,7 @@
 	(lyskom-change-faq): Inlined logic from kom-change-conf-faq.
 	Support server FAQs.
 	(lyskom-change-faq-2): Broke out callback for modify-x-info to
-	lykom-change-faq-3. Renamed from lyskom-change-conf-faq-2. Handle
+	lyskom-change-faq-3. Renamed from lyskom-change-conf-faq-2. Handle
 	server FAQs.
 	(lyskom-change-faq-3): New function.
 
