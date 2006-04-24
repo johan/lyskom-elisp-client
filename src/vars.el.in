@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.319 2006-03-31 11:48:18 byers Exp $
+;;;;; $Id: vars.el.in,v 44.320 2006-04-24 16:14:34 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.319 2006-03-31 11:48:18 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.320 2006-04-24 16:14:34 ceder Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4600,7 +4600,7 @@ should be dynamically bound whenever it needs to be used.")
   "**A list of phrases describing what the client is doing. 
 
 Each element in the list is a pair \(`KEY' . `PHRASE') where KEY is one
-of the keywords in `lykom-tell-phrases-validation-keyword-list' and
+of the keywords in `lyskom-tell-phrases-validation-keyword-list' and
 `PHRASE' is the phrase to sent to the server then the client is doing
 what `KEY' describes.
 
