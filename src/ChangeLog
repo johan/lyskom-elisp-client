@@ -1,3 +1,10 @@
+2006-04-25  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Get rid of compiler warning probably introduced 2006-04-05.
+	* lyskom-rest.el (lyskom-fill-message): Removed pointless
+	"(buffer-substring (point-min) (point))" whose value was not
+	used.
+
 2006-04-24  Per Cederqvist  <ceder@ingate.com>
 
 	Fixed typo in docstring.

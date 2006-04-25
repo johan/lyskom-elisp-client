@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.258 2006-04-05 14:32:12 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.259 2006-04-25 06:41:11 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.258 2006-04-05 14:32:12 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.259 2006-04-25 06:41:11 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2518,7 +2518,6 @@ or not."
 
         (goto-char (point-max))
         (skip-chars-backward " \t\r\n")
-        (buffer-substring (point-min) (point))
 
         (let* ((pos (1- (point-max))))
           (while (and (> pos 0) 
