@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.259 2006-04-25 06:41:11 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.260 2006-04-25 06:48:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.259 2006-04-25 06:41:11 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.260 2006-04-25 06:48:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2582,26 +2582,6 @@ or not."
           (setq eol-point (save-excursion (end-of-line) (point)))
           (setq paragraph-width (max paragraph-width (- eol-point (point))))
 
-          ;; Handle geometric paragraphs
-          ;;
-          ;; Geometric paragraphs have constant differences in line
-          ;; length. There is also a requirement of minimum size,
-          ;; which is enforced in lyskom-maybe-fill-region
-          ;;
-
-          (when geometric-text
-            (setq current-line-length (lyskom-fill-message-line-length))
-            (cond ((and (null length-difference)
-                        current-line-length
-                        last-line-length)
-                   (setq length-difference (- current-line-length last-line-length)))
-
-                  ((and current-line-length
-                        last-line-length
-                        (/= (- current-line-length last-line-length)
-                            length-difference))
-                   (setq geometric-text nil))))
-
           ;;
           ;; Handle unconditional paragraph break (empty line)
           ;;
@@ -2655,14 +2635,14 @@ or not."
           ;; - It can continue an all-colon line
           ;;
 
-          (when (looking-at "^\\s-+\\S-")
+          (when (looking-at "^\\(\\s-+\\)\\S-")
             (cond (bulleted-paragraph (lyskom-fill-message-next-line))
-                  ((equal (match-string 0) indented-paragraph)
+                  ((equal (match-string 1) indented-paragraph)
                    (lyskom-fill-message-next-line))
                   ((eq all-colon-lines t) (lyskom-fill-message-next-line))
                   ((lyskom-maybe-fill-region start (1- (point)) nil t)
                    (lyskom-fill-message-return))
-                  (t (setq indented-paragraph (match-string 0)))))
+                  (t (setq indented-paragraph (match-string 1)))))
 
           ;;
           ;; If we have seen indentation, but don't see it now,
@@ -2701,6 +2681,28 @@ or not."
           (if (and all-colon-lines (looking-at "^\\S-+\\s-*:"))
               (setq all-colon-lines t)
             (setq all-colon-lines nil))
+
+          ;; Handle geometric paragraphs
+          ;;
+          ;; Geometric paragraphs have constant differences in line
+          ;; length. There is also a requirement of minimum size,
+          ;; which is enforced in lyskom-maybe-fill-region
+          ;;
+
+          (when geometric-text
+            (setq current-line-length (lyskom-fill-message-line-length))
+            (cond ((and (null length-difference)
+                        current-line-length
+                        last-line-length)
+                   (setq length-difference (- current-line-length last-line-length)))
+
+                  ((and current-line-length
+                        last-line-length
+                        (/= (- current-line-length last-line-length)
+                            length-difference))
+                   (setq geometric-text nil))))
+
+
 
 
           ) ;; catch lyskom-fill-message-next-line
