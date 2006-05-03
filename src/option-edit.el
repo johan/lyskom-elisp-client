@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.116 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.117 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.116 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.117 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -258,7 +258,6 @@
     [kom-edit-hide-add-button]
     [kom-cite-string]
     [kom-ispell-dictionary]
-    [kom-write-text-recipient-strategy]
     "\n"
     sending-doc
     "\n\n"
@@ -591,8 +590,6 @@ All key bindings:
     (kom-async-highlight-text-body (toggle (on off)))
     (kom-personal-messages-in-window (open-window))
     (kom-write-texts-in-window (open-window))
-    (kom-write-text-recipient-strategy  (choice ((const (ask-every-time ask)) 
-						 (const (current-meeting current)))))
     (kom-list-membership-in-window (open-window))
     (kom-edit-filters-in-window (open-window))
     (kom-prioritize-in-window (open-window))

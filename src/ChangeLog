@@ -1,5 +1,10 @@
 2006-05-03  Pontus Freyhult  <pont@soua.net>
 
+	* option-edit.el, vars.el.in, swedish-strings.el,english-strings.el,
+	commands1.el: Reverted previous bad check in.
+
+2006-05-03  Pontus Freyhult  <pont@soua.net>
+
 	* option-edit.el (lyskom-customize-buffer-format): Added 
 	kom-write-text-recipient-strategy.
 	(lyskom-custom-variables): Dito.

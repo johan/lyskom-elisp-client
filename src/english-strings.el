@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.361 2006-05-03 16:05:55 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: english-strings.el,v 44.362 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.361 2006-05-03 16:05:55 _cvs_pont_lyskomelisp Exp $"))
+              "$Id: english-strings.el,v 44.362 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $"))
 
 
 ;;; ================================================================
@@ -3148,8 +3148,6 @@ Select whether to execute command or keyboard macro.")
     (ask-every-time . "Ask every time         ")
     (fixed-priority . "Fixed priority")
 
-    (current-meeting . "Current meeting")
-
     (messages-in-lyskom-buffer . "In the LysKOM buffer")
     (discard-messages .          "Nowhere - discard them")
     (in-named-buffer .           "In a named buffer:")
@@ -3578,9 +3576,6 @@ up menus.")
   commented texts the way it is done in e-mail or Usenet News since the
   commented text is always available in LysKOM.")
 
-    (kom-write-text-recipient-strategy-doc . "\
-  Determines whatever write text asks for a recipient or uses the  
-  current conference.")
 
     (kom-created-texts-are-read-doc . "\
   When this is on, self-created texts are automatically marked as read. Turned
@@ -4418,8 +4413,6 @@ up menus.")
 "Read prioritized texts:                           ")
     (kom-created-texts-are-read-tag . 
 "Automatically read created texts:                 ")
-    (kom-write-text-recipient-strategy-tag .
-"Recipient when using write text:                  ")
     (kom-default-mark-tag           . 
 "Default mark:                                     ")
     (kom-print-number-of-unread-on-entrance-tag . 

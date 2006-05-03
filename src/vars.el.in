@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.321 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.322 2006-05-03 20:44:49 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.321 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.322 2006-05-03 20:44:49 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -892,21 +892,6 @@ buffer list when one of the commands `kom-next-kom',
 `kom-previous-kom' or `kom-next-unread-kom' is invoked.
 
 Values other than `t' or `nil' are reserved for future use."
-  server)
-
-(def-kom-var kom-write-text-recipient-strategy 'ask
-  "**Determines how 'lyskom-write-text' handles recipients.
-
-The value must be one of `ask' or `current'.
-
-When set to `ask', a recipient will be queried for.
-When set to `current', the current meeting will be used as recipient.
-
-All other values are reserved.
-
-This variable is not considered when the recipient is known for other
-reasons, such as kom-write-text being called with a prefix argument.
-Neither is it used for kom-write-letter."
   server)
 
 (def-kom-var kom-write-texts-in-window nil
