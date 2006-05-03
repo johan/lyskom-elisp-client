@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.404 2006-04-05 14:32:12 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.405 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.404 2006-04-05 14:32:12 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.405 2006-05-03 16:05:56 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -3297,6 +3297,8 @@ Nuvarande rättigheter för %#1P (%#1p):
     (ask-every-time . "Fråga varje gång      ")
     (fixed-priority . "Fast prioritet")
 
+    (current-meeting . "Nuvarande möte")
+
     (messages-in-lyskom-buffer . "I LysKOM-bufferten  ")
     (discard-messages .          "Ingenstans          ")
     (in-named-buffer .           "I namngiven buffert:")
@@ -3716,12 +3718,14 @@ ta fram menyer.")
   att citera KOM-inlägg som man gör med sladdpost och News eftersom det
   kommenterade inlägget oftast finns tillgängligt.")
 
+    (kom-write-text-recipient-strategy-doc . "\
+  Bestämmer om skriv inlägg ska fråga efter en mottagare eller använda 
+  nuvarande möte.")
 
     (kom-created-texts-are-read-doc . "\
   Om detta är påslaget kommer alla inlägg man själv skriver att läsmarkeras
   automatiskt. Om inställningen är avslagen så får man läsa sådant man
   själv skriver.")
-
 
     (kom-default-mark-doc . "\
   Den markeringstyp som används för nya markeringar. En markeringstyp är ett
@@ -4566,6 +4570,8 @@ ta fram menyer.")
 "Läs prioriterade texter:                  ")
     (kom-created-texts-are-read-tag . 
 "Läsmarkera skapade texter:                ")
+    (kom-write-text-recipient-strategy-tag . 
+"Mottagare vid skriv inlägg:               ")
     (kom-default-mark-tag           . 
 "Defaultmarkering:                         ")
     (kom-print-number-of-unread-on-entrance-tag . 

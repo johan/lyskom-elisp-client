@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.225 2006-03-31 11:48:16 byers Exp $
+;;;;; $Id: commands1.el,v 44.226 2006-05-03 16:05:55 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.225 2006-03-31 11:48:16 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.226 2006-05-03 16:05:55 _cvs_pont_lyskomelisp Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1777,6 +1777,11 @@ recipients are handled."
                       lyskom-current-conf)
 
                      ((numberp arg) arg)
+
+		     ((and (eq kom-write-text-recipient-strategy 'current) 
+			   (eq prompt 'who-send-text-to) 
+			   (not (eq 0 lyskom-current-conf)))
+		      lyskom-current-conf)
 
                      (t (lyskom-read-conf-no prompt '(pers conf) nil nil t))))
          (conf-stat (blocking-do 'get-conf-stat tono)))

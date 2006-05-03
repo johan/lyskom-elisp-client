@@ -1,3 +1,19 @@
+2006-05-03  Pontus Freyhult  <pont@soua.net>
+
+	* option-edit.el (lyskom-customize-buffer-format): Added 
+	kom-write-text-recipient-strategy.
+	(lyskom-custom-variables): Dito.
+
+	* vars.el.in (kom-write-text-recipient-strategy): New variable.
+
+	* swedish-strings.el,english-strings.el (lyskom-custom-strings):
+	Added current-meeting. Added kom-write-text-recipient-strategy-doc 
+	and kom-write-text-recipient-strategy-tag.
+
+	* commands1.el (lyskom-write-text): Use current-conf is 
+	kom-write-text-recipient-strategy is 'current and we're called
+	from kom-write-text.
+
 2006-04-25  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-fill-next-paragraph): Fixed off-by-one
