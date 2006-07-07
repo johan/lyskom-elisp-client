@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.160 2005-01-23 16:25:31 byers Exp $
+;;;;; $Id: utilities.el,v 44.161 2006-07-07 07:28:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.160 2005-01-23 16:25:31 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.161 2006-07-07 07:28:18 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -1309,11 +1309,13 @@ car of each element is the recipient number and the cdr is the type."
                              result)))))
     (nreverse result)))
 
-(defun lyskom-text-comments (text-stat)
-  "Return the list of comments to TEXT-STAT"
+(defun lyskom-text-comments (text-stat &optional skip-footnotes)
+  "Return the list of comments to TEXT-STAT.
+If optional SKIP-FOOTNOTES is non-nil, do not return footnotes."
   (let ((result nil))
     (lyskom-traverse misc (text-stat->misc-info-list text-stat)
-      (cond ((eq (misc-info->type misc) 'FOOTN-IN)
+      (cond ((and (not skip-footnotes)
+                  (eq (misc-info->type misc) 'FOOTN-IN))
              (setq result (cons (misc-info->footn-in misc) result)))
             ((eq (misc-info->type misc) 'COMM-IN)
              (setq result (cons (misc-info->comm-in misc) result)))))

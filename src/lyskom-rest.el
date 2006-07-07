@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.260 2006-04-25 06:48:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.261 2006-07-07 07:28:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -83,7 +83,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.260 2006-04-25 06:48:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.261 2006-07-07 07:28:17 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2448,10 +2448,15 @@ in lyskom-messages."
 
 
 (defmacro lyskom-fill-message-next-line ()
-  `(throw 'lyskom-fill-message-next-line t))
+  `(setq next-line t))
 
 (defmacro lyskom-fill-message-return ()
   `(throw 'lyskom-fill-message-return t))
+
+(defsubst lyskom-fill-message-line-length ()
+  (- (save-excursion (end-of-line)
+                     (skip-chars-backward " \t")
+                     (current-column)) (current-column)))
 
 (defmacro lyskom-maybe-fill-region (start end &optional justify nosqueeze to-eop)
   "Fill the region from START to END if the prerequisites for doing
@@ -2459,7 +2464,7 @@ so are met. This macro checks on the internal state of
 lyskom-fill-next-paragraph to see if the text scanned should be filled
 or not."
   `(unless (or (<= ,end ,start)
-               (< paragraph-width fill-column)
+               (<= paragraph-width fill-column)
                quoted-paragraph
                special-characters
                (eq all-colon-lines t)
@@ -2534,6 +2539,7 @@ or not."
          (paragraph-length 0)
          (paragraph-width 0)
          (eol-point 0)
+         (next-line nil)
 
          ;; Variables used for geometric texts
          (geometric-text t)
@@ -2570,142 +2576,156 @@ or not."
       ;;
 
       (while (not (eobp))
+        (setq next-line nil)
 
         ;;
         ;; Code can throw to here to prevent further processing
         ;; of a line of input. This is used when a line has been
         ;; completely categorized.
         ;;
+        ;; FIXME: Paragraph-width is only used when starting to fill a paragraph, so we should
+        ;; FIXME: compute it only at that point. 
+        ;;
+        ;; FIXME: If we can move the special patterns check, we can lose eol-point as well, and
+        ;; FIXME: only compute it when it's needed to calculate paragraph-width.
 
-        (catch 'lyskom-fill-message-next-line
-          (setq next-char (char-after (point)))
-          (setq eol-point (save-excursion (end-of-line) (point)))
-          (setq paragraph-width (max paragraph-width (- eol-point (point))))
+        (setq next-char (char-after (point)))
+        (setq eol-point (save-excursion (end-of-line) (point)))
+        (setq paragraph-width (max paragraph-width (- eol-point (point))))
 
-          ;;
-          ;; Handle unconditional paragraph break (empty line)
-          ;;
-          ;; An empty line signals the end of the paragraph, always.
-          ;;
+        ;;
+        ;; Handle unconditional paragraph break (empty line)
+        ;;
+        ;; An empty line signals the end of the paragraph, always.
+        ;;
 
-          (when (looking-at "^\\s-*$")
-            (lyskom-maybe-fill-region start (1- (point)) nil t)
-            (lyskom-fill-scan-empty-lines)
+        (when (looking-at "^\\s-*$")
+          (lyskom-maybe-fill-region start (1- (point)) nil t)
+          (lyskom-fill-scan-empty-lines)
+          (lyskom-fill-message-return))
+
+
+        ;;
+        ;; Detect special patterns
+        ;;
+        ;; Here, we look for lines that have patterns that disqualify
+        ;; the entire paragraph from being filled. This should catch
+        ;; source code and many preformatted things.
+        ;;
+        ;; FIXME: It is probably possible to do this once when starting
+        ;; FIXME: to fill the text. Alternately, we could scan forward
+        ;; FIXME: for a para break as soon as we spot this.
+        ;; FIXME:
+        ;; FIXME: I suspect that indented paragraphs may trigger this
+        ;; FIXME: rule.
+
+        (when (save-excursion 
+                (re-search-forward lyskom-fill-disqualifying-regexp eol-point t))
+          (setq special-characters t))
+
+        (when (looking-at lyskom-fill-inline-text-regexp)
+          (setq special-characters t))
+
+
+        ;;
+        ;; Handle unconditional paragraph break (bulleted text)
+        ;;
+        ;; Bullet items end the current paragraph unconditionally.
+        ;; If we have seen text before the item, bail out of here,
+        ;; causing the same line to be revisited the next time
+        ;; the function is called. Otherwise, keep scanning, but
+        ;; set a flag.
+        ;;
+
+        (when (and (not next-line) 
+                   (looking-at "^\\s-*\\([-*+#]\\|[§#]?\\s-*[0-9]+[.):]?\\)\\s-*"))
+          (when (lyskom-maybe-fill-region start (1- (point)) nil t)
             (lyskom-fill-message-return))
+          (setq bulleted-paragraph (match-string 0))
+          (lyskom-fill-message-next-line))
+
+        ;;
+        ;; Handle indented paragraph
+        ;;
+        ;; - It can be a continuation of a bullet point
+        ;; - It can be a continuation of an indented para
+        ;; - It can terminate a non-indented para
+        ;; - It can continue an all-colon line
+        ;;
+
+        (when (and (not next-line) (looking-at "^\\(\\s-+\\)\\S-"))
+          (cond (bulleted-paragraph (lyskom-fill-message-next-line))
+                ((equal (match-string 1) indented-paragraph)
+                 (lyskom-fill-message-next-line))
+                ((eq all-colon-lines t) (lyskom-fill-message-next-line))
+                ((lyskom-maybe-fill-region start (1- (point)) nil t)
+                 (lyskom-fill-message-return))
+                (t (setq indented-paragraph (match-string 1)))))
+
+        ;;
+        ;; If we have seen indentation, but don't see it now,
+        ;; then this isn't an indented paragraph. It's just
+        ;; a paragraph with first-line indentation.
+        ;;
+
+        (when (and (not next-line) indented-paragraph (looking-at "^\\S-"))
+          (setq indented-paragraph nil))
 
 
-          ;;
-          ;; Detect special patterns
-          ;;
-          ;; Here, we look for lines that have patterns that disqualify
-          ;; the entire paragraph from being filled. This should catch
-          ;; source code and many preformatted things.
-          ;;
+        ;;
+        ;; Handle unconditional paragraph break (quoted text)
+        ;;
+        ;; Quoted text also results in an unconditional paragraph
+        ;; break. This must come after handling of indented lines
+        ;; since whitespace is not considered a legal line start
+        ;; character.
+        ;;
 
-          (when (save-excursion 
-                  (re-search-forward lyskom-fill-disqualifying-regexp eol-point t))
-            (setq special-characters t))
+        (when (and (not next-line)
+                   (not (looking-at "^\\s-"))
+                   (< (lyskom-char-to-int next-char)
+                      (length lyskom-line-start-chars))
+                   (not (aref lyskom-line-start-chars 
+                              (lyskom-char-to-int next-char))))
+          (lyskom-maybe-fill-region start (1- (point)) nil t)
+          (lyskom-fill-scan-quoted-paragraph next-char)
+          (lyskom-fill-message-return))
 
-          (when (looking-at lyskom-fill-inline-text-regexp)
-            (setq special-characters t))
+        ;;
+        ;; Handle header-like stuff
+        ;;
+        ;; This rule detects mail-header-like stuff
+        ;;
 
+        (if (and (not next-line) 
+                 all-colon-lines
+                 (looking-at "^\\S-+\\s-*:"))
+            (setq all-colon-lines t)
+          (setq all-colon-lines nil))
 
-          ;;
-          ;; Handle unconditional paragraph break (bulleted text)
-          ;;
-          ;; Bullet items end the current paragraph unconditionally.
-          ;; If we have seen text before the item, bail out of here,
-          ;; causing the same line to be revisited the next time
-          ;; the function is called. Otherwise, keep scanning, but
-          ;; set a flag.
-          ;;
+        ;; Handle geometric paragraphs
+        ;;
+        ;; Geometric paragraphs have constant differences in line
+        ;; length. There is also a requirement of minimum size,
+        ;; which is enforced in lyskom-maybe-fill-region
+        ;;
 
-          (when (looking-at "^\\s-*\\([-*+#]\\|[§#]?\\s-*[0-9]+[.):]?\\)\\s-*")
-            (when (lyskom-maybe-fill-region start (1- (point)) nil t)
-              (lyskom-fill-message-return))
-            (setq bulleted-paragraph (match-string 0))
-            (lyskom-fill-message-next-line))
+        (when (and (not next-line) geometric-text)
+          (setq current-line-length (lyskom-fill-message-line-length))
+          (cond ((and (null length-difference)
+                      current-line-length
+                      last-line-length)
+                 (setq length-difference (- current-line-length last-line-length)))
 
-          ;;
-          ;; Handle indented paragraph
-          ;;
-          ;; - It can be a continuation of a bullet point
-          ;; - It can be a continuation of an indented para
-          ;; - It can terminate a non-indented para
-          ;; - It can continue an all-colon line
-          ;;
-
-          (when (looking-at "^\\(\\s-+\\)\\S-")
-            (cond (bulleted-paragraph (lyskom-fill-message-next-line))
-                  ((equal (match-string 1) indented-paragraph)
-                   (lyskom-fill-message-next-line))
-                  ((eq all-colon-lines t) (lyskom-fill-message-next-line))
-                  ((lyskom-maybe-fill-region start (1- (point)) nil t)
-                   (lyskom-fill-message-return))
-                  (t (setq indented-paragraph (match-string 1)))))
-
-          ;;
-          ;; If we have seen indentation, but don't see it now,
-          ;; then this isn't an indented paragraph. It's just
-          ;; a paragraph with first-line indentation.
-          ;;
-
-          (when (and indented-paragraph (looking-at "^\\S-"))
-            (setq indented-paragraph nil))
-
-
-          ;;
-          ;; Handle unconditional paragraph break (quoted text)
-          ;;
-          ;; Quoted text also results in an unconditional paragraph
-          ;; break. This must come after handling of indented lines
-          ;; since whitespace is not considered a legal line start
-          ;; character.
-          ;;
-
-          (when (and (not (looking-at "^\\s-"))
-                     (< (lyskom-char-to-int next-char)
-                        (length lyskom-line-start-chars))
-                     (not (aref lyskom-line-start-chars 
-                                (lyskom-char-to-int next-char))))
-            (lyskom-maybe-fill-region start (1- (point)) nil t)
-            (lyskom-fill-scan-quoted-paragraph next-char)
-            (lyskom-fill-message-return))
-
-          ;;
-          ;; Handle header-like stuff
-          ;;
-          ;; This rule detects mail-header-like stuff
-          ;;
-
-          (if (and all-colon-lines (looking-at "^\\S-+\\s-*:"))
-              (setq all-colon-lines t)
-            (setq all-colon-lines nil))
-
-          ;; Handle geometric paragraphs
-          ;;
-          ;; Geometric paragraphs have constant differences in line
-          ;; length. There is also a requirement of minimum size,
-          ;; which is enforced in lyskom-maybe-fill-region
-          ;;
-
-          (when geometric-text
-            (setq current-line-length (lyskom-fill-message-line-length))
-            (cond ((and (null length-difference)
-                        current-line-length
-                        last-line-length)
-                   (setq length-difference (- current-line-length last-line-length)))
-
-                  ((and current-line-length
-                        last-line-length
-                        (/= (- current-line-length last-line-length)
-                            length-difference))
-                   (setq geometric-text nil))))
+                ((and current-line-length
+                      last-line-length
+                      (/= (- current-line-length last-line-length)
+                          length-difference))
+                 (setq geometric-text nil))))
 
 
 
 
-          ) ;; catch lyskom-fill-message-next-line
 
         (setq last-line-length current-line-length)
         (end-of-line)
@@ -2719,7 +2739,7 @@ or not."
 
         ) ;; while
 
-      (lyskom-maybe-fill-region start (1- (point)) nil t)
+      (lyskom-maybe-fill-region start (point) nil t)
 
       ) ;; catch lyskom-fill-message-return
 
@@ -2739,12 +2759,6 @@ or not."
     (unless (eobp)
       (forward-line 1)
       (beginning-of-line))))
-
-
-(defun lyskom-fill-message-line-length ()
-  (- (save-excursion (end-of-line)
-                     (skip-chars-backward " \t")
-                     (current-column)) (current-column)))
 
 
 ;;; ============================================================

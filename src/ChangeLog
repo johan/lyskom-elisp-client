@@ -1,3 +1,23 @@
+2006-06-27  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-next-paragraph): Fixed off-by-one
+	error causing the last character on the last line to (sometimes)
+	be put on a line of its own in XEmacs.
+	(lyskom-maybe-fill-region): Fixed off-by-one error causing lines
+	just under fill-column long to be wrapped.
+
+2006-05-14  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-text-comments): Added parameter
+	skip-footnotes.
+
+2006-04-26  David Byers  <davby@ida.liu.se>
+
+	* lyskom-rest.el (lyskom-fill-next-paragraph): Eliminated the
+	inner catch, as this seemed to cost more time than adding a
+	clause to each conditional in the loop.
+	(lyskom-fill-message-line-length): Make this a subst.
+
 2006-05-03  Pontus Freyhult  <pont@soua.net>
 
 	* option-edit.el, vars.el.in, swedish-strings.el,english-strings.el,
