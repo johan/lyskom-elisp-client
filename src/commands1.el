@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.227 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: commands1.el,v 44.228 2006-11-21 13:13:29 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.227 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: commands1.el,v 44.228 2006-11-21 13:13:29 eric Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2606,7 +2606,7 @@ Several variables affect display. See `kom-show-where-and-what',
 
 (def-kom-command kom-who-is-on-in-conference (&optional arg)
   "Display a list of all connected users who are members of a
-particular cnoference.
+particular conference.
 
 With a positive prefix argument ARG, list sessions who have been
 active in the last ARG minutes. With a positive zero prefix argument

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.84 2005-01-26 10:58:20 jhs Exp $
+;;;;; $Id: view-text.el,v 44.85 2006-11-21 13:13:29 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.84 2005-01-26 10:58:20 jhs Exp $\n"))
+	      "$Id: view-text.el,v 44.85 2006-11-21 13:13:29 eric Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -363,7 +363,7 @@ Note that this function must not be called asynchronously."
 			     (progn
 			       (lyskom-view-text (misc-info->footn-in misc)
 						 mark-as-read t conf-stat priority)
-			       ; Mark as read (internally) så follow-comments won't add 
+			       ; Mark as read (internally) so follow-comments won't add 
 			       ; it to the read list.
 			       (lyskom-is-read (misc-info->footn-in misc))))))
 
@@ -547,7 +547,7 @@ lyskom-reading-list."
                (let ((text-stat (blocking-do 'get-text-stat no)))
                  (if (and text-stat
                           (or review-tree
-                              (not (lyskom-text-read-p text-stat))))
+                              (not (lyskom-text-read-p text-stat t))))
                      (setq comments (cons no comments)))))
               ((memq no mx-attachments-in)
                (lyskom-skip-attachments no mark-as-read))))
@@ -631,7 +631,7 @@ lyskom-reading-list."
 
 
 
-(defun lyskom-text-read-p (text-stat)
+(defun lyskom-text-read-p (text-stat &optional want-passive)
   "Return t if TEXT-STAT has been marked as read in all
 recipients to it that the user is a member in."
   (let* ((misc-info-list (text-stat->misc-info-list text-stat))
@@ -646,7 +646,7 @@ recipients to it that the user is a member in."
 	  ;; Is this function ever called asynchronously? If not, we
 	  ;; can use lyskom-get-membership istead.
 	  (let ((membership (lyskom-try-get-membership
-			     (misc-info->recipient-no misc-info) nil))
+			     (misc-info->recipient-no misc-info) want-passive))
 		(loc-no (misc-info->local-no misc-info)))
 
 	    ;; Make a note that this text really is in a group we are
@@ -658,7 +658,7 @@ recipients to it that the user is a member in."
 					(membership->read-texts membership))))
 		(setq res nil)))))))
     (if (eq res 'not-member)
-	(not kom-follow-comments-outside-membership)
+        (not kom-follow-comments-outside-membership)
       res)))
 
 

@@ -1,3 +1,26 @@
+2006-11-21  Hans Eric Svensson  <eric+lyskom@lysator.liu.se>
+
+	* lyskom-rest.el (lyskom-view-next-text): Modified to read
+	commented texts in other conferences before the texts that comment
+	them in the current conference. See M-x describe-function
+	lyskom-find-best-text and M-x describe-function lyskom-find-lowest
+	text for more information.
+	(lyskom-member-of-at-least-one-p): New helper function.
+	(lyskom-member-one-priority-p): New helper function.
+	(lyskom-up-to): New helper function.
+	(lyskom-find-best-text): New helper function.
+	(lyskom-find-lowest-text): New helper function.
+	(lyskom-get-max-priority): New helper function.
+
+	* commands1.el (kom-who-is-on-in-conference): Spelling error
+	fixed.
+
+	* view-text.el (lyskom-view-text): Fixed sudden Swedish in
+	comment.
+	(lyskom-text-read-p): Added optional parameter want-passive.
+	(lyskom-follow-comments): Adjusted to use the new additional
+	parameter in one of the calls to lyskom-text-read-p.
+	
 2006-06-27  David Byers  <davby@ida.liu.se>
 
 	* lyskom-rest.el (lyskom-fill-next-paragraph): Fixed off-by-one

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.261 2006-07-07 07:28:17 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.262 2006-11-21 13:13:29 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -45,6 +45,7 @@
 ;;;;    Inge Wallin
 ;;;;    David K}gedal
 ;;;;    David Byers
+;;;;    Hans Eric Svensson
 ;;;;   and others.
 ;;;;
 ;;;; Some ideas stolen from lpmud.el written by Lars Willf|r and Thomas Bellman
@@ -83,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.261 2006-07-07 07:28:17 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.262 2006-11-21 13:13:29 eric Exp $\n"))
 
 
 ;;;; ================================================================
@@ -460,55 +461,6 @@ settings to control session priorities."
 
 ;;; Modified to handle filters
 
-(def-kom-command kom-view-next-text ()
-  "Display the next unread text. This is the most common default command."
-  (interactive)
-  (lyskom-tell-internat 'kom-tell-read)
-  (let ((action 'next-text))
-    (while (eq action 'next-text)
-      (if (read-list-isempty lyskom-reading-list)
-	  (progn
-	    (if (/= 0 lyskom-current-conf)
-		(lyskom-insert-string 'completely-read-conf)
-	      (lyskom-insert-string 'not-in-any-conf))
-	    (setq action nil))
-	      
-	(progn
-	  (let* ((tri (read-list->first lyskom-reading-list))
-		 (text-no (car (text-list->texts (read-info->text-list tri))))
-		 (type (read-info->type tri))
-		 (priority (read-info->priority
-			    (read-list->first lyskom-reading-list)))
-		 (is-review-tree (memq type '(REVIEW-TREE)))
-		 (is-review (or (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))
-				is-review-tree))
-		 (mark-as-read (not is-review)))
-	    (when (or is-review (eq type 'REVIEW-FAQ-TREE))
-              (set-text-list->texts
-               (read-info->text-list tri)
-               (delq text-no (text-list->texts 
-                              (read-info->text-list tri)))) ;First entry only
-              (unless kom-review-uses-cache
-                (cache-del-text-stat text-no)))
-	    (setq action
-		  (lyskom-view-text text-no mark-as-read 
-				    (and kom-read-depth-first
-					 (not is-review))
-				    (read-info->conf-stat
-				     (read-list->first
-				      lyskom-reading-list))
-				    priority
-				    is-review-tree
-				    (not is-review)
-				    (memq type '(REVIEW REVIEW-MARK))))
-	    (if mark-as-read
-		(lyskom-is-read text-no)
-	      (read-list-delete-text nil lyskom-reading-list)
-	      (read-list-delete-text nil lyskom-to-do-list))))))))
-  
-
-;;; Modified to handle filters
-
 ;; This is horribly ugly. It acts like a user command, but it isn't.
 (defun lyskom-view-priority-text ()
   "Display the first text from the next conference on the lyskom-to-do-list.
@@ -527,6 +479,261 @@ Cannot be called from a callback."
 			    priority nil t))
 	(lyskom-wait-queue 'main))
     (lyskom-end-of-command)))
+
+
+;;; ========================================================================
+;;; Functions to get the "best" text and the "least" text and their
+;;; helper functions.
+
+;;; Author: Hans Eric Svensson
+
+(defun lyskom-member-of-at-least-one-p (confs)
+  "Returns NIL if user is not a member of any of the conferences in
+CONFS (list of conference numbers), otherwise a conference number."
+   (lyskom-traverse conf confs
+     (when (lyskom-get-membership conf t)
+       (lyskom-traverse-break conf))))
+
+(defun lyskom-member-one-priority-p (confs)
+  "Find out if the maximum priority of the conferences in CONFS (list
+of conference numbers) is greater than or equal to the user's session
+priority which is given by `lyskom-session-priority' (i.e. if the user
+will read a text with the set of conferences as the only recipients).
+
+Returns NIL if user will not read texts to any of the conferences in
+CONFS, given the current session priority, T otherwise."
+(>= (or (lyskom-get-max-priority confs) -1) lyskom-session-priority))
+
+(defun lyskom-up-to (list element)
+  "Destructively remove elements in LIST from the first ELEMENT."
+  (let ((tem list) (prev nil))
+    (while tem
+      (when (eq element (car tem))
+        (if prev (setcdr prev nil) (setq tem nil list nil)))
+      (setq prev tem tem (cdr tem)))
+    list))
+
+(defun lyskom-find-best-text (text-nos came-from loop-as-accept)
+"Find the \"best\" text number to read next starting from the text
+numbers TEXT-NOS (and CAME-FROM).
+
+A text T2 is better to read than a text T1 if:
+
+1. T1 is a comment or footnote to T2.
+2. T2 is unread.
+3. The recipients of T2 contain at least one conference of which the
+   user is a member.
+4. The recipients of T2 of which the user is a member has at least one
+   priority which is higher than or equal to the current session
+   priority.
+
+-or-
+
+1. T1 is a comment or footnote to the text T3.
+2. T2 is a comment or footnote to T3.
+3. T2 is unread.
+4. T3 is read.
+5. T2 commented T3 before T1 commented T3.
+6. The recipients of T2 contain at least one conference of which the
+   user is a member.
+7. The recipients of T2 of which the user is a member has at least one
+   priority which is higher than or equal to the current session
+   priority.
+
+We also keep track of which text numbers have previously been
+considered to detect loops. If a loop is detected and LOOP-AS-ACCEPT
+is NIL, NIL is returned. Otherwise, the text number which was
+determined to be a part of the loop is returned. CAME-FROM is the text
+number of the text which was used to acquire TEXT-NOS. It is only used
+when TEXT-NO is a read text to filter out the comments to TEXT-NO
+which were made after CAME-FROM (as well as CAME-FROM)."
+  (let ((stack (list
+                (list text-nos (list came-from) came-from
+                      loop-as-accept came-from)))
+        (result nil))
+    (while (and (not result) stack)
+      (let* ((params (car stack))
+             (text-nos (nth 0 params)))
+        (if (null text-nos)
+            (setq result (nth 4 params)
+                  stack (cdr stack))
+          (let* ((text-no (car text-nos))
+                 (visited (nth 1 params))
+                 (loop-as-accept (nth 3 params))
+                 (text-stat (blocking-do 'get-text-stat text-no))
+                 ; Sometimes is-read is nil even though it has no proof
+                 ; (when kom-follow-comments-outside-membership is nil).
+                 (is-read (lyskom-text-read-p text-stat))
+                 (confs (lyskom-text-recipients text-stat))
+                 (but-current (delq lyskom-current-conf confs))
+                 (is-member (lyskom-member-of-at-least-one-p but-current)))
+            (setcar params (cdr text-nos))
+            (cond ((not text-stat)) ; oops!
+                  ((memq text-no visited) ; loop detection
+                   (and (not is-read) loop-as-accept text-no))
+                  (is-read
+                   (let* ((came-from (nth 2 params))
+                          (more-text-nos (lyskom-up-to
+                                          (lyskom-text-comments text-stat)
+                                          came-from)))
+                     (setq stack (cons (list more-text-nos
+                                             (cons text-no visited)
+                                             text-no nil nil)
+                                       stack))))
+                  ((not (or is-read is-member)) ; outside membership
+                   (let*
+                       ((more-text-nos (lyskom-text-stat-commented-texts
+                                        text-stat))
+                        (came-from (nth 2 params))
+                        (even-more-text-nos (lyskom-up-to
+                                             (lyskom-text-comments text-stat)
+                                             came-from)))
+                     (setq stack (cons (list more-text-nos
+                                             (cons text-no visited)
+                                             text-no
+                                             loop-as-accept
+                                             nil)
+                                       (cons (list even-more-text-nos
+                                                   (cons text-no visited)
+                                                   text-no nil nil)
+                                             stack)))))
+                  (t (let*
+                         ((more-text-nos (lyskom-text-stat-commented-texts
+                                          text-stat))
+                          (text-no-if-fail (and
+                                            is-member
+                                            (lyskom-member-one-priority-p
+                                             but-current)
+                                            text-no)))
+                     (setq stack (cons (list more-text-nos
+                                             (cons text-no visited)
+                                             text-no
+                                             loop-as-accept
+                                             text-no-if-fail)
+                                       stack)))))
+            (unless kom-review-uses-cache
+              (cache-del-text-stat text-no))))))
+    result))
+
+(defsubst lyskom-minimum (list)
+  "Return the least element in the list LIST."
+  (and list (apply #'min list)))
+
+(defun lyskom-find-lowest-text (text-no)
+  "Return the \"lowest\" text to read next, starting from the text
+number TEXT-NO.
+
+A text T2 is lower than a text T1 if:
+
+1. The text number of T2 is less than the text number of T1.
+2. T2 is unread.
+
+We consider all of the texts reachable from TEXT-NO.
+
+We keep track of which text numbers have previously been considered
+VISITED to detect loops and save all of the candidates in CANDIDATES."
+  (let* ((visited nil)
+         (candidates nil)
+         (consider (list text-no)))
+    (while consider
+      (let* ((text-no (car consider))
+             (text-stat (blocking-do 'get-text-stat text-no))
+             (is-read (lyskom-text-read-p text-stat))
+             (confs (lyskom-text-recipients text-stat))
+             (is-member (lyskom-member-of-at-least-one-p confs))
+             (more-text-nos (lyskom-text-stat-commented-texts text-stat))
+             (even-more-text-nos (lyskom-text-comments text-stat)))
+        (setq consider (cdr consider))
+        (if is-member
+            (unless (or is-read (memq text-no visited))
+              (setq candidates (cons text-no candidates))
+              (if consider
+                  (nconc consider more-text-nos even-more-text-nos)
+                (setq consider
+                      (nconc consider more-text-nos even-more-text-nos)))))
+        (setq visited (cons text-no visited))
+        (unless kom-review-uses-cache
+          (cache-del-text-stat text-no))))
+    (lyskom-minimum candidates)))
+
+(defun lyskom-get-max-priority (confs)
+"Return the maximum priority of the conferences in CONFS (list of
+conference numbers). If the list is empty or if the user is not a
+member of any of the conferences NIL is returned."
+  (let ((priorities (delq nil (mapcar
+                               (lambda (conf-no)
+                                 (membership->priority
+                                  (lyskom-get-membership conf-no t)))
+                               confs))))
+    (unless (null priorities) (apply #'max priorities))))
+
+;;;; ================================================================
+;;;;                         View next text (cont'd.)
+
+;;; Modified to handle filters
+
+;;; Modified to read commented texts first (Hans Eric Svensson)
+
+(def-kom-command kom-view-next-text ()
+  "Display the next unread text. This is the most common default command."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-read)
+  (let ((action 'next-text))
+    (while (eq action 'next-text)
+      (if (read-list-isempty lyskom-reading-list)
+	  (progn
+	    (if (/= 0 lyskom-current-conf)
+		(lyskom-insert-string 'completely-read-conf)
+	      (lyskom-insert-string 'not-in-any-conf))
+	    (setq action nil))
+	      
+	(progn
+	  (let* ((tri (read-list->first lyskom-reading-list))
+		 (type (read-info->type tri))
+		 (is-review-tree (memq type '(REVIEW-TREE)))
+		 (is-review (or (memq type '(REVIEW REVIEW-MARK REVIEW-FAQ))
+				is-review-tree))
+                 (is-reading (memq type '(CONF COMM-IN FOOTN-IN)))
+		 (text-no-maybe (car (text-list->texts (read-info->text-list
+                                                        tri))))
+                 (text-stat-maybe (blocking-do 'get-text-stat text-no-maybe))
+
+                 (text-no (if is-reading
+                              (if kom-read-depth-first
+                                  (lyskom-find-best-text
+                                   (lyskom-text-stat-commented-texts
+                                    text-stat-maybe)
+                                   text-no-maybe
+                                   t)
+                                (lyskom-find-lowest-text text-no-maybe))
+                            text-no-maybe))
+
+                 (text-stat (blocking-do 'get-text-stat text-no))
+                 
+                 (priority (read-info->priority tri))
+                 (conf-stat (read-info->conf-stat tri))
+                 
+		 (mark-as-read (not is-review)))
+	    (when (or is-review (eq type 'REVIEW-FAQ-TREE))
+              (set-text-list->texts
+               (read-info->text-list tri)
+               (delq text-no (text-list->texts 
+                              (read-info->text-list tri)))) ;First entry only
+              (unless kom-review-uses-cache
+                (cache-del-text-stat text-no)))
+	    (setq action
+		  (lyskom-view-text text-no mark-as-read 
+				    (and kom-read-depth-first
+					 (not is-review))
+				    conf-stat
+				    priority
+				    is-review-tree
+				    (not is-review)
+				    (memq type '(REVIEW REVIEW-MARK))))
+	    (if mark-as-read
+		(lyskom-is-read text-no)
+	      (read-list-delete-text nil lyskom-reading-list)
+	      (read-list-delete-text nil lyskom-to-do-list))))))))
 
 
 (defun lyskom-is-read (text-no)
