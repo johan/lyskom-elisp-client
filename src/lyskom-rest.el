@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.262 2006-11-21 13:13:29 eric Exp $
+;;;;; $Id: lyskom-rest.el,v 44.263 2006-12-14 17:34:56 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.262 2006-11-21 13:13:29 eric Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.263 2006-12-14 17:34:56 eric Exp $\n"))
 
 
 ;;;; ================================================================
@@ -563,7 +563,7 @@ which were made after CAME-FROM (as well as CAME-FROM)."
                  (text-stat (blocking-do 'get-text-stat text-no))
                  ; Sometimes is-read is nil even though it has no proof
                  ; (when kom-follow-comments-outside-membership is nil).
-                 (is-read (lyskom-text-read-p text-stat))
+                 (is-read (lyskom-text-read-p text-stat t))
                  (confs (lyskom-text-recipients text-stat))
                  (but-current (delq lyskom-current-conf confs))
                  (is-member (lyskom-member-of-at-least-one-p but-current)))
@@ -638,7 +638,7 @@ VISITED to detect loops and save all of the candidates in CANDIDATES."
     (while consider
       (let* ((text-no (car consider))
              (text-stat (blocking-do 'get-text-stat text-no))
-             (is-read (lyskom-text-read-p text-stat))
+             (is-read (lyskom-text-read-p text-stat t))
              (confs (lyskom-text-recipients text-stat))
              (is-member (lyskom-member-of-at-least-one-p confs))
              (more-text-nos (lyskom-text-stat-commented-texts text-stat))
@@ -756,7 +756,7 @@ lyskom-mark-as-read."
       misc (text-stat->misc-info-list text-stat)
     (if (memq (misc-info->type misc) '(RECPT BCC-RECPT CC-RECPT))
 	(let ((membership (lyskom-try-get-membership
-			   (misc-info->recipient-no misc))))
+			   (misc-info->recipient-no misc) t)))
 	  (when membership
             (set-membership->read-texts
              membership
