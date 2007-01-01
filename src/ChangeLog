@@ -1,3 +1,7 @@
+2007-01-01  Ulrik Haugen  <qha@lysator.liu.se>
+
+	* names.el (sv-1993): Remove empty string for 1/1.
+
 2006-11-21  Hans Eric Svensson  <eric+lyskom@lysator.liu.se>
 
 	* lyskom-rest.el (lyskom-view-next-text): Modified to read
