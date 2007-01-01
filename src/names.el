@@ -15,7 +15,7 @@
 ;;;;;
 ;;;;; ================================================================
 ;;;;;
-;;;;; $Id: names.el,v 44.11 2003-12-03 18:08:25 byers Exp $
+;;;;; $Id: names.el,v 44.12 2007-01-01 18:20:56 qha Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -48,7 +48,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: names.el,v 44.11 2003-12-03 18:08:25 byers Exp $\n"))
+	      "$Id: names.el,v 44.12 2007-01-01 18:20:56 qha Exp $\n"))
 
 (def-komtype nameday-data
   ((code            :read-only t)
@@ -1673,7 +1673,7 @@ Namnsdagar enligt namnlängd från 1986, med uppenbara helgdagar borttagna."
                         "\
 Namnsdagar enligt namnlängd från 1993, med uppenbara helgdagar borttagna."
                         '((1 . (
-                                (1 . (""))
+                                (1 . ())
                                 (2 . ("Svea" "Sverker"))
                                 (3 . ("Alfred" "Alfrida"))
                                 (4 . ("Rut" "Ritva"))
