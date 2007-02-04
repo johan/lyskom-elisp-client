@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.121 2006-03-31 11:48:16 byers Exp $
+;;;;; $Id: edit-text.el,v 44.122 2007-02-04 11:59:53 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.121 2006-03-31 11:48:16 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.122 2007-02-04 11:59:53 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -460,7 +460,10 @@ to edit the message and try to send it again."
 (defun lyskom-edit-send (send-function &optional is-anonymous)
   "Send the text to the server by calling SEND-FUNCTION.
 If optional IS-ANONYMOUS is non-nil, assume that the text is being submitted
-anonymously and take actions to avoid revealing the sender."
+anonymously and take actions to avoid revealing the sender.
+
+This runs `kom-send-text-hook' and (for backwards compatibility)
+`lyskom-send-text-hook'."
   (condition-case err
       (if (or (not lyskom-edit-text-sent)
 	      (j-or-n-p (lyskom-get-string 'already-sent)))

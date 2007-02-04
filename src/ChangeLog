@@ -1,3 +1,8 @@
+2007-02-04  Per Cederqvist  <ceder@ryttargardskyrkan.se>
+
+	* edit-text.el (lyskom-edit-send): Document the hooks that this
+	function runs.
+
 2007-01-01  Ulrik Haugen  <qha@lysator.liu.se>
 
 	* names.el (sv-1993): Remove empty string for 1/1.
