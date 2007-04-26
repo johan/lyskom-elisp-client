@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.263 2006-12-14 17:34:56 eric Exp $
+;;;;; $Id: lyskom-rest.el,v 44.264 2007-04-26 17:44:11 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.263 2006-12-14 17:34:56 eric Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.264 2007-04-26 17:44:11 eric Exp $\n"))
 
 
 ;;;; ================================================================
@@ -494,6 +494,12 @@ CONFS (list of conference numbers), otherwise a conference number."
      (when (lyskom-get-membership conf t)
        (lyskom-traverse-break conf))))
 
+(defun lyskom-cache-all-memberships (confs)
+  "Loads the memberships of all of the conferences in CONFS (list of
+conference numbers) into cache (mostly needed to load passive
+memberships into cache)."
+   (lyskom-traverse conf confs (lyskom-get-membership conf t)))
+
 (defun lyskom-member-one-priority-p (confs)
   "Find out if the maximum priority of the conferences in CONFS (list
 of conference numbers) is greater than or equal to the user's session
@@ -561,12 +567,11 @@ which were made after CAME-FROM (as well as CAME-FROM)."
                  (visited (nth 1 params))
                  (loop-as-accept (nth 3 params))
                  (text-stat (blocking-do 'get-text-stat text-no))
-                 ; Sometimes is-read is nil even though it has no proof
-                 ; (when kom-follow-comments-outside-membership is nil).
-                 (is-read (lyskom-text-read-p text-stat t))
                  (confs (lyskom-text-recipients text-stat))
                  (but-current (delq lyskom-current-conf confs))
-                 (is-member (lyskom-member-of-at-least-one-p but-current)))
+                 (is-member (lyskom-member-of-at-least-one-p but-current))
+                 (tmp (if is-member (lyskom-cache-all-memberships confs)))
+                 (is-read (lyskom-text-read-p text-stat t)))
             (setcar params (cdr text-nos))
             (cond ((not text-stat)) ; oops!
                   ((memq text-no visited) ; loop detection
@@ -638,9 +643,10 @@ VISITED to detect loops and save all of the candidates in CANDIDATES."
     (while consider
       (let* ((text-no (car consider))
              (text-stat (blocking-do 'get-text-stat text-no))
-             (is-read (lyskom-text-read-p text-stat t))
              (confs (lyskom-text-recipients text-stat))
              (is-member (lyskom-member-of-at-least-one-p confs))
+             (tmp (if is-member (lyskom-cache-all-memberships confs)))
+             (is-read (lyskom-text-read-p text-stat t))
              (more-text-nos (lyskom-text-stat-commented-texts text-stat))
              (even-more-text-nos (lyskom-text-comments text-stat)))
         (setq consider (cdr consider))

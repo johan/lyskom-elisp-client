@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.85 2006-11-21 13:13:29 eric Exp $
+;;;;; $Id: view-text.el,v 44.86 2007-04-26 17:44:11 eric Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.85 2006-11-21 13:13:29 eric Exp $\n"))
+	      "$Id: view-text.el,v 44.86 2007-04-26 17:44:11 eric Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -547,7 +547,8 @@ lyskom-reading-list."
                (let ((text-stat (blocking-do 'get-text-stat no)))
                  (if (and text-stat
                           (or review-tree
-                              (not (lyskom-text-read-p text-stat t))))
+                              (not (lyskom-text-read-p text-stat t))
+                              kom-follow-comments-outside-membership))
                      (setq comments (cons no comments)))))
               ((memq no mx-attachments-in)
                (lyskom-skip-attachments no mark-as-read))))
@@ -572,7 +573,8 @@ lyskom-reading-list."
 	(let ((text-stat (blocking-do 'get-text-stat no)))
 	  (if (or review-tree
 		  (and text-stat
-		       (not (lyskom-text-read-p text-stat))))
+		       (or (not (lyskom-text-read-p text-stat))
+                           kom-follow-comments-outside-membership)))
 	      (setq footnotes (cons no footnotes)))))
       (if footnotes
 	  (read-list-enter-read-info
@@ -658,7 +660,7 @@ recipients to it that the user is a member in."
 					(membership->read-texts membership))))
 		(setq res nil)))))))
     (if (eq res 'not-member)
-        (not kom-follow-comments-outside-membership)
+        nil
       res)))
 
 
