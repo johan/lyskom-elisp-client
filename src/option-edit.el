@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.117 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: option-edit.el,v 44.118 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.117 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: option-edit.el,v 44.118 2007-06-08 14:23:53 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -1733,7 +1733,7 @@ All key bindings:
     (widget-setup)))
 
 (defun lyskom-widget-number-value-to-external (widget value)
-  (cond ((stringp value) (string-to-int value))
+  (cond ((stringp value) (lyskom-string-to-number value))
 	((numberp value) value)
 	((null value) 0)
 	(t (error "unable to convert settings value"))))

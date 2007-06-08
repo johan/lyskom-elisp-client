@@ -1,3 +1,55 @@
+2007-06-08    <David Byers@TAMIZDAT>
+
+	* lyskom-rest.el (lyskom-sentinel): Check that proc is a process
+	before using it as such. Call lyskom-remove-unread-buffer with the
+	right argument (the buffer, not the process).
+	(lyskom-session-nickname): Don't croak if the process is nil.
+
+	* language.el (lyskom-get-menu-string): Decode menu string from
+	latin-1 rather than encoding it.
+
+	* compatibility.el (lyskom-frame-width): Dummy definition of
+	lyskom-frame-width to suppress compilation warning.
+
+	* view-text.el: Replaced string-to-int with
+	lyskom-string-to-number.
+
+	* aux-items.el: Same.
+
+	* commands1.el: Same.
+
+	* compatibility.el: Same.
+
+	* completing-read.el: Same.
+
+	* edit-text.el: Same.
+
+	* faqs.el: Same.
+
+	* filter-edit.el: Same.
+
+	* flags.el: Same.
+
+	* lyskom-buttons.el: Same.
+
+	* lyskom-rest.el: Same.
+
+	* option-edit.el: Same.
+
+	* parse.el: Same.
+
+	* regexp.el: Same.
+
+	* review.el: Same.
+
+	* startup.el: Same.
+
+	* utilities.el: Same.
+
+	* utilities.el: Fix for Emacs 22.1 (should also improve
+	performance on XEmacs).
+	(lyskom-string-to-int): Clarifyig comment in docstring.
+
 2007-04-26  Hans Eric Svensson  <eric+lyskom@lysator.liu.se>
 	
 	* lyskom-rest.el (lyskom-cache-all-memberships): New function

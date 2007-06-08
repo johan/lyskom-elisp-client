@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.64 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: review.el,v 44.65 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.64 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: review.el,v 44.65 2007-06-08 14:23:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1640,7 +1640,7 @@ all review-related functions."
 
 (defun lyskom-cross-referenced-text (aux-item-xref)
   (and (string-match "^T\\([0-9]+\\)" (aux-item->data aux-item-xref))
-       (string-to-int (match-string 1 (aux-item->data aux-item-xref)))))
+       (lyskom-string-to-number (match-string 1 (aux-item->data aux-item-xref)))))
 
 (defun lyskom-review-cross-references (text-stat)
   "Handles the return from the initiate-get-text-stat,

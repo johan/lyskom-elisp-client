@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.228 2006-11-21 13:13:29 eric Exp $
+;;;;; $Id: commands1.el,v 44.229 2007-06-08 14:23:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.228 2006-11-21 13:13:29 eric Exp $\n"))
+	      "$Id: commands1.el,v 44.229 2007-06-08 14:23:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -240,7 +240,7 @@ This command accepts text number prefix arguments (see
 
 (defun lyskom-print-comment-like-aux (item object)
   (when (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-    (let* ((text-no (string-to-int (aux-item->data item)))
+    (let* ((text-no (lyskom-string-to-number (aux-item->data item)))
            (text-stat nil)
            (text nil))
       (unless kom-deferred-printing
@@ -2269,7 +2269,7 @@ exist."
 
          ;; Incorrect completion, integer entered.
          ((string-match "\\`\\s-*[0-9]+\\s-*\\'" mark)
-          (setq mark-type (string-to-int mark)))
+          (setq mark-type (lyskom-string-to-number mark)))
 
          ;; Incorrect completion; create new symbolic mark type.
          ((and create-nonexistent

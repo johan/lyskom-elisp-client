@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.43 2006-03-31 11:48:16 byers Exp $
+;;;;; $Id: aux-items.el,v 44.44 2007-06-08 14:23:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.43 2006-03-31 11:48:16 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.44 2007-06-08 14:23:52 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -452,19 +452,19 @@ Invalid tests are silently ignored."
     (concat
      (cond ((string-match "^P\\([0-9]+\\)" (aux-item->data item))
             (lyskom-format 'cross-reference-pers-aux 
-                           (string-to-int 
+                           (lyskom-string-to-number 
                             (match-string 1 (aux-item->data item)))
                            pers
                            ))
            ((string-match "^C\\([0-9]+\\)" (aux-item->data item))
             (lyskom-format 'cross-reference-conf-aux 
-                           (string-to-int 
+                           (lyskom-string-to-number 
                             (match-string 1 (aux-item->data item)))
                            pers
                            ))
            ((string-match "^T\\([0-9]+\\)" (aux-item->data item))
             (lyskom-format 'cross-reference-text-aux 
-                           (string-to-int 
+                           (lyskom-string-to-number 
                             (match-string 1 (aux-item->data item)))
                            pers
                            ))
@@ -482,19 +482,19 @@ Invalid tests are silently ignored."
    (concat
     (cond ((string-match "^P\\([0-9]+\\)" (aux-item->data item))
            (lyskom-format 'cross-reference-pers-status-aux 
-                          (string-to-int 
+                          (lyskom-string-to-number 
                            (match-string 1 (aux-item->data item)))
                           (aux-item->creator pers)
                           ))
           ((string-match "^C\\([0-9]+\\)" (aux-item->data item))
            (lyskom-format 'cross-reference-conf-status-aux 
-                          (string-to-int 
+                          (lyskom-string-to-number 
                            (match-string 1 (aux-item->data item)))
                           pers
                           ))
           ((string-match "^T\\([0-9]+\\)" (aux-item->data item))
            (lyskom-format 'cross-reference-text-status-aux 
-                          (string-to-int 
+                          (lyskom-string-to-number 
                            (match-string 1 (aux-item->data item)))
                           (aux-item->creator pers)
                           ))
@@ -597,7 +597,7 @@ Invalid tests are silently ignored."
                          (match-string 1 (aux-item->data item))))
          ((string-match "^LysKOM:\\(.*\\)$" (aux-item->data item))
           (lyskom-format 'redirect-lyskom-aux 
-                         (string-to-int 
+                         (lyskom-string-to-number 
                           (match-string 1 (aux-item->data item))))))
    (lyskom-aux-item-terminating-button item obj)))   
 
@@ -666,7 +666,7 @@ Invalid tests are silently ignored."
 
 (defun lyskom-status-print-faq-text (item &optional obj)
   (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-      (let* ((text-no (string-to-int (aux-item->data item)))
+      (let* ((text-no (lyskom-string-to-number (aux-item->data item)))
              (subject (if kom-deferred-printing
                           (lyskom-create-defer-info 'get-text-stat
                                                     text-no
@@ -688,7 +688,7 @@ Invalid tests are silently ignored."
 
 (defun lyskom-print-faq-for-conf (item &optional obj)
   (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-      (let ((conf-no (string-to-int (aux-item->data item))))
+      (let ((conf-no (lyskom-string-to-number (aux-item->data item))))
         (concat 
          (cond ((zerop conf-no) (lyskom-get-string 'faq-for-server-aux))
                (t (lyskom-format 'faq-for-conf-aux conf-no)))
@@ -707,7 +707,7 @@ Invalid tests are silently ignored."
 
 (defun lyskom-print-send-comments-to (item &optional obj)
   (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-      (let ((conf-no (string-to-int (aux-item->data item))))
+      (let ((conf-no (lyskom-string-to-number (aux-item->data item))))
         (lyskom-format-insert 'status-send-comments-to
                               conf-no 
                               (lyskom-aux-item-terminating-button item obj)))
@@ -746,7 +746,7 @@ Invalid tests are silently ignored."
 
 (defun lyskom-print-recommended-conf (item &optional obj)
   (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-      (let ((conf-no (string-to-int (aux-item->data item))))
+      (let ((conf-no (lyskom-string-to-number (aux-item->data item))))
         (lyskom-format-insert 'recommended-conf-aux
                               conf-no
                               (lyskom-aux-item-terminating-button item obj)))
@@ -773,7 +773,7 @@ Invalid tests are silently ignored."
 
 (defun lyskom-print-elisp-client-rejected-invitation (item &optional obj)
   (if (lyskom-aux-item-validate (aux-item->data item) 'lyskom-string-to-int)
-      (let ((conf-no (string-to-int (aux-item->data item))))
+      (let ((conf-no (lyskom-string-to-number (aux-item->data item))))
         (lyskom-format-insert 'status-rejected-recommendation-aux-item
                               conf-no 
                               (lyskom-aux-item-terminating-button item obj)))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: regexp.el,v 44.3 2003-08-16 16:58:46 byers Exp $
+;;;;; $Id: regexp.el,v 44.4 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: regexp.el,v 44.3 2003-08-16 16:58:46 byers Exp $\n"))
+	      "$Id: regexp.el,v 44.4 2007-06-08 14:23:53 byers Exp $\n"))
 
 (defvar lyskom-re-converters 
   '((0 . nil)
@@ -77,8 +77,8 @@ regexp is in the cache."
     (lyskom-re-parse-modify-last
      parse
      'LIMIT
-     (cons (string-to-int (match-string 1 (regex-parse->re parse)))
-           (string-to-int (match-string 1 (regex-parse->re parse))))))
+     (cons (lyskom-string-to-number (match-string 1 (regex-parse->re parse)))
+           (lyskom-string-to-number (match-string 1 (regex-parse->re parse))))))
 
    ((eq (string-match "\\([0-9]+\\)?,\\([0-9]+\\)?}" (regex-parse->re parse)
                       (regex-parse->pos parse))
@@ -88,8 +88,8 @@ regexp is in the cache."
       (lyskom-re-parse-modify-last 
        parse
        'LIMIT 
-       (cons (and min (string-to-int min))
-             (and max (string-to-int max))))))
+       (cons (and min (lyskom-string-to-number min))
+             (and max (lyskom-string-to-number max))))))
 
    (t (throw 'lyskom-re-parse 'syntax-error)))
   (set-regex-parse->pos parse (match-end 0)))

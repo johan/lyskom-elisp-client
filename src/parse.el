@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.60 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: parse.el,v 44.61 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.60 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: parse.el,v 44.61 2007-06-08 14:23:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -119,7 +119,7 @@ Signal lyskom-protocol-error if the next token is not a number."
    ((looking-at "[ \n]*[0-9]+")
     (if (char-after (match-end 0))
         (progn (setq lyskom-parse-pos (goto-char (match-end 0)))
-               (string-to-int (match-string 0)))
+               (lyskom-string-to-number (match-string 0)))
       (signal 'lyskom-parse-incomplete nil)))
    ((looking-at "[ \n]*\\'") 
     (goto-char (point-max))
@@ -174,7 +174,7 @@ Signal lyskom-protocol-error if the next token is not a string."
    (t
     (let* ((num (match-string 0))
            (end (match-end 0))
-           (len (string-to-int num)))
+           (len (lyskom-string-to-number num)))
       (setq lyskom-parse-pos end)
       (cond
        ((< (point-max) (+ lyskom-parse-pos len))
@@ -207,7 +207,7 @@ Signal lyskom-protocol-error if the next token is not a string."
 ;;                             to-parse)) ;Not a legal string.
 ;;     (t
 ;;      (let ((end (match-end 0))
-;;            (len (string-to-int to-parse)))
+;;            (len (lyskom-string-to-number to-parse)))
 ;;        (setq lyskom-parse-pos (+ lyskom-parse-pos end))
 ;;        (cond
 ;;         ((< (point-max) (+ lyskom-parse-pos len))
@@ -239,7 +239,7 @@ Signal lyskom-protocol-error if the next token is not a string."
                              to-parse)) ;Not a legal string.
      (t
       (let ((end (match-end 0))
-	    (len (string-to-int to-parse)))
+	    (len (lyskom-string-to-number to-parse)))
 	(setq lyskom-parse-pos (+ lyskom-parse-pos end))
 	(cond
 	 ((< (point-max) (+ lyskom-parse-pos len))

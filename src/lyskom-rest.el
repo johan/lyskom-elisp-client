@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.264 2007-04-26 17:44:11 eric Exp $
+;;;;; $Id: lyskom-rest.el,v 44.265 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.264 2007-04-26 17:44:11 eric Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.265 2007-06-08 14:23:53 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -948,7 +948,7 @@ by PERS-NO"
     (lyskom-traverse item aux-list
       (when (string-match "^\\([0-9]+\\)" (aux-item->data item))
         (setq lyskom-rejected-recommendations
-              (cons (string-to-int (match-string 1 (aux-item->data item)))
+              (cons (lyskom-string-to-number (match-string 1 (aux-item->data item)))
                     lyskom-rejected-recommendations))))))
 
 (defun lyskom-startup-check-recommended-memberships ()
@@ -959,8 +959,8 @@ by PERS-NO"
             (not (lyskom-recommendation-already-rejected (car rec))))
           (mapcar (lambda (aux)
                     (when (string-match "^\\([0-9]+\\)\\( [0-9]+\\)?\\( [01]+\\)?" (aux-item->data aux))
-                      (let* ((conf-no (string-to-int (match-string 1 (aux-item->data aux))))
-                             (priority (and conf-no (match-string 2) (string-to-int (match-string 2 (aux-item->data aux)))))
+                      (let* ((conf-no (lyskom-string-to-number (match-string 1 (aux-item->data aux))))
+                             (priority (and conf-no (match-string 2) (lyskom-string-to-number (match-string 2 (aux-item->data aux)))))
                              (mship-type (and priority (match-string 3) (match-string 3 (aux-item->data aux)))))
                         (list conf-no priority mship-type (aux-item->creator aux)))))
                   (lyskom-get-aux-item (server-info->aux-item-list
@@ -1011,8 +1011,8 @@ that are no longer FAQs or are missing."
       (lyskom-traverse item (lyskom-get-aux-item (conf-stat->aux-items conf-stat)
                                                  10000)
         (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
-          (let ((conf-no (string-to-int (match-string 1 (aux-item->data item))))
-                (text-no (string-to-int (match-string 2 (aux-item->data item)))))
+          (let ((conf-no (lyskom-string-to-number (match-string 1 (aux-item->data item))))
+                (text-no (lyskom-string-to-number (match-string 2 (aux-item->data item)))))
             (initiate-get-text-stat 'background
                                     'lyskom-clean-read-faqs-1
                                     text-no
@@ -1581,10 +1581,10 @@ Deferred insertions are not supported."
             (let* ((s (match-string 2 (format-state->format-string format-state))))
               (cond ((or (string-match "\\(-?[0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" s)
                          (string-match "\\(-?[0-9]+\\)\\.\\([0-9]+\\)" s))
-                     (setq pad-length (string-to-int (match-string 1 s)))
-                     (setq frac-min (string-to-int (match-string 2 s)))
-                     (setq frac-max (string-to-int (or (match-string 3 s) (match-string 2 s)))))
-                    (t (setq pad-length (string-to-int s))))))
+                     (setq pad-length (lyskom-string-to-number (match-string 1 s)))
+                     (setq frac-min (lyskom-string-to-number (match-string 2 s)))
+                     (setq frac-max (lyskom-string-to-number (or (match-string 3 s) (match-string 2 s)))))
+                    (t (setq pad-length (lyskom-string-to-number s))))))
           (setq pad-length nil))
 
 	(setq equals-flag (and (match-beginning 1)
@@ -1592,7 +1592,7 @@ Deferred insertions are not supported."
                                                    (format-state->format-string
                                                     format-state)) 0))
 	      arg-no (if (match-beginning 6)
-			 (string-to-int 
+			 (lyskom-string-to-number 
                           (match-string 6 (format-state->format-string
                                            format-state)))
 		       nil)
@@ -3132,7 +3132,7 @@ See `kom-save-text-body' for an alternative to this command."
       (while (and arg (> arg 0))
         (backward-text 1)
         (if (looking-at "\\([0-9]+\\)\\s-")
-            (setq list-of-texts (cons (string-to-int (match-string 1))
+            (setq list-of-texts (cons (lyskom-string-to-number (match-string 1))
                                       list-of-texts)
                   arg (1- arg))
           (setq arg 0)))
@@ -3788,7 +3788,7 @@ The result will be a number or a list of (YEAR MONTH DATE)."
                  (lambda (val)
                    (cond 
                     ((string-match "^\\s-*[0-9]+\\s-*$" val)
-                     (let ((num (string-to-int val)))
+                     (let ((num (lyskom-string-to-number val)))
                        (unless (and (>= num low) (<= num high))
                          (lyskom-get-string 'number-out-of-range))))
                     ((and empty (string-match "^\\s-*$" val)) nil)
@@ -3797,7 +3797,7 @@ The result will be a number or a list of (YEAR MONTH DATE)."
                          (progn (lyskom-parse-date val) nil)
                        (lyskom-error (lyskom-get-string 'invalid-date-entry))))))))
       (cond ((string-match "^\\s-*[0-9]+\\s-*$" val)
-             (let ((num (string-to-int val)))
+             (let ((num (lyskom-string-to-number val)))
                (when (and (>= num low) (<= num high))
                  (setq result num))))
             ((and empty (string-match "^\\s-*$" val))
@@ -4171,8 +4171,9 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 
 (defun lyskom-sentinel (proc sentinel)
   "Handles changes in the lyskom-process."
-  (lyskom-remove-unread-buffer proc)
-  (set-buffer (process-buffer proc))
+  (when (processp proc)
+    (lyskom-remove-unread-buffer (process-buffer proc))
+    (set-buffer (process-buffer proc)))
   (lyskom-start-of-command (lyskom-get-string 'process-signal) t t)
   (lyskom-format-insert 'closed-connection
                         sentinel 
@@ -4470,7 +4471,8 @@ One parameter - the prompt string."
   "Return the nickname to use for this LysKOM session."
   (if kom-session-nickname
       kom-session-nickname
-    (let ((server (process-name (get-buffer-process (current-buffer)))))
+    (let* ((proc (get-buffer-process (current-buffer)))
+	   (server (if proc (process-name proc) lyskom-server-name)))
       (or (cdr (assoc server
 		      (append kom-server-aliases
 			      kom-builtin-server-aliases)))

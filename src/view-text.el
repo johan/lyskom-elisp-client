@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.86 2007-04-26 17:44:11 eric Exp $
+;;;;; $Id: view-text.el,v 44.87 2007-06-08 14:23:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.86 2007-04-26 17:44:11 eric Exp $\n"))
+	      "$Id: view-text.el,v 44.87 2007-06-08 14:23:54 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -829,8 +829,8 @@ blocking-do."
                         (cond ((null field-width) 42)
                               ((string= "" field-width) 42)
                               ((eq ?= (aref field-width 0))
-                               (string-to-int (substring field-width 1)))
-                              (t (string-to-int field-width)))))
+                               (lyskom-string-to-number (substring field-width 1)))
+                              (t (lyskom-string-to-number field-width)))))
                  
                    (lyskom-format 
                     "%#1s"

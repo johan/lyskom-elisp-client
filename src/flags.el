@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.43 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: flags.el,v 44.44 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.43 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: flags.el,v 44.44 2007-06-08 14:23:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -391,7 +391,7 @@ for more information."
     ;; Read the explicit coding, if any
 
     (when (string-match "^[0-9]+C" lyskom-options-text)
-      (let ((len (string-to-int lyskom-options-text)))
+      (let ((len (lyskom-string-to-number lyskom-options-text)))
         (setq coding (intern
                       (substring lyskom-options-text 
                                  (match-end 0)
@@ -401,7 +401,7 @@ for more information."
 
     ;; Read the string
 
-    (let ((len (string-to-int lyskom-options-text))
+    (let ((len (lyskom-string-to-number lyskom-options-text))
           (start (progn (string-match "[0-9]+H" lyskom-options-text)
                         (match-end 0))))
       (let ((name (substring lyskom-options-text start (+ start len))))
@@ -424,7 +424,7 @@ If optional NO-CODING is set, assume the string has internal coding."
     ;; Read the explicit coding, if any
 
     (when (string-match "^[0-9]+C" string)
-      (let ((len (string-to-int string)))
+      (let ((len (lyskom-string-to-number string)))
         (setq coding (intern
                       (substring string 
                                  (match-end 0)
@@ -433,7 +433,7 @@ If optional NO-CODING is set, assume the string has internal coding."
 
     ;; Read the string
 
-    (let ((len (string-to-int string))
+    (let ((len (lyskom-string-to-number string))
           (start (progn (string-match "[0-9]+H" string)
                         (match-end 0))))
       (let ((name (substring string start (+ start len))))
@@ -514,7 +514,7 @@ elisp variable VAR."
 
 (defun lyskom-flag-read-integer (str)
   (cond ((equal str "nil") nil)
-        (t (string-to-int str))))
+        (t (lyskom-string-to-number str))))
 
 (defun lyskom-flag-write-integer (val)
   (cond ((integerp val) (prin1-to-string val))

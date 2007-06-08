@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.53 2006-02-16 15:13:07 jhs Exp $
+;;;;; $Id: completing-read.el,v 44.54 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.53 2006-02-16 15:13:07 jhs Exp $\n"))
+       "$Id: completing-read.el,v 44.54 2007-06-08 14:23:53 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -407,7 +407,7 @@ persons who are logged on."
   "Used internally by lyskom-read-conf-internal to expand person and
 conference number specifications to something useful."
   (cond ((string-match (lyskom-get-string 'person-or-conf-no-regexp) string)
-         (let* ((no (string-to-int (match-string 1 string)))
+         (let* ((no (lyskom-string-to-number (match-string 1 string)))
                 (cs (blocking-do 'get-uconf-stat no)))
            (if (and cs
                     (lyskom-read-conf-internal-verify-type
@@ -420,7 +420,7 @@ conference number specifications to something useful."
                    cs
                  (list string)))))
         ((string-match (lyskom-get-string 'session-no-regexp) string)
-         (let* ((no (string-to-int (match-string 1 string)))
+         (let* ((no (lyskom-string-to-number (match-string 1 string)))
                 (si (blocking-do 'get-session-info no))
                 (cs (and si
                          (blocking-do 'get-uconf-stat

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.76 2006-03-31 11:48:16 byers Exp $
+;;;;; $Id: compatibility.el,v 44.77 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.76 2006-03-31 11:48:16 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.77 2007-06-08 14:23:53 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -134,6 +134,7 @@ KEYS should be a string in the format used for saving keyboard macros
 ;; If we use lyskom-function-alias here we'll get an obsolecense
 ;; warning about screen-width. This way the compiler won't notice :-)
 
+(defun lyskom-frame-width ())
 (if (fboundp 'frame-width)
     (defalias 'lyskom-frame-width 'frame-width)
   (fset 'lyskom-frame-width 'screen-width))
@@ -677,6 +678,13 @@ Emacsen."
       (defun lyskom-make-local-hook (hook))
     (fset 'lyskom-make-local-hook 'make-local-hook)))
 
+;;; ================================================================
+;;; Emacs 22.1 stuff
+
+(defun lyskom-string-to-number(string &optional base))
+(if (fboundp 'string-to-number)
+    (defalias 'lyskom-string-to-number 'string-to-number)
+  (defalias 'lyskom-string-to-number 'string-to-int))
 
 
 ;;; ================================================================

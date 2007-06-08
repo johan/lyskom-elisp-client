@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: faqs.el,v 44.20 2004-06-26 13:32:32 byers Exp $
+;;;;; $Id: faqs.el,v 44.21 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: faqs.el,v 44.20 2004-06-26 13:32:32 byers Exp $\n"))
+              "$Id: faqs.el,v 44.21 2007-06-08 14:23:53 byers Exp $\n"))
 
 (defun lyskom-register-read-faq (conf-no text-no)
   (unless conf-no (setq conf-no 0))
@@ -68,8 +68,8 @@
     (lyskom-traverse item aux-list
       (when (string-match "^\\([0-9]+\\) \\([0-9]+\\)" (aux-item->data item))
         (setq lyskom-read-faqs
-              (cons (cons (string-to-int (match-string 1 (aux-item->data item)))
-                          (string-to-int (match-string 2 (aux-item->data item))))
+              (cons (cons (lyskom-string-to-number (match-string 1 (aux-item->data item)))
+                          (lyskom-string-to-number (match-string 2 (aux-item->data item))))
                     lyskom-read-faqs))))))
 
 ;;; ======================================================================
@@ -170,9 +170,9 @@ do this. To add a FAQ, use `kom-add-server-faq'."
                                         nil t)))
         (when text-no
           (lyskom-format-insert 'deleting-faq 
-                                (string-to-int text-no)
+                                (lyskom-string-to-number text-no)
                                 conf-stat)
-          (cache-del-text-stat (string-to-int text-no))
+          (cache-del-text-stat (lyskom-string-to-number text-no))
           (when conf-stat
             (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
           (lyskom-report-command-answer
@@ -310,7 +310,7 @@ create a new FAQ."
                                   faq-list)
                                  nil t)
                                 faq-list))))
-         (text-no (and text-no-aux (string-to-int (car text-no-aux))))
+         (text-no (and text-no-aux (lyskom-string-to-number (car text-no-aux))))
          (aux-no (and text-no-aux (cdr text-no-aux))))
 
     (cond 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.113 2005-02-14 21:58:37 byers Exp $
+;;;;; $Id: startup.el,v 44.114 2007-06-08 14:23:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.113 2005-02-14 21:58:37 byers Exp $\n"))
+	      "$Id: startup.el,v 44.114 2007-06-08 14:23:53 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -114,7 +114,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 	(init-done nil))
     (cond				;Allow "nanny:4892" to use port 4892.
      ((string-match ":" host)
-      (setq port (string-to-int (substring host (match-end 0))))
+      (setq port (lyskom-string-to-number (substring host (match-end 0))))
       (cond
        ((zerop (match-beginning 0))
 	(setq host (or lyskom-default-server kom-default-server)))
@@ -183,7 +183,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                                           (match-string 1 www-proxy-host-string))
                                      www-proxy-host-string)
                       www-proxy-port (or (and match
-                                          (string-to-int
+                                          (lyskom-string-to-number
                                            (match-string 2
                                                          www-proxy-host-string)))
                                      80))
