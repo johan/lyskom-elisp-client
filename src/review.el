@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.65 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: review.el,v 44.66 2007-06-09 11:04:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.65 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: review.el,v 44.66 2007-06-09 11:04:54 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -652,12 +652,12 @@ Cannot be called from a callback."
       (if (> num 0)
           (progn
             (setq lyskom-last-review-saved-result-list 
-                  (nfirst (- (length result) num) result))
+                  (lyskom-nfirst (- (length result) num) result))
             (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
-          (nfirst (- num)  result))))))
+          (lyskom-nfirst (- num)  result))))))
 
 
 
@@ -928,7 +928,7 @@ Args: persno confno num &optional again pstart cstart"
         (if (> num 0)
             (progn
               (setq lyskom-last-review-saved-result-list
-                    (nfirst (- (length result-list) num) result-list))
+                    (lyskom-nfirst (- (length result-list) num) result-list))
               (setq lyskom-last-review-saved-result-size
                     (length  lyskom-last-review-saved-result-list))
               (setq lyskom-last-review-saved-result-list
@@ -944,7 +944,7 @@ Args: persno confno num &optional again pstart cstart"
             (setq lyskom-last-review-saved-result-list
                   (cons lyskom-last-review-saved-result-list
                         (make-list (- (length by-list) 1) nil)))
-            (nfirst (- num) result-list))))))))
+            (lyskom-nfirst (- num) result-list))))))))
 
 
 
@@ -1055,12 +1055,12 @@ Cannot be called from a callback."
       (if (> num 0)
           (progn
             (setq lyskom-last-review-saved-result-list 
-                  (nfirst (- (length result) num) result))
+                  (lyskom-nfirst (- (length result) num) result))
             (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
-          (nfirst (- num)  result))))))
+          (lyskom-nfirst (- num)  result))))))
 
 (defun lyskom-get-texts-to (confno num &optional again cstart)
   "From CONFNO get NUM texts."
@@ -1122,12 +1122,12 @@ Cannot be called from a callback."
       (if (> num 0)
           (progn
             (setq lyskom-last-review-saved-result-list 
-                  (nfirst (- (length result) num) result))
+                  (lyskom-nfirst (- (length result) num) result))
             (nthcdr (max 0 (- (length result) num)) result))
         (progn
           (setq lyskom-last-review-saved-result-list
                 (nthcdr (- num) result))
-          (nfirst (- num)  result))))))
+          (lyskom-nfirst (- num)  result))))))
 
 
 
@@ -1743,7 +1743,7 @@ all review-related functions."
    (list 
     (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
   (lyskom-tell-internat 'kom-tell-review)
-  (let* ((text-nos (nreverse (nfirst no lyskom-normally-read-texts))))
+  (let* ((text-nos (nreverse (lyskom-nfirst no lyskom-normally-read-texts))))
     (if text-nos
 	(progn
 	  (lyskom-format-insert 'review-text-no (car text-nos))
@@ -1765,7 +1765,7 @@ After marking a number of texts unread, this will mark the N texts
 read prior to that."
   (interactive 
    (list (lyskom-read-number (lyskom-get-string 'read-normally-read) 1)))
-  (let* ((text-nos (nreverse (nfirst no lyskom-normally-read-texts))))
+  (let* ((text-nos (nreverse (lyskom-nfirst no lyskom-normally-read-texts))))
     (if text-nos
         (lyskom-traverse text-no text-nos
           (lyskom-format-insert 'marking-text-unread text-no)

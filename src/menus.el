@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.40 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: menus.el,v 44.41 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.40 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: menus.el,v 44.41 2007-06-09 11:04:53 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -438,6 +438,38 @@
    keymap)
   result)
 
+
+;;; ============================================================
+;;; Creating menus
+
+(defvar lyskom-menu-encoding-rules
+  (lyskom-xemacs-or-gnu
+   '((title . iso-8859-1)
+     (item . iso-8859-1)
+     (keys . iso8859-1))
+   (cond ((< emacs-major-version 22) '((title . iso-8859-1)
+				      (item . iso-8859-1)
+				      (keys . iso8859-1)))
+	 ((boundp 'gtk-version-string) '((title . utf-8)
+					(item . utf-8)
+					(keys . utf-8)))
+	 ((memq window-system '(win32 mswindows w32)) '((title . utf-8)
+				   (item . nil)
+				   (keys . utf-8)))
+	 (t '((title . iso-8859-1) (item . iso-8859-1) (keys . iso8859-1)))))
+  "Rules for encoding menu strings")
+
+(defun lyskom-menu-encode (string what)
+  "Encode a string for use in menus.
+STRING is the string to encode
+WHAT is one of title, item or keys"
+  (let ((coding (cdr (assq what lyskom-menu-encoding-rules))))
+    (cond ((and coding (coding-system-p coding))
+	   (lyskom-encode-coding-string string coding))
+	  ((functionp coding)
+	   (funcall coding string))
+	  (t string))))
+
 (defun lyskom-build-menus ()
   "Create menus according to LYSKOM-MENUS"
   (lyskom-xemacs-or-gnu (lyskom-build-menus-xemacs)
@@ -476,7 +508,8 @@
           ((eq (car menus) 'menu)       ; A menu
            (let ((menu-title (car (cdr menus)))
                  (menu-items (car (cdr (cdr menus)))))
-             (cons (lyskom-get-menu-string menu-title)
+             (cons (lyskom-menu-encode 
+		    (lyskom-get-menu-string menu-title) 'title)
                    (mapcar
 		    (lambda (item)
 		      (let ((type (car item))
@@ -500,11 +533,16 @@
 					    (car (cdr (assq symbol specials)))
 					    " "))))
 				 (if shortcut
-				     (vector (lyskom-get-menu-string symbol)
+				     (vector (lyskom-menu-encode
+					      (lyskom-get-menu-string symbol)
+					      'item)
 					     symbol
 					     ':active t
-					     ':keys shortcut)
-				   (vector (lyskom-get-menu-string symbol) symbol ':active t))))
+					     ':keys (lyskom-menu-encode
+						     shortcut 'keys))
+				   (vector (lyskom-menu-encode 
+					    (lyskom-get-menu-string symbol)
+					    'item) symbol ':active t))))
 			      ((eq type 'hline)
 			       "--:shadowEtchedIn")
 			      ((eq type 'menu)
@@ -514,6 +552,7 @@
 
           (t nil))))
 
+(defvar lyskom-define-menu-gnu-title-encoding-type 'title)
 (defun lyskom-define-menu-gnu (map menus &optional specials)
   (let ((specials (or specials
 		      (when (current-local-map)
@@ -525,8 +564,11 @@
         (cond ((eq 'hline type)
                (define-key map (vector (lyskom-gensym)) '("--")))
               ((eq 'menu type)
-               (let* ((name (lyskom-get-menu-string symbol))
-                      (submap (make-sparse-keymap name)))
+               (let* ((name (lyskom-menu-encode
+			     (lyskom-get-menu-string symbol) 
+			     lyskom-define-menu-gnu-title-encoding-type))
+                      (submap (make-sparse-keymap name))
+		      (lyskom-define-menu-gnu-title-encoding-type 'item))
                  (define-key map (vector symbol)
                    (cons name submap))
                  (lyskom-define-menu-gnu submap
@@ -551,13 +593,13 @@
                               (car (cdr (assq symbol specials)))
                               " "))))
                  (if shortcut
-                     (progn (when (memq window-system '(win32 mswindows w32))
-                              (setq shortcut (lyskom-encode-coding-string shortcut 'iso-8859-1)))
-                            (define-key map (vector symbol)
-                              `(menu-item ,(lyskom-get-menu-string symbol) ,symbol
-                                          :keys ,shortcut)))
+                     (define-key map (vector symbol)
+                              `(menu-item ,(lyskom-menu-encode
+					    (lyskom-get-menu-string symbol)
+					    'item) ,symbol
+                                          :keys ,(lyskom-menu-encode shortcut 'keys)))
                    (define-key map (vector symbol)
-                     (cons (lyskom-get-menu-string symbol) symbol)))))
+                     (cons (lyskom-menu-encode (lyskom-get-menu-string symbol) 'item) symbol)))))
               (t (error "Menu description invalid in lyskom-define-menu")))))))
 
 

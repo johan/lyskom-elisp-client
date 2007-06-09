@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.406 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: swedish-strings.el,v 44.407 2007-06-09 11:04:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.406 2006-05-03 20:44:48 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.407 2007-06-09 11:04:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2774,9 +2774,9 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
   (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
 
-  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-button-click)
+  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
+  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3))   'kom-popup-menu)
-  (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd "*")     'kom-button-press)
   (define-key lyskom-sv-mode-map (kbd "=")     'kom-menu-button-press)
@@ -3025,8 +3025,8 @@ Nuvarande rättigheter för %#1P (%#1p):
 
   ;; Running in buffer
 
-  (define-key lyskom-sv-mode-map (kbd "M-p") 'backward-text)
-  (define-key lyskom-sv-mode-map (kbd "M-n") 'forward-text)
+  (define-key lyskom-sv-mode-map (kbd "M-p") 'kom-backward-text)
+  (define-key lyskom-sv-mode-map (kbd "M-n") 'kom-forward-text)
   (define-key lyskom-sv-mode-map (kbd "C-M-p") 'kom-prev-prompt)
   (define-key lyskom-sv-mode-map (kbd "C-M-n") 'kom-next-prompt)
 

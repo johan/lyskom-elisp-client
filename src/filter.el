@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.29 2003-08-17 13:21:33 byers Exp $
+;;;;; $Id: filter.el,v 44.30 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.29 2003-08-17 13:21:33 byers Exp $\n"))
+	      "$Id: filter.el,v 44.30 2007-06-09 11:04:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -57,7 +57,7 @@
 ;;; expire -- When the filter expires. Not used.
 ;;;
 
-(defun make-filter (&optional p a)
+(defun lyskom-make-filter (&optional p a)
   "Creates and returns a filter structure.
 Optional P and A initialize pattern and attributes, respectively."
   (lyskom-create-filter p a (lyskom-create-compile-filter-function p)))
@@ -71,12 +71,12 @@ Optional P and A initialize pattern and attributes, respectively."
                         (lyskom-create-compile-filter-function
                          (filter->pattern filter))))
 
-(defun copy-filter (f)
+(defun lyskom-copy-filter (f)
   "Create a copy of the filter F"
-  (make-filter (copy-tree (filter->pattern f))
+  (lyskom-make-filter (copy-tree (filter->pattern f))
                (copy-tree (filter->attribute-list f))))
 
-(defun filter-p (f)
+(defun lyskom-filter-p (f)
   "Returns T if f looks like a filter"
   (and (listp f)
        (eq 'filter (car f))))
@@ -469,7 +469,7 @@ To change existing filters, use `kom-filter-edit'."
       (setq perm (lyskom-filter-read-permanent))
 	      
       (lyskom-add-filter
-       (make-filter filter
+       (lyskom-make-filter filter
                     (list (cons 'action action)
                           (cons 'expire (not perm))))))))
   
@@ -498,7 +498,7 @@ To change existing filters, use `kom-filter-edit'."
     (setq action (lyskom-filter-read-action))
     (setq permanent (lyskom-filter-read-permanent))
     (lyskom-add-filter
-     (make-filter filter
+     (lyskom-make-filter filter
                   (list (cons 'action action)
                         (cons 'expire (not permanent)))))))
 
@@ -514,7 +514,7 @@ To change existing filters, use `kom-filter-edit'."
         (permanent (lyskom-filter-read-permanent)))
     (cond ((and conf-no (not (zerop conf-no)))
            (lyskom-add-filter
-            (make-filter (list (cons 'recipient-no conf-no))
+            (lyskom-make-filter (list (cons 'recipient-no conf-no))
                          (list (cons 'action action)
                                (cons 'expire (not permanent)))))
            ))))
@@ -592,7 +592,7 @@ This command accepts text number prefix arguments \(see
           (when (string-match "^\\s-*$" lyskom-current-subject) (setq text ""))
 
           (lyskom-add-filter
-           (make-filter (list 
+           (lyskom-make-filter (list 
                          (cons 'subject-re 
                                (concat (if (string-equal text "") "^" "")
                                        "\\([rR][eE]: *\\|[Ff][Ww][Dd]: *\\)*"
@@ -639,7 +639,7 @@ To change existing filters, use `kom-filter-edit'."
       (setq action (lyskom-filter-read-action))
       (setq perm (lyskom-filter-read-permanent))
       (lyskom-add-filter
-       (make-filter filter
+       (lyskom-make-filter filter
                     (list (cons 'action action)
                           (cons 'expire (not perm))))))))
 

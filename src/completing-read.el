@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.54 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: completing-read.el,v 44.55 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.54 2007-06-08 14:23:53 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.55 2007-06-09 11:04:53 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -267,7 +267,7 @@ See lyskom-read-conf for a description of the parameters."
 
     (uconf-stat->name
      (car
-      (filter-list 
+      (lyskom-filter-list 
        (lambda (uconf-stat)
          (and uconf-stat
               (not (memq nil

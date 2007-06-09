@@ -1,5 +1,47 @@
+2007-06-09    <David Byers@GULAG>
+
+	* language.el (lyskom-language-keymap-internal): Let Emacs 22.1
+	follow links with mouse-1.
+
+	* filter.el (lyskom-copy-filter): Renamed from copy-filter.
+	(lyskom-filter-p): Renamed from filter-p.
+	(lyskom-make-filter): Renamed from make-filter.
+
+	* lyskom-rest.el (kom-backward-text): Renamed backward-text to
+	kom-backward-text. Renamed forward-text to kom-forward-text.
+	(lyskom-silent-read): Renamed silent-read to lyskom-silent-read.
+
+	* parse.el: Renamed apply-parser lyskom-apply-parser.
+
+	* review.el: Replaced all calls to nfirst with lyskom-nfirst.
+
+	* lyskom-rest.el (lyskom-startup-check-recommended-memberships):
+	Use lyskom-filter-list, not filter-list.
+
+	* faqs.el (lyskom-get-unread-faqs): Same.
+
+	* completing-read.el (lyskom-read-conf-guess-initial): Same.
+
+	* utilities.el (lyskom-filter-list): Renamed from filter-list.
+	(lyskom-nfirst): Renamed from nfirst.
+
+	Fix menu display in Gnu Emacs 22.1:
+	* menus.el (lyskom-define-menu-gnu-title-encoding-type): New
+	variable used to encode top-level menu titles differently from
+	nested menus.
+
+	* language.el (lyskom-get-menu-string): Don't encode the menu
+	strings here, since encoding needs to be different in different
+	places.
+
+	* menus.el (lyskom-menu-encoding-rules): New variable.
+	(lyskom-menu-encode): New function.
+	(lyskom-define-menu-xemacs): Encode menu strings.
+	(lyskom-define-menu-gnu): Encode menu strings.
+
 2007-06-08    <David Byers@TAMIZDAT>
 
+	Compatibility fixes for Gnu Emacs 22.1:
 	* lyskom-rest.el (lyskom-sentinel): Check that proc is a process
 	before using it as such. Call lyskom-remove-unread-buffer with the
 	right argument (the buffer, not the process).

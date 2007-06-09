@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.162 2007-06-08 14:23:54 byers Exp $
+;;;;; $Id: utilities.el,v 44.163 2007-06-09 11:04:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.162 2007-06-08 14:23:54 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.163 2007-06-09 11:04:54 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -83,7 +83,7 @@
   "Turn VECTOR into a list"
   (append vector nil))
 
-(defun nfirst (n list)
+(defun lyskom-nfirst (n list)
   "Return a list of the N first elements of LIST."
   (let ((result nil))
     (while (and (> n 0) list)
@@ -146,7 +146,7 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 	   (if (> n 0) (setcdr (nthcdr (- (1- m) n) x) nil))
 	   x))))
 
-(defun filter-list (test list)
+(defun lyskom-filter-list (test list)
   (let ((result nil))
     (lyskom-traverse el list
       (when (funcall test el)
@@ -640,11 +640,11 @@ non-negative integer and 0 means the given text-no."
 (defun lyskom-get-text-above-point (arg)
   (save-excursion
     (let ((former-point (point)))
-      (backward-text (+ 1 arg))
+      (kom-backward-text (+ 1 arg))
       (if (looking-at "\\([0-9]+\\)\\s-")
 	  (lyskom-string-to-number (match-string 1))
 	(progn ;; we probably ended up above the first message in the buffer
-	  (forward-text)
+	  (kom-forward-text)
 	  (if (and (< (point) former-point)
 		   (looking-at "\\([0-9]+\\)\\s-"))
 	      (lyskom-string-to-number (match-string 1))
@@ -655,11 +655,11 @@ non-negative integer and 0 means the given text-no."
       arg
     (save-excursion
       (let ((former-point (point)))
-        (forward-text arg)
+        (kom-forward-text arg)
         (if (looking-at "\\([0-9]+\\)\\s-")
             (lyskom-string-to-number (match-string 1))
           (progn ;; we probably ended up below the final message in the buffer
-            (backward-text)
+            (kom-backward-text)
             (if (and (> (point) former-point)
                      (looking-at "\\([0-9]+\\)\\s-"))
                 (lyskom-string-to-number (match-string 1))

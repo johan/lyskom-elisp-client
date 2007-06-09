@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.61 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: parse.el,v 44.62 2007-06-09 11:04:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.61 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: parse.el,v 44.62 2007-06-09 11:04:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1202,7 +1202,7 @@ i.e creates the buffer, sets all markers and pointers."
 	  (call-info (lyskom-locate-ref-no kom-queue ref-no)))
      (set-buffer lyskom-unparsed-buffer)
      (if call-info
-	 (apply-parser call-info))
+	 (lyskom-apply-parser call-info))
      (set-buffer buffer)
      (lyskom-decrease-pending-calls)
      (setq lyskom-pending-calls
@@ -1239,7 +1239,7 @@ car is equal to ELT."
     (cdr head)))
 
 
-(defun apply-parser (call-info)
+(defun lyskom-apply-parser (call-info)
   "Try to parse a reply from the server.
 CALL-INFO looks like this: (See lyskom-call-data). 
 	('CALL REF-NO PARSER PARSER-DATA HANDLER HANDLER-DATA)

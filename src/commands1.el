@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.229 2007-06-08 14:23:52 byers Exp $
+;;;;; $Id: commands1.el,v 44.230 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.229 2007-06-08 14:23:52 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.230 2007-06-09 11:04:53 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2448,9 +2448,9 @@ person you need either the old password for the person, or have
 administrative privileges enabled."
   (interactive)
   (let ((pers-no (lyskom-read-conf-no 'whos-passwd '(pers) nil nil t))
-	(old-pw (silent-read (lyskom-get-string 'old-passwd)))
-	(new-pw1 (silent-read (lyskom-get-string 'new-passwd)))
-	(new-pw2 (silent-read (lyskom-get-string 'new-passwd-again))))
+	(old-pw (lyskom-silent-read (lyskom-get-string 'old-passwd)))
+	(new-pw1 (lyskom-silent-read (lyskom-get-string 'new-passwd)))
+	(new-pw2 (lyskom-silent-read (lyskom-get-string 'new-passwd-again))))
 
     (if (lyskom-string= new-pw1 new-pw2)
 	(progn

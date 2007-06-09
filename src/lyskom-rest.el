@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.265 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.266 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.265 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.266 2007-06-09 11:04:53 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -954,7 +954,7 @@ by PERS-NO"
 (defun lyskom-startup-check-recommended-memberships ()
   "Create invitations for new membership recommendations"
   (let ((recommendations 
-         (filter-list
+         (lyskom-filter-list
           (lambda (rec)
             (not (lyskom-recommendation-already-rejected (car rec))))
           (mapcar (lambda (aux)
@@ -3046,13 +3046,13 @@ A list of pairs means OPTARG will be used as a key to look up the real
   
 
 
-(defun backward-text (&optional arg)
+(defun kom-backward-text (&optional arg)
   "Searches backwards for a text start and recenters with that text at the top."
   (interactive "p")
   (lyskom-prev-area (or arg 1) 'lyskom-text-start t)
   (beginning-of-line))
 
-(defun forward-text (&optional arg)
+(defun kom-forward-text (&optional arg)
   "Searches forward for a text start and recenters with that text at the top."
   (interactive "p")
   (lyskom-next-area (or arg 1) 'lyskom-text-start t))
@@ -3130,7 +3130,7 @@ See `kom-save-text-body' for an alternative to this command."
   (let ((name nil))
     (save-excursion
       (while (and arg (> arg 0))
-        (backward-text 1)
+        (kom-backward-text 1)
         (if (looking-at "\\([0-9]+\\)\\s-")
             (setq list-of-texts (cons (lyskom-string-to-number (match-string 1))
                                       list-of-texts)
@@ -4069,7 +4069,7 @@ Returns the selected alternative (a symbol)"
       (elt (assq input-char alts) 2))))
 
 
-(defun impl ()
+(defun lyskom-not-implemented ()
   (error "Not implemented"))
 
 
@@ -4429,12 +4429,12 @@ Other objects are converted correctly."
 ;;;;                     Utility routines.
 
 
-;;; silent-read was
+;;; lyskom-silent-read was
 ;; Written by Lars Willf|r <willfor@lysator.liu.se>
 ;; Copyright and copyleft Lars Willf|r.
 ;; Last modified jun 93 by Linus Tolke
 
-(defun silent-read (prompt-str)
+(defun lyskom-silent-read (prompt-str)
   "Read a string in the minibuffer without echoing.
 One parameter - the prompt string."
   (interactive "sPrompt string: ")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.18 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.19 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.18 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.19 2007-06-09 11:04:53 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -43,11 +43,11 @@
 (defvar filter-edit-list-start nil)
 (defvar filter-edit-list-end nil)
 
-(defun copy-filter-list (l)
+(defun lyskom-copy-filter-list (l)
   "Copy the filter list L"
   (cond ((null l) nil)
-        (t (cons (copy-filter (car l))
-                 (copy-filter-list (cdr l))))))
+        (t (cons (lyskom-copy-filter (car l))
+                 (lyskom-copy-filter-list (cdr l))))))
 
 (defun lyskom-reverse-pairs (l)
   "Reverse the pairs in the assoc list L"
@@ -85,7 +85,7 @@
   "Return non-nil if FILTER is a valid filter list"
   (cond ((null filter) t)
         ((not (listp filter)) nil)
-        ((not (filter-p (car filter))) nil)
+        ((not (lyskom-filter-p (car filter))) nil)
         (t (and (lyskom-verify-filter-pattern 
                  (filter->pattern (car filter)))
                 (lyskom-verify-filter-list (cdr filter))))))
@@ -447,7 +447,7 @@ If NEWLINE is non-nil, insert a newline after the header."
                                            t))
       (setq permanent
             (lyskom-j-or-n-p (lyskom-get-string 'filter-permanent)))
-      (setq filter (make-filter nil
+      (setq filter (lyskom-make-filter nil
                                 (list (cons 'action 
                                             (cdr (assoc action rev-actions)))
                                       (cons 'expire (not permanent)))))
@@ -759,7 +759,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
         (delete-region filter-edit-list-start filter-edit-list-end)
         (goto-char filter-edit-list-start)
         (insert "\n")
-        (lyskom-format-filter-list (copy-filter-list filter-edit-filter-list))
+        (lyskom-format-filter-list (lyskom-copy-filter-list filter-edit-filter-list))
 	(set-marker filter-edit-list-end (point))
         (setq filter-edit-change-flag nil)
         (lyskom-filter-edit-beginning-of-list))))
@@ -894,7 +894,7 @@ undesired filters and to create complex filters."
                       server-name))
       (setq filter-edit-list-start (point-marker))
       (insert "\n")
-      (lyskom-format-filter-list (copy-filter-list filter-edit-filter-list))
+      (lyskom-format-filter-list (lyskom-copy-filter-list filter-edit-filter-list))
       (setq filter-edit-list-end (point-max-marker))
       (insert (make-string (1- (window-width)) ?=)
 	      (format (lyskom-get-string 'filter-edit-footer))))

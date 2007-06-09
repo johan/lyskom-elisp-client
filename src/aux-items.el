@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.44 2007-06-08 14:23:52 byers Exp $
+;;;;; $Id: aux-items.el,v 44.45 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.44 2007-06-08 14:23:52 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.45 2007-06-09 11:04:53 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -140,7 +140,7 @@ return non-nil if the item is to be included in the list."
 in ADDED added."
   (let ((new-nos (nconc (mapcar 'aux-item->aux-no deleted)
                         (mapcar 'aux-item->aux-no added))))
-    (nconc (filter-list (lambda (el) (not (memq (aux-item->aux-no el) new-nos)))
+    (nconc (lyskom-filter-list (lambda (el) (not (memq (aux-item->aux-no el) new-nos)))
                         item-list)
            added)))
 

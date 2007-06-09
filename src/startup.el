@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.114 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: startup.el,v 44.115 2007-06-09 11:04:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.114 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: startup.el,v 44.115 2007-06-09 11:04:54 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -455,7 +455,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                 (cond ((match-string 1)
                        (process-send-string 
                         proc
-                        (concat (silent-read (match-string 1)) "\n"))
+                        (concat (lyskom-silent-read (match-string 1)) "\n"))
                        (delete-region (match-beginning 0) 
                                       (match-end 0)))
                       (t (error (lyskom-get-string 'ssh-cant-connect)
@@ -592,7 +592,7 @@ shown to other users."
 					     ;; the person when loggin in new
 					     ;; users
 					     (or lyskom-is-new-user
-						 (silent-read
+						 (lyskom-silent-read
 						  (lyskom-get-string 'password)))))
 					   (if invisiblep 1 0))
                         (progn
@@ -755,10 +755,10 @@ This is called at login and after prioritize and set-unread."
   (lyskom-scroll)
   (cond
    ((ja-or-nej-p (lyskom-format 'is-name-correct name))
-    (let ((password (silent-read (lyskom-get-string 'personal-password))))
+    (let ((password (lyskom-silent-read (lyskom-get-string 'personal-password))))
       (cond
        ((not (equal password 
-		    (silent-read (lyskom-get-string 'repeat-password))))
+		    (lyskom-silent-read (lyskom-get-string 'repeat-password))))
 	;; Failed to enter the same password twice
 	(lyskom-insert-string 'repeat-failure)
 	nil)

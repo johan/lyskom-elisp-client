@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.32 2004-01-01 22:01:39 byers Exp $
+;;;;; $Id: language.el,v 44.33 2007-06-09 11:04:53 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -103,7 +103,8 @@ sessions."
   ;; If the "real" keymap has no value, set it to an empty keymap
   (if (eval keymap)
       nil
-    (set keymap (make-sparse-keymap)))
+    (set keymap (make-sparse-keymap))
+    (define-key (symbol-value keymap) [follow-link] 'mouse-face))
   ;; Add it to the list of keymaps
   (or (memq keymap lyskom-language-keymaps)
       (setq lyskom-language-keymaps
@@ -252,11 +253,9 @@ lyskom-define-language."
 
 Looks for the 'lyskom-menu category, or 'lyskom-command
 if 'lyskom-menu is not found."
-  (lyskom-encode-coding-string 
-    (or (lyskom-try-get-string symbol 'lyskom-menu)
+  (or (lyskom-try-get-string symbol 'lyskom-menu)
         (lyskom-try-get-string symbol 'lyskom-command)
-        (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu))
-    'iso-8859-1))
+        (lyskom-get-string-error 'lyskom-get-menu-string symbol 'lyskom-menu)))
 
 (defun lyskom-define-language (language coding &rest names)
   (let ((match (assq language lyskom-languages)))
