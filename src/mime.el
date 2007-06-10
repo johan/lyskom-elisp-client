@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.12 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: mime.el,v 44.13 2007-06-10 11:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,16 +31,21 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.12 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: mime.el,v 44.13 2007-06-10 11:08:20 byers Exp $\n"))
 
 (defvar lyskom-charset-alist
-  '(((ascii)						. us-ascii)
+  `(((ascii)						. iso-8859-1)
     ((ascii latin-iso8859-1)				. iso-8859-1)
+    ,@(condition-case nil
+	  (when (lyskom-coding-system-get 'mule-utf-8 'safe-charsets)
+	    (list (cons (lyskom-coding-system-get 'mule-utf-8 
+						  'safe-charsets)
+			'utf-8)))
+	(error nil))
     ((ascii latin-iso8859-2)				. iso-8859-2)
     ((ascii latin-iso8859-3)				. iso-8859-3)
     ((ascii latin-iso8859-4)				. iso-8859-4)
     ((ascii cyrillic-iso8859-5)				. iso-8859-5)
-;;; ((ascii cyrillic-iso8859-5)				. koi8-r)
     ((ascii arabic-iso8859-6)				. iso-8859-6)
     ((ascii greek-iso8859-7)				. iso-8859-7)
     ((ascii hebrew-iso8859-8)				. iso-8859-8)
@@ -57,22 +62,6 @@
 	    latin-jisx0201 japanese-jisx0208-1978
 	    chinese-gb2312 japanese-jisx0208
 	    korean-ksc5601 japanese-jisx0212)		. iso-2022-jp-2)
-    ;; ((ascii latin-iso8859-1 greek-iso8859-7
-    ;;         latin-jisx0201 japanese-jisx0208-1978
-    ;;         chinese-gb2312 japanese-jisx0208
-    ;;         korean-ksc5601 japanese-jisx0212
-    ;;         chinese-cns11643-1 chinese-cns11643-2)      . iso-2022-int-1)
-
-
-;;    ,(if (or (not (fboundp 'charsetp)) ;; non-Mule case
-;;	     (charsetp 'unicode-a)
-;;	     (not (mm-coding-system-p 'mule-utf-8)))
-;;	 '(utf-8 unicode-a unicode-b unicode-c unicode-d unicode-e)
-;;       ;; If we have utf-8 we're in Mule 5+.
-;;       (append '(utf-8)
-;;	       (delete 'ascii
-;;		       (lyskom-coding-system-get 'mule-utf-8 'safe-charsets))))
-
     ))
 
 
@@ -187,8 +176,12 @@
           (setq param-value (substring param-value 1 -1)))
         (setq param-value (replace-in-string param-value
                                              lyskom-mime-wrap-regexp ""))
-        (when (and (memq param-name '(charset format)) param-value)
-          (setq param-value (intern param-value)))
+	(when (eq param-name 'charset)
+	  (setq param-value (intern param-value))
+	  (when (eq param-value 'us-ascii) (setq param-value 'iso-8859-1)))
+
+	(when (eq param-name 'format)
+	  (setq param-value (intern param-value)))
 
         (when (and (string-match lyskom-mime-comment-regexp data start)
                    (eq (match-beginning 0) start))

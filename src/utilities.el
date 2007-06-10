@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.163 2007-06-09 11:04:54 byers Exp $
+;;;;; $Id: utilities.el,v 44.164 2007-06-10 11:08:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.163 2007-06-09 11:04:54 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.164 2007-06-10 11:08:21 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -58,7 +58,8 @@
 
           ;; Check coding system
           (when (and enable-multibyte-characters
-                     (not (memq 'utf-8
+		     (not (coding-system-p 'utf-8))
+		     (not (memq 'utf-8
                                 (lyskom-coding-system-get
                                  (symbol-value (car coding-category-list))
                                  'alias-coding-systems)))

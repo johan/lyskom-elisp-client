@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.407 2007-06-09 11:04:54 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.408 2007-06-10 11:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.407 2007-06-09 11:04:54 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.408 2007-06-10 11:08:20 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2036,7 +2036,8 @@ i emacs.
 andras inlägg, och kommentarer till dina inlägg kan få en blandning av
 tecken som inte går att visa ordentligt. Du bör byta språkomgivning i
 emacs till en som använder \"%#2s\" som förstahandsval för
-teckenkodning.
+teckenkodning (se Emacs-manualen och kommandot set-language-environment
+för mer information).
 
 ")
 

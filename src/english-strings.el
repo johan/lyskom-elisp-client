@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.363 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: english-strings.el,v 44.364 2007-06-10 11:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.363 2007-06-09 11:04:53 byers Exp $"))
+              "$Id: english-strings.el,v 44.364 2007-06-10 11:08:20 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1988,7 +1988,8 @@ but the LysKOM server you are using recommends \"%#2s\".
 You may encounter problems when writing comments, and comments to your
 texts may contain a mix of characters that cannot be encoded or
 displayed correctly. Please consider changing your language
-environment to one that uses \"%#2s\" to encode text.
+environment to one that uses \"%#2s\" to encode text (see the Emacs
+manual and the command set-language-environment for more information).
 
 ")
 

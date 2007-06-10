@@ -1,8 +1,41 @@
+2007-06-10    <David Byers@GULAG>
+
+	Better display of texts claiming to be us-ascii:
+	* mime.el (lyskom-mime-decode-content-type): Pretend us-ascii
+	texts are really latin-1.
+
+	Fix bug 819:
+	* completing-read.el (lyskom-read-conf-internal): When an exact
+	match is found, return t only if the input string is equal to the
+	only alternative.
+
+	Fix bug 1277:
+	* swedish-strings.el (coding-system-mismatch-warning): Added
+	reference to Emacs manual.
+
+	* utilities.el (lyskom-check-configuration): Don't warn about
+	coding system if UTF-8 is supported.
+
+	* lyskom-buttons.el (lyskom-make-button-menu): Encode menu strings
+	properly.
+
 2007-06-09    <David Byers@GULAG>
 
-	* language.el (lyskom-language-keymap-internal): Let Emacs 22.1
-	follow links with mouse-1.
+	Prefer UTF-8 over all but latin-1:
+	* mime.el (lyskom-charset-alist): Never choose us-ascii. When
+	us-ascii text is detected, assume latin-1 instead. For some
+	reason, us-ascii is detected on some emacsen even when this is not
+	the case. A more powerful charset would perhaps be a better
+	choice, but chances are if charset detection is broken, then what
+	are the chances that e.g. unicode conversion works?
+	(lyskom-charset-alist): Include utf-8 early in the list, making it
+	the preferred charset (when it works).
 
+	Follow links with mouse-1 in Emacs 22.1:
+	* language.el (lyskom-language-keymap-internal): Bind follow-links
+	in the global LysKOM keymaps.
+
+	Fix various naming issues:
 	* filter.el (lyskom-copy-filter): Renamed from copy-filter.
 	(lyskom-filter-p): Renamed from filter-p.
 	(lyskom-make-filter): Renamed from make-filter.
@@ -11807,6 +11840,6 @@ Sun Oct 12 00:39:47 1997  David Byers  <davby@litefix.ida.liu.se>
 
 Local Variables:
 outline-regexp:"M\\|T\\|W\\|F\\|S\\|\t\\\*"
-eval: (ispell-change-dictionary "british")
-eval: (if (boundp 'set-language-environment) (set-language-environment 'Latin-1))
+ispell-local-dictionary: "british"
+coding: iso-8859-1
 End:

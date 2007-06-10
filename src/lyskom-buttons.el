@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.104 2007-06-08 14:23:53 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.105 2007-06-10 11:08:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.104 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.105 2007-06-10 11:08:20 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -181,16 +181,17 @@ If there is no active area, then do something else."
   ;; function alters the menu, so we copy the entries to prevent it
   ;; from fiddling with lyskom-button-actions.
   (let* ((lyskom-language lyskom-global-language)
-         (title (lyskom-maybe-recode-string title 'iso-8859-1 t)))
+         (title (lyskom-menu-encode title 'item)))
     (when (> (length title) 44) (setq title (concat (substring title 0 40)
                                                     " ...")))
     (cond ((string-match "XEmacs" (emacs-version))
-           (cons (lyskom-maybe-recode-string title 'iso-8859-1 t)
+           (cons title
                  (delq nil
                        (mapcar (lambda (entry)
                                  (and (funcall filter (cdr entry) arg)
-                                      (vector (lyskom-maybe-recode-string
-                                               (lyskom-get-string (car entry)) 'iso-8859-1 t)
+                                      (vector (lyskom-menu-encode
+                                               (lyskom-get-string (car entry))
+					       'item)
                                               (list (cdr entry)
                                                     buf
                                                     (if (listp arg)
@@ -201,13 +202,16 @@ If there is no active area, then do something else."
                                entries))))
           (t (append (list 'keymap title)
                      (delq nil 
-                           (mapcar (lambda (entry)
-                                     (and (funcall filter (cdr entry) arg)
-                                          (let ((tmp (copy-tree entry)))
-                                            (setcar tmp (lyskom-maybe-recode-string
-                                                         (lyskom-get-string (car tmp))
-                                                         'iso-8859-1 t))
-                                            (cons `(,(cdr entry) ,buf ,arg ,text) tmp))))
+                           (mapcar
+			    (lambda (entry)
+			      (and (funcall filter (cdr entry) arg)
+				   (let ((tmp (copy-tree entry)))
+				     (setcar tmp 
+					     (lyskom-menu-encode
+					      (lyskom-get-string (car tmp))
+					      'item))
+				     (cons `(,(cdr entry) ,buf ,arg ,text)
+					   tmp))))
                                    entries)))))))
 
 
