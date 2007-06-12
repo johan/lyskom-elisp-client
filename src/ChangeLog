@@ -1,3 +1,20 @@
+2007-06-12    <David Byers@GULAG>
+
+	* mime.el (lyskom-mime-encode-string): Added mime-charset
+	parameter.
+
+	* edit-text.el (lyskom-edit-parse-headers): Changed the return
+	value to a data type (i was going to extend it, but ended up not
+	doing so, but the new version is easier to follow anyway).
+	(lyskom-edit-send): Use a temporary buffer (necessary since
+	transformation functions may alter the text) and
+	lyskom-mime-charset-for-text to determing text encoding.
+
+	* mime.el (lyskom-mime-charset-for-text): New function
+	(lyskom-mime-charset-for-string): Removed.
+	(lyskom-charset-alist): Removed. From now on, we shall rely on
+	mm-util in XEmacs.
+
 2007-06-10    <David Byers@GULAG>
 
 	Better display of texts claiming to be us-ascii:

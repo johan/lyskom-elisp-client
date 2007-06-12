@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.13 2007-06-10 11:08:20 byers Exp $
+;;;;; $Id: mime.el,v 44.14 2007-06-12 17:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,64 +31,40 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.13 2007-06-10 11:08:20 byers Exp $\n"))
+	      "$Id: mime.el,v 44.14 2007-06-12 17:07:44 byers Exp $\n"))
 
-(defvar lyskom-charset-alist
-  `(((ascii)						. iso-8859-1)
-    ((ascii latin-iso8859-1)				. iso-8859-1)
-    ,@(condition-case nil
-	  (when (lyskom-coding-system-get 'mule-utf-8 'safe-charsets)
-	    (list (cons (lyskom-coding-system-get 'mule-utf-8 
-						  'safe-charsets)
-			'utf-8)))
-	(error nil))
-    ((ascii latin-iso8859-2)				. iso-8859-2)
-    ((ascii latin-iso8859-3)				. iso-8859-3)
-    ((ascii latin-iso8859-4)				. iso-8859-4)
-    ((ascii cyrillic-iso8859-5)				. iso-8859-5)
-    ((ascii arabic-iso8859-6)				. iso-8859-6)
-    ((ascii greek-iso8859-7)				. iso-8859-7)
-    ((ascii hebrew-iso8859-8)				. iso-8859-8)
-    ((ascii latin-iso8859-9)				. iso-8859-9)
-    ((ascii latin-iso8859-15)				. iso-8859-15)
-    ((ascii latin-jisx0201
-	    japanese-jisx0208-1978 japanese-jisx0208)	. iso-2022-jp)
-    ((ascii latin-jisx0201
-	    katakana-jisx0201 japanese-jisx0208)	. shift_jis)
-    ((ascii korean-ksc5601)				. euc-kr)
-    ((ascii chinese-gb2312)				. gb2312)
-    ((ascii chinese-big5-1 chinese-big5-2)		. big5)
-    ((ascii latin-iso8859-1 greek-iso8859-7
-	    latin-jisx0201 japanese-jisx0208-1978
-	    chinese-gb2312 japanese-jisx0208
-	    korean-ksc5601 japanese-jisx0212)		. iso-2022-jp-2)
-    ))
+(lyskom-external-function mm-find-mime-charset)
+(defun lyskom-mime-charset-for-text-xemacs (start end)
+  (when (and (lyskom-try-require 'un-define)
+	     (lyskom-try-require 'mm-util))
+    (mm-find-mime-charset start end)))
 
+(defun lyskom-mime-charset-for-text-gnu (start end)
+  (let ((codings (delq nil 
+		       (mapcar (lambda (cs)
+				 (cond ((eq cs 'undecided) lyskom-server-coding-system)
+				       ((eq cs 'compound-text) nil)
+				       ((or (coding-system-get cs 'mime-charset)
+					    (coding-system-get cs ':mime-charset)))))
+			       (find-coding-systems-region start end)))))
+    (cond ((memq lyskom-server-coding-system codings) lyskom-server-coding-system)
+	  ((lyskom-traverse cs kom-preferred-charsets
+	     (when (memq cs codings)
+	       (lyskom-traverse-break cs))))
+	  (t (car codings)))))
+      
 
-(defun lyskom-mime-string-charset (data)
-  (let* ((cs (lyskom-find-charset-string data))
-         (the-cs (and (eq (length cs) 1) (car cs)))
-         (tmp lyskom-charset-alist)
-         (best-guess (let ((system nil))
-                       (while (and tmp cs)
-                         (if (or (lyskom-subset-p cs (car (car tmp)))
-                                 (eq the-cs (cdr (car tmp))))
-                             (setq system (cdr (car tmp)) tmp nil)
-                           (setq tmp (cdr tmp))))
-                       system)))
-    (or
-     best-guess
-     (lyskom-xemacs-or-gnu
-      lyskom-server-coding-system
-      (let ((coding (lyskom-find-coding-systems-for-charsets cs)))
-        (while (and (car coding)
-                    (null (or (lyskom-coding-system-get (car coding) 'mime-charset)
-                              (lyskom-coding-system-get (car coding) :mime-charset))))
-          (setq coding (cdr coding)))
-        (and (car coding)
-             (or (lyskom-coding-system-get (car coding) 'mime-charset)
-                 (lyskom-coding-system-get (car coding) :mime-charset)))))
-    lyskom-server-coding-system)))
+(defun lyskom-mime-charset-for-text (start end)
+  "Determine which MIME charset to use for region START..END.
+If the server coding system is valid for the text, it will be
+returned. Otherwise charsets are returned based on Emcas idea
+of coding system priority.
+
+In XEmacs, this function will only work if mm-util from Gnus
+is present and follows the expected conventions."
+  (lyskom-xemacs-or-gnu
+   (lyskom-mime-charset-for-text-xemacs start end)
+   (lyskom-mime-charset-for-text-gnu start end)))
 
 (defun lyskom-mime-charset-coding-system (charset)
   (condition-case nil
@@ -96,9 +72,8 @@
            charset)
     (error 'raw-text)))
 
-(defun lyskom-mime-encode-string (data)
-  (let* ((mime-charset (lyskom-mime-string-charset data))
-         (coding-system (lyskom-mime-charset-coding-system mime-charset)))
+(defun lyskom-mime-encode-string (data mime-charset)
+  (let* ((coding-system (lyskom-mime-charset-coding-system mime-charset)))
     (when (and mime-charset coding-system)
       (cons mime-charset (lyskom-encode-coding-string data coding-system)))))
 

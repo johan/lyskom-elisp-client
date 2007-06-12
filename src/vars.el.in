@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.322 2006-05-03 20:44:49 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.323 2007-06-12 17:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.322 2006-05-03 20:44:49 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.323 2007-06-12 17:07:44 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -3430,6 +3430,21 @@ name. If `nil', any name matching the input will be preferred to a
 numeric reference.
 
 Values other than `t' and `nil' are reserved for future use."
+  server)
+
+(def-kom-var kom-preferred-charsets '(iso-8859-1 utf-8)
+  "**Character sets to try encoding texts with.
+
+Thie setting may contain a list of valid MIME character sets. When
+encoding a text to send to the server, the client will use the default
+server character set whenever possible. If it is insufficient, it will
+try the character sets listed in this setting, in order. If they are
+also insufficient, it will attempt to find some other character set
+that works.
+
+WARNING: this setting only applies to Gnu Emacs. In XEmacs, customize
+the variable mm-coding-system-priorities instead; you may have to load
+Gnus in order to do so."
   server)
 
 

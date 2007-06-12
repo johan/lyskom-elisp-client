@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.123 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: edit-text.el,v 44.124 2007-06-12 17:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.123 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.124 2007-06-12 17:07:44 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -104,6 +104,12 @@ See lyskom-edit-handler.")
 
 (defvar lyskom-edit-return-to-configuration nil
   "Status variable for an edit-buffer.")
+
+(def-komtype lyskom-text-headers
+  ((subject :read-only t)
+   (misc-info :read-only t)
+   (aux-items :read-only t)))
+   
 
 ;;; Error signaled by lyskom-edit-parse-headers
 (put 'lyskom-edit-text-abort 'error-conditions
@@ -472,6 +478,8 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
 		  (headers nil)
                   (misc-list nil)
                   (subject nil)
+		  (subject-start-pos nil)
+		  (body-start-pos nil)
                   (message nil)
                   (aux-list nil))
 
@@ -487,9 +495,9 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
 	      (save-excursion
 		(setq headers (lyskom-edit-parse-headers)
 		      misc-list (apply 'lyskom-create-misc-list 
-                                       (elt headers 1))
-                      aux-list (elt headers 2)
-		      subject (car headers)))
+                                       (lyskom-text-headers->misc-info headers))
+                      aux-list (lyskom-text-headers->aux-items headers)
+		      subject (lyskom-text-headers->subject headers)))
 
               ;;
               ;; Check that there is a subject
@@ -558,13 +566,15 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                                       (lyskom-mime-decode-content-type
                                            (aux-item->data (car content-type)))
                                       'charset)))
-                       (mime-charset (lyskom-mime-string-charset full-message)))
+		       (mime-charset (with-temp-buffer
+				       (insert full-message)
+				       (lyskom-mime-charset-for-text (point-min) (point-max)))))
 
                   ;; If the charset isn't already set, encode the string
 
                   (if (and mime-charset (null charset))
                       (setq full-message
-                            (lyskom-mime-encode-string full-message))
+                            (lyskom-mime-encode-string full-message mime-charset))
                     (when (lyskom-j-or-n-p 'too-many-languages)
                       (keyboard-quit)))
 
@@ -1173,7 +1183,7 @@ WINDOW plus any optional arguments given in ARG-LIST."
       (let* ((buffer (current-buffer))
              (window (selected-window))
              (headers (condition-case nil
-                          (elt (lyskom-edit-parse-headers) 1)
+                          (lyskom-text-headers->misc-info (lyskom-edit-parse-headers))
                         (lyskom-edit-error nil))) ; Ignore these errors
              (no nil))
         (while headers
@@ -1298,12 +1308,12 @@ text was."
 (defun lyskom-edit-move-recipients (conf-stat insert-at edit-buffer)
   (save-excursion
     (set-buffer edit-buffer)
-    (let* ((tmp (lyskom-edit-parse-headers))
-           (subject (car tmp))
+    (let* ((headers (lyskom-edit-parse-headers))
+           (subject (lyskom-text-headers->subject headers))
            (miscs (mapcar (lambda (x) (if (eq (car x) 'RECPT) 
                                           (cons 'CC-RECPT (cdr x)) x))
-                  (cdr (lyskom-edit-translate-headers (elt tmp 1)))))
-           (aux-list (elt tmp 2))
+                  (cdr (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))))
+           (aux-list (lyskom-text-headers->aux-items headers))
            (elem nil))
 
 
@@ -1329,16 +1339,16 @@ text was."
   (save-excursion
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
-           (miscs (lyskom-edit-translate-headers (elt headers 1)))
+           (miscs (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))
            (elem (lyskom-edit-find-misc miscs lyskom-recpt-types-list
                                         recpt-no)))
 
       (cond (elem (setcar elem recpt-type))
             (t (setq miscs
                      (append miscs (list (cons recpt-type recpt-no))))))
-      (lyskom-edit-replace-headers (elt headers 0)
+      (lyskom-edit-replace-headers (lyskom-text-headers->subject headers)
                                    miscs
-                                   (elt headers 2)))))
+                                   (lyskom-text-headers->aux-items headers)))))
 
 
 (defun lyskom-edit-add-recipient/copy (prompt &optional what-to-do recpt-type)
@@ -1400,15 +1410,15 @@ RECPT-TYPE is the type of recipient to add."
   (save-excursion
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
-           (miscs (lyskom-edit-translate-headers (elt headers 1)))
+           (miscs (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))
            (elem (lyskom-edit-find-misc miscs lyskom-recpt-types-list
                                         recpt-no)))
 
       (when elem (setcar elem nil))
 
-      (lyskom-edit-replace-headers (elt headers 0)
+      (lyskom-edit-replace-headers (lyskom-text-headers->subject headers)
                                    miscs
-                                   (elt headers 2)))))
+                                   (lyskom-text-headers->aux-items headers)))))
     
 
 (defun kom-edit-add-cross-reference ()
@@ -1677,10 +1687,8 @@ non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
 
 (defun lyskom-edit-parse-headers ()
   "Parse the headers of an article.
-They are returned as a list where the first element is the subject,
-and the rest is a list (HEADER DATA HEADER DATA ...), where HEADER is
-either 'RECPT, 'CC-RECPT, 'COMM-TO or 'FOOTN-TO. This is to make it
-easy to use the result in a call to `lyskom-create-misc-list'."
+
+The value returned is a lyskom-text-headers structure."
   (goto-char (point-min))
   (let ((misc nil)
         (subject nil)
@@ -1727,7 +1735,7 @@ easy to use the result in a call to `lyskom-create-misc-list'."
 
 	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
 	(forward-line 1)))
-    (list subject misc aux)))
+    (lyskom-create-lyskom-text-headers subject misc aux)))
 
 (defun lyskom-edit-parse-aux-item ()
   (let ((definitions lyskom-aux-item-definitions)
