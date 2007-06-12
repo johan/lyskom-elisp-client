@@ -1,5 +1,10 @@
 2007-06-12    <David Byers@GULAG>
 
+	Fix bug 1619:
+	* commands2.el (kom-diff-texts): Use lyskom-compatible insertion
+	commands for the diff.
+
+	Fix bug 1636:
 	* mime.el (lyskom-mime-encode-string): Added mime-charset
 	parameter.
 

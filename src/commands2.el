@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.219 2006-03-31 11:48:16 byers Exp $
+;;;;; $Id: commands2.el,v 44.220 2007-06-12 17:16:54 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.219 2006-03-31 11:48:16 byers Exp $\n"))
+              "$Id: commands2.el,v 44.220 2007-06-12 17:16:54 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2686,11 +2686,13 @@ This command accepts text number prefix arguments \(see
 	    
 
 	(set-buffer buf)
-	(let ((buffer-read-only nil))
-	  (apply 'call-process (if (boundp 'diff-command)
-				   diff-command
-				 "diff")
-		 nil buf nil args))
+	(lyskom-insert
+	 (with-temp-buffer
+	   (apply 'call-process (if (boundp 'diff-command)
+				    diff-command
+				  "diff")
+		  nil t nil args)
+	   (buffer-string)))
 	(delete-file oldfile)
 	(delete-file newfile))))))
       
