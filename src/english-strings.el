@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.367 2007-06-24 09:08:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.368 2007-06-24 14:07:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.367 2007-06-24 09:08:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.368 2007-06-24 14:07:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -914,25 +914,28 @@ Mark the envelope with \"LysKOM bug report\"\n\n")
     (no-review-done . "You need to review something before you can review more.\n")
     (not-reviewing . "You are currently not reviewing anything.\n")
     (unread-how-many . "Unread how many?")
+    (unread-how-many-roots . "Unread how many root texts?")
     (unread-how-many-more . "Unread how many more?")
     (review-how-many . "Review how many?")
+    (review-how-many-roots . "Review how many root texts?")
     (review-how-many-more . "Review how many more?")
     (latest-n . "last %#1d")
     (first-n . "first %#1d")
 
-    (review-by-whom . "Review %#1s by whom: ")
-    (review-to-conf . "Review %#1s to conference: ")
-    (unread-by-whom . "Unread %#1s by whom: ")
-    (unread-to-conf . "Unread %#1s to conference: ")
+    (review-by-whom . "Review %#1s %#2?b%[%#2s %]%[%]by whom: ")
+    (review-to-conf . "Review %#1s %#2?b%[%#2s %]%[%]to conference: ")
+    (unread-by-whom . "Unread %#1s %#2?b%[%#2s %]%[%]by whom: ")
+    (unread-to-conf . "Unread %#1s %#2?b%[%#2s %]%[%]to conference: ")
     (all-confs . "all conferences")
 
-    (unread-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
-    (unread-more-info-by-to . "Unread %#1s by %#2P to %#3M.\n")
+    (unread-info-by-to . "Unread %#1s %#4?b%[%#4s %]%[%]by %#2P to %#3M.\n")
+    (unread-more-info-by-to . "Unread %#1s %#4?b%[%#4s %]%[%]by %#2P to %#3M.\n")
     (unread-rest . "the rest")
     (unread-more . "%#1d more")
 
-    (review-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
-    (review-more-info-by-to . "Review %#1s by %#2P to %#3M forwards.\n")
+    (review-info-by-to . "Review %#1s %#4?b%[%#4s %]%[%]by %#2P to %#3M forwards.\n")
+    (review-more-info-by-to . "Review %#1s %#4?b%[%#4s %]%[%]by %#2P to %#3M forwards.\n")
+    (review-filter-roots . "roots")
     (review-rest . "the rest")
     (review-more . "%#1d more")
     (you-review . "You are now reviewing %#1s.\n")
@@ -1746,12 +1749,12 @@ You must become an active member of the conference to enter it.\n")
     (review-commented-q . "Review the commented for which text?")
 
     (review-tree-q . "Review all comments recursively for which text?")
-    (find-root-q . "Review original text for text?")
+    (find-root-q . "Review root for text?")
     (find-root-review-q . "Review tree of which text?")
     (review-comments-q . "Review all comments to which text?")
     (review-xrefs-q . "Review all cross references from which text?")
     (unread-tree-q . "Unread all comments recursively for which text?")
-    (unread-root-q . "Unread original text for text?")
+    (unread-root-q . "Unread root for text?")
     (unread-root-review-q . "Unread tree of which text?")
     (unread-comments-q . "Unread all comments to which text?")
 
@@ -2229,10 +2232,13 @@ Change privileges for %#1P (%#1p)...")
     (kom-review-noconversion  . "Review unconverted")
     (kom-review-rot13         . "Review rot13")
     (kom-review-next          . "Review next")
-    (kom-find-root            . "Review original (text)")
+    (kom-find-root            . "Review root (text)")
     (kom-review-by-to         . "Review last")
+    (kom-review-roots-by-to         . "Review last roots")
     (kom-review-first         . "Review first")
+    (kom-review-first-roots         . "Review first roots")
     (kom-review-all           . "Review all")
+    (kom-review-all-roots           . "Review all roots")
     (kom-review-more          . "Review more")
     (kom-view-commented-text  . "Review (the) commented (text)")
     (kom-view-previous-commented-text
@@ -2372,6 +2378,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-copy-options         . "Copy options")
     (kom-mark-unread          . "Unread text")
     (kom-unread-by-to         . "Unread last")
+    (kom-unread-roots-by-to         . "Unread last")
     (kom-unread-more          . "Unread more")
     (kom-unread-commented-text . "Unread (the) commented (text)")
     (kom-unread-previous-commented-text . "Unread (the) previously commented (text)")
@@ -2382,7 +2389,9 @@ Change privileges for %#1P (%#1p)...")
     (kom-unread-last-normally-read
      			      . "Unread again")
     (kom-unread-first         . "Unread first")
+    (kom-unread-first-roots   . "Unread first roots")
     (kom-unread-all           . "Unread all")
+    (kom-unread-all-roots     . "Unread all roots")
 
     (kom-unread-presentation  . "Unread presentation")
     (kom-unread-server-faq    . "Unread server FAQ")
@@ -2794,10 +2803,12 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-unread-prefix (kbd "g") 'kom-unread-last-normally-read)
   (define-key lyskom-en-unread-prefix (kbd "o") 'kom-unread-root)
   (define-key lyskom-en-unread-prefix (kbd "l") 'kom-unread-by-to)
+  (define-key lyskom-en-unread-prefix (kbd "L") 'kom-unread-roots-by-to)
   (define-key lyskom-en-unread-prefix (kbd "M") 'kom-unread-more)
   (define-key lyskom-en-unread-prefix (kbd "r") 'kom-unread-root-review)
   (define-key lyskom-en-unread-prefix (kbd "f") 'kom-unread-first)
-  (define-key lyskom-en-unread-prefix (kbd "A") 'kom-unread-all)
+  (define-key lyskom-en-unread-prefix (kbd "F") 'kom-unread-first-roots)
+  (define-key lyskom-en-unread-prefix (kbd "A") 'kom-unread-all-roots)
   (define-key lyskom-en-unread-prefix (kbd "f") 'kom-unread-first)
   (define-key lyskom-en-unread-prefix (kbd "p") 'kom-unread-presentation)
   (define-key lyskom-en-unread-prefix (kbd "q") 'kom-unread-faq)
@@ -2832,8 +2843,10 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-review-prefix (kbd "3") 'kom-review-rot13)
   (define-key lyskom-en-review-prefix (kbd "o") 'kom-find-root)
   (define-key lyskom-en-review-prefix (kbd "l") 'kom-review-by-to)
+  (define-key lyskom-en-review-prefix (kbd "L") 'kom-review-roots-by-to)
   (define-key lyskom-en-review-prefix (kbd "f") 'kom-review-first)
-  (define-key lyskom-en-review-prefix (kbd "A") 'kom-review-all)
+  (define-key lyskom-en-review-prefix (kbd "F") 'kom-review-first-roots)
+  (define-key lyskom-en-review-prefix (kbd "A") 'kom-review-all-roots)
   (define-key lyskom-en-review-prefix (kbd "M") 'kom-review-more)
   (define-key lyskom-en-review-prefix (kbd "g") 'kom-review-last-normally-read)
   (define-key lyskom-en-review-prefix (kbd "q") 'kom-review-faq)
@@ -3886,6 +3899,30 @@ up menus.")
   The users named in this list will be displayed using a warning face in
   the LysKOM buffer.")
 
+    (kom-person-list-1-doc . "\
+  This list of users has no predefined meaning. It can be used to show
+  the users with a special font (see kom-highlight-conferences) or to
+  configure presence messages (see kom-presence-messages-in-buffer) or
+  for whatever purpose you like.")
+
+    (kom-person-list-2-doc . "\
+  This list of users has no predefined meaning. It can be used to show
+  the users with a special font (see kom-highlight-conferences) or to
+  configure presence messages (see kom-presence-messages-in-buffer) or
+  for whatever purpose you like.")
+
+    (kom-person-list-3-doc . "\
+  This list of users has no predefined meaning. It can be used to show
+  the users with a special font (see kom-highlight-conferences) or to
+  configure presence messages (see kom-presence-messages-in-buffer) or
+  for whatever purpose you like.")
+
+    (kom-person-list-4-doc . "\
+  This list of users has no predefined meaning. It can be used to show
+  the users with a special font (see kom-highlight-conferences) or to
+  configure presence messages (see kom-presence-messages-in-buffer) or
+  for whatever purpose you like.")
+
     (kom-url-viewer-preferences-doc . "\
   This setting controls which WWW browser that will be used to open URLs
   found in LysKOM. If the first browser in the list cannot handle the type
@@ -4483,6 +4520,10 @@ up menus.")
     (kom-filter-outgoing-messages-tag . "Show automatic messages:")
     (kom-friends-tag . "Friends and other special people:")
     (kom-morons-tag . "Morons and other \"special\" people:")
+    (kom-person-list-1-tag . "Generlic list of persons (1):")
+    (kom-person-list-2-tag . "Generlic list of persons (2):")
+    (kom-person-list-3-tag . "Generlic list of persons (3):")
+    (kom-person-list-4-tag . "Generlic list of persons (4):")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-windows-browser-command-tag . "Command to start a web browser on Windows:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")

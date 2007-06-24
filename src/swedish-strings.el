@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.411 2007-06-24 09:08:31 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.412 2007-06-24 14:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.411 2007-06-24 09:08:31 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.412 2007-06-24 14:07:44 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -960,25 +960,29 @@ Märk kuvertet \"LysKOM buggrapport för elispklienten\".\n\n")
     (no-review-done . "Du måste återse innan du kan återse mer.\n")
     (not-reviewing . "Du håller inte på att återse något nu.\n")
     (unread-how-many . "Oläsmarkera hur många?")
+    (unread-how-many-roots . "Oläsmarkera hur många urinlägg?")
     (review-how-many . "Återse hur många?")
+    (review-how-many-roots . "Återse hur många urinlägg?")
     (unread-how-many-more . "Oläsmarkera ytterligare hur många?")
     (review-how-many-more . "Återse ytterligare hur många?")
     (latest-n . "senaste %#1d")
     (first-n . "första %#1d")
 
-    (review-by-whom . "Återse %#1s av vem: ")
-    (review-to-conf . "Återse %#1s till möte: ")
-    (unread-by-whom . "Oläsmarkera %#1s av vem: ")
-    (unread-to-conf . "Oläsmarkera %#1s till möte: ")
+    (review-by-whom . "Återse %#1s %#2?b%[%#2s %]%[%]av vem: ")
+    (review-to-conf . "Återse %#1s %#2?b%[%#2s %]%[%]till möte: ")
+    (unread-by-whom . "Oläsmarkera %#1s %#2?b%[%#2s %]%[%]av vem: ")
+    (unread-to-conf . "Oläsmarkera %#1s %#2?b%[%#2s %]%[%]till möte: ")
     (all-confs . "alla möten")
 
-    (unread-info-by-to . "Oläsmarkera %#1s av %#2P till %#3M.\n")
-    (unread-more-info-by-to . "Oläsmarkera %#1s av %#2P till %#3M.\n")
+    (unread-info-by-to . "Oläsmarkera %#1s %#4?b%[%#4s %]%[%]av %#2P till %#3M.\n")
+    (unread-more-info-by-to . "Oläsmarkera %#1s %#4?b%[%#4s %]%[%]av %#2P till %#3M.\n")
     (unread-rest . "resten")
     (unread-more . "nästa %#1d")
 
-    (review-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
-    (review-more-info-by-to . "Återse %#1s av %#2P till %#3M framåt.\n")
+    (review-info-by-to . "Återse %#1s  %#4?b%[%#4s %]%[%]av %#2P till %#3M.\n")
+    (review-more-info-by-to . "Återse %#1s %#4?b%[%#4s %]%[%]av %#2P till %#3M.\n")
+    (review-filter-roots . "urinlägg")
+
     (review-rest . "resten")
     (review-more . "nästa %#1d")
     (you-review . "Du återser nu %#1s.\n")
@@ -2272,9 +2276,12 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-review-next          . "Återse nästa")
     (kom-find-root	      . "Återse urinlägget")
     (kom-review-by-to         . "Återse senaste")
+    (kom-review-roots-by-to   . "Återse senaste urinlägg")
     (kom-review-more          . "Återse fler inlägg")
     (kom-review-first         . "Återse första")
+    (kom-review-first-roots   . "Återse första urinlägg")
     (kom-review-all           . "Återse alla")
+    (kom-review-all-roots     . "Återse alla urinlägg")
     (kom-view-commented-text  . "Återse det kommenterade")
     (kom-view-previous-commented-text
      			      . "Återse det föregående kommenterade")
@@ -2414,6 +2421,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-copy-options         . "Kopiera inställningar")
     (kom-mark-unread          . "Oläsmarkera inlägg")
     (kom-unread-by-to         . "Oläsmarkera senaste")
+    (kom-unread-roots-by-to   . "Oläsmarkera senaste urinlägg")
     (kom-unread-more          . "Oläsmarkera fler inlägg")
     (kom-unread-commented-text . "Oläsmarkera det kommenterade")
     (kom-unread-previous-commented-text . "Oläsmarkera det föregående kommenterade")
@@ -2424,7 +2432,9 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-unread-last-normally-read
      			      . "Oläsmarkera igen")
     (kom-unread-all           . "Oläsmarkera alla")
+    (kom-unread-all-roots     . "Oläsmarkera alla urinlägg")
     (kom-unread-first         . "Oläsmarkera första")
+    (kom-unread-first-roots   . "Oläsmarkera första urinlägg")
     (kom-unread-presentation  . "Oläsmarkera presentation")
     (kom-unread-server-faq    . "Oläsmarkera server-FAQ")
     (kom-unread-faq           . "Oläsmarkera FAQ")
@@ -2774,6 +2784,7 @@ Nuvarande rättigheter för %#1P (%#1p):
 
   (define-key lyskom-sv-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
   (define-key lyskom-sv-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
+  (define-key lyskom-sv-mode-map (kbd "M-u") 'kom-toggle-topic-prefix)
 
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2)) 'kom-mouse-null)
   (define-key lyskom-sv-mode-map (kbd (lyskom-keys 'button2up)) 'kom-button-click)
@@ -2928,10 +2939,12 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-unread-prefix (kbd "r") 'kom-unread-root)
   (define-key lyskom-sv-unread-prefix (kbd "u") 'kom-unread-root)
   (define-key lyskom-sv-unread-prefix (kbd "s") 'kom-unread-by-to)
+  (define-key lyskom-sv-unread-prefix (kbd "S") 'kom-unread-roots-by-to)
   (define-key lyskom-sv-unread-prefix (kbd "y") 'kom-unread-more)
   (define-key lyskom-sv-unread-prefix (kbd "t") 'kom-unread-root-review)
-  (define-key lyskom-sv-unread-prefix (kbd "A") 'kom-unread-all)
+  (define-key lyskom-sv-unread-prefix (kbd "A") 'kom-unread-all-roots)
   (define-key lyskom-sv-unread-prefix (kbd "f") 'kom-unread-first)
+  (define-key lyskom-sv-unread-prefix (kbd "F") 'kom-unread-first-roots)
   (define-key lyskom-sv-unread-prefix (kbd "p") 'kom-unread-presentation)
   (define-key lyskom-sv-unread-prefix (kbd "q") 'kom-unread-faq)
   (define-key lyskom-sv-unread-prefix (kbd "Q") 'kom-unread-server-faq)
@@ -2966,9 +2979,11 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-review-prefix (kbd "r") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "u") 'kom-find-root)
   (define-key lyskom-sv-review-prefix (kbd "s") 'kom-review-by-to)
+  (define-key lyskom-sv-review-prefix (kbd "S") 'kom-review-roots-by-to)
   (define-key lyskom-sv-review-prefix (kbd "y") 'kom-review-more)
-  (define-key lyskom-sv-review-prefix (kbd "A") 'kom-review-all)
+  (define-key lyskom-sv-review-prefix (kbd "A") 'kom-review-all-roots)
   (define-key lyskom-sv-review-prefix (kbd "f") 'kom-review-first)
+  (define-key lyskom-sv-review-prefix (kbd "F") 'kom-review-first-roots)
   (define-key lyskom-sv-review-prefix (kbd "l") 'kom-review-stack)
   (define-key lyskom-sv-review-prefix (kbd "p") 'kom-review-presentation)
   (define-key lyskom-sv-review-prefix (kbd "t") 'kom-find-root-review)
@@ -4032,13 +4047,37 @@ ta fram menyer.")
   även att visas som om man hade skickat det manuellt.")
 
     (kom-friends-doc . "\
-  Namnen på personerna i denna lista kommer att visas med ett speciellt 
-  utseende i LysKOM-bufferten. Kommandot Vilka vänner är inloggade (och
-  andra liknande kommandon) använder också denna lista.")
+  Namnen på personerna i denna lista kan visas med ett speciellt utseende
+  i LysKOM-bufferten. Kommandot Vilka vänner är inloggade (och andra
+  liknande kommandon) använder också denna lista.")
 
     (kom-morons-doc . "\
-  Namnen på personerna i denna lista kommer att visas med ett varnande 
+  Namnen på personerna i denna lista kan visas med ett varnande 
   utseende i LysKOM-bufferten.")
+
+    (kom-person-list-1-doc . "\
+  Den här listan har ingen förutbestämd betydelse, utan kan användas för
+  att ställa in att personerna ska visas med ett speciellt utseende (se
+  kom-highlight-conferences) eller för att konfigurera in- och utloggningar
+  (se kom-presence-messages-in-buffer) med mera.")
+
+    (kom-person-list-2-doc . "\
+  Den här listan har ingen förutbestämd betydelse, utan kan användas för
+  att ställa in att personerna ska visas med ett speciellt utseende (se
+  kom-highlight-conferences) eller för att konfigurera in- och utloggningar
+  (se kom-presence-messages-in-buffer) med mera.")
+
+    (kom-person-list-3-doc . "\
+  Den här listan har ingen förutbestämd betydelse, utan kan användas för
+  att ställa in att personerna ska visas med ett speciellt utseende (se
+  kom-highlight-conferences) eller för att konfigurera in- och utloggningar
+  (se kom-presence-messages-in-buffer) med mera.")
+
+    (kom-person-list-4-doc . "\
+  Den här listan har ingen förutbestämd betydelse, utan kan användas för
+  att ställa in att personerna ska visas med ett speciellt utseende (se
+  kom-highlight-conferences) eller för att konfigurera in- och utloggningar
+  (se kom-presence-messages-in-buffer) med mera.")
 
     (kom-url-viewer-preferences-doc . "\
   Denna inställning bestämmer vilken WWW-läsare som i första hand skall 
@@ -4637,6 +4676,10 @@ ta fram menyer.")
     (kom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
     (kom-friends-tag . "Vänner och bekanta:")
     (kom-morons-tag . "Idioter och knäppskallar:")
+    (kom-person-list-1-tag . "Personlista (1):")
+    (kom-person-list-2-tag . "Personlista (1):")
+    (kom-person-list-3-tag . "Personlista (1):")
+    (kom-person-list-4-tag . "Personlista (1):")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-windows-browser-command-tag . "Kommando för att starta en WWW-läsare i Windows:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")

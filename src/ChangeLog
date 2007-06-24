@@ -1,5 +1,42 @@
 2007-06-24    <David Byers@GULAG>
 
+	Fix bug 1143:
+	* review.el (lyskom-last-review-filter): New variable.
+	(kom-review-all-roots): New command.
+	(kom-unread-all-roots): New command.
+	(kom-review-more): Use saved filter when getting more texts.
+	(kom-unread-more): Use saved filter when getting more texts.
+	(kom-review-first-roots): New command.
+	(kom-unread-first-roots): New command.
+	(kom-review-roots-by-to): New command.
+	(lyskom-review-by-to): New filter argument. Get default filter
+	from global variable. Pass filter on to other functions.
+	(kom-unread-roots-by-to): New command.
+	(lyskom-unread-by-to): New filter argument. Get default filter
+	from global variable. Pass filter on to other commands.
+	(lyskom-get-texts-by-to): New filter argument. Pass to sub
+	functions and use in predicate for lyskom-get-texts-by-generic.
+	(lyskom-get-texts-by): New filter argument. Pass filter to
+	lyskom-get-texts-by-generic.
+	(lyskom-get-texts-by-and-to): New argument filter.
+	(lyskom-get-texts-globally): New argument filter.
+	(lyskom-get-texts-to): New argument filter.
+	(lyskom-get-letters-to): New argument filter.
+
+	* utilities.el (lyskom-set-connection-time-format): Use
+	make-local-variable instead of make-variable-buffer-local.
+
+	* view-mode.el (lyskom-view-base-mode): Use make-local-variable
+	instead of make-variable-buffer-local.
+
+	* vars.el.in (kom-unread-mode-line-type): Make this server-stored.
+
+	* compatibility.el: Don't defvar enable-multibyte-characters
+	unless it's unbound.
+
+	* english-strings.el,swedish-strings.el (lyskom-sv-mode-map):
+	Rebound ÂA from kom-review-all to kom-review-all-roots.
+
 	Fix bug 673:
 	* async.el (lyskom-show-personal-message): Don't run
 	lyskom-personal-message-hook.

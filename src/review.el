@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.66 2007-06-09 11:04:54 byers Exp $
+;;;;; $Id: review.el,v 44.67 2007-06-24 14:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.66 2007-06-09 11:04:54 byers Exp $\n"))
+	      "$Id: review.el,v 44.67 2007-06-24 14:07:44 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -59,6 +59,7 @@
 (def-kom-var lyskom-last-review-num nil local)
 (def-kom-var lyskom-last-review-pmark nil local)
 (def-kom-var lyskom-last-review-cmark nil local)
+(def-kom-var lyskom-last-review-filter nil local)
 (def-kom-var lyskom-last-review-saved-result-list nil local)
 (def-kom-var lyskom-last-review-saved-by-list nil local)
 (def-kom-var lyskom-last-review-saved-to-list nil local)
@@ -73,6 +74,7 @@
 (def-kom-var lyskom-last-unread-num nil local)
 (def-kom-var lyskom-last-unread-pmark nil local)
 (def-kom-var lyskom-last-unread-cmark nil local)
+(def-kom-var lyskom-last-unread-filter nil local)
 (def-kom-var lyskom-last-unread-saved-result-list nil local)
 (def-kom-var lyskom-last-unread-saved-by-list nil local)
 (def-kom-var lyskom-last-unread-saved-to-list nil local)
@@ -80,6 +82,9 @@
 (def-kom-var lyskom-last-unread-saved-smallest nil local)
 (def-kom-var lyskom-last-unread-saved-largest nil local)
 (def-kom-var lyskom-have-unread nil local)
+
+(defvar lyskom-default-review-filter nil
+  "Default filter for reviewing texts")
 
 
 (defun lyskom-remove-zeroes (a)
@@ -120,6 +125,18 @@ kom-review-marks-texts-as-read toggled."
     (when (commandp command)
       (call-interactively command))))
 
+;; (defun kom-toggle-topic-prefix ()
+;;   "Read one key sequence and run one command with the review
+;; filter set to only show texts that are not comments."
+;;   (interactive)
+;;   (let* ((lyskom-default-review-filter 'lyskom-review-filter-roots)
+;; 	 (sequence (read-key-sequence
+;; 		    (format "%s: " "Enbart urinlägg")))
+;; 	 (command (lookup-key (current-local-map) sequence)))
+;;     (when (commandp command)
+;;       (call-interactively command))))
+
+
 
 ;;; ================================================================
 ;;;              ]terse av, till - Review by X to Conference Y.
@@ -139,6 +156,18 @@ all review-related functions."
   (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to 0))
 
+(def-kom-command kom-review-all-roots ()
+  "Review all texts that are not comments written by a particular
+author to a particular conference. This can also be accomplished
+by using `kom-review-roots-by-to' and specifying zero texts.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-as-read' for information on settings that affect
+all review-related functions."
+  (interactive)
+  (lyskom-tell-internat 'kom-tell-review)
+  (lyskom-review-by-to 0 'lyskom-review-filter-roots))
+
 (def-kom-command kom-unread-all ()
   "Mark all texts written by a particular author to a particular
 conference as unread. This can also be accomplished by using
@@ -146,6 +175,13 @@ conference as unread. This can also be accomplished by using
   (interactive)
   (lyskom-unread-by-to 0))
 
+(def-kom-command kom-unread-all-roots ()
+  "Mark all texts that are not comments written by a particular
+author to a particular conference as unread. This can also be
+accomplished by using `kom-unread-roots-by-to' and specifying
+zero texts."
+  (interactive)
+  (lyskom-unread-by-to 0 'lyskom-review-filter-roots))
 
 (def-kom-command kom-review-more (count)
   "Review more texts using the same critera as the last review
@@ -173,7 +209,8 @@ all review-related functions."
                                (lyskom-format (lyskom-get-string 'review-more)
                                               count)))))
            (by lyskom-last-review-by)
-           (to lyskom-last-review-to))
+           (to lyskom-last-review-to)
+	   (filter lyskom-last-review-filter))
 
       (lyskom-format-insert 'review-more-info-by-to
                             info
@@ -182,10 +219,12 @@ all review-related functions."
                               by)
                             (if (zerop to)
                                 (lyskom-get-string 'all-confs)
-                              to))
+                              to)
+			    (when filter
+			      (funcall filter 'description)))
     
       (condition-case arg
-          (let ((list (lyskom-get-texts-by-to by to count t)))
+          (let ((list (lyskom-get-texts-by-to by to count t nil filter)))
             (setq lyskom-last-review-num 
                   (if (< lyskom-last-review-num 0)
                       (- count)
@@ -224,7 +263,8 @@ mark unread performed with `kom-unread-by-to'."
                                (lyskom-format (lyskom-get-string 'unread-more)
                                               count)))))
            (by lyskom-last-unread-by)
-           (to lyskom-last-unread-to))
+           (to lyskom-last-unread-to)
+	   (filter lyskom-last-review-filter))
 
       (lyskom-format-insert 'unread-more-info-by-to
                             info
@@ -233,10 +273,12 @@ mark unread performed with `kom-unread-by-to'."
                               by)
                             (if (zerop to)
                                 (lyskom-get-string 'all-confs)
-                              to))
+                              to)
+			    (when filter
+			      (funcall filter 'description)))
     
       (condition-case arg
-          (let ((list (lyskom-get-texts-by-to by to count t t)))
+          (let ((list (lyskom-get-texts-by-to by to count t t filter)))
             (setq lyskom-last-unread-num 
                   (if (< lyskom-last-unread-num 0)
                       (- count)
@@ -266,10 +308,28 @@ See `kom-review-uses-cache', `kom-review-priority' and
 `kom-review-marks-texts-as-read' for information on settings that affect
 all review-related functions."
   (interactive "P")
-  (lyskom-tell-internat 'kom-tell-review)
   (lyskom-review-by-to (- (or count
                            (lyskom-read-number
                             (lyskom-get-string 'review-how-many) 1)))))
+
+(def-kom-command kom-review-first-roots (&optional count)
+
+  "Review the first N texts that are not comments written by a
+particular author to some conference. With no author specified,
+review texts by all authors. With zero texts specified, review
+all text. With no conference specified, review texts to all
+conferences. With a negative number of texts, review the last N
+texts instead of the first (you can use `kom-review-roots-by-to'
+instead.
+
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-as-read' for information on settings that affect
+all review-related functions."
+  (interactive "P")
+  (lyskom-review-by-to (- (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'review-how-many-roots) 1)))
+		       'lyskom-review-filter-roots))
 
 (def-kom-command kom-unread-first (&optional count)
   "Mark the first N texts written by a particular author to some
@@ -283,11 +343,25 @@ texts, review the last N texts instead of the first (you can use
                            (lyskom-read-number
                             (lyskom-get-string 'unread-how-many) 1)))))
 
+(def-kom-command kom-unread-first-roots (&optional count)
+  "Mark the first N texts that are not comments written by a
+particular author to some conference as unread. With no author
+specified, review texts by all authors. With zero texts
+specified, review all text. With no conference specified, review
+texts to all conferences. With a negative number of texts, review
+the last N texts instead of the first (you can use
+`kom-unread-roots-by-to' instead."
+  (interactive "P")
+  (lyskom-unread-by-to (- (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'unread-how-many-roots) 1)))
+		       'lyskom-review-filter-roots))
+
 
 (def-kom-command kom-review-by-to (&optional count)
   "Review the last N texts written by a particular author to some
 conference. With no author specified, review texts by all authors.
-With zero texts specified, review all text. With no conference
+With zero texts specified, review all texts. With no conference
 specified, review texts to all conferences. With a negative number of
 texts, review the last N texts instead of the first (you can use
 `kom-review-first' instead.
@@ -299,11 +373,27 @@ all review-related functions."
   (lyskom-review-by-to (or count
                            (lyskom-read-number
                             (lyskom-get-string 'review-how-many) 1))))
-  
 
+(def-kom-command kom-review-roots-by-to (&optional count)
+  "Review the last N texts, excluding comments, written by a particular
+author to some conference. With no author specified, review texts by all
+authors. With zero texts specified, review all texts. With no conference
+specified, review texts to all conferences. With a negative number of
+texts, review the last N texts instead of the first (you can use
+`kom-review-first-roots' instead.
 
-(defun lyskom-review-by-to (count)
+See `kom-review-uses-cache', `kom-review-priority' and
+`kom-review-marks-texts-as-read' for information on settings that affect
+all review-related functions."
+  (interactive "P")
+  (lyskom-review-by-to (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'review-how-many-roots) 1))
+		       'lyskom-review-filter-roots))
+
+(defun lyskom-review-by-to (count &optional filter)
   "Common function for kom-review-by-to and kom-review-first"
+  (setq filter (or filter lyskom-default-review-filter))
   (let* ((info (progn (if (and (listp count)
                                (integerp (car count))
                                (null (cdr count)))
@@ -316,10 +406,12 @@ all review-related functions."
                             ((< count 0)
                              (lyskom-format 'first-n
                                             (- count))))))
-         (by (lyskom-read-conf-no `(review-by-whom ,info)
-                                  '(pers) t nil t))
-         (to (lyskom-read-conf-no `(review-to-conf ,info)
-                                  '(all) t nil t)))
+         (by (lyskom-read-conf-no
+	      `(review-by-whom ,info ,(and filter (funcall filter 'description)))
+	      '(pers) t nil t))
+         (to (lyskom-read-conf-no
+	      `(review-to-conf ,info ,(and filter (funcall filter 'description)))
+	      '(all) t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
@@ -333,13 +425,16 @@ all review-related functions."
                             by)
                           (if (zerop to)
                               (lyskom-get-string 'all-confs)
-                            to))
+                            to)
+			  (when filter
+			    (funcall filter 'description)))
 
     (setq lyskom-last-review-by by)
     (setq lyskom-last-review-to to)
     (setq lyskom-last-review-num count)
     (setq lyskom-last-review-pmark nil)
     (setq lyskom-last-review-cmark nil)
+    (setq lyskom-last-review-filter filter)
     (setq lyskom-last-review-saved-result-list nil)
     (setq lyskom-last-review-saved-by-list nil)
     (setq lyskom-last-review-saved-to-list nil)
@@ -349,7 +444,9 @@ all review-related functions."
     (setq lyskom-have-review 'lyskom-review-by-to)
 
     (condition-case arg
-        (let ((list (lyskom-get-texts-by-to by to count)))
+        (let ((list (lyskom-get-texts-by-to by to count 
+					    nil nil 
+					    filter)))
           (if list
               (lyskom-review-enter-read-info
                (lyskom-create-read-info
@@ -370,15 +467,32 @@ conference as unread. With no author specified, review texts by all
 authors. With zero texts specified, review all text. With no conference
 specified, review texts to all conferences. With a negative number of
 texts, review the last N texts instead of the first (you can use
-`kom-unread-first' instead."
+`kom-unread-first' instead)."
   (interactive "P")
   (lyskom-unread-by-to (or count
                            (lyskom-read-number
                             (lyskom-get-string 'unread-how-many) 1))))
+
+(def-kom-command kom-unread-roots-by-to (&optional count)
+  "Mark the last N texts, excluding comments, written by a
+particular author to some conference as unread. With no author
+specified, review texts by all authors. With zero texts
+specified, review all texts. With no conference specified, review
+texts to all conferences. With a negative number of texts, review
+the last N texts instead of the first (you can use
+`kom-unread-first-roots' instead)."
+  (interactive "P")
+  (lyskom-unread-by-to (or count
+                           (lyskom-read-number
+                            (lyskom-get-string 'unread-how-many-roots) 1))
+		       'lyskom-review-filter-roots))
   
 
-(defun lyskom-unread-by-to (count)
+  
+
+(defun lyskom-unread-by-to (count &optional filter)
   "Common function for kom-review-by-to and kom-review-first"
+  (setq filter (or filter lyskom-default-review-filter))
   (let* ((info (progn (if (and (listp count)
                                (integerp (car count))
                                (null (cdr count)))
@@ -391,10 +505,12 @@ texts, review the last N texts instead of the first (you can use
                             ((< count 0)
                              (lyskom-format 'first-n
                                             (- count))))))
-         (by (lyskom-read-conf-no `(unread-by-whom ,info)
-                                  '(pers) t nil t))
-         (to (lyskom-read-conf-no `(unread-to-conf ,info)
-                                  '(all) t nil t)))
+         (by (lyskom-read-conf-no 
+	      `(unread-by-whom ,info ,(and filter (funcall filter 'description)))
+	      '(pers) t nil t))
+         (to (lyskom-read-conf-no 
+	      `(unread-to-conf ,info ,(and filter (funcall filter 'description)))
+	      '(all) t nil t)))
 
     (if (not (zerop to))
         (cache-del-conf-stat to))
@@ -408,13 +524,16 @@ texts, review the last N texts instead of the first (you can use
                             by)
                           (if (zerop to)
                               (lyskom-get-string 'all-confs)
-                            to))
+                            to)
+			  (when filter
+			    (funcall filter 'description)))
 
     (setq lyskom-last-unread-by by)
     (setq lyskom-last-unread-to to)
     (setq lyskom-last-unread-num count)
     (setq lyskom-last-unread-pmark nil)
     (setq lyskom-last-unread-cmark nil)
+    (setq lyskom-last-unread-filter filter)
     (setq lyskom-last-unread-saved-result-list nil)
     (setq lyskom-last-unread-saved-by-list nil)
     (setq lyskom-last-unread-saved-to-list nil)
@@ -424,7 +543,9 @@ texts, review the last N texts instead of the first (you can use
     (setq lyskom-have-unread t)
 
     (condition-case arg
-        (let ((list (lyskom-get-texts-by-to by to count nil t)))
+        (let ((list (lyskom-get-texts-by-to by to count 
+					    nil t
+					    filter)))
           (if list
               (lyskom-traverse text-no list
                 (unless (lyskom-mark-unread text-no)
@@ -451,13 +572,22 @@ texts, review the last N texts instead of the first (you can use
 ;;;
 
 
-(defun lyskom-get-texts-by-to (by to num &optional again do-unread)
+(defun lyskom-get-texts-by-to (by to num &optional again do-unread filter)
   "Get NUM texts written by person number BY in conference number TO
+
+If optional argument AGAIN is non-nil, then repeat the last review.
+
+If optional argument DO-UNREAD is non-nil, this call is for
+marking texts unread, not reviewing them. If optional argument
+FILTER is non-nil, then only accept those texts for which
+FILTER (called with a text-no) returns non-nil.
+
 Args: BY TO NUM AGAIN DO-UNREAD"
   (cond ((and (zerop by) 
-              (zerop to)) (lyskom-get-texts-globally num again do-unread))
-        ((zerop to) (lyskom-get-texts-by by num again))
-        ((zerop by) (lyskom-get-texts-to to num again))
+              (zerop to)) (lyskom-get-texts-globally num again 
+						     do-unread filter))
+        ((zerop to) (lyskom-get-texts-by by num again nil filter))
+        ((zerop by) (lyskom-get-texts-to to num again nil filter))
         ((and (eq by lyskom-pers-no)
               (not (eq to by))
               (let ((conf (blocking-do 'get-conf-stat to)))
@@ -469,19 +599,20 @@ Args: BY TO NUM AGAIN DO-UNREAD"
                                          1))))))
          (lyskom-get-texts-by-generic 
           by num 
-          (function 
-           (lambda (x to)
-             (let ((found nil))
-               (lyskom-traverse misc (text-stat->misc-info-list x)
-                 (setq found 
-                       (or found
-                           (and (memq (misc-info->type misc)
-					lyskom-recpt-types-list)
-                                (eq (misc-info->recipient-no misc) to)))))
-               found)))
-          (list to)
+	  (lambda (x to filter)
+	    (let ((found nil))
+	      (and (or (null filter)
+		       (funcall filter x))
+		   (lyskom-traverse misc (text-stat->misc-info-list x)
+		     (setq found 
+			   (or found
+			       (and (memq (misc-info->type misc)
+					  lyskom-recpt-types-list)
+				    (eq (misc-info->recipient-no misc) to))))))
+	      found))
+          (list to filter)
           again))
-         (t (lyskom-get-texts-by-and-to by to num again))))
+         (t (lyskom-get-texts-by-and-to by to num again nil nil filter))))
 
 
 ;;; ============================================================
@@ -525,7 +656,7 @@ This function signals an error if review is impossible"
 ;;; Author: Per Cederquist, David Byers
 ;;;
 
-(defun lyskom-get-texts-globally (num &optional again do-unread)
+(defun lyskom-get-texts-globally (num &optional again do-unread filter)
   "Get the last NUM texts created in LysKOM. If AGAIN is non-nil, keep
 going from where we were before."
   (cond ((and again (null num))
@@ -543,14 +674,38 @@ going from where we were before."
                       (t (lyskom-maxint))))
         (op (if (< num 0)
                 'find-next-text-no
-              'find-previous-text-no)))
+              'find-previous-text-no))
+	(batch-size (abs num)))
 
-    (while (and (not (eq textno 0))
-                (not (null textno))
-                (< (length result) (abs num)))
-      (setq textno (blocking-do op textno))
-      (if textno
-          (setq result (cons textno result))))
+    ;; Get the texts in batches of how many we have left to get
+    ;; With the filter, this gets inefficient as we start getting
+    ;; close to the number of texts we want. 
+
+    (while (and (not (eq textno 0)) (not (null textno))
+		(< (length result) (abs num)))
+
+      ;; Inner loop to get a batch of texts
+
+      (let (batch)
+	(while (and (not (eq textno 0))
+		    (not (null textno))
+		    (< (length batch) batch-size))
+	  (setq textno (blocking-do op textno))
+	  (when textno (setq batch (cons textno batch))))
+	  
+	;; Now filter the results.
+
+	(setq batch (lyskom-review-filter-results batch filter))
+
+	;; We now have the batch (sometimes in reverse order), so we
+	;; put it onto the front of the result list. It would probably
+	;; be better to retain a reasonable batch size and save any
+	;; results not used, but the benefit is not obvious, and the
+	;; work required is...
+
+	(setq result (nconc batch result))
+	(setq batch-size (- (abs num) (length result)))))
+
     (setq lyskom-last-review-cmark textno)
     (if (< num 0)
         (nreverse result)
@@ -568,7 +723,8 @@ going from where we were before."
 ;;; +++ FIXME: This is just get-texts-by right now. Need to filter stuff.
 ;;;
 
-(defun lyskom-get-letters-to (persno recipient num &optional again pstart)
+(defun lyskom-get-letters-to (persno recipient num &optional again
+				     pstart filter)
   "Get NUM texts written by PERSNO. Args: persno num
 
 Cannot be called from a callback."
@@ -587,10 +743,8 @@ Cannot be called from a callback."
            (mark (cond (again lyskom-last-review-pmark)
                         ((and num (< num 0)) plow)
                         (t phigh)))
-           (collector nil)
            (found nil)
-           (start nil)
-           (data nil))
+           (start nil))
     
 
       (if (null num)
@@ -611,32 +765,26 @@ Cannot be called from a callback."
               (setq increment (- increment start))
               (setq start 0)))
       
-        (setq data (lyskom-remove-zeroes
-                    (listify-vector
-                     (map->text-nos
-                      (blocking-do 'get-created-texts
-                                   persno
-                                   start
-                                   increment)))))
+        (setq found (lyskom-remove-zeroes
+		     (listify-vector
+		      (map->text-nos
+		       (blocking-do 'get-created-texts
+				    persno
+				    start
+				    increment)))))
 
-        (setq collector (make-collector))
-        (mapcar
-         (function
-          (lambda (x)
-            (initiate-get-text-stat 
-             'main 
-             (function
-              (lambda (x collector pers-no)
-                (if (and x
-                         (lyskom-is-recipient x pers-no))
-                    (collector-push (text-stat->text-no x) collector))))
-             x
-             collector
-             recipient)))
-         data)
+        (let ((collector (make-collector)))
+	  (lyskom-traverse x found
+	    (initiate-get-text-stat 
+	     'main 
+	     (lambda (x collector pers-no pred)
+	       (if (and x (or (null pred) (funcall pred x))
+			(lyskom-is-recipient x pers-no))
+		   (collector-push (text-stat->text-no x) collector)))
+	     x collector recipient filter))
 
-        (lyskom-wait-queue 'main)
-        (setq found (nreverse (collector->value collector)))
+	  (lyskom-wait-queue 'main)
+	  (setq found (nreverse (collector->value collector))))
 
         (if (> num 0)
             (setq result (nconc found result)
@@ -724,7 +872,7 @@ Cannot be called from a callback."
 ;;;
 
 (defun lyskom-get-texts-by-and-to (persno confno num 
-                                          &optional again pstart cstart)
+                                          &optional again pstart cstart filter)
   "Get NUM texts written by person PERSNO with conference CONFNO as a
 recipient. If optional AGAIN is non-nil, continue from where we were.
 Args: persno confno num &optional again pstart cstart"
@@ -747,7 +895,7 @@ Args: persno confno num &optional again pstart cstart"
                                         (conf-stat->first-local-no confstat)
                                         1)))))
            (not (eq persno confno)))
-      (lyskom-get-letters-to persno confno num again pstart))
+      (lyskom-get-letters-to persno confno num again pstart filter))
 
      ;;
      ;; General case
@@ -835,9 +983,10 @@ Args: persno confno num &optional again pstart cstart"
           (setq result-list
                 (cons (apply 'nconc
                              (mapcar 
-                              (function
-                               (lambda (x)
-                                 (lyskom-intersection to x)))
+			      (lambda (x)
+				(lyskom-review-filter-results
+				 (lyskom-intersection to x)
+				 filter))
                               by-list))
                       result-list))
 
@@ -854,10 +1003,11 @@ Args: persno confno num &optional again pstart cstart"
           ;;
 
           (setq result-list
-                (lyskom-mapcar2 (function
-                                 (lambda (x y)
-                                   (lyskom-intersection y
-                                                        (nconc x by))))
+                (lyskom-mapcar2 (lambda (x y)
+				  (lyskom-review-filter-results
+				   (lyskom-intersection y
+							(nconc x by))
+				   filter))
                                 result-list
                                 to-list))
 
@@ -885,17 +1035,17 @@ Args: persno confno num &optional again pstart cstart"
                        (< cmark clow)))
               (setq smallest 
                     (apply 'min
-                           (mapcar (function (lambda (x)
-                                               (if x
-                                                   (apply 'min x)
-                                                 (lyskom-maxint))))
+                           (mapcar (lambda (x)
+				     (if x
+					 (apply 'min x)
+				       (lyskom-maxint)))
                                    to-list))
                     largest
                     (apply 'max
-                           (mapcar (function (lambda (x)
-                                               (if x
-                                                   (apply 'max x)
-                                                 -1)))
+                           (mapcar (lambda (x)
+				     (if x
+					 (apply 'max x)
+				       -1))
                                    to-list))))
 
 
@@ -961,11 +1111,11 @@ Args: persno confno num &optional again pstart cstart"
 ;;; are not readable, hence the added complexity in that function.
 ;;;
 
-(defun lyskom-get-texts-by (persno num &optional again pstart)
+(defun lyskom-get-texts-by (persno num &optional again pstart filter)
   "Get NUM texts written by PERSNO. Args: persno num"
   (let* ((persstat (blocking-do 'get-pers-stat persno)))
     (lyskom-check-review-access t persstat)
-    (lyskom-get-texts-by-generic persno num nil nil again pstart)))
+    (lyskom-get-texts-by-generic persno num filter nil again pstart)))
 
 (defun lyskom-get-texts-by-generic (persno num pred args 
                                            &optional again pstart)
@@ -989,8 +1139,7 @@ Cannot be called from a callback."
                         (t phigh)))
            (collector nil)
            (found nil)
-           (start nil)
-           (data nil))
+           (start nil))
     
 
       (if (null num)
@@ -1011,35 +1160,28 @@ Cannot be called from a callback."
               (setq increment (- increment start))
               (setq start 0)))
       
-        (setq data (delq user-area
-                         (lyskom-remove-zeroes
-                          (listify-vector
-                           (map->text-nos
-                            (blocking-do 'get-created-texts
-                                         persno
-                                         start
-                                         increment))))))
+        (setq found (delq user-area
+			  (lyskom-remove-zeroes
+			   (listify-vector
+			    (map->text-nos
+			     (blocking-do 'get-created-texts
+					  persno
+					  start
+					  increment))))))
 
-        (setq collector (make-collector))
-        (mapcar
-         (function
-          (lambda (x)
-            (initiate-get-text-stat 'main 
-                                    (function
-                                     (lambda (x collector pred args)
-                                       (when (and x
-                                                  (or (null pred)
-                                                      (apply pred
-                                                             x
-                                                             args)))
-                                           (collector-push 
-                                            (text-stat->text-no x)
-                                            collector))))
-                                    x collector pred args)))
-         data)
+	(when pred
+	  (let ((collector (make-collector)))
+	    (lyskom-traverse x found
+	      (initiate-get-text-stat 'main 
+				      (lambda (x collector pred args)
+					(when (and x (apply pred x args))
+					  (collector-push 
+					   (text-stat->text-no x)
+					   collector)))
+				      x collector pred args))
 
-        (lyskom-wait-queue 'main)
-        (setq found (nreverse (collector->value collector)))
+	    (lyskom-wait-queue 'main)
+	    (setq found (nreverse (collector->value collector)))))
 
         (if (> num 0)
             (setq result (nconc found result)
@@ -1062,8 +1204,13 @@ Cannot be called from a callback."
                 (nthcdr (- num) result))
           (lyskom-nfirst (- num)  result))))))
 
-(defun lyskom-get-texts-to (confno num &optional again cstart)
-  "From CONFNO get NUM texts."
+(defun lyskom-get-texts-to (confno num &optional again cstart filter)
+  "From CONFNO get NUM texts.
+
+If optional AGAIN is non-nil, repeat last review. If optional CSTART
+is non-nil, then start from that local number. If optional FILTER
+is non-nil, then only retrieve those texts for which FILTER (called 
+with the text-stat) returns non-nil."
   (let ((confstat (blocking-do 'get-conf-stat confno)))
 
     (lyskom-check-review-access confstat t)
@@ -1107,6 +1254,20 @@ Cannot be called from a callback."
                                      confno
                                      start
                                      increment))))))
+	  (when filter
+	    (let ((collector (make-collector)))
+	      (lyskom-traverse x found
+		(initiate-get-text-stat 'main
+					(lambda (x collector pred)
+					  (when (and x (funcall pred x))
+					    (collector-push
+					     (text-stat->text-no x)
+					     collector)))
+					x collector filter))
+	      (lyskom-wait-queue 'main)
+	      (setq found (nreverse (collector->value collector)))))
+					
+
           (if (> num 0)
               (setq result (nconc found result)
                     mark (- mark increment)
@@ -1469,23 +1630,22 @@ all review-related functions."
   (interactive)
   (if (read-list->all-entries lyskom-reading-list)
       (mapcar
-       (function
-        (lambda (info)
-          (let ((un (text-list->length (read-info->text-list info)))
-                (type (read-info->type info))
-                (cto (read-info->comm-to info))
-                (conf (read-info->conf-stat info)))
-            (cond
-             ((eq type 'COMM-IN)
-              (lyskom-format-insert 'view-many-comments cto un))
-             ((eq type 'CONF)
-              (lyskom-format-insert 'view-texts-in-conf un conf))
-             ((eq type 'REVIEW)
-              (lyskom-format-insert 'review-n-texts un))
-             ((eq type 'REVIEW-TREE)
-              (lyskom-format-insert 'review-many-comments cto un))
-             ((eq type 'REVIEW-MARK)
-              (lyskom-format-insert 'review-marked un))))))
+       (lambda (info)
+	 (let ((un (text-list->length (read-info->text-list info)))
+	       (type (read-info->type info))
+	       (cto (read-info->comm-to info))
+	       (conf (read-info->conf-stat info)))
+	   (cond
+	    ((eq type 'COMM-IN)
+	     (lyskom-format-insert 'view-many-comments cto un))
+	    ((eq type 'CONF)
+	     (lyskom-format-insert 'view-texts-in-conf un conf))
+	    ((eq type 'REVIEW)
+	     (lyskom-format-insert 'review-n-texts un))
+	    ((eq type 'REVIEW-TREE)
+	     (lyskom-format-insert 'review-many-comments cto un))
+	    ((eq type 'REVIEW-MARK)
+	     (lyskom-format-insert 'review-marked un)))))
        (read-list->all-entries lyskom-reading-list))
     (cond (lyskom-current-conf 
            (lyskom-format-insert 'you-have-no-unreads lyskom-current-conf))
@@ -1587,12 +1747,11 @@ all review-related functions."
                                        'COMM-IN misc-info-list))))
              (all-text-nos (and misc-infos
                                 (mapcar
-                                 (function
-                                  (lambda (misc-info)
-                                    (if (equal (misc-info->type misc-info)
-                                               'COMM-IN)
-                                        (misc-info->comm-in misc-info)
-                                      (misc-info->footn-in misc-info))))
+				 (lambda (misc-info)
+				   (if (equal (misc-info->type misc-info)
+					      'COMM-IN)
+				       (misc-info->comm-in misc-info)
+				     (misc-info->footn-in misc-info)))
                                  misc-infos))))
         ;; Only try to review texts that we can read.
         (while all-text-nos
@@ -1843,29 +2002,29 @@ This command accepts text number prefix arguments \(see
   (read-list-enter-read-info read-info lyskom-reading-list before)
   (read-list-enter-read-info read-info lyskom-to-do-list before))
 
-;;; ============================================================
-;;;         Återse senaste dagarnas inlägg
-;;;
-;;; Author: Up for grabs
 
-;;;
-;;; Algorithm:
-;;;
-;;; Binärsökning i mappen efter inlägg med rätt datum.
-;;;
-;;; Utilityfunktioner: Beräkna diff i dagar mellan två datum.
-;;;                    Subtrahera n dagar från ett datum.
-;;;
-;;; Användarkommandot: Återse N inlägg av person X till Y från DATE
-;;;                    
-;;; Hitta index i X och Y där det sökta datumet börjar
-;;; Låt de vanliga återsefunktionerna accepter cmin och pmin som
-;;; parametrar så de kan söka igenom en del av en map.
-;;;
-;;; Problem med binärsökning i mapparna är hålen. Det finns risk att
-;;; man försöker binärsöka bland en massa nollor, och det lär ta tid.
-;;; I de fallen får man nog göra get-next-text eller get-previous-text
-;;; för att få ett riktigt textnummer att titta på. Risk: att man
-;;; tittar på samma text två gånger och går i loop.
-;;;
+(defun lyskom-review-filter-roots (text-stat)
+  "Return non-nil if TEXT-STATE is a comment"
+  (cond ((lyskom-text-stat-p text-stat)
+	 (not (lyskom-traverse misc (text-stat->misc-info-list text-stat)
+		(when (memq (misc-info->type misc)
+			    '(COMM-TO FOOTN-TO))
+		  (lyskom-traverse-break t)))))
+	((eq text-stat 'description)
+	 (lyskom-get-string 'review-filter-roots))))
 
+(defun lyskom-review-filter-results (results filter)
+  "Filter review RESULTS according to FILTER"
+  (if filter
+      (let ((collector (make-collector)))
+	(lyskom-traverse x results
+	  (initiate-get-text-stat 'main
+				  (lambda (x collector pred)
+				    (when (and x (funcall pred x))
+				      (collector-push
+				       (text-stat->text-no x)
+				       collector)))
+				  x collector filter))
+	(lyskom-wait-queue 'main)
+	(nreverse (collector->value collector)))
+    results))

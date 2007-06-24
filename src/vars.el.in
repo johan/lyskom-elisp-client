@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.325 2007-06-24 09:33:27 byers Exp $
+;;;;; $Id: vars.el.in,v 44.326 2007-06-24 14:07:44 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.325 2007-06-24 09:33:27 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.326 2007-06-24 14:07:44 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -283,30 +283,60 @@ the priority among links that match the same text is undefined."
                                    lyskom-default-conference-empty)))
                       (review-to-conf))
 
+    (kom-review-roots-by-to (review-by-whom
+			     (default . (lyskom-default-conference-at-point
+					 lyskom-default-conference-empty)))
+			    (review-to-conf))
+
     (kom-review-first (review-by-whom
                        (default . (lyskom-default-conference-at-point
                                    lyskom-default-conference-empty)))
                       (review-to-conf))
+
+    (kom-review-first-roots (review-by-whom
+			     (default . (lyskom-default-conference-at-point
+					 lyskom-default-conference-empty)))
+			    (review-to-conf))
 
     (kom-review-all (review-by-whom
                      (default . (lyskom-default-conference-at-point
                                  lyskom-default-conference-empty)))
                     (review-to-conf))
 
+    (kom-review-all-roots (review-by-whom
+			   (default . (lyskom-default-conference-at-point
+				       lyskom-default-conference-empty)))
+			  (review-to-conf))
+
     (kom-unread-by-to (unread-by-whom
                        (default . (lyskom-default-conference-at-point
                                    lyskom-default-conference-empty)))
                       (unread-to-conf))
+
+    (kom-unread-roots-by-to (unread-by-whom
+			     (default . (lyskom-default-conference-at-point
+					 lyskom-default-conference-empty)))
+			    (unread-to-conf))
 
     (kom-unread-first (unread-by-whom
                       (default . (lyskom-default-conference-at-point
                                   lyskom-default-conference-empty)))
                       (unread-to-conf))
 
+    (kom-unread-first-roots (unread-by-whom
+			     (default . (lyskom-default-conference-at-point
+					 lyskom-default-conference-empty)))
+			    (unread-to-conf))
+
     (kom-unread-all (unread-by-whom 
                      (default . (lyskom-default-conference-at-point
                                  lyskom-default-conference-empty)))
                     (unread-to-conf))
+
+    (kom-unread-all-roots (unread-by-whom 
+			   (default . (lyskom-default-conference-at-point
+				       lyskom-default-conference-empty)))
+			  (unread-to-conf))
 
     (kom-set-permitted-submitters (conf-to-set-permitted-submitters-q)
                                   (new-permitted-submitters-q
@@ -1519,6 +1549,7 @@ name or (if the session name is in upper case already) surrounding it
 with asterisks.
 
 All other values are reserved for future use."
+  server
   )
 
 
@@ -3573,9 +3604,12 @@ Users are encouraged to use their best sense of humor."
     kom-review-next
     kom-find-root
     kom-review-by-to
+    kom-review-roots-by-to
     kom-review-more
     kom-review-first
+    kom-review-first-roots
     kom-review-all
+    kom-review-all-roots
     kom-view-commented-text
     kom-view-previous-commented-text
     kom-review-stack
@@ -3711,6 +3745,7 @@ Users are encouraged to use their best sense of humor."
     kom-copy-options
     kom-mark-unread
     kom-unread-by-to
+    kom-unread-roots-by-to
     kom-unread-last-normally-read
     kom-unread-root-review
     kom-unread-root
@@ -3720,7 +3755,9 @@ Users are encouraged to use their best sense of humor."
     kom-unread-commented-text
     kom-unread-more
     kom-unread-all
+    kom-unread-all-roots
     kom-unread-first
+    kom-unread-first-roots
     kom-unread-all-marked-texts
     kom-unread-marked-texts
     kom-unread-faq

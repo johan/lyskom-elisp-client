@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.77 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: compatibility.el,v 44.78 2007-06-24 14:07:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.77 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.78 2007-06-24 14:07:43 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -212,7 +212,9 @@ KEYS should be a string in the format used for saving keyboard macros
 ;;; we could code using the standard names. We don't do that any
 ;;; more. Instead, we define aliases in our own namespace.
 
-(defvar enable-multibyte-characters nil)
+(unless (boundp 'enable-multibyte-characters)
+  (defvar enable-multibyte-characters nil))
+
 (lyskom-function-alias set-buffer-multibyte (arg)
   (put 'enable-multibyte-characters 'permanent-local t)
   (make-local-variable 'enable-multibyte-characters)
