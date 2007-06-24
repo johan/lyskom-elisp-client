@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.410 2007-06-24 06:18:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.411 2007-06-24 09:08:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.410 2007-06-24 06:18:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.411 2007-06-24 09:08:31 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1116,7 +1116,7 @@ Annat se \\[describe-mode] ---")
     ;; From async.el:
 
     (name-has-changed-to-name . "%#1:P har nu bytt namn till %#2:P")
-    (name-has-changed-to-name-r . "%[%#3@%#1:P%] har nu bytt namn till %[%#3@%#2:P%]\n")
+    (name-has-changed-to-name-r . "%#4@%[%#3@%#1:P%] har nu bytt namn till %[%#3@%#2:P%]\n")
     (you-changed-name-to . "Nu har du bytt namn till %[%#2@%#1:P%].\n")
     (database-sync . "Databasen synkas.")
 
@@ -1134,7 +1134,7 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
 ===============================================================================
 ")
     (has-entered . "Nu har %#1:P gått in i %#2s.")
-    (has-entered-r . "%#2@Nu har %#1P gått in i %#3s (%#4s %#5s).\n")
+    (has-entered-r . "%#2@Nu har %#1P gått in i %#3s%#6?b%[ från %#6s%]%[%]%#4?b%[ (%#4s %#5s)%]%[%].\n")
     (has-left . "Nu har %#1:P gått ur %#2s.")
     (has-left-r . "%#2@Nu har %#1P gått ur %#3s (%#4s %#5s).\n")
     (Unknown . "Okänd")

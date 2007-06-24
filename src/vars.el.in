@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.323 2007-06-12 17:07:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.324 2007-06-24 09:08:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.323 2007-06-12 17:07:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.324 2007-06-24 09:08:32 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1436,19 +1436,75 @@ If non-nil, LysKOM prints continuous info about what other people
 are doing. Info is printed on the echo area and never in the buffer.
 If minibuffer is used, no message is printed.
 
-A list of integers means show messages for those users.
+The value `t' means show messages for everyone.
 
-The value `friends' means show messages for the users in `kom-friends'.
+A list is treated as an `indirect association list', and is the
+most flexible way to configure this variable. When a user logs
+in, the person's number is matched against the list, and if the
+value of the match is non-nil, a message is shown. The matching
+rules are as follows:
 
-The value `morons' means show messages for the users in `kom-morons'.
+  Element           Meaning
+  ------------------------------------------------------------------
+  `ATOM'            Matches with the default value if ATOM equals 
+                    the person number (this means that you can set 
+                    this variable to a list of person numbers).
 
-The value `friends-and-morons' means show messages for the users in 
-`kom-friends' and `kom-morons'.
+  `(t . VAL)'       Matches with value VAL if no other match is 
+                    found.
+
+  `(FN . VAL)'      Matches with value VAL if FN is a function that
+                    returns non-nil when called with the person 
+                    number as its sole argument.
+
+  `(SYM . VAL)'     If SYM is bound to a list, match the person 
+                    number against that list using these rules. 
+                    VAL is used as the default value for the 
+                    matching process.
+
+  `(SYM . VAL)'     If SYM is not bound to a list, matches with 
+                    the value VAL if the value of SYM equals the
+                    person number.
+
+  `(LIST . VAL)'    Match the person number against LIST using
+                    these rules. VAL is used as the default value.
+
+  `(ATOM . VAL)'    Match with value VAL if ATOM equals the 
+                    person number.
+  ------------------------------------------------------------------
+
+For example, the value `((5 . nil) (kom-friends . t))' will show
+a message for every person listed in `kom-friends', except for
+person number 5.
+
+The following values work but are obsolete as they can be
+expressed by a list:
+
+The value `friends' means show messages for the users in
+`kom-friends'. Equivalent to the value `((kom-friends . t))
+
+The value `morons' means show messages for the users in
+`kom-morons'. Equivalent to `((kom-morons . t)).
+
+The value `friends-and-morons' means show messages for the users
+in `kom-friends' and `kom-morons'. Equivalent to the
+value `((kom-friends . t) (kom-morons . t))'.
 
 If you want the messages in the buffer, set the variable 
 `kom-presence-messages-in-buffer'.
 
 Values other than those listed are reserved for future use."
+  server)
+
+(def-kom-var kom-presence-messages-in-buffer nil
+  "**Controls display of presence messages in the LysKOM buffer.
+
+If non-nil, LysKOM prints information about what other people are
+doing in the LysKOM buffer. All printing is done just before the
+prompt.
+
+See `kom-presence-messages-in-echo-area for a list of permitted
+values."
   server)
 
 (def-kom-var kom-unread-mode-line-type nil
@@ -1465,20 +1521,6 @@ with asterisks.
 All other values are reserved for future use."
   )
 
-
-
-(def-kom-var kom-presence-messages-in-buffer nil
-  "**Controls display of presence messages in the LysKOM buffer.
-
-If non-nil, LysKOM prints information about what other people are
-doing in the LysKOM buffer. All printing is done just before the
-prompt.
-
-If `nil' no messages are printed. If `presence', messages about people
-logging in, out and people changing name are printed.
-
-All other values are reserved for future use."
-  server)
 
 (def-kom-var kom-show-where-and-what t
   "**Controls display of hostname and activity information in `kom-who-is-on'. 
@@ -2236,6 +2278,38 @@ will vary depending on how it is printed. Functions should be written
 so they work regardless of what is passed to them.
 
 All other values are reserved for future use."
+  server)
+
+(def-kom-var kom-person-list-1 nil
+  "**General list of persons. 
+
+This variable has no predefined meanind and is intended for use
+in variables such as `kom-presence-messages-in-buffer' and
+`kom-highlight-conferences'."
+  server)
+
+(def-kom-var kom-person-list-2 nil
+  "**General list of persons. 
+
+This variable has no predefined meanind and is intended for use
+in variables such as `kom-presence-messages-in-buffer' and
+`kom-highlight-conferences'."
+  server)
+
+(def-kom-var kom-person-list-3 nil
+  "**General list of persons. 
+
+This variable has no predefined meanind and is intended for use
+in variables such as `kom-presence-messages-in-buffer' and
+`kom-highlight-conferences'."
+  server)
+
+(def-kom-var kom-person-list-4 nil
+  "**General list of persons. 
+
+This variable has no predefined meanind and is intended for use
+in variables such as `kom-presence-messages-in-buffer' and
+`kom-highlight-conferences'."
   server)
 
 (def-kom-var kom-friends nil

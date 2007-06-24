@@ -1,5 +1,35 @@
 2007-06-24    <David Byers@GULAG>
 
+	Prepare to print more info on logins:
+	* async.el (lyskom-parse-async): Parse the session number in the
+	login message. Get static session info.
+	(lyskom-show-logged-in-person): Accept the session info. Added
+	code (disabled) to show from where a user logged in.
+	(lyskom-parse-async): Get both conf-stat and session info for new
+	logins.
+
+	Fix bug 1637:
+	* lyskom-buttons.el (lyskom-generate-button): Use
+	lyskom-indirect-assq to match names against
+	kom-highlight-conferences.
+
+	Add some utility lists:
+	* option-edit.el (lyskom-custom-variables): Added
+	kom-person-list-1, kom-person-list-2, kom-person-list-3,
+	kom-person-list-4.
+	(lyskom-customize-buffer-format): Same here.
+
+	* vars.el.in (kom-person-list-4): New variable.
+	(kom-person-list-3): New variable.
+	(kom-person-list-2): New variable.
+	(kom-person-list-1): New variable.
+
+	Fix bug 1621:
+	* async.el (lyskom-show-presence): Use lyskom-indirect-assq when
+	the flag is a list.
+	(lyskom-parse-async): Show presence messages for self.
+
+
 	Fixed bug 1608:
 	* async.el (lyskom-show-logged-in-person): Applied modified patch
 	from Per Jonsson (unlike the original patch, still print the

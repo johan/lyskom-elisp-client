@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.366 2007-06-24 06:18:00 byers Exp $
+;;;;; $Id: english-strings.el,v 44.367 2007-06-24 09:08:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.366 2007-06-24 06:18:00 byers Exp $"))
+              "$Id: english-strings.el,v 44.367 2007-06-24 09:08:31 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1071,7 +1071,7 @@ Help: \\[describe-mode] ---")
     ; From async.el:
 
     (name-has-changed-to-name . "%#1:P has changed name to %#2:P")
-    (name-has-changed-to-name-r . "%[%#3@%#1:P%] has changed name to %[%#3@%#2:P%]\n")
+    (name-has-changed-to-name-r . "%#4@%[%#3@%#1:P%] has changed name to %[%#3@%#2:P%]\n")
     (you-changed-name-to . "You have now changed your name to %[%#2@%#1:P%].\n")
     (database-sync . "Synching database.")
 
@@ -1091,7 +1091,7 @@ for a text.
 ===============================================================================
 ")
     (has-entered . "%#1:P has entered %#2s.")
-    (has-entered-r . "%#2@%#1P has entered %#3s (%#4s %#5s).\n")
+    (has-entered-r . "%#2@%#1P has entered %#3s%#6?b%[ from %#6s%]%[%]%#4?b%[ (%#4s %#5s)%]%[%].\n")
     (has-left . "%#1:P has left %#2s.")
     (has-left-r . "%#2@%#1P has left %#3s (%#4s %#5s).\n")
     (Unknown . "Unknown")

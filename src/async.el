@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.66 2007-06-24 06:18:00 byers Exp $
+;;;;; $Id: async.el,v 44.67 2007-06-24 09:08:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.66 2007-06-24 06:18:00 byers Exp $\n"))
+	      "$Id: async.el,v 44.67 2007-06-24 09:08:31 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -114,7 +114,9 @@ this function shall be with current-buffer the BUFFER."
 	    'name-has-changed-to-name-r 
 	    old-name 
 	    new-name
-	    (lyskom-default-button 'conf conf-no))))
+	    (lyskom-default-button 'conf conf-no)
+	    (and kom-text-properties
+		 (list 'face kom-presence-face)))))
 
          ;; Update in the mship-edit buffer
 
@@ -151,18 +153,20 @@ this function shall be with current-buffer the BUFFER."
      
      ((eq msg-no 9)			; A person has logged in
       (let ((pers-no (lyskom-parse-num))
-	    ;;;(session-no (lyskom-parse-num))
-            )
-        (lyskom-parse-num)
+	    (session-no (lyskom-parse-num)))
 	(lyskom-save-excursion
-	 (set-buffer buffer)
-	 (if (and lyskom-pers-no
-		  (not (zerop lyskom-pers-no))
-		  (/= pers-no lyskom-pers-no)) ; Don't show myself.
-	     (initiate-get-conf-stat 'follow
-				     'lyskom-show-logged-in-person
-				     pers-no))
-	 )))
+	  (set-buffer buffer)
+	  (if (and lyskom-pers-no
+		   (not (zerop lyskom-pers-no)))
+	      (let ((c (make-collector)))
+		(initiate-get-conf-stat 'follow 'collector-push pers-no c)
+		(initiate-get-static-session-info 'follow 'collector-push 
+						  session-no c)
+		(lyskom-run 'follow (lambda (c)
+				      (lyskom-show-logged-in-person 
+				       (elt (collector->value c) 1)
+				       (elt (collector->value c) 0)))
+			    c))))))
 
      ;; msg-no 10 is the old broadcast message. No longer used.
      
@@ -197,7 +201,6 @@ this function shall be with current-buffer the BUFFER."
 	 (set-buffer buffer)
 	 (if (and lyskom-pers-no
 		  (not (zerop lyskom-pers-no))
-		  (/= lyskom-pers-no pers-no)
 		  (or (lyskom-show-presence pers-no kom-presence-messages-in-echo-area)
 		      (lyskom-show-presence pers-no kom-presence-messages-in-buffer)))
 	     (initiate-get-conf-stat 'follow
@@ -397,11 +400,11 @@ according to the value of FLAG."
         ((eq flag 'morons) (memq num kom-morons))
         ((eq flag 'friends-and-morons) (or (memq num kom-friends)
                                            (memq num kom-morons)))
-        ((listp flag) (memq num flag))
+        ((listp flag) (lyskom-indirect-assq num flag))
         (t t)))
 
 
-(defun lyskom-show-logged-in-person (conf-stat)
+(defun lyskom-show-logged-in-person (conf-stat session-info)
   "Visa p} kommandoraden vem som loggat in."
   (let ((server (lyskom-session-nickname))
 	(login-when-date (let ((kom-print-relative-dates nil))
@@ -423,15 +426,22 @@ according to the value of FLAG."
     (cond
      ((lyskom-show-presence (conf-stat->conf-no conf-stat)
                             kom-presence-messages-in-buffer)
-      (lyskom-format-insert-before-prompt 'has-entered-r
-					  (or conf-stat 
-					      (lyskom-get-string
-					       'unknown-person))
-					  (and kom-text-properties
-					       (list 'face kom-presence-face))
-					  server
-					  login-when-date
-					  login-when-time)))))
+      (lyskom-format-insert-before-prompt 
+       'has-entered-r
+       (or conf-stat 
+	   (lyskom-get-string
+	    'unknown-person))
+       (and kom-text-properties
+	    (list 'face kom-presence-face))
+       server
+       login-when-date
+       login-when-time
+       (and session-info
+	    nil
+	    (lyskom-combine-username 
+	     (static-session-info->username session-info)
+	     (static-session-info->ident-user session-info)
+	     (static-session-info->hostname session-info))))))))
 
 
 (defun lyskom-show-logged-out-person (conf-stat session-no)

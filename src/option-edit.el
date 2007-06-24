@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.118 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: option-edit.el,v 44.119 2007-06-24 09:08:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.118 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.119 2007-06-24 09:08:31 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -83,6 +83,10 @@
     [kom-highlight-conferences]
     [kom-friends]
     [kom-morons]
+    [kom-person-list-1]
+    [kom-person-list-2]
+    [kom-person-list-3]
+    [kom-person-list-4]
     "\n"
     [kom-show-unread-in-frame-title]
     [kom-unread-mode-line-type]
@@ -761,6 +765,10 @@ All key bindings:
              ))
     (kom-friends (repeat (person nil :tag name) :indent 4))
     (kom-morons (repeat (person nil :tag name) :indent 4))
+    (kom-person-list-1 (repeat (person nil :tag name) :indent 4))
+    (kom-person-list-2 (repeat (person nil :tag name) :indent 4))
+    (kom-person-list-3 (repeat (person nil :tag name) :indent 4))
+    (kom-person-list-4 (repeat (person nil :tag name) :indent 4))
     (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
                                         :indent 4))
     (kom-windows-browser-command (file))

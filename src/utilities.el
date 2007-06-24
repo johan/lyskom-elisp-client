@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.165 2007-06-24 05:59:20 byers Exp $
+;;;;; $Id: utilities.el,v 44.166 2007-06-24 09:08:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.165 2007-06-24 05:59:20 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.166 2007-06-24 09:08:32 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -232,7 +232,7 @@ when recursing due to bound symbols being used as keys."
       (cond ((atom el) (when (eq el key) (throw 'lyskom-indirect-assq-return default-return)))
 	    ((eq t (car el)) (setcar memo-list (cdr el)))
 	    ((functionp (car el))
-	     (when (funcall (car el) key)
+	     (when (condition-case nil (funcall (car el) key) (error nil))
 	       (throw 'lyskom-indirect-assq-return (cdr el))))
 	    ((and (symbolp (car el)) (boundp (car el)))
 	     (cond ((listp (symbol-value (car el)))

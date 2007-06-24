@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.105 2007-06-10 11:08:20 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.106 2007-06-24 09:08:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.105 2007-06-10 11:08:20 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.106 2007-06-24 09:08:31 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -505,39 +505,12 @@ kom-next- and -previous-link won't notice the button"
                  (list 'face 
                        (or face
                            (or 
-                            (lyskom-traverse el kom-highlight-conferences
-                              (cond ((and (symbolp (car el))
-                                          (boundp (car el))
-                                          (listp (symbol-value (car el)))
-                                          (memq numarg (symbol-value (car el))))
-                                     (lyskom-traverse-break
-                                      (cond ((facep (cdr el)) (cdr el))
-                                            ((and (symbolp (cdr el))
-                                                  (boundp (cdr el)))
-                                             (symbol-value (cdr el))))))
-                                    ((and (symbolp (car el))
-                                          (boundp (car el))
-                                          (eq numarg (symbol-value (car el))))
-                                     (lyskom-traverse-break
-                                      (cond ((facep (cdr el)) (cdr el))
-                                            ((and (symbolp (cdr el))
-                                                  (boundp (cdr el)))
-                                             (symbol-value (cdr el))))))
-                                    ((and (functionp (car el))
-                                          (funcall (car el) arg))
-                                     (lyskom-traverse-break
-                                      (cond ((facep (cdr el)) (cdr el))
-                                            ((and (symbolp (cdr el))
-                                                  (boundp (cdr el)))
-                                             (symbol-value (cdr el))))))
-                                    ((and (listp (car el))
-                                          (memq numarg (car el)))
-                                     (lyskom-traverse-break
-                                      (cond ((facep (cdr el)) (cdr el))
-                                            ((and (symbolp (cdr el))
-                                                  (boundp (cdr el)))
-                                             (symbol-value (cdr el)))))))
-                              nil)
+			    (let ((val (lyskom-indirect-assq 
+					numarg kom-highlight-conferences)))
+			      (when val
+				(cond ((facep val) val)
+				      ((and (symbolp val) (boundp val))
+				       (symbol-value val)))))
                             kom-active-face))
                        'mouse-face kom-highlight-face
                        'lyskom-button-text text
