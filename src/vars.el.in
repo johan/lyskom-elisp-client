@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.326 2007-06-24 14:07:44 byers Exp $
+;;;;; $Id: vars.el.in,v 44.327 2007-06-24 17:21:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.326 2007-06-24 14:07:44 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.327 2007-06-24 17:21:00 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1481,7 +1481,7 @@ rules are as follows:
                     this variable to a list of person numbers).
 
   `(t . VAL)'       Matches with value VAL if no other match is 
-                    found.
+                    found (i.e. sets the default value).
 
   `(FN . VAL)'      Matches with value VAL if FN is a function that
                     returns non-nil when called with the person 
@@ -4556,10 +4556,46 @@ Values other than `t' and `nil' are reserved for future use."
 (def-kom-var kom-format-html-authors '((t . t))
   "**Determines from which authors we accept HTML.
 
-Each element of this list is a pair \(`PERS' . `VAL'), where `PERS' is a
-person number and `VAL' is `t' or `nil'. If `VAL' is `t', then format
-HTML written by `PERS'. If `VAL' is `nil', don't. The special value
-`t' for `PERS' determines the default.
+If non-nil, LysKOM will attempt to format texts marked as HTML.
+
+The value is treated as an `indirect association list'. When
+reading a text he author of a text is matched against the list,
+and if the value of the match is non-nil, the HTML formatting may
+be attempted. The matching rules are as follows:
+
+  Element           Meaning
+  ------------------------------------------------------------------
+  `ATOM'            Matches with the default value if ATOM equals 
+                    the author number (this means that you can set 
+                    this variable to a list of person numbers).
+
+  `(t . VAL)'       Matches with value VAL if no other match is 
+                    found (i.e. sets the default value).
+
+  `(FN . VAL)'      Matches with value VAL if FN is a function that
+                    returns non-nil when called with the author
+                    number as its sole argument.
+
+  `(SYM . VAL)'     If SYM is bound to a list, match the author
+                    number against that list using these rules. 
+                    VAL is used as the default value for the 
+                    matching process.
+
+  `(SYM . VAL)'     If SYM is not bound to a list, matches with 
+                    the value VAL if the value of SYM equals the
+                    author number.
+
+  `(LIST . VAL)'    Match the person number against LIST using
+                    these rules. VAL is used as the default value.
+
+  `(ATOM . VAL)'    Match with value VAL if ATOM equals the 
+                    author number.
+  ------------------------------------------------------------------
+
+For example, the value `((5 . nil) (kom-friends . t))' will
+prevent texts by person 5 from being shown as formatted HTML,
+while texts by persons listed in the variable `kom-friends' can
+be shown as formatted HTML.
 
 Values other than those listed are reserved for future use." 
   server)

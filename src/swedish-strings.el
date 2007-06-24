@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.412 2007-06-24 14:07:44 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.413 2007-06-24 17:21:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.412 2007-06-24 14:07:44 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.413 2007-06-24 17:21:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -3181,8 +3181,10 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-customize-map (kbd "C-j") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<RET>") 'widget-button-press)
   (define-key lyskom-sv-customize-map (kbd "<LFD>") 'widget-button-press)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button1)) 'widget-button-click)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2)) 'widget-button-click)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3)) 'lyskom-widget-click)
+  (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button1up)) 'kom-mouse-null)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-sv-customize-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
   (define-key lyskom-sv-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
@@ -3303,7 +3305,7 @@ Nuvarande rättigheter för %#1P (%#1p):
 
     (command . "Kommando")
     (command-list . "Kommandolista")
-    (some-persons . "För vissa personer")
+    (some-persons . "För vissa personer:")
     (name . "Namn")
 
     (page-none . "Aldrig                 ")
@@ -3379,7 +3381,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (format-html . "Formattera HTML:")
 
     (url-transform-regexp . "Från (regexp):")
-    (url-transform-newtext . " Till:")
+    (url-transform-newtext . "Till:")
 
     (default-namedays . "Namnsdagar för aktuellt språk")
     (specific-namedays . "Specifik namnlängd")
@@ -3427,6 +3429,18 @@ Nuvarande rättigheter för %#1P (%#1p):
     (extended-read-faq-info . "Lästa FAQ")
     (extended-statistics-info . "Fullständig serverstatistik")
     (extended-all-other-info . "Annan information")
+
+    (show-presence . "Visa närvaromeddelanden")
+    (conflist . "Mötes/Personlista")
+    (pers-list-1 . "Mötes/personlista 1")
+    (pers-list-2 . "Mötes/personlista 2")
+    (pers-list-3 . "Mötes/personlista 3")
+    (pers-list-4 . "Mötes/personlista 4")
+    (other-list . "Annan lista")
+    (always-show-presence . "Visa alla närvaromeddelanden")
+    (never-show-presence . "Visa inga närvaromeddelanden")
+    (obsolete-setting . "Föråldrad inställning")
+    (detailed-setting . "Detaljerad inställning")
 
     ;;
     ;; Misc doc strings
@@ -4676,10 +4690,10 @@ ta fram menyer.")
     (kom-filter-outgoing-messages-tag . "Visa automatiska meddelanden:")
     (kom-friends-tag . "Vänner och bekanta:")
     (kom-morons-tag . "Idioter och knäppskallar:")
-    (kom-person-list-1-tag . "Personlista (1):")
-    (kom-person-list-2-tag . "Personlista (1):")
-    (kom-person-list-3-tag . "Personlista (1):")
-    (kom-person-list-4-tag . "Personlista (1):")
+    (kom-person-list-1-tag . "Mötes/personlista (1):")
+    (kom-person-list-2-tag . "Mötes/personlista (2):")
+    (kom-person-list-3-tag . "Mötes/personlista (3):")
+    (kom-person-list-4-tag . "Mötes/personlista (4):")
     (kom-url-viewer-preferences-tag . "Öppna URLer med följande program:")
     (kom-windows-browser-command-tag . "Kommando för att starta en WWW-läsare i Windows:")
     (kom-mosaic-command-tag . "Kommando för att starta NCSA Mosaic:")

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.119 2007-06-24 09:08:31 byers Exp $
+;;;;; $Id: option-edit.el,v 44.120 2007-06-24 17:21:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.119 2007-06-24 09:08:31 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.120 2007-06-24 17:21:00 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -48,6 +48,8 @@
 
 (defvar lyskom-widgets nil
   "List of widgets in the customize buffer.")
+
+;(setq lyskom-customize-buffer-format '([kom-format-html-authors]))
 
 (defvar lyskom-customize-buffer-format
   '("\n"
@@ -603,7 +605,7 @@ All key bindings:
     (kom-list-membership-in-window (open-window))
     (kom-customize-format (choice ((const (long-format long))
                                    (const (short-format short)))))
-    (kom-default-language (repeat (language-choice nil :format "%[%t%] %v\n")))
+    (kom-default-language (repeat (language-choice nil)))
     (kom-user-prompt-format (string))
     (kom-user-prompt-format-executing (string))
     (kom-anonymous-prompt-format (string))
@@ -626,8 +628,7 @@ All key bindings:
                                        nil
                                        :tag symbolic-mark-association
                                        :mark-key-prompt symbolic-mark-name
-                                       :mark-value-prompt mark-type-to-assoc)
-                                      :indent 4))
+                                       :mark-value-prompt mark-type-to-assoc)))
     (kom-reading-puts-comments-in-pointers-last (toggle (after before)))
     (kom-autowrap (choice ((const (on t))
                            (const (off nil))
@@ -644,20 +645,6 @@ All key bindings:
     (kom-truncate-show-lines (number nil))
 
     (kom-print-number-of-unread-on-entrance (toggle (yes no)))
-    (kom-presence-messages-in-echo-area
-     (choice ((const (on t))
-              (const (friends friends))
-              (repeat (person nil :tag name)
-                      :indent 4
-                      :tag some-persons
-                      :menu-tag some-persons))))
-    (kom-presence-messages-in-buffer
-     (choice ((const (on t))
-              (const (friends friends))
-              (repeat (person nil :tag name)
-                      :indent 4
-                      :tag some-persons
-                      :menu-tag some-persons))))
     (kom-show-where-and-what (toggle (yes no)))
     (kom-show-since-and-when (toggle (yes no)))
     (kom-remember-password (toggle (yes no)))
@@ -684,27 +671,21 @@ All key bindings:
 					   :tag given-session-name
 					   :help-echo select-buffer))))			 
 
-    (kom-relogin-inhibit-commands (repeat (command nil :tag command)
-					  :indent 4))
-
-    (kom-login-hook (repeat (command nil :tag command)
-                            :indent 4))
+    (kom-relogin-inhibit-commands (repeat (command nil :tag command)))
+    (kom-login-hook (repeat (command nil :tag command)))
     (kom-do-when-done (repeat (choice ((command nil :tag command)
                                        (kbd-macro nil :tag kbd-macro))
                                       :tag execute
                                       :help-echo select-what-to-execute
-                                      :format "%[%t%] %v")
-                              :indent 4))
+                                      :format "%[%t%] %v")))
     (kom-page-before-command (choice ((const (page-none nil))
                                       (const (page-all t))
                                       (repeat (command nil
                                                        :tag command)
-                                              :indent 4
                                               :tag page-some
                                               :menu-tag page-some
-                                              :format "%[%t%] %v"
                                               :value (kom-view-next-text)))
-                                     :format "%[%t%] %v"))
+                                     ))
     (kom-permissive-completion (noggle (on off)))
     (kom-membership-default-priority
      (choice ((const (ask-every-time ask))
@@ -740,19 +721,26 @@ All key bindings:
               (const (last-recipient-recpt last-recipient)))))
     (kom-filter-outgoing-messages (noggle (yes no)))
     (kom-highlight-conferences
-     (repeat (cons ((choice ((const (morons kom-morons))
+     (repeat (cons ((choice ((const (other-persons t))
+			     (const (morons kom-morons))
                              (const (friends kom-friends))
                              (const (me lyskom-pers-no))
                              (const (i-am-supervisor lyskom-highlight-i-am-supervisor))
                              (const (has-no-presentation lyskom-highlight-has-no-presentation))
+			     (const (pers-list-1 kom-person-list-1))
+			     (const (pers-list-2 kom-person-list-2))
+			     (const (pers-list-3 kom-person-list-3))
+			     (const (pers-list-4 kom-person-list-4))
+			     (symbol nil :tag other-list)
+			     (person nil :tag name :lyskom-predicate (pers))
                              (repeat (person nil :tag name) 
                                      :indent 12
-                                     :tag highlight-conflist
+                                     :tag conflist
                                      :lyskom-predicate (pers conf)
-                                     :menu-tag highlight-conflist)
+                                     :menu-tag conflist)
                              )
                             :tag highlight-conferences
-                            :format "%[%t%] %v\n"
+			    :format "%[%t%] %v\n"
                             )
                     (face (kom-active-face
                            kom-active-highlight-face
@@ -763,32 +751,88 @@ All key bindings:
                    :format "%v"
                    )
              ))
-    (kom-friends (repeat (person nil :tag name) :indent 4))
-    (kom-morons (repeat (person nil :tag name) :indent 4))
-    (kom-person-list-1 (repeat (person nil :tag name) :indent 4))
-    (kom-person-list-2 (repeat (person nil :tag name) :indent 4))
-    (kom-person-list-3 (repeat (person nil :tag name) :indent 4))
-    (kom-person-list-4 (repeat (person nil :tag name) :indent 4))
-    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)
-                                        :indent 4))
+
+    (kom-presence-messages-in-buffer 
+     (choice ((const (always-show-presence t))
+	      (const (never-show-presence nil))
+	      (symbol nil :tag obsolete-setting)
+	      (repeat (cons ((choice ((const (other-persons t))
+				      (const (me lyskom-pers-no))
+				      (const (morons kom-morons))
+				      (const (friends kom-friends))
+				      (const (pers-list-1 kom-person-list-1))
+				      (const (pers-list-2 kom-person-list-2))
+				      (const (pers-list-3 kom-person-list-3))
+				      (const (pers-list-4 kom-person-list-4))
+				      (symbol nil :tag other-list)
+				      (person nil :tag name :lyskom-predicate (pers))
+				      (repeat (person nil :tag name) 
+					      :indent 12
+					      :tag conflist
+					      :lyskom-predicate (pers)
+					      :menu-tag conflist)
+				      )
+				     :tag some-persons
+				     :format "%[%t%] %v\n"
+				     )
+			     (toggle (yes no) :tag show-presence))
+			    )
+		      :tag detailed-setting
+		      ))))
+
+    (kom-presence-messages-in-echo-area
+     (choice ((const (always-show-presence t))
+	      (const (never-show-presence nil))
+	      (symbol nil :tag obsolete-setting)
+	      (repeat (cons ((choice ((const (other-persons t))
+				      (const (me lyskom-pers-no))
+				      (const (morons kom-morons))
+				      (const (friends kom-friends))
+				      (const (pers-list-1 kom-person-list-1))
+				      (const (pers-list-2 kom-person-list-2))
+				      (const (pers-list-3 kom-person-list-3))
+				      (const (pers-list-4 kom-person-list-4))
+				      (symbol nil :tag other-list)
+				      (person nil :tag name :lyskom-predicate (pers))
+				      (repeat (person nil :tag name) 
+					      :indent 12
+					      :tag conflist
+					      :lyskom-predicate (pers)
+					      :menu-tag conflist)
+				      )
+				     :tag some-persons
+				     :format "%[%t%] %v\n"
+				     )
+			     (toggle (yes no) :tag show-presence))
+			    )
+		      :tag detailed-setting
+		      ))))
+
+    (kom-friends (repeat (person nil :tag name)))
+    (kom-morons (repeat (person nil :tag name)))
+    (kom-person-list-1 (repeat (person nil :tag name)))
+    (kom-person-list-2 (repeat (person nil :tag name)))
+    (kom-person-list-3 (repeat (person nil :tag name)))
+    (kom-person-list-4 (repeat (person nil :tag name)))
+    (kom-url-viewer-preferences (repeat (url-viewer nil :tag viewer-program)))
     (kom-windows-browser-command (file))
-    (kom-mosaic-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
-                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+    (kom-mosaic-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v")
                                              :tag ext-complex-command
                                              :menu-tag ext-complex-command))))
-    (kom-netscape-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
-                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+    (kom-netscape-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v")
                                              :tag ext-complex-command
                                              :menu-tag ext-complex-command))))
-    (kom-galeon-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
-                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+    (kom-galeon-command (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v")
                                              :tag ext-complex-command
                                              :menu-tag ext-complex-command))))
     (kom-lynx-terminal (choice ((const (lynx-xterm xterm))
                                 (const (lynx-emacs terminal)))))
     (kom-lynx-terminal-command (file))
-    (kom-lynx-xterm-command  (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v\n")
-                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v\n")
+    (kom-lynx-xterm-command  (choice ((file nil :tag ext-simple-command :format "%[%t:%] %v")
+                                     (repeat (string nil :tag ext-complex-component :format "%[%t:%] %v")
                                              :tag ext-complex-command
                                              :menu-tag ext-complex-command))))
     (kom-confirm-multiple-recipients
@@ -808,16 +852,15 @@ All key bindings:
     (kom-ansaphone-show-messages (toggle (yes no)))
     (kom-ansaphone-default-reply (string nil :format "%[%t%]\n%v"))
     (kom-remote-control (toggle (on off)))
-    (kom-remote-controllers (repeat (person nil :tag name)
-                                    :indent 4))
+    (kom-remote-controllers (repeat (person nil :tag name)))
     (kom-self-control (toggle (yes no)))
     (kom-ispell-dictionary (ispell-dictionary))
     (kom-show-namedays (choice ((const (off nil))
                                 (const (default-namedays t))
-                                (repeat (nameday nil :format "%[%t%]: `%v'\n" :tag specific-namedays)
+                                (repeat (nameday nil :format "%[%t%]: `%v'" 
+						     :tag specific-namedays)
                                         :tag several-name-lists
-                                        :menu-tag several-name-lists
-                                        :indent 4)
+                                        :menu-tag several-name-lists)
                                 (nameday nil :tag specific-namedays))))
 
     (kom-show-week-number (toggle (on off)))
@@ -838,8 +881,7 @@ All key bindings:
     (kom-agree-text (choice ((string nil :tag a-string)
                              (repeat (string nil
                                              :tag a-string
-                                             :format "%[%t%] `%v'\n")
-                                     :indent 4
+                                             :format "%[%t%] `%v'")
                                      :tag some-string
                                      :menu-tag some-string))))
     (kom-silent-ansaphone (noggle (on off)))
@@ -856,21 +898,41 @@ All key bindings:
     (kom-postpone-default (number))
     (kom-allow-incompleteness (toggle (on off)))
     (kom-smileys (toggle (on off)))
-    (kom-ignore-message-senders (repeat (person nil :tag name)
-                                    :indent 4))
+    (kom-ignore-message-senders (repeat (person nil :tag name)))
     (kom-ignore-message-recipients (repeat (person nil 
                                                    :tag name
-                                                   :lyskom-predicate (pers conf))
-                                    :indent 4))
+                                                   :lyskom-predicate (pers conf))))
     (kom-text-header-dash-length (number))
     (kom-text-footer-dash-length (number))
     (kom-show-personal-message-date (toggle (on off)))
     (kom-mercial (string))
     (kom-w3-simplify-body (toggle (on off)))
-    (kom-format-html-authors (repeat (cons ((choice ((person nil :tag some-person :lyskom-predicate (pers))
-                                                     (const (all-others t) :format "%t\n"))
-                                                    :format "%[%v%]")
-                                            (toggle (yes no) :tag format-html)))))
+    (kom-format-html-authors 
+     (repeat (cons ((choice ((const (other-persons t))
+			     (const (me lyskom-pers-no))
+			     (const (morons kom-morons))
+			     (const (friends kom-friends))
+			     (const (pers-list-1 kom-person-list-1))
+			     (const (pers-list-2 kom-person-list-2))
+			     (const (pers-list-3 kom-person-list-3))
+			     (const (pers-list-4 kom-person-list-4))
+			     (symbol nil :tag other-list)
+			     (person nil :tag name   
+					 :format "%[[*]%] %v"
+					 :lyskom-predicate (pers))
+			     (repeat (person nil :tag name) 
+				     :indent 12
+				     :tag conflist
+				     :lyskom-predicate (pers)
+				     :menu-tag conflist)
+			     )
+			    :tag some-persons
+			    :format "%[%t%] %v\n"
+			    )
+		    (toggle (yes no) :tag format-html))
+		   )
+	     :tag detailed-setting
+	     ))
     (kom-format-show-images (toggle (on off)))
     (kom-bury-buffers (toggle (on off)))
     (kom-ansaphone-replies (ansaphone))
@@ -879,7 +941,7 @@ All key bindings:
     (kom-lost-session-notification (choice ((const (off nil))
 					    (const (session-lost-all-buffers all-buffers))
 					    (const (session-lost-beep beep)))))
-    (kom-text-no-prompts (repeat (cons ((command nil :tag command :format "%[%t%]: %v")
+    (kom-text-no-prompts (repeat (cons ((command nil :tag command :format "%[%t%]: %v\n")
                                         (toggle (yes no)  :tag prompt-for-text-no :format "%[%t%]: %v")
                                         ))))
     (kom-saved-file-name (file))
@@ -891,8 +953,7 @@ All key bindings:
 
     (kom-confirm-add-recipients (toggle (yes no)))
     (kom-trim-buffer-minimum (number))
-    (kom-dont-check-commented-authors (repeat (person nil 
-                                                      :tag name) :indent 4))
+    (kom-dont-check-commented-authors (repeat (person nil :tag name)))
     (kom-print-relative-dates (toggle (yes no)))
     (kom-print-seconds-in-time-strings (toggle (yes no)))
     (kom-extended-status-information (choice ((const (yes t))
@@ -904,13 +965,13 @@ All key bindings:
                                                                       (const (extended-all-other-info t))
                                                                       )
                                                                      :tag extended-info-type
-                                                                     :format "%[%t%] %v ")
+                                                                     :format "%[%t%] %v\n")
                                                              (toggle (yes no) :tag extended-info-show)))
                                                       :tag specific-extended-info 
                                                       :menu-tag specific-extended-info))))
     (kom-edit-hide-add-button (noggle (yes no)))
     (kom-keyboard-menu-immediate-selection (noggle (yes no)))
-    (kom-url-transformation-rules (repeat (cons ((string nil :tag url-transform-regexp)
+    (kom-url-transformation-rules (repeat (cons ((string nil :tag url-transform-regexp :format "%[%t%] %v\n")
                                                  (string nil :tag url-transform-newtext)))))
     (kom-text-links (repeat (cons ((choice ((person nil :tag link-specific-rcpt :lyskom-predicate (pers conf))
                                             (const (all-conferences t)))
@@ -920,9 +981,8 @@ All key bindings:
                                                   (string nil :tag link-replace :format "%[%t%]: %v\n")
                                                   (number (0 9) :tag link-highlight-match :format "%[%t%]: %v\n")
                                                   (toggle (yes no) :tag link-fold-case :format "%[%t%]: %v"))
-                                                 ) :indent 8 :tag "")
-                                   ))
-                            :indent 4))
+                                                 ) :indent 12 :tag "")
+                                   ))))
     (kom-url-face (face))
     (kom-text-no-face (face))
     (kom-active-face (face))
@@ -957,6 +1017,7 @@ All key bindings:
     (ding   . lyskom-ding-widget)
     (choice . lyskom-choice-widget)
     (string . lyskom-string-widget)
+    (symbol . lyskom-symbol-widget)
     (number . lyskom-number-widget)
     (const .  lyskom-item-widget)
     (repeat . lyskom-repeat-widget)
@@ -1222,11 +1283,11 @@ All key bindings:
                     wargs)))
     (if wargs
         (lyskom-build-simple-widget-spec 'menu-choice
-                                         (list ':format "%[%t%] %v\n"
+                                         (list ':format "%[%t%] %v"
                                                ':args wargs)
                                          propl)
       (lyskom-build-simple-widget-spec 'symbol
-                                       (list ':format "%[%t%] %v\n"
+                                       (list ':format "%[%t%] %v"
                                              ':size 30
                                              ':args wargs)
                                        propl))))
@@ -1234,7 +1295,7 @@ All key bindings:
 (defun lyskom-url-viewer-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'menu-choice 
-   (list ':format "%[%v%]\n"
+   (list ':format "%[%v%]"
          ':case-fold t
          ':help-echo (lyskom-custom-string 'select-url-viewer)
          ':args
@@ -1342,7 +1403,6 @@ All key bindings:
                       ':size 0)
                 (list 'editable-list
                       ':format "%[%t%]\n%v%i"
-                      ':indent 4
                       ':tag (lyskom-custom-string 'specific-spec)
                       ':menu-tag (lyskom-custom-string 'specific-spec)
                       ':args
@@ -1351,7 +1411,7 @@ All key bindings:
                               :args
                               ((menu-choice
                                 :case-fold t
-                                :format "%[%t%]: %v"
+                                :format "%[%t%]: %v\n"
                                 :tag ,(lyskom-custom-string 'conf-or-person)
                                 :args
                                 ((lyskom-name :lyskom-predicate (pers conf)
@@ -1419,6 +1479,7 @@ All key bindings:
   (lyskom-build-simple-widget-spec
    'editable-list 
    (list ':format "%[%t%]\n%v%i"
+	 ':entry-format "%i %d %v\n"
          ':args
          (list (lyskom-widget-convert-specification args var)))
    propl))
@@ -1426,7 +1487,7 @@ All key bindings:
 (defun lyskom-cons-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'cons
-   (list ':format "%v\n"
+   (list ':format "%v"
          ':tag ""
          ':args (list (lyskom-widget-convert-specification (elt args 0) var)
                       (lyskom-widget-convert-specification (elt args 1) var)))
@@ -1435,7 +1496,7 @@ All key bindings:
 (defun lyskom-list-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'list
-   (list ':format "%v\n"
+   (list ':format "%v"
          ':tag ""
          ':args (mapcar (lambda (x) (lyskom-widget-convert-specification x var)) args))
    propl))
@@ -1453,6 +1514,13 @@ All key bindings:
 (defun lyskom-string-widget (type &optional args propl var)
   (lyskom-build-simple-widget-spec
    'lyskom-string 
+   (list ':size 0 
+         ':format "%[%t%] `%v'")
+   propl))
+
+(defun lyskom-symbol-widget (type &optional args propl var)
+  (lyskom-build-simple-widget-spec
+   'symbol 
    (list ':size 0 
          ':format "%[%t%] `%v'")
    propl))
@@ -1600,9 +1668,7 @@ All key bindings:
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
     (set-marker-insertion-type (widget-get widget ':value-to) nil)
-    (if (null size)
-        (insert ?\n)
-      (insert ?\ ))))
+    (insert " ")))
 
 (defun lyskom-widget-name-match (widget value)
   (and (numberp value)
@@ -1670,9 +1736,7 @@ All key bindings:
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
     (set-marker-insertion-type (widget-get widget ':value-to) nil)
-    (if (null size)
-        (insert ?\n)
-      (insert ?\ ))))
+    (insert " ")))
 
 (defun lyskom-widget-command-match (widget value)
   (symbolp value))
@@ -1803,9 +1867,7 @@ All key bindings:
     (widget-put widget ':value-from (copy-marker from))
     (widget-put widget ':value-to (copy-marker (point)))
     (set-marker-insertion-type (widget-get widget ':value-to) nil)
-    (if (null size)
-        (insert ?\n)
-      (insert ?\ ))))
+    (insert " ")))
 
 ;;;
 ;;; This is a truly disgusting piece of work. In Gnu Emacs it's not
@@ -1913,7 +1975,7 @@ All key bindings:
 (define-widget 'lyskom-mark-association 'default
   "A mark association."
   :tag "Mark association"
-  :format "%[%t%] %v\n"
+  :format "%[%t%] %v"
   :value '("..." . 0)
   :default-help-echo 'change-this-name
   :match 'lyskom-widget-mark-association-match

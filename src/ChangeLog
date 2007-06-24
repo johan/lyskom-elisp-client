@@ -1,5 +1,16 @@
 2007-06-24    <David Byers@GULAG>
 
+	More customization:
+	* lyskom-rest.el (lyskom-format-html): Use lyskom-indirect-assq to
+	look stuff up in kom-format-html-authors.
+
+	Fix settings buffer:
+	* option-edit.el (lyskom-custom-variables): Updated definitions
+	for kom-highlight-conferences, kom-presence-messages-in-buffer,
+	kom-presence-messages-in-echo-area. Updated widget definitions so
+	we don't get newlines in unexpected places (and get then where we
+	really want them). Removed indent from most lists. 
+
 	Fix bug 1143:
 	* review.el (lyskom-last-review-filter): New variable.
 	(kom-review-all-roots): New command.

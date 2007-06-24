@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.368 2007-06-24 14:07:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.369 2007-06-24 17:20:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.368 2007-06-24 14:07:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.369 2007-06-24 17:20:59 byers Exp $"))
 
 
 ;;; ================================================================
@@ -3029,8 +3029,10 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-customize-map (kbd "C-j") 'widget-button-press)
   (define-key lyskom-en-customize-map (kbd "<RET>") 'widget-button-press)
   (define-key lyskom-en-customize-map (kbd "<LFD>") 'widget-button-press)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button1up)) 'kom-mouse-null)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2up)) 'kom-mouse-null)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button3up)) 'kom-mouse-null)
+  (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button1)) 'widget-button-click)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button2)) 'widget-button-click)
   (define-key lyskom-en-customize-map (kbd (lyskom-keys 'button3)) 'lyskom-widget-click)
   (define-key lyskom-en-customize-map (kbd "C-c C-c") 'lyskom-customize-save-and-quit)
@@ -3152,7 +3154,7 @@ Select whether to execute command or keyboard macro.")
 
     (command . "Command")
     (command-list . "Command list")
-    (some-persons . "For some persons")
+    (some-persons . "For some persons:")
     (name . "Name")
 
     (page-none . "Never                        ")
@@ -3275,6 +3277,18 @@ Select whether to execute command or keyboard macro.")
     (extended-read-faq-info . "Read FAQs")
     (extended-statistics-info . "Full server statistics")
     (extended-all-other-info . "Other information")
+
+    (show-presence . "Show presence messages")
+    (conflist . "Conference/person list")
+    (pers-list-1 . "Conference/person list 1")
+    (pers-list-2 . "Conference/person list 2")
+    (pers-list-3 . "Conference/person list 3")
+    (pers-list-4 . "Conference/person list 4")
+    (other-list . "Other list")
+    (always-show-presence . "Show all presence messages")
+    (never-show-presence . "Show no presence messages")
+    (obsolete-setting . "Obsolete setting")
+    (detailed-setting . "Detailed setting")
 
     ;;
     ;; Misc doc strings
@@ -4520,10 +4534,10 @@ up menus.")
     (kom-filter-outgoing-messages-tag . "Show automatic messages:")
     (kom-friends-tag . "Friends and other special people:")
     (kom-morons-tag . "Morons and other \"special\" people:")
-    (kom-person-list-1-tag . "Generlic list of persons (1):")
-    (kom-person-list-2-tag . "Generlic list of persons (2):")
-    (kom-person-list-3-tag . "Generlic list of persons (3):")
-    (kom-person-list-4-tag . "Generlic list of persons (4):")
+    (kom-person-list-1-tag . "Generlic list of conferences/persons (1):")
+    (kom-person-list-2-tag . "Generlic list of conferences/persons (2):")
+    (kom-person-list-3-tag . "Generlic list of conferences/persons (3):")
+    (kom-person-list-4-tag . "Generlic list of conferences/persons (4):")
     (kom-url-viewer-preferences-tag . "Open URLs using the following program:")
     (kom-windows-browser-command-tag . "Command to start a web browser on Windows:")
     (kom-mosaic-command-tag . "Command to start NCSA Mosaic:")
