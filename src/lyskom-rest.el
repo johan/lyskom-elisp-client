@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.266 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.267 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.266 2007-06-09 11:04:53 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.267 2007-06-24 09:33:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1044,9 +1044,6 @@ according to the value of kom-print-number-of-unread-on-entrance.
 Args: CONF-STAT READ-INFO"
   (let ((from-conf lyskom-current-conf)
         (to-conf (conf-stat->conf-no conf-stat)))
-    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
-                               from-conf
-                               to-conf)
     (lyskom-run-hook-with-args 'kom-change-conf-hook 
                                lyskom-current-conf
                                (conf-stat->conf-no conf-stat))
@@ -1056,9 +1053,6 @@ Args: CONF-STAT READ-INFO"
     (lp--update-buffer to-conf)
     (let ((num-unread (text-list->length (read-info->text-list read-info))))
       (lyskom-enter-conf-print-unread conf-stat num-unread)
-      (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
-                                 from-conf
-                                 to-conf)
       (lyskom-run-hook-with-args 'kom-after-change-conf-hook 
                                  lyskom-current-conf
                                  (conf-stat->conf-no conf-stat)))))
@@ -1090,11 +1084,11 @@ CONF is the conference and NUM is the number of unread in the conference."
   "Leave the current conference without going to another one."
   (let ((from-conf lyskom-current-conf))
     (set-read-list-empty lyskom-reading-list)
-    (lyskom-run-hook-with-args 'lyskom-change-conf-hook
+    (lyskom-run-hook-with-args 'kom-change-conf-hook
                                from-conf 0)
     (setq lyskom-current-conf 0)
     (initiate-pepsi 'main nil 0)
-    (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook
+    (lyskom-run-hook-with-args 'kom-after-change-conf-hook
                                from-conf 0)
     ))
 

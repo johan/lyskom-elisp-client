@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.324 2007-06-24 09:08:32 byers Exp $
+;;;;; $Id: vars.el.in,v 44.325 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.324 2007-06-24 09:08:32 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.325 2007-06-24 09:33:27 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1774,15 +1774,6 @@ mass of the text and `kom-view-text-text-stat' to the text-stat of the
 text to be shown."
   local-hook)
 
-(def-kom-var lyskom-view-text-hook nil
-  "Obsolete synonym for kom-view-text-hook."
-  local-hook)
-
-
-(def-kom-var lyskom-send-message-hook nil
-  "Obsolete synonym for lyskom-send-message-hook."
-  local-hook)
-
 (def-kom-var kom-send-message-hook '(lyskom-send-message-trim-newlines)
   "**Hook that is called before a personal, group or common message is sent. 
 
@@ -1803,19 +1794,11 @@ writing messages. For example, the hook might enable `auto-fill-mode'
 or set up automatic resizing of the minibuffer."
   local-hook)
 
-(def-kom-var lyskom-send-message-setup-hook nil
-  "Obsolete synonym for kom-send-message-setup-hook."
-  local-hook)
-
 (def-kom-var kom-send-message-exit-hook nil
   "**Hook that is called when the minibuffer is exited after reading a message.
 
 Typically this hook will be used to undo the effects of
 `kom-send-message-setup-hook'."
-  local-hook)
-
-(def-kom-var lyskom-send-message-exit-hook nil
-  "Obsolete synonym for kom-send-message-exit-hook."
   local-hook)
 
 (def-kom-var kom-send-text-hook nil
@@ -1824,10 +1807,6 @@ Typically this hook will be used to undo the effects of
 This hook is called before the headers are parsed, so it is possible
 for the headers to be modified after this hook is called. It is also
 possible that the text will not be sent at all."
-  local-hook)
-
-(def-kom-var lyskom-send-text-hook nil
-  "Obsolete synonym for kom-send-text-hook."
   local-hook)
 
 (def-kom-var kom-after-load-hook nil
@@ -1850,10 +1829,6 @@ This hook is run before `lyskom-current-conf' is changed, and before
 any standard messages have been printed."
   local-hook)
 
-(def-kom-var lyskom-change-conf-hook nil
-  "Obsolete synonym for kom-change-conf-hook"
-  local-hook)
-
 (def-kom-var kom-after-change-conf-hook nil
   "**Hook to run when changing conferences.
 
@@ -1863,10 +1838,6 @@ being changed to.
 
 This hook is run after `lyskom-current-conf' is changed, and after any
 standard messages have been printed."
-  local-hook)
-
-(def-kom-var lyskom-after-change-conf-hook nil
-  "Obsolete synonym for kom-after-change-conf-hook."
   local-hook)
 
 (def-kom-var lyskom-login-hook nil
@@ -4358,11 +4329,6 @@ aux-item list by modifying `aux-list'. This is not encouraged and may
 break in the future."
   local-hook)
 
-(def-kom-var lyskom-create-text-hook nil
-  "Obsolete synonym for kom-create-text-hook"
-  local-hook)
-
-
 (def-kom-var kom-new-text-hook nil
   "**Hook to run when a new text is created.
 
@@ -4371,19 +4337,11 @@ but before the text \"Text 4711 created\" is printed in the message
 area and before the new prompt is printed."
   local-hook)
 
-(def-kom-var lyskom-new-text-hook nil
-  "Obsolete synonym for kom-new-text-hook"
-  local-hook)
-
 (def-kom-var kom-deleted-text-hook nil
   "**Hook to run when a text is deleted.
 
 This hook is run after the prompt is removed if it shall be changed but 
 before the new prompt is printed."
-  local-hook)
-
-(def-kom-var lyskom-deleted-text-hook nil
-  "Obsolete synonym for kom-deleted-text-hook."
   local-hook)
 
 (def-kom-var kom-new-recipient-hook nil
@@ -4395,10 +4353,6 @@ been marked as read in any conference other than the person's
 letterbox."
   local-hook)
 
-(def-kom-var lyskom-new-recipient-hook nil
-  "Obsolete synonym for kom-new-recipient-hook."
-  local-hook)
-
 (def-kom-var kom-personal-message-hook nil
   "**Hook to run when a personal message is received.
 
@@ -4407,11 +4361,6 @@ of the message (or possibly `nil'), `recipient' is 0 if the message is
 an alarm message and otherwise the conf-stat of the recipient, and
 `message' is a string that holds the message."
   local-hook)
-
-(def-kom-var lyskom-personal-message-hook nil
-  "Obsolete synonym for kom-personal-message-hook."
-  local-hook)
-
 
 (def-kom-var lyskom-executing-command t
   "Non-nil means the client is executing a command.

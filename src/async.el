@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.67 2007-06-24 09:08:31 byers Exp $
+;;;;; $Id: async.el,v 44.68 2007-06-24 09:33:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.67 2007-06-24 09:08:31 byers Exp $\n"))
+	      "$Id: async.el,v 44.68 2007-06-24 09:33:26 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -500,7 +500,6 @@ Args: SENDER: conf-stat for the person sending the message.
                  (not (eq (conf-stat->conf-no recipient) lyskom-pers-no)))
             (conf-stat->conf-no recipient)
           nil))
-  (run-hooks 'lyskom-personal-message-hook)
   (run-hooks 'kom-personal-message-hook))
 
 
@@ -689,7 +688,6 @@ converted, before insertion."
   (when (and (not lyskom-dont-change-prompt) ;We shall change it
              (not lyskom-executing-command)) ;We have time to do it.
     (lyskom-update-prompt))
-  (run-hooks 'lyskom-new-recipient-hook)
   (run-hooks 'kom-new-recipient-hook))
 
 
@@ -705,7 +703,6 @@ converted, before insertion."
       (lyskom-update-prompt))
 
   (let ((no-message nil))
-    (run-hooks 'lyskom-new-text-hook)
     (run-hooks 'kom-new-text-hook)
   
     (if (and (not no-message)
@@ -719,7 +716,6 @@ converted, before insertion."
   (if (and (not lyskom-dont-change-prompt) ;We shall change it
 	   (not lyskom-executing-command)) ;We have time to do it.
       (lyskom-update-prompt))
-  (run-hooks 'lyskom-deleted-text-hook)
   (run-hooks 'kom-deleted-text-hook))
 
 (defun lyskom-async-new-text (text-stat)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.230 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: commands1.el,v 44.231 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.230 2007-06-09 11:04:53 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.231 2007-06-24 09:33:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1723,9 +1723,6 @@ Args: CONF-STAT MEMBERSHIP"
   (let ((old-current-conf lyskom-current-conf))
     (unless lyskom-is-anonymous
       (blocking-do 'pepsi (conf-stat->conf-no conf-stat)))
-    (lyskom-run-hook-with-args 'lyskom-change-conf-hook 
-                               lyskom-current-conf
-                               (conf-stat->conf-no conf-stat))
     (lyskom-run-hook-with-args 'kom-change-conf-hook 
                                lyskom-current-conf
                                (conf-stat->conf-no conf-stat))
@@ -1733,9 +1730,6 @@ Args: CONF-STAT MEMBERSHIP"
     (lyskom-enter-conf-print-unread conf-stat 0)
     (lp--update-buffer old-current-conf)
     (lp--update-buffer lyskom-current-conf)
-    (lyskom-run-hook-with-args 'lyskom-after-change-conf-hook 
-                               lyskom-current-conf
-                               (conf-stat->conf-no conf-stat))
     (lyskom-run-hook-with-args 'kom-after-change-conf-hook 
                                lyskom-current-conf
                                (conf-stat->conf-no conf-stat))))

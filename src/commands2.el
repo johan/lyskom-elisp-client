@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.221 2007-06-24 05:59:19 byers Exp $
+;;;;; $Id: commands2.el,v 44.222 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.221 2007-06-24 05:59:19 byers Exp $\n"))
+              "$Id: commands2.el,v 44.222 2007-06-24 09:33:27 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -599,7 +599,6 @@ Runs `kom-send-message-setup-hook' when entering the minibuffer."
 (defun lyskom-send-message-minibuffer-setup-hook ()
   (unwind-protect
       (progn
-        (run-hooks 'lyskom-send-message-setup-hook)
         (run-hooks 'kom-send-message-setup-hook))
     (remove-hook 'minibuffer-setup-hook 
                  'lyskom-send-message-minibuffer-setup-hook)))
@@ -607,7 +606,6 @@ Runs `kom-send-message-setup-hook' when entering the minibuffer."
 (defun lyskom-send-message-minibuffer-exit-hook ()
   (unwind-protect
       (progn
-        (run-hooks 'lyskom-send-message-exit-hook)
         (run-hooks 'kom-send-message-exit-hook))
     (remove-hook 'minibuffer-exit-hook
                  'lyskom-send-message-minibuffer-exit-hook)))
@@ -636,7 +634,6 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                                      (blocking-do 'get-conf-stat 
                                                   pers-no)))
 
-    (run-hooks 'lyskom-send-message-hook)
     (run-hooks 'kom-send-message-hook)
     (if lyskom-message-string
         (progn

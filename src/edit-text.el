@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.124 2007-06-12 17:07:44 byers Exp $
+;;;;; $Id: edit-text.el,v 44.125 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.124 2007-06-12 17:07:44 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.125 2007-06-24 09:33:27 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -487,8 +487,7 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
               ;; Run user hooks
               ;; ####: ++++: FIXME: We should quit more graciously.
 
-              (if (and (not (run-hook-with-args-until-failure 'kom-send-text-hook))
-                       (not (run-hook-with-args-until-failure 'lyskom-send-text-hook)))
+              (if (not (run-hook-with-args-until-failure 'kom-send-text-hook))
                   (signal 'lyskom-edit-text-abort nil))
 
 
@@ -605,20 +604,6 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                       (setq lyskom-dont-change-prompt t))
                   (setq lyskom-is-writing nil)
                   (lyskom-tell-internat 'kom-tell-send)
-                  (run-hook-with-args 'lyskom-create-text-hook
-                              full-message
-                              misc-list
-                              (if (not is-anonymous)
-                                  (cons (lyskom-create-aux-item
-                                         0 15 0 0
-                                         (lyskom-create-aux-item-flags
-                                          nil nil nil nil nil nil nil nil)
-                                         0 (concat "lyskom.el "
-                                                   lyskom-clientversion))
-                                        aux-list)
-                                aux-list)
-                              buffer
-                              is-anonymous)
                   (run-hook-with-args 'kom-create-text-hook
                               full-message
                               misc-list

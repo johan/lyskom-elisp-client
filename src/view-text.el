@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.87 2007-06-08 14:23:54 byers Exp $
+;;;;; $Id: view-text.el,v 44.88 2007-06-24 09:33:27 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.87 2007-06-08 14:23:54 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.88 2007-06-24 09:33:27 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -98,7 +98,6 @@ Note that this function must not be called asynchronously."
                    lyskom-view-text-text-stat text-stat)
 	     (if (and text-stat text)
 		 (progn
-                   (run-hooks 'lyskom-view-text-hook)
                    (run-hooks 'kom-view-text-hook)
 		   ;; Use a marker, because the buffer may lose data
 		   ;; at the top if kom-max-buffer-size is set.

@@ -1,5 +1,44 @@
 2007-06-24    <David Byers@GULAG>
 
+	Fix bug 673:
+	* async.el (lyskom-show-personal-message): Don't run
+	lyskom-personal-message-hook.
+	(lyskom-default-new-recipient-hook): Don't run
+	lyskom-new-recipient-hook.
+	(lyskom-default-new-text-hook): Don't run lyskom-new-text-hook.
+	(lyskom-default-deleted-text-hook): Don't run
+	lyskom-deleted-text-hook.
+
+	* edit-text.el (lyskom-edit-send): Don't run lyskom-send-text-hook.
+	(lyskom-edit-send): Don't run lyskom-create-text-hook.
+
+	* lyskom-rest.el (lyskom-enter-conf): Don't run
+	lyskom-change-conf-hook or lyskom-after-change-conf-hook.
+	(lyskom-leave-current-conf): Run kom-change-conf-hook and
+	kom-after-change-conf-hook instead of the obsolete names.
+
+	* commands1.el (lyskom-go-to-empty-conf): Don't run
+	lyskom-change-conf-hook or lyskom-after-change-conf-hook.
+
+	* commands2.el (lyskom-send-message-minibuffer-setup-hook): Don't
+	run lyskom-send-message-setup-hook.
+	(lyskom-send-message-minibuffer-exit-hook): Don't run
+	lyskom-send-message-exit-hook.
+
+	* view-text.el (lyskom-view-text): Don't run
+	lyskom-view-text-hook.
+
+	* vars.el.in (lyskom-view-text-hook): Removed.
+	(lyskom-send-message-hook): Removed.
+	(lyskom-send-message-setup-hook): Removed.
+	(lyskom-send-message-exit-hook): Removed.
+	(lyskom-change-conf-hook): Removed.
+	(lyskom-after-change-conf-hook): Removed.
+	(lyskom-create-text-hook): Removed.
+	(lyskom-deleted-text-hook): Removed.
+	(lyskom-new-recipient-hook): Removed.
+	(lyskom-personal-message-hook): Removed.
+
 	Prepare to print more info on logins:
 	* async.el (lyskom-parse-async): Parse the session number in the
 	login message. Get static session info.
