@@ -1,7 +1,12 @@
 2007-06-24    <David Byers@GULAG>
 
+	Fixed bug 1608:
+	* async.el (lyskom-show-logged-in-person): Applied modified patch
+	from Per Jonsson (unlike the original patch, still print the
+	server name).
+
 	Fix bug 1620:
-	* commands2.el (lyskom-send-message): Applicerade patch från Per
+	* commands2.el (lyskom-send-message): Applied patch from Per
 	Jonsson.
 
 2007-06-13    <David Byers@GULAG>

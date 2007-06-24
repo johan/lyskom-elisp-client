@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.365 2007-06-24 05:59:19 byers Exp $
+;;;;; $Id: english-strings.el,v 44.366 2007-06-24 06:18:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.365 2007-06-24 05:59:19 byers Exp $"))
+              "$Id: english-strings.el,v 44.366 2007-06-24 06:18:00 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1091,9 +1091,9 @@ for a text.
 ===============================================================================
 ")
     (has-entered . "%#1:P has entered %#2s.")
-    (has-entered-r . "%#2@%#1P has entered %#3s.\n")
+    (has-entered-r . "%#2@%#1P has entered %#3s (%#4s %#5s).\n")
     (has-left . "%#1:P has left %#2s.")
-    (has-left-r . "%#2@%#1P has left %#3s.\n")
+    (has-left-r . "%#2@%#1P has left %#3s (%#4s %#5s).\n")
     (Unknown . "Unknown")
     (unknown . "unknown")
     (Unknown2 . "Unknown")
@@ -1303,7 +1303,7 @@ You should set it to a better value.\n")
 %#2s
 LysKOM session killed abnormally
 Error message: %#1s**************************************************")
-    (closed-connection-other-buf . "
+    (closed-connection-other-buf . "\
 **************************************************
 The LysKOM session %#1s was killed abnormally.
 **************************************************

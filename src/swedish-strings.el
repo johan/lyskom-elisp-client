@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.409 2007-06-24 05:59:19 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.410 2007-06-24 06:18:00 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.409 2007-06-24 05:59:19 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.410 2007-06-24 06:18:00 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1134,9 +1134,9 @@ upptagna. Logga ut och kom tillbaks senare om du väntar nu.
 ===============================================================================
 ")
     (has-entered . "Nu har %#1:P gått in i %#2s.")
-    (has-entered-r . "%#2@Nu har %#1P gått in i %#3s.\n")
+    (has-entered-r . "%#2@Nu har %#1P gått in i %#3s (%#4s %#5s).\n")
     (has-left . "Nu har %#1:P gått ur %#2s.")
-    (has-left-r . "%#2@Nu har %#1P gått ur %#3s.\n")
+    (has-left-r . "%#2@Nu har %#1P gått ur %#3s (%#4s %#5s).\n")
     (Unknown . "Okänd")
     (unknown . "okänd")
     (Unknown2 . "Okänt")
@@ -1349,7 +1349,7 @@ Du bör sätta den till ett bättre värde.\n")
 %#2s
 LysKOM-sessionen onormalt stängd.
 Felmeddelande: %#1s**************************************************")
-    (closed-connection-other-buf . "
+    (closed-connection-other-buf . "\
 **************************************************
 LysKOM-sessionen %#1s stängdes onormalt.
 **************************************************
