@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.220 2007-06-12 17:16:54 byers Exp $
+;;;;; $Id: commands2.el,v 44.221 2007-06-24 05:59:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.220 2007-06-12 17:16:54 byers Exp $\n"))
+              "$Id: commands2.el,v 44.221 2007-06-24 05:59:19 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -657,7 +657,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
                                   lyskom-default-async-dashed-lines-face)))
                     (when kom-async-highlight-text-body
                       `(face ,(or kom-async-text-body-face
-                                  lyskom-default-async-text-body-face))))
+                                  lyskom-default-async-text-body-face)))
+		    (let ((kom-print-relative-dates nil))
+		      (lyskom-format-time 'date-and-time)))
                    lyskom-pers-no
                    kom-filter-outgoing-messages))
             (lyskom-format-insert-before-prompt

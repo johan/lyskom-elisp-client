@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.164 2007-06-10 11:08:21 byers Exp $
+;;;;; $Id: utilities.el,v 44.165 2007-06-24 05:59:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.164 2007-06-10 11:08:21 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.165 2007-06-24 05:59:20 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -186,6 +186,62 @@ If BEFORE is not in the list, then insert EL at the end of the list."
 ;; Set lyskom-maxint correctly
 
 (setq lyskom-max-int (lyskom-maxint))
+
+(defun lyskom-indirect-assq (key assoc-list)
+  "Return the value of KEY in ASSOC-LIST.
+
+An indirect assoc list is a kind of assoc list that can contain
+references to other lists. This function is intended to work with
+numbers only since symbols and lists have special meanings as keys.
+
+Matching is done as follows. If an element in ASSOC-LIST is a cons
+and its car is a:
+
+symbol bound to a list	Recursively test the list, setting the 
+			default return value to the cdr of the
+			element.
+
+symbol with value eq KEY Return cdr of the element.
+
+function		Call the function with KEY as its only arg. 
+			Return the cdr of the element if the function
+			returns non-nil.
+
+list			Return the cdr of the element if KEY is
+			memq the list.
+
+t			If they key isn't found anywhere, return the
+			cdr of this element.
+
+other atom		Return the cdr of the element if KEY is eq
+			the car of the element.
+
+If an element in ASSOC-LIST is not a cons, but is eq KEY, return
+the default return value (which defaults to t, but can be changed
+when recursing due to bound symbols being used as keys."
+  (catch 'lyskom-indirect-assq-return
+    (let ((memo-list (cons nil nil)))
+      (lyskom-indirect-assq-2 key assoc-list memo-list t)
+      (car memo-list))))
+
+(defun lyskom-indirect-assq-2 (key assoc-list &optional memo-list default-return)
+  "Internal function to implement lyskom-indirect-assoc."
+  (unless (memq assoc-list memo-list)
+    (setcdr memo-list (cons assoc-list (cdr memo-list)))
+    (lyskom-traverse el assoc-list
+      (cond ((atom el) (when (eq el key) (throw 'lyskom-indirect-assq-return default-return)))
+	    ((eq t (car el)) (setcar memo-list (cdr el)))
+	    ((functionp (car el))
+	     (when (funcall (car el) key)
+	       (throw 'lyskom-indirect-assq-return (cdr el))))
+	    ((and (symbolp (car el)) (boundp (car el)))
+	     (cond ((listp (symbol-value (car el)))
+		    (lyskom-indirect-assq-2 key (symbol-value (car el)) memo-list (cdr el)))
+		   ((eq (symbol-value (car el)) key)
+		    (throw 'lyskom-indirect-assq-return (cdr el)))))
+	    ((listp (car el))
+	     (lyskom-indirect-assq-2 key (car el) memo-list (cdr el)))
+	    ((atom (car el)) (when (eq (car el) key) (throw 'lyskom-indirect-assq-return (cdr el))))))))
 
 
 (defun lyskom-try-require (feature &optional message &rest args)

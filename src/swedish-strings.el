@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.408 2007-06-10 11:08:20 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.409 2007-06-24 05:59:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.408 2007-06-10 11:08:20 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.409 2007-06-24 05:59:19 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -770,7 +770,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 %[%#3$\
 ================================================================
 %]%[%#4$\
-Ditt meddelande till %#2M:
+Ditt meddelande till %#2M (%#5s):
 
 %#1t
 %]%[%#3$\
@@ -780,7 +780,7 @@ Ditt meddelande till %#2M:
 %[%#3$\
 ================================================================
 %]%[%#4$\
-Ditt alarmmeddelande löd:
+Ditt alarmmeddelande löd (%#5s):
 
 %#1t
 %]%[%#3$\
@@ -790,7 +790,7 @@ Ditt alarmmeddelande löd:
 %[%#3$\
 ===============================================================================
 %]%[%#4$\
-Ditt meddelande till %#2M:
+Ditt meddelande till %#2M (%#5s):
 
 %#1t
 %]%[%#3$\
@@ -800,7 +800,7 @@ Ditt meddelande till %#2M:
 %[%#3$\
 ===============================================================================
 %]%[%#4$\
-Ditt alarmmeddelande löd:
+Ditt alarmmeddelande löd (%#5s):
 
 %#1t
 %]%[%#3$\

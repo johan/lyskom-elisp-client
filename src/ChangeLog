@@ -1,3 +1,15 @@
+2007-06-24    <David Byers@GULAG>
+
+	Fix bug 1620:
+	* commands2.el (lyskom-send-message): Applicerade patch från Per
+	Jonsson.
+
+2007-06-13    <David Byers@GULAG>
+
+	Generalized support for lists like kom-highlight-conferences:
+	* utilities.el (lyskom-indirect-assq): New function.
+	(lyskom-indirect-assq-2): Utility function.
+
 2007-06-12    <David Byers@GULAG>
 
 	Fix bug 1619:

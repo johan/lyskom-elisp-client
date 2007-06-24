@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.364 2007-06-10 11:08:20 byers Exp $
+;;;;; $Id: english-strings.el,v 44.365 2007-06-24 05:59:19 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.364 2007-06-10 11:08:20 byers Exp $"))
+              "$Id: english-strings.el,v 44.365 2007-06-24 05:59:19 byers Exp $"))
 
 
 ;;; ================================================================
@@ -757,14 +757,14 @@ Read all about it at http://www.lysator.liu.se/history/")
     (message-prompt . "Message%#1?z%[%]%[ (till alla inloggade)%]: ")
     (message-sent-to-user . "\
 %[%#3$================================================================
-%]%[%#4$Your message for %#2M:
+%]%[%#4$Your message for %#2M (%#5s):
 
 %#1t
 %]%[%#3$----------------------------------------------------------------
 %]")
     (message-sent-to-all . "\
 %[%#3$================================================================
-%]%[%#4$Your public message
+%]%[%#4$Your public message (%#5s):
 
 %#1t
 %]%[%#3$----------------------------------------------------------------
@@ -772,7 +772,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (message-sent-to-user-long . "\
 %[%#3$\
 ===============================================================================
-%]%[%#4$Your message for %#2M:
+%]%[%#4$Your message for %#2M (%#5s):
 
 %#1t
 %]%[%#3$\
@@ -781,7 +781,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (message-sent-to-all-long . "\
 %[%#3$\
 ===============================================================================
-%]%[%#4$Your public message
+%]%[%#4$Your public message (%#5s):
 
 %#1t
 %]%[%#3$\
