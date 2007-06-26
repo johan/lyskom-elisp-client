@@ -1,3 +1,8 @@
+2007-06-26    <David Byers@GULAG>
+
+	* utilities.el (lyskom-indirect-assq): If assoc-list is t, then
+	return t. This is a (very) special case.
+
 2007-06-24    <David Byers@GULAG>
 
 	More customization:

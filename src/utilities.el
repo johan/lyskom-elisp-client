@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.167 2007-06-24 14:07:44 byers Exp $
+;;;;; $Id: utilities.el,v 44.168 2007-06-26 16:57:48 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.167 2007-06-24 14:07:44 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.168 2007-06-26 16:57:48 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -219,10 +219,12 @@ other atom		Return the cdr of the element if KEY is eq
 If an element in ASSOC-LIST is not a cons, but is eq KEY, return
 the default return value (which defaults to t, but can be changed
 when recursing due to bound symbols being used as keys."
-  (catch 'lyskom-indirect-assq-return
-    (let ((memo-list (cons nil nil)))
-      (lyskom-indirect-assq-2 key assoc-list memo-list t)
-      (car memo-list))))
+  (if (listp assoc-list)
+      (catch 'lyskom-indirect-assq-return
+	(let ((memo-list (cons nil nil)))
+	  (lyskom-indirect-assq-2 key assoc-list memo-list t)
+	  (car memo-list)))
+    (eq assoc-list t)))
 
 (defun lyskom-indirect-assq-2 (key assoc-list &optional memo-list default-return)
   "Internal function to implement lyskom-indirect-assoc."
