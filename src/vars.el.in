@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.327 2007-06-24 17:21:00 byers Exp $
+;;;;; $Id: vars.el.in,v 44.328 2007-06-30 12:52:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.327 2007-06-24 17:21:00 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.328 2007-06-30 12:52:52 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1800,8 +1800,8 @@ See also `kom-server-aliases' and `kom-builtin-server-aliases'."
 (def-kom-var kom-view-text-hook nil
   "**Hook that is called before a text is shown. 
 
-When the hooks are called, `kom-view-text-text' is bound to the text
-mass of the text and `kom-view-text-text-stat' to the text-stat of the
+When the hooks are called, `lyskom-view-text-text' is bound to the text
+mass of the text and `lyskom-view-text-text-stat' to the text-stat of the
 text to be shown."
   local-hook)
 

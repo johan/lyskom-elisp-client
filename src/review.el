@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.67 2007-06-24 14:07:44 byers Exp $
+;;;;; $Id: review.el,v 44.68 2007-06-30 12:52:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.67 2007-06-24 14:07:44 byers Exp $\n"))
+	      "$Id: review.el,v 44.68 2007-06-30 12:52:52 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -100,14 +100,19 @@
 kom-review-marks-texts-as-read toggled."
   (interactive)
   (let* ((kom-review-marks-texts-as-read (not kom-review-marks-texts-as-read))
-         (sequence (read-key-sequence
-                    (format "%s: " 
-                            (lyskom-get-string
-                             (if kom-review-marks-texts-as-read 
-                                 'review-marking-as-read
-                               'review-not-marking-as-read)))))
-         (command (lookup-key (current-local-map) sequence)))
-    (when (commandp command)
+	 (sequence (read-key-sequence
+		    (format "%s: " 
+			    (lyskom-get-string
+			     (if kom-review-marks-texts-as-read 
+				 'review-marking-as-read
+			       'review-not-marking-as-read)))))
+	 (command (or (lookup-key (current-local-map) sequence)
+		      (lookup-key global-map sequence))))
+    (when (or (null command) (eq command 'kom-mouse-null))
+      (setq sequence (read-key-sequence ""))
+      (setq command (or (lookup-key (current-local-map) sequence)
+			(lookup-key global-map sequence))))
+    (when (commandp command) 
       (call-interactively command))))
 
 (defun kom-toggle-cache-prefix ()
@@ -278,7 +283,8 @@ mark unread performed with `kom-unread-by-to'."
 			      (funcall filter 'description)))
     
       (condition-case arg
-          (let ((list (lyskom-get-texts-by-to by to count t t filter)))
+          (let* ((lyskom-last-review-num count)
+		 (list (lyskom-get-texts-by-to by to count t t filter)))
             (setq lyskom-last-unread-num 
                   (if (< lyskom-last-unread-num 0)
                       (- count)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.269 2007-06-26 17:10:49 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.270 2007-06-30 12:52:52 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.269 2007-06-26 17:10:49 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.270 2007-06-30 12:52:52 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1260,12 +1260,21 @@ back, and works even if from has the property."
     (error (lyskom-ignore var))))
 
 (defun lyskom-do-insert (string)
-  (let ((start (point)))
-    (insert string)
-    (lyskom-do-special-inserts start (point) 'lyskom-fill)
-    (lyskom-do-special-inserts start (point) 'lyskom-overlay)
-    (lyskom-do-special-inserts start (point) 'special-insert)
-))
+  (if (lyskom-format-state-p string)
+      (let ((start (point)))
+	(lyskom-do-insert (lyskom-format-transform-result string))
+	(lyskom-traverse defer-info (format-state->delayed-content string)
+	  (set-defer-info->pos defer-info 
+			       (set-marker (make-marker)
+					   (+ start 
+					      (defer-info->pos defer-info))))
+	  (lyskom-defer-insertion defer-info)))
+
+    (let ((start (point)))
+      (insert string)
+      (lyskom-do-special-inserts start (point) 'lyskom-fill)
+      (lyskom-do-special-inserts start (point) 'lyskom-overlay)
+      (lyskom-do-special-inserts start (point) 'special-insert))))
 
 
 
@@ -1431,46 +1440,21 @@ Args: FORMAT-STRING &rest ARGS"
 (defun lyskom-format-insert (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at the end of the buffer with `lyskom-insert'."
-  (let* ((state (lyskom-do-format format-string argl t))
-	 ;; We have to use a marker, because lyskom-insert may trim
-	 ;; the buffer size.
-	 (start (point-max-marker))
-	 (deferred (format-state->delayed-content state)))
-    (lyskom-insert (lyskom-format-transform-result state))
-
-    (while deferred
-      (let ((defer-info (car deferred))
-	    (m (make-marker)))
-	(set-marker m (+ start (defer-info->pos defer-info)))
-	(set-defer-info->pos defer-info m) 
-	(lyskom-defer-insertion defer-info)
-	(setq deferred (cdr deferred))))
-    (set-marker start nil)))
+  (lyskom-insert (lyskom-do-format format-string argl t)))
 
 (defun lyskom-format-insert-at-point (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted at point."
-  (let* ((state (lyskom-do-format format-string argl t))
-         (start (point))
-	 (deferred (format-state->delayed-content state)))
-    (lyskom-insert-at-point (lyskom-format-transform-result state))
-    (while deferred
-      (let ((defer-info (car deferred))
-	    (m (make-marker)))
-	(set-marker m (+ start (defer-info->pos defer-info)))
-	(set-defer-info->pos defer-info m) 
-	(lyskom-defer-insertion defer-info)
-	(setq deferred (cdr deferred))))))
+  (lyskom-insert-at-point (lyskom-do-format format-string argl t)))
+
 
 (defun lyskom-format-insert-before-prompt (format-string &rest argl)
   "Format and insert a string according to FORMAT-STRING.
 The string is inserted just before the prompt, and if the prompt is not
 currently visible the text is queued to be inserted when the prompt
-reappears.
-
-Deferred insertions are not supported."
+reappears."
   (lyskom-insert-before-prompt
-   (lyskom-format-transform-result (lyskom-do-format format-string argl))))
+   (lyskom-do-format format-string argl t)))
 
 
 (defun lyskom-do-format (format-string &optional argl allow-defer)
