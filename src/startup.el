@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.116 2007-07-07 15:26:17 byers Exp $
+;;;;; $Id: startup.el,v 44.117 2007-07-07 15:41:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.116 2007-07-07 15:26:17 byers Exp $\n"))
+	      "$Id: startup.el,v 44.117 2007-07-07 15:41:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -422,6 +422,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                                 kom-ssh-relay-host))
               (when proc (delete-process proc))
               (setq relay-port (+ 10000 (random 20000)))
+	      (setq relay-port 4455)
               (put procsym 'relay-host 
                    (if (string-match "@" kom-ssh-relay-host)
                        (substring kom-ssh-relay-host (1+ (match-beginning 0)))
@@ -451,7 +452,8 @@ clients of the event. See lyskom-mode for details on lyskom."
                      (goto-char (point-max))
                      (re-search-backward "^--- .* ---$" nil t)
                      (not (re-search-forward "^ok$" nil t)))
-              (when (re-search-forward "\\<\\(Enter passphrase.*$\\|^.*password.*$\\)\\|refused\\|disconnect\\|denied\\|error\\|key not found\\|cannot listen\\|[Aa]ddress already in use\\>" nil t)
+              (when (or (re-search-forward kom-ssh-general-errors nil t)
+			(not (eq 'run (process-status proc))))
                 (cond ((match-string 1)
                        (process-send-string 
                         proc
@@ -464,6 +466,20 @@ clients of the event. See lyskom-mode for details on lyskom."
                                  (progn (skip-chars-forward "^\n\r")
                                         (point)))))))
               (sleep-for 0.5))
+
+	    ;; Check that local forwarding works.
+
+	    (save-excursion
+	      (goto-char (point-max))
+	      (re-search-backward "^--- .* ---$" nil t)
+	      (when (re-search-forward kom-ssh-forwarding-errors nil t)
+		(kill-process proc)
+		(error (lyskom-get-string 'ssh-cant-connect)
+                                (buffer-substring-no-properties
+                                 (progn (beginning-of-line) (point))
+                                 (progn (skip-chars-forward "^\n\r")
+                                        (point))))))
+
             (setq proc nil)
             (lyskom-message 
              "%s"

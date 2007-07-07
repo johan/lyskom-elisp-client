@@ -1,3 +1,8 @@
+2007-07-07  David Byers  <davby@sysinst-gw.sysinst.ida.liu.se>
+
+	* vars.el.in (kom-ssh-general-errors): New variable.
+	(kom-ssh-forwarding-errors): New variable.
+
 2007-07-07    <David Byers@GULAG>
 
 	* startup.el (lyskom-setup-ssh-relay): Detect failure to set up
