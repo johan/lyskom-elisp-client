@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.328 2007-06-30 12:52:52 byers Exp $
+;;;;; $Id: vars.el.in,v 44.329 2007-07-07 14:15:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.328 2007-06-30 12:52:52 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.329 2007-07-07 14:15:58 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1524,7 +1524,8 @@ If you want the messages in the buffer, set the variable
 `kom-presence-messages-in-buffer'.
 
 Values other than those listed are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-presence-messages-in-buffer nil
   "**Controls display of presence messages in the LysKOM buffer.
@@ -1535,7 +1536,8 @@ prompt.
 
 See `kom-presence-messages-in-echo-area for a list of permitted
 values."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-unread-mode-line-type nil
   "**Controls how information about unread sessions is shown in the mode line.
@@ -1795,7 +1797,8 @@ This variable contains the name of the current LysKOM session (a string)
 or `nil'. If set, it will be used as the nickname for this LysKOM session.
 
 See also `kom-server-aliases' and `kom-builtin-server-aliases'."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-view-text-hook nil
   "**Hook that is called before a text is shown. 
@@ -2175,7 +2178,8 @@ group and alarm messages sent by users in this list will be silently
 ignored.
 
 Values other than those listed are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-ignore-message-recipients nil
   "**List of recipients you do not want group messages to.
@@ -2184,7 +2188,8 @@ The value of this variable must be a list of conference numbers.
 Messages sent to a recipient listed will be silently ignored.
 
 Values other than those listed are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-show-personal-message-date t
   "**Controls display of date on personal messages.
@@ -2280,7 +2285,8 @@ will vary depending on how it is printed. Functions should be written
 so they work regardless of what is passed to them.
 
 All other values are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-person-list-1 nil
   "**General list of persons. 
@@ -2288,7 +2294,8 @@ All other values are reserved for future use."
 This variable has no predefined meanind and is intended for use
 in variables such as `kom-presence-messages-in-buffer' and
 `kom-highlight-conferences'."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-person-list-2 nil
   "**General list of persons. 
@@ -2296,7 +2303,8 @@ in variables such as `kom-presence-messages-in-buffer' and
 This variable has no predefined meanind and is intended for use
 in variables such as `kom-presence-messages-in-buffer' and
 `kom-highlight-conferences'."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-person-list-3 nil
   "**General list of persons. 
@@ -2304,7 +2312,8 @@ in variables such as `kom-presence-messages-in-buffer' and
 This variable has no predefined meanind and is intended for use
 in variables such as `kom-presence-messages-in-buffer' and
 `kom-highlight-conferences'."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-person-list-4 nil
   "**General list of persons. 
@@ -2312,7 +2321,8 @@ in variables such as `kom-presence-messages-in-buffer' and
 This variable has no predefined meanind and is intended for use
 in variables such as `kom-presence-messages-in-buffer' and
 `kom-highlight-conferences'."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-friends nil
   "**List of friends and other nice people.
@@ -2325,7 +2335,8 @@ also receive special treatment in other cases (see
 See `kom-morons' for a related variable.
 
 Values other than a list of integers are reserved for future use."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-morons nil
   "**List of people morons and other nasty people.
@@ -2336,7 +2347,8 @@ here will be displayed using the face in `kom-morons-face'.
 See `kom-friends' for a related variable.
 
 Values other than a list of integers are reserved for future use."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-dont-check-commented-authors nil
   "**A list of recipients that don't need to see comments to their texts.
@@ -2351,7 +2363,8 @@ Typically it will contain a list of import agents.
 
 Values other than a list of integers are reserved for future use."
   server
-  inherited)
+  inherited
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var kom-smileys t
   "**Controls display of graphical smileys.
@@ -2717,7 +2730,9 @@ A list of conference numbers means perform the check for all
 conferences other than those listed.
 
 All other values are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
+
 
 (def-kom-var kom-check-commented-author-membership t
   "**Controls check that authors of commented texts will see a new comment.
@@ -2734,7 +2749,9 @@ See `kom-dont-check-commented-authors' for a way to exclude certain
 authors from this check.
 
 Values other than `t' and `nil' are reserved for future use."
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
+
 
 (def-kom-var kom-inhibit-typeahead nil
   "**Controls how command typed while the client is busy are handled.
@@ -2995,7 +3012,8 @@ control.
 
 Values other than `nil' and a list of persons are reserved for future
 use."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-self-control t
   "**Enable or disable remote control for the logged-in user.
@@ -3553,6 +3571,7 @@ Users are encouraged to use their best sense of humor."
     kom-comment-previous
     kom-private-answer-previous
     kom-change-language
+    kom-delete-user-area
     )
   "Commands that are not supposed to appear in menus.")
 
@@ -3676,6 +3695,7 @@ Users are encouraged to use their best sense of humor."
     kom-filter-edit
     kom-list-filters
     kom-show-user-area
+    kom-delete-user-area
     kom-change-conf-type
 
     kom-change-auto-reply
@@ -4285,7 +4305,8 @@ This is currently not implemented.")
 
 (def-kom-var kom-permanent-filter-list nil
   "List of patterns to filter permanently."
-  server)
+  server
+  non-portable)
 
 (def-kom-var kom-session-filter-list nil
   "List of patterns to filter during this session."
@@ -4598,7 +4619,8 @@ while texts by persons listed in the variable `kom-friends' can
 be shown as formatted HTML.
 
 Values other than those listed are reserved for future use." 
-  server)
+  server
+  copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var lyskom-format-special 
   '(("html"               . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
@@ -4662,11 +4684,13 @@ should be dynamically bound whenever it needs to be used.")
 
 (def-kom-var lyskom-last-known-conf-no nil
   "Last known conference number."
-  server)
+  server
+  non-portable)
 
 (def-kom-var lyskom-last-known-pers-no nil
   "Last known conference number."
-  server)
+  server
+  non-portable)
 
 (defvar lyskom-xface-cache (make-vector 29 0))
 

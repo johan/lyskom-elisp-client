@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: defvar.el,v 44.19 2004-07-12 18:11:16 byers Exp $
+;;;;; $Id: defvar.el,v 44.20 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 
 (defvar lyskom-clientversion-long 
-  "$Id: defvar.el,v 44.19 2004-07-12 18:11:16 byers Exp $\n"
+  "$Id: defvar.el,v 44.20 2007-07-07 14:15:57 byers Exp $\n"
   "Version for every file in the client.")
 
 
@@ -63,6 +63,9 @@ These are the flags that are saved in the elisp-client part of the server.")
   "Tells the client what variables are not to be saved in the server, but
 are to be read from the server. This is for transitioning.")
 
+(defvar lyskom-copy-transition-variables nil
+  "Tells the client about variables that need transforming when copying.")
+
 (defvar lyskom-minibuffer-variables nil
   "These are variables that should be set in the minibuffer by 
 lyskom-with-lyskom-minibuffer.")
@@ -75,6 +78,9 @@ lyskom-with-lyskom-minibuffer.")
 
 Don't change these. They are defined by the protocol.")
 
+(defvar lyskom-non-portable-server-variables nil
+  "List of variables that should not be copied from server to server.")
+
 
 (defmacro lyskom-save-variables (var-list &rest forms)
   "Save the values and property list of symbols in VAR-LIST and execute FORMS
@@ -84,38 +90,37 @@ is saved before executing FORMS and restored when FORMS have finished."
         (sym2 (make-symbol "lyskom-saved-symbols"))
         (sym3 (make-symbol "lyskom-saved-local"))
         (sym4 (make-symbol "lyskom-saved-plist")))
-    (` (let* (((, sym2) (quote (, var-list)))
-              ((, sym1) (mapcar 'symbol-value (, sym2)))
-              ((, sym4) (mapcar 'symbol-plist (, sym2)))
-              ((, sym3) (mapcar (function
-                                 (lambda (v)
-                                   (local-variable-p v (current-buffer))))
-                                 (, sym2))))
+    `(let* ((,sym2 (quote ,var-list))
+	    (,sym1 (mapcar 'symbol-value ,sym2))
+	    (,sym4 (mapcar 'symbol-plist ,sym2))
+	    (,sym3 (mapcar (lambda (v)
+			     (local-variable-p v (current-buffer)))
+			   ,sym2)))
          (unwind-protect 
-             (progn (,@ forms))
-           (while (, sym1)
-             (if (car (, sym3)) (make-local-variable (car (, sym2))))
-             (set (car (, sym2)) (car (, sym1)))
-             (setplist (car (, sym2)) (car (, sym4)))
-             (setq (, sym1) (cdr (, sym1))
-                   (, sym2) (cdr (, sym2))
-                   (, sym3) (cdr (, sym3))
-                   (, sym4) (cdr (, sym4)))))))))
+             (progn ,@forms)
+           (while ,sym1
+             (when (car ,sym3) (make-local-variable (car ,sym2)))
+             (set (car ,sym2) (car ,sym1))
+             (setplist (car ,sym2) (car ,sym4))
+             (setq ,sym1 (cdr ,sym1)
+                   ,sym2 (cdr ,sym2)
+                   ,sym3 (cdr ,sym3)
+                   ,sym4 (cdr ,sym4)))))))
 
 (put 'lyskom-save-variables 'edebug-form-spec
      '(sexp body))
 
 (defmacro lyskom-with-lyskom-minibuffer (&rest forms)
   "Run FORMS after ensuring that LysKOM minibuffer variables will be set."
-  (` (let* ((lyskom-minibuffer-values
-             (mapcar 'symbol-value lyskom-minibuffer-variables)))
-       (unwind-protect
-           (progn
-             (add-hook 'minibuffer-setup-hook
-                       'lyskom-setup-minibuffer-variables)
-             (,@ forms))
-         (remove-hook 'minibuffer-setup-hook
-                      'lyskom-setup-minibuffer-variables)))))
+  `(let* ((lyskom-minibuffer-values
+	   (mapcar 'symbol-value lyskom-minibuffer-variables)))
+     (unwind-protect
+	 (progn
+	   (add-hook 'minibuffer-setup-hook
+		     'lyskom-setup-minibuffer-variables)
+	   ,@forms)
+       (remove-hook 'minibuffer-setup-hook
+		    'lyskom-setup-minibuffer-variables))))
 
 (put 'lyskom-with-lyskom-minibuffer 'edebug-form-spec
      '(body))
@@ -153,10 +158,12 @@ language-force  A language-variable whose value is to be forced."
           (protected nil)
           (elisp-block nil)
           (transition-block nil)
+          (copy-transition-block nil)
           (buffer-local nil)
           (widget-spec nil)
           (doc-string nil)
           (minibuffer nil)
+          (non-portable nil)
           (local-hook-doc nil)
           (local-var-doc nil)
           (server-doc nil)
@@ -167,16 +174,15 @@ language-force  A language-variable whose value is to be forced."
         (cond ((stringp (car arglist)) (setq doc-string (car arglist)))
               ((consp (car arglist))
                (setq widget-spec 
-                     (` ((setq lyskom-custom-variables
-                               (cons  (quote (, (list name
-                                                      (car arglist))))
-                                      lyskom-custom-variables))))))
+                     `((setq lyskom-custom-variables
+			     (cons  (quote ,(list name (car arglist)))
+				    lyskom-custom-variables)))))
               ((symbolp (car arglist))
                (cond ((eq (car arglist) 'server)
                       (setq local-var-doc t server-doc t)
                       (setq elisp-block
-                            `((add-to-list 'lyskom-elisp-variables ', name)
-                              (add-to-list 'lyskom-local-variables ', name))))
+                            `((add-to-list 'lyskom-elisp-variables ',name)
+                              (add-to-list 'lyskom-local-variables ',name))))
 
                      ((eq (car arglist) 'common)
                       (setq local-var-doc t server-doc t)
@@ -197,50 +203,52 @@ language-force  A language-variable whose value is to be forced."
                                              '(,name . ,converter))
                                 (add-to-list 'lyskom-local-variables ',name)))))
 
+                     ((eq (car arglist) 'copy-transition)
+                      (let ((converter (car (cdr arglist))))
+                        (setq arglist (cdr arglist))
+                        (setq local-var-doc t server-doc t)
+                        (setq copy-transition-block
+                              `((add-to-list 'lyskom-copy-transition-variables 
+                                             '(,name . ,converter))))))
+
                      ((eq (car arglist) 'server-hook)
                       (setq local-hook-doc t server-doc t)
                       (setq elisp-block
-                            (` ((add-to-list 'lyskom-elisp-variables
-                                             (quote (, name)))
-                                (add-to-list 'lyskom-local-hooks
-                                             (quote (, name)))))))
+                            `((add-to-list 'lyskom-elisp-variables ',name)
+			      (add-to-list 'lyskom-local-hooks ',name))))
 
                      ((eq (car arglist) 'protected)
                       (setq local-var-doc t)
                       (setq protected
-                            (` ((put (quote (, name)) 'permanent-local t)
-                                (add-to-list 'lyskom-protected-variables
-                                             (quote (, name)))
-                                (add-to-list 'lyskom-local-variables
-                                             (quote (, name)))))))
+                            `((put ',name 'permanent-local t)
+			      (add-to-list 'lyskom-protected-variables ',name)
+			      (add-to-list 'lyskom-local-variables ',name))))
 
                      ((eq (car arglist) 'inherited)
                       (setq local-var-doc t)
                       (setq inherited
-                            (` ((add-to-list 'lyskom-inherited-variables
-                                             (quote (, name)))
-                                (put (quote (, name)) 'permanent-local t)
-                                (add-to-list 'lyskom-protected-variables
-                                             (quote (, name)))
-                                (add-to-list 'lyskom-local-variables
-                                             (quote (, name)))))))
+                            `((add-to-list 'lyskom-inherited-variables ',name)
+			      (put ',name 'permanent-local t)
+			      (add-to-list 'lyskom-protected-variables ',name)
+			      (add-to-list 'lyskom-local-variables ',name))))
 
                      ((eq (car arglist) 'local)
                       (setq local-var-doc t)
                       (setq buffer-local
-                            (` ((add-to-list 'lyskom-local-variables
-                                             (quote (, name)))))))
+                            `((add-to-list 'lyskom-local-variables ',name))))
 
                      ((eq (car arglist) 'local-hook)
                       (setq local-hook-doc t)
                       (setq buffer-local
-                            (` ((add-to-list 'lyskom-local-hooks
-                                             (quote (, name)))))))
+                            `((add-to-list 'lyskom-local-hooks ',name))))
+
+                     ((eq (car arglist) 'non-portable)
+                      (setq non-portable
+                            `((add-to-list 'lyskom-non-portable-server-variables ',name))))
 
                      ((eq (car arglist) 'minibuffer)
                       (setq minibuffer
-                            (` ((add-to-list 'lyskom-minibuffer-variables
-                                             (quote (, name)))))))
+                            `((add-to-list 'lyskom-minibuffer-variables ',name))))
 
                      ((eq (car arglist) 'language-force)
                       (setq language-force
@@ -273,23 +281,24 @@ This variable is normally stored on a per-session basis in the
 LysKOM server, but can be set in your .emacs simply by setting
 it using setq or defvar.")))
 
-      (` (progn (dont-compile (if (and (boundp (quote (, name)))
-                                       (or (not (boundp lyskom-is-loaded))
-                                           (not lyskom-is-loaded))
-                                       (listp kom-dont-read-saved-variables))
-                                  (add-to-list 'kom-dont-read-saved-variables
-                                               (quote (, name)))))
-                (defvar (, name) (, value) (, doc-string))
-                (,@ (apply 'append
-                           (list inherited
-                                 protected
-                                 elisp-block
-                                 transition-block
-                                 buffer-local
-                                 minibuffer
-                                 widget-spec
-                                 language-force
-                                 )))))))
+      `(progn (dont-compile (if (and (boundp ',name)
+				     (or (not (boundp lyskom-is-loaded))
+					 (not lyskom-is-loaded))
+				     (listp kom-dont-read-saved-variables))
+				(add-to-list 'kom-dont-read-saved-variables ',name)))
+	      (defvar ,name ,value ,doc-string)
+	      ,@(apply 'append
+		       (list inherited
+			     protected
+			     elisp-block
+			     transition-block
+			     copy-transition-block
+			     buffer-local
+			     minibuffer
+			     non-portable
+			     widget-spec
+			     language-force
+			     )))))
 
 
 (put 'def-kom-var 'edebug-form-spec
@@ -298,6 +307,3 @@ it using setq or defvar.")))
 
 
 (eval-and-compile (provide 'lyskom-defvar))
-
-
-

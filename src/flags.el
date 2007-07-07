@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.44 2007-06-08 14:23:53 byers Exp $
+;;;;; $Id: flags.el,v 44.45 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.44 2007-06-08 14:23:53 byers Exp $\n"))
+	      "$Id: flags.el,v 44.45 2007-07-07 14:15:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -86,7 +86,7 @@ settings and save them to your emacs init file."
                         completions
                         nil t)))
     (lyskom-message (lyskom-get-string 'reading-settings-from) from-session)
-    (setq lyskom-saved-unknown-variables (lyskom-read-options from-session))
+    (setq lyskom-saved-unknown-variables (lyskom-read-options from-session t))
     (lyskom-message (lyskom-get-string 'reading-settings-from-done) from-session)
 
     ;; Inline kom-save-options
@@ -95,6 +95,18 @@ settings and save them to your emacs init file."
                          (lyskom-get-string 'saving-settings-done)
                          (lyskom-get-string 'could-not-save-options))
 ))
+
+(defun lyskom-copy-indirect-assq (val)
+  "Attempt to filter out non-portable stuff from an indirect assq"
+  (cond ((eq val t) t)
+	((eq val nil) nil)
+	(t (delq nil 
+		 (mapcar (lambda (el)
+			   (cond ((numberp el) nil)
+				 ((atom el) el)
+				 ((and (consp el) (symbolp (car el))) el)
+				 (t nil)))
+			 val)))))
 
 
 ;;;============================================================
@@ -252,13 +264,15 @@ settings and save them to your emacs init file."
       (lyskom-format-insert 'could-not-set-user-area lyskom-errno)
       (when error-message (lyskom-message "%s" error-message)))))
 
-(defun lyskom-read-options (&optional buffer)
+(defun lyskom-read-options (&optional buffer portable-only)
   "Reads the user-area and sets the variables according to the choises.
 Returns a association list of variables that were ignored. Each list
 element is a cons (NAME . VALUE), where NAME is the name of the variable
 and VALUE is the unparsed value (i.e. it is always a string).
 
-If optional BUFFER is non-nil, read settings in that buffer."
+If optional BUFFER is non-nil, read settings in that buffer.
+
+If optional PORTABLE-ONLY is non-nil, skip variables marked non-portable."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (let ((pers-stat 
@@ -278,13 +292,16 @@ If optional BUFFER is non-nil, read settings in that buffer."
              (save-excursion
                (when buffer (set-buffer buffer))
                (blocking-do 'get-text
-                            (pers-stat->user-area pers-stat)))))))
+                            (pers-stat->user-area pers-stat)))
+	     portable-only))))
     nil))
 
-(defun lyskom-read-options-eval (text)
+(defun lyskom-read-options-eval (text &optional portable-only)
   "Handles the call from where we have the text.
 Returns a alist of variables that were ignored. See lyskom-read-options
-for more information."
+for more information.
+
+If optional PORTABLE-ONLY is non-nil, skip variables marked non-portable."
   (let ((ignored-user-area-vars nil))
     (condition-case nil
         (when text                        ;+++ Other error handler
@@ -333,7 +350,7 @@ for more information."
                                            (cons tmp lyskom-global-variables))
                                      tmp))))
 
-                    (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2))
+                    (unless (lyskom-maybe-set-var-from-string (elt spec 1) value (elt spec 2) portable-only)
                       (setq ignored-user-area-vars
                             (cons (cons (elt spec 1) value) ignored-user-area-vars))))))
                ;; Note that elisp-no may be nil here, so the comparison
@@ -344,7 +361,7 @@ for more information."
                   (while (> (length lyskom-options-text) 2)
                     (setq name (intern (lyskom-read-options-eval-get-holerith)))
                     (setq value (lyskom-read-options-eval-get-holerith))
-                    (if (lyskom-maybe-set-var-from-string name value)
+                    (if (lyskom-maybe-set-var-from-string name value nil portable-only)
                         (when (functionp (cdr (assq name lyskom-transition-variables)))
                           (set name (funcall (cdr (assq name lyskom-transition-variables))
                                              (symbol-value name))))
@@ -442,17 +459,22 @@ If optional NO-CODING is set, assume the string has internal coding."
             (cons (lyskom-decode-coding-string name coding) string)
           (error (cons name string)))))))
 
-(defun lyskom-maybe-set-var-from-string (var string &optional type)
+(defun lyskom-maybe-set-var-from-string (var string &optional type portable-only)
   "This is a wrapper around lyskom-set-var-from-string that does nothing
 if the variable is in kom-dont-read-saved-variables.
 
 Return non-nil if the variable shouldn't have been set in the first place."
-  (cond ((eq kom-dont-read-saved-variables t) t)
-        ((memq var kom-dont-read-saved-variables) t)
-        ((not (or (memq var lyskom-elisp-variables)
-                  (assq var lyskom-transition-variables)
-                  (lyskom-flag-global-variable-from-elisp var))) nil)
-        (t (lyskom-set-var-from-string var string type) t)))
+  (prog1 
+      (cond ((eq kom-dont-read-saved-variables t) t)
+	    ((memq var kom-dont-read-saved-variables) t)
+	    ((and portable-only (memq var lyskom-non-portable-server-variables)) nil)
+	    ((not (or (memq var lyskom-elisp-variables)
+		      (assq var lyskom-transition-variables)
+		      (lyskom-flag-global-variable-from-elisp var))) nil)
+	    (t (lyskom-set-var-from-string var string type) t))
+	(when (and portable-only (assq var lyskom-copy-transition-variables))
+	  (set var (funcall (cdr (assq var lyskom-copy-transition-variables))
+			    (symbol-value var))))))
 
 (defun lyskom-set-var-from-string (var string &optional type)
   "This is a wrapper aroud read-from-string.

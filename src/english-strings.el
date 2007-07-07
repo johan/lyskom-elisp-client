@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.369 2007-06-24 17:20:59 byers Exp $
+;;;;; $Id: english-strings.el,v 44.370 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.369 2007-06-24 17:20:59 byers Exp $"))
+              "$Id: english-strings.el,v 44.370 2007-07-07 14:15:57 byers Exp $"))
 
 
 ;;; ================================================================
@@ -2062,6 +2062,21 @@ written a presentation.%]
 ========================================================================
 
 ")
+
+    (delete-user-area-warning . "\
+%#1@\
+========================================================================
+If you delete your user area, all your saved settings will be lost. You
+can restore the user area by saving your current settings, but any
+saved settings from other clients will still be lost.
+
+Are you completely certain that you know what you are doing and that
+you really want to delete your user area?
+========================================================================
+")
+    (delete-user-area-confirm . "Delete your user area and all saved settings? ")
+    (removing-user-area . "Removing reference to user area from person status...")
+    (deleting-user-area . "Deleting the user area...")
 
     (status-server-stats . "Server statistics:\n\n")
     (current-average . "current")

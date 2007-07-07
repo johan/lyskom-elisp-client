@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.57 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: command.el,v 44.58 2007-07-07 14:15:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.57 2007-07-07 08:01:31 byers Exp $\n"))
+	      "$Id: command.el,v 44.58 2007-07-07 14:15:56 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -594,13 +594,14 @@ chosen according to this"
 	 (if (or (eq t kom-relogin-behaviour)
 		 (and (eq 'ask kom-relogin-behaviour) 
 		      (lyskom-j-or-n-p (lyskom-get-string 'resurrect-session))))
-	     (lyskom (if (= 4894 lyskom-server-port) ; Should we do this different?
-		       lyskom-server-name
-		       (concat lyskom-server-name 
-			       ":" 
-			       (int-to-string lyskom-server-port)))
-		     lyskom-pers-no
-		     lyskom-default-password)
+	     (let ((lyskom-default-user-name lyskom-default-user-name))
+	       (lyskom (if (= 4894 lyskom-server-port) ; Should we do this different?
+			   lyskom-server-name
+			 (concat lyskom-server-name 
+				 ":" 
+				 (int-to-string lyskom-server-port)))
+		       lyskom-pers-no
+		       lyskom-default-password))
       (lyskom-error "%s" (lyskom-get-string 'dead-session)))))
 
   (if (and lyskom-is-waiting

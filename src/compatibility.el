@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.79 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: compatibility.el,v 44.80 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.79 2007-07-07 08:01:31 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.80 2007-07-07 14:15:57 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -395,7 +395,10 @@ visible in the event's window."
 
   (lyskom-function-alias event-closest-point (e)
     "Return the character position closest to the mouse event EVENT."
-    (car (cdr (event-start e)))))
+    (car (cdr (event-start e))))
+
+  (lyskom-function-alias event-type (e)
+    (event-basic-type e)))
 
 
 ;;; ======================================================================

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.223 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: commands2.el,v 44.224 2007-07-07 14:15:56 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.223 2007-07-07 08:01:31 byers Exp $\n"))
+              "$Id: commands2.el,v 44.224 2007-07-07 14:15:56 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1842,6 +1842,24 @@ primarily intended for use by developers."
     (lyskom-view-text (pers-stat->user-area pers-stat)
                       nil nil nil nil nil)
     (lyskom-wait-queue 'main)))
+
+(def-kom-command kom-delete-user-area ()
+  "Remove the user area of the current person. The user area
+is where all settings are stored. Deleting it means all settings
+are lost. Do not delete the user area unless you're sure you really
+want to."
+  (interactive)
+  (lyskom-format-insert 'delete-user-area-warning
+			`(face ,kom-warning-face))
+  (when (lyskom-ja-or-nej-p (lyskom-get-string 'delete-user-area-confirm))
+    (let* ((pers-stat (blocking-do 'get-pers-stat lyskom-pers-no))
+	   (user-area (pers-stat->user-area pers-stat)))
+      (lyskom-insert 'deleting-user-area)
+      (lyskom-report-command-answer (blocking-do 'delete-text user-area))
+      (lyskom-insert 'removing-user-area)
+      (lyskom-report-command-answer (blocking-do 'set-user-area lyskom-pers-no 0))
+      )))
+  
 
 
 ;;;============================================================

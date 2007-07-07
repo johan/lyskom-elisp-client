@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.68 2007-06-30 12:52:52 byers Exp $
+;;;;; $Id: review.el,v 44.69 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.68 2007-06-30 12:52:52 byers Exp $\n"))
+	      "$Id: review.el,v 44.69 2007-07-07 14:15:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -95,6 +95,22 @@
 ;;; ================================================================
 ;;; Temoporary change of mark-as-read
 
+(defun lyskom-maybe-run-mouse-2 (command)
+  (lyskom-xemacs-or-gnu 
+   nil
+   (when (and (eq command 'mouse-drag-region)
+	      unread-command-events
+	      (eventp (car unread-command-events))
+	      (eq (lyskom-event-type 
+		   (car unread-command-events)) 'mouse-2))
+     (let* ((sequence (vector (car unread-command-events)))
+	    (command (or (lookup-key (current-local-map) 
+				     sequence)
+			 (lookup-key global-map sequence))))
+       (setq unread-command-events (cdr unread-command-events))
+       (when (commandp command) 
+	 (call-interactively command))))))
+
 (defun kom-toggle-mark-as-read-prefix ()
   "Read one key sequence and run one command with state of
 kom-review-marks-texts-as-read toggled."
@@ -113,7 +129,8 @@ kom-review-marks-texts-as-read toggled."
       (setq command (or (lookup-key (current-local-map) sequence)
 			(lookup-key global-map sequence))))
     (when (commandp command) 
-      (call-interactively command))))
+      (call-interactively command))
+    (lyskom-maybe-run-mouse-2 command)))
 
 (defun kom-toggle-cache-prefix ()
   "Read one key sequence and run one command with state of
@@ -128,7 +145,8 @@ kom-review-marks-texts-as-read toggled."
                                'review-not-using-cache)))))
          (command (lookup-key (current-local-map) sequence)))
     (when (commandp command)
-      (call-interactively command))))
+      (call-interactively command))
+    (lyskom-maybe-run-mouse-2 command)))
 
 ;; (defun kom-toggle-topic-prefix ()
 ;;   "Read one key sequence and run one command with the review

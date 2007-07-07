@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.413 2007-06-24 17:21:00 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.414 2007-07-07 14:15:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.413 2007-06-24 17:21:00 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.414 2007-07-07 14:15:57 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2108,6 +2108,22 @@ att upprepas då och då tills du har skrivit en presentation.%]
 
 ")
 
+    (delete-user-area-warning . "\
+%#1@\
+========================================================================
+Om du raderar user-arean så kommer alla dina sparade inställningar att
+försvinna. Du kan naturligtvis spara dina aktuella inställningar, och 
+då kommer en ny user-area att skapas med elispklientens (men inga andra
+klienters) inställningar.
+
+Är du helt säker på att du vet var du håller på med och att du verkligen
+vill radera din user-area?
+========================================================================
+")
+    (delete-user-area-confirm . "Radera din user-area och alla sparade inställningar? ")
+    (removing-user-area . "Tar bort hänvisningen till user-arean från din personstatus...")
+    (deleting-user-area . "Raderar din user-area...")
+
     (status-server-stats . "Statistik om servern:\n\n")
     (current-average . "nu")
 
@@ -2351,6 +2367,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-filter-edit          . "Ändra filter")
     (kom-list-filters         . "Lista filter")
     (kom-show-user-area       . "Visa user-arean")
+    (kom-delete-user-area     . "Ta bort user-arean")
     (kom-change-conf-type     . "Ändra mötestyp")
 
     (kom-change-auto-reply    . "Ändra svarsmeddelande")

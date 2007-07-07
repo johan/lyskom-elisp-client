@@ -1,3 +1,37 @@
+2007-07-07    <David Byers@GULAG>
+
+	* commands2.el (kom-delete-user-area): New command.
+
+	Fix bug 1542:
+	* flags.el (kom-copy-options): Pass portable-only to
+	lyskom-read-options.
+	(lyskom-copy-indirect-assq): New function.
+
+	* command.el (lyskom-start-of-command): Don't mess up
+	lyskom-default-user-name when reconnecting.
+
+	* vars.el.in: Marked a bunch of non-portable variables as such.
+	Marked some indirect assqs for copy-transition.
+
+	* flags.el (lyskom-read-options): Added portable-only argument.
+	(lyskom-read-options-eval): Same here.
+	(lyskom-maybe-set-var-from-string): Same here, and convert
+	variables when portable-only as requested.
+
+	* defvar.el (lyskom-save-variables): Cleaned up old backquote
+	syntax.
+	(lyskom-with-lyskom-minibuffer): Same here.
+	(def-kom-var): Same here.
+	(lyskom-non-portable-server-variables): New variable.
+	(def-kom-var): Support non-portable and copy-transition variable
+	specs.
+
+	Fix bug 1638:
+	* review.el (lyskom-maybe-run-mouse-2): New function to run unread
+	mouse-2 event under certain circumstances.
+	(kom-toggle-mark-as-read-prefix): Use lyskom-maybe-run-mouse-2
+	(kom-toggle-cache-prefix): Here too.
+
 2007-07-07  David Byers  <davby@sysinst-gw.sysinst.ida.liu.se>
 
 	* edit-text.el (lyskom-edit-insert-buglist): Don't use interactive
