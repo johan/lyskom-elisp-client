@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.115 2007-06-09 11:04:54 byers Exp $
+;;;;; $Id: startup.el,v 44.116 2007-07-07 15:26:17 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.115 2007-06-09 11:04:54 byers Exp $\n"))
+	      "$Id: startup.el,v 44.116 2007-07-07 15:26:17 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -451,7 +451,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                      (goto-char (point-max))
                      (re-search-backward "^--- .* ---$" nil t)
                      (not (re-search-forward "^ok$" nil t)))
-              (when (re-search-forward "\\<\\(Enter passphrase.*$\\|^.*password.*$\\)\\|refused\\|disconnect\\|denied\\|error\\|key not found\\>" nil t)
+              (when (re-search-forward "\\<\\(Enter passphrase.*$\\|^.*password.*$\\)\\|refused\\|disconnect\\|denied\\|error\\|key not found\\|cannot listen\\|[Aa]ddress already in use\\>" nil t)
                 (cond ((match-string 1)
                        (process-send-string 
                         proc
