@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.78 2007-06-24 14:07:43 byers Exp $
+;;;;; $Id: compatibility.el,v 44.79 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.78 2007-06-24 14:07:43 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.79 2007-07-07 08:01:31 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -687,6 +687,25 @@ Emacsen."
 (if (fboundp 'string-to-number)
     (defalias 'lyskom-string-to-number 'string-to-number)
   (defalias 'lyskom-string-to-number 'string-to-int))
+
+(defun lyskom-pos-visible-in-window-p-22-1 (&optional pos window)
+  "Workaround for the buggy pos-visible-in-window-p in Gnu Emacs"
+  (setq pos (or pos (point)))
+  (condition-case nil
+      (cond ((/= pos (point-max))
+	     (pos-visible-in-window-p pos window))
+	    ((eq ?\n (char-after (1- (point-max))))
+	     (pos-visible-in-window-p pos window))
+	    (t (pos-visible-in-window-p (1- pos) window)))
+    (pos-visible-in-window-p pos window)))
+
+(defalias 'lyskom-pos-visible-in-window-p 'pos-visible-in-window-p)
+(when (and (not window-system)
+	   (not (featurep 'xemacs))
+	   (eq emacs-major-version 22)
+	   (<= emacs-minor-version 1))
+  (defalias 'lyskom-pos-visible-in-window-p
+    'lyskom-pos-visible-in-window-p-22-1))
 
 
 ;;; ================================================================

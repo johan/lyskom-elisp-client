@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: deferred-insert.el,v 44.6 2003-04-05 18:14:25 byers Exp $
+;;;;; $Id: deferred-insert.el,v 44.7 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -135,7 +135,7 @@ The insertion will be at (point)."
       nil
     (let ((window (get-buffer-window lyskom-buffer)))
       (if window
-	  (if (pos-visible-in-window-p (point-max) window)
+	  (if (lyskom-pos-visible-in-window-p (point-max) window)
 	      nil
 	    ;; This means that this insertion moved point out of the
 	    ;; window. The scrolling becomes tricky. One big problem is

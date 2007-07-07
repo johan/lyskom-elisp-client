@@ -1,3 +1,11 @@
+2007-07-07  David Byers  <davby@sysinst-gw.sysinst.ida.liu.se>
+
+	* edit-text.el (lyskom-edit-insert-buglist): Don't use interactive
+	functions for non-interactive work (replace-regexp).
+
+	* compatibility.el (lyskom-pos-visible-in-window-p-22-1):
+	Workaround for bug in Gnu Emacs 22.1 pos-visible-in-window-p
+
 2007-06-30    <David Byers@GULAG>
 
 	* lyskom-rest.el (lyskom-do-insert): Support format state directly

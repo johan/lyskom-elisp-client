@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.222 2007-06-24 09:33:27 byers Exp $
+;;;;; $Id: commands2.el,v 44.223 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.222 2007-06-24 09:33:27 byers Exp $\n"))
+              "$Id: commands2.el,v 44.223 2007-07-07 08:01:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -686,6 +686,9 @@ send. If DONTSHOW is non-nil, don't display the sent message."
             (t (setq lyskom-message-string (substring lyskom-message-string 
                                                       0 size)))))))
 
+(lyskom-with-external-functions (resize-minibuffer-setup 
+				 resize-minibuffer-mode)
+
   (defun lyskom-send-message-turn-off-resize-on-exit ()
     (resize-minibuffer-mode -1)
     (remove-hook 'kom-send-message-exit-hook
@@ -693,8 +696,6 @@ send. If DONTSHOW is non-nil, don't display the sent message."
 
   ;; USER-HOOK: lyskom-send-message-resize-minibuffer
   (defvar resize-minibuffer-mode)
-
-(lyskom-with-external-functions (resize-minibuffer-setup)
 
   (defun lyskom-send-message-resize-minibuffer ()
     "Temporarily turn on resizing of minibuffer"

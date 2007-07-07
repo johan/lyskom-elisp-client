@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.125 2007-06-24 09:33:27 byers Exp $
+;;;;; $Id: edit-text.el,v 44.126 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.125 2007-06-24 09:33:27 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.126 2007-07-07 08:01:31 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1997,8 +1997,8 @@ buglist style, automating the removal of closed subjects and change-marks."
 	  ;; with a space wherever some form of "[ ]" follows
 	  ;; (and X:s, since some morons were too inept to
 	  ;;  handle these highly advanced syntactic rules)
-          (while (re-search-backward "^\\s-*[!X][ \t(]*\\[" nil t)
-            (replace-regexp "^\\(\\s-*\\)[!X]\\([ \t(]*\\[\\)" "\\1 \\2"))
+          (while (re-search-backward "^\\(\\s-*\\)[!X]\\([ \t(]*\\[\\)" nil t)
+            (replace-match "\\1 \\2"))
 	  (goto-char pb)
 	  ;; new pass; leave all [ ], [/] and [\] subjects untouched,
 	  ;; but remove the rest, except for category headers, who remain.

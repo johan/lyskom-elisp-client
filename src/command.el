@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.56 2005-02-24 07:25:43 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: command.el,v 44.57 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.56 2005-02-24 07:25:43 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: command.el,v 44.57 2007-07-07 08:01:31 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -639,7 +639,7 @@ chosen according to this"
                           (t (format "%S" lyskom-current-prompt)))
                     t)))
   (setq mode-line-process (lyskom-get-string 'mode-line-working))
-  (if (pos-visible-in-window-p (point-max))
+  (if (lyskom-pos-visible-in-window-p (point-max))
       (save-excursion
         (goto-char (point-max))
         (lyskom-set-last-viewed)))
@@ -650,7 +650,7 @@ chosen according to this"
   (if (and (eq (window-buffer (selected-window))
                (current-buffer))) 
       (progn
-	(if (pos-visible-in-window-p (1- (point-max)))
+	(if (lyskom-pos-visible-in-window-p (1- (point-max)))
 	    (goto-char (point-max)))
 	(sit-for 0)))
   (run-hooks 'lyskom-before-command-hook)
@@ -676,7 +676,7 @@ chosen according to this"
     (setq lyskom-current-prompt nil)	; Already set in s-o-c really
     (lyskom-scroll)
     (setq mode-line-process (lyskom-get-string 'mode-line-waiting))
-    (if (pos-visible-in-window-p (point-max) (selected-window))
+    (if (lyskom-pos-visible-in-window-p (point-max) (selected-window))
         (lyskom-set-last-viewed))
     (lyskom-prefetch-and-print-prompt)
     (run-hooks 'lyskom-after-command-hook)

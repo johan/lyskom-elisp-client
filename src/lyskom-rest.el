@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.270 2007-06-30 12:52:52 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.271 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.270 2007-06-30 12:52:52 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.271 2007-07-07 08:01:31 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -217,7 +217,7 @@ interactively, all caches are cleared and the membership is re-read."
 (defun kom-page-next-command ()
   "Scroll the bottom to the top and run the next command if it should be run"
   (interactive)
-  (if (pos-visible-in-window-p (point-max))
+  (if (lyskom-pos-visible-in-window-p (point-max))
       (progn
 	(goto-char (point-max))
 	(recenter 0)
@@ -234,7 +234,7 @@ interactively, all caches are cleared and the membership is re-read."
 (defun kom-next-command ()
   "Run next command or scroll one page."
   (interactive)
-  (if (pos-visible-in-window-p (point-max))
+  (if (lyskom-pos-visible-in-window-p (point-max))
       (lyskom-next-command)
     (move-to-window-line -1)
     (lyskom-set-last-viewed)
@@ -268,7 +268,7 @@ interactively, all caches are cleared and the membership is re-read."
 (defun kom-line-next-command ()
   "Run next command or scroll one line."
   (interactive)
-  (if (pos-visible-in-window-p (point-max))
+  (if (lyskom-pos-visible-in-window-p (point-max))
       (lyskom-next-command)
     (move-to-window-line 1)
     (lyskom-set-last-viewed)
@@ -1209,14 +1209,14 @@ The position lyskom-last-viewed will always remain visible."
   (let ((win (cond ((eq (window-buffer (selected-window)) (current-buffer))
                     (selected-window))
                    (t nil))))
-    (when (and win (not (pos-visible-in-window-p (point-max))))
+    (when (and win (not (lyskom-pos-visible-in-window-p (point-max))))
       (goto-char (point-max))
       (recenter -1)
-      (unless (pos-visible-in-window-p lyskom-last-viewed)
+      (unless (lyskom-pos-visible-in-window-p lyskom-last-viewed)
         (set-window-start win lyskom-last-viewed)
         (move-to-window-line -1)
         (vertical-motion 1)
-        (when (not (pos-visible-in-window-p))
+        (when (not (lyskom-pos-visible-in-window-p))
           (forward-char -1)
           (when (> (current-column) (window-width))
             (backward-char (+ (- (current-column) (window-width)) 6)))
@@ -1293,7 +1293,7 @@ is not on screen then doesn't move point."
       (lyskom-trim-buffer))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window was-at-max)
-	  (if (pos-visible-in-window-p (point-max) window)
+	  (if (lyskom-pos-visible-in-window-p (point-max) window)
               (goto-char (point-max))
             (and kom-continuous-scrolling (lyskom-scroll)))))))
 
@@ -1349,7 +1349,7 @@ The strings buffered are printed before the prompt by lyskom-update-prompt."
       (set-marker oldpoint nil))
     (let ((window (get-buffer-window (current-buffer))))
       (if (and window
-               (not (pos-visible-in-window-p (point) window)))
+               (not (lyskom-pos-visible-in-window-p (point) window)))
           ;; This mease that the prompt has been pushed off the bottom
           (save-selected-window
             (select-window window)

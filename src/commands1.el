@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.231 2007-06-24 09:33:27 byers Exp $
+;;;;; $Id: commands1.el,v 44.232 2007-07-07 08:01:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.231 2007-06-24 09:33:27 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.232 2007-07-07 08:01:31 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1901,7 +1901,7 @@ See `kom-allow-incompleteness'."
                           (lyskom-format-insert 'no-created-confs pers)
                         (let ((window (get-buffer-window (current-buffer))))
                           (if (and window was-at-max)
-                              (if (pos-visible-in-window-p (point-max) window)
+                              (if (lyskom-pos-visible-in-window-p (point-max) window)
                                   (goto-char (point-max))
                                 (and kom-continuous-scrolling (lyskom-scroll)))))))
                   (quit (aset counter 0 t)
