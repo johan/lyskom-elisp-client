@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.414 2007-07-07 14:15:57 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.415 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.414 2007-07-07 14:15:57 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.415 2007-07-11 11:14:58 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -456,6 +456,13 @@ du har läst klart allting. Kom tillbaks senare.
     (text-to-delete-comment-from . "Vilket inlägg vill du subtrahera en kommentar från:")
     (text-to-add-footnote-to . "Vilket inlägg vill du addera en fotnot till:")
     (text-to-delete-footnote-from . "Vilket inlägg vill du subtrahera en fotnot från:")
+    (comment-to-move-q . "Vilken kommentar vill du flytta:")
+    (comment-move-from-q . "Från vilken text vill du flytta %#1n:")
+    (comment-move-to-q . "Till vilken text vill du flytta %#1n:")
+    (text-is-not-a-comment . "Inlägg %#1n är inte en kommentar till något inlägg\n")
+    (cant-move-footnotes . "Kan inte flytta fotnoter.\n")
+    (moving-comment . "Flyttar %#1n från %#2n till %#3n...\n")
+
     (text-to-add-cross-reference-to . "Vilket inlägg vill du addera en referens till:")
     (text-has-no-recipients-r . "Inlägg %#1n har inga mottagare\n")
     (cant-move-from-to-same . "Mötet du flyttar till kan inte vara samma som du flyttar från.\n")
@@ -605,8 +612,18 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (adding-name-as-recipient . "Adderar %#1M som mottagare till text %#2n...")
     (adding-name-as-copy . "Adderar %#1M som kopiemottagare till text %#2n...")
     (adding-name-as-bcc . "Adderar %#1M som dold kopiemottagare till text %#2n...")
-    (remove-name-as-recipient .
-			      "Subtraherar %#1M som mottagare från text %#2n...")
+    (remove-name-as-recipient . "Subtraherar %#1M som mottagare från text %#2n...")
+
+
+    (unknown-recpt-text . "okänd mottagare")
+    (cc-recpt-text . "kopiemottagare")
+    (bcc-recpt-text . "dold kopiemottagare")
+    (recpt-text . "mottagare")
+    (add-conf-as-rcpt-q . "Vill du göra %#1M %#2s till text %#3n? ")
+    (del-conf-as-rcpt-q . "Vill ta bort %#1M som %#2s till text %#3n? ")
+    (change-conf-as-rcpt-q . "Vill du ändra %#2s %#1M till en %#3s till text %#4n? ")
+    (move-conf-as-rcpt-q . "Vill du flytta %#1n från %#2M till %#3M? ")
+
     (adding-cross-reference . "Adderar referens...")
 
     (error-recipient-limit . "Text %#1n har för många mottagare.\n")
@@ -2341,6 +2358,7 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-move-text            . "Flytta inlägg")
     (kom-add-comment	      . "Addera kommentar")
     (kom-sub-comment	      . "Subtrahera kommentar")
+    (kom-move-comment	      . "Flytta kommentar")
     (kom-add-cross-reference  . "Addera referens")
     (kom-add-member	      . "Addera medlem")
     (kom-sub-member           . "Uteslut medlem")
@@ -2905,6 +2923,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-filter-get-prefix (kbd "i") 'kom-filter-text)
   (define-key lyskom-sv-filter-get-prefix (kbd "m") 'kom-filter-recipient)
   (define-key lyskom-sv-filter-get-prefix (kbd "l") 'kom-previous-kom)
+  (define-key lyskom-sv-filter-get-prefix (kbd "k") 'kom-move-comment)
 
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "ä")    'kom-filter-subject)
   (lyskom-try-define-key lyskom-sv-filter-get-prefix (kbd "{")    'kom-filter-subject)

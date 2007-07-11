@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.56 2007-06-10 11:08:20 byers Exp $
+;;;;; $Id: completing-read.el,v 44.57 2007-07-11 11:14:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.56 2007-06-10 11:08:20 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.57 2007-07-11 11:14:57 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -1070,18 +1070,9 @@ the LysKOM rules of string matching."
 
 
 
-
-
-
-
-
 ;;; ============================================================
-;;;
 ;;; Session reading
 ;;;
-;;;
-
-
 
 (defun lyskom-read-session-no (prompt &optional empty initial only-one)
   (let ((possible-matches
@@ -1183,4 +1174,39 @@ the LysKOM rules of string matching."
       (list (session-info->connection (cdr (assoc result who-info)))))))
 
 
+;;; ================================================================
+;;; Reading text data
+;;;
 
+(defun lyskom-completing-read-text-no (prompt default text-no misc-types)
+  "Read a text number based on some other text number.
+PROMPT is the prompt. DEFAULT is the default value. It can be a number,
+nil (in which case a default is computed) or a function that is called
+with TEXT-NO and the list of possible completions as argument (and
+should return a single number). TEXT-NO is the text number to base
+reading on. MISC-TYPES are the types of misc-infos in the base text
+to use as completion"
+  (unless (listp misc-types) (setq misc-types (list misc-types)))
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+	 (completions 
+	  (delq nil
+		(mapcar (lambda (misc)
+			  (and (memq (misc-info->type misc) misc-types)
+			       (cond ((eq (misc-info->type misc) 'COMM-IN)
+				      (misc-info->comm-in misc))
+				     ((eq (misc-info->type misc) 'FOOTN-IN)
+				      (misc-info->footn-in misc))
+				     ((eq (misc-info->type misc) 'COMM-TO)
+				      (misc-info->comm-to misc))
+				     ((eq (misc-info->type misc) 'FOOTN-TO)
+				      (misc-info->footn-to misc)))))
+			(text-stat->misc-info-list text-stat)))))
+    (lyskom-read-number prompt
+			(cond ((functionp default) (funcall default text-no completions))
+			      (default)
+			      ((memq lyskom-current-text completions) lyskom-current-text)
+			      (t (car completions)))
+			nil
+			nil
+			completions
+			)))

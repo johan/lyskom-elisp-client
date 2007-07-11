@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.168 2007-06-26 16:57:48 byers Exp $
+;;;;; $Id: utilities.el,v 44.169 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.168 2007-06-26 16:57:48 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.169 2007-07-11 11:14:58 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -128,6 +128,56 @@ If BEFORE is not in the list, then insert EL at the end of the list."
           (t (setcdr (nthcdr (1- pos) list)
                      (cons el (nthcdr pos list))))))
   list)
+
+
+(defun lyskom-find-dag-roots (predecessor-func 
+			      node-transform 
+			      start-node 
+			      only-first
+			      &rest other-args)
+  "Locate the roots of a graph from a particular node.
+
+PREDECESSOR-FUNC is a function that returns the predecessors of a
+node in a list. It takes at least one argument, which is the node
+for which it is to find predecessors.
+
+NODE-TRANSFORM is a function that transforms return values
+\(elements of the list) from func to suitable arguments for the
+predecessor function. It is a function that takes a single
+argument.
+
+START-NODE is the initial argument to give to the predecessor
+function. It is not transformed using NODE-TRANSFORM.
+
+OTHER-ARGS are other arguments to FUNC, appended at each call.
+
+If ONLY-FIRST is non-nil, then only the first root found is
+returned.
+
+This function calls PREDECESSOR-FUNC until it returns nil. The
+return value is a list of all arguments for which
+PREDECESSOR-FUNC returned nil.
+
+Cycles are by remembering the visited nodes. When a backlink is
+detected, it is not traversed."
+  (let ((result nil)
+	(visited nil)
+	(candidates (apply predecessor-func start-node other-args))
+	(cur nil)
+	(tem nil))
+    (while candidates
+      (setq cur (car candidates)
+	    candidates (cdr candidates))
+      (unless (member cur visited)
+	(setq visited (cons cur visited)
+	      tem (apply predecessor-func
+			 (funcall node-transform cur) other-args))
+	(if tem
+	    (setq candidates (nconc candidates tem))
+	  (setq result (cons cur result))
+	  (when only-first (setq candidates nil)))))
+    (nreverse result)))
+
 
 ;;;
 ;;; +++ FIXME: If cl.el can be guaranteed, this is pointless.
@@ -2759,3 +2809,112 @@ function returns non-nil."
                   (setq text-list (cons 'in text-list))))))
             ))))))
 
+
+
+
+;;; ================================================================
+;;; Computing recipients for comments
+
+
+(defun lyskom-compute-recipients-commented-authors (commented-texts recipients)
+  "Compute the commented-authors recipients for a text that comments
+COMMENTED-TEXTS and has recipients RECIPIENTS."
+  (when (lyskom-default-value 'kom-check-commented-author-membership)
+    (lyskom-message "%s" (lyskom-get-string 'checking-rcpt))
+
+    (let ((raw-author-list (make-collector))
+	  (author-list nil)
+	  (result nil))
+    ;;
+    ;; Collect conf-stats of all authors to check. Since there
+    ;; could be several, do it in a non-blocking way.
+    ;;
+
+    (lyskom-traverse text-no commented-texts
+      (initiate-get-text-stat 
+       'background
+       (lambda (text-stat collector)
+	 (when text-stat
+	   (initiate-get-conf-stat 'background
+				   'collector-push
+				   (text-stat->author text-stat)
+				   collector)))
+       text-no
+       raw-author-list))
+    (lyskom-wait-queue 'background)
+    (setq raw-author-list (lyskom-delete-duplicates
+			   (collector->value raw-author-list)
+			   'conf-stat->conf-no))
+
+    ;;
+    ;; Filter the list. Remove all authors that are direct recipients
+    ;; or whose send-comments-to is a direct recipient or who are
+    ;; listed in kom-dont-check-commented-authors
+    ;;
+
+    (lyskom-traverse author raw-author-list
+      (let ((send-comments-to (lyskom-get-send-comments-to author t)))
+	(cond
+
+	 ;; Author is in kom-dont-check-commented-authors
+
+	 ((memq (conf-stat->conf-no author) 
+		kom-dont-check-commented-authors))
+
+	 ;; Author is direct recipient to text
+
+	 ((memq (conf-stat->conf-no author) recipients))
+
+	 ;; Author has a zero send-comments-to
+
+	 ((and send-comments-to (zerop (car send-comments-to))))
+
+	 ;; We don't have permission to send stuff to the author's
+	 ;; send-comments-to or to the author if there is no
+	 ;; send-comments-to
+
+	 ((or (and send-comments-to
+		   (not (lyskom-is-permitted-author
+			 (blocking-do 'get-conf-stat (car send-comments-to)))))
+	      (and (not send-comments-to)
+		   (not (lyskom-is-permitted-author author)))))
+
+	 ;; We can't filter the author straight off, so we add it
+	 ;; to the list that we want to check completely.
+
+	 (t (setq author-list (cons author author-list))))))
+
+    ;;
+    ;; Now author-list contains a list of authors that we need to
+    ;; check memberships of. Traverse all authors and get their
+    ;; memberships in all recipients.
+
+    (lyskom-traverse author author-list
+      (let ((memberships (make-collector)))
+	(lyskom-traverse recipient recipients
+	  (initiate-query-read-texts 'background
+				     (lambda (x y)
+				       (collector-push x y))
+				     (conf-stat->conf-no author)
+				     recipient
+				     nil
+				     0
+				     memberships))
+	(lyskom-wait-queue 'background)
+	(setq memberships (collector->value memberships))
+
+	;;
+	;; Now memberships contains the memberships of author
+	;; in all recipients of the text. Traverse all memberships
+	;; in the collector and see if there is one that is not
+	;; an active membership. If there is not, then we need to
+	;; ask the user whether they want to add the author.
+	;;
+
+	(unless (lyskom-traverse membership memberships
+		  (when (and membership
+			     (not (membership-type->passive
+				   (membership->type membership))))
+		    (lyskom-traverse-break t)))
+	  (setq result (cons author result)))))
+    result)))

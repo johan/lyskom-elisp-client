@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.370 2007-07-07 14:15:57 byers Exp $
+;;;;; $Id: english-strings.el,v 44.371 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.370 2007-07-07 14:15:57 byers Exp $"))
+              "$Id: english-strings.el,v 44.371 2007-07-11 11:14:58 byers Exp $"))
 
 
 ;;; ================================================================
@@ -451,6 +451,13 @@ and you have finished reading. Please come back later.
     (text-to-delete-comment-from . "Remove comment from which text:")
     (text-to-add-footnote-to . "Add footnote to which text:")
     (text-to-delete-footnote-from . "Remove footnote from which text:")
+    (comment-to-move-q . "Which comment do you want to move:")
+    (comment-move-from-q . "From which text do you want to move %#1n:")
+    (comment-move-to-q . "To which text do you want to move %#1n:")
+    (text-is-not-a-comment . "Text %#1n is not a comment to any text\n")
+    (cant-move-footnotes . "Can't move foonotes automatically.\n")
+    (moving-comment . "Moving %#1n from %#2n to %#3n...\n")
+
     (text-to-add-cross-reference-to . "Add cross reference to which text:")
     (text-has-no-recipients-r . "Text %#1n has no recipients\n")
     (cant-move-from-to-same . "Source and target conferences must be different.\n")
@@ -576,8 +583,18 @@ Read all about it at http://www.lysator.liu.se/history/")
     (adding-name-as-recipient . "Adding %#1M as recipient of text %#2n...")
     (adding-name-as-copy . "%#1M will receive a carbon copy of text %#2n...")
     (adding-name-as-bcc . "%#1M will receive a blind carbon copy of text %#2n...")
-    (remove-name-as-recipient .
-     "Removing %#1M as recipient of text %#2n...")
+    (remove-name-as-recipient . "Removing %#1M as recipient of text %#2n...")
+
+
+    (unknown-recpt-text . "unknown mottagare")
+    (cc-recpt-text . "carbon copy recipient")
+    (bcc-recpt-text . "blind carbon copy recipient")
+    (recpt-text . "recipient")
+    (add-conf-as-rcpt-q . "Do you want to make %#1M a %#2s of text %#3n? ")
+    (del-conf-as-rcpt-q . "Do you want to remove %#1M as a %#2s to text %#3n? ")
+    (change-conf-as-rcpt-q . "Do you want to change %#2s %#1M to a %#3s of text %#4n? ")
+    (move-conf-as-rcpt-q . "Do you want to move %#1n from %#2M to %#3M? ")
+
     (adding-cross-reference . "Adding cross reference...")
 
     (error-recipient-limit . "Text %#1n has too many recipients.\n")
@@ -2299,6 +2316,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-move-text-tree       . "Move tree")
     (kom-add-comment          . "Add comment")
     (kom-sub-comment          . "Remove comment")
+    (kom-move-comment	      . "Move comment")
     (kom-add-cross-reference  . "Add cross reference")
     (kom-add-member           . "Add (a) member")
     (kom-sub-member           . "Remove (a) member")
@@ -2325,6 +2343,7 @@ Change privileges for %#1P (%#1p)...")
     (kom-filter-text          . "Filter contents")
     (kom-list-filters         . "List filters")
     (kom-show-user-area       . "Show user area")
+    (kom-delete-user-area     . "Remove user area")
     (kom-change-conf-type     . "Change conference type")
 
     (kom-change-auto-reply    . "Change ansaphone message")
@@ -2797,6 +2816,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-change-prefix (kbd "f") 'kom-filter-edit)
   (define-key lyskom-en-change-prefix (kbd "m") 'kom-change-auto-reply)
   (define-key lyskom-en-change-prefix (kbd "t") 'kom-move-text)
+  (define-key lyskom-en-change-prefix (kbd "c") 'kom-move-comment)
   (define-key lyskom-en-change-prefix (kbd "T") 'kom-move-text-tree)
 
   (define-key lyskom-en-unread-prefix (kbd "SPC") 'kom-mark-unread)

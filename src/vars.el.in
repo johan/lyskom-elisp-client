@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.330 2007-07-07 15:41:26 byers Exp $
+;;;;; $Id: vars.el.in,v 44.331 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.330 2007-07-07 15:41:26 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.331 2007-07-11 11:14:58 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -592,6 +592,7 @@ The format of this variable may change in the future.
     (kom-add-no-comments              :refer read-or-written)
     (kom-add-private-answer           :refer read-or-written)
     (kom-add-request-confirm          :refer read-or-written)
+    (kom-move-comment		      :refer read-or-written)
 
     ;; Default specification
 
@@ -3678,6 +3679,7 @@ Users are encouraged to use their best sense of humor."
     kom-move-text-tree
     kom-add-comment
     kom-sub-comment
+    kom-move-comment
     kom-add-cross-reference
     kom-add-member
     kom-sub-member

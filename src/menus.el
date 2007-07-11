@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.42 2007-06-24 14:07:44 byers Exp $
+;;;;; $Id: menus.el,v 44.43 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.42 2007-06-24 14:07:44 byers Exp $\n"))
+	      "$Id: menus.el,v 44.43 2007-07-11 11:14:58 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -154,6 +154,7 @@
            (menu commented
                  ((item kom-add-comment)
                   (item kom-sub-comment)
+		  (item kom-move-comment)
                   (item kom-add-footnote)
                   (item kom-sub-footnote)))
            (menu aux-items 

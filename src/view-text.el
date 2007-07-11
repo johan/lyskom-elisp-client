@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.88 2007-06-24 09:33:27 byers Exp $
+;;;;; $Id: view-text.el,v 44.89 2007-07-11 11:14:59 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.88 2007-06-24 09:33:27 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.89 2007-07-11 11:14:59 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -590,11 +590,29 @@ lyskom-reading-list."
      (string-to-number (aux-item->data el)))
    (lyskom-get-aux-item (text-stat->aux-items text-stat) 10101)))
 
-(defun lyskom-get-text-belongs-to (text-stat)
-  "Return a list of all texts TEXT-STAT is an attachment to."
-  (mapcar
-   (lambda (el) (string-to-number (aux-item->data el)))
-   (lyskom-get-aux-item (text-stat->aux-items text-stat) 10100)))
+(defun lyskom-get-text-belongs-to (text-stat &optional footnotes)
+  "Return a list of all texts TEXT-STAT is an attachment to.
+If optional FOOTNOTES is non-nil, include text TEXT-STAT is a footnote to."
+  (append
+   (mapcar
+    (lambda (el) (string-to-number (aux-item->data el)))
+    (lyskom-get-aux-item (text-stat->aux-items text-stat) 10100))
+   (when footnotes
+     (delq nil
+	   (mapcar (lambda (misc)
+		     (when (eq (misc-info->type misc) 'FOOTN-TO)
+		       (misc-info->footn-to misc)))
+		   (text-stat->misc-info-list text-stat))))))
+
+
+(defun lyskom-get-root-text-belongs-to (text-stat &optional footnotes)
+  "Return the top-level parent of TEXT-STAT, following attachment
+and footnote (if optional FOOTNOTES is non-nil"
+  (lyskom-find-dag-roots  'lyskom-get-text-belongs-to
+			  (lambda (x) (blocking-do 'get-text-stat x))
+			  text-stat
+			  nil
+			  footnotes))
 
 
 (defun lyskom-skip-attachments (text-no mark-as-read)

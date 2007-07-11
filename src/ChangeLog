@@ -1,3 +1,37 @@
+2007-07-11    <David Byers@GULAG>
+
+	* commands1.el (lyskom-get-recipients-from-misc-list): Rewrote
+	ugly code recursive code to pretty pointer manipulating code.
+	Added optional GET-TYPES argument.
+	(lyskom-recipient-type->): New function.
+	(lyskom-recipient-type-string): New function.
+	(lyskom-recipient-sender): New function.
+
+2007-07-10    <David Byers@GULAG>
+
+	* commands1.el (lyskom-text-stat-commented-texts): Added optional
+	argument type and rewrote from scratch.
+	(lyskom-move-comment): New function.
+	(lyskom-compute-text-recipients): New function.
+	(kom-move-comment): New command.
+
+2007-07-08    <David Byers@GULAG>
+
+	* edit-text.el (lyskom-edit-send-check-recipients): Use
+	lyskom-compute-recipients-commented-authors.
+
+	* utilities.el (lyskom-compute-recipients-commented-authors): New function.
+
+2007-07-07    <David Byers@GULAG>
+
+	* review.el (lyskom-find-root): Rewrote using
+	lyskom-find-dag-roots. So much simpler! And prettier!
+
+	* utilities.el (lyskom-find-dag-roots): New utility function.
+
+	* view-text.el (lyskom-get-text-belongs-to): Added optional
+	argument footnotes.
+
 2007-07-07  David Byers  <davby@sysinst-gw.sysinst.ida.liu.se>
 
 	* vars.el.in (kom-ssh-general-errors): New variable.

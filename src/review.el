@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.69 2007-07-07 14:15:57 byers Exp $
+;;;;; $Id: review.el,v 44.70 2007-07-11 11:14:58 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.69 2007-07-07 14:15:57 byers Exp $\n"))
+	      "$Id: review.el,v 44.70 2007-07-11 11:14:58 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1521,73 +1521,24 @@ This command accepts text number prefix arguments \(see
 
 
 (defun lyskom-find-root (text-stat &optional all)
-  "Finds the root text of the tree containing the text TEXT-STAT.
-Args: TEXT-STAT &optional ALL
-If ALL is set, return a list of all root texts."  
-  (cond (text-stat
-         (let ((queue (list text-stat))
-               (head nil)
-               (misclist nil)
-               (tmp nil)
-               (seen nil)
-               (result nil))
-           (while queue
-             (setq head (car queue))
-             (setq queue (cdr queue))
-             (setq tmp nil)
-
-             ;;
-             ;; For each parent, add it to the queue
-             ;;
-
-             (setq misclist (text-stat->misc-info-list head))
-             (while misclist
-               (cond ((eq (misc-info->type (car misclist)) 'COMM-TO)
-                      (if (memq (misc-info->comm-to (car misclist)) seen)
-                          (setq tmp (cons t tmp))
-                        (unless kom-review-uses-cache
-                          (cache-del-text-stat (misc-info->comm-to (car misclist))))
-                        (setq seen (cons (misc-info->comm-to (car misclist)) seen)
-                              tmp (cons
-                                   (blocking-do 'get-text-stat
-                                                (misc-info->comm-to (car misclist)))
-                                   tmp))))
-                     ((eq (misc-info->type (car misclist)) 'FOOTN-TO)
-                      (if (memq (misc-info->footn-to (car misclist)) seen)
-                          (setq tmp (cons t tmp))
-                        (unless kom-review-uses-cache
-                          (cache-del-text-stat (misc-info->footn-to (car misclist))))
-                        (setq seen (cons (misc-info->footn-to (car misclist)) seen)
-                              tmp (cons
-                                   (blocking-do 'get-text-stat
-                                                (misc-info->footn-to (car misclist)))
-                                   tmp)))))
-               (setq misclist (cdr misclist)))
-
-             ;;
-             ;; Remove unreadable texts
-             ;;
-
-             (setq tmp (delq nil tmp))
-
-             ;;
-             ;; If no parents were found, this is is a top-level text
-             ;;
-
-             (when (null tmp)
-               (setq result (cons head result))
-               (unless all (setq queue nil)))
-
-             ;;
-             ;; Remove "I visited this parent already" markers
-             ;;
-
-             (setq tmp (delq t tmp))
-             (setq queue (nconc tmp queue)))
-           (if all 
-               (mapcar 'text-stat->text-no result)
-             (text-stat->text-no (car result)))))
-        (t nil)))
+  "Finds the root text of the tree containing TEXT-STAT.
+If optional ALL is non-nil, then return a list of all roots, otherwise
+just a list of the firt root found."
+  (lyskom-find-dag-roots 
+   (lambda (text-stat)
+     (delq nil
+	   (mapcar (lambda (misc)
+		     (cond ((eq (misc-info->type misc) 'COMM-TO) 
+			    (misc-info->comm-to misc))
+			   ((eq (misc-info->type misc) 'FOOTN-TO) 
+			    (misc-info->footn-to misc))))
+		   (text-stat->misc-info-list text-stat))))
+   (lambda (text-no)
+     (unless kom-review-uses-cache
+       (cache-del-text-stat text-no))
+     (blocking-do 'get-text-stat text-no))
+   text-stat
+   (not all)))
 
 
 

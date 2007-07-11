@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.232 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: commands1.el,v 44.233 2007-07-11 11:14:57 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.232 2007-07-07 08:01:31 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.233 2007-07-11 11:14:57 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -420,24 +420,19 @@ This command accepts text number prefix arguments (see
     (lyskom-insert-string 'confusion-what-to-mark-unread)))
 
 
-(defun lyskom-text-stat-commented-texts (text-stat)
-  "Return a list of the text-nos that TEXT-STAT is a comment or footnote to."
-  (let* ((misc-info-list (and text-stat
-                              (text-stat->misc-info-list text-stat)))
-         (misc-infos (and misc-info-list
-                          (append (lyskom-misc-infos-from-list
-                                   'COMM-TO misc-info-list)
-                                  (lyskom-misc-infos-from-list
-                                   'FOOTN-TO misc-info-list)))))
-    (and misc-infos
-	 (mapcar
-	  (function
-	   (lambda (misc-info)
-	     (if (equal (misc-info->type misc-info)
-			'COMM-TO)
-		 (misc-info->comm-to misc-info)
-	       (misc-info->footn-to misc-info))))
-	  misc-infos))))
+(defun lyskom-text-stat-commented-texts (text-stat &optional type)
+  "Return a list of the text-nos that TEXT-STAT is a comment or footnote to.
+If optional TYPE is non-nil, only return parents of that type."
+  (cond ((null type) (setq type '(COMM-TO FOOTN-TO)))
+	((atom type) (setq type (list type))))
+  (delq nil (mapcar
+	     (lambda (misc)
+	       (when (memq (misc-info->type misc) type)
+		 (cond ((eq (misc-info->type misc) 'COMM-TO) 
+			(misc-info->comm-to misc))
+		       ((eq (misc-info->type misc) 'FOOTN-TO)
+			(misc-info->footn-to misc)))))
+	     (text-stat->misc-info-list text-stat))))
 
 
 (defun lyskom-view-commented-text (text-stat)
@@ -477,7 +472,7 @@ This command accepts text number prefix arguments (see
 as TYPE. If no such misc-info, return NIL"
   (let ((result nil))
     (while list
-      (when (equal type (misc-info->type (car list)))
+      (when (eq type (misc-info->type (car list)))
         (setq result (cons (car list) result)))
       (setq list (cdr list)))
     (nreverse result)))
@@ -1157,28 +1152,27 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
                               'kom-tell-write-footnote))
       (let (data)
         (mapcar 
-         (function
-          (lambda (misc-info)
-            (cond
-             ((eq 'RECPT (misc-info->type misc-info))
-              (setq data 
-                    (cons (blocking-do 'get-conf-stat 
-                                       (misc-info->recipient-no misc-info))
-                          data)))
-             ((and (eq type 'footnote)
-                   (eq 'CC-RECPT (misc-info->type misc-info)))
-              (setq ccrep (cons (misc-info->recipient-no misc-info) 
-                                ccrep))
-              (setq data (cons (blocking-do 'get-conf-stat
-                                            (misc-info->recipient-no misc-info))
-                               data)))
-             ((and (eq type 'footnote)
-                   (eq 'BCC-RECPT (misc-info->type misc-info)))
-              (setq bccrep (cons (misc-info->recipient-no misc-info) 
-                                 bccrep))
-              (setq data (cons (blocking-do 'get-conf-stat
-                                            (misc-info->recipient-no misc-info))
-                               data))))))
+	 (lambda (misc-info)
+	   (cond
+	    ((eq 'RECPT (misc-info->type misc-info))
+	     (setq data 
+		   (cons (blocking-do 'get-conf-stat 
+				      (misc-info->recipient-no misc-info))
+			 data)))
+	    ((and (eq type 'footnote)
+		  (eq 'CC-RECPT (misc-info->type misc-info)))
+	     (setq ccrep (cons (misc-info->recipient-no misc-info) 
+			       ccrep))
+	     (setq data (cons (blocking-do 'get-conf-stat
+					   (misc-info->recipient-no misc-info))
+			      data)))
+	    ((and (eq type 'footnote)
+		  (eq 'BCC-RECPT (misc-info->type misc-info)))
+	     (setq bccrep (cons (misc-info->recipient-no misc-info) 
+				bccrep))
+	     (setq data (cons (blocking-do 'get-conf-stat
+					   (misc-info->recipient-no misc-info))
+			      data)))))
          (text-stat->misc-info-list text-stat))
         (lyskom-comment-recipients (nreverse data)
                                    lyskom-proc 
@@ -1462,19 +1456,18 @@ or conference doesn't have a notice, a new notice till be created."
    'motd))
 
 
-(defun lyskom-get-recipients-from-misc-list (misc-list)
-  "Return a misc-info-list containing only the recipients."
-  (let* ((info (car misc-list))
-	 (type (misc-info->type info)))
-    (cond ((null misc-list) '())
-	  ((memq type lyskom-recpt-types-list)
-	   (append (list (intern (symbol-name type))
-			 (misc-info->recipient-no info))
-		   (lyskom-get-recipients-from-misc-list
-		    (cdr misc-list))))
-	  (t
-	   (lyskom-get-recipients-from-misc-list
-	    (cdr misc-list))))))
+(defun lyskom-get-recipients-from-misc-list (misc-list &optional get-types)
+  "Return a misc-info-list containing only the recipients.
+If optional GET-TYPES is non-nil, then return only recipients of that type."
+  (unless get-types (setq get-types lyskom-recpt-types-list))
+  (let ((result nil))
+    (lyskom-traverse misc misc-list
+      (when (memq (misc-info->type misc) get-types)
+	(setq result (cons (misc-info->recipient-no misc)
+			   (cons (misc-info->type misc) 
+				 result)))))
+    (nreverse result)))
+
 
 
 (defun lyskom-change-pres-or-motd-2 (conf-stat type)
@@ -4021,6 +4014,7 @@ This command accepts text number prefix arguments (see
       (lyskom-add-sub-comment text-no-arg nil)
     (lyskom-format-insert 'text-has-no-comments text-no-arg)))
 
+
 (defun lyskom-add-sub-comment (text-no do-add)
   "Get the number of the text that is going to have a comment added to it or
 subtracted from it
@@ -4060,6 +4054,283 @@ DO-ADD: NIL if a comment should be subtracted.
     (lyskom-format-insert (if do-add 
                               'confusion-what-to-add-comment-to
                             'confusion-what-to-sub-comment-from))))
+
+
+;; ================================================================
+;; Move comment
+;;
+
+(def-kom-command kom-move-comment (text-no)
+  "Move a comment from one text to another.
+This command is like first adding the comment to the new text,
+then removing it from the old one, and then updating all the
+recipients to match its new parent text."
+  (interactive (list (lyskom-read-text-no-prefix-arg 'comment-to-move-q)))
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+	 (comm-parents (lyskom-text-stat-commented-texts text-stat 'COMM-TO))
+	 (footn-parents (lyskom-text-stat-commented-texts text-stat 'FOOTN-TO))
+	 move-from move-to)
+    (cond ((null text-stat) (lyskom-format-insert 'no-such-text-no text-no))
+	  ((and (null comm-parents)
+		(null footn-parents)) 
+	   (lyskom-format-insert 'text-is-not-a-comment text-no))
+	  ((null comm-parents) (lyskom-format-insert 'cant-move-footnotes))
+	  (t (setq move-from (lyskom-completing-read-text-no 
+			      (lyskom-format 'comment-move-from-q text-no)
+			      (car comm-parents)
+			      (text-stat->text-no text-stat)
+			      'COMM-TO))
+	     (setq move-to (lyskom-read-number 
+			    (lyskom-format 'comment-move-to-q text-no)))
+	     (cond ((null (blocking-do 'get-text-stat move-to))
+		    (lyskom-format-insert 'no-such-text move-to))
+		   ((null (blocking-do 'get-text-stat move-from))
+		    (lyskom-format-insert 'no-such-text move-from))
+		   (t (lyskom-move-comment text-no move-from move-to)))))))
+
+
+(defun lyskom-compute-text-recipients (text-no &optional move-from move-to)
+  "Compute the default recipients for TEXT-NO.
+If optional MOVE-FROM and MOVE-TO are non-nil, pretend text-no is no
+longer a comment to move-from, but a comment to move-to."
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+	 (text-rcpts (lyskom-text-recipients text-stat t))
+	 (comments (lyskom-text-comments text-stat))
+	 (comment-rcpts (apply 'nconc
+			       (mapcar (lambda (c)
+					 (lyskom-text-recipients (blocking-do 'get-text-stat c) t))
+				       comments)))
+	 (parents (delq nil (delq move-from (cons move-to (lyskom-text-stat-commented-texts text-stat)))))
+	 (parent-rcpts (apply 'nconc
+			       (mapcar (lambda (p)
+					 (lyskom-text-recipients (blocking-do 'get-text-stat p) t))
+				       parents)))
+	 (parent-authors (mapcar (lambda (p)
+				   (text-stat->author (blocking-do 'get-text-stat p)))
+				 parents))
+	 (proposed-rcpts nil))
+
+    ;; Parent recipients live on in this text
+
+    (lyskom-traverse rcpt parent-rcpts
+      (when (or (eq (cdr rcpt) 'RECPT)
+		(eq (cdr rcpt) 'BCC-RECPT))
+	(setq proposed-rcpts (cons rcpt proposed-rcpts))))
+
+    ;; Child recipients live on as CC-recipients, to preserve the link
+
+    (lyskom-traverse rcpt comment-rcpts
+      (unless (assq (car rcpt) parent-rcpts)
+	(setq proposed-rcpts (cons (cons (car rcpt) 'CC-RECPT) proposed-rcpts))))
+
+    ;; Check our own membership
+
+    (unless
+	(lyskom-traverse rcpt proposed-rcpts
+	  (when (lyskom-get-membership (car rcpt))
+	    (lyskom-traverse-break t)))
+      (setq proposed-rcpts (cons (cons lyskom-pers-no 'RECPT) proposed-rcpts)))
+
+    ;; Check authors of commented texts
+
+    (setq proposed-rcpts (nconc (lyskom-filter-list 
+				 (lambda (x) (unless (assq x proposed-rcpts)
+							    (cons x 'RECPT)))
+				 (lyskom-compute-recipients-commented-authors 
+				  parents
+				  (mapcar 'car proposed-rcpts)))
+				proposed-rcpts))
+    proposed-rcpts))
+
+
+(defun lyskom-recipient-type-> (t1 t2)
+  "Return non-nil if recipient type T1 is stronger than T2.
+RECPT > CC-RECPT > BCC-RECPT > nil"
+  (> (cdr (assq t1 '((RECPT . 4) (CC-RECPT . 3) (BCC-RECPT . 2) (nil . 1))))
+     (cdr (assq t2 '((RECPT . 4) (CC-RECPT . 3) (BCC-RECPT . 2) (nil . 1))))))
+
+(defun lyskom-recipient-type-string (rcpt-type)
+  "Return a string representing recipient type T"
+  (lyskom-get-string
+   (or (cdr (assq rcpt-type '((RECPT . recpt-text)
+			      (CC-RECPT . cc-recpt-text)
+			      (BCC-RECPT . bcc-recpt-text))))
+       'unknown-recpt-text)))
+
+(defun lyskom-recipient-sender (text-stat rcpt)
+  "Return who sent TEXT-STAT to recipient number RCPT."
+  (lyskom-traverse misc (text-stat->misc-info-list text-stat)
+    (when (and (memq (misc-info->type misc) lyskom-recpt-types-list)
+	       (eq rcpt (misc-info->recipient-no misc)))
+      (lyskom-traverse-break
+       (or (misc-info->sender misc)
+	   (text-stat->author text-stat))))))
+
+(defun lyskom-move-comment (text-no from-text to-text)
+  "Move comment TEXT-NO from FROM-TEXT to TO-TEXT
+If FROM-TEXT is nil, then just add TEXT-NO as comment to TO-TEXT.
+If TO-TEXT is nil, then just remove TEXT-NO as comment to FROM-TEXT."
+
+  (let* ((text-stat (blocking-do 'get-text-stat text-no))
+	 (org-rcpts (lyskom-text-recipients text-stat t))
+	 (org-computed-rcpts (lyskom-compute-text-recipients text-no))
+	 (new-computed-rcpts (lyskom-compute-text-recipients text-no from-text to-text))
+	 wanted-rcpts ab ca cb add-rcpts del-rcpts change-rcpts)
+
+
+    (when (and from-text to-text)
+      (lyskom-format-insert 'moving-comment text-no from-text to-text))
+
+
+
+    ;; AB = Actual recipient before move
+    ;; CB = Computed recipient before move
+    ;; CA = Computed recipient after move
+    
+    ;; User accepted old default (AB = CB)			-> CA (16 cases)
+    ;; 
+    ;; User upgraded old default (AB > CB)
+    ;; - New default is higher than upgrade (CA > AB)		-> CA (4 cases)
+    ;; - New default is lower than old default (CA < CB)	-> CA (4 cases)
+    ;; - Otherwise						-> AB (16 cases)
+    ;; 
+    ;; User downgraded old default (AB < CB)
+    ;; - New default is lower than user selected (CA < AB)	-> CA (4 cases)
+    ;; - New default is higher than old default (CA > CB)	-> CA (4 cases)
+    ;; - Otherwise						-> AB (16 cases)
+
+    ;; Traverse the original actual recipients and compare
+    ;; to the new ones.
+
+    (lyskom-traverse ab org-rcpts
+      (setq ca (assq (car ab) new-computed-rcpts)
+	    cb (assq (car ab) org-computed-rcpts))
+      (cond ((eq (cdr ab) (cdr ca))
+	     (push (cons (car ab) (cdr ca)) wanted-rcpts))
+	    ((lyskom-recipient-type-> (cdr ab) (cdr cb))
+	     (cond ((lyskom-recipient-type-> (cdr ca) (cdr ab))
+		    (push (cons (car ab) (cdr ca)) wanted-rcpts))
+		   ((lyskom-recipient-type-> (cdr cb) (cdr ca))
+		    (push (cons (car ab) (cdr ca)) wanted-rcpts))
+		   (t (push ab wanted-rcpts))))
+	    (t (cond ((lyskom-recipient-type-> (cdr ab) (cdr ca))
+		      (push (cons (car ab) (cdr ca)) wanted-rcpts))
+		     ((lyskom-recipient-type-> (cdr ca) (cdr cb))
+		      (push (cons (car ab) (cdr ca)) wanted-rcpts))
+		     (t (push ab wanted-rcpts)))))
+      (setq org-computed-rcpts (delq cb org-computed-rcpts)
+	    new-computed-rcpts (delq ca new-computed-rcpts)))
+
+    ;; Traverse any old default recipients that didn't
+    ;; exist as original recipients (i.e. AB < CB). Same
+    ;; code as in the third cond branch above.
+      
+    ;; User downgraded old default (AB < CB)
+    ;; - New default is lower than user selected (CA < AB)	-> CA (can't happen)
+    ;; - New default is higher than old default (CA > CB)	-> CA (can happen)
+    ;; - Otherwise						-> AB 
+      
+    (setq ab nil)
+    (lyskom-traverse cb org-computed-rcpts
+      (setq ca (assq (car cb) new-computed-rcpts))
+      (cond ((lyskom-recipient-type-> (cdr ca) (cdr cb))
+	     (push (cons (car cb) (cdr ca)) wanted-rcpts))
+	    (t))
+      (setq new-computed-rcpts (delq ca new-computed-rcpts)))
+
+    ;; Any new default recipients that didn't exist
+    ;; as old defaults or old recipients get added
+    ;; to the list of wanted recipients. This is part
+    ;; of the case AB = CB.
+
+    (setq wanted-rcpts (nconc new-computed-rcpts
+			      (nreverse wanted-rcpts)))
+
+    ;; Done. Classify recipients in add, del or change.
+
+    ;; Special case: single recipient before and after -- move
+
+    (let ((a (lyskom-filter-list (lambda (x) (eq (cdr x) 'RECPT))
+				 (lyskom-text-recipients text-stat t)))
+	  (b (lyskom-filter-list (lambda (x) (eq (cdr x) 'RECPT))
+				 wanted-rcpts)))
+      (when (and (= 1 (length a))
+		 (= 1 (length b))
+		 (not (eq (car (car a)) (car (car b))))
+		 (j-or-n-p (lyskom-format 'move-conf-as-rcpt-q
+					  text-no
+					  (car (car a))
+					  (car (car b)))))
+	(push (car a) del-rcpts)
+	(push (car b) add-rcpts)
+	(setq wanted-rcpts (delq (assq (car (car b)) wanted-rcpts) wanted-rcpts))
+	(setq wanted-rcpts (delq (assq (car (car a)) wanted-rcpts) wanted-rcpts))))
+
+
+    ;; General case
+
+    (lyskom-traverse rcpt wanted-rcpts
+      (cond ((null (cdr rcpt))
+	     (when (and (or (null (lyskom-recipient-sender text-stat (car rcpt)))
+			    (lyskom-is-supervisor (lyskom-recipient-sender text-stat (car rcpt))
+						  lyskom-pers-no))
+			(j-or-n-p (lyskom-format 'del-conf-as-rcpt-q 
+						 (car rcpt)
+						 (lyskom-recipient-type-string 'RECPT) 
+						 text-no)))
+	       (push rcpt del-rcpts)))
+	    ((member rcpt org-rcpts))
+	    ((assq (car rcpt) org-rcpts)
+	     (when (and (or (null (lyskom-recipient-sender text-stat (car rcpt)))
+			    (lyskom-is-supervisor (lyskom-recipient-sender text-stat (car rcpt))
+						  lyskom-pers-no))
+			(j-or-n-p 
+			 (lyskom-format 'change-conf-as-rcpt-q 
+					(car rcpt)
+					(lyskom-recipient-type-string (cdr (assq (car rcpt) org-rcpts)))
+					(lyskom-recipient-type-string (cdr rcpt)) 
+					text-no)))
+	       (push rcpt change-rcpts)))
+	    ((j-or-n-p (lyskom-format 'add-conf-as-rcpt-q
+				      (car rcpt)
+				      (lyskom-recipient-type-string (cdr rcpt)) 
+				      text-no))
+	     (push rcpt add-rcpts))))
+			
+    ;; Add the comment
+
+    (when to-text
+      (cache-del-text-stat to-text)
+      (lyskom-format-insert 'add-comment-to text-no to-text)
+      (lyskom-report-command-answer (blocking-do 'add-comment
+						 text-no
+						 to-text)))
+
+    ;; Finally execute it all
+
+    (when from-text
+      (cache-del-text-stat from-text)
+      (lyskom-format-insert 'sub-comment-to text-no from-text)
+      (lyskom-report-command-answer (blocking-do 'sub-comment
+						 text-no
+						 from-text)))
+
+    (cache-del-text-stat text-no)
+
+    (lyskom-traverse rcpt (append add-rcpts change-rcpts)
+      (lyskom-format-insert (cond ((eq (cdr rcpt) 'RECPT) 'adding-name-as-recipient)
+				  ((eq (cdr rcpt) 'CC-RECPT) 'adding-name-as-copy)
+				  ((eq (cdr rcpt) 'BCC-RECPT) 'adding-name-as-bcc))
+			    (car rcpt) text-no)
+      (lyskom-report-command-answer (blocking-do 'add-recipient text-no (car rcpt) (cdr rcpt))))
+
+    (lyskom-traverse rcpt del-rcpts
+      (lyskom-format-insert 'remove-name-as-recipient (car rcpt) text-no)
+      (lyskom-report-command-answer (blocking-do 'sub-recipient text-no (car rcpt))))
+
+    ))
+
+
 
 (def-kom-command kom-add-footnote (text-no-arg)
   "Add a text as a footnote to another text. This command is used to
