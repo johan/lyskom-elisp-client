@@ -1,5 +1,13 @@
 2007-07-11    <David Byers@GULAG>
 
+	* commands2.el (lyskom-help-get-keylist): Changed name of variable
+	list to keylist. In Emacs 22.1, map-keymap-internal (which is
+	called by map-keymap) uses "list" as an internal variable.
+
+	Fix bug 1262:
+	* edit-text.el (lyskom-edit-move-recipients): Don't alter
+	recipients that are letterboxes.
+
 	Fix bug 281:
 	* vars.el.in (lyskom-format-special): Cover all IANA mime type
 	allocations, and include fallback for anything unknown.

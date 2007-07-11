@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.372 2007-07-11 19:13:08 byers Exp $
+;;;;; $Id: english-strings.el,v 44.373 2007-07-11 20:48:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.372 2007-07-11 19:13:08 byers Exp $"))
+              "$Id: english-strings.el,v 44.373 2007-07-11 20:48:43 byers Exp $"))
 
 
 ;;; ================================================================
@@ -578,6 +578,7 @@ Read all about it at http://www.lysator.liu.se/history/")
 
     (who-to-move-from-q . "Move text %#1n from where? ")
     (who-to-move-to-q . "Move text %#1n to where? ")
+    (edit-who-to-move-to-q . "Move text to where? ")
     (who-to-move-to-or-sub-q . "Move to where (empty to just remove recipient)? ")
     (move-footnotes-too-q . "Try to move footnotes? ")
     (move-attachments-too-q . "Try to move attachments? ")

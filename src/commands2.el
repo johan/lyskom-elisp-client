@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.224 2007-07-07 14:15:56 byers Exp $
+;;;;; $Id: commands2.el,v 44.225 2007-07-11 20:48:42 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.224 2007-07-07 14:15:56 byers Exp $\n"))
+              "$Id: commands2.el,v 44.225 2007-07-11 20:48:42 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1238,12 +1238,12 @@ will be prompted for the mark."
 
 (defun lyskom-help-get-keylist (keymap)
   (and keymap
-       (let (list)
+       (let (keylist)
          (lyskom-map-keymap
           (lambda (event function)
-            (setq list (cons (cons event function) list)))
+            (setq keylist (cons (cons event function) keylist)))
           keymap t)
-         (nreverse list))))
+         (nreverse keylist))))
 
 
 ;;; ================================================================

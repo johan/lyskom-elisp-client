@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.416 2007-07-11 19:13:09 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.417 2007-07-11 20:48:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.416 2007-07-11 19:13:09 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.417 2007-07-11 20:48:43 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -607,6 +607,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
 
     (who-to-move-from-q . "Från vilket möte vill du flytta text %#1n? ")
     (who-to-move-to-q . "Vart vill du flytta text %#1n? ")
+    (edit-who-to-move-to-q . "Vart vill du flytta texten? ")
     (who-to-move-to-or-sub-q . "Vart vill du flytta texten (tomt för att bara subtrahera)? ")
     (move-footnotes-too-q . "Försök flytta fotnoter också? ")
     (move-attachments-too-q . "Försök flytta bilagor också? ")

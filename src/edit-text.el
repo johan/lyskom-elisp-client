@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.127 2007-07-11 11:14:57 byers Exp $
+;;;;; $Id: edit-text.el,v 44.128 2007-07-11 20:48:43 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.127 2007-07-11 11:14:57 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.128 2007-07-11 20:48:43 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1188,7 +1188,7 @@ carbonn copy recipients. This command is intended for situations where
 a commend is being sent to a different recipient than the commented
 text was."
   (interactive)
-  (lyskom-edit-add-recipient/copy 'who-to-move-to-q
+  (lyskom-edit-add-recipient/copy 'edit-who-to-move-to-q
                                   'lyskom-edit-move-recipients))
 
 
@@ -1197,9 +1197,13 @@ text was."
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (subject (lyskom-text-headers->subject headers))
-           (miscs (mapcar (lambda (x) (if (eq (car x) 'RECPT) 
-                                          (cons 'CC-RECPT (cdr x)) x))
-                  (cdr (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))))
+           (miscs (mapcar (lambda (x) (cond ((and (eq (car x) 'RECPT)
+						  (not (conf-type->letterbox
+							(uconf-stat->conf-type
+							 (blocking-do 'get-uconf-stat (cdr x))))))
+					     (cons 'CC-RECPT (cdr x)))
+					    (t x)))
+			  (cdr (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))))
            (aux-list (lyskom-text-headers->aux-items headers))
            (elem nil))
 
@@ -1285,7 +1289,7 @@ RECPT-TYPE is the type of recipient to add."
            (setq recpt-type 'CC-RECPT))
 
          (if what-to-do
-           (funcall what-to-do conf-stat insert-at edit-buffer)
+	     (funcall what-to-do conf-stat insert-at edit-buffer)
            (lyskom-edit-do-add-recipient/copy recpt-type
                                               (conf-stat->conf-no conf-stat)
                                               edit-buffer)))
