@@ -1,5 +1,11 @@
 2007-07-11    <David Byers@GULAG>
 
+	Fix bug 818:
+	* startup.el (lyskom-read-server-name): Use programmed completion.
+	(lyskom-complete-server-name): Programmed completion function for
+	server names.
+
+	Fix bug 1308:
 	* commands1.el (lyskom-get-recipients-from-misc-list): Rewrote
 	ugly code recursive code to pretty pointer manipulating code.
 	Added optional GET-TYPES argument.

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.233 2007-07-11 11:14:57 byers Exp $
+;;;;; $Id: commands1.el,v 44.234 2007-07-11 13:36:24 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.233 2007-07-11 11:14:57 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.234 2007-07-11 13:36:24 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -4105,9 +4105,6 @@ longer a comment to move-from, but a comment to move-to."
 			       (mapcar (lambda (p)
 					 (lyskom-text-recipients (blocking-do 'get-text-stat p) t))
 				       parents)))
-	 (parent-authors (mapcar (lambda (p)
-				   (text-stat->author (blocking-do 'get-text-stat p)))
-				 parents))
 	 (proposed-rcpts nil))
 
     ;; Parent recipients live on in this text
@@ -4256,6 +4253,7 @@ If TO-TEXT is nil, then just remove TEXT-NO as comment to FROM-TEXT."
 				 wanted-rcpts)))
       (when (and (= 1 (length a))
 		 (= 1 (length b))
+		 (null (cdr (assq (car (car a)) wanted-rcpts)))  
 		 (not (eq (car (car a)) (car (car b))))
 		 (j-or-n-p (lyskom-format 'move-conf-as-rcpt-q
 					  text-no

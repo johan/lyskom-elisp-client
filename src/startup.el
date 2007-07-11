@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.117 2007-07-07 15:41:25 byers Exp $
+;;;;; $Id: startup.el,v 44.118 2007-07-11 13:36:25 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.117 2007-07-07 15:41:25 byers Exp $\n"))
+	      "$Id: startup.el,v 44.118 2007-07-11 13:36:25 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -802,6 +802,19 @@ This is called at login and after prioritize and set-unread."
     nil)))
 
 
+(defvar lyskom-known-servers)
+(defun lyskom-complete-server-name (string pred flag)
+  "Programmed completion function for lyskom-read-server-name."
+  (cond ((null flag)			; try-completion
+	 (or (try-completion string lyskom-known-servers) string))
+	((eq flag 'lambda)		; test-completion
+	 (cond ((assoc string lyskom-known-servers) t)
+	       ((try-completion string lyskom-known-servers) nil)
+	       (t t)))
+	((eq flag 't)			; all-completions
+	 (or (all-completions string lyskom-known-servers)
+	     (list string)))))
+
 (defun lyskom-read-server-name ()
   "Read the name of a LysKOM server.
 Copmpletion is done on the servers i kom-server-aliases and
@@ -810,25 +823,26 @@ corresponding address is returned."
   ;; Create a completion table like
   ;; (("kom.lysator.liu.se" . "kom.lysator.liu.se")
   ;;  ("LysKOM" . "kom.lysator.liu.se"))
-  (let ((known-servers
-	 (append (mapcar (function (lambda (pair)
-				     (cons (car pair) (car pair))))
+  (let ((lyskom-known-servers
+	 (append (mapcar (lambda (pair)
+			   (cons (car pair) (car pair)))
 			 (append kom-server-aliases kom-builtin-server-aliases))
-		 (mapcar (function (lambda (pair)
-				     (cons (cdr pair) (car pair))))
+		 (mapcar (lambda (pair)
+			   (cons (cdr pair) (car pair)))
 			 (append kom-server-aliases kom-builtin-server-aliases))))
 	(completion-ignore-case t)
 	server)
+    (setq lyskom-known-servers (lyskom-maybe-frob-completion-table lyskom-known-servers))
+
     (while (null server)
       (setq server (lyskom-completing-read (lyskom-format 'server-q)
-                                           (lyskom-maybe-frob-completion-table
-                                            known-servers)
-                                           nil nil
+					   'lyskom-complete-server-name
+                                           nil t
                                            (cons (or (getenv "KOMSERVER")
                                                      lyskom-default-server
                                                      kom-default-server
                                                      "") 0))))
-    (or (cdr (lyskom-string-assoc server known-servers))
+    (or (cdr (lyskom-string-assoc server lyskom-known-servers))
 	server)))
 
 
