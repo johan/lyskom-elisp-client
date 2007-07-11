@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.331 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: vars.el.in,v 44.332 2007-07-11 19:13:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.331 2007-07-11 11:14:58 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.332 2007-07-11 19:13:10 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4634,20 +4634,38 @@ Values other than those listed are reserved for future use."
   copy-transition lyskom-copy-indirect-assq)
 
 (def-kom-var lyskom-format-special 
-  '(("html"               . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
-    ("enriched"           . lyskom-format-enriched)
-    ("^image/"            . lyskom-format-image)
+  '(("html"                . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
+    ("enriched"            . lyskom-format-enriched)
+    ("^image/"             . lyskom-format-image)
     ("^text/html"          . (lyskom-format-html-w3m lyskom-format-html-w3 lyskom-format-html-plaintext))
     ("^text/enriched"      . lyskom-format-enriched)
-    ("^text/"             . lyskom-format-plaintext)
+    ("^text/"              . lyskom-format-plaintext)
     ("^x-kom/text"         . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
     ("^x-kom/basic"        . lyskom-format-plaintext)  ;Archaic alias for text/x-kom-basic.
     ("^x-kom/user-area"    . lyskom-format-x-kom/user-area)
-    ("^x-kom/ö\\."         . lyskom-format-ö))
+    ("^x-kom/ö\\."      . lyskom-format-ö)
+    ("^audio/"		   . lyskom-format-audio)
+    ("^video/"		   . lyskom-format-video)
+    ("^multipart/"	   . lyskom-format-multipart)
+    ("^message/rfc822"	   . lyskom-format-plaintext)
+    ("^message/delivery-status" . lyskom-format-plaintext)
+    ("^message/disposition-notification" . lyskom-format-plaintext)
+    ("^message/news"       . lyskom-format-plaintext)
+    ("^message/"	   . lyskom-format-message)
+    ("^model/"		   . lyskom-format-model)
+    ("^application/"	   . lyskom-format-application)
+    (""	                   . lyskom-format-unknown)
+    )
   
   "AList of (FORMAT . FUNCTION) specifying functions that format texts
 of that type. FORMAT is a symbol and FUNCTION is a function taking one
 argument and returning a formatted string.")
+
+(def-kom-var kom-respect-ancient-content-types nil
+  "**When set to non-nil, LysKOM respects an ancient method for specifying
+the content type of texts (in the first line of the text body). Should be
+set to nil for most users."
+  server)
 
 (def-kom-var lyskom-send-text-transform-hook nil
   "Functions to call to transform text before sending it to the server.

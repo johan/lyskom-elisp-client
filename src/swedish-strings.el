@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.415 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.416 2007-07-11 19:13:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.415 2007-07-11 11:14:58 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.416 2007-07-11 19:13:09 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -446,6 +446,9 @@ du har läst klart allting. Kom tillbaks senare.
     (active-last . "Aktiv senast")
     (active . "Aktiv")
     (lyskom-client . "Klient")
+    (move-roots-q . "Inlägg %#1n är en fotnot/bilaga. Flytta %#2n%#3?b%[ mfl.%]%[%] istället? ")
+    (add-roots-q . "Inlägg %#1n är en fotnot/bilaga. Addera till %#2n%#3?b%[ mfl.%]%[%] istället? ")
+    (sub-roots-q . "Inlägg %#1n är en fotnot/bilaga. Subtrahera från %#2n%#3?b%[ mfl.%]%[%] istället? ")
     (text-to-add-recipient . "Vilket inlägg vill du addera mottagare till:")
     (text-to-add-copy . "Vilket inlägg vill du addera en extra kopia till:")
     (text-to-add-bcc . "Vilket inlägg vill du skicka som dold kopia:")
@@ -591,19 +594,19 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
      . "    Sammanlagt %#1d synlig%#1?d%[%]%[a%] aktiv%#1?d%[%]%[a%] användare (%#2s).\n")
     (client-statistics . "    Klienternas fördelning:\n")
     (client-statistics-line . "    %4#2d %#1s%#3?d%[%]%[ [%#3d varianter]%]")
-    (who-to-add-q . "Vilket möte/person vill du addera som mottagare? ")
-    (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare? ")
-    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare av en dold kopia? ")
+    (who-to-add-q . "Vilket möte/person vill du addera som mottagare till text %#1n? ")
+    (who-to-add-copy-q . "Vilket möte/person vill du addera som kopiemottagare till text %#1n? ")
+    (who-to-add-bcc-q . "Vilket möte/person vill du addera som mottagare av en dold kopia till text %#1n? ")
     (add-footnotes-too-q . "Försök addera mottagare till fotnoter också? ")
     (add-attachments-too-q . "Försök addera mottagare till bilagor också? ")
 
     (really-add-as-recpt-q . "Skall framtida kommentarer till inlägget också skickas till %#1M? ") 
-    (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare? ")
+    (who-to-sub-q . "Vilket möte/person vill du subtrahera som mottagare till text %#1n? ")
     (sub-footnotes-too-q . "Försök subtrahera mottagare från fotnoter också? ")
     (sub-attachments-too-q . "Försök subtrahera mottagare från bilagor också? ")
 
-    (who-to-move-from-q . "Från vilket möte vill du flytta texten? ")
-    (who-to-move-to-q . "Vart vill du flytta texten? ")
+    (who-to-move-from-q . "Från vilket möte vill du flytta text %#1n? ")
+    (who-to-move-to-q . "Vart vill du flytta text %#1n? ")
     (who-to-move-to-or-sub-q . "Vart vill du flytta texten (tomt för att bara subtrahera)? ")
     (move-footnotes-too-q . "Försök flytta fotnoter också? ")
     (move-attachments-too-q . "Försök flytta bilagor också? ")
@@ -1567,7 +1570,21 @@ Uppkopplad sedan %#8s%#9s")
     (reformat-enriched . "enriched")
     (reformat-filled . "ombruten")
     (reformat-image . "bild")
-    (image-no-show . "< Bilden kan inte visas. >")
+    (image-no-show . "< Bilden (%#1s) kan inte visas. >")
+    (reformat-video . "video")
+    (video-no-show . "< Video (%#1s) stöds inte. >")
+    (reformat-audio . "ljud")
+    (audio-no-show . "< Ljud (%#1s) stöds inte. >")
+    (reformat-multipart . "flerdelat")
+    (multipart-no-show . "< Flerdelade inlägg (%#1s) stöds inte. >")
+    (reformat-message . "meddelande")
+    (message-no-show . "< Meddelandetyp (%#1s) stöds inte. >")
+    (reformat-model . "modell")
+    (model-no-show . "< Modeller (%#1s) stöds inte. >")
+    (reformat-application . "tillämpningsdata")
+    (application-no-show . "< Tillämpningsdata (%#1s) stöds inte. >")
+    (reformat-unknown . "okänd typ")
+    (unknown-no-show . "< Okänd typ (%#1s) stöds inte. >")
 
     (reformat-truncated . "nedkortad")
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.89 2007-07-11 11:14:59 byers Exp $
+;;;;; $Id: view-text.el,v 44.90 2007-07-11 19:13:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.89 2007-07-11 11:14:59 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.90 2007-07-11 19:13:10 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -769,18 +769,14 @@ blocking-do."
                         (lambda (str)
                           (let ((face nil))
                             ;; If it's a cons, the cdr is property list
-                            (when (consp str)
-                              (setq face (cdr str)
-                                    str (car str)))
-                            ;; Get the string
-                            (setq str (lyskom-get-string str))
-                            ;; Upcase the first in the list
-                            (when first-flag 
-                              (setq first-flag nil str (upcase-initials str)))
-                            ;; If we have a plist, apply it
-                            (when face
-                              (add-text-properties 0 (length str) face str))
-                            ;; Return the string
+                            (when (consp str) (setq face (cdr str) str (car str)))
+			    (if (stringp str)
+				str
+			      (setq str (lyskom-get-string str))
+			      (when first-flag 
+				(setq str (capitalize str))))
+			    (setq first-flag nil)
+                            (when face (add-text-properties 0 (length str) face str))
                             str))
                         format-flags ", ")
                        ")"))

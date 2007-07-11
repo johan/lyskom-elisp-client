@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.271 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.272 2007-07-11 19:13:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.271 2007-07-07 08:01:31 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.272 2007-07-11 19:13:09 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -2260,19 +2260,23 @@ reappears."
 ;;; ================================================================
 ;;;			 Text body formatting
 
+(defun lyskom-text-stat-content-type (text text-stat)
+  "Return the content type of a text."
+  (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1)))))
+    (or (cond (ct-item (aux-item->data ct-item))
+	      ((and kom-respect-ancient-content-types
+		    (string-match "\\`\\(\\S-+\\):\\s-*$" text)
+		    (match-beginning 1))
+	       (match-string 1 text))
+	      (t nil))
+	"text/x-kom-basic")))
 
 (lyskom-try-require 'latin-unity)
 (lyskom-with-external-functions (smiley-region latin-unity-remap-region)
 
   (defun lyskom-format-text-body (text &optional text-stat)
     "Format a text for insertion. Does parsing of special markers in the text."
-    (let* ((ct-item (and text-stat (car (text-stat-find-aux text-stat 1))))
-           (content-type (or (cond (ct-item (aux-item->data ct-item))
-                                   ((and (string-match "\\`\\(\\S-+\\):\\s-*$" text)
-                                         (match-beginning 1))
-                                    (match-string 1 text))
-                                   (t nil))
-                             "text/x-kom-basic"))
+    (let* ((content-type (lyskom-text-stat-content-type text text-stat))
            (fn (and content-type
                     (cdr (let ((case-fold-search t))
                            (lyskom-traverse el lyskom-format-special
@@ -2373,7 +2377,7 @@ reappears."
 (defun lyskom-signal-reformatted-text (how)
   "Signal that the last text was reformatted HOW, which should be a string
 in lyskom-messages."
-  (or (memq how lyskom-last-text-format-flags)
+  (or (member how lyskom-last-text-format-flags)
       (setq lyskom-last-text-format-flags (cons how lyskom-last-text-format-flags))))
 
 
@@ -2429,6 +2433,34 @@ in lyskom-messages."
 (defun lyskom-format-html-w3m (text text-stat)
   (lyskom-format-html text text-stat 'w3m 'lyskom-w3m-region))
 
+(defun lyskom-format-audio (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-audio)
+  (lyskom-format 'audio-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-video (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-video)
+  (lyskom-format 'video-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-multipart (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-multipart)
+  (lyskom-format 'multipart-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-message (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-message)
+  (lyskom-format 'message-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-model (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-model)
+  (lyskom-format 'model-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-application (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-application)
+  (lyskom-format 'application-no-show (lyskom-text-stat-content-type text text-stat)))
+
+(defun lyskom-format-unknown (text text-stat)
+  (lyskom-signal-reformatted-text 'reformat-unknown)
+  (lyskom-format 'unknown-no-show (lyskom-text-stat-content-type text text-stat)))
+
 (defun lyskom-format-image (text text-stat)
   (if kom-format-show-images
       (let* ((cti (lyskom-get-aux-item (text-stat->aux-items text-stat) 1))
@@ -2450,9 +2482,11 @@ in lyskom-messages."
 			  (lyskom-put-image 
 			   (lyskom-create-image imagedata imagetype t) 
 			   (point-max)))
-	       (setq msg (lyskom-get-string 'image-no-show))))
+	       (setq msg (lyskom-format 'image-no-show
+					(lyskom-text-stat-content-type text text-stat)))))
 	       ; Errors just marks it as a no show
-	  (error (setq msg (lyskom-get-string 'image-no-show)))) 
+	  (error (setq msg (lyskom-format 'image-no-show
+					  (lyskom-text-stat-content-type text text-stat))))) 
 	(lyskom-signal-reformatted-text 'reformat-image)
 	msg)))
 

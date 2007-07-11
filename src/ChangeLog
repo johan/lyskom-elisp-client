@@ -1,5 +1,27 @@
 2007-07-11    <David Byers@GULAG>
 
+	Fix bug 281:
+	* vars.el.in (lyskom-format-special): Cover all IANA mime type
+	allocations, and include fallback for anything unknown.
+
+	* lyskom-rest.el (lyskom-text-stat-content-type): New function.
+	(lyskom-format-audio): New function.
+	(lyskom-format-video): New function.
+	(lyskom-format-multipart): New function.
+	(lyskom-format-message): New function.
+	(lyskom-format-model): New function.
+	(lyskom-format-application): New function.
+	(lyskom-format-image): Show content type when failing to show image.
+	(lyskom-format-unknown): New function.
+
+	* view-text.el (lyskom-format-text-footer): Allow strings as format flags.
+
+	* vars.el.in (kom-respect-ancient-content-types): New variable.
+
+	* lyskom-rest.el (lyskom-format-text-body): Don't get content type
+	from text body unless kom-respect-ancient-content-types is
+	non-nil.
+
 	Fix bug 818:
 	* startup.el (lyskom-read-server-name): Use programmed completion.
 	(lyskom-complete-server-name): Programmed completion function for

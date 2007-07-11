@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.371 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: english-strings.el,v 44.372 2007-07-11 19:13:08 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.371 2007-07-11 11:14:58 byers Exp $"))
+              "$Id: english-strings.el,v 44.372 2007-07-11 19:13:08 byers Exp $"))
 
 
 ;;; ================================================================
@@ -440,6 +440,9 @@ and you have finished reading. Please come back later.
     (active-last . "Active last")
     (active . "Active")
     (lyskom-client . "Client")
+    (move-roots-q . "Text %#1n is a footnote/attachment. Move %#2n%#3?b%[ et al.%]%[%] instead? ")
+    (add-roots-q . "Text %#1n is a footnote/attachment. Add to %#2n%#3?b%[ et al.%]%[%] instead? ")
+    (sub-roots-q . "Text %#1n is a footnote/attachment. Remove from %#2n%#3?b%[ et al.%]%[%] instead? ")
     (text-to-add-recipient . "Add recipient to which text:")
     (text-to-add-copy . "Add recipient of carbon copy to which text:")
     (text-to-add-bcc . "Add recipient of blind carbon copy to which text:")
@@ -562,19 +565,19 @@ Read all about it at http://www.lysator.liu.se/history/")
      . "    A total of %#1d visible%#1?d%[%]%[%] active user%#1?d%[%]%[s%] (%#2s).\n")
     (client-statistics . "    Distribution of clients:\n")
     (client-statistics-line . "    %4#2d %#1s%#3?d%[%]%[ [%#3d variants]%]")
-    (who-to-add-q . "Add whom/what as a recipient? ")
-    (who-to-add-copy-q . "Add which conference/user as carbon copy recipient? ")
-    (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient? ")
+    (who-to-add-q . "Add whom/what as a recipient of text %#1n? ")
+    (who-to-add-copy-q . "Add which conference/user as carbon copy recipient of text %#1n? ")
+    (who-to-add-bcc-q . "Add which conference/user as blind carbon copy recipient of text %#1n? ")
     (add-footnotes-too-q . "Try to add recipient to footnotes? ")
     (add-attachments-too-q . "Try to add recipient to attachments? ")
 
     (really-add-as-recpt-q . "Send future comments to the text to %#1M too? ") 
-    (who-to-sub-q . "Remove whom/what as a recipient? ")
+    (who-to-sub-q . "Remove whom/what as a recipient of %#1n? ")
     (sub-footnotes-too-q . "Try to remove recipient from footnotes? ")
     (sub-attachments-too-q . "Try to remove recipient from attachments? ")
 
-    (who-to-move-from-q . "Move from where? ")
-    (who-to-move-to-q . "Move to where? ")
+    (who-to-move-from-q . "Move text %#1n from where? ")
+    (who-to-move-to-q . "Move text %#1n to where? ")
     (who-to-move-to-or-sub-q . "Move to where (empty to just remove recipient)? ")
     (move-footnotes-too-q . "Try to move footnotes? ")
     (move-attachments-too-q . "Try to move attachments? ")
@@ -1518,7 +1521,21 @@ On since %#8s%#9s")
     (reformat-enriched . "enriched")
     (reformat-filled . "filled")
     (reformat-image . "image")
-    (image-no-show . "< The image cannot be shown. >")
+    (image-no-show . "< The image (%#1s) cannot be shown. >")
+    (reformat-video . "video")
+    (video-no-show . "< Video (%#1s) not supported. >")
+    (reformat-audio . "audio")
+    (audio-no-show . "< Audio (%#1s) not supported. >")
+    (reformat-multipart . "multipart")
+    (multipart-no-show . "< Multipart (%#1s) texts not supported. >")
+    (reformat-message . "message")
+    (message-no-show . "< Message type (%#1s) not supported. >")
+    (reformat-model . "model")
+    (model-no-show . "< Models (%#1s) not supported. >")
+    (reformat-application . "application data")
+    (application-no-show . "< Application data (%#1s) not supported. >")
+    (reformat-unknown . "unknown type")
+    (unknown-no-show . "< Unknown type (%#1s) not supported. >")
 
     (reformat-truncated . "truncated")
 
