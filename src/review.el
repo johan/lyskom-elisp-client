@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.70 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: review.el,v 44.71 2007-07-14 15:01:36 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.70 2007-07-11 11:14:58 byers Exp $\n"))
+	      "$Id: review.el,v 44.71 2007-07-14 15:01:36 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.169 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: utilities.el,v 44.170 2007-07-14 15:01:36 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.169 2007-07-11 11:14:58 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.170 2007-07-14 15:01:36 ceder Exp $\n"))
 
 
 (defvar coding-category-list)
