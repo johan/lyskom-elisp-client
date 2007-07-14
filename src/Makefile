@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.118 2005-02-14 18:14:33 byers Exp $
+# $Id: Makefile,v 44.119 2007-07-14 15:01:53 ceder Exp $
 
 # Useful targets:
 #
@@ -194,9 +194,23 @@ fast: $(HEADER-ELC) $(LANGUAGE-ELC) $(SOURCES-ELC)
 	cat $^ >$(TARGET)
 
 
-check: $(TARGET-EL)
+check: $(TARGET-EL) check-eof
 	$(EMACS-BATCH) -l lpath.el -l $< -l check-strings.el \
 			-f lyskom-check-strings
+
+check-eof:
+	for i in $(HEADER) $(LANGUAGE-EL) $(SOURCES); \
+	do \
+	    sz=`wc -c < $$i`; \
+	    sz=`expr $$sz - 1`; \
+	    lastchar=`od -t d1 -j $$sz $$i|awk 'NF==2 {print $$2}'`; \
+	    if [ $$lastchar != 10 ]; \
+	    then \
+		echo $$i:`wc -l < $$i`: bad file ending >&2; \
+		exit 1; \
+	    fi \
+	done
+
 
 TAGS: $(HEADER) $(LANGUAGE-EL) $(SOURCES)
 	etags $^
