@@ -1,3 +1,13 @@
+2007-07-14  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Make sure all elisp files end in a newline.
+	* utilities.el: Add a newline at end of file.
+	* review.el: Add a newline at end of file.
+	* Makefile (check-eof): New target.  Check that all elisp files
+	ends in a newline, to avoid strange code in the concatenated
+	lyskom.el.
+	(check): Depend on check-eof.
+
 2007-07-11    <David Byers@GULAG>
 
 	* commands2.el (lyskom-help-get-keylist): Changed name of variable
