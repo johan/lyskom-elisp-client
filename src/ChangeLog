@@ -1,3 +1,9 @@
+2007-07-20  Hans Eric Svensson  <eric+lyskom@lysator.liu.se>
+	
+	* view-text.el (lyskom-follow-comments): Adjusted to take into
+	account that text-read-p doesn't know if a text *should* be read,
+	it only only knows if a text *is marked* as read.
+
 2007-07-14  Per Cederqvist  <ceder@lysator.liu.se>
 
 	Make sure all elisp files end in a newline.
