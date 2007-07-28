@@ -36,6 +36,10 @@
     swedish-strings.el and in english-strings.el (and of course in
     hindi-strings.el if you have one).
 
+    To add a keybinding for the command, see the code that sets
+    lyskom-en-mode-map in english-strings.el and lyskom-sv-mode-map in
+    swedish-strings.el.
+
     You're done.
 
 
