@@ -1,3 +1,20 @@
+2007-07-28  Per Cederqvist  <ceder@lysator.liu.se>
+
+	New command: "View URL".
+
+	* commands2.el (kom-view-url-in-text): New command.
+
+	* vars.el.in (lyskom-commands): Added kom-view-url-in-text.
+
+	* swedish-strings.el (lyskom-command): Add kom-view-url-in-text as
+	"Visa URL".
+	(lyskom-sv-mode-map): Bind "vu" to "Visa URL".
+
+	* english-strings.el (lyskom-command): Add kom-view-url-in-text as
+	"View URL".
+	(lyskom-en-view-prefix): New prefix, bound to "v".
+	(lyskom-en-mode-map): Bind "vu" to "View URL".
+
 2007-07-20  Hans Eric Svensson  <eric+lyskom@lysator.liu.se>
 	
 	* view-text.el (lyskom-follow-comments): Adjusted to take into

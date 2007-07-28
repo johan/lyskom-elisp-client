@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.225 2007-07-11 20:48:42 byers Exp $
+;;;;; $Id: commands2.el,v 44.226 2007-07-28 17:29:08 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.225 2007-07-11 20:48:42 byers Exp $\n"))
+              "$Id: commands2.el,v 44.226 2007-07-28 17:29:08 ceder Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2715,6 +2715,22 @@ This command accepts text number prefix arguments \(see
 	(delete-file newfile))))))
       
     
+
+;;; ================================================================
+;;;             Visa URL - Show URL
+;;; View an URL in the current browser.
+
+;;; Author: Per Cederqvist
+
+(def-kom-command kom-view-url-in-text (n)
+  "Display the first URL in the current text of a LysKOM buffer.
+With a prefix argument, view the Nth URL in the text."
+  (interactive "p")
+  (save-excursion
+    (let ((end (point)))
+      (kom-backward-text)
+      (re-search-forward lyskom-url-protocol-regexp end nil n)
+      (kom-button-press))))
 
 ;;; ================================================================
 ;;;             Skapa aux-item

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.373 2007-07-11 20:48:43 byers Exp $
+;;;;; $Id: english-strings.el,v 44.374 2007-07-28 17:29:08 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.373 2007-07-11 20:48:43 byers Exp $"))
+              "$Id: english-strings.el,v 44.374 2007-07-28 17:29:08 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -2402,6 +2402,8 @@ Change privileges for %#1P (%#1p)...")
     (kom-compare-texts        . "Compare two texts")
     (kom-diff-texts           . "View diff")
 
+    (kom-view-url-in-text     . "View URL")
+
     (kom-become-anonymous     . "Become anonymous")
     (kom-become-nonanonymous  . "Become non-anonymous (come forth into the light)")
 
@@ -2713,6 +2715,7 @@ Change privileges for %#1P (%#1p)...")
 (lyskom-language-keymap lyskom-mode-map en lyskom-en-mode-map)
 
 (defvar lyskom-en-review-prefix)
+(defvar lyskom-en-view-prefix)
 (defvar lyskom-en-change-prefix)
 (defvar lyskom-en-next-prefix)
 (defvar lyskom-en-list-prefix)
@@ -2737,6 +2740,7 @@ Change privileges for %#1P (%#1p)...")
   (define-prefix-command 'lyskom-en-A-prefix)
   (define-prefix-command 'lyskom-en-B-prefix)
   (define-prefix-command 'lyskom-en-unread-prefix)
+  (define-prefix-command 'lyskom-en-view-prefix)
 
   (define-key lyskom-en-mode-map (kbd "h") 'lyskom-en-change-prefix)
   (define-key lyskom-en-mode-map (kbd "r") 'lyskom-en-review-prefix)
@@ -2748,6 +2752,7 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-mode-map (kbd "a") 'lyskom-en-A-prefix)
   (define-key lyskom-en-mode-map (kbd "b") 'lyskom-en-B-prefix)
   (define-key lyskom-en-mode-map (kbd "u") 'lyskom-en-unread-prefix)
+  (define-key lyskom-en-mode-map (kbd "v") 'lyskom-en-view-prefix)
 
   (define-key lyskom-en-mode-map (kbd "M-m") 'kom-toggle-mark-as-read-prefix)
   (define-key lyskom-en-mode-map (kbd "M-c") 'kom-toggle-cache-prefix)
@@ -2765,6 +2770,7 @@ Change privileges for %#1P (%#1p)...")
   ;; These should be first in order to be last in the menu of alternatives.
   (define-key lyskom-en-review-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-en-unread-prefix     (kbd "?") 'lyskom-help)
+  (define-key lyskom-en-view-prefix       (kbd "?") 'lyskom-help)
   (define-key lyskom-en-change-prefix     (kbd "?") 'lyskom-help)
   (define-key lyskom-en-next-prefix       (kbd "?") 'lyskom-help)
   (define-key lyskom-en-list-prefix       (kbd "?") 'lyskom-help)
@@ -2869,6 +2875,8 @@ Change privileges for %#1P (%#1p)...")
   (define-key lyskom-en-unread-prefix (kbd "m") 'kom-unread-marked-texts)
   (define-key lyskom-en-unread-prefix (kbd "a m") 'kom-unread-all-marked-texts)
   (define-key lyskom-en-unread-prefix (kbd "a SPC") 'kom-unread-all)
+
+  (define-key lyskom-en-view-prefix (kbd "u") 'kom-view-url-in-text)
 
   (define-key lyskom-en-review-prefix (kbd "SPC") 'kom-view)
   (define-key lyskom-en-review-prefix (kbd "0") 'kom-initial-digit-view)

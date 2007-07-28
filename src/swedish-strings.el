@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.417 2007-07-11 20:48:43 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.418 2007-07-28 17:29:08 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.417 2007-07-11 20:48:43 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.418 2007-07-28 17:29:08 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -2444,6 +2444,8 @@ Nuvarande rättigheter för %#1P (%#1p):
     (kom-compare-texts        . "Jämför två texter")
     (kom-diff-texts           . "Se diff")
 
+    (kom-view-url-in-text     . "Visa URL")
+
     (kom-become-anonymous     . "Bli anonym")
     (kom-become-nonanonymous  . "Bli icke-anonym (träd fram ur skuggorna)")
 
@@ -2966,6 +2968,7 @@ Nuvarande rättigheter för %#1P (%#1p):
   (define-key lyskom-sv-who-prefix (kbd "i") 'kom-who-is-on)
   (define-key lyskom-sv-who-prefix (kbd "m") 'kom-who-is-on-in-conference)
   (define-key lyskom-sv-who-prefix (kbd "n") 'kom-who-is-present-in-conference)
+  (define-key lyskom-sv-who-prefix (kbd "u") 'kom-view-url-in-text)
   (define-key lyskom-sv-who-prefix (kbd "v") 'kom-who-is-on-and-friend)
 
   (define-key lyskom-sv-change-prefix (kbd "p") 'kom-change-presentation)
