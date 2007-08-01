@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.272 2007-07-11 19:13:09 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.273 2007-08-01 10:09:04 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.272 2007-07-11 19:13:09 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.273 2007-08-01 10:09:04 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -422,7 +422,7 @@ failed."
 
 (def-kom-command kom-go-to-pri-session ()
   "Go to a prioritized session with unreads. This pseudo command is
-generally invoked frmo the prompt when there is a session with unread
+generally invoked from the prompt when there is a session with unread
 texts that has a higher priority than the current session.
 
 See `kom-server-priority' and `kom-server-priority-breaks' for

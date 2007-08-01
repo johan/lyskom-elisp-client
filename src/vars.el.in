@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.333 2007-07-28 17:29:07 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.334 2007-08-01 10:09:04 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.333 2007-07-28 17:29:07 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.334 2007-08-01 10:09:04 ceder Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1563,7 +1563,7 @@ When this is set to `t', `kom-who-is-on' and related commands will
 display the machine the session is connected from and what the user is
 doing. When set to `nil', this information will not be shwon.
 
-Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `t':
+Listing from `kom-who-is-on' with `kom-show-where-and-what' set to `t':
 
 <
       User                                   Is in conference             
@@ -1576,7 +1576,7 @@ Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `t':
   --------------------------------------------------------------------------
 >
 
-Listing frmo `kom-who-is-on' with `kom-show-where-and-what' set to `nil':
+Listing from `kom-who-is-on' with `kom-show-where-and-what' set to `nil':
 
 <
       User                                   Is in conference             
@@ -1596,7 +1596,7 @@ When set to `t', `kom-who-is-on' and related commands will display the
 time when each session connected to the server and when each session
 last indicated activity.
 
-Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `t':
+Listing from `kom-who-is-on' with `kom-show-since-and-when' set to `t':
 
 <
         User                                 Is in conference             
@@ -1609,7 +1609,7 @@ Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `t':
   --------------------------------------------------------------------------
 >
 
-Listing frmo `kom-who-is-on' with `kom-show-since-and-when' set to `nil':
+Listing from `kom-who-is-on' with `kom-show-since-and-when' set to `nil':
 
 <
         User                                 Is in conference             
