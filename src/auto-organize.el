@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: auto-organize.el,v 44.1 2007-06-30 12:52:52 byers Exp $
+;;;;; $Id: auto-organize.el,v 44.2 2007-08-16 12:56:25 byers Exp $
 ;;;;; Copyright (C) 2007 David Byers <davby@ida.liu.se>
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,11 +36,11 @@ for which author the ACTIONS apply, or t, to indicate that the
 actions apply to all authors.
 
 ACTIONS is also a list, where each element has the format
-\(REGEXP . FUNC). REGEXP is matched against every text viewed
-in CONF, and if a match is found, then FUNC is called with the
-conf-stat of the conference, text-stat and text-mass of the text
-to be auto-managed. If the function returns non-nil, no more 
-actions will be applied.")
+\(REGEXP . FUNC). REGEXP is matched against every text viewed in
+CONF, and if a match is found, then FUNC is called with a list
+containing the conf-stat of the matched resipient (or conf-stats
+of all recipients if the default match was used). If the function
+returns non-nil, no more actions will be applied.")
 
 (defun kom-auto-organize ()
   (let* ((text-stat lyskom-view-text-text-stat)
@@ -100,13 +100,15 @@ actions will be applied.")
 					(text->decoded-text-mass text-mass
 								 text-stat))))
 				 (funcall (cdr action) 
-					  rcpt
+					  (if (eq rcpt t)
+                                              (butlast rcpt-confs 1)
+                                            (list rcpt))
 					  text-stat
 					  text-mass))
 			(throw 'kom-auto-organize-done t)))))))))))))
 
 
-(defun kom-auto-organize-sub-recipient (conf-stat text-stat text-mass)
+(defun kom-auto-organize-sub-recipient (confs text-stat text-mass)
   "Automatically subtract recipient from text (for kom-auto-organize)"
   (let ((to-sub (cons (text-stat->text-no text-stat)
 		      (lyskom-get-text-attachments text-stat))))
@@ -115,18 +117,40 @@ actions will be applied.")
 	(setq to-sub (cons (misc-info->footn-in misc) footnotes))))
 
     (lyskom-traverse text-no to-sub
-      (lyskom-format-insert-before-prompt 
-       "Subtraherar text %#1n från %#2M i bakgrunden...%#3D\n"
-       text-no
-       conf-stat
-       (lyskom-create-defer-info
-	'sub-recipient
-	(list text-no (conf-stat->conf-no conf-stat))
-	(lambda (res defer-info)
-	  (message "Hello!")
-	  (if res
-	      (lyskom-replace-deferred defer-info "klart")
-	    (lyskom-replace-deferred defer-info "det gick inte")))
-	nil nil "%#1s")))))
+      (lyskom-traverse conf-stat confs
+        (lyskom-format-insert-before-prompt 
+         "Subtraherar text %#1n från %#2M i bakgrunden...%#3D\n"
+         text-no
+         conf-stat
+         (lyskom-create-defer-info
+          'sub-recipient
+          (list text-no (conf-stat->conf-no conf-stat))
+          (lambda (res defer-info)
+            (if res
+                (lyskom-replace-deferred defer-info "klart")
+              (lyskom-replace-deferred defer-info "det gick inte")))
+          nil nil "%#1s"))))))
+
+(defun kom-auto-organize-debug (confs text-stat text-mass) 
+  (let ((to-sub (cons (text-stat->text-no text-stat)
+		      (lyskom-get-text-attachments text-stat))))
+    (lyskom-traverse misc (text-stat->misc-info-list text-stat)
+      (when (eq (misc-info->type misc) 'FOOTN-IN)
+	(setq to-sub (cons (misc-info->footn-in misc) footnotes))))
+
+    (lyskom-traverse text-no to-sub
+      (lyskom-traverse conf-stat confs
+        (lyskom-format-insert-before-prompt 
+         "Subtraherar text %#1n från %#2M i bakgrunden...%#3D\n"
+         text-no
+         conf-stat
+         (lyskom-create-defer-info
+          'user-active
+          nil
+          (lambda (res defer-info)
+            (if res
+                (lyskom-replace-deferred defer-info "klart")
+              (lyskom-replace-deferred defer-info "det gick inte")))
+          nil nil "%#1s"))))))
 
 ; (setq kom-auto-organize-list '((3715 (7871 ("See attachment" . kom-auto-organize-sub-recipient)))))
