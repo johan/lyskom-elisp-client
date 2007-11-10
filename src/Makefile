@@ -20,7 +20,7 @@
 #
 # Please mail bug reports to bug-lyskom@lysator.liu.se. 
 #
-# $Id: Makefile,v 44.119 2007-07-14 15:01:53 ceder Exp $
+# $Id: Makefile,v 44.120 2007-11-10 10:00:33 byers Exp $
 
 # Useful targets:
 #
@@ -312,8 +312,7 @@ redhat-packages: $(PACKAGENAME)-src-$(CLIENTVERSION).tar.gz
 	    -e "s/#REDHATCLIENTVERSION#/$(REDHATCLIENTVERSION)/" \
 	    <$(PACKAGENAME).spec \
 	    >$(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
-	rpm -ba $(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
-
+	rpmbuild -ba $(RPMROOT)/SPECS/$(PACKAGENAME)-$(REDHATCLIENTVERSION).spec
 ######################################################################
 # Debian packages
 
