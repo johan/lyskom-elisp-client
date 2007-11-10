@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: auto-organize.el,v 44.2 2007-08-16 12:56:25 byers Exp $
+;;;;; $Id: auto-organize.el,v 44.3 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 2007 David Byers <davby@ida.liu.se>
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -61,7 +61,7 @@ returns non-nil, no more actions will be applied.")
 	  (nreverse 
 	   (cons t (delq nil (mapcar
 			       (lambda (conf-stat) 
-				 (and (lyskom-i-am-supervisor conf-stat t)
+				 (and (or t (lyskom-i-am-supervisor conf-stat t))
 				      conf-stat))
 			       (collector->value rcpt-confs))))))
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.49 2004-10-28 18:51:55 byers Exp $
+;;;;; $Id: services.el,v 44.50 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.49 2004-10-28 18:51:55 byers Exp $\n"))
+	      "$Id: services.el,v 44.50 2007-11-10 09:53:50 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -79,12 +79,12 @@
 (defmacro lyskom-server-call (&rest body)
   "Macro to protect initiate-somethings 
 from being called in the wrong buffer."
-  (` (let ((initiate-something-saved-buffer (current-buffer)))
-       (unwind-protect
-           (prog2 (or lyskom-output-queues (set-buffer lyskom-buffer))
-               lyskom-ref-no
-             (,@ body))
-         (set-buffer initiate-something-saved-buffer)))))
+  `(let ((initiate-something-saved-buffer (current-buffer)))
+     (unwind-protect
+	 (prog2 (or lyskom-output-queues (set-buffer lyskom-buffer))
+	     lyskom-ref-no
+	   ,@body)
+       (set-buffer initiate-something-saved-buffer))))
 
 (put 'lyskom-server-call 'lisp-indent-function 0)
 (put 'lyskom-server-call 'edebug-form-spec t)

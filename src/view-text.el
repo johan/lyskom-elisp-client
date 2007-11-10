@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.91 2007-07-20 16:20:21 eric Exp $
+;;;;; $Id: view-text.el,v 44.92 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.91 2007-07-20 16:20:21 eric Exp $\n"))
+	      "$Id: view-text.el,v 44.92 2007-11-10 09:53:50 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -546,8 +546,8 @@ lyskom-reading-list."
                (let ((text-stat (blocking-do 'get-text-stat no)))
                  (if (and text-stat
                           (or review-tree
-                              kom-follow-comments-outside-membership
-                              (and (lyskom-member-of-at-least-one-p (lyskom-text-recipients text-stat))
+                              (and (or kom-follow-comments-outside-membership
+				       (lyskom-member-of-at-least-one-p (lyskom-text-recipients text-stat)))
                                    (not (lyskom-text-read-p text-stat t)))))
                      (setq comments (cons no comments)))))
               ((memq no mx-attachments-in)
@@ -573,9 +573,9 @@ lyskom-reading-list."
 	(let ((text-stat (blocking-do 'get-text-stat no)))
 	  (if (or review-tree
 		  (and text-stat
-                       (or kom-follow-comments-outside-membership
-                           (and (lyskom-member-of-at-least-one-p (lyskom-text-recipients text-stat))
-                                (not (lyskom-text-read-p text-stat t))))))
+		       (or kom-follow-comments-outside-membership
+			   (lyskom-member-of-at-least-one-p (lyskom-text-recipients text-stat)))
+		       (not (lyskom-text-read-p text-stat t))))
 	      (setq footnotes (cons no footnotes)))))
       (if footnotes
 	  (read-list-enter-read-info
@@ -700,7 +700,7 @@ blocking-do."
           (setq misc-item (car misc-info-list))
           (setq type (misc-info->type misc-item))
           (setq misc-info-list (cdr misc-info-list))
-          (cond ((memq type '(RECPT BCC-RECPT CC-RECPT))
+          (cond ((memq type lyskom-recpt-types-list)
                  (setq membership (if bg
                                       (lyskom-try-get-membership
                                        (misc-info->recipient-no misc-item) t)

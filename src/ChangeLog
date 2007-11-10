@@ -1,3 +1,20 @@
+2007-11-10    <David Byers@GULAG>
+
+	* view-text.el (lyskom-follow-comments): Only look at
+	kom-follow-comments-outside membership if we actually aren't a
+	member of any of the recipients.
+
+2007-07-12    <David Byers@GULAG>
+
+	* edit-text.el (lyskom-create-text-handler): Be a bit more
+	conservative when changing buffers.
+
+	* services.el (lyskom-server-call): Changed old-style backquotes
+	to new-style backquotes.
+
+	* utilities.el: Recompute timeouts only once, not each time the
+	client is loaded.
+
 2007-11-10  David Byers  <davby@ida.liu.se>
 
 	* mime.el (lyskom-mime-charset-for-text-xemacs): Better
@@ -50,6 +67,12 @@
 	(check): Depend on check-eof.
 
 2007-07-11    <David Byers@GULAG>
+
+	* async.el (lyskom-delete-old-text): Changed text-stat argument to
+	text-no.
+	(lyskom-async-deleted-text): Changed the caller too.
+	(lyskom-parse-async): Remove text from readling lists if a
+	recipient is removed.
 
 	* commands2.el (lyskom-help-get-keylist): Changed name of variable
 	list to keylist. In Emacs 22.1, map-keymap-internal (which is

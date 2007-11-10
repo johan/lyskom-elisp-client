@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.129 2007-11-10 09:09:31 byers Exp $
+;;;;; $Id: edit-text.el,v 44.130 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.129 2007-11-10 09:09:31 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.130 2007-11-10 09:53:50 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1742,8 +1742,9 @@ Point must be located on the line where the subject is."
      (t					; Probably not necessary
       (setq lyskom-dont-change-prompt nil)))
     
-    (set-buffer edit-buffer)		;Need local variables.
-    (lyskom-edit-sent-mode 1)
+    (save-excursion
+      (set-buffer edit-buffer)		;Need local variables.
+      (lyskom-edit-sent-mode 1))
 
     ;; Record the text number
 
@@ -1755,17 +1756,16 @@ Point must be located on the line where the subject is."
 
     (let ((hnd lyskom-edit-handler)
 	  (dta lyskom-edit-handler-data))
-      (cond
-       ((get-buffer-window edit-buffer)
+      (when (get-buffer-window edit-buffer)
 	(set-window-configuration lyskom-edit-return-to-configuration)
 	(set-buffer (window-buffer (selected-window)))
-	(goto-char (point-max))))
-	
+	(goto-char (point-max)))
 
       ;; Apply handler.
 
-      (set-buffer lyskom-buffer)
-      (if hnd (apply hnd text-no dta)))
+      (lyskom-save-excursion
+	(set-buffer lyskom-buffer)
+	(if hnd (apply hnd text-no dta))))
     
     ;; Kill the edit-buffer.
 

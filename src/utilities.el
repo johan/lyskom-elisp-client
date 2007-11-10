@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.170 2007-07-14 15:01:36 ceder Exp $
+;;;;; $Id: utilities.el,v 44.171 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.170 2007-07-14 15:01:36 ceder Exp $\n"))
+	      "$Id: utilities.el,v 44.171 2007-11-10 09:53:50 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -328,10 +328,13 @@ Returns t if the feature is loaded or can be loaded, and nil otherwise."
 ;;; accept-process-output. The most reliable way to detect which
 ;;; version is in play, is to look at the documentation.
 
-(when (string-match "milliseconds" (documentation 'accept-process-output))
+(defvar lyskom-recomputed-apo-timeout nil)
+(when (and (not lyskom-recomputed-apo-timeout)
+	   (string-match "milliseconds" (documentation 'accept-process-output)))
   (setq lyskom-apo-timeout-vector 
 	(apply 'vector 
-	       (mapcar (lambda (x) (/ x 1000)) lyskom-apo-timeout-vector))))
+	       (mapcar (lambda (x) (/ x 1000)) lyskom-apo-timeout-vector))
+	lyskom-recomputed-apo-timeout t))
 
 (defconst lyskom-apo-timeout-vector-max (1- (length lyskom-apo-timeout-vector))
   "Maximum index in lyskom-apo-timeout-vector")
@@ -2918,3 +2921,82 @@ COMMENTED-TEXTS and has recipients RECIPIENTS."
 		    (lyskom-traverse-break t)))
 	  (setq result (cons author result)))))
     result)))
+
+
+;;; ================================================================
+;;; MULE utilities
+
+;;; (defun lyskom-safe-encode-string (string coding-system)
+;;;   "Encode STRING using CODING-SYSTEM.
+;;; Return the encoded string if the encoding could be safely performed, 
+;;; or nil if it seems there are replacement characters in the encoded
+;;; string"
+;;;   (let ((res (encode-coding-string string coding-system)))
+;;;     (and (lyskom-encoding-is-safe string res) res)))
+;;; 
+;;; (defun lyskom-encoding-is-safe-xemacs (from to)
+;;;   (let ((len1 (length from))
+;;; 	(len2 (length to))
+;;; 	(i 0)
+;;; 	(res t))
+;;;     (and (= len1 len2)
+;;; 	 (progn (while (< i len1)
+;;; 		  (when (and (eq (aref to i) ?~)
+;;; 			     (not (eq (aref from i) ?~)))
+;;; 		    (setq i len1 res nil))
+;;; 		  (setq i (1+ i)))
+;;; 		res))))
+;;; 
+;;; (defun lyskom-encoding-is-safe-gnu (from to)
+;;;   (let ((len1 (length from))
+;;; 	(len2 (length to))
+;;; 	(i 0)
+;;; 	(res t))
+;;;     (and (= len1 len2)
+;;; 	 (progn (while (< i len1)
+;;; 		  (when (and (eq (aref to i) ??)
+;;; 			     (not (eq (aref from i) ??)))
+;;; 		    (setq i len1 res nil))
+;;; 		  (setq i (1+ i)))
+;;; 		res))))
+
+
+;;; ================================================================
+;;; Other utilities
+;;;
+;;; An llist is a list with a limited size, used for a fast FIFO 
+;;; cache. One use is to keep track of the N most recently read
+;;; texts.
+;;; 
+
+;;; (defun lyskom-llist-create (size) 
+;;;   (let ((list (make-list size nil)))
+;;;     (cons list list)))
+;;; 
+;;; (defsubst lyskom-llist->head (llist) (car llist))
+;;; (defsubst set-lyskom-llist->head (llist c) (setcar llist c))
+;;; (defsubst lyskom-llist->tail (llist) (cdr llist))
+;;; (defsubst set-lyskom-llist->tail (llist c) (setcdr llist c))
+;;; 
+;;; 
+;;; (defun lyskom-llist-add (llist el)
+;;;   (cond ((null (cdr (lyskom-llist->tail llist)))
+;;; 	 (setcar (lyskom-llist->tail llist) el)
+;;; 	 (setcdr (lyskom-llist->tail llist) (lyskom-llist->head llist))
+;;; 	 (set-lyskom-llist->tail llist (lyskom-llist->head llist))
+;;; 	 (set-lyskom-llist->head llist (cdr (lyskom-llist->head llist)))
+;;; 	 (setcdr (lyskom-llist->tail llist) nil))
+;;; 	(t (setcar (lyskom-llist->tail llist) el)
+;;; 	   (set-lyskom-llist->tail llist (cdr (lyskom-llist->tail llist)))))
+;;;   (lyskom-llist->head llist))
+;;; 
+;;; (defun lyskom-llist-remove (el llist)
+;;;   (let ((cur (lyskom-llist->head llist)))
+;;;     (while cur
+;;;       (when (eq el (car cur))
+;;; 	(setcar cur nil))
+;;;       (setq cur (cdr cur)))))
+;;; 
+;;; (defun lyskom-llist-memq (el llist)
+;;;   (memq el (lyskom-llist->list head)))
+;;;     result)))

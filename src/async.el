@@ -1,5 +1,5 @@
 ;;;;;
-;;;;; $Id: async.el,v 44.68 2007-06-24 09:33:26 byers Exp $
+;;;;; $Id: async.el,v 44.69 2007-11-10 09:53:50 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -37,7 +37,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: async.el,v 44.68 2007-06-24 09:33:26 byers Exp $\n"))
+	      "$Id: async.el,v 44.69 2007-11-10 09:53:50 byers Exp $\n"))
 
 
 (defun lyskom-is-ignoring-async (buffer message &rest args)
@@ -240,21 +240,12 @@ this function shall be with current-buffer the BUFFER."
          (set-buffer buffer)
           (cache-del-conf-stat conf-no)
           (cache-del-text-stat text-no)
-          ;; FIXME: Code here.
-          ;; FIXME: This implementation sucks. There is no need to
-          ;; FIXME:   remove the text from the cache. Just modify it.
-          ;; FIXME: If we cache maps somewhere, we'll want to remove
-          ;; FIXME:   the text from the appropriate map.
-          ;; FIXME: If we want to get *really* picky, and the user is
-          ;; FIXME:   doing a review texts to conference, and this text
-          ;; FIXME:   has been found, remove this text from those
-          ;; FIXME:   lists too (probably not worth the effort).
-          ;; FIXME: The text should be removed from the reading lists
-          ;; FIXME:   if it is there because we are reading the conf
-          ;; FIXME:   that is being removed. Take care not to lose
-          ;; FIXME:   any comments to it though...
-          ;; FIXME: The unread counter for the conference should be
-          ;; FIXME:   decreased like it is in async-deleted-text (i hope).
+
+	  (let ((membership (lyskom-try-get-membership conf-no)))
+	    (when (and membership
+		       (lyskom-visible-membership membership))
+	      (read-list-delete-text text-no lyskom-to-do-list)
+	      (read-list-delete-text text-no lyskom-reading-list)))
           (lyskom-ignore misc-type)
          )))
 
@@ -765,7 +756,7 @@ converted, before insertion."
           (cond ((memq type lyskom-recpt-types-list)
                  (initiate-get-conf-stat 'async 'lyskom-delete-old-text
                                          (misc-info->recipient-no misc-info)
-                                         text-stat
+                                         (text-stat->text-no text-stat)
                                          (misc-info->local-no misc-info)))
                 ((eq type 'COMM-TO)
                  (cache-del-text-stat (misc-info->comm-to misc-info)))
@@ -774,15 +765,15 @@ converted, before insertion."
       (lyskom-run 'async 'lyskom-default-deleted-text-hook text-stat)
       (lyskom-run 'async 'lyskom-prefetch-and-print-prompt))
 
-(defun lyskom-delete-old-text (recipient text-stat local-no)
-  "RECIPIENT is a conf-stat and previous recipient of TEXT-STAT.
+(defun lyskom-delete-old-text (recipient text-no local-no)
+  "RECIPIENT is a conf-stat and previous recipient of TEXT-NO.
 This call is used in response to a deleted text message"
   (when recipient
 
     ;; Update the cache
 
-    (cache-del-text-stat (text-stat->text-no text-stat))
-    (cache-del-text (text-stat->text-no text-stat))
+    (cache-del-text-stat text-no)
+    (cache-del-text text-no)
     (set-conf-stat->no-of-texts 
      recipient
      (min (conf-stat->no-of-texts recipient)
@@ -795,10 +786,8 @@ This call is used in response to a deleted text message"
                        (conf-stat->conf-no recipient))))
       (when (and membership
                  (lyskom-visible-membership membership))
-        (read-list-delete-text (text-stat->text-no text-stat) 
-                               lyskom-to-do-list)
-        (read-list-delete-text (text-stat->text-no text-stat) 
-                               lyskom-reading-list)))
+        (read-list-delete-text text-no lyskom-to-do-list)
+        (read-list-delete-text text-no lyskom-reading-list)))
 
     (lyskom-set-mode-line)))
                  
