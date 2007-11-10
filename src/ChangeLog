@@ -1,3 +1,11 @@
+2007-11-10  David Byers  <davby@ida.liu.se>
+
+	* mime.el (lyskom-mime-charset-for-text-xemacs): Better
+	diagnostics for XEmacs. Use server charset if text is ascii.
+
+	* edit-text.el (lyskom-edit-send): Don't even attempt to send text
+	with too many charsets.
+
 2007-08-01  Per Cederqvist  <ceder@ingate.com>
 
 	Fixed typos in docstrings.

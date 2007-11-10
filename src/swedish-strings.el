@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.418 2007-07-28 17:29:08 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.419 2007-11-10 09:09:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.418 2007-07-28 17:29:08 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.419 2007-11-10 09:09:32 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1660,6 +1660,7 @@ Uppkopplad sedan %#8s%#9s")
     (all-faqs-header . "Alla FAQ till %#1?b%[%#1M%]%[servern%]:\n")
 
     (too-many-languages . "För många teckenuppsättningar för att koda. Skicka in okodat? ")
+    (too-many-languages-error . "För många teckenuppsättningar för att koda. Kan inte skicka in inlägget.")
     (too-many-content-types . "Kan inte avgöra innehållstyp. Förenkla inlägget.")
 
     (cross-reference-text-status-aux . "Se även inlägg:                 %10#1n /%#2P/")

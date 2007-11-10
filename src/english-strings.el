@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.374 2007-07-28 17:29:08 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.375 2007-11-10 09:09:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.374 2007-07-28 17:29:08 ceder Exp $"))
+              "$Id: english-strings.el,v 44.375 2007-11-10 09:09:31 byers Exp $"))
 
 
 ;;; ================================================================
@@ -1611,6 +1611,7 @@ On since %#8s%#9s")
     (all-faqs-header . "All FAQs for %#1?b%[%#1M%]%[the server%]:\n")
 
     (too-many-languages . "Cannot code that many character sets. Send uncoded? ")
+    (too-many-languages-error . "Cannot code that many character sets. Unable to send text.")
     (too-many-content-types . "Cannot figure out what content type you want. Simplify the text.")
 
     (cross-reference-text-status-aux . "See text:              %10#1n /%#2P/")

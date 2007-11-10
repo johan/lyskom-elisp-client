@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.128 2007-07-11 20:48:43 byers Exp $
+;;;;; $Id: edit-text.el,v 44.129 2007-11-10 09:09:31 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.128 2007-07-11 20:48:43 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.129 2007-11-10 09:09:31 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -573,8 +573,7 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                   (if (and mime-charset (null charset))
                       (setq full-message
                             (lyskom-mime-encode-string full-message mime-charset))
-                    (when (lyskom-j-or-n-p 'too-many-languages)
-                      (keyboard-quit)))
+		    (lyskom-error (lyskom-get-string 'too-many-languages-error)))
 
                   ;; Add the charset data to the content type
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.14 2007-06-12 17:07:44 byers Exp $
+;;;;; $Id: mime.el,v 44.15 2007-11-10 09:09:32 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,13 +31,17 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.14 2007-06-12 17:07:44 byers Exp $\n"))
+	      "$Id: mime.el,v 44.15 2007-11-10 09:09:32 byers Exp $\n"))
 
-(lyskom-external-function mm-find-mime-charset)
+(lyskom-external-function mm-find-mime-charset-region)
 (defun lyskom-mime-charset-for-text-xemacs (start end)
-  (when (and (lyskom-try-require 'un-define)
-	     (lyskom-try-require 'mm-util))
-    (mm-find-mime-charset start end)))
+  (lyskom-try-require 'un-define)
+  (if (lyskom-try-require 'mm-util)
+      (let ((cs (mm-find-mime-charset-region start end)))
+	(cond ((null cs) lyskom-server-coding-system)
+	      ((null (cdr cs)) (car cs))
+	      (t nil)))
+    (lyskom-error "Unable to load required mm-util from gnus")))
 
 (defun lyskom-mime-charset-for-text-gnu (start end)
   (let ((codings (delq nil 
