@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.121 2007-07-11 19:13:09 byers Exp $
+;;;;; $Id: option-edit.el,v 44.122 2008-03-17 14:15:31 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.121 2007-07-11 19:13:09 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.122 2008-03-17 14:15:31 ceder Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -202,6 +202,7 @@
     [kom-session-nickname]
     "\n"
     [kom-read-depth-first]
+    [kom-read-related-first]
     [kom-reading-puts-comments-in-pointers-last]
     [kom-show-footnotes-immediately]
     [kom-follow-comments-outside-membership]
@@ -655,6 +656,9 @@ All key bindings:
     (kom-show-footnotes-immediately (toggle (yes no)))
     (kom-follow-comments-outside-membership (toggle (yes no)))
     (kom-read-depth-first (toggle (depth-first time-order)))
+    (kom-read-related-first (choice ((const (off nil))
+				     (const (ancestor oldest-ancestor))
+				     (const (relative oldest-relative)))))
     (kom-continuous-scrolling  (toggle (on off)))
     (kom-deferred-printing (toggle (on off)))
     (kom-higher-priority-breaks (choice ((const (express-break express))

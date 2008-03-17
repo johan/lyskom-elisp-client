@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.334 2007-08-01 10:09:04 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.335 2008-03-17 14:15:31 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.334 2007-08-01 10:09:04 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.335 2008-03-17 14:15:31 ceder Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1680,6 +1680,21 @@ you view threads of discussion.
 
 Values other than `t' or `nil' are reserved for future use."
   common read-depth-first boolean)
+
+(def-kom-var kom-read-related-first 'oldest-ancestor
+  "**Read unread related texts first?
+
+Once a candidate text to read has been found (using the rules defined
+by the `kom-read-depth-first' variable), the choice can be further
+refined as specified by this variable.
+
+When set to `nil', no refinement is made.  When set to
+`oldest-ancestor' \(the default), unread parents are shown first.
+When set to `oldest-related', children of the parents are also
+considered.
+
+Other values are reserved for future use."
+  server)
 
 (def-kom-var kom-continuous-scrolling t
   "**Controls frequency of scrolling.

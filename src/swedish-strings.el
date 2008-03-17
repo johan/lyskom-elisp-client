@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.419 2007-11-10 09:09:32 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.420 2008-03-17 14:15:31 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.419 2007-11-10 09:09:32 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.420 2008-03-17 14:15:31 ceder Exp $\n"))
 
 
 ;;; ================================================================
@@ -3325,6 +3325,8 @@ Nuvarande rättigheter för %#1P (%#1p):
     (last . "Sist ")
     (depth-first . "I kommentarsordning")
     (time-order . "I tidsordning")
+    (ancestor . "Läs olästa kommenterade först")
+    (relative . "Läs olästa relaterade först")
     (limited-number . "Ett begränsat antal")
     (unlimited-number . "Obegränsat")
 
@@ -4028,6 +4030,35 @@ ta fram menyer.")
   i stället 1002, 1003, 1006, 1004, 1005 och 1007.")
 
 
+    (kom-read-related-first-doc . "\
+  När LysKOM bestämt sig för en text som ska visas enligt reglerna som
+  styrs av variabeln kom-read-depth-first, kan den ta hänsyn till att
+  en annan relaterad oläst text borde visas först.  Följande värden är
+  tillåtna:
+
+    nil (Av)
+        Gör ingen mer processning.
+
+    'oldest-ancestor (Läs olästa kommenterade först)
+        Om texten är en kommentar eller fotnot till en föräldratext,
+        och om användaren är medlem i minst en mottagare av den
+        texten, och texten är oläst, så blir texten en kandidat till
+        att användas i stället.  Processen upprepas så länge någon
+        kandidat har en förälder som uppfyller villkoren.  Den
+        kandidat som har det lägsta textnumret kommer att användas.
+        Den här inställningen betyder att ett kommentarsträd som
+        börjar i ett annat möte än det du just nu läser kommer att
+        visas i en mer logisk ordning: du får se hela det olästa
+        trädet i kommentarsordning.
+
+    'oldest-relative (Läs olästa relaterade först)
+        Den här inställningen är snarlik 'oldest-ancestor, men
+        undersöker även rekursivt alla kommentarer till alla
+        kandidater.  Nackdelen med denna metod är att den kan behöva
+        kontrollera hundratals texter, och det kan få klienten att bli
+        långsam.")
+
+
     (kom-continuous-scrolling-doc . "\
   Påslaget innebär att klienten scrollar bufferten medan ny text sätts in, så
   man ser det senaste som har satts in. Detta fungerar bra om man har en
@@ -4706,6 +4737,7 @@ ta fram menyer.")
     
     (kom-reading-puts-comments-in-pointers-last-tag . "Kommentarslänkar visas:")
     (kom-read-depth-first-tag . "Läsordning:")
+    (kom-read-related-first-tag . "Läs relaterade texter först:")
     (kom-deferred-printing-tag . "Fördröjda utskrifter:")
     (kom-continuous-scrolling-tag . "Omedelbar scrollning:")
 

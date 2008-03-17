@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.273 2007-08-01 10:09:04 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.274 2008-03-17 14:15:31 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.273 2007-08-01 10:09:04 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.274 2008-03-17 14:15:31 ceder Exp $\n"))
 
 
 ;;;; ================================================================
@@ -633,10 +633,11 @@ A text T2 is lower than a text T1 if:
 1. The text number of T2 is less than the text number of T1.
 2. T2 is unread.
 
-We consider all of the texts reachable from TEXT-NO.
+We consider all of the texts reachable from TEXT-NO."
 
-We keep track of which text numbers have previously been considered
-VISITED to detect loops and save all of the candidates in CANDIDATES."
+  ;; We keep track of which text numbers have previously been considered in
+  ;; VISITED to detect loops and save all of the candidates in CANDIDATES.
+
   (let* ((visited nil)
          (candidates nil)
          (consider (list text-no)))
@@ -662,6 +663,42 @@ VISITED to detect loops and save all of the candidates in CANDIDATES."
           (cache-del-text-stat text-no))))
     (lyskom-minimum candidates)))
 
+(defun lyskom-find-unread-ancestor (text-no)
+  "Look for unread texts that TEXT-NO is a comment or footnote to.
+This function considers all parents of TEXT-NO.  If they fulfill all
+of the following requirements they are kept as candidates for further
+processing:
+
+ - the current user is an active member of at least one recipient of
+   the text.
+ - the text is unread.
+
+The parents of each candidate is in turn examined.  The
+lowest-numbered candidate is returned."
+
+  ;; We keep track of which text numbers have previously been considered in
+  ;; VISITED to detect loops and save all of the candidates in CANDIDATES.
+
+  (let* ((visited nil)
+         (candidates (list text-no))
+         (consider (list text-no)))
+    (while consider
+      (let* ((text-no (car consider))
+             (text-stat (blocking-do 'get-text-stat text-no))
+             (confs (lyskom-text-recipients text-stat))
+             (is-member (lyskom-member-of-at-least-one-p confs))
+             (tmp (if is-member (lyskom-cache-all-memberships confs)))
+             (is-read (lyskom-text-read-at-least-once-p text-stat)))
+        (setq consider (cdr consider))
+	(when (not (memq text-no visited))
+	  (setq visited (cons text-no visited))
+	  (when (and is-member (not is-read))
+	    (setq candidates (cons text-no candidates))
+	    (setq consider
+		  (nconc consider
+			 (lyskom-text-stat-commented-texts text-stat)))))))
+    (lyskom-minimum candidates)))
+
 (defun lyskom-get-max-priority (confs)
 "Return the maximum priority of the conferences in CONFS (list of
 conference numbers). If the list is empty or if the user is not a
@@ -679,6 +716,27 @@ member of any of the conferences NIL is returned."
 ;;; Modified to handle filters
 
 ;;; Modified to read commented texts first (Hans Eric Svensson)
+
+(defun lyskom-select-text-to-read (text-no-maybe text-stat-maybe)
+  "Select the next text to read."
+
+  (cond
+
+   ((eq kom-read-related-first nil)
+    text-no-maybe)
+
+   ((eq kom-read-related-first 'oldest-relative)
+    (if kom-read-depth-first
+	(lyskom-find-best-text (lyskom-text-stat-commented-texts
+				text-stat-maybe)
+			       text-no-maybe t)
+       (lyskom-find-lowest-text text-no-maybe)))
+
+   ((eq kom-read-related-first 'oldest-ancestor)
+    (lyskom-find-unread-ancestor text-no-maybe))
+
+   (t
+    (error "Unexpected value for kom-read-related-first"))))
 
 (def-kom-command kom-view-next-text ()
   "Display the next unread text. This is the most common default command."
@@ -705,13 +763,8 @@ member of any of the conferences NIL is returned."
                  (text-stat-maybe (blocking-do 'get-text-stat text-no-maybe))
 
                  (text-no (if is-reading
-                              (if kom-read-depth-first
-                                  (lyskom-find-best-text
-                                   (lyskom-text-stat-commented-texts
-                                    text-stat-maybe)
-                                   text-no-maybe
-                                   t)
-                                (lyskom-find-lowest-text text-no-maybe))
+			      (lyskom-select-text-to-read
+			       text-no-maybe text-stat-maybe)
                             text-no-maybe))
 
                  (text-stat (blocking-do 'get-text-stat text-no))

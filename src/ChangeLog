@@ -1,3 +1,31 @@
+2008-03-17  Per Cederqvist  <ceder@ingate.com>
+
+	Make it configurable if the client should search for unread
+	parents or relatives of a text before displaying it.  Also, add a
+	new strategy ('oldest-ancestor) that only searches among parents.
+
+	* vars.el.in (kom-read-related-first): New configuration
+	variable.  Set this to nil to get the old-style behaviour,
+	'oldest-related to get the behaviour before this commit, or
+	'oldest-ancestor to get the new default behaviour.
+
+	* lyskom-rest.el (lyskom-find-lowest-text): Moved internal
+	documentation from the doc-string to an internal comment.
+	(lyskom-find-unread-ancestor): New defun.  This code is based on
+	lyskom-find-lowest-text, but works in a more sensible way.
+	(lyskom-select-text-to-read): New defun, extracted from
+	kom-view-next-text.  Handle the new oldest-ancestor strategy.
+	(kom-view-next-text): Use lyskom-select-text-to-read to simplify
+	the code.
+
+	* swedish-strings.el, english-strings.el (lyskom-custom-strings):
+	Added ancestor, relative, kom-read-related-first-doc and
+	kom-read-related-first-tag.
+
+	* option-edit.el (lyskom-customize-buffer-format): Added
+	kom-read-related-first.
+	(lyskom-custom-variables): Ditto.
+
 2007-11-10    <David Byers@GULAG>
 
 	* view-text.el (lyskom-follow-comments): Only look at

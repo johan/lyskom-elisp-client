@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.375 2007-11-10 09:09:31 byers Exp $
+;;;;; $Id: english-strings.el,v 44.376 2008-03-17 14:15:31 ceder Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.375 2007-11-10 09:09:31 byers Exp $"))
+              "$Id: english-strings.el,v 44.376 2008-03-17 14:15:31 ceder Exp $"))
 
 
 ;;; ================================================================
@@ -3180,6 +3180,8 @@ Select whether to execute command or keyboard macro.")
     (after . "After the text")
     (depth-first . "In comment order")
     (time-order . "In time order")
+    (ancestor . "Read unread commented first")
+    (relative . "Read unread relatives first")
 
     (ar-message-type . "Message type")
     (ar-personal     . "Personal")
@@ -3883,6 +3885,34 @@ up menus.")
   Reading in comment order will give the order 1002, 1003, 1006, 1004,
   1005 and finally 1007.")
 
+    (kom-read-related-first-doc . "\
+  When LysKOM has decided what text to read next (using the algorithm
+  specified by the kom-read-depth-first variable) it can optionally
+  refine the choice.  This variable can have the following values:
+
+    nil (Off)
+        Do no more processing.
+
+    'oldest-ancestor (Read unread commented first)
+        If the text is a comment or footnote to a parent text, the
+        user is a member of at least one recipient of the text, and
+        the text is unread, it becomes a candidate to be used
+        instead.  Repeat the process as long as any candidate has a
+        parent that fulfills the requirements.  Use the
+        lowest-numbered text.  This setting means that if a comment
+        tree started in another conference than the one you are
+        reading, you will see the entire unread part of the comment
+        tree in order.
+
+    'oldest-relative (Read unread relatives first)
+        This is similar to 'oldest-ancestor, but also considers all
+        children of all candidates, whether they are read or not.
+        Only unread texts will be selected, but even read texts will
+        be considered to ensure that the order you read texts in are
+        as close to the depth-first order as possible.  The drawback
+        of this method is that LysKOM may have to consider hundreds of
+        texts, which may slow down the client.")
+
 
     (kom-continuous-scrolling-doc . "\
   Turned on means that LysKOM will scroll the buffer while new text is 
@@ -4555,6 +4585,7 @@ up menus.")
 
     (kom-reading-puts-comments-in-pointers-last-tag . "Comment links are shown:")
     (kom-read-depth-first-tag . "Read order:")
+    (kom-read-related-first-tag . "Read related texts first:")
     (kom-deferred-printing-tag . "Delayed display:")
     (kom-continuous-scrolling-tag . "Continuous scrolling:")
 
