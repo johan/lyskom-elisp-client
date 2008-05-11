@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.131 2008-05-11 06:17:20 byers Exp $
+;;;;; $Id: edit-text.el,v 44.132 2008-05-11 09:14:28 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.131 2008-05-11 06:17:20 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.132 2008-05-11 09:14:28 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -521,9 +521,10 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                      (lyskom-edit-send-check-recipients misc-list
                                                         subject)))
                 (if extra-headers
-                    (setq misc-list (apply 'lyskom-create-misc-list
-                                           (nconc (elt headers 1)
-						  extra-headers)))))
+                    (setq misc-list
+			  (apply 'lyskom-create-misc-list
+				 (nconc (lyskom-text-headers->misc-info headers)
+					extra-headers)))))
 
               ;;
               ;; Check that we don't add ourselves to an anon text

@@ -1,5 +1,9 @@
 2008-05-11    <David Byers@GULAG>
 
+	Fix bug 1654:
+	* edit-text.el (lyskom-edit-send): Use accessors to access parsed
+	headers.
+	
 	Fix bug 1660:
 	* edit-text.el (lyskom-create-text-handler): Added callback and
 	callback-data parameters. Juggling buffers to get these right is
