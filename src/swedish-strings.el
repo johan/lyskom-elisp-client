@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.420 2008-03-17 14:15:31 ceder Exp $
+;;;;; $Id: swedish-strings.el,v 44.421 2008-05-11 06:17:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.420 2008-03-17 14:15:31 ceder Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.421 2008-05-11 06:17:21 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -726,6 +726,7 @@ i svensk datorhistoria. Läs mer på http://www.lysator.liu.se/history/")
     (conf-has-motd . "\n%#1M har en lapp på dörren:\n")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item .   "Okänd tilläggsinformation: %15#1s%#3s (skapad av %#2M)\n")
+    (conf-mx-allow-envelope-sender-regexp . "Tillåten avsändare vid import:           %#1s %#2s\n")
     (conf-mx-list-name . "Importerad mailinglista:                 %#1s %#2s\n")
     (conf-mx-refuse-import . "Vägra import av:                         %#1s %#2s\n")
     (recommended-conf-aux . "Rekommenderat möte:                      %#1M <%#1m> %#2s\n")
@@ -2028,6 +2029,7 @@ version %#3s av elispklienten, medan detta är version %#4s.
     (aux-mx-misc-name . "E-mailheader")
     (aux-mx-allow-filter-name . "E-mail allow-filter")
     (aux-mx-reject-forward-name . "E-mail reject-forward")
+    (anx-mx-allow-envelope-sender-regexp . "Tillåten avsändare vid import:")
     (aux-notify-comments-name . "Meddela kommentarer")
     (aux-faq-for-conf-name . "FAQ för möte")
     (aux-recommended-conf-name . "Mötesrekommendation")
@@ -2115,10 +2117,13 @@ för mer information).
     (abc-html . "hHTML")
     (abc-spam . "sSpam")
     (abc-everything . "aAlla texter")
+    (abc-regexp . "tTillåt avsändare")
+    (limit-import-regexp-q . "Tillåt endast vilken avsändare (regexp)? ")
     (limit-import-to-conf . "Begränsa import till vilket möte? ")
     (limit-import-of-what . "Begränsa import av vad? ")
     (limit-import-not-super . "Du verkar inte vara organisatör för mötet. Försök ändå? ")
     (limiting-import . "Begränsar import av %#1s i %#2M...")
+    (limiting-import-regexp . "Begränsar import till %#2M till avsänare %#1s...")
 
     (set-message-flag-for-conf . "Ändra meddelandeflagga för vilket möte? ")
     (set-message-flag-to-what . "Vill du ta emot gruppmeddelanden till %#1M? ")

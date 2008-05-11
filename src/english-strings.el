@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: english-strings.el,v 44.376 2008-03-17 14:15:31 ceder Exp $
+;;;;; $Id: english-strings.el,v 44.377 2008-05-11 06:17:21 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -40,7 +40,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: english-strings.el,v 44.376 2008-03-17 14:15:31 ceder Exp $"))
+              "$Id: english-strings.el,v 44.377 2008-05-11 06:17:21 byers Exp $"))
 
 
 ;;; ================================================================
@@ -715,6 +715,7 @@ Read all about it at http://www.lysator.liu.se/history/")
     (conf-mship-priority . "Prioritet:       %25#1n%#2?b%[ %#2s%]%[%]\n")
     (status-conf-generic . "%-40#1s %#2s\n")
     (status-aux-item . "Unknown property:              %11#1s%#3s (created by %#2M)\n")
+    (conf-mx-allow-envelope-sender-regexp . "Allowed senders for mail import:         %#1s %#2s\n")
     (conf-mx-list-name . "Imported mailing list:                   %#1s %#2s\n")
     (conf-mx-refuse-import . "Refuse import of:                        %#1s %#2s\n")
     (recommended-conf-aux . "Recommended conference:                  %#1M <%#1m> %#2s\n")
@@ -1979,6 +1980,7 @@ Unknown variables may be the result of saving your settings in version
     (aux-mx-misc-name . "E-mail headers")
     (aux-mx-allow-filter-name . "E-mail allow-filter")
     (aux-mx-reject-forward-name . "E-mail reject-forward")
+    (aux-mx-allow-envelope-sender-regexp . "Allowed senders for mail import")
     (aux-notify-comments-name . "Notify me about comments")
     (aux-faq-for-conf-name . "FAQ for conference")
     (aux-recommended-conf-name . "Conference recommendation")
@@ -2067,10 +2069,13 @@ manual and the command set-language-environment for more information).
     (abc-html . "hHTML")
     (abc-spam . "sSpam")
     (abc-everything . "aAll texts")
+    (abc-regexp . "rAllow sender")
+    (limit-import-regexp-q . "Allow only which sender (regexp)? ")
     (limit-import-to-conf . "Limit import to which conference? ")
     (limit-import-of-what . "Limit import of what? ")
     (limit-import-not-super . "You do not seem to be the supervisor of the conference. Try anyway? ")
     (limiting-import . "Limiting import of  %#1s to %#2M...")
+    (limiting-import-regexp . "Limiting import to %#2M to sender %#1s...")
 
     (set-message-flag-for-conf . "Sett message flag for which conference? ")
     (set-message-flag-to-what . "Receive grupp messages to %#1M? ")

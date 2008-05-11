@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: auto-organize.el,v 44.3 2007-11-10 09:53:50 byers Exp $
+;;;;; $Id: auto-organize.el,v 44.4 2008-05-11 06:17:20 byers Exp $
 ;;;;; Copyright (C) 2007 David Byers <davby@ida.liu.se>
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -147,10 +147,21 @@ returns non-nil, no more actions will be applied.")
          (lyskom-create-defer-info
           'user-active
           nil
-          (lambda (res defer-info)
+          (lambda (res par defer-info)
             (if res
                 (lyskom-replace-deferred defer-info "klart")
               (lyskom-replace-deferred defer-info "det gick inte")))
           nil nil "%#1s"))))))
 
-; (setq kom-auto-organize-list '((3715 (7871 ("See attachment" . kom-auto-organize-sub-recipient)))))
+;; (setq kom-auto-organize-list
+;;       '((3715
+;; 	 (7871 ("See attachment" . kom-auto-organize-sub-recipient)))))
+;; 
+;; (setq kom-auto-organize-list                           
+;;       '((t
+;; 	 (119
+;; 	  ("see attachment" . kom-auto-organize-debug) 
+;; 	  ("oem software means" . kom-auto-organize-sub-recipient) 
+;; 	  ("beware of fake pills" . kom-auto-organize-debug) 
+;; 	  ) 
+;; 	 ))) 

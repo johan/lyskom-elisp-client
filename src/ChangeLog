@@ -1,3 +1,19 @@
+2008-05-11    <David Byers@GULAG>
+
+	Fix bug 1660:
+	* edit-text.el (lyskom-create-text-handler): Added callback and
+	callback-data parameters. Juggling buffers to get these right is
+	somewhat tricky, but worst is that it is *possible* for the buffer
+	containing the callback to be deleted before this is called.
+	(lyskom-edit-send): Pass lyskom-edit-handler and data to
+	lyskom-create-text-handler.
+
+	Fix bug 1658:
+	* review.el (kom-review-rot13): Removed local arg from add-hook.
+
+	* commands2.el (kom-limit-import): Add support for limiting import
+	by regexp.
+
 2008-03-17  Per Cederqvist  <ceder@ingate.com>
 
 	Make it configurable if the client should search for unread

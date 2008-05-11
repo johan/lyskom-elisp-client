@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.130 2007-11-10 09:53:50 byers Exp $
+;;;;; $Id: edit-text.el,v 44.131 2008-05-11 06:17:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.130 2007-11-10 09:53:50 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.131 2008-05-11 06:17:20 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -474,6 +474,8 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
 	      (j-or-n-p (lyskom-get-string 'already-sent)))
 	  (progn 
 	    (let ((buffer (current-buffer))
+		  (handler lyskom-edit-handler)
+		  (handler-data lyskom-edit-handler-data)
 		  (headers nil)
                   (misc-list nil)
                   (subject nil)
@@ -632,7 +634,9 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                                      aux-list)
                              aux-list)
                            buffer
-                           is-anonymous))))
+                           is-anonymous
+			   handler
+			   handler-data))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -1685,8 +1689,8 @@ Point must be located on the line where the subject is."
 			  (point))))))
 
 
-(defun lyskom-create-text-handler (text-no edit-buffer 
-                                           &optional is-anonymous)
+(defun lyskom-create-text-handler (text-no edit-buffer is-anonymous
+					   callback callback-data)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)
   (message "")
@@ -1754,18 +1758,16 @@ Point must be located on the line where the subject is."
 
     ;; Select the old configuration.
 
-    (let ((hnd lyskom-edit-handler)
-	  (dta lyskom-edit-handler-data))
-      (when (get-buffer-window edit-buffer)
-	(set-window-configuration lyskom-edit-return-to-configuration)
-	(set-buffer (window-buffer (selected-window)))
-	(goto-char (point-max)))
-
-      ;; Apply handler.
-
-      (lyskom-save-excursion
-	(set-buffer lyskom-buffer)
-	(if hnd (apply hnd text-no dta))))
+    (when (get-buffer-window edit-buffer)
+      (set-window-configuration lyskom-edit-return-to-configuration)
+      (set-buffer (window-buffer (selected-window)))
+      (goto-char (point-max)))
+    
+    ;; Apply handler.
+    
+    (lyskom-save-excursion
+      (set-buffer lyskom-buffer)
+      (if callback (apply callback text-no callback-data)))
     
     ;; Kill the edit-buffer.
 

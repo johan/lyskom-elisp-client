@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.226 2007-07-28 17:29:08 ceder Exp $
+;;;;; $Id: commands2.el,v 44.227 2008-05-11 06:17:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.226 2007-07-28 17:29:08 ceder Exp $\n"))
+              "$Id: commands2.el,v 44.227 2008-05-11 06:17:20 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -3299,7 +3299,7 @@ are advisory; clients may ignore them."
                                             '(conf pers) nil nil t)))
   (when conf-stat
     (let* ((what (lyskom-a-or-b-or-c-p 'limit-import-of-what
-                                       '(abc-spam abc-html abc-everything)
+                                       '(abc-regexp abc-spam abc-html abc-everything)
                                        'abc-spam))
            (data (cond ((eq what 'abc-spam) "spam")
                        ((eq what 'abc-html) "html")
@@ -3307,8 +3307,9 @@ are advisory; clients may ignore them."
       (when (or (lyskom-is-supervisor (conf-stat->conf-no conf-stat)
                                       lyskom-pers-no)
                 (lyskom-j-or-n-p 'limit-import-not-super))
-        (when data
-          (lyskom-format-insert 'limiting-import
+        (cond 
+	 ((and data (memq what '(abc-spam abc-html abc-everything)))
+	  (lyskom-format-insert 'limiting-import
                                 (substring (lyskom-get-string what) 1)
                                 conf-stat)
           (lyskom-report-command-answer
@@ -3321,7 +3322,25 @@ are advisory; clients may ignore them."
                           (lyskom-create-aux-item-flags nil nil nil nil 
                                                         nil nil nil nil)
                           0 data))))
-          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))
+          (cache-del-conf-stat (conf-stat->conf-no conf-stat)))
+	 ((eq what 'abc-regexp)
+	  (let ((regexp (lyskom-read-string 
+			 (lyskom-get-string 'limit-import-regexp-q)
+			 nil nil)))
+	    (lyskom-format-insert 'limiting-import-regexp
+				  regexp
+				  conf-stat)
+	    (lyskom-report-command-answer
+	     (blocking-do 'modify-conf-info
+			  (conf-stat->conf-no conf-stat)
+			  nil
+			  (list
+			   (lyskom-create-aux-item
+			    0 10105 nil nil
+			    (lyskom-create-aux-item-flags nil nil nil nil
+							  nil nil nil nil)
+			    0 regexp))))
+	    (cache-del-conf-stat (conf-stat->conf-no conf-stat)))))))))
 
 
 (def-kom-command kom-change-message-flag (uconf-stat)

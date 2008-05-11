@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.45 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: aux-items.el,v 44.46 2008-05-11 06:17:20 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.45 2007-06-09 11:04:53 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.46 2008-05-11 06:17:20 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
@@ -362,6 +362,12 @@ Invalid tests are silently ignored."
   (status-print . lyskom-print-elisp-client-rejected-invitation))
 
 (def-aux-item elisp-client-enriched-headers 10002)
+
+(def-aux-item mx-allow-envelope-sender-regexp 10105
+  (text-name aux-mx-allow-envelope-sender-regexp)
+  (info . lyskom-aux-item-info)
+  (status-print . lyskom-print-mx-allow-envelope-sender-regexp))
+
 
 
 ;;; ================================================================
@@ -781,5 +787,11 @@ Invalid tests are silently ignored."
                           (aux-item->data item)
                           `(face ,kom-warning-face)
                           (lyskom-aux-item-terminating-button item obj))))
+
+(defun lyskom-print-mx-allow-envelope-sender-regexp (item &optional obj)
+  (lyskom-format-insert 'conf-mx-allow-envelope-sender-regexp
+                        (aux-item->data item)
+                        (lyskom-aux-item-terminating-button item obj)))
+
 
 (provide 'lyskom-aux-items)
