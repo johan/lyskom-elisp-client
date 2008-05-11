@@ -1,6 +1,6 @@
 ;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: swedish-strings.el,v 44.421 2008-05-11 06:17:21 byers Exp $
+;;;;; $Id: swedish-strings.el,v 44.422 2008-05-11 06:18:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: swedish-strings.el,v 44.421 2008-05-11 06:17:21 byers Exp $\n"))
+	      "$Id: swedish-strings.el,v 44.422 2008-05-11 06:18:10 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -2029,7 +2029,7 @@ version %#3s av elispklienten, medan detta är version %#4s.
     (aux-mx-misc-name . "E-mailheader")
     (aux-mx-allow-filter-name . "E-mail allow-filter")
     (aux-mx-reject-forward-name . "E-mail reject-forward")
-    (anx-mx-allow-envelope-sender-regexp . "Tillåten avsändare vid import:")
+    (aux-mx-allow-envelope-sender-regexp . "Tillåten avsändare vid import:")
     (aux-notify-comments-name . "Meddela kommentarer")
     (aux-faq-for-conf-name . "FAQ för möte")
     (aux-recommended-conf-name . "Mötesrekommendation")
