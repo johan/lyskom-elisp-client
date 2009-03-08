@@ -1,5 +1,6 @@
 2009-03-08  David Byers  <davby@ida.liu.se>
 
+
 	Defensive coding for bug 1660:
 	* edit-text.el (lyskom-create-text-handler): New parameter
 	callback-buffer. Use instead of lyskom-buffer when calling
