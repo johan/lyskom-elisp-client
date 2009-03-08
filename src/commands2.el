@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.228 2009-03-08 12:20:12 byers Exp $
+;;;;; $Id: commands2.el,v 44.229 2009-03-08 14:33:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.228 2009-03-08 12:20:12 byers Exp $\n"))
+              "$Id: commands2.el,v 44.229 2009-03-08 14:33:18 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1826,6 +1826,7 @@ not function names."
     (if kom-where-is-running-as-kom-command
         (lyskom-insert-before-prompt (concat msg "\n"))
       (message msg))))
+
 
 ;;;============================================================
 ;;;  Visa user-arean                    (kom-show-user-area)

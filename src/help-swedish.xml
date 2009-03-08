@@ -1,5 +1,9 @@
 <!-- -*-mode: xml-*- -->
 <help language="sv">
+  <section id="help-on-command" prompt="Kommandobeskrivning">
+    <call function="lyskom-help-on-command" />
+  </section>
+
   <section id="commands" prompt="Snabbkommandon">
     <p>Snabbommandon:</p>
     <keymap />

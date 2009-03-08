@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: help.el,v 44.9 2006-03-31 11:48:17 byers Exp $
+;;;;; $Id: help.el,v 44.10 2009-03-08 14:33:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: help.el,v 44.9 2006-03-31 11:48:17 byers Exp $\n"))
+	      "$Id: help.el,v 44.10 2009-03-08 14:33:18 byers Exp $\n"))
 
 
 
@@ -92,6 +92,7 @@
     (refer . lyskom-help-format-refer)
     (cref . lyskom-help-format-cref)
     (section . lyskom-help-format-section)
+    (call . lyskom-help-call-function)
     (TEXT . lyskom-help-format-TEXT))
   )
 
@@ -165,6 +166,10 @@
   (let ((this-command-keys nil))
     (lyskom-insert (lyskom-help t))))
 
+(defun lyskom-help-call-function (data)
+  (let ((fn (lyskom-help-data-get-attr 'function data)))
+    (funcall (intern fn))))
+
 (defun lyskom-help-format-refer (data)
   (let* ((id (intern (lyskom-help-data-get-attr 'id data)))
          (section (lyskom-help-get-section id))
@@ -223,3 +228,37 @@
           (lyskom-fill-region (point-min) (point-max))))
       (lyskom-insert "\n\n")
       (set-marker start nil)))
+
+(defvar lyskom-swedish-bindings-reverse)
+(defun lyskom-help-on-command (&rest args)
+  (let* ((cmd (lyskom-read-extended-command))
+         (specials (lyskom-menu-guess-shortcuts (current-local-map)))
+         (shortcut nil))
+    (when cmd
+      (if (assq cmd specials)
+        (unless (lyskom-traverse key (cdr (assq cmd specials))
+                  (unless (condition-case nil
+                              (eq (lookup-key (current-local-map) key) cmd)
+                            (error nil))
+                    (lyskom-traverse-break t)))
+          (setq shortcut
+                (mapconcat 
+                 (lambda (key)
+                   (if (assq key lyskom-swedish-bindings-reverse)
+                       (symbol-name 
+                        (cdr (assq key lyskom-swedish-bindings-reverse)))
+                     (single-key-description key)))
+                 (car (cdr (assq cmd specials)))
+                 " ")))
+        (setq shortcut (delq nil (mapcar (lambda (kd) (unless (symbolp (elt kd 0)) kd))
+                                         (where-is-internal cmd)))))
+      (lyskom-format-insert "\n%#1C%#2?b%[ [%#2s]%]%[%]\n\n%#3s\n\n" 
+                            cmd
+                            (if (stringp shortcut)
+                                shortcut
+                              (mapconcat
+                               (lambda (x) 
+                                 (format "`%s'" (key-description x)))
+                               shortcut ", "))
+                            (documentation cmd)))))
+

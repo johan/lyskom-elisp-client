@@ -1,5 +1,9 @@
 <!-- -*-mode: xml-*- -->
 <help language="en">
+  <section id="help-on-command" prompt="Command description">
+    <call function="lyskom-help-on-command" />
+  </section>
+
   <section id="commands" prompt="Keyboard commands">
     <p>Keyboard commands:</p>
     <keymap />

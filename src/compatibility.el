@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.80 2007-07-07 14:15:57 byers Exp $
+;;;;; $Id: compatibility.el,v 44.81 2009-03-08 14:33:18 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.80 2007-07-07 14:15:57 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.81 2009-03-08 14:33:18 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -314,6 +314,12 @@ KEYS should be a string in the format used for saving keyboard macros
                  enable-multibyte-characters)
             (lyskom-original-string-width (lyskom-string-make-multibyte str)))
            (t (lyskom-original-string-width str))))))
+
+;; XEmacs doesn't have detect-coding-string
+;; Make a version that just plain doesn't do anything
+
+(lyskom-function-alias detect-coding-string (string &optional highest)
+  (if highest 'undecided '(undecided)))
 
 
 ;;; ================================================================
