@@ -1,0 +1,208 @@
+                       News for lyskom.el 0.49
+                       =======================
+
+    Version 0.49 contains a number of major changes and enhancements.
+    It is available from the following addresses:
+
+      <URL:http://www.lysator.liu.se/lyskom/klienter/emacslisp/>
+      <URL:ftp://ftp.lysator.liu.se/pub/lyskom/elisp-client/>
+
+    The file is named lyskom-0.49.tar.gz, and a copy of this texts is
+    available under the name NEWS-0.49 in the tar archive. There is
+    also a zip file available at the same location for people using
+    systems that do not understand tar files.
+
+    If you find a bug in the LysKOM elisp client, please report it in
+    our bugzilla at <URL:http://bugzilla.lysator.liu.se/> (product
+    name lyskom-elisp-client). If you are unable to use bugzilla,
+    please use M-x kom-bug-report. Note that reports filed using this
+    method may inadvertently get lost. Reports submitted to bugzilla
+    never get lost, no matter how much we would like that to happen to
+    some of them.
+
+    Everybody using Emacs 22 or later should upgrade to version 0.49.
+
+
+
+
+* Compatibility
+
+** Emacs 22.x introduced a non-backwards-compatible change and some
+   bugs that severely impact performance of the elisp client. This
+   version is compatible with the changes in Emacs 22.x.
+
+** Emacs 23.x introduced non-backwards-compatible changes in menu
+   handling and text decoding. This version is compatible with the
+   changes in Emacs 23.x.
+
+** Support for Emacs 21.x and earlier has been dropped. The client
+   might still work with older Emacsen, but this has not been tested
+   at all.
+
+** XEmacs is probably supported, but this has not been tested
+   properly. Gnus must be installed for the client to work in XEmacs.
+
+
+
+* New commands
+
+** kom-review-more-comments: Extends the kom-review-comments to review
+   an additional level of comments.
+
+   Swedish name: Återse fler kommentarer [å a y]
+   English name: Review more comments [r a M]
+
+** kom-befriend
+
+** kom-moronify
+
+** kom-review-all-roots
+
+** kom-unread-all-roots
+
+** kom-review-first-roots
+
+** kom-unread-first-roots
+
+** kom-review-roots-by-to
+
+** kom-unread-roots-by-to
+
+** kom-delete-user-area
+
+** kom-move-comment
+
+** kom-view-url-in-text
+
+
+
+
+
+** New settings
+
+** kom-ssh-general-errors
+
+** kom-ssh-forwarding-errors
+
+** kom-respect-ancient-content-types
+
+** kom-read-related-first
+
+
+
+
+
+* Changed commands
+
+** kom-send-letter: Now always adds the sender's letterbox as a
+   recipient, regardless of whether the sender is a member of the
+   recipient or not.
+
+** kom-copy-options attempts to avoid non-portable settings.
+
+
+
+
+* Other changes worth noting
+
+** The help function now offers help on individual commands.
+
+** It is possible to completely customize highlighting of conference
+   and person names via the kom-highlight-conferences variable. The
+   default value of this variable highlights conference names as they
+   were in previous versions of the client.
+
+** Obsolete hook names have been removed.
+
+** All non-text standard MIME types are handled without showing the
+   contents of the texts.
+
+** When writing, UTF-8 is used if possible, when ISO-8859-1 can't be
+   used. When reading, US-ASCII texts are treated as ISO-8859-1, and
+   Emacs build-in autodetection is used on texts that don't specify a
+   charset.
+
+** Use left mouse button to follow links in Emacs 22.1.
+
+** Option to read commented text in other conferences before the text
+   that comment them in the current conference.
+
+** Lost connections are shown in all buffers.
+
+** The client is now capable of reconnecting when the connection has
+   been lost.
+
+** Heuristics for automatic line breaking have been completely
+   rewritten. The new version should be faster, better and easier to
+   maintain.
+
+
+
+ID        Summary
+------------------------------------------------------------------------
+212  WORK Man får läsa om inlägg som adderas till möten.
+236  WONT SPC scrollar ibland inte
+242       Brutna e-mail-headers hanteras fel
+281       Hantering av importerade bilagor
+297       Lägg till Opera i URL-öppnarlistan
+407       Flyttade texter bör inte visas
+438       lista nyheter - global för alla sessioner
+440  WONT \200-\237 i vilkalista
+443  WONT Buglistehanteringen städar för mycket ibland
+673       Slutför prefixbyte på hookvariablerna
+699  WONT lyskom-get-ancestors-of-text är rekursiv
+751       Dålig ombrytning av punktade listor
+766       Missvisande beskrivning om automatisk radbrytning
+818       Automatisk komplettering vid uppkoppling
+819       Varken x Addera mottagare eller C-c C-a C-m visar hela mottagarnamnet
+1086      kom-add-recipient et al should move parent of footnoted text
+1091      Sessionsavbrott är lätt att missa.
+1118 WONT Svårt att bli av med text-properties som read-only
+1130      Irriterande buffertbytebeteende
+1138 WONT Olika semantik när man startar klient från kommandorad eller innifrån emacs
+1143      Återse senaste urinläggen i ett visst möte.
+1262      Flytta text bör inte ändra på mottagare som är brevlådor
+1277      Tips om language-environment
+1308      Nytt kommando: Flytta kommentar
+1321      Ingen hantering av upptagna lokala portar i ssh-relay
+1390 INVA Fel teckenmängd
+1391      ?-kombo för att se vilka snabbkommandon som finns
+1422      Addera vän under högerklicksmenyn på en person
+1459      Krasch efter meddelanden vid inloggning
+1501 WONT Svenska tecken i menyraden visas fel med terminal-emacsar i UTF-8 läge
+1510      å y med å a k
+1511      Host name comparisons should be case insensitive
+1512      "Wrong type argument: keymapp, nil" in Xemacs
+1519      Bli medlem i möte via kontextmeny misslyckas
+1520      "Gå till mötet" saknas i kontextmenyn för brevlådan.
+1524      Spara inställningar för LysKOM misslyckas.
+1533      "Lista nyheter" ger färre antal olästa efter "lista ärenden".
+1535      Defaultmottagare för Skicka brev
+1536      Fel i kom-resurrect?
+1542      kom-copy-options copies too much
+1559 LATE Add MIME format support (such as HTML, through the w3 module)
+1565 INVA Inte helt lättstartat på en standard-Windows med standard-emacs ...
+1566      Felaktiga länkar på lyskom.el-webbsidan hos Lysator
+1570      lyskom-map-keymap doesn't know about strings in keymaps
+1589      åäö i text/x-kom-basic;charset=us-ascii
+1602      Quoted charsets in the content-type aux-item not handled correctly
+1608      Tidsstämpel i meddelanden om in-/utlogin
+1619      Se diff sätter inte point innan den infogar diffen i kom-buffern
+1620      Tidsstämpel i skickade meddelanden
+1621      Omöjligt att få presence-meddelanden om sig själv
+1631      Use mouse-1 to click on links
+1632 INVA Use Emacs unification
+1634      Fix multibyte menus
+1635      Error in process sentinel at exit
+1636      Anpassa klienten till emacs-unicode-2-grenen
+1637      Use lyskom-indirect-assq for kom-highlight-conferences
+1638      Klickläsmarkering fungerar inte längre
+1639      Emacs 22.1 pos-visible-in-window-p and move-to-window-line are buggy
+1641      Symbol's function definition is void: mm-find-mime-charset
+1642 WORK auto-organize errs out when trying to kom-auto-organize-sub-recipient
+1645      RPM target is broken
+1646      fotnoter dupliceras
+1651      Går inte att skicka in inlägg med XEmacs 21.5.x
+1652 WORK Klienten går inte längre att bygga med XEmacs
+1654      Klienten klarar inte att lägga till mottagare själv
+1658      Stuck in rot-13-review mode
