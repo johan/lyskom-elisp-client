@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.122 2008-03-17 14:15:31 ceder Exp $
+;;;;; $Id: option-edit.el,v 44.123 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.122 2008-03-17 14:15:31 ceder Exp $\n"))
+	      "$Id: option-edit.el,v 44.123 2009-03-08 12:20:14 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -363,7 +363,7 @@ customize buffer but do not save them to the server."
                          (lyskom-get-string 'saving-settings-done)
                          (lyskom-get-string 'could-not-save-options))
     (let ((var-list nil))
-      (mapcar 
+      (mapc
        (function 
         (lambda (e)
           (when (and (vectorp e)
@@ -411,7 +411,7 @@ customize buffer but do not save them to the server."
     (let ((standard-output init-output-marker))
       (princ ";;; LysKOM Settings\n")
       (princ ";;; =====================\n")
-      (mapcar (lambda (x)
+      (mapc (lambda (x)
                 (princ (format "(setq-default %S %s%S)\n" 
                                (car x)
                                (cond ((eq (cdr x) t) "")
@@ -495,9 +495,9 @@ All key bindings:
   (condition-case nil
       (lyskom-copy-face kom-active-face 'widget-button-face)
     (error nil))
-  (mapcar 'lyskom-custom-insert lyskom-customize-buffer-format)
+  (mapc 'lyskom-custom-insert lyskom-customize-buffer-format)
   (widget-setup)
-  (mapcar (function
+  (mapc (function
            (lambda (variable)
              (widget-value-set (cdr variable)
                                (save-excursion
@@ -544,11 +544,10 @@ All key bindings:
                (inhibit-read-only t))
            (widget-insert (lyskom-custom-string (car w)))
            (setq end (point))
-           (mapcar (function
-                    (lambda (fn)
-                      (funcall (intern (concat "lyskom-custom-insert-"
-                                               (symbol-name fn)))
-                               start end)))
+           (mapc (lambda (fn)
+                   (funcall (intern (concat "lyskom-custom-insert-"
+                                            (symbol-name fn)))
+                            start end))
                    (cdr w))))
         ((stringp w)
          (widget-insert w))
@@ -1206,12 +1205,11 @@ All key bindings:
          ':tag (lyskom-custom-string 'language)
          ':args
          (mapcar
-          (function
-           (lambda (x)
-             (list 'item
-                   ':tag (lyskom-language-name (car x))
-                   ':format "%t"
-                   ':value (elt x 0))))
+          (lambda (x)
+            (list 'item
+                  ':tag (lyskom-language-name (car x))
+                  ':format "%t"
+                  ':value (elt x 0)))
           lyskom-languages))
    propl))
 
@@ -1230,23 +1228,24 @@ All key bindings:
           lyskom-namedays))
    propl))
 
+(defvar ispell-dictionary-alist)
 (defun lyskom-ispell-dictionary-widget (type &optional args propl var)
   (let ((tmp-dictionary-alist nil))
     (condition-case nil 
         (progn (require 'ispell)
                (setq tmp-dictionary-alist ispell-dictionary-alist))
-      (error (if (null ispell-dictionary-alist)
-                 (setq tmp-dictionary-alist '("american" "brasiliano"
-                                              "british" "castellano"
-                                              "castellano8" "czech" 
-                                              "dansk" "deutsch"
-                                              "deutsch8" "english" 
-                                              "esperanto" "esperanto-tex"
-                                              "francais7" "francais" 
-                                              "francais-tex" "nederlands"
-                                              "nederlands8" "norsk"
-                                              "norsk7-tex" "polish"
-                                              "russian" "svenska")))))
+      (error (when (null ispell-dictionary-alist)
+               (setq tmp-dictionary-alist '("american" "brasiliano"
+                                            "british" "castellano"
+                                            "castellano8" "czech" 
+                                            "dansk" "deutsch"
+                                            "deutsch8" "english" 
+                                            "esperanto" "esperanto-tex"
+                                            "francais7" "francais" 
+                                            "francais-tex" "nederlands"
+                                            "nederlands8" "norsk"
+                                            "norsk7-tex" "polish"
+                                            "russian" "svenska")))))
     (lyskom-build-simple-widget-spec 
      'menu-choice
      (list ':format "%[%t%] %v"
@@ -1258,13 +1257,12 @@ All key bindings:
                        ':value nil)
                  (delq nil
                        (mapcar 
-                        (function
-                         (lambda (x)
-                           (and (car x)
-                                (list 'item
-                                      ':tag (car x)
-                                      ':format "%t"
-                                      ':value (car x)))))
+                        (lambda (x)
+                          (and (car x)
+                               (list 'item
+                                     ':tag (car x)
+                                     ':format "%t"
+                                     ':value (car x))))
                         tmp-dictionary-alist))))
      propl)))
 
@@ -1896,7 +1894,7 @@ All key bindings:
     (save-window-excursion
       (unwind-protect
           (progn
-            (mapcar (function
+            (mapc (function
                      (lambda (k)
                        (define-key global-map k 'lyskom-widget-end-kbd-macro)))
                     (where-is-internal 'end-kbd-macro))
@@ -1904,7 +1902,7 @@ All key bindings:
                 (pop-to-buffer (widget-get widget ':macro-buffer)))
             (start-kbd-macro nil)
             (recursive-edit))
-        (mapcar (function
+        (mapc (function
                  (lambda (k)
                    (define-key global-map k 'end-kbd-macro)))
                 (where-is-internal 'lyskom-widget-end-kbd-macro))

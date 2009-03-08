@@ -1,9 +1,78 @@
+2009-03-08  David Byers  <davby@ida.liu.se>
+
+	Defensive coding for bug 1660:
+	* edit-text.el (lyskom-create-text-handler): New parameter
+	callback-buffer. Use instead of lyskom-buffer when calling
+	callback.
+	(lyskom-edit-handler-buffer): New variable.
+	(lyskom-dispatch-edit-text): Initialize callback buffer to lyskom-buffer.
+	(lyskom-edit-send): Pass callback buffer to create-text handler.
+
+	Fix bug 1658 again:
+	* review.el (kom-review-rot13): Rewrote to use unwind-protect to
+	remove the rot13 filter rather than use let to override the hook
+	variable.
+
+	Fixed text viewing in Emacs 23:
+	* komtypes.el (text->decoded-text-mass): Use detect-coding-string
+	on texts with no specified charset.
+
+	Fix compilation warnings in Emacs 23:
+	* macros.el (lyskom-end-of-compilation): mapcar->mapc
+
+	* commands2.el (lyskom-stop-keep-alive): mapcar->mapc
+	(lyskom-available-language-list): mapcar->mapc
+
+	* review.el (kom-review-more-comments): mapcar->mapc
+
+	* edit-text.el (lyskom-edit-insert-miscs): mapcar->mapc
+	(lyskom-edit-send-check-recipients): mapcar->mapc
+
+	* option-edit.el (lyskom-custom-insert): mapcar->mapc
+
+2009-03-04  David Byers  <davby@ida.liu.se>
+
+	Fix compilation warnings in Emacs 23:
+	* lyskom-rest.el (lyskom-limited-make-overlay): mapcar->mapc
+	(kom-save-text): mapcar->mapc
+	(lyskom-is-loaded): mapcar->mapc
+
+	* talkback.el (lyskom-insert-bug-report): mapcar->mapc
+
+	* option-edit.el (lyskom-customize-send): mapcar->mapc
+	(lyskom-customize-mode): mapcar->mapc
+	(lyskom-widget-kbd-macro-action): mapcar->mapc
+
+	* menus.el (lyskom-popup-menu-template): Removed old-style backquotes.
+	(lyskom-set-menus-xemacs): mapcar->mapc
+
+	* view-text.el (lyskom-view-text): mapcar->mapc
+
+	* filter.el (lyskom-create-filter-function-body): Removed
+	old-style backquotes.
+
+	* cache.el (clear-all-caches): mapcar->mapc
+
+	* startup.el (kom-start-anew): mapcar->mapc
+
+	* aux-items.el (def-aux-item): Removed last old-style backquotes
+
+	* completing-read.el (lyskom-complete-string-next-char): mapcar->mapc
+
+	* komtypes.el (def-komtype): mapcar->mapc
+
+	* language.el (lyskom-language-strings-internal): mapcar->mapc
+
+	* macros.el: Removed last old-style backquotes.
+
+	* vars.el.in (lyskom-setup-local-variables): mapcar->mapc
+
 2008-05-11    <David Byers@GULAG>
 
 	Fix bug 1654:
 	* edit-text.el (lyskom-edit-send): Use accessors to access parsed
 	headers.
-	
+
 	Fix bug 1660:
 	* edit-text.el (lyskom-create-text-handler): Added callback and
 	callback-data parameters. Juggling buffers to get these right is

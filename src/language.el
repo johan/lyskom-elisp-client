@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: language.el,v 44.33 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: language.el,v 44.34 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -146,7 +146,7 @@ parameters to this function."
       (setq lyskom-language-categories
 	    (cons (cons category scope) lyskom-language-categories)))
   (let ((record (get category 'lyskom-language-symbols)))
-    (mapcar (lambda (pair)
+    (mapc (lambda (pair)
               (let* ((symbol (car pair))
                      (string (cdr pair))
                      (llist (get symbol category))

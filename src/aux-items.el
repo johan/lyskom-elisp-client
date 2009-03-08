@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: aux-items.el,v 44.46 2008-05-11 06:17:20 byers Exp $
+;;;;; $Id: aux-items.el,v 44.47 2009-03-08 12:20:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,17 +34,17 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: aux-items.el,v 44.46 2008-05-11 06:17:20 byers Exp $\n"))
+	      "$Id: aux-items.el,v 44.47 2009-03-08 12:20:11 byers Exp $\n"))
 
 (def-kom-var lyskom-aux-item-definitions nil
   "List of aux item definitions.")
 
 (defmacro def-aux-item (name number &rest data)
-  (` (setq lyskom-aux-item-definitions 
+  ` (setq lyskom-aux-item-definitions 
            (add-to-list 'lyskom-aux-item-definitions
-                        (cons (, number)
-                              (cons (cons 'name (quote (, name)))
-                                    (quote (, data))))))))
+                        (cons ,number
+                              (cons (cons 'name (quote ,name))
+                                    (quote ,data))))))
 
 (defun lyskom-aux-item-definition->name (def)
   (cdr (assq 'name def)))

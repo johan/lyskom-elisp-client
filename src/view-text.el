@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.92 2007-11-10 09:53:50 byers Exp $
+;;;;; $Id: view-text.el,v 44.93 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.92 2007-11-10 09:53:50 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.93 2009-03-08 12:20:14 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -178,21 +178,21 @@ Note that this function must not be called asynchronously."
                                                          'date-and-time
                                                          (text-stat->creation-time text-stat)))))
                    (when kom-show-imported-external-recipients
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Recipient)
-                                                     (aux-item->data el)))
-                             mx-to)
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Extra-recipient)
-                                                     (aux-item->data el)))
-                             mx-cc)
-                     (mapcar (lambda (el)
-                               (lyskom-format-insert "%#1s: %#2s\n"
-                                                     (lyskom-get-string 'mx-Extern-reply-to)
-                                                     (aux-item->data el)))
-                             mx-reply-to)
+                     (mapc (lambda (el)
+                             (lyskom-format-insert "%#1s: %#2s\n"
+                                                   (lyskom-get-string 'mx-Recipient)
+                                                   (aux-item->data el)))
+                           mx-to)
+                     (mapc (lambda (el)
+                             (lyskom-format-insert "%#1s: %#2s\n"
+                                                   (lyskom-get-string 'mx-Extra-recipient)
+                                                   (aux-item->data el)))
+                           mx-cc)
+                     (mapc (lambda (el)
+                             (lyskom-format-insert "%#1s: %#2s\n"
+                                                   (lyskom-get-string 'mx-Extern-reply-to)
+                                                   (aux-item->data el)))
+                           mx-reply-to)
                      )
 
 

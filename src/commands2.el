@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.227 2008-05-11 06:17:20 byers Exp $
+;;;;; $Id: commands2.el,v 44.228 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.227 2008-05-11 06:17:20 byers Exp $\n"))
+              "$Id: commands2.el,v 44.228 2009-03-08 12:20:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -2014,26 +2014,22 @@ global effect, including changes to key binding."
 (defun lyskom-available-language-list ()
   "Return an alist suitable for completing read of available language names."
   (let ((tmp 
-         (mapcar
-          (function
-           (lambda (el)
-             (cons (car el) (eval (cdr el)))))
-          (get 'lyskom-language-codes 'lyskom-language-var)))
+         (mapcar (lambda (el)
+		   (cons (car el) (eval (cdr el))))
+		 (get 'lyskom-language-codes 'lyskom-language-var)))
         (codes (mapcar 'car lyskom-languages))
         (result nil))
-    (mapcar 
-     (function
-      (lambda (code)
-        (mapcar 
-         (function
-          (lambda (codelist)
-            (when (assq code codelist)
-              (setq result
-                    (cons (cons (cdr (assq code codelist))
-                                code)
-                          result)))))
-         tmp)))
-     codes)
+    (mapc (lambda (code)
+            (mapcar 
+             (function
+              (lambda (codelist)
+                (when (assq code codelist)
+                  (setq result
+                        (cons (cons (cdr (assq code codelist))
+                                    code)
+                              result)))))
+             tmp))
+          codes)
     result))
 
 
@@ -2426,7 +2422,7 @@ See `kom-keep-alive' for more information."
 
 
 (defun lyskom-stop-keep-alive ()
-  (mapcar 'disable-timeout lyskom-keep-alive-timers)
+  (mapc 'disable-timeout lyskom-keep-alive-timers)
   (setq lyskom-keep-alive-timers nil))
 
 

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: talkback.el,v 44.4 2002-02-24 20:23:28 joel Exp $
+;;;;; $Id: talkback.el,v 44.5 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: talkback.el,v 44.4 2002-02-24 20:23:28 joel Exp $\n"))
+	      "$Id: talkback.el,v 44.5 2009-03-08 12:20:14 byers Exp $\n"))
 
 (defvar kom-bug-report-address "kom@lysator.liu.se")
 
@@ -124,7 +124,7 @@ make any conclusions of your own.
     (lyskom-bug-insert-recent-messages 20)
     (insert "\n\nSaved backtraces:\n\n")
 
-    (mapcar (lambda (el)
+    (mapc (lambda (el)
               (insert (elt el 0))        ; Time
               (insert "\n")
               (insert (elt el 1))        ; Backtrace

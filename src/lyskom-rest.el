@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.274 2008-03-17 14:15:31 ceder Exp $
+;;;;; $Id: lyskom-rest.el,v 44.275 2009-03-08 12:20:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.274 2008-03-17 14:15:31 ceder Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.275 2009-03-08 12:20:13 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -1468,7 +1468,7 @@ Args: FORMAT-STRING &rest ARGS"
             (lyskom-nbutlast lyskom-overlay-pool 
                              (- (length lyskom-overlay-pool)
                                 kom-max-overlays)))
-      (mapcar
+      (mapc
        (lambda (o) (lyskom-xemacs-or-gnu (delete-extent o)
 					 (delete-overlay o))) old))
     (setq lyskom-overlay-pool (cons val lyskom-overlay-pool)))
@@ -3223,7 +3223,7 @@ See `kom-save-text-body' for an alternative to this command."
                (lyskom-format-insert-before-prompt 'saving-many-on-file
                                      (length list-of-texts)
                                      name))
-             (mapcar (lambda (n)
+             (mapc (lambda (n)
                        (blocking-do-multiple ((text-stat (get-text-stat n))
                                               (text (get-text n)))
                          (lyskom-save-text text-stat text name)))
@@ -4676,7 +4676,7 @@ One parameter - the prompt string."
 
   (setq lyskom-line-start-chars
         (let ((tmp (make-vector 256 nil)))
-          (mapcar 
+          (mapc
            (function
             (lambda (x)
               (aset tmp (lyskom-char-to-int x) t)))

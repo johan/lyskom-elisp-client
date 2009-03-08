@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter.el,v 44.30 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: filter.el,v 44.31 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter.el,v 44.30 2007-06-09 11:04:53 byers Exp $\n"))
+	      "$Id: filter.el,v 44.31 2009-03-08 12:20:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -245,13 +245,13 @@ invalid-value until a filter action has been selected.")
 
 
 (defmacro lyskom-filter-is-member (testfn arg list selector)
-  (` (let (found
-           (objlist (, list)))
-       (while (and objlist (not found))
-         (and ((, testfn) (, arg) ((, selector) (car objlist)))
-           (setq found t))
-      (setq objlist (cdr objlist)))
-    found)))
+  `(let (found 
+         (objlist ,list))
+     (while (and objlist (not found))
+       (and (,testfn ,arg (,selector (car objlist)))
+            (setq found t))
+       (setq objlist (cdr objlist)))
+     found))
 
 
 (defun lyskom-create-compile-filter-function (pattern)
@@ -262,8 +262,8 @@ invalid-value until a filter action has been selected.")
 
 
 (defun lyskom-create-filter-function (pattern)
-  (` (lambda (filter author recipient-list subject text-stat text)
-       (, (cons 'and (lyskom-create-filter-function-body pattern))))))
+  `(lambda (filter author recipient-list subject text-stat text)
+     ,(cons 'and (lyskom-create-filter-function-body pattern))))
 
 (defun lyskom-create-filter-function-body (pattern)
   (let (inverse)
@@ -301,57 +301,54 @@ invalid-value until a filter action has been selected.")
               (cond 
                ((eq key 'author)
                 (lyskom-filter-check-args 'stringp args)
-                (` (and author (string-match (, (regexp-quote args))
-                                             (conf-stat->name author)))))
+                `(and author (string-match ,(regexp-quote args)
+                                           (conf-stat->name author))))
 
                ((eq key 'author-re)
                 (lyskom-filter-check-args 'regexpp args)
-                (` (and author (string-match (, args)
-                                             (conf-stat->name author)))))
+                `(and author (string-match ,args
+                                           (conf-stat->name author))))
 
                ((eq key 'author-no)
                 (lyskom-filter-check-args 'integerp args)
-                (` (and author (= (, args) (conf-stat->conf-no author)))))
+                `(and author (= ,args (conf-stat->conf-no author))))
 
                ((eq key 'recipient)
                 (lyskom-filter-check-args 'stringp args)
-                (` (lyskom-filter-is-member
+                `(lyskom-filter-is-member
                     string-match
-                    (, (regexp-quote args))
+                    ,(regexp-quote args)
                     recipient-list
-                    conf-stat->name)))
+                    conf-stat->name))
                ((eq key 'recipient-re)
                 (lyskom-filter-check-args 'regexpp args)
-                (` (lyskom-filter-is-member
+                `(lyskom-filter-is-member
                     string-match
-                    (,  args)
+                    ,args
                     recipient-list
-                    conf-stat->name)))
+                    conf-stat->name))
                ((eq key 'recipient-no)
                 (lyskom-filter-check-args 'integerp args)
-                (` (lyskom-filter-is-member
+                `(lyskom-filter-is-member
                     =
-                    (,  args)
+                    ,args
                     recipient-list
-                    conf-stat->conf-no)))
+                    conf-stat->conf-no))
 
                ((eq key 'subject)
                 (lyskom-filter-check-args 'stringp args)
-                (` (string-match (, (regexp-quote args))
-                                 subject)))
+                `(string-match ,(regexp-quote args)
+                                 subject))
                ((eq key 'subject-re)
                 (lyskom-filter-check-args 'regexpp args)
-                (` (string-match (, args)
-                                 subject)))
+                `(string-match ,args subject))
 
                ((eq key 'text)
                 (lyskom-filter-check-args 'stringp args)
-                (` (string-match (, (regexp-quote args))
-                                 text)))
+                `(string-match ,(regexp-quote args) text))
                ((eq key 'text-re)
                 (lyskom-filter-check-args 'regexpp args)
-                (` (string-match (, args)
-                                 text)))
+                `(string-match ,args text))
                (t (lyskom-error 
                    (lyskom-get-string 'filter-error-unknown-key)
                    key

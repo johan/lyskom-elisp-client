@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.132 2008-05-11 09:14:28 byers Exp $
+;;;;; $Id: edit-text.el,v 44.133 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.132 2008-05-11 09:14:28 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.133 2009-03-08 12:20:12 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -96,11 +96,15 @@
 
 (defvar lyskom-edit-handler nil
   "Status variable for an edit-buffer.
-See lyskom-edit-handler-data.")
+See lyskom-edit-handler-data and lyskom-edit-handler-buffer.")
 
 (defvar lyskom-edit-handler-data nil
   "Status variable for an edit-buffer.
-See lyskom-edit-handler.")
+See lyskom-edit-handler and lyskom-edit-handler-buffer.")
+
+(defvar lyskom-edit-handler-buffer nil
+  "Buffer to run the edit-handler in.
+See lyskom-edit-handler and lyskom-edit-handler-data.")
 
 (defvar lyskom-edit-return-to-configuration nil
   "Status variable for an edit-buffer.")
@@ -144,11 +148,12 @@ Does lyskom-end-of-command."
 (defun lyskom-dispatch-edit-text (proc misc-list subject body
 				       &optional handler &rest data)
   "Same as lyskom-edit-text except that it doesn't set lyskom-is-writing."
-  (let ((buffer (lyskom-get-buffer-create 'write-texts
-                                          (concat 
-                                           (buffer-name (process-buffer proc))
-                                           "-edit")))
-	(config (current-window-configuration)))
+  (let* ((saved-buffer lyskom-buffer)
+         (buffer (lyskom-get-buffer-create 'write-texts
+                                           (concat 
+                                            (buffer-name (process-buffer proc))
+                                            "-edit")))
+         (config (current-window-configuration)))
 
     (lyskom-display-buffer buffer)
     (text-mode)
@@ -157,9 +162,11 @@ Does lyskom-end-of-command."
     (lyskom-edit-mode)
     (make-local-variable 'lyskom-edit-handler)
     (make-local-variable 'lyskom-edit-handler-data)
+    (make-local-variable 'lyskom-edit-handler-buffer)
     (make-local-variable 'lyskom-edit-return-to-configuration)
     (setq lyskom-edit-handler handler)
     (setq lyskom-edit-handler-data data)
+    (setq lyskom-edit-handler-buffer saved-buffer)
     (setq lyskom-edit-return-to-configuration config)
     (buffer-disable-undo)
     (lyskom-edit-insert-miscs misc-list subject body)
@@ -231,20 +238,20 @@ nil             -> Ingenting."
 					    (lyskom-get-string 'footnote)
 					    where-put-misc data)))
 	(setq misc-list (cdr misc-list))))
-    (mapcar (lambda (item)
-	      (let ((data (lyskom-aux-item-call
-			   item '(edit-insert print)
-			   item lyskom-pers-no)))
-		(when data
-		  (lyskom-princ
-		   (lyskom-format "%#1@%[%#3s%] %#2s\n" 
-				  (lyskom-default-button 'aux-edit-menu 
-							 (cons edit-buffer
-							       (copy-marker where-put-misc)))
-				  data
-				  (lyskom-get-string 'aux-item-prefix))
-		   where-put-misc))))
-            aux-list)
+    (mapc (lambda (item)
+            (let ((data (lyskom-aux-item-call
+                         item '(edit-insert print)
+                         item lyskom-pers-no)))
+              (when data
+                (lyskom-princ
+                 (lyskom-format "%#1@%[%#3s%] %#2s\n" 
+                                (lyskom-default-button 'aux-edit-menu 
+                                                       (cons edit-buffer
+                                                             (copy-marker where-put-misc)))
+                                data
+                                (lyskom-get-string 'aux-item-prefix))
+                 where-put-misc))))
+          aux-list)
     (unless kom-edit-hide-add-button
       (lyskom-princ (lyskom-format "%[%#1@%#2s%]\n"
                                    (lyskom-default-button 'add-recipient-or-xref
@@ -476,6 +483,7 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
 	    (let ((buffer (current-buffer))
 		  (handler lyskom-edit-handler)
 		  (handler-data lyskom-edit-handler-data)
+		  (handler-buffer lyskom-edit-handler-buffer)
 		  (headers nil)
                   (misc-list nil)
                   (subject nil)
@@ -637,7 +645,8 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
                            buffer
                            is-anonymous
 			   handler
-			   handler-data))))
+			   handler-data
+                           handler-buffer))))
             (lyskom-undisplay-buffer)
 	    (goto-char (point-max))))
     ;;
@@ -839,12 +848,12 @@ Cannot be called from a callback."
         (set-buffer lyskom-buffer)
         (set-collector->value collector nil)
 
-        (mapcar (lambda (text-stat)
-		  (cache-del-text-stat text-stat)
-		  (initiate-get-text-stat 'sending 
-					  'collector-push
-					  text-stat
-					  collector))
+        (mapc (lambda (text-stat)
+                (cache-del-text-stat text-stat)
+                (initiate-get-text-stat 'sending 
+                                        'collector-push
+                                        text-stat
+                                        collector))
                 comm-to-list)
         (lyskom-wait-queue 'sending)
 
@@ -1691,7 +1700,8 @@ Point must be located on the line where the subject is."
 
 
 (defun lyskom-create-text-handler (text-no edit-buffer is-anonymous
-					   callback callback-data)
+					   callback callback-data 
+                                           callback-buffer)
   "Handle an attempt to write a text."
   (lyskom-tell-internat 'kom-tell-silence)
   (message "")
@@ -1723,30 +1733,27 @@ Point must be located on the line where the subject is."
 
     ;; Save the text
 
-    (when kom-created-texts-are-saved
-      (when (buffer-live-p edit-buffer)
-        (initiate-get-conf-stat 'background 
-                                'lyskom-edit-fcc-text
-                                lyskom-pers-no
-                                (save-excursion (set-buffer edit-buffer)
-                                                (buffer-string))
-                                text-no
-                                is-anonymous)))
+    (when (and kom-created-texts-are-saved (buffer-live-p edit-buffer))
+      (initiate-get-conf-stat 'background 
+                              'lyskom-edit-fcc-text
+                              lyskom-pers-no
+                              (save-excursion (set-buffer edit-buffer)
+                                              (buffer-string))
+                              text-no
+                              is-anonymous))
 
     ;; Immediately mark the text as read if kom-created-texts-are-read is set
     ;; and we are not sending the text anonymously.
     
     (cond
-     ((and kom-created-texts-are-read
-           (not is-anonymous))
+     ((and kom-created-texts-are-read (not is-anonymous))
       (lyskom-is-read text-no)
       (initiate-get-text-stat 'background 'lyskom-mark-as-read
 			      text-no)
       (lyskom-run 'background 'set 'lyskom-dont-change-prompt nil)
       (lyskom-run 'background 'lyskom-set-mode-line))
-     (t					; Probably not necessary
-      (setq lyskom-dont-change-prompt nil)))
-    
+     (t (setq lyskom-dont-change-prompt nil)))
+
     (save-excursion
       (set-buffer edit-buffer)		;Need local variables.
       (lyskom-edit-sent-mode 1))
@@ -1763,13 +1770,14 @@ Point must be located on the line where the subject is."
       (set-window-configuration lyskom-edit-return-to-configuration)
       (set-buffer (window-buffer (selected-window)))
       (goto-char (point-max)))
-    
+
     ;; Apply handler.
-    
-    (lyskom-save-excursion
-      (set-buffer lyskom-buffer)
-      (if callback (apply callback text-no callback-data)))
-    
+
+    (when (and callback (buffer-live-p callback-buffer))
+      (lyskom-save-excursion
+        (set-buffer callback-buffer)
+        (if callback (apply callback text-no callback-data))))
+
     ;; Kill the edit-buffer.
 
     (lyskom-save-excursion

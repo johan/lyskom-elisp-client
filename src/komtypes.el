@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.42 2004-07-20 19:28:10 byers Exp $
+;;;;; $Id: komtypes.el,v 44.43 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.42 2004-07-20 19:28:10 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.43 2009-03-08 12:20:12 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -133,7 +133,7 @@ Automatically created with def-komtype" type)
     ;; Create accessors and mutators
 
     (let ((field-index 0))
-      (mapcar
+      (mapc
        (lambda (arg)
          (unless (eq arg '&optional)
            (let ((field (or (car-safe arg) arg)))
@@ -346,11 +346,17 @@ Automatically created with def-komtype" type)
                   (text-stat->aux-items text-stat) 1))
            (content-type (and (car item)
                               (lyskom-mime-decode-content-type
-                               (aux-item->data (car item))))))
-      (if (lyskom-mime-content-type-get content-type 'charset)
-          (lyskom-mime-decode-string str (lyskom-mime-content-type-get content-type 'charset))
-        str))))
-
+                               (aux-item->data (car item)))))
+           (charset (lyskom-mime-content-type-get content-type 'charset)))
+      (condition-case nil
+          (cond (charset (lyskom-mime-decode-string str charset))
+                ((and (setq charset (detect-coding-string str t))
+                      (not (memq charset '(raw-text undecided))))
+                 (lyskom-mime-decode-string str charset))
+                ((setq charset lyskom-server-coding-system)
+                 (lyskom-mime-decode-string str charset))
+                (t (lyskom-mime-decode-string str 'iso-8859-1)))
+        (error str)))))
 
 
 ;;; ================================================================

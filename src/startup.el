@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.118 2007-07-11 13:36:25 byers Exp $
+;;;;; $Id: startup.el,v 44.119 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.118 2007-07-11 13:36:25 byers Exp $\n"))
+	      "$Id: startup.el,v 44.119 2009-03-08 12:20:14 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -218,9 +218,9 @@ clients of the event. See lyskom-mode for details on lyskom."
                         (format "CONNECT %s:%d HTTP/1.0\r\n"
                                 host port))
 
-                       (mapcar (lambda (header)
-                                 (lyskom-process-send-string proc header)
-                                 (lyskom-process-send-string proc "\r\n"))
+                       (mapc (lambda (header)
+                               (lyskom-process-send-string proc header)
+                               (lyskom-process-send-string proc "\r\n"))
                                headers)
                        (lyskom-process-send-string proc "\r\n")
 
@@ -627,7 +627,7 @@ shown to other users."
                              (server-info->aux-item-list lyskom-server-info)
                              13)        ; e-mail
                         (lyskom-insert 'wrong-password-help)
-                        (mapcar (lambda (el)
+                        (mapc (lambda (el)
                                   (lyskom-format-insert 'wrong-password-email
                                                         (aux-item->data el)))
                                 (lyskom-get-aux-item 

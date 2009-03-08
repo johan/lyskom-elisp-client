@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: keyboard-menu.el,v 44.7 2007-07-07 08:01:31 byers Exp $
+;;;;; $Id: keyboard-menu.el,v 44.8 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: keyboard-menu.el,v 44.7 2007-07-07 08:01:31 byers Exp $\n"))
+	      "$Id: keyboard-menu.el,v 44.8 2009-03-08 12:20:12 byers Exp $\n"))
 
 (defvar lyskom-keyboard-menu-menu)
 (defvar lyskom-keyboard-menu-buffer)
@@ -304,9 +304,10 @@ Returns the selected string."
     (while (not done)
 
       ;; Move up one line
-      (condition-case nil
-          (previous-line 1)
-        (beginning-of-buffer (setq done t)))
+      (let ((current-prefix-arg nil))
+        (condition-case nil
+            (call-interactively 'previous-line)
+          (beginning-of-buffer (setq done t))))
 
       ;; Scan the items on this line until we find the one
       ;; just before point or just after point or around
@@ -336,9 +337,10 @@ Returns the selected string."
     (while (not done)
 
       ;; Move up one line
-      (condition-case nil
-          (next-line 1)
-        (end-of-buffer (setq done t)))
+      (let ((current-prefix-arg nil))
+        (condition-case nil
+            (call-interactively 'next-line)
+          (end-of-buffer (setq done t))))
 
       ;; Scan the items on this line until we find the one
       ;; just before point or just after point or around

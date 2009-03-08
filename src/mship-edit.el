@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.53 2005-01-09 22:09:00 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.54 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.53 2005-01-09 22:09:00 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.54 2009-03-08 12:20:14 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -1328,7 +1328,7 @@ lp--update-membership is called automatically before this function exits."
           (entries (lp--all-selected-entries)))
      (cond ((null cur) (error (lyskom-get-string 'lp-no-entry)))
            ((null entries) (error (lyskom-get-string 'lp-no-selection)))
-           (t (mapcar 
+           (t (mapc 
                (lambda (entry)
                  (lp--set-entry-pri-and-pos
                   entry priority
@@ -1359,7 +1359,7 @@ possible in the list."
                                           (lp--entry->membership
                                            (car entries)))) t)))))
     (lp--save-excursion
-     (mapcar (lambda (entry)
+     (mapc (lambda (entry)
                (let ((new-pos (lp--entry-position
                                (lp--find-new-position entry priority))))
                  (lp--set-entry-pri-and-pos entry priority new-pos)))

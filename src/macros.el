@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: macros.el,v 44.40 2004-07-18 14:58:05 byers Exp $
+;;;;; $Id: macros.el,v 44.41 2009-03-08 12:20:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: macros.el,v 44.40 2004-07-18 14:58:05 byers Exp $\n"))
+	      "$Id: macros.el,v 44.41 2009-03-08 12:20:13 byers Exp $\n"))
 
 ;;;
 ;;; Require parts of the widget package. We do this to avoid generating
@@ -251,11 +251,11 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
                              lyskom-expected-unresolved-functions-temp))))
           ,@body
           (eval-when-compile
-            (and (boundp 'byte-compile-unresolved-functions)
-                 (mapcar (lambda (fn) (and fn (setq byte-compile-unresolved-functions
-                                                    (delq (assq fn byte-compile-unresolved-functions)
-                                                          byte-compile-unresolved-functions))))
-                         (car lyskom-expected-unresolved-functions-temp)))
+            (when (boundp 'byte-compile-unresolved-functions)
+              (mapc (lambda (fn) (and fn (setq byte-compile-unresolved-functions
+                                               (delq (assq fn byte-compile-unresolved-functions)
+                                                     byte-compile-unresolved-functions))))
+                    (car lyskom-expected-unresolved-functions-temp)))
             (setq lyskom-expected-unresolved-functions-temp
                   (cdr lyskom-expected-unresolved-functions-temp)))))
 
@@ -269,12 +269,12 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
                   (symbolp (car-safe (car-safe 
                                       byte-compile-unresolved-functions))))
              (progn
-               (mapcar (function (lambda (x)
-                                   (setq byte-compile-unresolved-functions
-                                         (delq
-                                          (assq x
-                                                byte-compile-unresolved-functions)
-                                          byte-compile-unresolved-functions))))
+               (mapc (lambda (x)
+                       (setq byte-compile-unresolved-functions
+                             (delq
+                              (assq x
+                                    byte-compile-unresolved-functions)
+                              byte-compile-unresolved-functions)))
                        lyskom-expected-unresolved-functions)
                ))
 
@@ -292,10 +292,9 @@ All the forms in BIND-LIST are evaluated before any symbols are bound."
 (defmacro lyskom-use-local-map (keymap)
   "Use keymap KEYMAP as local map in this buffer. KEYMAP is made local in
 the current buffer, and its value is copied from the LysKOM buffer."
-  (` (progn (make-local-variable (quote (, keymap)))
-            (setq (, keymap)
-                  (lyskom-default-value (quote (, keymap))))
-            (use-local-map (, keymap)))))
+  ` (progn (make-local-variable (quote ,keymap))
+            (setq ,keymap (lyskom-default-value (quote ,keymap)))
+            (use-local-map ,keymap)))
 
 (defmacro lyskom-try-define-key (map seq fn)
   `(condition-case nil
@@ -328,9 +327,9 @@ the current buffer, and its value is copied from the LysKOM buffer."
 ;;;
 
 (defmacro lyskom-ignore-errors (&rest forms)
-  (` (condition-case nil
-         (progn (,@ forms))
-       (error nil))))
+  ` (condition-case nil
+         (progn ,@forms)
+       (error nil)))
 
 (put 'ignore-errors 'edebug-form-spec
      '(sexp form body))
@@ -367,8 +366,8 @@ the current buffer, and its value is copied from the LysKOM buffer."
 ;;;
 
 (defmacro lyskom-setq-default (name value)
-  (` (lyskom-set-default (quote (, name))
-                         (, value))))
+  ` (lyskom-set-default (quote ,name)
+                         ,value))
 
 (defmacro lyskom-ref-no ()
   `(prog1 lyskom-ref-no

@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.335 2008-03-17 14:15:31 ceder Exp $
+;;;;; $Id: vars.el.in,v 44.336 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.335 2008-03-17 14:15:31 ceder Exp $\n"))
+	      "$Id: vars.el.in,v 44.336 2009-03-08 12:20:14 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -81,8 +81,8 @@ Inheritance only works with the LysKOM buffer handling functions."
 
 (defun lyskom-setup-local-variables ()
   "Set up all globally defined local variables in the current buffer."
-  (mapcar 'make-local-variable lyskom-local-variables)
-  (mapcar 'lyskom-make-local-hook lyskom-local-hooks))
+  (mapc 'make-local-variable lyskom-local-variables)
+  (mapc 'lyskom-make-local-hook lyskom-local-hooks))
 
 (defvar lyskom-is-loaded nil
   "Non-nil when lyskom has been loaded.")

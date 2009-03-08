@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.235 2007-07-11 19:13:08 byers Exp $
+;;;;; $Id: commands1.el,v 44.236 2009-03-08 12:20:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.235 2007-07-11 19:13:08 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.236 2009-03-08 12:20:11 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1151,7 +1151,7 @@ The default subject is SUBJECT. TYPE is either 'comment or 'footnote."
                                 'kom-tell-write-comment
                               'kom-tell-write-footnote))
       (let (data)
-        (mapcar 
+        (mapc
 	 (lambda (misc-info)
 	   (cond
 	    ((eq 'RECPT (misc-info->type misc-info))
@@ -2513,7 +2513,7 @@ today's name is controlled by `kom-show-namedays'."
          "")
        weekno)
       ;; Mera kult
-      (mapcar (function 
+      (mapc (function 
                (lambda (el)
                  (let ((when (car el))
                        (event (cdr el)))

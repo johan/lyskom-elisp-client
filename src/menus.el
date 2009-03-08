@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.43 2007-07-11 11:14:58 byers Exp $
+;;;;; $Id: menus.el,v 44.44 2009-03-08 12:20:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.43 2007-07-11 11:14:58 byers Exp $\n"))
+	      "$Id: menus.el,v 44.44 2009-03-08 12:20:13 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -319,7 +319,7 @@
   "The menus used in LysKOM.")
 
 (defvar lyskom-popup-menu-template
-  (` (menu lyskom ((,@ lyskom-menu-template))))
+  `(menu lyskom (,@lyskom-menu-template))
   "Popup-menu in the backgrouond of the LysKOM window")
 
 
@@ -640,7 +640,7 @@ WHAT is one of title, item or keys"
   (make-local-variable 'current-menubar)
   (make-local-variable 'lyskom-current-menu-category)
   (set-buffer-menubar default-menubar)
-  (mapcar (function
+  (mapc (function
            (lambda (menu)
              (add-submenu nil menu)))
           (lyskom-get-menu-category menu-category))
@@ -657,16 +657,15 @@ WHAT is one of title, item or keys"
   "Pop up a menu"
   (lyskom-xemacs-or-gnu 
    (popup-menu menu event)
-   (let* ((result (nreverse (x-popup-menu (or event t)
-                                          (list menu)))))
+   (let* ((result (x-popup-menu (or event t) menu)))
      (cond ((null result))
-           ((listp (car result)) 
-            (apply (car (car result))
-                   (cdr (car result))))
-           ((commandp (car result))
-            (call-interactively (car result)))
-           ((functionp (car result))
-            (funcall (car result)))
+           ((listp result)
+            (apply (car result)
+                   (cdr result)))
+           ((commandp result)
+            (call-interactively result))
+           ((functionp result)
+            (funcall result))
            (t nil)))))
 
 

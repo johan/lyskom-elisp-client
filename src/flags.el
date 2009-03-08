@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.45 2007-07-07 14:15:57 byers Exp $
+;;;;; $Id: flags.el,v 44.46 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.45 2007-07-07 14:15:57 byers Exp $\n"))
+	      "$Id: flags.el,v 44.46 2009-03-08 12:20:12 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -380,8 +380,8 @@ If optional PORTABLE-ONLY is non-nil, skip variables marked non-portable."
 					;was stored.
               (++ r))
 
-            (mapcar 'lyskom-recompile-filter kom-permanent-filter-list)
-            (mapcar 'lyskom-recompile-filter kom-session-filter-list)
+            (mapc 'lyskom-recompile-filter kom-permanent-filter-list)
+            (mapc 'lyskom-recompile-filter kom-session-filter-list)
 
             (setq lyskom-filter-list (append kom-permanent-filter-list
                                              kom-session-filter-list))

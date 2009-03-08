@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.106 2007-06-24 09:08:31 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.107 2009-03-08 12:20:13 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.106 2007-06-24 09:08:31 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.107 2009-03-08 12:20:13 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -200,20 +200,16 @@ If there is no active area, then do something else."
                                                     text)
                                               ':active t)))
                                entries))))
-          (t (append (list 'keymap title)
-                     (delq nil 
-                           (mapcar
-			    (lambda (entry)
-			      (and (funcall filter (cdr entry) arg)
-				   (let ((tmp (copy-tree entry)))
-				     (setcar tmp 
-					     (lyskom-menu-encode
-					      (lyskom-get-string (car tmp))
-					      'item))
-				     (cons `(,(cdr entry) ,buf ,arg ,text)
-					   tmp))))
-                                   entries)))))))
-
+          (t (list title
+                   (cons title
+                         (delq nil
+                               (mapcar (lambda (entry)
+                                         (when (funcall filter (cdr entry) arg)
+                                           (cons 
+                                            (lyskom-menu-encode (lyskom-get-string (car entry))
+                                                                'item)
+                                            `(,(cdr entry) ,buf ,arg ,text))))
+                                       entries))))))))
 
 
 (defun lyskom-button-menu (pos event)

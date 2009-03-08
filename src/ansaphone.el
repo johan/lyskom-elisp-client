@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: ansaphone.el,v 44.12 2003-01-08 00:33:14 byers Exp $
+;;;;; $Id: ansaphone.el,v 44.13 2009-03-08 12:20:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -44,7 +44,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: ansaphone.el,v 44.12 2003-01-08 00:33:14 byers Exp $\n"))
+	      "$Id: ansaphone.el,v 44.13 2009-03-08 12:20:11 byers Exp $\n"))
 
 (defconst lyskom-ansaphone-tag "Auto-reply:\n")
 
@@ -104,14 +104,14 @@ See `kom-toggle-auto-reply' and `kom-ansaphone-record-messages'."
       (lyskom-format-insert (lyskom-get-string 'ansaphone-no-messages))
     (progn
       (lyskom-format-insert (lyskom-get-string 'ansaphone-message-list-start))
-      (mapcar (function
-               (lambda (msg)
-                 (lyskom-show-personal-message 
-                  (blocking-do 'get-conf-stat (elt msg 0))
-                  (blocking-do 'get-conf-stat (elt msg 1))
-                  (elt msg 2)
-                  (elt msg 3)
-                  'nobeep)))
+      (mapc (function
+             (lambda (msg)
+               (lyskom-show-personal-message 
+                (blocking-do 'get-conf-stat (elt msg 0))
+                (blocking-do 'get-conf-stat (elt msg 1))
+                (elt msg 2)
+                (elt msg 3)
+                'nobeep)))
               (reverse lyskom-ansaphone-messages))
       (lyskom-format-insert (lyskom-get-string 'ansaphone-message-list-end)))))
 

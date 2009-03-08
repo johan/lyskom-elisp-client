@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: completing-read.el,v 44.57 2007-07-11 11:14:57 byers Exp $
+;;;;; $Id: completing-read.el,v 44.58 2009-03-08 12:20:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 (setq lyskom-clientversion-long 
       (concat
        lyskom-clientversion-long
-       "$Id: completing-read.el,v 44.57 2007-07-11 11:14:57 byers Exp $\n"))
+       "$Id: completing-read.el,v 44.58 2009-03-08 12:20:12 byers Exp $\n"))
 
 (defvar lyskom-name-hist nil)
 
@@ -1028,7 +1028,7 @@ the LysKOM rules of string matching."
 
     (lyskom-save-excursion
      (set-buffer lyskom-buffer)
-     (mapcar
+     (mapc
       (function 
        (lambda (x)
          (cond ((>= (aref x 0) (aref x 1))

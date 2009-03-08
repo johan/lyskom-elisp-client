@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.72 2008-05-11 06:17:21 byers Exp $
+;;;;; $Id: review.el,v 44.73 2009-03-08 12:20:14 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.72 2008-05-11 06:17:21 byers Exp $\n"))
+	      "$Id: review.el,v 44.73 2009-03-08 12:20:14 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1695,10 +1695,10 @@ all review-related functions."
   (cond
    (lyskom-last-review-comments
     (unless kom-review-uses-cache
-      (mapcar 'cache-del-text-stat lyskom-last-review-comments))
+      (mapc 'cache-del-text-stat lyskom-last-review-comments))
     (lyskom-review-comments
      (let ((collector (make-collector)))
-       (mapcar (lambda (text-no)
+       (mapc (lambda (text-no)
                  (initiate-get-text-stat 'main
                                          'collector-push
                                          text-no
@@ -1961,11 +1961,12 @@ This command accepts text number prefix arguments \(see
 `lyskom-read-text-no-prefix-arg')."
   (interactive (list (lyskom-read-text-no-prefix-arg 'review-rot13-q)))
   (if text-no
-      (let ((kom-view-text-hook kom-view-text-hook))
-        (unless kom-review-uses-cache (cache-del-text-stat text-no))
-	(add-hook 'kom-view-text-hook 'lyskom-filter-rot13)
-        (lyskom-view-text text-no)
-	)
+      (unwind-protect
+          (progn (add-hook 'kom-view-text-hook 'lyskom-filter-rot13)
+                 (unless kom-review-uses-cache (cache-del-text-stat text-no))
+                 (lyskom-view-text text-no))
+        (remove-hook 'kom-view-text-hook 'lyskom-filter-rot13)
+        (remove-hook 'kom-view-text-hook 'lyskom-filter-rot13 t))
     (lyskom-insert 'confusion-what-to-view)))
 
 (defun lyskom-review-get-priority ()

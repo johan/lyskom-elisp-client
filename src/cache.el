@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: cache.el,v 44.14 2003-11-17 21:03:48 byers Exp $
+;;;;; $Id: cache.el,v 44.15 2009-03-08 12:20:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: cache.el,v 44.14 2003-11-17 21:03:48 byers Exp $\n"))
+	      "$Id: cache.el,v 44.15 2009-03-08 12:20:11 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -290,7 +290,7 @@ CACHE is the name of the variable that points to the cache."
 
 
 (defun clear-all-caches ()
-  (mapcar (function (lambda (cache) (set cache nil)))
+  (mapc (function (lambda (cache) (set cache nil)))
 	  lyskom-caches)
   (setq lyskom-caches nil))
 
