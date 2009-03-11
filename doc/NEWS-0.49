@@ -24,7 +24,6 @@
 
 
 
-
 * Compatibility
 
 ** Emacs 22.x introduced a non-backwards-compatible change and some
@@ -39,8 +38,9 @@
    might still work with older Emacsen, but this has not been tested
    at all.
 
-** XEmacs is probably supported, but this has not been tested
-   properly. Gnus must be installed for the client to work in XEmacs.
+** You can probably use this client in XEmacs, but this has not been
+   tested properly. Gnus must be installed for the client to work in
+   XEmacs.
 
 
 
@@ -52,43 +52,90 @@
    Swedish name: Återse fler kommentarer [å a y]
    English name: Review more comments [r a M]
 
-** kom-befriend
+** kom-befriend: Adds a person to the kom-friends list.
 
-** kom-moronify
+   Swedish name: Lägg på vänner/bekanta-listan
+   English name: Add to friend list
 
-** kom-review-all-roots
+** kom-moronify: Adds a person to the kom-morons list.
 
-** kom-unread-all-roots
+   Swedish name: Lägg till idiot/knäppskalle-listan
+   English name: Add to morons list
 
-** kom-review-first-roots
+** kom-review-all-roots: Find all roots (texts that are not comments
+   to anything) in a conference.
 
-** kom-unread-first-roots
+   Swedish name: Oläsmarkera alla urinlägg [å A]
+   English name: Review all roots [r A]
 
-** kom-review-roots-by-to
+** kom-unread-all-roots: Mark all roots in a conference as unread.
 
-** kom-unread-roots-by-to
+   Swedish name: Oläsmarkera alla [o A]
+   English name: Unread all roots [u A]
 
-** kom-delete-user-area
+** kom-review-first-roots: Review the first several roots in a
+   conference.
 
-** kom-move-comment
+   Swedish name: Återse första urinlägg [å F]
+   English name: Review first roots [r F]
 
-** kom-view-url-in-text
+** kom-unread-first-roots: Mark the first several roots in a
+   conference as unread.
 
+   Swedish name: Oläsmarkera första urinlägg [o F]
+   English name: Unread first roots [u F]
 
+** kom-review-roots-by-to: Review roots by a specific user to a
+   specific conference.
+
+   Swedish name: Återse senaste urinlägg [å S]
+   English name: Review last roots [r L]
+
+** kom-unread-roots-by-to: Mark roots by a specific user to a specific
+   conference as unread.
+
+   Swedish name: Oläsmarkera senaste urinlägg [o S]
+   English name: Unread last roots [r L]
+
+** kom-delete-user-area: Delete the special text containing all saved
+   settings. 
+
+   Swedish name: Ta bort user-arean
+   English name: Remove user area
+
+** kom-move-comment: Move a comment from one text to another (useful
+   if you commented the wrong text).
+
+   Swedish name: Flytta kommentar [f k]
+   English name: Move comment [h c]
+
+** kom-view-url-in-text: Display the first URL in the current text of
+   a LysKOM buffer. With prefix argument, view the Nth URL in the
+   text.
+
+   Swedish name: Visa URL [v u]
+   English name: View URL [v u]
 
 
 
 ** New settings
 
-** kom-ssh-general-errors
+** kom-ssh-general-errors: Regular expression for messages from ssh
+   that indicate that ssh has failed. The default value should be
+   suitable for the most common ssh clients.
 
-** kom-ssh-forwarding-errors
+** kom-ssh-forwarding-errors: Regular expression for messages from ssh
+   that indicate that forwardning has failed. The default value should
+   be suitable for the most common ssh clients.
 
-** kom-respect-ancient-content-types
+** kom-respect-ancient-content-types: Set to non-nil in order to honor
+   content types specified as they were in the bad old days.
 
-** kom-read-related-first
-
-
+** kom-read-related-first: Set to non-nil to try out a new reading
+   mode where the client attempts to stop you from entering a thread
+   in the middle. This mode sometimes results in having to re-read the
+   same texts a lot, and sometimes results in the same text being
+   shown over and over again without end.
 
 
 
@@ -105,7 +152,8 @@
 
 * Other changes worth noting
 
-** The help function now offers help on individual commands.
+** The help function now offers help on individual commands. Help on
+   individual commands is always shown in English.
 
 ** It is possible to completely customize highlighting of conference
    and person names via the kom-highlight-conferences variable. The
