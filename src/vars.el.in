@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.336 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: vars.el.in,v 44.337 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.336 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: vars.el.in,v 44.337 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -4928,11 +4928,6 @@ user with that name.
 Overrides the environment variable `KOMNAME'."
   local)
 
-(def-kom-var lyskom-default-user-name nil
-  "**This variable is reserved for internal use. See 
-`kom-default-user-name' instead."
-  local)
-
 (def-kom-var kom-default-password nil
   "**Default LysKOM password.
 
@@ -4941,7 +4936,7 @@ environment variable `KOMPASSWORD' \(which should never be used)."
   local)
 
 (def-kom-var lyskom-default-password nil
-  "**This variable is resvered for internal use. See 
+  "**This variable is reserved for internal use. See 
 `kom-default-password' instead."
   local)
 

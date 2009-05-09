@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.119 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: startup.el,v 44.120 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.119 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: startup.el,v 44.120 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $\n"))
 
 
 ;;; ================================================================
@@ -90,7 +90,6 @@ clients of the event. See lyskom-mode for details on lyskom."
   (run-hooks 'lyskom-init-hook)
   (setq username
 	(or username 
-	    lyskom-default-user-name
 	    kom-default-user-name
 	    (getenv "KOMNAME")))
   (setq password
@@ -243,8 +242,6 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      (switch-to-buffer buffer)
 	      (lyskom-mode)		;Clearing lyskom-default...
 	      (setq lyskom-buffer buffer)
-	      (setq lyskom-default-user-name username)
-	      (setq lyskom-default-password password)
 	      (setq lyskom-server-name host)
 	      (setq lyskom-server-port port)
 	      (setq lyskom-proc proc)
@@ -348,7 +345,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      ;; Can't use lyskom-end-of-command here.
 	      (setq lyskom-executing-command nil)
 	      ;; Log in
-	      (kom-start-anew t session-priority invisiblep)
+	      (kom-start-anew t session-priority invisiblep username password)
 	      (if (memq lyskom-buffer lyskom-buffer-list)
 		  (while (not (eq lyskom-buffer (car lyskom-buffer-list)))
 		    (setq lyskom-buffer-list
@@ -537,7 +534,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 ;;;                        Start anew
 
 
-(defun kom-start-anew (&optional lyskom-first-time-around session-priority invisiblep)
+(defun kom-start-anew (&optional lyskom-first-time-around session-priority invisiblep username password)
   "Start/login as a new person. If INVISIBLEP is not nil, the login will not be
 shown to other users."
   (interactive)
@@ -560,13 +557,13 @@ shown to other users."
             (while (not new-me)
 
               (if (and lyskom-first-time-around
-                       lyskom-default-user-name)
+                       username)
                   ;; This is nil if we can't find a unique match.
                   (setq new-me
-			(if (integerp lyskom-default-user-name)
-			    lyskom-default-user-name
+			(if (integerp username)
+			    username
 			(conf-z-info->conf-no
-                         (lyskom-lookup-conf-by-name lyskom-default-user-name
+                         (lyskom-lookup-conf-by-name username
                                                      '(pers))))))
               (if new-me
                   nil
@@ -601,9 +598,8 @@ shown to other users."
                     (lyskom-insert (concat (conf-stat->name conf-stat) "\n"))
                     (setq lyskom-first-time-around nil)
                     (if (blocking-do 'login new-me
-                                     (setq lyskom-default-password
-					   (if lyskom-default-password
-					       lyskom-default-password
+                                     (setq password
+					   (or password
 					     ;; Use password read when creating
 					     ;; the person when loggin in new
 					     ;; users
@@ -648,8 +644,8 @@ shown to other users."
             (unless lyskom-dont-read-user-area
               (setq ignored-user-area-vars (lyskom-read-options)))
 
-	    (unless kom-remember-password
-		(setq lyskom-default-password nil))
+	    (if kom-remember-password
+		(setq lyskom-default-password password))
 
 	    ;Update mode-line string if needed (as early as possible).
 

@@ -1,3 +1,25 @@
+2009-05-09  Pontus Freyhult  <pont@soua.net>
+
+	* vars.el.in (lyskom-default-password): Fixed typo.
+
+	* startup.el (kom-start-anew): Only store password in
+	lyskom-default-password if requested (kom-remember-password),
+	instead of keeping it there and clearing it if not desired..
+
+2009-05-08  Pontus Freyhult  <pont@soua.net>
+
+	* command.el (lyskom-start-of-command): No longer protect obsolete
+	variable lyskom-default-username.
+
+	* vars.el.in (kom-default-password): Removed lyskom-default-username.
+
+	* startup.el (lyskom): Get rid of lyskom-default-username. Pass
+	username and password to kom-start-anew instead.
+
+	* startup.el (kom-start-anew): Use parameter username instead
+	of lyskom-default-username. Use password for input password (if
+	any).
+
 2009-03-08  David Byers  <davby@ida.liu.se>
 
 	Add access to command descriptions:
