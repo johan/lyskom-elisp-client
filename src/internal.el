@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: internal.el,v 44.11 2004-02-12 21:07:52 byers Exp $
+;;;;; $Id: internal.el,v 44.12 2010-05-13 18:14:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: internal.el,v 44.11 2004-02-12 21:07:52 byers Exp $\n"))
+	      "$Id: internal.el,v 44.12 2010-05-13 18:14:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -466,7 +466,7 @@ is sent with each packet. If STRING is longer it is splitted."
 				  (min (length string)
 				       (+ i lyskom-max-packet-size)))))
 	   (if lyskom-debug-communications-to-buffer
-	       (save-excursion
+	       (save-current-buffer
 		 (set-buffer (get-buffer-create 
 			      lyskom-debug-communications-to-buffer-buffer))
 		 (save-excursion

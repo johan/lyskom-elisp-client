@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands1.el,v 44.236 2009-03-08 12:20:11 byers Exp $
+;;;;; $Id: commands1.el,v 44.237 2010-05-13 18:14:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: commands1.el,v 44.236 2009-03-08 12:20:11 byers Exp $\n"))
+	      "$Id: commands1.el,v 44.237 2010-05-13 18:14:09 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1420,7 +1420,7 @@ Don't ask for confirmation."
                               (lyskom-get-string 'ssh-unknown-host))))
           (delete-process proc)
           (when (get-buffer bufname)
-            (save-excursion
+            (save-current-buffer
               (set-buffer bufname)
               (goto-char (point-max))
               (insert "\n--- closed connection ---\n")))))))

@@ -1,8 +1,14 @@
 2010-05-13  David Byers  <davby@ida.liu.se>
 
+	Emacs 24 compatibility
+	* all: replaces many save-excursion with save-current-buffer in
+	order to avoid meaningless warnings in Gnu Emacs 24.1.
+
+	Menus on Macintosh:
 	* menus.el (lyskom-menu-encoding-rules): Applied patch from Mårten
 	Svensson for bug 1655.
 
+	Handle root review of root texts:
 	* view-text.el (lyskom-get-root-text-belongs-to): In node
 	transform, explicitly look in the cache (it's faster), and pass
 	text-no, not text-stat to lyskom-find-dag-roots.
@@ -11,6 +17,7 @@
 	in the cache (it's faster), and pass text-no, not text-stat to
 	lyskom-find-dag-roots. 
 
+	Improve handing of startup compatbility check:
 	* utilities.el (lyskom-check-configuration): Also look at
 	mime-charset.
 	(lyskom-magic-minibuffer-post-command): Check that

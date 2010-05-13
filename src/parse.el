@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: parse.el,v 44.62 2007-06-09 11:04:54 byers Exp $
+;;;;; $Id: parse.el,v 44.63 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: parse.el,v 44.62 2007-06-09 11:04:54 byers Exp $\n"))
+	      "$Id: parse.el,v 44.63 2010-05-13 18:14:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1174,8 +1174,8 @@ i.e creates the buffer, sets all markers and pointers."
 		 "-replies")))
   (lyskom-set-buffer-parent lyskom-unparsed-buffer lyskom-buffer)
   (lyskom-update-inherited-variables lyskom-unparsed-buffer)
-  (save-excursion (set-buffer lyskom-unparsed-buffer)
-		  (lyskom-set-buffer-multibyte nil))
+  (save-current-buffer (set-buffer lyskom-unparsed-buffer)
+                       (lyskom-set-buffer-multibyte nil))
   (setq lyskom-unparsed-marker 
 	(lyskom-save-excursion
 	 (let ((proc lyskom-proc))

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: commands2.el,v 44.229 2009-03-08 14:33:18 byers Exp $
+;;;;; $Id: commands2.el,v 44.230 2010-05-13 18:14:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-              "$Id: commands2.el,v 44.229 2009-03-08 14:33:18 byers Exp $\n"))
+              "$Id: commands2.el,v 44.230 2010-05-13 18:14:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1626,7 +1626,7 @@ If optional second argument MAY-BE-DEAD is non-nil, this function returns t
 whether the session is alive or not. Otherwise it checks that the session
 is alive."
   (when (buffer-live-p buf)
-    (save-excursion
+    (save-current-buffer
       (set-buffer buf)
       (and (eq major-mode 'lyskom-mode)
            (boundp 'lyskom-proc)
@@ -1767,7 +1767,7 @@ See `kom-next-kom' and `kom-previous-kom' for related commands."
   (when lyskom-sessions-with-unread
     (let ((unreads
            (mapcar (lambda (buffer)
-                     (save-excursion
+                     (save-current-buffer
                        (set-buffer buffer)
                        (vector
                         (lyskom-format "%#1P, %#2s%#3?b%[ (%#4s)%]%[%]"
@@ -2378,10 +2378,10 @@ This command accepts text number prefix arguments \(see
 
 (defun lyskom-keep-alive-callback (buffer)
   (condition-case nil
-    (save-excursion (set-buffer buffer)
-                    (if (eq (process-status lyskom-proc) 'open)
-                        (initiate-get-time 'keep nil)
-                      (lyskom-stop-keep-alive)))
+    (save-current-buffer (set-buffer buffer)
+                         (if (eq (process-status lyskom-proc) 'open)
+                             (initiate-get-time 'keep nil)
+                           (lyskom-stop-keep-alive)))
     (error (lyskom-stop-keep-alive))))
 
 (def-kom-command kom-keep-alive ()

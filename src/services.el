@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: services.el,v 44.50 2007-11-10 09:53:50 byers Exp $
+;;;;; $Id: services.el,v 44.51 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -32,7 +32,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: services.el,v 44.50 2007-11-10 09:53:50 byers Exp $\n"))
+	      "$Id: services.el,v 44.51 2010-05-13 18:14:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -1410,12 +1410,10 @@ or get-text-stat."
   ;; Here we could check if lyskom-blocking-return is non-nil, in
   ;; which case there is a bug in the code
 
-  (save-excursion
-    (set-buffer (or lyskom-buffer
-                    (process-buffer lyskom-proc)))
+  (save-current-buffer
+    (set-buffer (or lyskom-buffer (process-buffer lyskom-proc)))
     ;; If this happens, we're in trouble
-    (if lyskom-is-parsing
-	(lyskom-really-serious-bug))
+    (if lyskom-is-parsing (lyskom-really-serious-bug))
 
     (let ((lyskom-blocking-return 'not-yet-gotten))
       ;; This should not be necessary, but for robustness sake...
@@ -1446,7 +1444,7 @@ or get-text-stat."
 
 (defun lyskom-wait-queue (queue)
   "Waits until all data on QUEUE has been processed"
-  (save-excursion
+  (save-current-buffer
     (set-buffer (or lyskom-buffer
                     (process-buffer lyskom-proc)))
     (let ((collector (make-collector)))
@@ -1469,12 +1467,10 @@ or get-text-stat."
   "Return from blocking-do-multiple")
 
 (defun lyskom-blocking-do-multiple (call-list)
-  (save-excursion
-    (set-buffer (or lyskom-buffer
-                    (process-buffer lyskom-proc)))
+  (save-current-buffer
+    (set-buffer (or lyskom-buffer (process-buffer lyskom-proc)))
     ;; If this happens, we're in trouble
-    (if lyskom-is-parsing
-	(lyskom-really-serious-bug))
+    (if lyskom-is-parsing (lyskom-really-serious-bug))
     
     (let ((lyskom-multiple-blocking-return 'not-yet-gotten))
       (setq lyskom-ok-to-send-new-calls t)

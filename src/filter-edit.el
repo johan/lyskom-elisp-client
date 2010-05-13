@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: filter-edit.el,v 44.19 2007-06-09 11:04:53 byers Exp $
+;;;;; $Id: filter-edit.el,v 44.20 2010-05-13 18:14:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: filter-edit.el,v 44.19 2007-06-09 11:04:53 byers Exp $\n"))
+	      "$Id: filter-edit.el,v 44.20 2010-05-13 18:14:10 byers Exp $\n"))
 
 
 (defvar filter-edit-currently-edited-filter-entry-list nil
@@ -734,8 +734,7 @@ If NOERROR is non-nil, return nil instead of signaling an error."
                      xtemporary-list
                    xpermanent-list)))
       (setq e (cdr e)))
-    (save-excursion
-      (set-buffer lyskom-buffer)
+    (lyskom-with-lyskom-buffer
       (setq lyskom-filter-list 
             (append
              (setq kom-permanent-filter-list (nreverse xpermanent-list))

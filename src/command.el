@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: command.el,v 44.59 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: command.el,v 44.60 2010-05-13 18:14:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: command.el,v 44.59 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: command.el,v 44.60 2010-05-13 18:14:09 byers Exp $\n"))
 
 
 ;;; ======================================================================
@@ -682,8 +682,8 @@ chosen according to this"
     (run-hooks 'lyskom-after-command-hook)
     (when (and (lyskom-have-feature idle-time)
                (not lyskom-is-anonymous))
-      (save-excursion (set-buffer lyskom-buffer)
-                      (initiate-user-active 'background nil)))
+      (lyskom-with-lyskom-buffer
+        (initiate-user-active 'background nil)))
     (if kom-inhibit-typeahead
         (discard-input))
     ;; lyskom-pending-commands should probably be a queue or a stack.

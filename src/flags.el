@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: flags.el,v 44.46 2009-03-08 12:20:12 byers Exp $
+;;;;; $Id: flags.el,v 44.47 2010-05-13 18:14:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: flags.el,v 44.46 2009-03-08 12:20:12 byers Exp $\n"))
+	      "$Id: flags.el,v 44.47 2010-05-13 18:14:10 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -75,7 +75,7 @@ settings and save them to your emacs init file."
   (interactive)
   (let* ((completions
           (mapcar (lambda (x)
-                    (cons (save-excursion
+                    (cons (save-current-buffer
                             (set-buffer x)
                             (buffer-name))
                           x))
@@ -205,7 +205,7 @@ settings and save them to your emacs init file."
                                 (memq t (mapcar 'lyskom-multibyte-string-p 
                                                 lyskom-other-clients-user-areas)))
           (when error-message (lyskom-message "%s" error-message)))
-      (save-excursion
+      (save-current-buffer
         (set-buffer kombuf)
         (when start-message (lyskom-message "%s" start-message))
         (initiate-create-text
@@ -246,14 +246,14 @@ settings and save them to your emacs init file."
              (initiate-set-user-area 'options 'lyskom-save-options-3
                                      lyskom-pers-no text-no kombuf 
                                      done-message error-message text-no))
-    (save-excursion
+    (save-current-buffer
      (set-buffer kombuf)
      (lyskom-insert-string 'could-not-save-options)
      (lyskom-message "%s" (lyskom-get-string 'could-not-save-options)))))
 
 (defun lyskom-save-options-3 (success kombuf done-message
                                       error-message text-no)
-  (save-excursion
+  (save-current-buffer
     (set-buffer kombuf)
     (if success
         (let ((pers-stat (cache-get-pers-stat lyskom-pers-no)))
@@ -276,7 +276,7 @@ If optional PORTABLE-ONLY is non-nil, skip variables marked non-portable."
   (if (and lyskom-pers-no
 	   (not (zerop lyskom-pers-no)))
       (let ((pers-stat 
-             (save-excursion
+             (save-current-buffer
                (when buffer (set-buffer buffer))
                (blocking-do 'get-pers-stat lyskom-pers-no))))
 	(if (not pers-stat)             ;+++ Other error handler.
@@ -289,7 +289,7 @@ If optional PORTABLE-ONLY is non-nil, skip variables marked non-portable."
 		(setq lyskom-options-done t)
                 nil)
 	    (lyskom-read-options-eval 
-             (save-excursion
+             (save-current-buffer
                (when buffer (set-buffer buffer))
                (blocking-do 'get-text
                             (pers-stat->user-area pers-stat)))

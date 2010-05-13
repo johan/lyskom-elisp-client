@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: talkback.el,v 44.5 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: talkback.el,v 44.6 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: talkback.el,v 44.5 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: talkback.el,v 44.6 2010-05-13 18:14:12 byers Exp $\n"))
 
 (defvar kom-bug-report-address "kom@lysator.liu.se")
 
@@ -53,7 +53,7 @@
                                           (let* ((buffer (generate-new-buffer " *Backtrace*"))
                                                  (standard-output buffer))
                                             (backtrace)
-                                            (prog1 (save-excursion
+                                            (prog1 (save-current-buffer
                                                      (set-buffer buffer)
                                                      (buffer-string))
                                               (kill-buffer buffer)))
@@ -67,19 +67,20 @@
     (insert "\n\nRecent messages:\n")
     (if message-buf
         (insert-buffer-substring message-buf
-                                 (save-excursion
+                                 (save-current-buffer
                                    (set-buffer message-buf)
-                                   (goto-char (point-max))
-                                   (forward-line -10)
-                                   (point))
-                                  (save-excursion
+                                   (save-excursion
+                                     (goto-char (point-max))
+                                     (forward-line -10)
+                                     (point)))
+                                  (save-current-buffer
                                     (set-buffer message-buf)
                                     (point-max))))))
 
 
 (defun lyskom-insert-bug-report ()
   (insert 
-   (save-excursion 
+   (save-current-buffer
      (set-buffer lyskom-buffer)
      (let ((v lyskom-server-version-info))
        (format "\
@@ -140,7 +141,7 @@ make any conclusions of your own.
    
     (mapatoms 
      (lambda (var)
-       (when (and (save-excursion (set-buffer lyskom-buffer) (boundp var))
+       (when (and (save-current-buffer (set-buffer lyskom-buffer) (boundp var))
                   (or (string-match "^\\(lys\\)?kom" (symbol-name var))))
          (message "Collecting system information...%s" var)
          (insert (format "(%s " var))

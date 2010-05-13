@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.172 2010-05-13 07:29:36 byers Exp $
+;;;;; $Id: utilities.el,v 44.173 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.172 2010-05-13 07:29:36 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.173 2010-05-13 18:14:12 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -647,7 +647,7 @@ The value is actually the element of LIST whose car equals KEY."
 
 (defun lyskom-set-default (sym val)
   "Set the value of SYM in the LysKOM buffer to VAL."
-  (save-excursion
+  (save-current-buffer
     (set-buffer (or (and (boundp 'lyskom-buffer)
                          (bufferp lyskom-buffer)
                          (buffer-live-p lyskom-buffer)
@@ -657,7 +657,7 @@ The value is actually the element of LIST whose car equals KEY."
 
 (defun lyskom-default-value (sym)
   "Get the value of SYM in the LysKOM buffer"
-  (save-excursion
+  (save-current-buffer
     (set-buffer (or (and (boundp 'lyskom-buffer)
                          (bufferp lyskom-buffer)
                          (buffer-live-p lyskom-buffer)
@@ -667,7 +667,7 @@ The value is actually the element of LIST whose car equals KEY."
 
 (defun lyskom-default-value-safe (sym)
   "Get the value of SYM in the LysKOM buffer"
-  (save-excursion
+  (save-current-buffer
     (set-buffer (or (and (boundp 'lyskom-buffer)
                          (bufferp lyskom-buffer)
                          (buffer-live-p lyskom-buffer)
@@ -989,7 +989,7 @@ comparison. Comparison is done with eq."
 (defun lyskom-run-hook-with-args (hook &rest args)
   "Run HOOK with the specified arguments ARGS in the LysKOM buffer.
 See run-hook-with-args for detailed information."
-  (lyskom-save-excursion (set-buffer (or (and (boundp 'lyskom-buffer)
+  (save-current-buffer (set-buffer (or (and (boundp 'lyskom-buffer)
                                               lyskom-buffer)
                                          (current-buffer)))
                   (apply 'run-hook-with-args hook args)))
@@ -999,17 +999,17 @@ See run-hook-with-args for detailed information."
 (defun lyskom-add-hook (hook function &optional append)
   "Add to the value of HOOK the function FUNCTION in the LysKOM buffer.
 If optional APPEND is non-nil, add at the end of HOOK."
-  (save-excursion (set-buffer (or (and (boundp 'lyskom-buffer)
+  (save-current-buffer (set-buffer (or (and (boundp 'lyskom-buffer)
                                        lyskom-buffer)
                                   (current-buffer)))
                   (add-hook hook function append t)))
 
 (defun lyskom-remove-hook (hook function)
   "From the value of HOOK remove the function FUNCTION in the LysKOM buffer."
-  (save-excursion (set-buffer (or (and (boundp 'lyskom-buffer)
-                                       lyskom-buffer)
-                                  (current-buffer)))
-                  (remove-hook hook function t)))
+  (save-current-buffer (set-buffer (or (and (boundp 'lyskom-buffer)
+                                            lyskom-buffer)
+                                       (current-buffer)))
+                       (remove-hook hook function t)))
 
 
 
@@ -1277,8 +1277,7 @@ TIME defaults to the current client time."
   "Return the number of unread texts in CONF-NO.
 If this function is unable to calculate the number of unread texts it will
 return nil."
-  (save-excursion
-   (set-buffer lyskom-buffer)
+  (lyskom-with-lyskom-buffer
    (let ((rlist (read-list->all-entries lyskom-to-do-list))
          (found nil))
      (while (and (not found) rlist)
@@ -2174,9 +2173,9 @@ reflects an override of the value by the value of TAG."
 ;;; that mangles the initial input appropriately.
 ;;;
 
-(defvar lyskom-minibuffer-point)
-(defvar lyskom-minibuffer-string)
-(defvar lyskom-minibuffer-do-change)
+(defvar lyskom-minibuffer-point nil)
+(defvar lyskom-minibuffer-string nil)
+(defvar lyskom-minibuffer-do-change nil)
 
 (defun lyskom-magic-minibuffer-pre-command (&rest args)
   "Save current status of the minibuffer for later magic."
@@ -2203,7 +2202,8 @@ happens when the user enters something in the minibuffer.
 If point has moved, disable magic. This happens either after we
 delete the initial contents (which is OK) or after the user moves
 point without altering the buffer contents."
-  (when (and lyskom-minibuffer-do-change
+  (when (and (boundp 'lyskom-minibuffer-do-change)
+             lyskom-minibuffer-do-change
              (not (equal (buffer-string) lyskom-minibuffer-string)))
     (let ((ranges nil)
           (tmp nil)
@@ -2343,7 +2343,7 @@ suitable for use as initial input in a magic minibuffer."
             (null val))
     (lyskom-traverse-buffer-hierarchy
      (lambda (buf)
-       (save-excursion
+       (save-current-buffer
          (set-buffer buf)
          (make-local-variable 'lyskom-server-uses-utc)
          (setq lyskom-server-uses-utc val)))

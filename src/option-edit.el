@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: option-edit.el,v 44.123 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: option-edit.el,v 44.124 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: option-edit.el,v 44.123 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: option-edit.el,v 44.124 2010-05-13 18:14:12 byers Exp $\n"))
 
 (lyskom-external-function widget-default-format-handler)
 (lyskom-external-function popup-mode-menu)
@@ -335,7 +335,7 @@
 customize buffer but do not save them to the server."
   (interactive)
   (let ((tmp lyskom-widgets))
-    (save-excursion
+    (save-current-buffer
       (set-buffer lyskom-buffer)
       (when (listp kom-dont-read-saved-variables)
         (setq kom-dont-read-saved-variables nil))
@@ -356,7 +356,7 @@ customize buffer but do not save them to the server."
 
 (defun lyskom-customize-send ()
   "Save variables to the server"
-  (save-excursion
+  (save-current-buffer
     (set-buffer lyskom-buffer)
     (lyskom-save-options (current-buffer)
                          (lyskom-get-string 'saving-settings)
@@ -364,18 +364,17 @@ customize buffer but do not save them to the server."
                          (lyskom-get-string 'could-not-save-options))
     (let ((var-list nil))
       (mapc
-       (function 
-        (lambda (e)
-          (when (and (vectorp e)
-                     (symbolp (elt e 0))
-                     (or 
-                      (and (not (memq (elt e 0) lyskom-elisp-variables))
-                           (not (lyskom-flag-global-variable-from-elisp (elt e 0))))
-                      (memq (elt e 0) kom-dont-read-saved-variables))
-                     (boundp (elt e 0)))
-            (setq var-list (cons (cons (elt e 0)
-                                       (symbol-value (elt e 0)))
-                                 var-list)))))
+       (lambda (e)
+         (when (and (vectorp e)
+                    (symbolp (elt e 0))
+                    (or 
+                     (and (not (memq (elt e 0) lyskom-elisp-variables))
+                          (not (lyskom-flag-global-variable-from-elisp (elt e 0))))
+                     (memq (elt e 0) kom-dont-read-saved-variables))
+                    (boundp (elt e 0)))
+           (setq var-list (cons (cons (elt e 0)
+                                      (symbol-value (elt e 0)))
+                                var-list))))
        lyskom-customize-buffer-format)
 
       (let* ((actual-save-options-init-file
@@ -390,7 +389,7 @@ customize buffer but do not save them to the server."
                                   actual-save-options-init-file))
              (init-output-marker nil))
 
-        (save-excursion
+        (save-current-buffer
           (set-buffer init-output-buffer)
           ;;
           ;; Find and delete the previously saved data, and position to write.
@@ -425,7 +424,7 @@ customize buffer but do not save them to the server."
       (princ ";;; End of LysKOM Settings\n"))
 
     (set-marker init-output-marker nil)
-    (save-excursion
+    (save-current-buffer
       (set-buffer init-output-buffer)
       (save-buffer))
     ))))
@@ -500,7 +499,7 @@ All key bindings:
   (mapc (function
            (lambda (variable)
              (widget-value-set (cdr variable)
-                               (save-excursion
+                               (save-current-buffer
                                  (set-buffer lyskom-buffer)
                                  (symbol-value (car variable))))))
           lyskom-widgets)
@@ -521,11 +520,11 @@ All key bindings:
         (progn
           (lyskom-start-of-command 'kom-customize)
           (sit-for 0)
-          (save-excursion
+          (save-current-buffer
             (set-buffer buf)
             (lyskom-customize-mode))
            (lyskom-display-buffer buf))
-      (save-excursion
+      (save-current-buffer
         (set-buffer lyskom-buffer)
         (lyskom-end-of-command)))
     (goto-char (point-min))))
@@ -567,7 +566,7 @@ All key bindings:
 
 
 (defun lyskom-custom-get-value (var)
-  (save-excursion
+  (save-current-buffer
     (set-buffer lyskom-buffer)
     (symbol-value var)))
 
@@ -1057,8 +1056,8 @@ All key bindings:
          (tag-sym (intern (concat (symbol-name variable) "-tag")))
          (doc-sym (intern (concat (symbol-name variable) "-doc")))
          (help-sym (intern (concat (symbol-name variable) "-help")))
-         (value (save-excursion (set-buffer lyskom-buffer)
-                                (symbol-value variable)))
+         (value (save-current-buffer (set-buffer lyskom-buffer)
+                                     (symbol-value variable)))
          (storage-widget nil))
 
     (lyskom-ignore value help-sym dummy)       ; Are they ever used?
@@ -1629,7 +1628,7 @@ All key bindings:
 
 (defun lyskom-widget-name-action (widget &optional event)
   (widget-value-set widget
-                    (save-excursion
+                    (save-current-buffer
                       (set-buffer lyskom-buffer)
                       (lyskom-read-conf-no
                        (lyskom-custom-string
@@ -1656,7 +1655,7 @@ All key bindings:
   (let* ((size (widget-get widget ':size))
          (value (widget-get widget ':value))
          (from (point))
-         (string (save-excursion
+         (string (save-current-buffer
                    (set-buffer lyskom-buffer)
                    (cond ((or (null value) (eq 0 value)) "")
                          (t (or (conf-stat->name
@@ -1714,7 +1713,7 @@ All key bindings:
 
 (defun lyskom-widget-command-action (widget &optional event)
   (widget-value-set widget
-		    (save-excursion
+		    (save-current-buffer
 		      (set-buffer lyskom-buffer)
 		      (lyskom-read-extended-command nil (concat 
                                                          (widget-get widget ':tag)
@@ -1725,7 +1724,7 @@ All key bindings:
   (let* ((size (widget-get widget ':size))
          (value (widget-get widget ':value))
          (from (point))
-         (string (save-excursion
+         (string (save-current-buffer
                    (set-buffer lyskom-buffer)
                    (cond ((null value) "")
                          (t (or (lyskom-try-get-string value 'lyskom-command)

@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: keyboard-menu.el,v 44.8 2009-03-08 12:20:12 byers Exp $
+;;;;; $Id: keyboard-menu.el,v 44.9 2010-05-13 18:14:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: keyboard-menu.el,v 44.8 2009-03-08 12:20:12 byers Exp $\n"))
+	      "$Id: keyboard-menu.el,v 44.9 2010-05-13 18:14:11 byers Exp $\n"))
 
 (defvar lyskom-keyboard-menu-menu)
 (defvar lyskom-keyboard-menu-buffer)
@@ -218,7 +218,7 @@ Returns the selected string."
   (let* ((menu (lyskom-keyboard-menu-frob-table table))
          (buffer (get-buffer-create "*Keyboard menu*"))
          (menu-window-height 0))
-    (save-excursion
+    (save-current-buffer
 
       ;; Format the buffer
 

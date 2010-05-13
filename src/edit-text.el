@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: edit-text.el,v 44.133 2009-03-08 12:20:12 byers Exp $
+;;;;; $Id: edit-text.el,v 44.134 2010-05-13 18:14:10 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: edit-text.el,v 44.133 2009-03-08 12:20:12 byers Exp $\n"))
+	      "$Id: edit-text.el,v 44.134 2010-05-13 18:14:10 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -297,9 +297,6 @@ NUMBER is the number of the person. Used if the conf-stat is nil."
   (if text-stat
       (let ((mx-from (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 17)))
             (mx-author (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 16))))
-        
-       
-
         (lyskom-edit-insert-commented-author 
          (if (or mx-from mx-author)
              (lyskom-format-mx-author mx-from mx-author)
@@ -659,16 +656,7 @@ This runs `kom-send-text-hook' and (for backwards compatibility)
      (lyskom-beep kom-ding-on-no-subject)
      (if (cdr-safe (cdr-safe err))
 	 (goto-char (car-safe (cdr-safe (cdr-safe err)))))
-     (lyskom-message "%s" (lyskom-get-string (car (cdr err))))
-     (condition-case nil
-         (let ((text ""))
-           (save-excursion
-             (set-buffer lyskom-buffer)
-             (if (and (string= "kom.lysator.liu.se" lyskom-server-name)
-                      (eq lyskom-pers-no 698))
-                 (setq text "Ärende, IDI!")))
-           (save-excursion (insert text)))
-       (error nil)))
+     (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))
     (lyskom-unknown-header
      (lyskom-message "%s" (lyskom-get-string (car (cdr err)))))))
 
@@ -795,8 +783,7 @@ Cannot be called from a callback."
          (collector (make-collector))
          (extra-headers nil)
          (buffer (current-buffer))
-         (me (save-excursion (set-buffer lyskom-buffer)
-                             lyskom-pers-no))
+         (me (lyskom-with-lyskom-buffer lyskom-pers-no))
          (num-me 0)
          (num-real-recpt 0))
     (lyskom-ignore text-stat)       ; Have no idea if its ever used...
@@ -837,15 +824,14 @@ Cannot be called from a callback."
     ;; Check for new comments
     ;;
 
-    (when (save-excursion (set-buffer lyskom-buffer)
-                          (cond ((null kom-check-for-new-comments) nil)
-                                ((functionp kom-check-for-new-comments)
-                                 (funcall kom-check-for-new-comments
-                                          buffer misc-list subject))
-                                (t t)))
+    (when (lyskom-with-lyskom-buffer
+            (cond ((null kom-check-for-new-comments) nil)
+                  ((functionp kom-check-for-new-comments)
+                   (funcall kom-check-for-new-comments
+                            buffer misc-list subject))
+                  (t t)))
       (lyskom-message "%s" (lyskom-format 'checking-comments))
-      (save-excursion
-        (set-buffer lyskom-buffer)
+      (lyskom-with-lyskom-buffer
         (set-collector->value collector nil)
 
         (mapc (lambda (text-stat)
@@ -967,7 +953,7 @@ Cannot be called from a callback."
                                                "lyskom-enriched" 
                                                t)))
             (unwind-protect
-                (save-excursion
+                (save-current-buffer
                   (set-buffer buf)
                   (insert lyskom-edit-text)
                   (goto-char (point-min))
@@ -978,8 +964,7 @@ Cannot be called from a callback."
                                    (replace-in-string (buffer-substring (point) (point-max))
                                                       "<<" "<" t)
                                    lyskom-edit-text))
-                             (save-excursion
-                               (set-buffer lyskom-buffer)
+                             (lyskom-with-lyskom-buffer
                                (lyskom-j-or-n-p 
                                 (lyskom-get-string 'send-formatted))))
                     (setq lyskom-edit-text (buffer-substring (point) (point-max)))
@@ -1131,7 +1116,7 @@ info node in a LysKOM text."
   (interactive)
   (condition-case nil
       (let ((link nil))
-        (save-excursion
+        (save-current-buffer
           (set-buffer (get-buffer "*info*"))
           (setq link (format "*Note %s: (%s)%s,"
                              Info-current-node
@@ -1206,7 +1191,7 @@ text was."
 
 
 (defun lyskom-edit-move-recipients (conf-stat insert-at edit-buffer)
-  (save-excursion
+  (save-current-buffer
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (subject (lyskom-text-headers->subject headers))
@@ -1236,11 +1221,11 @@ text was."
                          miscs)))))
 
       (lyskom-edit-replace-headers subject (cons 'MISC-LIST miscs) aux-list))))
-                                  
+
 
 
 (defun lyskom-edit-do-add-recipient/copy (recpt-type recpt-no edit-buffer)
-  (save-excursion
+  (save-current-buffer
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (miscs (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))
@@ -1264,54 +1249,54 @@ RECPT-TYPE is the type of recipient to add."
 	(insert-at (point-min-marker))
 	(conf-stat (lyskom-read-conf-stat prompt '(all) nil nil t)))
     (lyskom-save-excursion
-     (save-excursion
-     (set-buffer lyskom-buffer)
-     ;; +++ The information about msg-of-day might be old. We should
-     ;; make sure it is up-to-date.
+     (save-current-buffer
+       (set-buffer lyskom-buffer)
+       ;; +++ The information about msg-of-day might be old. We should
+       ;; make sure it is up-to-date.
 
-     (let ((text-no (conf-stat->msg-of-day conf-stat))
-           (win-config nil)
-           (text nil)
-           (text-stat nil)
-           (collector (make-collector)))
+       (let ((text-no (conf-stat->msg-of-day conf-stat))
+             (win-config nil)
+             (text nil)
+             (text-stat nil)
+             (collector (make-collector)))
 
-       (unless (zerop text-no)
-         (initiate-get-text 'edit 'collector-push text-no collector)
-         (initiate-get-text-stat 'edit 'collector-push text-no collector)
-         (lyskom-wait-queue 'edit)
-         (setq text-stat (elt (collector->value collector) 0))
-         (setq text (elt (collector->value collector) 1)))
+         (unless (zerop text-no)
+           (initiate-get-text 'edit 'collector-push text-no collector)
+           (initiate-get-text-stat 'edit 'collector-push text-no collector)
+           (lyskom-wait-queue 'edit)
+           (setq text-stat (elt (collector->value collector) 0))
+           (setq text (elt (collector->value collector) 1)))
 
-       (when (or (null text)
-                 (null text-stat)
-                 (null (get-buffer-window edit-buffer))
-                 (progn (setq win-config (current-window-configuration))
-                        (with-output-to-temp-buffer "*Motd*"
-                          (lyskom-princ
-                           (lyskom-format 'conf-has-motd-no
-                                          (text->text-no text)
-                                          (text->decoded-text-mass text 
-                                                                   text-stat))))
-                        (j-or-n-p (lyskom-get-string 'still-want-to-add))))
+         (when (or (null text)
+                   (null text-stat)
+                   (null (get-buffer-window edit-buffer))
+                   (progn (setq win-config (current-window-configuration))
+                          (with-output-to-temp-buffer "*Motd*"
+                            (lyskom-princ
+                             (lyskom-format 'conf-has-motd-no
+                                            (text->text-no text)
+                                            (text->decoded-text-mass text 
+                                                                     text-stat))))
+                          (j-or-n-p (lyskom-get-string 'still-want-to-add))))
 
-         (when (and kom-confirm-add-recipients
-                    (eq recpt-type 'RECPT)
-                    (not (lyskom-j-or-n-p (lyskom-format
-                                           'really-add-as-recpt-q
-                                           conf-stat))))
-           (setq recpt-type 'CC-RECPT))
+           (when (and kom-confirm-add-recipients
+                      (eq recpt-type 'RECPT)
+                      (not (lyskom-j-or-n-p (lyskom-format
+                                             'really-add-as-recpt-q
+                                             conf-stat))))
+             (setq recpt-type 'CC-RECPT))
 
-         (if what-to-do
-	     (funcall what-to-do conf-stat insert-at edit-buffer)
-           (lyskom-edit-do-add-recipient/copy recpt-type
-                                              (conf-stat->conf-no conf-stat)
-                                              edit-buffer)))
-       (when win-config (set-window-configuration win-config))))
+           (if what-to-do
+               (funcall what-to-do conf-stat insert-at edit-buffer)
+             (lyskom-edit-do-add-recipient/copy recpt-type
+                                                (conf-stat->conf-no conf-stat)
+                                                edit-buffer)))
+         (when win-config (set-window-configuration win-config))))
      (set-marker insert-at nil))))
 
 (defun lyskom-edit-sub-recipient/copy (recpt-no edit-buffer)
   "Remove the recipient having RECPT-NO from EDIT-BUFFER"
-  (save-excursion
+  (save-current-buffer
     (set-buffer edit-buffer)
     (let* ((headers (lyskom-edit-parse-headers))
            (miscs (lyskom-edit-translate-headers (lyskom-text-headers->misc-info headers)))
@@ -1452,28 +1437,28 @@ link as a string."
 
 (defun lyskom-edit-toggle-secret-aux (buf arg text)
   (interactive)
-  (lyskom-save-excursion
+  (save-current-buffer
     (set-buffer (car arg))
     (goto-char (cdr arg))
     (lyskom-edit-toggle-aux-item-flag buf arg text 'secret)))
 
 (defun lyskom-edit-toggle-anonymous-aux (buf arg text)
   (interactive)
-  (save-excursion
+  (save-current-buffer
     (set-buffer (car arg))
     (goto-char (cdr arg))
     (lyskom-edit-toggle-aux-item-flag buf arg text 'anonymous)))
 
 (defun lyskom-edit-toggle-inherit-aux (buf arg text)
   (interactive)
-  (save-excursion
+  (save-current-buffer
     (set-buffer (car arg))
     (goto-char (cdr arg))
     (lyskom-edit-toggle-aux-item-flag buf arg text 'inherit)))
 
 (defun lyskom-edit-delete-aux (buf arg text)
   (interactive)
-  (save-excursion
+  (save-current-buffer
     (set-buffer (car arg))
     (goto-char (cdr arg))
     (beginning-of-line)
@@ -1481,8 +1466,7 @@ link as a string."
 
 
 (defun lyskom-edit-generate-aux-item-flags (flags)
-  (save-excursion
-    (let ((str (mapconcat 'identity
+  (let ((str (mapconcat 'identity
                           (delq nil
                                 (list
                                  (and (aux-item-flags->secret flags)
@@ -1493,7 +1477,7 @@ link as a string."
                                       (lyskom-get-string 'inherit-aux-flag))))
                           ", ")))
       (when (not (string= str ""))
-        (format " [%s]" str)))))
+        (format " [%s]" str))))
 
 (defun lyskom-edit-insert-aux-item-flags (flags)
   (end-of-line)
@@ -1593,53 +1577,54 @@ non-nil. If MATCH-NUMBER is 'angled, only match a number inside <>."
   "Parse the headers of an article.
 
 The value returned is a lyskom-text-headers structure."
-  (goto-char (point-min))
-  (let ((misc nil)
-        (subject nil)
-        (aux nil))
-    (save-restriction
-      ;; Narrow to headers
-      (lyskom-edit-find-separator t)
-      (narrow-to-region (point-min) (point))
-      (goto-char (point-min))
-      (while (< (point) (point-max))
-	(let ((case-fold-search t)
-	      (n nil))
-	  (cond
-	   ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
-	    (setq misc (nconc misc (list 'RECPT n))))
-	   ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
-	    (setq misc (nconc misc (list 'CC-RECPT n))))
-	   ((setq n (lyskom-looking-at-header 'blank-carbon-copy-prefix
-                                              'angled))
-	    (setq misc (nconc misc (list 'BCC-RECPT n))))
-	   ((setq n (lyskom-looking-at-header 'comment-prefix t))
-	    (setq misc (nconc misc (list 'COMM-TO n))))
-	   ((setq n (lyskom-looking-at-header 'footnote-prefix t))
-	    (setq misc (nconc misc (list 'FOOTN-TO n))))
-	   ((lyskom-looking-at-header 'header-subject nil)
-	    (setq subject (lyskom-edit-extract-subject)))
+  (save-excursion
+    (goto-char (point-min))
+    (let ((misc nil)
+          (subject nil)
+          (aux nil))
+      (save-restriction
+        ;; Narrow to headers
+        (lyskom-edit-find-separator t)
+        (narrow-to-region (point-min) (point))
+        (goto-char (point-min))
+        (while (< (point) (point-max))
+          (let ((case-fold-search t)
+                (n nil))
+            (cond
+             ((setq n (lyskom-looking-at-header 'recipient-prefix 'angled))
+              (setq misc (nconc misc (list 'RECPT n))))
+             ((setq n (lyskom-looking-at-header 'carbon-copy-prefix 'angled))
+              (setq misc (nconc misc (list 'CC-RECPT n))))
+             ((setq n (lyskom-looking-at-header 'blank-carbon-copy-prefix
+                                                'angled))
+              (setq misc (nconc misc (list 'BCC-RECPT n))))
+             ((setq n (lyskom-looking-at-header 'comment-prefix t))
+              (setq misc (nconc misc (list 'COMM-TO n))))
+             ((setq n (lyskom-looking-at-header 'footnote-prefix t))
+              (setq misc (nconc misc (list 'FOOTN-TO n))))
+             ((lyskom-looking-at-header 'header-subject nil)
+              (setq subject (lyskom-edit-extract-subject)))
 
-           ((lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
-            (goto-char (match-end 0))
-            (let ((item (lyskom-edit-parse-aux-item)))
-              (if item
-                  (setq aux (cons item aux))
-                (signal 'lyskom-unknown-header
-                        (list 'unknown-header (point))))))
+             ((lyskom-looking-at (lyskom-get-string 'aux-item-prefix-regexp))
+              (goto-char (match-end 0))
+              (let ((item (lyskom-edit-parse-aux-item)))
+                (if item
+                    (setq aux (cons item aux))
+                  (signal 'lyskom-unknown-header
+                          (list 'unknown-header (point))))))
 
-           ((lyskom-looking-at (lyskom-get-string 'comment-item-prefix))
-            nil)
+             ((lyskom-looking-at (lyskom-get-string 'comment-item-prefix))
+              nil)
 
-           ((or (lyskom-looking-at-header 'blank-carbon-copy-prefix 'empty)
-                (lyskom-looking-at-header 'carbon-copy-prefix 'empty)
-                (lyskom-looking-at-header 'recipient-prefix 'empty))
-            nil)
-           ((lyskom-looking-at-header 'add-recpt-button-text-regex nil) nil)
+             ((or (lyskom-looking-at-header 'blank-carbon-copy-prefix 'empty)
+                  (lyskom-looking-at-header 'carbon-copy-prefix 'empty)
+                  (lyskom-looking-at-header 'recipient-prefix 'empty))
+              nil)
+             ((lyskom-looking-at-header 'add-recpt-button-text-regex nil) nil)
 
-	   (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
-	(forward-line 1)))
-    (lyskom-create-lyskom-text-headers subject misc aux)))
+             (t (signal 'lyskom-unknown-header (list 'unknown-header (point))))))
+          (forward-line 1)))
+      (lyskom-create-lyskom-text-headers subject misc aux))))
 
 (defun lyskom-edit-parse-aux-item ()
   (let ((definitions lyskom-aux-item-definitions)
@@ -1737,8 +1722,8 @@ Point must be located on the line where the subject is."
       (initiate-get-conf-stat 'background 
                               'lyskom-edit-fcc-text
                               lyskom-pers-no
-                              (save-excursion (set-buffer edit-buffer)
-                                              (buffer-string))
+                              (save-current-buffer (set-buffer edit-buffer)
+                                                   (buffer-string))
                               text-no
                               is-anonymous))
 
@@ -1754,7 +1739,7 @@ Point must be located on the line where the subject is."
       (lyskom-run 'background 'lyskom-set-mode-line))
      (t (setq lyskom-dont-change-prompt nil)))
 
-    (save-excursion
+    (save-current-buffer
       (set-buffer edit-buffer)		;Need local variables.
       (lyskom-edit-sent-mode 1))
 
@@ -1774,13 +1759,13 @@ Point must be located on the line where the subject is."
     ;; Apply handler.
 
     (when (and callback (buffer-live-p callback-buffer))
-      (lyskom-save-excursion
+      (save-current-buffer
         (set-buffer callback-buffer)
         (if callback (apply callback text-no callback-data))))
 
     ;; Kill the edit-buffer.
 
-    (lyskom-save-excursion
+    (save-current-buffer
      (set-buffer edit-buffer)
      (delete-auto-save-file-if-necessary))
     (kill-buffer edit-buffer)
@@ -1789,7 +1774,7 @@ Point must be located on the line where the subject is."
 (defun lyskom-edit-fcc-text (conf-stat text text-no is-anonymous)
   (condition-case arg
       (let ((start 1) (end 0) (inhibit-read-only t))
-        (save-excursion
+        (save-current-buffer
           (set-buffer (lyskom-get-buffer-create 'fcc "*kom*-fcc" t))
           (erase-buffer)
           (insert text)
@@ -1856,11 +1841,11 @@ the with-output-to-temp-buffer command is issued to make them both apear."
              (lyskom-display-buffer buf)
              (unless kom-review-uses-cache
                (cache-del-text-stat (text->text-no text)))
-             (save-excursion (set-buffer buf)
-                             (erase-buffer)
-                             (lyskom-view-text (text->text-no text))
-                             (set-buffer-modified-p nil)
-                             (lyskom-view-mode)))))))
+             (save-current-buffer (set-buffer buf)
+                                  (erase-buffer)
+                                  (lyskom-view-text (text->text-no text))
+                                  (set-buffer-modified-p nil)
+                                  (lyskom-view-mode)))))))
 
 
 (defun lyskom-edit-insert-commented (text text-stat editing-buffer window &optional prefix)

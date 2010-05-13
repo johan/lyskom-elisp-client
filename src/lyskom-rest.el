@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: lyskom-rest.el,v 44.275 2009-03-08 12:20:13 byers Exp $
+;;;;; $Id: lyskom-rest.el,v 44.276 2010-05-13 18:14:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -84,7 +84,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-rest.el,v 44.275 2009-03-08 12:20:13 byers Exp $\n"))
+	      "$Id: lyskom-rest.el,v 44.276 2010-05-13 18:14:11 byers Exp $\n"))
 
 
 ;;;; ================================================================
@@ -309,7 +309,7 @@ interactively, all caches are cleared and the membership is re-read."
              (lyskom-get-string 'wait-for-server)))
            (t (signal 'lyskom-internal-error '(kom-next-command)))))
       (condition-case nil
-          (save-excursion
+          (save-current-buffer
             (set-buffer saved-buffer)
             (setq lyskom-doing-default-command nil))
         (error nil)))))
@@ -2548,7 +2548,7 @@ in lyskom-messages."
       nil
     (let ((tmpbuf (lyskom-generate-new-buffer "lyskom-enriched")))
       (unwind-protect
-          (save-excursion
+          (save-current-buffer
             (set-buffer tmpbuf)
             (if (lyskom-get-aux-item (text-stat->aux-items text-stat) 10002)
                 (insert (aux-item->data (car (lyskom-get-aux-item (text-stat->aux-items text-stat) 10002))))
@@ -2566,7 +2566,7 @@ in lyskom-messages."
 (defun lyskom-format-ö (text text-stat)
   (cond ((string= text "") "")
         (t
-         (save-excursion
+         (save-current-buffer
            (set-buffer (lyskom-get-buffer-create 'lyskom-text 
                                                  " lyskom-text" t))
            (erase-buffer)
@@ -2780,7 +2780,7 @@ or not."
   (cond 
    ((null kom-autowrap) text)
    ((and (numberp kom-autowrap) (> (length text) kom-autowrap)) text)
-   (t (save-excursion
+   (t (save-current-buffer
         (set-buffer (lyskom-get-buffer-create 'lyskom-text " lyskom-text" t))
         (erase-buffer)
         (insert text)
@@ -3162,7 +3162,7 @@ See `kom-save-text' for an alternative command."
                                (lyskom-format-insert 'saving-text text-no filename)
                                (when (string-match "\n" str)
                                  (setq str (substring str (match-end 0))))
-                               (save-excursion
+                               (save-current-buffer
                                  (set-buffer buf)
                                  (erase-buffer)
                                  (insert str)
@@ -3238,7 +3238,7 @@ See `kom-save-text-body' for an alternative to this command."
 
          ;; This has to come last
          (buf (lyskom-get-buffer-create 'temp "*kom*-text" t)))
-    (save-excursion
+    (save-current-buffer
       (set-buffer buf)
       (erase-buffer)
       (lyskom-view-text (text-stat->text-no text-stat))
@@ -3300,10 +3300,9 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
               (setq prompt 'next-unread-session-prompt)
             (setq prompt 'next-pri-session-prompt))
           (setq prompt-args 
-                (save-excursion
+                (save-current-buffer
                   (set-buffer (lyskom-get-prioritized-session))
-                  (list
-		   (lyskom-session-nickname)))))
+                  (list (lyskom-session-nickname)))))
 
          ((eq to-do 'next-pri-text)
           (setq prompt
@@ -3555,7 +3554,7 @@ Set lyskom-current-prompt accordingly. Tell server what I am doing."
         (saved-priority nil))
     (while session-list
       (condition-case nil
-          (save-excursion
+          (save-current-buffer
             (set-buffer (car session-list))
             (when (or (null saved-priority)
                       (> kom-server-priority saved-priority))
@@ -4169,7 +4168,7 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
 	      (setq lyskom-quit-flag nil)
 
               (if lyskom-debug-communications-to-buffer
-                  (save-excursion
+                  (save-current-buffer
                     (set-buffer (get-buffer-create "*kom*-replies"))
                     (goto-char (point-max))
                     (princ (lyskom-string-as-unibyte output) (current-buffer))
@@ -4274,21 +4273,20 @@ If MEMBERSHIPs prioriy is 0, it always returns nil."
   (let* ((buf (get-buffer-create lyskom-debug-communications-to-buffer-buffer))
 	 (win (get-buffer-window buf 'visible)))
     (if win
-	(save-excursion
-	  (save-selected-window
-	    (select-window win)
-            (set-buffer buf)
-	    (let ((move (eobp)))
-	      (save-excursion
-		(goto-char (point-max))
-		(insert "\n"
-                        prefix
-			(format "%s" proc)
-                        ": "
-                        string))
-              (lyskom-debug-limit-buffer)
-	      (if move (goto-char (point-max))))))
-      (save-excursion
+        (save-selected-window
+          (select-window win)
+          (set-buffer buf)
+          (let ((move (eobp)))
+            (save-excursion
+              (goto-char (point-max))
+              (insert "\n"
+                      prefix
+                      (format "%s" proc)
+                      ": "
+                      string))
+            (lyskom-debug-limit-buffer)
+            (if move (goto-char (point-max)))))
+      (save-current-buffer
 	(set-buffer buf)
 	(goto-char (point-max))
 	(insert "\n"

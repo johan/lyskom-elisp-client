@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.122 2010-05-13 07:29:36 byers Exp $
+;;;;; $Id: startup.el,v 44.123 2010-05-13 18:14:12 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.122 2010-05-13 07:29:36 byers Exp $\n"))
+	      "$Id: startup.el,v 44.123 2010-05-13 18:14:12 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -58,17 +58,17 @@
 
     ;; This horrid code is inspired from how cl-compiling-file in the
     ;; cl package works.
-    (let ((outbuffersym (lyskom-xemacs-or-gnu 'byte-compile-outbuffer
-                                              'outbuffer)))
-      (and (boundp outbuffersym)
-           (bufferp (symbol-value outbuffersym))
-           (equal (buffer-name (symbol-value outbuffersym))
-                  " *Compiler Output*")))))
+    (let ((buf (car (delq nil
+                          (mapcar (lambda (sym)
+                                    (and (boundp sym) (symbol-value sym)))
+                                  '(bytecomp-outbuffer byte-compile-outbuffer outbuffer))))))
+      (and (bufferp buf) (equal (buffer-name buf) " *Compiler Output*")))))
 
-
-(defconst lyskom-is-running-compiled
-  (eval-when-compile (lyskom-compilation-in-progress))
-  "Non-nil if the client is running compiled, else nil.")
+(defun lyskom-is-running-compiled ()
+  (condition-case nil
+      (or (eval-when-compile (lyskom-compilation-in-progress))
+          (byte-code-function-p (symbol-function 'lyskom-is-running-compiled)))
+    (error nil)))
 
 
 ;;;###autoload
@@ -127,10 +127,11 @@ clients of the event. See lyskom-mode for details on lyskom."
                                  (buffer-name buffer)
                                  (string-match (regexp-quote host)
                                                (buffer-name buffer))
-                                 (save-excursion (set-buffer buffer)
-                                                 (and 
-                                                  (boundp 'lyskom-server-port)
-                                                  (eq port lyskom-server-port)))
+                                 (save-current-buffer
+                                   (set-buffer buffer)
+                                   (and 
+                                    (boundp 'lyskom-server-port)
+                                    (eq port lyskom-server-port)))
                                  buffer))
                           (buffer-list))))
 	   (name nil)
@@ -263,7 +264,7 @@ clients of the event. See lyskom-mode for details on lyskom."
 	      ;; Now we have got the correct response.
 	      (set-process-sentinel proc 'lyskom-sentinel)
 
-	      (save-excursion
+	      (save-current-buffer
 		(lyskom-init-parse buffer))
 
               ;; Set up timestamps and stuff
@@ -410,7 +411,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                             (get procsym 'relay-port)))
            (msg nil))
       (unwind-protect
-          (save-excursion
+          (save-current-buffer
             (set-buffer (get-buffer-create bufname))
             (if relay-port
                 (lyskom-message 
@@ -484,7 +485,7 @@ clients of the event. See lyskom-mode for details on lyskom."
                              (lyskom-get-string 'done)))))
         (if proc (delete-process proc)))
 
-      (save-excursion 
+      (save-current-buffer
         (set-buffer kom-buffer)
         (put procsym 'num-connected (1+ (or (get procsym 'num-connected) 0)))
         (make-local-variable 'lyskom-ssh-proxy)
@@ -638,7 +639,7 @@ shown to other users."
             (setq lyskom-is-administrator nil)
             (lyskom-insert-string 'are-logged-in)
 
-            (unless lyskom-is-running-compiled
+            (unless (lyskom-is-running-compiled)
               (lyskom-insert-string 'warning-about-uncompiled-client))
 
             (unless lyskom-dont-read-user-area

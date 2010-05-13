@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;; $Id: lyskom-buttons.el,v 44.107 2009-03-08 12:20:13 byers Exp $
+;;;; $Id: lyskom-buttons.el,v 44.108 2010-05-13 18:14:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: lyskom-buttons.el,v 44.107 2009-03-08 12:20:13 byers Exp $\n"))
+	      "$Id: lyskom-buttons.el,v 44.108 2010-05-13 18:14:11 byers Exp $\n"))
 
 (lyskom-external-function glyph-property)
 (lyskom-external-function widget-at)
@@ -1191,7 +1191,7 @@ existing Mosaic process. Failing that, it starts a new Mosaic."
         tempbuffer
         (filename "/tmp/Mosaic."))
     (if (file-exists-p (expand-file-name "~/.mosaicpid"))
-        (save-excursion
+        (save-current-buffer
           (set-buffer 
            (setq tempbuffer (get-buffer-create " *kom*-mosaicpid")))
           (insert-file-contents (expand-file-name "~/.mosaicpid"))

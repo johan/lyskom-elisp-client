@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: buffers.el,v 44.28 2004-11-15 17:27:17 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: buffers.el,v 44.29 2010-05-13 18:14:09 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: buffers.el,v 44.28 2004-11-15 17:27:17 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: buffers.el,v 44.29 2010-05-13 18:14:09 byers Exp $\n"))
 
 
 ;;;;
@@ -87,37 +87,38 @@ they are created.")
 (defun lyskom-set-buffer-parent (buffer parent)
   "Set the parent buffer of BUFFER to PARENT. If buffer is already
 a child of some buffer, reparent it."
-  (save-excursion (set-buffer buffer)
-		  (if (and lyskom-buffer-parent
-                           (buffer-live-p lyskom-buffer-parent))
-                      (lyskom-remove-buffer-child lyskom-buffer-parent buffer))
-		  (setq lyskom-buffer-parent parent)
-		  (if parent (lyskom-add-buffer-child parent buffer))))
+  (save-current-buffer
+    (set-buffer buffer)
+    (if (and lyskom-buffer-parent
+             (buffer-live-p lyskom-buffer-parent))
+        (lyskom-remove-buffer-child lyskom-buffer-parent buffer))
+    (setq lyskom-buffer-parent parent)
+    (if parent (lyskom-add-buffer-child parent buffer))))
 
 (defun lyskom-remove-buffer-child (buffer child)
   "Remove CHILD from BUFFER's list of children. Args: BUFFER CHILD"
-  (save-excursion (set-buffer buffer)
-		  (if (boundp 'lyskom-buffer-children)
-		      (setq lyskom-buffer-children 
-                            (delq child lyskom-buffer-children)))))
+  (save-current-buffer (set-buffer buffer)
+                       (if (boundp 'lyskom-buffer-children)
+                           (setq lyskom-buffer-children 
+                                 (delq child lyskom-buffer-children)))))
 
 (defun lyskom-add-buffer-child (buffer child)
   "Add CHILD as a child of BUFFER. Args: BUFFER CHILD"
-  (save-excursion (set-buffer buffer)
-		  (setq lyskom-buffer-children
-                        (cons child lyskom-buffer-children))))
+  (save-current-buffer (set-buffer buffer)
+                       (setq lyskom-buffer-children
+                             (cons child lyskom-buffer-children))))
 
 (defun lyskom-get-buffer-parent (buffer)
   "Return the parent of BUFFER or nil if it has no parent"
-  (save-excursion (set-buffer buffer)
-		  (and (boundp 'lyskom-buffer-parent)
-		       lyskom-buffer-parent)))
+  (save-current-buffer (set-buffer buffer)
+                       (and (boundp 'lyskom-buffer-parent)
+                            lyskom-buffer-parent)))
 
 (defun lyskom-get-buffer-children (buffer)
   "Return the list of children of buffer BUFFER or nil if there are none."
-  (save-excursion (set-buffer buffer)
-		  (and (boundp 'lyskom-buffer-children)
-		       lyskom-buffer-children)))
+  (save-current-buffer (set-buffer buffer)
+                       (and (boundp 'lyskom-buffer-children)
+                            lyskom-buffer-children)))
 
 (defun lyskom-buffer-root-ancestor (buffer)
   "Return the ultimate ancestor of buffer BUFFER."
@@ -218,9 +219,10 @@ the children object"
     (while buffers
       (if (lyskom-buffer-p (car buffers))
         (setq result (cons (car buffers) result))
-        (save-excursion (set-buffer (car buffers))
-                        (setq lyskom-session-has-unread-letters nil)
-                        (setq lyskom-session-has-unreads nil)))
+        (save-current-buffer
+          (set-buffer (car buffers))
+          (setq lyskom-session-has-unread-letters nil)
+          (setq lyskom-session-has-unreads nil)))
       (setq buffers (cdr buffers)))
     (nreverse result)))
 
@@ -238,15 +240,15 @@ If BUFFER is not specified, assume the current buffer"
   (unless letters-only
     (lyskom-traverse-buffer-hierarchy 
      (lambda (x)
-       (save-excursion (set-buffer x)
-                       (setq lyskom-session-has-unreads nil)))
+       (save-current-buffer (set-buffer x)
+                            (setq lyskom-session-has-unreads nil)))
      buffer)
     (setq lyskom-sessions-with-unread 
           (delq buffer lyskom-sessions-with-unread)))
   (lyskom-traverse-buffer-hierarchy 
    (lambda (x)
-     (save-excursion (set-buffer x)
-                     (setq lyskom-session-has-unread-letters nil)))
+     (save-current-buffer (set-buffer x)
+                          (setq lyskom-session-has-unread-letters nil)))
    buffer)
   (setq lyskom-sessions-with-unread-letters
         (delq buffer lyskom-sessions-with-unread-letters))
@@ -258,8 +260,8 @@ If BUFFER is not specified, assume the current buffer"
   (unless (memq buffer lyskom-sessions-with-unread)
     (lyskom-traverse-buffer-hierarchy 
      (lambda (x)
-       (save-excursion (set-buffer x)
-                       (setq lyskom-session-has-unreads t)))
+       (save-current-buffer (set-buffer x)
+                            (setq lyskom-session-has-unreads t)))
      buffer)
     (setq lyskom-sessions-with-unread
           (cons buffer lyskom-sessions-with-unread)))
@@ -267,8 +269,8 @@ If BUFFER is not specified, assume the current buffer"
               (memq buffer lyskom-sessions-with-unread-letters))
     (lyskom-traverse-buffer-hierarchy 
      (lambda (x)
-       (save-excursion (set-buffer x)
-                       (setq lyskom-session-has-unread-letters t)))
+       (save-current-buffer (set-buffer x)
+                            (setq lyskom-session-has-unread-letters t)))
      buffer)
     (setq lyskom-sessions-with-unread-letters
           (cons buffer lyskom-sessions-with-unread-letters)))
@@ -378,7 +380,7 @@ categories")
 (defun lyskom-generate-new-buffer (name)
   (setq name (lyskom-recode-buffer-name name))
   (let ((buf (generate-new-buffer name)))
-    (save-excursion
+    (save-current-buffer
       (set-buffer buf))
     buf))
 
@@ -393,24 +395,24 @@ The created buffer is made a child of the current buffer."
         (buffer nil))
     (if (and unique buffers)
         (progn (setq buffer (car buffers))
-               (save-excursion (set-buffer buffer)
-                               (let ((inhibit-read-only t))
+               (save-current-buffer (set-buffer buffer)
+                                    (let ((inhibit-read-only t))
 ;;; +++ FIXME: This is that erase-buffer works if there are widgets
-                                 (setq before-change-functions
-                                       (delq 'widget-before-change
-                                             before-change-functions))
-                                 (erase-buffer))
-                               (kill-all-local-variables)
-                               (if (equal (buffer-name (current-buffer))
-                                          name)
-                                   nil
-                                 (rename-buffer name t))))
+                                      (setq before-change-functions
+                                            (delq 'widget-before-change
+                                                  before-change-functions))
+                                      (erase-buffer))
+                                    (kill-all-local-variables)
+                                    (if (equal (buffer-name (current-buffer))
+                                               name)
+                                        nil
+                                      (rename-buffer name t))))
       (progn (setq buffer (generate-new-buffer name))
              (lyskom-add-buffer-of-category buffer category)))
     (lyskom-set-buffer-parent buffer (current-buffer))
     (lyskom-update-inherited-variables buffer)
-    (save-excursion (set-buffer buffer)
-                    (setq lyskom-buffer-category category))
+    (save-current-buffer (set-buffer buffer)
+                         (setq lyskom-buffer-category category))
     buffer))
 
 
@@ -491,7 +493,7 @@ Returns the window displaying BUFFER."
                                            "-in-window")))
                  (open (lyskom-default-value-safe sym))
                  (saved-window-configuration
-                  (save-excursion
+                  (save-current-buffer
                     (set-buffer (or (and (boundp 'lyskom-buffer)
                                          lyskom-buffer)
                                     (current-buffer)))

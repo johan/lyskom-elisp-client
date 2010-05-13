@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mship-edit.el,v 44.54 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: mship-edit.el,v 44.55 2010-05-13 18:14:11 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -34,7 +34,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mship-edit.el,v 44.54 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: mship-edit.el,v 44.55 2010-05-13 18:14:11 byers Exp $\n"))
 
 ;; KNOWN BUGS AND TO DO
 ;; --------------------
@@ -157,7 +157,7 @@ This function does not tell the server about the change."
 
 (defun lp--entry-set-background (entry color)
   "Use extents or overlays to set the background of ENTRY to COLOR."
-  (save-excursion
+  (save-current-buffer
     (set-buffer (marker-buffer (lp--entry->start-marker entry)))
     (if (null color)
         (let* ((extent (assq 'color (lp--entry->extents entry))))
@@ -191,7 +191,7 @@ This function does not tell the server about the change."
 
 (defun lp--entry-set-foreground (entry color)
   "Use extents or overlays to set the foreground of ENTRY to COLOR."
-  (save-excursion 
+  (save-current-buffer
     (set-buffer (marker-buffer (lp--entry->start-marker entry)))
     (if (null color)
         (let* ((extent (assq 'fcolor (lp--entry->extents entry))))
@@ -469,7 +469,7 @@ The start and end markers of the entry are adjusted"
   "Perform FN in all prioritization buffers. ARGS are arguments for FN.
 Normally there should only be one buffer, but who knows..."
   (when lyskom-buffer
-    (save-excursion
+    (save-current-buffer
       (set-buffer lyskom-buffer)
       (let ((prioritize-buffers (lyskom-buffers-of-category 'prioritize)))
         (lyskom-traverse buffer prioritize-buffers
@@ -816,12 +816,12 @@ clicked on."
   (interactive)
   (let ((entry (elt arg 0))
         (flag (elt arg 1)))
-    (save-excursion
+    (save-current-buffer
       (set-buffer (marker-buffer (lp--entry->start-marker entry)))
       (lp--flag-menu-set entry flag (not (lp--flag-menu-get entry flag)))
 
       ;; Attempt to perform the change
-      (save-excursion
+      (save-current-buffer
         (set-buffer lyskom-buffer)
         (let ((result (blocking-do 'set-membership-type
                                    lyskom-pers-no
@@ -842,7 +842,7 @@ clicked on."
           (set-lp--entry->membership entry mship)
           (when (eq flag 'passive)
             (cond ((membership-type->passive (membership->type mship))
-                   (save-excursion
+                   (save-current-buffer
                      (set-buffer lyskom-buffer)
                      (when (eq (membership->conf-no mship) lyskom-current-conf)
                        (lyskom-leave-current-conf))
@@ -1066,7 +1066,7 @@ Forces a mode line update"
 
 (defun lp--update-membership (entry old-pri old-pos)
   "Update the server and local versions of membership in ENTRY."
-  (save-excursion
+  (save-current-buffer
     (let ((saved-pos (lp--entry-position entry)))
       (set-buffer lyskom-buffer)
       (let ((mship (lp--entry->membership entry)))
