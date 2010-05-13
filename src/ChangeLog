@@ -1,5 +1,8 @@
 2010-05-13  David Byers  <davby@ida.liu.se>
 
+	* menus.el (lyskom-menu-encoding-rules): Applied patch from Mårten
+	Svensson for bug 1655.
+
 	* view-text.el (lyskom-get-root-text-belongs-to): In node
 	transform, explicitly look in the cache (it's faster), and pass
 	text-no, not text-stat to lyskom-find-dag-roots.

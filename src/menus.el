@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: menus.el,v 44.46 2010-05-13 07:29:35 byers Exp $
+;;;;; $Id: menus.el,v 44.47 2010-05-13 07:44:15 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -33,7 +33,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: menus.el,v 44.46 2010-05-13 07:29:35 byers Exp $\n"))
+	      "$Id: menus.el,v 44.47 2010-05-13 07:44:15 byers Exp $\n"))
 
 (lyskom-external-function set-buffer-menubar)
 (lyskom-external-function popup-menu)
@@ -464,6 +464,9 @@
 	 ((eq window-system 'mac) '((title . mac-roman)
 				    (item . nil)
 				    (keys . nil)))
+         ((featurep 'mac-carbon) '((title . mac-roman)
+                                  (item . mac-roman)
+                                  (keys . iso8859-1)))
 	 ((memq window-system '(win32 mswindows w32)) '((title . utf-8)
 				   (item . nil)
 				   (keys . utf-8)))
