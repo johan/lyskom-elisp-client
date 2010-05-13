@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: mime.el,v 44.15 2007-11-10 09:09:32 byers Exp $
+;;;;; $Id: mime.el,v 44.16 2010-05-13 07:29:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -31,7 +31,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: mime.el,v 44.15 2007-11-10 09:09:32 byers Exp $\n"))
+	      "$Id: mime.el,v 44.16 2010-05-13 07:29:36 byers Exp $\n"))
 
 (lyskom-external-function mm-find-mime-charset-region)
 (defun lyskom-mime-charset-for-text-xemacs (start end)
@@ -44,19 +44,21 @@
     (lyskom-error "Unable to load required mm-util from gnus")))
 
 (defun lyskom-mime-charset-for-text-gnu (start end)
-  (let ((codings (delq nil 
-		       (mapcar (lambda (cs)
-				 (cond ((eq cs 'undecided) lyskom-server-coding-system)
-				       ((eq cs 'compound-text) nil)
-				       ((or (coding-system-get cs 'mime-charset)
-					    (coding-system-get cs ':mime-charset)))))
-			       (find-coding-systems-region start end)))))
-    (cond ((memq lyskom-server-coding-system codings) lyskom-server-coding-system)
+  (let ((codings
+         (delq nil 
+               (mapcar (lambda (cs)
+                         (cond ((eq cs 'undecided) lyskom-server-coding-system)
+                               ((eq cs 'compound-text) nil)
+                               ((or (coding-system-get cs 'mime-charset)
+                                    (coding-system-get cs ':mime-charset)))))
+                       (find-coding-systems-region start end)))))
+    (cond ((memq lyskom-server-coding-system codings) 
+           lyskom-server-coding-system)
 	  ((lyskom-traverse cs kom-preferred-charsets
 	     (when (memq cs codings)
 	       (lyskom-traverse-break cs))))
 	  (t (car codings)))))
-      
+
 
 (defun lyskom-mime-charset-for-text (start end)
   "Determine which MIME charset to use for region START..END.

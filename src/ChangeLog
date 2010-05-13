@@ -1,3 +1,30 @@
+2010-05-13  David Byers  <davby@ida.liu.se>
+
+	* view-text.el (lyskom-get-root-text-belongs-to): In node
+	transform, explicitly look in the cache (it's faster), and pass
+	text-no, not text-stat to lyskom-find-dag-roots.
+
+	* review.el (lyskom-find-root): In node transform, explicitly look
+	in the cache (it's faster), and pass text-no, not text-stat to
+	lyskom-find-dag-roots. 
+
+	* utilities.el (lyskom-check-configuration): Also look at
+	mime-charset.
+	(lyskom-magic-minibuffer-post-command): Check that
+	lyskom-minibuffer-point is bound before trying to use it.
+	(lyskom-find-dag-roots): Apply node-transform to start node.
+
+	* startup.el (lyskom-setup-ssh-relay): Removed hard-coded relay
+	port.
+
+	* menus.el (lyskom-menu-encoding-rules): Inserted menu coding
+	rules for mac (blindly, I can't test).
+
+2010-05-08  David Byers  <davby@ida.liu.se>
+
+	* utilities.el (lyskom-check-configuration): Check
+	coding-system-aliases for the server coding system too.
+
 2009-05-09  Pontus Freyhult  <pont@soua.net>
 
 	* vars.el.in (lyskom-default-password): Fixed typo.

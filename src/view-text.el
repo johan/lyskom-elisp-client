@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.93 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: view-text.el,v 44.94 2010-05-13 07:29:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.93 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.94 2010-05-13 07:29:36 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -611,8 +611,10 @@ If optional FOOTNOTES is non-nil, include text TEXT-STAT is a footnote to."
   "Return the top-level parent of TEXT-STAT, following attachment
 and footnote (if optional FOOTNOTES is non-nil"
   (lyskom-find-dag-roots  'lyskom-get-text-belongs-to
-			  (lambda (x) (blocking-do 'get-text-stat x))
-			  text-stat
+			  (lambda (x) 
+                            (or (cache-get-text-stat x)
+                                (blocking-do 'get-text-stat x)))
+			  (text-stat->text-no text-stat)
 			  nil
 			  footnotes))
 

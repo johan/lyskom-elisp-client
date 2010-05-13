@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.171 2007-11-10 09:53:50 byers Exp $
+;;;;; $Id: utilities.el,v 44.172 2010-05-13 07:29:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.171 2007-11-10 09:53:50 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.172 2010-05-13 07:29:36 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -57,22 +57,19 @@
                                   ))
 
           ;; Check coding system
-          (when (and enable-multibyte-characters
-		     (not (coding-system-p 'utf-8))
-		     (not (memq 'utf-8
-                                (lyskom-coding-system-get
-                                 (symbol-value (car coding-category-list))
-                                 'alias-coding-systems)))
-                     (not (memq lyskom-server-coding-system
-                                (lyskom-coding-system-get
-                                 (symbol-value (car coding-category-list))
-                                 'alias-coding-systems))))
-            (lyskom-format-insert 'coding-system-mismatch-warning
-                                  (symbol-value (car coding-category-list))
-                                  lyskom-server-coding-system
-                                  `(face ,kom-warning-face)
-                                  ))
-          )
+          (when enable-multibyte-characters
+            (let* ((cs (symbol-value (car coding-category-list)))
+                   (aliases (or (lyskom-coding-system-get cs 'mime-charset)
+                                (lyskom-coding-system-get cs ':mime-charset)
+                                (lyskom-coding-system-aliases cs)
+                                (lyskom-coding-system-get cs 'alias-coding-systems))))
+              (when (and (not (memq 'utf-8 aliases))
+                         (not (memq lyskom-server-coding-system aliases)))
+                (lyskom-format-insert 'coding-system-mismatch-warning
+                                      (symbol-value (car coding-category-list))
+                                      lyskom-server-coding-system
+                                      `(face ,kom-warning-face)
+                                      )))))
       (error nil)
       )))
 
@@ -147,7 +144,7 @@ predecessor function. It is a function that takes a single
 argument.
 
 START-NODE is the initial argument to give to the predecessor
-function. It is not transformed using NODE-TRANSFORM.
+function. It is also transformed using NODE-TRANSFORM.
 
 OTHER-ARGS are other arguments to FUNC, appended at each call.
 
@@ -162,9 +159,13 @@ Cycles are by remembering the visited nodes. When a backlink is
 detected, it is not traversed."
   (let ((result nil)
 	(visited nil)
-	(candidates (apply predecessor-func start-node other-args))
+	(candidates (apply predecessor-func 
+                           (funcall node-transform start-node) 
+                           other-args))
 	(cur nil)
 	(tem nil))
+    (unless candidates
+      (setq result (cons start-node result)))
     (while candidates
       (setq cur (car candidates)
 	    candidates (cdr candidates))
@@ -2216,7 +2217,8 @@ point without altering the buffer contents."
       (when ranges
         (lyskom-magic-minibuffer-cancel))))
 
-    (unless (or (null lyskom-minibuffer-point)
+  (unless (or (not (boundp 'lyskom-minibuffer-point))
+              (null lyskom-minibuffer-point)
               (eq lyskom-minibuffer-point (point)))
     (lyskom-magic-minibuffer-cancel)))
 

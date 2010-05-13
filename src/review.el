@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.73 2009-03-08 12:20:14 byers Exp $
+;;;;; $Id: review.el,v 44.74 2010-05-13 07:29:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.73 2009-03-08 12:20:14 byers Exp $\n"))
+	      "$Id: review.el,v 44.74 2010-05-13 07:29:36 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1536,8 +1536,9 @@ just a list of the firt root found."
    (lambda (text-no)
      (unless kom-review-uses-cache
        (cache-del-text-stat text-no))
-     (blocking-do 'get-text-stat text-no))
-   text-stat
+     (or (cache-get-text-stat text-no)
+         (blocking-do 'get-text-stat text-no)))
+   (text-stat->text-no text-stat)
    (not all)))
 
 

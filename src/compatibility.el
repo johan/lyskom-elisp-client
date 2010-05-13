@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: compatibility.el,v 44.81 2009-03-08 14:33:18 byers Exp $
+;;;;; $Id: compatibility.el,v 44.82 2010-05-13 07:29:35 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;; Copyright (C) 2001 Free Software Foundation, Inc.
 ;;;;;
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: compatibility.el,v 44.81 2009-03-08 14:33:18 byers Exp $\n"))
+	      "$Id: compatibility.el,v 44.82 2010-05-13 07:29:35 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -227,6 +227,7 @@ KEYS should be a string in the format used for saving keyboard macros
 (lyskom-function-alias check-coding-system (name) (error "No such coding system"))
 (lyskom-function-alias find-coding-systems-for-charsets (cs) nil)
 (lyskom-function-alias coding-system-get (cs prop) nil)
+(lyskom-function-alias coding-system-aliases (cs) (list cs))
 (lyskom-function-alias char-width (c) 1)
 (lyskom-function-alias find-charset-string (str) (list (or (lyskom-default-value-safe 'lyskom-server-coding-system)
                                                            'ascii)))

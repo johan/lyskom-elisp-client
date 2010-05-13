@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: startup.el,v 44.121 2009-10-21 19:22:02 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: startup.el,v 44.122 2010-05-13 07:29:36 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: startup.el,v 44.121 2009-10-21 19:22:02 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: startup.el,v 44.122 2010-05-13 07:29:36 byers Exp $\n"))
 
 
 ;;; ================================================================
@@ -419,7 +419,6 @@ clients of the event. See lyskom-mode for details on lyskom."
                                 kom-ssh-relay-host))
               (when proc (delete-process proc))
               (setq relay-port (+ 10000 (random 20000)))
-	      (setq relay-port 4455)
               (put procsym 'relay-host 
                    (if (string-match "@" kom-ssh-relay-host)
                        (substring kom-ssh-relay-host (1+ (match-beginning 0)))
