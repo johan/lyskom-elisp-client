@@ -1,6 +1,6 @@
 ;;;;; -*-coding: raw-text;-*-
 ;;;;;
-;;;;; $Id: view-text.el,v 44.94 2010-05-13 07:29:36 byers Exp $
+;;;;; $Id: view-text.el,v 44.95 2010-05-14 14:10:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: view-text.el,v 44.94 2010-05-13 07:29:36 byers Exp $\n"))
+	      "$Id: view-text.el,v 44.95 2010-05-14 14:10:26 byers Exp $\n"))
 
 
 (defvar lyskom-view-text-text)
@@ -123,16 +123,7 @@ Note that this function must not be called asynchronously."
                     text-stat
                     (list 'lyskom-text-start (text-stat->text-no text-stat))
                     (if mx-date
-                        (let ((date (lyskom-mx-date-to-time mx-date)))
-                          (if date
-                              (concat
-                               (lyskom-format-time 'date-and-time date)
-                               (if (time->tzhr date)
-                                   (lyskom-format " %#1s%#2s" 
-                                                  (time->tzhr date)
-                                                  (time->tzmin date))
-                                 ""))
-                            (aux-item->data mx-date)))
+                        (lyskom-format-mx-date mx-date)
                       (lyskom-format-time 'date-and-time
                                           (text-stat->creation-time text-stat)))
                     (text-stat->no-of-lines text-stat)
@@ -1303,34 +1294,55 @@ Args: TEXT-STAT of the text being read."
       )
     author))
 
+(defun lyskom-format-mx-date (mx-date)
+  (let ((date (lyskom-mx-date-to-time mx-date)))
+    (if date
+        (let ((tem (lyskom-format-time 'date-and-time date)))
+          (if (or kom-show-mx-date-as-local (null (time->zone date)))
+              tem
+            (concat tem " " (lyskom-format-timezone (time->zone date)))))
+      (aux-item->data mx-date))))
+
+
+
+
 (lyskom-with-external-functions (calendar-iso-from-absolute
                                  calendar-absolute-from-gregorian)
-  (defun lyskom-mx-date-to-time (mx-date)
-    "Attempt to convert MX-DATE to a lyskom time structure.
-Returns the time structure if successful, otherwise nil."
-    (if (and mx-date
-             (condition-case nil
-                 (progn (require 'calendar)
-                        (require 'cal-iso)
-                        t)
-               (error nil))
-             (string-match "\\([0-9][0-9][0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\) \\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\) \\([-+][0-9][0-9]\\)?\\([0-9][0-9]\\)?"
-                           (aux-item->data mx-date)))
-        (let* ((secs (string-to-number (match-string 6 (aux-item->data mx-date))))
-               (mins (string-to-number (match-string 5 (aux-item->data mx-date))))
-               (hour (string-to-number (match-string 4 (aux-item->data mx-date))))
-               (mday (string-to-number (match-string 3 (aux-item->data mx-date))))
-               (mon  (string-to-number (match-string 2 (aux-item->data mx-date))))
-               (year (string-to-number (match-string 1 (aux-item->data mx-date))))
-               (tzhr (match-string 7 (aux-item->data mx-date)))
-               (tzmin (or (match-string 8 (aux-item->data mx-date)) ""))
-               (wday (abs
-                      (elt 
-                       (calendar-iso-from-absolute
-                        (calendar-absolute-from-gregorian
-                         (list mon mday year)))
-                       1))))
-          (lyskom-create-time secs mins hour mday mon year wday 0 nil tzhr tzmin)))))
+(defun lyskom-mx-date-to-time (mx-date)
+  (when mx-date
+    (let* ((date (parse-time-string (aux-item->data mx-date)))
+           (now (decode-time))
+           (sec (or (elt date 0) 0))
+           (min (or (elt date 1) 0))
+           (hour (or (elt date 2) 0))
+           (day (or (elt date 3) (elt now 3)))
+           (month (or (elt date 4) (elt now 4)))
+           (year (or (elt date 5) (elt now 5)))
+           (wday (elt date 6))
+           (dst (elt date 7))
+           (zone (elt date 8)))
+      (setq date (if kom-show-mx-date-as-local
+                     (decode-time (encode-time sec min hour day month year wday dst zone))
+                 (list sec min hour day month year wday dst zone)))
+      (unless (elt date 6)
+        (setq date
+              (lyskom-replace-in-list
+               date 6
+               (abs (elt 
+                     (calendar-iso-from-absolute
+                      (calendar-absolute-from-gregorian
+                       (list (elt date 4) (elt date 3) (elt date 5))))
+                     1)))))
+      (lyskom-create-time (elt date 0)
+                          (elt date 1)
+                          (elt date 2)
+                          (elt date 3)
+                          (elt date 4)
+                          (elt date 5)
+                          (elt date 6)
+                          0
+                          (elt date 7)
+                          (elt date 8))))))
 
 ;;; Local Variables: 
 ;;; eval: (put 'lyskom-traverse 'lisp-indent-hook 2)

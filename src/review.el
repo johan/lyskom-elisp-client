@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: review.el,v 44.74 2010-05-13 07:29:36 byers Exp $
+;;;;; $Id: review.el,v 44.75 2010-05-14 14:10:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -38,7 +38,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: review.el,v 44.74 2010-05-13 07:29:36 byers Exp $\n"))
+	      "$Id: review.el,v 44.75 2010-05-14 14:10:26 byers Exp $\n"))
 
 (eval-when-compile
   (require 'lyskom-command "command"))
@@ -1927,6 +1927,9 @@ This command accepts text number prefix arguments \(see
       (let ((lyskom-format-special nil)
             (kom-smileys nil)
 	    (kom-show-footnotes-immediately nil)
+            (kom-show-mx-date-as-local nil)
+            (kom-print-relative-dates nil)
+            (kom-print-seconds-in-time-strings t)
             (kom-autowrap nil))
           (unless kom-review-uses-cache
             (cache-del-text-stat text-no))

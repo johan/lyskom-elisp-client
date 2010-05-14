@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: komtypes.el,v 44.44 2009-03-08 14:33:18 byers Exp $
+;;;;; $Id: komtypes.el,v 44.45 2010-05-14 14:10:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -35,7 +35,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: komtypes.el,v 44.44 2009-03-08 14:33:18 byers Exp $\n"))
+	      "$Id: komtypes.el,v 44.45 2010-05-14 14:10:26 byers Exp $\n"))
 
 
 ;;; ============================================================
@@ -55,6 +55,7 @@ Legal fiels properties are:
 :default val        In the constructor, if the value supplied for the 
                     field is nil, use VAL instead.
 :read-only t        Do not create a mutator. Note that t must be specified.
+:write-only t       Do not create an accessor
 :automatic val      Do not include field in constructor. Use VAL for
                     the initial field value.
 :filter code        Use CODE as a filter for the field value supplied to
@@ -137,13 +138,14 @@ Automatically created with def-komtype" type)
        (lambda (arg)
          (unless (eq arg '&optional)
            (let ((field (or (car-safe arg) arg)))
-             (setq accessors
-                   (cons `(defsubst ,(intern (format "%S->%S" type field)) (obj)
-                            (lyskom-assert (or (null obj) (,(intern (format "lyskom-%S-p" type)) obj))
-                                           "Assertion failed in %s: got %S" ,(format "%S->%S" type field) obj)
-                            ,(format "Return field `%s' from OBJ." field)
-                            (,access-method (cdr obj) ,field-index))
-                         accessors))
+             (unless (plist-get (cdr-safe arg) ':write-only)
+               (setq accessors
+                     (cons `(defsubst ,(intern (format "%S->%S" type field)) (obj)
+                              (lyskom-assert (or (null obj) (,(intern (format "lyskom-%S-p" type)) obj))
+                                             "Assertion failed in %s: got %S" ,(format "%S->%S" type field) obj)
+                              ,(format "Return field `%s' from OBJ." field)
+                              (,access-method (cdr obj) ,field-index))
+                           accessors)))
              (unless (plist-get (cdr-safe arg) ':read-only)
                (setq mutators
                      (cons `(defsubst ,(intern (format "set-%S->%S" type field)) (obj val)
@@ -393,15 +395,14 @@ Automatically created with def-komtype" type)
    (mon         :read-only t)
    (year        :read-only t)
    (wday        :read-only t)
-   (yday        :read-only t)
-   (isdst       :read-only t)
+   (yday        :read-only t :write-only t)
+   (isdst       :read-only t :write-only t)
    &optional
-   (tzhr        :read-only t)
-   (tzmin       :read-only t))
+   (zone        :read-only t))
   :nil-safe)
 
 (defun lyskom-create-time-from-utc (sec min hour mday mon year 
-                                        wday yday isdst &optional tzhr tzmin)
+                                        wday yday isdst &optional zone)
   (if lyskom-server-uses-utc
       (let* ((date (decode-time (encode-time sec min hour mday mon year 0))))
         (unless (eq mday (elt date 3))
@@ -419,10 +420,10 @@ Automatically created with def-komtype" type)
                             (elt date 6) ; dow
                             yday        ; yday
                             (elt date 7) ; dst
-                            nil nil)
+                            nil)
         )
     (lyskom-create-time sec min hour mday mon year
-                        wday yday isdst tzhr tzmin)))
+                        wday yday isdst nil)))
 
 
 ;;; ================================================================

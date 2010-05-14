@@ -1,5 +1,5 @@
 ;;;;; -*-coding: raw-text;mode: emacs-lisp;-*-
-;;;;; $Id: vars.el.in,v 44.337 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $
+;;;;; $Id: vars.el.in,v 44.338 2010-05-14 14:10:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -39,7 +39,7 @@
 
 (setq lyskom-clientversion-long 
       (concat lyskom-clientversion-long
-	      "$Id: vars.el.in,v 44.337 2009-05-09 19:35:46 _cvs_pont_lyskomelisp Exp $\n"))
+	      "$Id: vars.el.in,v 44.338 2010-05-14 14:10:26 byers Exp $\n"))
 
 (defvar lyskom-dummy-variable-to-fool-the-byte-compiler)
 
@@ -1073,6 +1073,13 @@ set to `nil', don't display the time. All other values are reserved
 for future use.
 
 For this feature to work, the calendar package must be installed."
+  server)
+
+(def-kom-var kom-show-mx-date-as-local t
+  "**Controls display of creation date of imported texts.
+
+If set to `t' then display timestamps of imported texts in the local
+timezone instead of the timezone specified in the timestamp."
   server)
 
 

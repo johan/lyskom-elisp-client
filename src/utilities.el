@@ -1,6 +1,6 @@
 ;;;;; -*-coding: iso-8859-1;-*-
 ;;;;;
-;;;;; $Id: utilities.el,v 44.173 2010-05-13 18:14:12 byers Exp $
+;;;;; $Id: utilities.el,v 44.174 2010-05-14 14:10:26 byers Exp $
 ;;;;; Copyright (C) 1991-2002  Lysator Academic Computer Association.
 ;;;;;
 ;;;;; This file is part of the LysKOM Emacs LISP client.
@@ -36,7 +36,7 @@
 
 (setq lyskom-clientversion-long
       (concat lyskom-clientversion-long
-	      "$Id: utilities.el,v 44.173 2010-05-13 18:14:12 byers Exp $\n"))
+	      "$Id: utilities.el,v 44.174 2010-05-14 14:10:26 byers Exp $\n"))
 
 
 (defvar coding-category-list)
@@ -116,6 +116,13 @@ If BEFORE is not in the list, then insert EL at the end of the list."
                               (length (memq before list)) 1) list)
                    (cons el (memq before list)))
            list)))
+
+(defun lyskom-replace-in-list (list idx newelt)
+  "Destructively replace LIST element at IDX with NEWELT."
+  (if (zerop idx)
+      (cons newelt (cdr list))
+    (setcdr (nthcdr (1- idx) list) (cons newelt (nthcdr (1+ idx) list)))
+    list))
 
 (defun lyskom-move-in-list (el list pos)
   "Destructively move EL within LIST so it appears at position POS."
@@ -1125,8 +1132,7 @@ of the week.
 TIME defaults to the current client time."
   (let* ((time (or time (lyskom-current-client-time)))
          (fmt (cond
-               ((stringp format)
-                format)
+               ((stringp format) format)
                ((memq format '(date-and-time date time))
                 (lyskom-format (cond ((eq format 'date-and-time)
                                       'format-time-date-and-time)
@@ -1142,8 +1148,7 @@ TIME defaults to the current client time."
                                 (if kom-print-seconds-in-time-strings
                                     'timeformat-hh-mm-ss
                                   'timeformat-hh-mm))))
-               ((symbolp format)
-                (lyskom-get-string format))
+               ((symbolp format) (lyskom-get-string format))
                (t (error "Invalid argument")))))
     (lyskom-format fmt
                    (time->year time)
@@ -1155,7 +1160,23 @@ TIME defaults to the current client time."
                    (elt (lyskom-get-string 'weekdays)
                         (time->wday time))
                    (elt (lyskom-get-string 'weekdays-short)
-                        (time->wday time)))))
+                        (time->wday time))
+                   (lyskom-format-timezone (time->zone time)))))
+
+(defun lyskom-format-timezone (zone)
+  "Return a string representation of the timezone ZONE.
+
+Returns nil if ZONE is nil."
+  (cond ((null zone) "")
+        ((eq zone t) (lyskom-format-timezone (current-time-zone)))
+        ((stringp zone) zone)
+        ((listp zone) (car (cdr zone)))
+        ((integerp zone)
+         (format "%s%02d%02d"
+                 (if (< zone 0) "-" "+")
+                 (/ (abs zone) 3600)
+                 (/ (% (abs zone) 3600) 60)))
+        (t nil)))
 
 
 ;;; ============================================================

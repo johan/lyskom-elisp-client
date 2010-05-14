@@ -1,3 +1,16 @@
+2010-05-14  David Byers  <davby@ida.liu.se>
+
+	Fix bug 1679:
+	* view-text.el (lyskom-format-mx-date): New function.
+	(lyskom-view-text): Use it.
+	(lyskom-mx-date-to-time): New implementation.
+
+	* utilities.el (lyskom-replace-in-list): New function.
+
+	* komtypes.el (def-komtype): Support :write-only keyword.
+	(time): Make yday and isdst read-only and write-only (we don't use
+	them and don't always set them correctly).
+
 2010-05-13  David Byers  <davby@ida.liu.se>
 
 	Emacs 24 compatibility
